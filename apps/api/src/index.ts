@@ -10,6 +10,7 @@ import {assetView,sourceView,jobView,auditView,visibleAssets,visibleAudit,record
 import {searchRequest,index,startProjector} from './search.ts';
 import {verifyAuditChain} from './audit.ts';
 import {installModels} from './models.ts';
+import {installModelMigrations} from './model-migrations.ts';
 export const app=Fastify({logger:{level:'info',redact:['req.headers.authorization','req.headers.cookie','req.url','res.headers.set-cookie']},bodyLimit:8*1024*1024,requestTimeout:20000,trustProxy:false,genReqId:()=>randomUUID()});
 await app.register(cookie);
 await app.register(helmet,{contentSecurityPolicy:{directives:{defaultSrc:["'self'"],scriptSrc:["'self'"],styleSrc:["'self'","'unsafe-inline'"],imgSrc:["'self'",'data:'],connectSrc:["'self'"],frameAncestors:["'none'"],formAction:["'self'"],upgradeInsecureRequests:process.env.NODE_ENV==='production'?[]:null}},hsts:process.env.NODE_ENV==='production'});
@@ -25,6 +26,7 @@ app.get('/health/live',async()=>({status:'ok'}));
 app.get('/health/ready',async()=>{await sql`select 1`.execute(db);return {status:'ok',version:'0.1.0-dev.1'};});
 await installAuth(app);
 await installModels(app);
+await installModelMigrations(app);
 const params={params:Type.Object({id:Id})};
 app.get('/api/v1/me',async req=>{const a=await authenticate(req);return {user:{id:a.principal.id,name:a.principal.name},tenant:a.tenants.find(x=>x.id===a.principal.tenantId),tenants:a.tenants,permissions:a.principal.permissions,csrfToken:a.csrf};});
 app.post('/api/v1/session/tenant',{schema:{body:Type.Object({tenantId:Id},{additionalProperties:false})}},async req=>{const a=await authenticate(req),tenant=(req.body as any).tenantId;if(!a.tenants.some(x=>x.id===tenant))throw new Problem(403,'TENANT_DENIED','Organization access is not permitted.');await db.updateTable('sessions').set({tenant_id:tenant,csrf:random()}).where('id_hash','=',a.sessionHash).execute();return {changed:true};});

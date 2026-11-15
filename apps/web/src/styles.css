@@ -87,7 +87,7 @@ p { margin-bottom: 12px; }
 .entity-header-top { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .eyebrow { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); font-weight: 650; margin-bottom: 9px; }
 .page-description { color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin-bottom: 0; }
-.header-actions { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
+.header-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; flex: 0 0 auto; }
 .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 24px; overflow: hidden; }
 .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--border); padding: 17px 20px; }
 .panel-heading h2 { font-size: 14px; }
@@ -522,3 +522,54 @@ p { margin-bottom: 12px; }
 .version-picker > label { flex: 1; min-width: 80px; }
 .version-picker input { width: 100%; }
 .version-picker .field-error { width: 100%; margin: 0; }
+
+/* Explicit bounded model migrations. Values remain in their own scroll regions. */
+.migration-context, .migration-definition, .migration-plan, .migration-preview, .migration-receipt-assets, .migration-receipt-plan { margin-bottom: 24px; }
+.migration-scope-grid { margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.migration-scope-grid dt { font-size: 11px; color: var(--text-secondary); margin-bottom: 7px; }
+.migration-scope-grid dd { font-size: 15px; font-weight: 600; margin: 0; overflow-wrap: anywhere; }
+.migration-definition > legend { font-size: 14px; font-weight: 600; padding: 0 8px; }
+.migration-section-actions { margin-top: 20px; display: flex; justify-content: flex-end; }
+.migration-plan-fields { border: 0; padding: 0; margin: 0; min-width: 0; }
+.migration-file-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.migration-plan-editor, .migration-plan-editor fieldset, .migration-plan-editor section { min-width: 0; }
+.migration-plan-editor { border: 0; padding: 0; }
+.migration-plan-editor .model-publication-actions { margin: 8px 0 0; justify-content: flex-start; }
+.migration-plan-editor .checkbox-field { align-items: flex-start; line-height: 1.7; margin: 0; }
+.migration-plan-editor .checkbox-field input { flex-shrink: 0; margin-top: 3px; }
+.migration-plan-editor > section > .detail-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.migration-plan-editor .detail-list dd { overflow-wrap: anywhere; }
+.migration-identity, .migration-receipt-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; margin-bottom: 24px; }
+.migration-identity > div, .migration-receipt-facts > div { min-width: 0; }
+.migration-asset { border-top: 1px solid var(--border); padding: 18px 0; min-width: 0; }
+.migration-asset:first-child { border-top: 0; }
+.migration-asset summary { min-height: 32px; padding: 8px 0; cursor: pointer; overflow-wrap: anywhere; font-size: 12px; }
+.migration-asset summary span { color: var(--text-secondary); margin-inline-start: 12px; }
+.migration-asset h3 { margin: 8px 0; font-size: 13px; overflow-wrap: anywhere; }
+.migration-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 12px; }
+.migration-values section { min-width: 0; }
+.migration-values .code-block { max-height: 400px; }
+.migration-hash { display: block; font-size: 10px; overflow-wrap: anywhere; margin-top: 5px; }
+.migration-approval { align-items: flex-start; line-height: 1.7; }
+.migration-approval input { flex-shrink: 0; margin-top: 4px; }
+@media (max-width: 767px) {
+  .migration-scope-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .migration-values, .migration-identity, .migration-receipt-facts { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .migration-plan-editor > section > .detail-list { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .migration-file-actions { width: 100%; }
+  .migration-file-actions > * { flex: 1; justify-content: center; }
+  .migration-plan .model-toolbar { flex-direction: column; align-items: stretch; }
+  .migration-plan-editor .connection-fields { padding: 10px; }
+  .migration-plan-editor .model-field { padding: 12px; }
+}
+
+.model-browser { margin-bottom: 20px; min-width: 0; }
+.model-search { display: flex; align-items: end; flex-wrap: wrap; gap: 10px; }
+.model-search .form-field { flex: 1; min-width: 160px; }
+.model-pager { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; margin-top: 12px; font-size: 12px; }
+.model-pager .form-field { width: 100px; }
+.model-pager .button { min-height: 36px; }
+.model-pager nav { display: flex; flex-wrap: wrap; gap: 8px; }
+.model-pager > [aria-live] { flex: 1; min-width: 140px; }
+.model-browser .supporting-text { margin-bottom: 0; }
+@media (max-width: 767px) { .model-search > .button { flex: 1; } .model-pager nav { width: 100%; } .model-pager nav > .button { flex: 1; } }

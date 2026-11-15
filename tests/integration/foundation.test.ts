@@ -35,7 +35,9 @@ test('source creation idempotency binds request and atomic audit; audit is immut
  await assert.rejects(()=>scope(A,steward,tx=>tx.deleteFrom('audit').where('id','=',audits[0].id).execute()));
 });
 test('restricted asset denied through direct detail and stale projection search',async()=>{
- const id=randomUUID(),name='hidden-canary-'+randomUUID();await scope(A,steward,tx=>tx.insertInto('assets').values({tenant_id:A,id,external_id:id,name,qualified_name:name,type:'dataset',observed_at:new Date(),visibility:'restricted',allowed_identities:JSON.stringify([steward])}).execute());
+ // One long unique token avoids fuzzy matching common UUID fragments from
+ // unrelated visible fixtures while still testing counts/facets for this canary.
+ const id=randomUUID(),name='hiddencanary'+randomUUID().replaceAll('-','');await scope(A,steward,tx=>tx.insertInto('assets').values({tenant_id:A,id,external_id:id,name,qualified_name:name,type:'dataset',observed_at:new Date(),visibility:'restricted',allowed_identities:JSON.stringify([steward])}).execute());
  await scope(A,steward,tx=>record(tx,{id:steward,name:'Harbor steward',tenantId:A,permissions:[]},'asset.observed',id,1,{name},randomUUID()));
  const indexResponse=await fetch((process.env.OPENSEARCH_URL??'http://opensearch:9200')+'/gc-assets-v1/_doc/'+id+'?refresh=true',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({tenantId:A,id,name,qualifiedName:name,type:'dataset',description:'',status:'active',version:1})});assert.equal(indexResponse.ok,true);
  const headers=await session(consumer);assert.equal((await fetch(base+'/api/v1/assets/'+id,{headers})).status,404);

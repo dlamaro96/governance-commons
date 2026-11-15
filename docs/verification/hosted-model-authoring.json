@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T16:38:01.910237+00:00",
+  "scope": "Hosted qualification of the merged initial model-authoring increment, before explicit migration execution",
+  "result": "PASS",
+  "pull_request": "https://github.com/dlamaro96/governance-commons/pull/4",
+  "head_commit": "2a6aff77d423a650b4fdcc6b034a5de9201787c2",
+  "merge_commit": "a2e9a5d71a9d869aaeef8065e41b0be295523224",
+  "ci_tested_merge_commit": "e7bb0d55eca635e4e3b09cb95323f5a5bc8bb6de",
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43735027282",
+  "safe_artifact_sha256": "587d99074bf7e46cff36021c53b255ba59ca3a1901390823c9cf5b3617a529c9",
+  "required_checks": {
+    "quality": "SUCCESS",
+    "secrets": "SUCCESS",
+    "behavior": "SUCCESS",
+    "required": "SUCCESS"
+  },
+  "behavior": {
+    "schema_version": 1,
+    "timestamp": "2026-11-15T16:26:34.633334+00:00",
+    "commit": "e7bb0d55eca635e4e3b09cb95323f5a5bc8bb6de",
+    "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43735027282",
+    "profile": "core / GitHub-hosted Ubuntu 24.04 / synthetic PostgreSQL",
+    "steps": {
+      "bootstrap": "success",
+      "services": "success",
+      "object_store": "success",
+      "seed": "success",
+      "connectors": "success",
+      "security": "success",
+      "browser": "success"
+    },
+    "outcome": "PASS",
+    "tests": [
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 17,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 7306
+      },
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 101,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1893
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 30,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 12582
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 74,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1709
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 77,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 17098
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 227,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1919
+      }
+    ],
+    "screenshots": [
+      "catalog-en-light-390.png",
+      "catalog-en-light-768.png",
+      "catalog-en-light-1024.png",
+      "catalog-en-light-1280.png",
+      "catalog-en-light-1440.png",
+      "catalog-en-dark-1440.png",
+      "catalog-history.png",
+      "catalog-ar-dark-390.png",
+      "catalog-ar-dark-768.png",
+      "catalog-ar-dark-1440.png"
+    ],
+    "limitations": [
+      "No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
+      "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification."
+    ]
+  },
+  "limitations": [
+    "This is hosted evidence imported from the executed GitHub job, not a new local test run.",
+    "Six browser journeys cover the initial model increment; the later migration/pagination implementation requires its own execution evidence.",
+    "No independent human review, complete MOD/AT-MOD acceptance, enterprise profile or release qualification is claimed."
+  ]
+}

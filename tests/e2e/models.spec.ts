@@ -23,7 +23,7 @@ async function accessible(page: Page) {
   const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
   expect(result.violations).toEqual([]);
 }
-async function capture(page: Page, name: string) {
+async function capture(page: Page, name: string, prefix = 'm2-model') {
   mkdirSync('docs/verification/screenshots', { recursive: true });
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 960 });
@@ -34,7 +34,7 @@ async function capture(page: Page, name: string) {
       document.querySelector('.dialog-content')?.scrollTo({ top: 0, behavior: 'instant' });
     }, name);
     await accessible(page);
-    await page.screenshot({ path: `docs/verification/screenshots/m2-model-${name}-${width}.png`, fullPage: false });
+    await page.screenshot({ path: `docs/verification/screenshots/${prefix}-${name}-${width}.png`, fullPage: false });
   }
   await page.setViewportSize({ width: 1440, height: 960 });
 }
@@ -78,7 +78,7 @@ test('MOD: visual model, import/export, real typed assets, immutable versions an
   test.setTimeout(180_000);
   await login(page);
   const inventory = await (await page.request.get('/api/v1/models')).json();
-  console.info(`Browser model inventory: ${inventory.items.length} of the API's 100-model bound`);
+  console.info(`Browser model first page: ${inventory.items.length} models; another page: ${!!inventory.nextCursor}; no total inferred`);
   const modelId = `browser_model_${Date.now()}`;
   await page.goto('/models');
   await page.getByRole('link', { name: 'Create model', exact: true }).first().click();
@@ -124,6 +124,23 @@ test('MOD: visual model, import/export, real typed assets, immutable versions an
   expect(JSON.parse(readFileSync(exportPath, 'utf8'))).toEqual(definition);
   await capture(page, 'version-en');
 
+  // Two explicit fixtures make paging deterministic even in a fresh CI database.
+  const companion = { formatVersion: 1, id: `${modelId}_page`, version: 1, attributes: {} };
+  expect((await page.request.post('/api/v1/models', { headers: await headers(page), data: { definition: companion } })).status()).toBe(201);
+  await page.goto('/models');
+  await page.getByLabel('Search model identifiers', { exact: true }).fill(modelId);
+  await page.getByRole('button', { name: 'Search models', exact: true }).click();
+  await page.getByRole('combobox', { name: 'Rows per page', exact: true }).selectOption('1');
+  await expect(page.getByRole('link', { name: modelId, exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Previous page', exact: true })).toBeDisabled();
+  await page.getByRole('button', { name: 'Next page', exact: true }).click();
+  await expect(page.getByRole('link', { name: companion.id, exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: modelId, exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Next page', exact: true })).toBeDisabled();
+  await page.getByRole('button', { name: 'Previous page', exact: true }).click();
+  await expect(page.getByRole('link', { name: modelId, exact: true })).toBeVisible();
+  await capture(page, 'model-list-en', 'm2-migration');
+
   // Import goes through the raw-text parser; duplicate keys cannot disappear in JSON.parse.
   await page.goto('/models/new/definition');
   await page.getByLabel('Import JSON file', { exact: true }).setInputFiles({ name: 'duplicate.json', mimeType: 'application/json', buffer: Buffer.from('{"formatVersion":1,"id":"first","id":"second","version":1,"attributes":{}}') });
@@ -138,7 +155,20 @@ test('MOD: visual model, import/export, real typed assets, immutable versions an
   await page.goto(`/catalog/${assetId}`);
   await page.getByRole('button', { name: 'Assign a model', exact: true }).click();
   const form = page.getByRole('dialog', { name: 'Edit attributes', exact: true });
+  await form.getByLabel('Search model identifiers', { exact: true }).fill(modelId);
+  await form.getByRole('button', { name: 'Search models', exact: true }).click();
+  await form.getByRole('combobox', { name: 'Rows per page', exact: true }).selectOption('1');
   await form.getByRole('combobox', { name: 'Choose a model', exact: true }).selectOption(modelId);
+  await form.getByRole('button', { name: 'Next page', exact: true }).click();
+  await expect(form.getByRole('combobox', { name: 'Choose a model', exact: true })).toHaveValue(modelId);
+  await expect(form.getByRole('option', { name: companion.id, exact: true })).toHaveCount(1);
+  await form.getByLabel('Search model identifiers', { exact: true }).fill('no_matching_model_for_this_fixture');
+  await form.getByRole('button', { name: 'Search models', exact: true }).click();
+  await expect(form.getByRole('button', { name: 'Next page', exact: true })).toBeDisabled();
+  await expect(form.getByRole('combobox', { name: 'Choose a model', exact: true })).toHaveValue(modelId);
+  await expect(form.locator('.model-pager [aria-live]')).toContainText('Models on this page: 0');
+  await expect(form.getByRole('textbox', { name: 'Approved budget (amount)', exact: true })).toBeVisible();
+  await capture(page, 'model-chooser-en', 'm2-migration');
   await form.getByRole('textbox', { name: 'Approved budget (amount)', exact: true }).fill('not-a-decimal');
   const invalid = page.waitForResponse(response => response.url().endsWith(`/assets/${assetId}/attributes`) && response.request().method() === 'PUT');
   await form.getByRole('button', { name: 'Save changes', exact: true }).click();
@@ -213,7 +243,7 @@ test('MOD: visual model, import/export, real typed assets, immutable versions an
   await page.getByRole('link', { name: 'Create next version', exact: true }).click();
   await page.getByRole('button', { name: 'Remove field amount', exact: true }).click();
   await page.getByRole('button', { name: 'Preview impact', exact: true }).click();
-  await expect(page.getByText('Publication blocked. These changes require an explicit migration, which is not yet supported in this development increment.', { exact: true })).toBeVisible();
+  await expect(page.getByText('Publication blocked. These changes require an explicit migration. Open the migration editor to transform existing values.', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Publish model', exact: true })).toBeDisabled();
   expect((await (await page.request.get(`/api/v1/models/${modelId}`)).json()).model.currentVersion).toBe(2);
   await page.setViewportSize({ width: 390, height: 960 });
@@ -237,6 +267,9 @@ test('MOD: consumer cannot publish models and tenant definitions remain isolated
   await consumerPage.goto('/models');
   await expect(consumerPage.getByRole('heading', { name: 'Operating models', exact: true })).toBeVisible();
   await expect(consumerPage.getByRole('link', { name: 'Create model', exact: true })).toHaveCount(0);
+  await consumerPage.getByLabel('Search model identifiers', { exact: true }).fill(modelId);
+  await consumerPage.getByRole('button', { name: 'Search models', exact: true }).click();
+  await expect(consumerPage.getByRole('link', { name: modelId, exact: true })).toBeVisible();
   await consumerPage.goto('/models/new/definition');
   await expect(consumerPage.getByRole('heading', { name: 'You do not have access to this view', exact: true })).toBeVisible();
   expect((await consumerPage.request.post('/api/v1/models', { headers: await headers(consumerPage), data: { definition: { ...definition, id: `${modelId}_denied` } } })).status()).toBe(403);
@@ -244,6 +277,11 @@ test('MOD: consumer cannot publish models and tenant definitions remain isolated
   const summit = await browser.newContext(); const summitPage = await summit.newPage();
   await login(summitPage, 'summit');
   expect((await summitPage.request.get(`/api/v1/models/${modelId}`)).status()).toBe(404);
+  await summitPage.goto('/models');
+  await summitPage.getByLabel('Search model identifiers', { exact: true }).fill(modelId);
+  await summitPage.getByRole('button', { name: 'Search models', exact: true }).click();
+  await expect(summitPage.getByRole('link', { name: modelId, exact: true })).toHaveCount(0);
+  await expect(summitPage.getByRole('heading', { name: 'No matching models', exact: true })).toBeVisible();
   await summitPage.goto(`/models/${modelId}`);
   await expect(summitPage.getByRole('heading', { name: 'This item is not available', exact: true })).toBeVisible();
   await summit.close();

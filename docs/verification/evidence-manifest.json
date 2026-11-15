@@ -150,6 +150,34 @@
         "verified_files": 45,
         "evidence_sha256": "ac67e3deb679f5076d8895f644682d0a589637c8edbffa004cebe10c843294cc"
       }
+    },
+    {
+      "path": "docs/verification/hosted-model-authoring.json",
+      "scope": "hosted-model-authoring",
+      "source_binding": {
+        "implementation_commit": "2a6aff77d423a650b4fdcc6b034a5de9201787c2",
+        "ci_tested_merge_commit": "e7bb0d55eca635e4e3b09cb95323f5a5bc8bb6de",
+        "method": "GitHub required-check readback and downloaded allowlisted behavior summary from run43735027282; this record preserves the tested pull-request merge revision."
+      }
+    },
+    {
+      "path": "docs/verification/m2-model-migrations.json",
+      "scope": "historical-model-migration-service",
+      "source_binding": {
+        "method": "Historical source-mounted development execution preserves its original file hashes and timestamps. It predates receipt integrity and signed pagination; these historical sources are not represented as the final publication commit."
+      }
+    },
+    {
+      "path": "docs/verification/m2-migration-api.json",
+      "scope": "model-migration-api-storage-pagination"
+    },
+    {
+      "path": "docs/verification/m2-migration-ui.json",
+      "scope": "model-migration-ui"
+    },
+    {
+      "path": "docs/verification/model-migration-upgrade.json",
+      "scope": "model-migration-upgrade"
     }
   ],
   "limitations": [

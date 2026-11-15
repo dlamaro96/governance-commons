@@ -16,5 +16,6 @@ export default defineConfig({
     { name: 'vertical-slice', testMatch: /vertical-slice\.spec\.ts/ },
     { name: 'accessibility', testMatch: /ui-accessibility\.spec\.ts/, dependencies: ['vertical-slice'] },
     { name: 'models', testMatch: /models\.spec\.ts/, dependencies: ['vertical-slice'] },
+    { name: 'model-migrations', testMatch: /model-migrations\.spec\.ts/, dependencies: ['models'] },
   ],
 });

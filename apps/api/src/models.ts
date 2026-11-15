@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import type {FastifyInstance, FastifyRequest} from 'fastify';
+import type {FastifyInstance} from 'fastify';
 import {Type} from '@sinclair/typebox';
 import {scope} from '../../../packages/db/src/index.ts';
 import {Problem, requirePermission} from '../../../packages/authz/src/index.ts';
@@ -8,24 +8,16 @@ import {parseModelFile} from '../../../packages/domain/src/model.ts';
 import {listModels,getModel,createModel,previewModel,publishModel,getAssetModel,assignAssetModel} from '../../../packages/domain/src/model-service.ts';
 import {authenticate} from './security.ts';
 import {record,once,assetView} from './repository.ts';
+import {ModelId,modelParams,version} from './model-http.ts';
 
-const ModelId=Type.String({pattern:'^[A-Za-z_][A-Za-z0-9_.-]{0,63}$'});
-const modelParams=Type.Object({id:ModelId},{additionalProperties:false});
 const definitionBody=Type.Object({definition:Type.Unknown()},{additionalProperties:false});
 const hooks={record,assetSnapshot:assetView};
-function version(req:FastifyRequest):number {
- const value=String(req.headers['if-match']??'');
- if(!/^(?:[1-9][0-9]*|"[1-9][0-9]*")$/.test(value))throw new Problem(428,'VERSION_REQUIRED','Send the current version using If-Match.');
- const parsed=Number(value.replaceAll('"',''));
- if(!Number.isSafeInteger(parsed)||parsed>2_147_483_646)throw new Problem(400,'VERSION_INVALID','The version is outside the supported range.');
- return parsed;
-}
 
 /** Every ingress delegates typed validation and mutations to one application service. */
 export async function installModels(app:FastifyInstance):Promise<void> {
- app.get('/api/v1/models',async req=>{
+ app.get('/api/v1/models',{schema:{querystring:Type.Object({limit:Type.Optional(Type.Integer({minimum:1,maximum:100})),cursor:Type.Optional(Type.String({maxLength:1024})),q:Type.Optional(Type.String({maxLength:64}))},{additionalProperties:false})}},async req=>{
   const {principal:p}=await authenticate(req);
-  return scope(p.tenantId,p.id,tx=>listModels(tx,p));
+  return scope(p.tenantId,p.id,tx=>listModels(tx,p,req.query as {limit?:number;cursor?:string;q?:string}));
  });
  app.get('/api/v1/models/:id',{schema:{params:modelParams}},async req=>{
   const {principal:p}=await authenticate(req);
