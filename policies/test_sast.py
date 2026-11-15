@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest import mock
@@ -280,6 +281,46 @@ class CoverageAndSnapshotTests(unittest.TestCase):
             self.assertEqual(decoded['tool']['extensions'][0]['locations'][0]['uri'], 'file:///codeql/qlpack.yml')
             self.assertEqual(decoded['tool']['extensions'][0]['locations'][1]['uri'], '%2Fcodeql%2Fqlpack.yml')
             self.assertEqual(decoded['message'], '/codeql/query.ql')
+
+
+class FailureDiagnosticTests(unittest.TestCase):
+    def test_only_fixed_markers_sizes_and_hashes_are_published(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary); stdout = root / 'out'; stderr = root / 'err'
+            private = b'SYNTHETIC_PRIVATE_VALUE /private/project/source.ts --credential=example'
+            stdout.write_bytes(b'Initializing database ' + private)
+            stderr.write_bytes(b'A fatal error occurred: Permission denied ' + private)
+            result = sast.scanner_failure_diagnostics(stdout, stderr, 1024)
+            self.assertEqual(result['streams']['stdout']['markers'], ['database_initializing'])
+            self.assertEqual(result['streams']['stderr']['markers'], ['fatal_error', 'permission_denied'])
+            self.assertEqual(result['streams']['stderr']['sha256'], sast.file_hash(stderr))
+            self.assertEqual(result['streams']['stderr']['bytes'], stderr.stat().st_size)
+            rendered = json.dumps(result)
+            for value in ('SYNTHETIC_PRIVATE_VALUE', '/private/', 'source.ts', 'credential', 'Permission denied'):
+                self.assertNotIn(value, rendered)
+            stderr.write_bytes(b'x' * 1025)
+            self.assertEqual(sast.scanner_failure_diagnostics(stdout, stderr, 1024)['streams']['stderr'],
+                             {'bytes': 1025, 'available': False, 'reason': 'diagnostic-log-limit'})
+            stderr.write_bytes(b'Initializing database' + b'x' * 40000 + b'Permission denied' + b'x' * 40000 + b'A fatal error occurred')
+            bounded = sast.scanner_failure_diagnostics(stdout, stderr, 100000)['streams']['stderr']
+            self.assertEqual(bounded['markers'], ['database_initializing', 'fatal_error'])
+            self.assertEqual(bounded['sha256'], sast.file_hash(stderr))
+            stderr.unlink(); stderr.symlink_to(stdout)
+            self.assertEqual(sast.scanner_failure_diagnostics(stdout, stderr, 1024)['streams']['stderr'],
+                             {'available': False, 'reason': 'diagnostic-unavailable'})
+
+    def test_real_failed_command_retains_rejection_and_success_has_no_diagnostic(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary); runner = sast.Runner(root, POLICY)
+            with self.assertRaisesRegex(sast.Rejected, 'scanner-command-failed:fixture'):
+                runner.command('fixture', [sys.executable, '-c',
+                    "import sys; sys.stderr.write('A fatal error occurred: synthetic-private-message'); sys.exit(2)"], root)
+            self.assertEqual(runner.steps[-1]['exitCode'], 2)
+            self.assertEqual(runner.failure_diagnostics['streams']['stderr']['markers'], ['fatal_error'])
+            self.assertNotIn('synthetic-private-message', json.dumps(runner.failure_diagnostics))
+            runner.command('success', [sys.executable, '-c', 'pass'], root)
+            self.assertIsNone(runner.failure_diagnostics)
+            self.assertEqual(runner.steps[-1]['exitCode'], 0)
 
 
 class WorkflowTests(unittest.TestCase):

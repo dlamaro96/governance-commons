@@ -1,0 +1,65 @@
+{
+  "checks": [
+    {
+      "check": "policy",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "policies",
+        "-p",
+        "test_sast.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "logSha256": "7ac27ea411db9e284b19197310c82ba055aef145f89a09aef32283e4d00e057f",
+      "startedAt": "2026-11-15T22:32:39.278494+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "d6ae24d9f2ff775b43201464cf9f317bb6c06477ba85512d3680fe6288ad9b08",
+      "startedAt": "2026-11-15T22:32:40.078303+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-15T22:32:50.342889+00:00",
+      "status": "PASS"
+    }
+  ],
+  "dirty": true,
+  "head": "94e21a1afae84b81f800a686b808349703e73374",
+  "limitations": [
+    "Focused policy tooling tests, publication and whitespace only.",
+    "No modified scanner execution, application tests, hosted execution or analysis read-back.",
+    "Unchanged scanner policy, configuration, workflow and triage hashes recorded for comparison."
+  ],
+  "policyTests": 30,
+  "python": "3.14.5",
+  "scanExecution": "NOT_RUN_FOR_DIAGNOSTIC_PATCH",
+  "schemaVersion": 1,
+  "sourceSha256": {
+    ".github/codeql/codeql-config.yml": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+    ".github/workflows/security.yml": "87704b640679588d83b0c4d76a4fe35e07e74ee60f821da2f926f3ed10fa89ed",
+    "policies/sast-policy.json": "920038aebeb759097d57f7712b3269ebd29b9e3ff488164ded57a0d772cda581",
+    "policies/sast-triage.json": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+    "policies/sast.py": "48fd34e544390fa602d12ae4ce4cd1ba57e6b60872056a6a018830e8b507a4ae",
+    "policies/test_sast.py": "c559a0befb7f02fe7d2dd58070f77bc9b8837e569b7874a11f00d6c4bf36e258"
+  }
+}

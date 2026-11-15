@@ -1,5 +1,9 @@
 # Local source scanning qualification
 
+This historical record covers the isolated local runs below. The later integrated
+hosted attempt and its separate failure are recorded in
+`SAST_HOSTED_QUALIFICATION.md`; neither record overrides the other.
+
 Status: the final local source analysis, findings gate and artifact-hygiene checks
 **PASS** on the isolated `codex/sast-qualification`
 worktree based on `8d9c9c701d1f0ea49df13671088cbc8b1e294832`. Exact dirty

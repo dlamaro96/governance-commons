@@ -381,6 +381,16 @@
         "verified_files": 123,
         "evidence_sha256": "7b43f2ee5ee0390867ce0db4b294a74f1b8619b4eb9171fb837f75adf9a3adf5"
       }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-1/record.json",
+      "scope": "First integrated hosted source-security failure, separately passing behavior and bounded extraction diagnostics",
+      "source_binding": {
+        "implementation_commit": "94e21a1afae84b81f800a686b808349703e73374",
+        "ci_tested_merge_commit": "1bb4637def199c12226d1d337dcd2eece61ee57e",
+        "evidence_sha256": "1c255703f39d67912e057c0aa854d74a2280b6f3f8f5148c1b71541f4a1a85f4",
+        "method": "Original sanitized hosted manifests and summaries preserved byte-identically; public job status readback. Failed JavaScript extraction remains NOT_PASSED; no complete SAST qualification inferred."
+      }
     }
   ],
   "limitations": [

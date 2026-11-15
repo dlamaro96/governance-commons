@@ -3,9 +3,12 @@
 Status: the isolated Linux arm64 qualification has executed all three source
 analyses and the real vulnerable-fixture rejection control. Their exact source,
 findings and artifact-hygiene results are recorded separately in
-`SAST_QUALIFICATION.md`; this is **not a full security/release pass**. Hosted
-execution, ingestion read-back, fork behavior and the integrated root revision
-still need their own evidence. No human finding disposition is inferred.
+`SAST_QUALIFICATION.md`; this is **not a full security/release pass**. The first
+hosted integrated attempt passed Python and Actions but failed JavaScript during
+extraction; findings for that language were not evaluated. See
+`SAST_HOSTED_QUALIFICATION.md` for exact run evidence. Complete hosted analysis,
+ingestion read-back and fork behavior remain open. No human finding disposition
+is inferred.
 This implements the bounded source-scanning part of issue 11 and OSS-006/007;
 SQL/RLS, dependency vulnerabilities, images, general IaC, ASVS and independent
 review remain separate required work.
@@ -144,6 +147,14 @@ public directory with 7-day retention, including failed-attempt summaries. It
 never uploads a database or debug artifact. Its upload status record separately
 identifies upload+processing outcome and the exact Actions commit. An additional
 analysis API read-back is required for qualification.
+
+A failed scanner command may additionally publish fixed allowlisted diagnostic
+markers, byte counts and SHA256 values for its bounded stdout/stderr files.
+Markers inspect at most the first and last 32 KiB; they are hints, not a cause
+determination, and do not change any gate. No log text, source value, command
+line, path or environment value is published. Successful commands add no failure
+diagnostic. Private full logs retain the details needed for an authorized local
+investigation.
 
 `.github/workflows/security.yml` uses separate jobs for each language, no path
 filters, read-only contents, `security-events: write` only where ingestion needs

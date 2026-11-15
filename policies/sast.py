@@ -414,6 +414,65 @@ def publish_sarif(raw, destination, replacements):
     write_json(destination, scrub(raw))
 
 
+# Diagnostic hints only: fixed public labels, never a log excerpt, path or source value.
+# Their presence cannot change extraction, coverage, findings or upload outcomes.
+FAILURE_MARKERS = {
+    'database_initializing': b'initializing database',
+    'build_command_started': b'running build command',
+    'extractor_command_started': b'running command',
+    'database_finalizing': b'finalizing database',
+    'trap_import_started': b'running trap import',
+    'fatal_error': b'a fatal error occurred',
+    'spawn_abnormal': b'spawned process exited abnormally',
+    'permission_denied': b'permission denied',
+    'operation_not_permitted': b'operation not permitted',
+    'missing_file': b'no such file or directory',
+    'executable_not_found': b'executable file not found',
+    'cannot_start_process': b'cannot run program',
+    'no_source_code': b'no source code',
+    'environment_required': b'must be set',
+    'unknown_option': b'unknown option',
+    'unrecognized_option': b'unrecognized option',
+    'invalid_option': b'invalid option',
+    'out_of_memory': b'outofmemoryerror',
+    'heap_limit': b'heap limit',
+    'insufficient_memory': b'not enough memory',
+    'disk_full': b'no space left on device',
+    'execution_format': b'exec format error',
+    'shared_library_missing': b'error while loading shared libraries',
+    'unsatisfied_native_link': b'unsatisfiedlinkerror',
+    'null_pointer': b'nullpointerexception',
+    'initialization_error': b'exceptionininitializererror',
+    'class_not_found': b'classnotfoundexception',
+    'illegal_argument': b'illegalargumentexception',
+    'syntax_error': b'syntax error',
+    'connection_refused': b'connection refused',
+    'name_resolution': b'name or service not known',
+}
+
+
+def scanner_failure_diagnostics(stdout, stderr, max_bytes):
+    result = {'schemaVersion': 1, 'scope': 'FIXED_MARKERS_ONLY_NOT_A_CAUSE_DETERMINATION', 'streams': {}}
+    for label, path in [('stdout', stdout), ('stderr', stderr)]:
+        try:
+            require(not path.is_symlink(), 'diagnostic-symlink')
+            size = path.stat().st_size
+            if size > max_bytes:
+                result['streams'][label] = {'bytes': size, 'available': False, 'reason': 'diagnostic-log-limit'}
+                continue
+            with path.open('rb') as stream:
+                first = stream.read(32768)
+                stream.seek(max(len(first), size - 32768))
+                last = stream.read(32768)
+            sample = first.lower() + b'\n' + last.lower()
+            result['streams'][label] = {'bytes': size, 'sha256': file_hash(path), 'available': True,
+                'sample': 'HEAD_AND_TAIL_UP_TO_64_KIB',
+                'markers': sorted(marker for marker, needle in FAILURE_MARKERS.items() if needle in sample)}
+        except (OSError, Rejected):
+            result['streams'][label] = {'available': False, 'reason': 'diagnostic-unavailable'}
+    return result
+
+
 def container_command(container, args, cwd, name):
     platform_name = 'linux/arm64' if container['platform'] == 'linux-arm64' else 'linux/amd64'
     output, toolchain = container['output'], container['toolchain']
@@ -434,9 +493,11 @@ class Runner:
         self.output, self.policy, self.container = output, policy, container
         self.deadline = time.monotonic() + policy['languageTimeoutSeconds']
         self.steps = []
+        self.failure_diagnostics = None
 
     def command(self, name, args, cwd):
         started = time.monotonic()
+        self.failure_diagnostics = None
         capacity(self.output, self.policy['diskFloorGiB'] * GIB)
         log = self.output / f'{name}.log'
         stdout = self.output / f'{name}.stdout'
@@ -459,6 +520,8 @@ class Runner:
                 require(time.monotonic() < self.deadline, 'language-timeout')
                 require(log.stat().st_size + stdout.stat().st_size <= self.policy['maxReportBytes'], 'scanner-log-limit')
                 self.steps.append({'step': name, 'exitCode': process.returncode, 'durationSeconds': round(time.monotonic() - started, 3)})
+                if process.returncode != 0:
+                    self.failure_diagnostics = scanner_failure_diagnostics(stdout, log, self.policy['maxReportBytes'])
                 require(process.returncode == 0, f'scanner-command-failed:{name}')
             finally:
                 if process.poll() is None:
@@ -546,6 +609,8 @@ def scan_language(language, output, source, manifest, toolchain, policy, decisio
         summary['publishedSarifSha256'] = file_hash(report)
     except (Rejected, OSError, ValueError, KeyError, TypeError) as error:
         summary['failure'] = str(error) if isinstance(error, Rejected) else f'invalid-scanner-output:{type(error).__name__}'
+        if runner.failure_diagnostics is not None:
+            summary['failureDiagnostics'] = runner.failure_diagnostics
         if isinstance(error, Rejected) and str(error) == 'scanner-cancelled':
             raise
     finally:
