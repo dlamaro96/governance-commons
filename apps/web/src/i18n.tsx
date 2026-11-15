@@ -3,9 +3,10 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import { modelEn, modelAr } from './models/messages';
 import { migrationEn, migrationAr } from './models/migrationMessages';
 import { planEn, planAr } from './models/planMessages';
+import { assetTypeEn, assetTypeAr } from './assetTypes/messages';
 
 const en = {
-  ...modelEn, ...migrationEn, ...planEn,
+  ...modelEn, ...migrationEn, ...planEn, ...assetTypeEn,
   product: 'Governance Commons', tagline: 'A shared understanding of your data.',
   home: 'Overview', catalog: 'Data catalog', sources: 'Sources & scans', audit: 'Audit history',
   discover: 'Discover', operate: 'Operate', workspace: 'Workspace', organization: 'Organisation',
@@ -102,7 +103,7 @@ const en = {
 } as const;
 export type MessageKey = keyof typeof en;
 const ar: Record<MessageKey, string> = {
-  ...modelAr, ...migrationAr, ...planAr,
+  ...modelAr, ...migrationAr, ...planAr, ...assetTypeAr,
   product: 'Governance Commons', tagline: 'فهم مشترك لبياناتك.',
   home: 'نظرة عامة', catalog: 'كتالوج البيانات', sources: 'المصادر وعمليات المسح', audit: 'سجل التدقيق',
   discover: 'اكتشف', operate: 'الإدارة', workspace: 'مساحة العمل', organization: 'المؤسسة',

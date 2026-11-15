@@ -93,6 +93,7 @@ async function sourceDefinitions(tx: Tx, principal: Principal, modelId: string, 
 async function prepare(tx: Tx, principal: Principal, id: string, expectedVersion: number, input: MigrationRequest): Promise<Prepared> {
   await persistence.authorize(tx, principal, writePermissions);
   const current = await persistence.head(tx, principal, id, true);
+  if (current.type_id) throw new Problem(422, 'ASSET_TYPE_REQUIRED', 'Authored asset types require their complete type migration workflow.');
   persistence.assertHead(current, expectedVersion);
   const head = persistence.storedDefinition(await persistence.versionRow(tx, principal, id, current.current_version));
   let proposed: ModelDefinition;
@@ -159,6 +160,7 @@ export async function getMigrationContext(tx: Tx, principal: Principal, id: stri
   await persistence.lockTenantModels(tx, principal);
   await persistence.authorize(tx, principal, writePermissions);
   const current = await persistence.head(tx, principal, id, true);
+  if (current.type_id) throw new Problem(422, 'ASSET_TYPE_REQUIRED', 'Authored asset types require their complete type migration workflow.');
   let rows: Row[];
   try { rows = await persistence.modelCohort(tx, principal, id); }
   catch (error) {

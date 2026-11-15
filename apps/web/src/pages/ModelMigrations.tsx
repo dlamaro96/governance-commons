@@ -13,6 +13,7 @@ import type { ModelPreview, PublishedModel } from '../models/contracts';
 import { FieldEditor } from '../models/SchemaEditor';
 import { ModelError } from '../models/ModelFeedback';
 import { MigrationPlanEditor } from '../models/MigrationPlanEditor';
+import { AuthoredTypeNotice } from './Models';
 
 interface MigrationContext { modelId: string; currentVersion: number; sourceVersions: number[]; assetCount: number }
 function exportJson(value: unknown, filename: string) {
@@ -25,6 +26,7 @@ export function ModelMigrationPage({ id }: { id: string }) {
   const model = useResource<{ model: PublishedModel }>(`/models/${encodeURIComponent(id)}`);
   if (model.error) return <><BackModel id={id}/><RequestError error={model.error} retry={model.reload}/></>;
   if (!model.data) return <LoadingState label={t('loading')}/>;
+  if (model.data.model.typeId) return <><BackModel id={id}/><AuthoredTypeNotice id={id}/></>;
   return <MigrationWorkbench key={id} initial={model.data.model}/>;
 }
 export function MigrationWorkbench({ initial, initialDefinition, onBack }: { initial: PublishedModel; initialDefinition?: ModelDefinition; onBack?: (definition: ModelDefinition) => void }) {

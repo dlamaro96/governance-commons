@@ -573,3 +573,48 @@ p { margin-bottom: 12px; }
 .model-pager > [aria-live] { flex: 1; min-width: 140px; }
 .model-browser .supporting-text { margin-bottom: 0; }
 @media (max-width: 767px) { .model-search > .button { flex: 1; } .model-pager nav { width: 100%; } .model-pager nav > .button { flex: 1; } }
+
+/* Authored asset types: exact pins, inherited evidence and bounded lifecycle rules. */
+.asset-type-definition, .asset-type-section, .asset-type-editor { min-width: 0; }
+.asset-type-section { border-top: 1px solid var(--border); padding-top: 24px; margin-top: 24px; }
+.asset-type-section h2 { font-size: 16px; margin: 0 0 10px; }
+.asset-type-section h3, .lifecycle-readout h3 { font-size: 13px; margin: 18px 0 10px; }
+.asset-type-parent-browser { border: 1px solid var(--border); border-radius: 5px; margin: 14px 0; }
+.asset-type-parent-browser > summary, .asset-type-authored > summary { cursor: pointer; padding: 16px; font-size: 13px; font-weight: 600; }
+.asset-type-parent-search { padding: 0 16px 16px; }
+.asset-type-parent-add { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+.asset-type-parent-add > .form-field { flex: 1; min-width: 160px; }
+.asset-type-parent { border: 1px solid var(--border); border-radius: 5px; padding: 16px; margin: 12px 0; }
+.asset-type-parent-heading { display: grid; grid-template-columns: minmax(0, 1fr) minmax(110px, 180px) 32px; align-items: center; gap: 12px; margin-bottom: 12px; }
+.asset-type-parent > details > summary, .lifecycle-rule-detail > summary { min-height: 32px; cursor: pointer; font-size: 12px; padding: 8px 0; }
+.asset-type-parent-fields { list-style: none; padding: 0; margin: 8px 0; }
+.asset-type-parent-fields > li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid var(--border); padding: 8px 0; font-size: 12px; overflow-wrap: anywhere; }
+.asset-type-overrides { border: 0; margin: 22px 0 0; padding: 0; min-width: 0; }
+.asset-type-overrides legend { font-size: 13px; font-weight: 600; }
+.asset-type-overrides .checkbox-field { margin: 12px 0; align-items: start; overflow-wrap: anywhere; }
+.asset-type-overrides input { flex-shrink: 0; }
+.lifecycle-editor { margin-top: 20px; }
+.lifecycle-transition-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 32px; align-items: end; gap: 12px; margin: 12px 0; }
+.lifecycle-transition-row > button { margin-bottom: 4px; }
+.lifecycle-states { display: flex; flex-wrap: wrap; gap: 8px; }
+.lifecycle-states .status-badge { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+.lifecycle-readout, .lifecycle-rule-detail { font-size: 13px; overflow-wrap: anywhere; }
+.lifecycle-readout li, .lifecycle-rule-detail li { padding: 5px 0; }
+[dir="rtl"] .transition-arrow { display: inline-block; transform: scaleX(-1); }
+.asset-type-pin-list { padding: 0; list-style: none; font-size: 12px; }
+.asset-type-pin-list li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+.asset-type-pin-list a { min-width: 0; }
+.asset-type-pin-list span { color: var(--text-secondary); }
+.asset-type-approval, .asset-type-preview { margin-top: 24px; }
+.asset-lifecycle .attribute-model-pin { margin-bottom: 20px; }
+.lifecycle-transition-form { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin-top: 20px; }
+.lifecycle-transition-form > .form-field { flex: 1; min-width: 150px; }
+.lifecycle-transition-form > p { width: 100%; margin: 0; }
+@media (max-width: 767px) {
+  .asset-type-parent-heading { grid-template-columns: minmax(0, 1fr) 32px; }
+  .asset-type-parent-heading > a { grid-column: 1 / -1; }
+  .asset-type-parent-heading .version-picker { min-width: 0; }
+  .asset-type-parent-add > .button { flex: 1; }
+  .lifecycle-transition-row { gap: 8px; }
+  .lifecycle-transition-form > button { flex: 1; }
+}

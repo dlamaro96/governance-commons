@@ -5,7 +5,7 @@ import {scope} from '../../../packages/db/src/index.ts';
 import {Problem, requirePermission} from '../../../packages/authz/src/index.ts';
 import {Id} from '../../../packages/contracts/src/index.ts';
 import {parseModelFile} from '../../../packages/domain/src/model.ts';
-import {listModels,getModel,createModel,previewModel,publishModel,getAssetModel,assignAssetModel} from '../../../packages/domain/src/model-service.ts';
+import {listModels,getModel,createModel,previewModel,publishModel,getAssetModel,assignAssetModel,modelPersistence} from '../../../packages/domain/src/model-service.ts';
 import {authenticate} from './security.ts';
 import {record,once,assetView} from './repository.ts';
 import {ModelId,modelParams,version} from './model-http.ts';
@@ -36,7 +36,11 @@ export async function installModels(app:FastifyInstance):Promise<void> {
  app.post('/api/v1/models',{bodyLimit:1_048_576,schema:{body:definitionBody}},async(req,reply)=>{
   const {principal:p}=await authenticate(req);requirePermission(p,'models:write');requirePermission(p,'models:read');
   const body=req.body as {definition:unknown};
-  const result=await scope(p.tenantId,p.id,tx=>once(tx,p,'model.create',req.headers['idempotency-key'],body,()=>createModel(tx,p,req.id,body.definition,hooks)));
+  const result=await scope(p.tenantId,p.id,async tx=>{
+   const result=await once(tx,p,'model.create',req.headers['idempotency-key'],body,()=>createModel(tx,p,req.id,body.definition,hooks));
+   await modelPersistence.authorize(tx,p,['models:read','models:write']);
+   return result;
+  });
   reply.code(201);return result;
  });
  app.post('/api/v1/models/:id/previews',{bodyLimit:1_048_576,schema:{params:modelParams,body:definitionBody}},async req=>{
@@ -46,7 +50,11 @@ export async function installModels(app:FastifyInstance):Promise<void> {
  app.post('/api/v1/models/:id/versions',{bodyLimit:1_048_576,schema:{params:modelParams,body:Type.Object({definition:Type.Unknown(),previewDigest:Type.String({pattern:'^[a-f0-9]{64}$'})},{additionalProperties:false})}},async(req,reply)=>{
   const {principal:p}=await authenticate(req);requirePermission(p,'models:read');requirePermission(p,'models:write');requirePermission(p,'catalog:read');
   const id=(req.params as {id:string}).id,expected=version(req),body=req.body as {definition:unknown;previewDigest:string};
-  const result=await scope(p.tenantId,p.id,tx=>once(tx,p,'model.publish',req.headers['idempotency-key'],{id,expected,...body},()=>publishModel(tx,p,req.id,id,expected,body.definition,body.previewDigest,hooks)));
+  const result=await scope(p.tenantId,p.id,async tx=>{
+   const result=await once(tx,p,'model.publish',req.headers['idempotency-key'],{id,expected,...body},()=>publishModel(tx,p,req.id,id,expected,body.definition,body.previewDigest,hooks));
+   await modelPersistence.authorize(tx,p,['models:read','models:write','catalog:read']);
+   return result;
+  });
   reply.code(201);return result;
  });
  app.get('/api/v1/assets/:id/attributes',{schema:{params:Type.Object({id:Id},{additionalProperties:false})}},async req=>{
@@ -59,7 +67,10 @@ export async function installModels(app:FastifyInstance):Promise<void> {
   const result=await scope(p.tenantId,p.id,async tx=>{
    // A cached response must never bypass a later asset visibility revocation.
    await getAssetModel(tx,p,id);
-   return once(tx,p,'asset.model.assign',req.headers['idempotency-key'],{id,expected,...body},()=>assignAssetModel(tx,p,req.id,id,expected,body,hooks));
+   const result=await once(tx,p,'asset.model.assign',req.headers['idempotency-key'],{id,expected,...body},()=>assignAssetModel(tx,p,req.id,id,expected,body,hooks));
+   await modelPersistence.authorize(tx,p,['catalog:read','catalog:write','models:read']);
+   await getAssetModel(tx,p,id);
+   return result;
   });
   reply.header('ETag',String(result.assetVersion));return result;
  });

@@ -1,0 +1,58 @@
+# Explicit authored-type migration contract
+
+Status: agreed next implementation increment; NOT IMPLEMENTED or qualified. It follows pinned inheritance and does not close full MOD-001/002 or AT-MOD-01. Applied SQL001–006 and existing attribute-only plans/receipts remain immutable and compatible.
+
+## Shared representation
+
+A distinct strict formatVersion1 plan contains:
+
+```ts
+interface AssetTypeMigrationPlan {
+  formatVersion: 1;
+  typeId: string; // Immutable authored type UUID.
+  attributes: MigrationPlan; // Existing strict attribute-plan format, unchanged.
+  owner: {
+    default: 'preserve';
+    overrides: { assetId: string; ownerId: string | null }[];
+  };
+  lifecycle: {
+    onUnmapped: 'preserve' | 'error';
+    mappings: { sourceVersion: number; from: string; to: string }[];
+  };
+  acknowledgedPolicyChanges: (
+    'parents_changed' | 'required_owner_changed' | 'lifecycle_changed'
+  )[];
+}
+```
+
+Every field is required and unknown/duplicate JSON keys are rejected before overwrite. No coercion, executable expressions or arbitrary selectors. Nested attribute modelId/targetVersion/sourceVersions are canonical and must agree with route, immutable type identity and proposed authored definition. Exact sourceVersions equal the complete directly bound asset cohort. Owner overrides are unique by asset, limited to that cohort and sorted canonically; they never grant permission. Preserve ownership unless an explicit override changes it. Non-null replacements require an active identity and tenant membership. Null is legal only when the resolved target permits it.
+
+Lifecycle mappings are unique by sourceVersion/from, because historical versions may give identical labels different meaning. Both ends must exist in the exact source and target lifecycle respectively. Unmapped preserve requires that the current state remains legal in the target; error rejects any unmapped asset. Explicit schema-migration mappings may cross an edge absent from the old ordinary transition graph; the explicit mapping plus confirmed preview acknowledges that state movement. A mapping from an old pin does not require a fictitious lifecycle_changed entry when head and target lifecycles are identical. Policy acknowledgements exactly match changes between the resolved head and target; existing attribute acknowledgements retain their unchanged rules.
+
+Reuse the existing pure attribute parser/validator/transformer. The outer parser needs its own bounded copier because nullable owner overrides are valid while the old plan copier excludes null. Retain 64 attribute operations, 1,000 assets/owner overrides/lifecycle mappings, 512KiB aggregate values and definitions, 100,000 materialized nodes and 1,000 output issues. File and resolved-definition budgets fail before partial results.
+
+## Service and persistence
+
+Expose parseAssetTypeMigrationPlan, parseAssetTypeMigrationFile and pure owner/state transformation helpers in a new domain module. Compose them with applyModelMigrationToAttributes; do not invoke legacy executeMigration and patch policy effects afterward. Extract narrow internal authored-type resolution/version-insert helpers shared with ordinary type publication.
+
+Freshly authorize model/catalog read and write. Use idempotency advisory lock → tenant ledger → model scope → model head → assets ascending UUID → identities ascending UUID → memberships ascending UUID. Apply bounded transaction-local lock/statement budgets before the first blocking lock and map timeout/deadlock to an explicit retryable failure with transaction rollback. Verify each historical source policy by recomputing exact pinned inheritance, not just checking its stored envelope. Resolve the proposed target once. Reject corrupt source attributes/states; report an inactive or missing source owner as a repairable policy issue when a valid explicit target owner resolves it, or when an acknowledged target policy removes the owner requirement. A preserved inactive owner may remain only when the resolved target permits it; an explicitly supplied non-null replacement must always be active. An ownership repair must not be blocked by unconditional source-owner validation.
+
+Preview binds tenant/type UUID, expected head, complete plan, authored/resolved target hashes and dependencies, every source resolution hash, asset versions/pins/attributes/owners/states and current/proposed owner activity. Execution recomputes and compares this digest before any writes. Actor permissions and old/proposed owner activity need stable row locks through commit. Runtime currently cannot update identity/membership tables, so use a narrowly scoped reviewed database locking function rather than granting arbitrary UPDATE to obtain FOR SHARE privileges. Lock the actor plus requested owner identities, including inactive rows, only with membership in the explicit gc_tenant() scope. Bound and deduplicate the input, lock global identities in UUID order before tenant memberships, then reread activity and permissions after any waits. Membership RLS also exposes the actor's memberships in other tenants, so an explicit tenant predicate is mandatory; identities are global and do not have RLS. The function's non-bypass owner still obeys membership RLS. Fix search_path, fully qualify objects, revoke PUBLIC execution, grant only the intended runtime role and expose no mutation or arbitrary query capability. The internal function is public.gc_lock_type_migration_principals(uuid[]) RETURNS void, SECURITY DEFINER, VOLATILE, PARALLEL UNSAFE, row_security=on, and search_path=pg_catalog,pg_temp. Reject null/multidimensional input, null elements and more than2,001 supplied IDs before expansion; deduplicate and sort. Require valid tenant/actor context. No tenant argument, dynamic SQL, returned identity data, writes or extra modes. Revoke PUBLIC EXECUTE in the same migration transaction, and prove the actual function owner is NOSUPERUSER/NOBYPASSRLS with no runtime role-membership path to it. Future audited status/membership writers must acquire applicable tenant ledgers before identity/member rows; global identity administration needs a deterministic multi-tenant rule. PostgreSQL documents the [SELECT locking privileges](https://www.postgresql.org/docs/current/sql-select.htm) and [safe SECURITY DEFINER configuration](https://www.postgresql.org/docs/current/sql-createfunction.html). Qualification must prove both lock orderings: migration first blocks revocation until commit; revocation first forces reread and stale/revoked rejection. This design is not a concurrency pass.
+
+Insert the flat model and authored type version together, then update the head and every directly bound asset's pin, attributes, owner, state and optimistic version. Append real immutable asset revisions, audit and outbox, then the migration receipt, all in one transaction. Parent migration never cascades into child type definitions, their pinned ancestry or their assets. Reauthorize after lock waits and idempotency replay before returning.
+
+SQL007 will add a typed companion receipt without changing existing receipt semantics. The existing base receipt keeps the unchanged nested attribute plan and seven-field asset entries, preserving SQL005 revision references. A companion with the same tenant/migration ID records full typed plan/hash, full digest, immutable type UUID, source resolution hashes and target authored/resolved hashes. Typed asset rows reference actual base normalized rows and before/after revisions, recording owner/state plus hashes of `{modelId,modelVersion,attributes,ownerId,state}`. Derive rows from the immutable parent using exact membership guards, forced tenant RLS, composite FKs and immutable runtime privileges. Deferred completeness checks must prevent an authored-type base receipt from committing without its complete companion. Base/companion cohorts, pins, revisions and digest must agree. Claimed full typed tuples must equal the owner/state/pins/attributes in both immutable revision snapshots; FK existence alone is insufficient.
+
+Receipt getters and cached execution reauthorize the original recorded assets even after reassignment. The legacy receipt endpoint must not present a typed migration as attribute-only success; reject that representation or provide the full typed result through the authored route.
+
+## Ingress and UI
+
+Use authenticated existing CSRF/If-Match/Idempotency-Key conventions under `/api/v1/asset-types/:id`: GET migration-context, POST migration-previews, POST migrations and GET migrations/:migrationId. A shared validation endpoint parses raw plan files. Preview displays complete before/after attributes, owner and state plus source repair issues and target validation failures, and requires confirmation of the exact digest. Provide explicit owner overrides, source-version state mappings, policy acknowledgements, file import/export, stale recovery and immutable receipt history. Route/API exact shapes must be finalized with workers before parallel edits.
+
+Root owns SQL007, shared service/persistence, HTTP, central records and integration. Domain worker owns only the new pure migration module and units; web worker owns authoring/receipt UI and browser tests; integration worker owns new real DB/API cases. Preserve others' edits. No runtime migration or application-source changes while an earlier increment's image qualification is running.
+
+## Required increment evidence
+
+Verify mixed historical pins, changed parents, owner repair and lifecycle mapping together; descendant pins remain unchanged. Test stale owner activity, state, cohort and plan; hidden scopes, foreign owners/parents/receipts, revoked authority and inaccessible replays fail closed. Inject errors after canonical updates and receipt normalization and prove all head/version/value/owner/state/revision/audit/outbox/idempotency-success writes roll back. A valid retry produces one complete receipt. Test exact source/target tuple contents against immutable snapshots and forged nested normalized writes in PostgreSQL. Test both revocation lock orderings, foreign-only identity IDs, cross-tenant actor memberships, inactive-owner repair, oversized lock arrays, function ACL/owner attributes, continued denial of direct identity UPDATE and late rollback releasing locks. Exercise UI confirmation, real execution, receipt and tenant denial, plus responsive/keyboard/Arabic/light-dark behavior.
+
+Transactional rollback and explicit forward repair do not establish production backup/restore. Constrained relations, scoped overrides, other model kinds and future ingress enforcement remain required after this increment; continue the complete programme.

@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T17:17:01.082355+00:00",
+  "scope": "Hosted qualification of the merged explicit model-migration and signed model-inventory pagination increment",
+  "result": "PASS",
+  "pull_request": "https://github.com/dlamaro96/governance-commons/pull/6",
+  "head_commit": "c666ca64a05f357efb130bd78f0470c4f7c82cc3",
+  "merge_commit": "649b8aab308937346b0c6b5041576f84e76fce63",
+  "merged_at": "2026-11-15T17:15:28Z",
+  "ci_tested_merge_commit": "d3831ebbdacc88441bf605b8ff6eb289b93ef842",
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43738876918",
+  "run_status": "completed",
+  "run_conclusion": "success",
+  "required_checks": {
+    "quality": "SUCCESS",
+    "secrets": "SUCCESS",
+    "behavior": "SUCCESS",
+    "required": "SUCCESS"
+  },
+  "safe_artifact": {
+    "id": 14170689338,
+    "name": "behavior-d3831ebbdacc88441bf605b8ff6eb289b93ef842",
+    "size_in_bytes": 923083,
+    "github_reported_archive_digest": "sha256:a88acffae700d8696e5ef8139c6544377aba1c5b0ddd48fdde953da35ac4ea94",
+    "reviewed_summary_sha256": "eb22de9761a143dfa11e9978ebcd57f9e0b3e45f899c19933f4a850683f72df1",
+    "reviewed_contents": "Allowlisted behavior summary and ten catalog PNG files only; artifact filenames and PNG signatures checked."
+  },
+  "behavior": {
+    "schema_version": 1,
+    "timestamp": "2026-11-15T17:09:21.588265+00:00",
+    "commit": "d3831ebbdacc88441bf605b8ff6eb289b93ef842",
+    "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43738876918",
+    "profile": "core / GitHub-hosted Ubuntu 24.04 / synthetic PostgreSQL",
+    "steps": {
+      "bootstrap": "success",
+      "services": "success",
+      "object_store": "success",
+      "seed": "success",
+      "connectors": "success",
+      "security": "success",
+      "model_upgrade": "success",
+      "browser": "success"
+    },
+    "outcome": "PASS",
+    "tests": [
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 17,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 7829
+      },
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 101,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1764
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 30,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 10519
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 74,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1409
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 77,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 16448
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 257,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1934
+      },
+      {
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 80,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 16682
+      },
+      {
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 218,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 3436
+      }
+    ],
+    "screenshots": [
+      "catalog-en-light-390.png",
+      "catalog-en-light-768.png",
+      "catalog-en-light-1024.png",
+      "catalog-en-light-1280.png",
+      "catalog-en-light-1440.png",
+      "catalog-en-dark-1440.png",
+      "catalog-history.png",
+      "catalog-ar-dark-390.png",
+      "catalog-ar-dark-768.png",
+      "catalog-ar-dark-1440.png"
+    ],
+    "limitations": [
+      "No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
+      "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification."
+    ]
+  },
+  "limitations": [
+    "This is hosted evidence imported from the executed GitHub job, not a new local test run.",
+    "The safe summary records the model_upgrade step as successful but does not contain individual upgrade-case outcomes; it does not independently establish five named hosted upgrade checks.",
+    "The archive digest is GitHub-reported metadata; the extracted summary SHA256 was computed locally.",
+    "No raw logs, traces, videos, private payloads or credentials were downloaded or published. The ten downloaded catalog screenshots were not re-inspected visually for this metadata record.",
+    "No independent human review, complete MOD/AT-MOD acceptance, enterprise profile or release qualification is claimed."
+  ]
+}

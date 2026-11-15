@@ -10,7 +10,10 @@ import {assetView,sourceView,jobView,auditView,visibleAssets,visibleAudit,record
 import {searchRequest,index,startProjector} from './search.ts';
 import {verifyAuditChain} from './audit.ts';
 import {installModels} from './models.ts';
+import {installAssetTypes} from './asset-types.ts';
 import {installModelMigrations} from './model-migrations.ts';
+import {validatePinnedType} from '../../../packages/domain/src/asset-type-policy.ts';
+import {modelPersistence} from '../../../packages/domain/src/model-service.ts';
 export const app=Fastify({logger:{level:'info',redact:['req.headers.authorization','req.headers.cookie','req.url','res.headers.set-cookie']},bodyLimit:8*1024*1024,requestTimeout:20000,trustProxy:false,genReqId:()=>randomUUID()});
 await app.register(cookie);
 await app.register(helmet,{contentSecurityPolicy:{directives:{defaultSrc:["'self'"],scriptSrc:["'self'"],styleSrc:["'self'","'unsafe-inline'"],imgSrc:["'self'",'data:'],connectSrc:["'self'"],frameAncestors:["'none'"],formAction:["'self'"],upgradeInsecureRequests:process.env.NODE_ENV==='production'?[]:null}},hsts:process.env.NODE_ENV==='production'});
@@ -26,6 +29,7 @@ app.get('/health/live',async()=>({status:'ok'}));
 app.get('/health/ready',async()=>{await sql`select 1`.execute(db);return {status:'ok',version:'0.1.0-dev.1'};});
 await installAuth(app);
 await installModels(app);
+await installAssetTypes(app);
 await installModelMigrations(app);
 const params={params:Type.Object({id:Id})};
 app.get('/api/v1/me',async req=>{const a=await authenticate(req);return {user:{id:a.principal.id,name:a.principal.name},tenant:a.tenants.find(x=>x.id===a.principal.tenantId),tenants:a.tenants,permissions:a.principal.permissions,csrfToken:a.csrf};});
@@ -54,7 +58,9 @@ app.patch('/api/v1/assets/:id',{schema:{...params,body:AssetEdit}},async(req,rep
  const {principal:p}=await authenticate(req);requirePermission(p,'catalog:write');const {id}=req.params as any;const body=req.body as any,version=Number(String(req.headers['if-match']??'').replaceAll('"',''));if(!Number.isInteger(version)||version<1)throw new Problem(428,'VERSION_REQUIRED','Send the current asset version using If-Match.');
  return scope(p.tenantId,p.id,async tx=>{
   await lockTenantLedger(tx,p.tenantId);
+  await modelPersistence.authorize(tx,p,['catalog:read','catalog:write']);
   const a=await visibleAssets(tx,p).where('assets.id','=',id).executeTakeFirst();if(!a)throw new Problem(404,'ASSET_NOT_FOUND','Asset is unavailable.');
+  await validatePinnedType(tx,p,a,'ownerId'in body?body.ownerId:a.owner_id);
   if(body.ownerId){const owner=await tx.selectFrom('memberships').select('identity_id').where('identity_id','=',body.ownerId).where('active','=',true).executeTakeFirst();if(!owner)throw new Problem(422,'OWNER_INVALID','Choose an active owner in this organization.');}
   const updated=await tx.updateTable('assets').set({...('description'in body?{description:body.description}:{}),...('ownerId'in body?{owner_id:body.ownerId}:{}),version:version+1,updated_at:new Date()}).where('id','=',id).where('version','=',version).returningAll().executeTakeFirst();if(!updated)throw new Problem(409,'VERSION_CONFLICT','This asset changed. Reload before saving your edits.');
   await tx.insertInto('asset_revisions').values({tenant_id:p.tenantId,asset_id:id,version:updated.version,snapshot:JSON.stringify(assetView(updated))}).execute();

@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { lockTenantLedger, sql, type Tx } from '../../db/src/index.ts';
 import { canView, Problem, requirePermission, type Principal } from '../../authz/src/index.ts';
 import { signedCursor } from './cursor.ts';
+import { assetTypePolicy, validateTypeOwner } from './asset-type-policy.ts';
 import {
   MODEL_LIMITS, parseModelDefinition, previewModelUpgrade, validateAttributes,
   type AttributeValues, type ModelAssetPreview, type ModelChange, type ModelDefinition,
@@ -13,12 +14,13 @@ export interface ModelHooks {
   record: (tx: Tx, principal: Principal, action: string, resourceId: string, version: number, changes: unknown, correlationId: string) => Promise<unknown>;
   assetSnapshot: (row: any) => unknown;
 }
-export interface ModelSummary { id: string; currentVersion: number; createdAt: string; createdBy: string }
+export interface ModelSummary { id: string; currentVersion: number; createdAt: string; createdBy: string; typeId: string | null }
 export interface ModelListQuery { limit?: number; cursor?: string; q?: string }
 export interface ModelListPage { items: ModelSummary[]; nextCursor: string | null }
 export interface ModelVersionView {
   id: string; version: number; currentVersion: number; definition: ModelDefinition;
   definitionHash: string; createdAt: string; createdBy: string;
+  typeId: string | null;
 }
 export interface AssetModelView {
   assetId: string; assetVersion: number; modelId: string | null; modelVersion: number | null;
@@ -60,9 +62,9 @@ function storedDefinition(row: Row): ModelDefinition {
   }
   return parsed.value;
 }
-function view(row: Row, currentVersion: number): ModelVersionView {
+function view(row: Row, currentVersion: number, typeId: string | null = null): ModelVersionView {
   return { id: row.model_id, version: row.version, currentVersion, definition: storedDefinition(row),
-    definitionHash: row.definition_hash, createdAt: iso(row.created_at), createdBy: row.created_by };
+    definitionHash: row.definition_hash, createdAt: iso(row.created_at), createdBy: row.created_by, typeId };
 }
 
 /** Services recheck the active membership so non-HTTP callers cannot rely on a stale role snapshot. */
@@ -139,7 +141,7 @@ export async function listModels(tx: Tx, principal: Principal, query: ModelListQ
   if (after) selection = selection.where('id', '>', after);
   const rows = await selection.orderBy('id').limit(pageSize + 1).execute();
   const page = rows.slice(0, pageSize);
-  return { items: page.map(row => ({ id: row.id, currentVersion: row.current_version, createdAt: iso(row.created_at), createdBy: row.created_by })),
+  return { items: page.map(row => ({ id: row.id, currentVersion: row.current_version, createdAt: iso(row.created_at), createdBy: row.created_by, typeId: row.type_id ?? null })),
     nextCursor: rows.length > pageSize ? codec.encode({ v: 2, tenantId: principal.tenantId, actorId: principal.id,
       q: search, sort: 'id:asc', limit: pageSize, after: page.at(-1)!.id }) : null };
 }
@@ -147,7 +149,7 @@ export async function listModels(tx: Tx, principal: Principal, query: ModelListQ
 export async function getModel(tx: Tx, principal: Principal, id: string, version?: number): Promise<{ model: ModelVersionView }> {
   await authorize(tx, principal, ['models:read']);
   const current = await head(tx, principal, id);
-  return { model: view(await versionRow(tx, principal, id, version ?? current.current_version), current.current_version) };
+  return { model: view(await versionRow(tx, principal, id, version ?? current.current_version), current.current_version, current.type_id) };
 }
 
 export async function createModel(tx: Tx, principal: Principal, correlationId: string, input: unknown, hooks: ModelHooks): Promise<{ model: ModelVersionView }> {
@@ -177,7 +179,7 @@ async function modelCohort(tx: Tx, principal: Principal, modelId: string): Promi
     throw new Problem(422, 'MODEL_PREVIEW_LIMIT', 'This model exceeds the bounded synchronous preview profile. No partial preview or publication was performed.');
   }
   // Canonical asset locks also protect digest generation against scanner/normal PATCH changes.
-  const rows = await tx.selectFrom('assets').select(['tenant_id', 'id', 'version', 'model_id', 'model_version', 'attributes', 'visibility', 'allowed_identities'])
+  const rows = await tx.selectFrom('assets').select(['tenant_id', 'id', 'version', 'model_id', 'model_version', 'attributes', 'visibility', 'allowed_identities', 'owner_id', 'type_state'])
     .where('tenant_id', '=', principal.tenantId).where('model_id', '=', modelId).orderBy('id').forUpdate().execute();
   let nodes = 0;
   for (const row of rows) {
@@ -199,6 +201,7 @@ async function modelCohort(tx: Tx, principal: Principal, modelId: string): Promi
 
 async function previewLocked(tx: Tx, principal: Principal, id: string, expectedVersion: number, input: unknown): Promise<ModelPreview> {
   const current = await head(tx, principal, id, true);
+  if (current.type_id) throw new Problem(422, 'ASSET_TYPE_REQUIRED', 'Publish this authored asset type through its type editor.');
   assertHead(current, expectedVersion);
   const proposed = definition(input);
   const currentDefinition = storedDefinition(await versionRow(tx, principal, id, current.current_version));
@@ -285,10 +288,16 @@ export async function assignAssetModel(tx: Tx, principal: Principal, correlation
   if (asset.version !== expectedAssetVersion) throw new Problem(409, 'VERSION_CONFLICT', 'The asset changed. Load its current version before saving.');
   const parsed = validateAttributes(model, input.attributes);
   if (!parsed.ok) throw new Problem(422, 'ATTRIBUTES_INVALID', 'Correct the typed attribute values.', parsed.issues);
+  const policy = await assetTypePolicy(tx, principal, input.modelId, input.modelVersion);
+  const state = policy ? (asset.model_id === input.modelId && asset.type_state ? asset.type_state : policy.lifecycle.initial) : null;
+  if (policy) {
+    await validateTypeOwner(tx, principal, policy.requiredOwner, asset.owner_id);
+    if (!policy.lifecycle.states.includes(state!)) throw new Problem(422, 'ASSET_TYPE_STATE_INVALID', 'The current state is not valid for the selected type version.');
+  }
   if (Buffer.byteLength(JSON.stringify(parsed.value), 'utf8') > MODEL_SERVICE_LIMITS.previewBytes) throw new Problem(422, 'ATTRIBUTE_PROFILE_LIMIT', 'The typed attributes exceed this development storage profile.');
   // An explicit pin and full replacement are required; no source metadata is interpreted as governed attributes.
   const updated = await tx.updateTable('assets').set({ model_id: input.modelId, model_version: input.modelVersion,
-    attributes: JSON.stringify(parsed.value), version: asset.version + 1, updated_at: new Date() })
+    attributes: JSON.stringify(parsed.value), type_state: state, version: asset.version + 1, updated_at: new Date() })
     .where('tenant_id', '=', principal.tenantId).where('id', '=', assetId).where('version', '=', expectedAssetVersion)
     .returningAll().executeTakeFirst();
   if (!updated) throw new Problem(409, 'VERSION_CONFLICT', 'The asset changed. Load its current version before saving.');

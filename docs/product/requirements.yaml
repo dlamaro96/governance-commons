@@ -5798,13 +5798,27 @@
         "apps/web/src/pages/Models.tsx",
         "apps/web/src/models/SchemaEditor.tsx",
         "apps/web/src/models/ValueFields.tsx",
-        "apps/web/src/models/AssetAttributes.tsx"
+        "apps/web/src/models/AssetAttributes.tsx",
+        "packages/domain/src/asset-type.ts",
+        "packages/domain/src/asset-type-policy.ts",
+        "packages/domain/src/asset-type-service.ts",
+        "packages/db/migrations/006_inherited_asset_types.sql",
+        "apps/api/src/asset-types.ts",
+        "apps/web/src/pages/AssetTypes.tsx",
+        "apps/web/src/assetTypes/LifecyclePanel.tsx",
+        "docs/runbooks/inherited-asset-types.md"
       ],
       "test_ids": [
         "tests/unit/model.test.ts",
         "tests/integration/models.test.ts",
         "tests/integration/model-api.test.ts",
-        "tests/e2e/models.spec.ts"
+        "tests/e2e/models.spec.ts",
+        "tests/unit/asset-type.test.ts",
+        "tests/unit/asset-type-policy.test.ts",
+        "tests/integration/asset-types.test.ts",
+        "tests/integration/asset-type-storage.test.ts",
+        "tests/integration/asset-type-api-limits.test.ts",
+        "tests/e2e/asset-types.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -5835,7 +5849,8 @@
       },
       "limitations": [
         "Immutable tenant-scoped typed model versions, explicit asset pins, complete bounded server previews, compatible publication, shared validation, visual editor and model-file import/export are implemented. Scoped real API/service and browser tests pass; full-row verification remains open.",
-        "Inheritance, relation constraints/validity, scoped overrides, lifecycle states, bulk/workflow/MCP ingress and typed search/sort/catalog export remain required. The current synchronous preview is bounded to1000 assets/512KiB attribute JSON and inventory pages contain at most100 models; bounded model search/pagination and signed-cursor integration/browser qualification pass for the recorded development scope."
+        "Full authored-type migration, relation constraints/validity, remaining model kinds/scoped overrides, and bulk/workflow/MCP ingress and typed search/sort/catalog export remain required. The current synchronous preview is bounded to1000 assets/512KiB attribute JSON and inventory pages contain at most100 models; bounded model search/pagination and signed-cursor integration/browser qualification pass for the recorded development scope.",
+        "Pinned authored asset-type inheritance, inherited required ownership, explicit lifecycle transitions, immutable dependency closure and visual/file authoring are implemented in the current increment. The 63-unit, 55-test PostgreSQL/API and complete ten-browser development gates pass on the recorded source/image. Full-row qualification remains open. Explicit authored-type migrations, relation/domain/attribute type definitions, scoped overrides, additional responsibility roles and future bulk/workflow/MCP ingress remain required."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M3",
@@ -5843,7 +5858,10 @@
         "docs/verification/model-validation.json",
         "docs/verification/m2-model-service.json",
         "docs/verification/m2-model-api.json",
-        "docs/verification/m2-ui.json"
+        "docs/verification/m2-ui.json",
+        "docs/verification/m2-asset-type-api.json",
+        "docs/verification/asset-type-upgrade.json",
+        "docs/verification/m2-asset-type-ui.json"
       ]
     },
     {
@@ -5896,7 +5914,15 @@
         "apps/web/src/models/MigrationPlanEditor.tsx",
         "docs/runbooks/model-migration-recovery.md",
         "packages/db/migrations/005_model_migration_integrity.sql",
-        "scripts/runtime-test-model-upgrade.py"
+        "scripts/runtime-test-model-upgrade.py",
+        "packages/domain/src/asset-type.ts",
+        "packages/domain/src/asset-type-policy.ts",
+        "packages/domain/src/asset-type-service.ts",
+        "packages/db/migrations/006_inherited_asset_types.sql",
+        "apps/api/src/asset-types.ts",
+        "apps/web/src/pages/AssetTypes.tsx",
+        "apps/web/src/assetTypes/LifecyclePanel.tsx",
+        "docs/runbooks/inherited-asset-types.md"
       ],
       "test_ids": [
         "tests/unit/model.test.ts",
@@ -5908,7 +5934,13 @@
         "tests/integration/model-migrations.test.ts",
         "tests/integration/model-migration-api.test.ts",
         "tests/e2e/model-migrations.spec.ts",
-        "tests/integration/model-migration-storage.test.ts"
+        "tests/integration/model-migration-storage.test.ts",
+        "tests/unit/asset-type.test.ts",
+        "tests/unit/asset-type-policy.test.ts",
+        "tests/integration/asset-types.test.ts",
+        "tests/integration/asset-type-storage.test.ts",
+        "tests/integration/asset-type-api-limits.test.ts",
+        "tests/e2e/asset-types.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -5939,8 +5971,9 @@
       },
       "limitations": [
         "Immutable tenant-scoped typed model versions, explicit asset pins, complete bounded server previews, compatible publication, shared validation, visual editor and model-file import/export are implemented. Scoped real API/service and browser tests pass; full-row verification remains open.",
-        "Inheritance, relation constraints/validity, scoped overrides, lifecycle states, bulk/workflow/MCP ingress and typed search/sort/catalog export remain required. The current synchronous preview is bounded to1000 assets/512KiB attribute JSON and inventory pages contain at most100 models; bounded model search/pagination and signed-cursor integration/browser qualification pass for the recorded development scope.",
-        "Explicit bounded transactional migration, production audit/outbox, immutable normalized receipt references and the complete eight-browser development gate pass. The isolated real-PostgreSQL upgrade check passes five cases, including atomic rollback on malformed history. Fifteen historical pre005 synthetic receipts with missing initial revisions are quarantined as explicit unverifiable exceptions; no history is fabricated. Full operating-model AT-MOD-01 and production restore remain open."
+        "Full authored-type migration, relation constraints/validity, remaining model kinds/scoped overrides, and bulk/workflow/MCP ingress and typed search/sort/catalog export remain required. The current synchronous preview is bounded to1000 assets/512KiB attribute JSON and inventory pages contain at most100 models; bounded model search/pagination and signed-cursor integration/browser qualification pass for the recorded development scope.",
+        "Explicit bounded transactional migration, production audit/outbox, immutable normalized receipt references and the complete eight-browser development gate pass. The isolated real-PostgreSQL upgrade check passes five cases, including atomic rollback on malformed history. Fifteen historical pre005 synthetic receipts with missing initial revisions are quarantined as explicit unverifiable exceptions; no history is fabricated. Full operating-model AT-MOD-01 and production restore remain open.",
+        "Pinned authored asset-type inheritance, inherited required ownership, explicit lifecycle transitions, immutable dependency closure and visual/file authoring are implemented in the current increment. The 63-unit, 55-test PostgreSQL/API and complete ten-browser development gates pass on the recorded source/image. Full-row qualification remains open. Explicit authored-type migrations, relation/domain/attribute type definitions, scoped overrides, additional responsibility roles and future bulk/workflow/MCP ingress remain required."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M3",
@@ -5953,7 +5986,10 @@
         "docs/verification/m2-model-migrations.json",
         "docs/verification/m2-migration-api.json",
         "docs/verification/m2-migration-ui.json",
-        "docs/verification/model-migration-upgrade.json"
+        "docs/verification/model-migration-upgrade.json",
+        "docs/verification/m2-asset-type-api.json",
+        "docs/verification/asset-type-upgrade.json",
+        "docs/verification/m2-asset-type-ui.json"
       ]
     },
     {
@@ -6129,13 +6165,27 @@
         "apps/web/src/pages/Models.tsx",
         "apps/web/src/models/SchemaEditor.tsx",
         "apps/web/src/models/ValueFields.tsx",
-        "apps/web/src/models/AssetAttributes.tsx"
+        "apps/web/src/models/AssetAttributes.tsx",
+        "packages/domain/src/asset-type.ts",
+        "packages/domain/src/asset-type-policy.ts",
+        "packages/domain/src/asset-type-service.ts",
+        "packages/db/migrations/006_inherited_asset_types.sql",
+        "apps/api/src/asset-types.ts",
+        "apps/web/src/pages/AssetTypes.tsx",
+        "apps/web/src/assetTypes/LifecyclePanel.tsx",
+        "docs/runbooks/inherited-asset-types.md"
       ],
       "test_ids": [
         "tests/unit/model.test.ts",
         "tests/integration/models.test.ts",
         "tests/integration/model-api.test.ts",
-        "tests/e2e/models.spec.ts"
+        "tests/e2e/models.spec.ts",
+        "tests/unit/asset-type.test.ts",
+        "tests/unit/asset-type-policy.test.ts",
+        "tests/integration/asset-types.test.ts",
+        "tests/integration/asset-type-storage.test.ts",
+        "tests/integration/asset-type-api-limits.test.ts",
+        "tests/e2e/asset-types.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -6166,7 +6216,8 @@
       },
       "limitations": [
         "Immutable tenant-scoped typed model versions, explicit asset pins, complete bounded server previews, compatible publication, shared validation, visual editor and model-file import/export are implemented. Scoped real API/service and browser tests pass; full-row verification remains open.",
-        "Inheritance, relation constraints/validity, scoped overrides, lifecycle states, bulk/workflow/MCP ingress and typed search/sort/catalog export remain required. The current synchronous preview is bounded to1000 assets/512KiB attribute JSON and inventory pages contain at most100 models; bounded model search/pagination and signed-cursor integration/browser qualification pass for the recorded development scope."
+        "Full authored-type migration, relation constraints/validity, remaining model kinds/scoped overrides, and bulk/workflow/MCP ingress and typed search/sort/catalog export remain required. The current synchronous preview is bounded to1000 assets/512KiB attribute JSON and inventory pages contain at most100 models; bounded model search/pagination and signed-cursor integration/browser qualification pass for the recorded development scope.",
+        "Pinned authored asset-type inheritance, inherited required ownership, explicit lifecycle transitions, immutable dependency closure and visual/file authoring are implemented in the current increment. The 63-unit, 55-test PostgreSQL/API and complete ten-browser development gates pass on the recorded source/image. Full-row qualification remains open. Explicit authored-type migrations, relation/domain/attribute type definitions, scoped overrides, additional responsibility roles and future bulk/workflow/MCP ingress remain required."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M3",
@@ -6174,7 +6225,10 @@
         "docs/verification/model-validation.json",
         "docs/verification/m2-model-service.json",
         "docs/verification/m2-model-api.json",
-        "docs/verification/m2-ui.json"
+        "docs/verification/m2-ui.json",
+        "docs/verification/m2-asset-type-api.json",
+        "docs/verification/asset-type-upgrade.json",
+        "docs/verification/m2-asset-type-ui.json"
       ]
     },
     {

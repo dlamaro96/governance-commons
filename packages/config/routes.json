@@ -123,6 +123,50 @@
       "additionalPermissions": [
         "catalog:read"
       ]
+    },
+    {
+      "path": "/asset-types",
+      "screen": "UX-10",
+      "component": "AssetTypesPage",
+      "permission": "models:read",
+      "mutationPermission": "models:write"
+    },
+    {
+      "path": "/asset-types/new/definition",
+      "screen": "UX-10",
+      "component": "AssetTypeEditorPage",
+      "permission": "models:write",
+      "additionalPermissions": [
+        "models:read"
+      ]
+    },
+    {
+      "path": "/asset-types/:id",
+      "screen": "UX-10",
+      "component": "AssetTypePage",
+      "permission": "models:read",
+      "query": [
+        "version"
+      ]
+    },
+    {
+      "path": "/asset-types/:id/edit",
+      "screen": "UX-10",
+      "component": "AssetTypeEditorPage",
+      "permission": "models:write",
+      "additionalPermissions": [
+        "models:read",
+        "catalog:read"
+      ],
+      "context": "Exact parent pins, resolved inheritance, ownership and lifecycle publication preview"
+    },
+    {
+      "path": "/catalog/:id",
+      "screen": "UX-05",
+      "component": "LifecyclePanel",
+      "permission": "catalog:read",
+      "mutationPermission": "catalog:write",
+      "context": "Lifecycle and required ownership follow the exact assigned asset-type version"
     }
   ]
 }
