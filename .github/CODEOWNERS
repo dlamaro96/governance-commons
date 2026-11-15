@@ -1,0 +1,11 @@
+# Repository identity is real; review enforcement depends on read-back evidence.
+* @dlamaro96
+/.github/CODEOWNERS @dlamaro96
+/.github/ @dlamaro96
+/packages/authz/ @dlamaro96
+/packages/db/ @dlamaro96
+/scripts/github/ @dlamaro96
+/policies/ @dlamaro96
+/SECURITY.md @dlamaro96
+/LICENSE @dlamaro96
+/NOTICE @dlamaro96

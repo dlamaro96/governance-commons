@@ -1,0 +1,17 @@
+name: Feature or improvement
+description: Describe an observable outcome and its scope.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: User problem and outcome
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance, requirement ID and constraints
+      description: Include permissions, failure behavior, accessibility and scope where relevant.
+    validations:
+      required: true

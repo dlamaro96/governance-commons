@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+# SPDX-License-Identifier: Apache-2.0
+set -eu
+cd "$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+exec python3 scripts/runtime.py "$@"

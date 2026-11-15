@@ -1,0 +1,37 @@
+[
+  {
+    "repository": "actions/checkout",
+    "version": "v7.0.1",
+    "commit": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+    "retrieved_at": "2026-11-15",
+    "source": "https://api.github.com/repos/actions/checkout/git/commits/3d3c42e5aac5ba805825da76410c181273ba90b1"
+  },
+  {
+    "repository": "actions/setup-node",
+    "version": "v7.1.0",
+    "commit": "949feb2413d6458794dcd2491c4babbbce0c15c1",
+    "retrieved_at": "2026-11-15",
+    "source": "https://api.github.com/repos/actions/setup-node/git/commits/949feb2413d6458794dcd2491c4babbbce0c15c1"
+  },
+  {
+    "repository": "pnpm/action-setup",
+    "version": "v4",
+    "commit": "b906affcce14559ad1aafd4ab0e942779e9f58b1",
+    "retrieved_at": "2026-11-15",
+    "source": "https://api.github.com/repos/pnpm/action-setup/git/commits/b906affcce14559ad1aafd4ab0e942779e9f58b1"
+  },
+  {
+    "repository": "actions/setup-python",
+    "version": "v5",
+    "commit": "a26af69be951a213d495a4c3e4e4022e16d87065",
+    "retrieved_at": "2026-11-15",
+    "source": "https://api.github.com/repos/actions/setup-python/git/commits/a26af69be951a213d495a4c3e4e4022e16d87065"
+  },
+  {
+    "repository": "actions/upload-artifact",
+    "version": "v4",
+    "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02",
+    "retrieved_at": "2026-11-15",
+    "source": "https://api.github.com/repos/actions/upload-artifact/git/commits/ea165f8d65b6e75b540449e92b4886f43607fa02"
+  }
+]

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Private security reporting
+    url: https://github.com/dlamaro96/governance-commons/security/policy
+    about: Read the security policy and verified private-reporting status before sharing vulnerability details.

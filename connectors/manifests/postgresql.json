@@ -1,0 +1,75 @@
+{
+  "connector_id": "postgresql",
+  "version": "0.1.0",
+  "source_versions": [
+    "PostgreSQL 17 (exact patch recorded in live evidence)"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "psycopg",
+      "version": "3.3.3",
+      "license": "LGPL-3.0-only"
+    }
+  ],
+  "execution_location": "tenant-assigned local Python execution worker",
+  "authentication_methods": [
+    "password via site-local secret reference"
+  ],
+  "required_permissions": [
+    "CONNECT database",
+    "USAGE selected schema",
+    "SELECT all relations in scan scope"
+  ],
+  "tenant_scope": "secret reference binds tenant IDs and exact destination",
+  "region_scope": "execution site network",
+  "network_destinations": [
+    "operator-registered PostgreSQL host and port; local profile source-postgres:5432 only"
+  ],
+  "source_identity_rules": "database OID + relation OID + column attnum; display paths never identify objects; source recreation needs explicit reconciliation",
+  "supported_asset_types": [
+    "schema",
+    "table",
+    "view",
+    "column"
+  ],
+  "pagination": "bounded full catalog snapshot, 10000 records / 8 MiB; exceeding bound fails without completion",
+  "incremental_cursor_behavior": "not implemented; repeatable-read scope-complete snapshots only",
+  "rate_limits": {
+    "concurrent_scans_per_site": 1,
+    "statement_timeout_ms": 15000,
+    "connect_timeout_s": 5
+  },
+  "retry_classes": [
+    "site transport transient errors retried through Temporal; source error terminates scan with sanitized code"
+  ],
+  "deletion_strategy": "only successful complete manifests qualify; permission fingerprint changes prohibit absence-based deletion",
+  "features": {
+    "metadata": true,
+    "table_lineage": false,
+    "column_lineage": false,
+    "transformations": false,
+    "profile": false,
+    "sample": false,
+    "dq_pushdown": false,
+    "classification": false,
+    "tag_writeback": false,
+    "grant_read": false,
+    "grant_write": false,
+    "mask_write": false,
+    "row_filter_write": false,
+    "ai_registry": false,
+    "ai_metrics": false,
+    "document_content": false,
+    "acl_sync": false
+  },
+  "implementation_status": "partial",
+  "verification_level": "V0",
+  "configuration_status": "unconfigured",
+  "runtime_health": "unknown",
+  "limitations": [
+    "Required PostgreSQL lineage, profiling, DQ and scoped native grant capabilities remain unimplemented; metadata-only flag is not full CX-001 completion.",
+    "No deletion occurs on failed or incomplete scans."
+  ],
+  "manifest_version": "1.0"
+}

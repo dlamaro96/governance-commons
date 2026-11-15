@@ -1,0 +1,24 @@
+name: Connector capability
+description: Request or report one source-specific capability.
+labels: [connector]
+body:
+  - type: input
+    id: source
+    attributes:
+      label: Named source, version and connector requirement ID
+    validations:
+      required: true
+  - type: textarea
+    id: capability
+    attributes:
+      label: Capability, public interface and minimum privileges
+      description: Distinguish metadata, lineage, DQ, ACL and writes. Link primary docs; do not attach restricted drivers.
+    validations:
+      required: true
+  - type: textarea
+    id: qualification
+    attributes:
+      label: Fixture/local/live evidence or exact qualification prerequisite
+      description: Use synthetic examples and redacted results. Never share credentials or source-row data.
+    validations:
+      required: true

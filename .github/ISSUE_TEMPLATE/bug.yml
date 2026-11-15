@@ -1,0 +1,25 @@
+name: Reproducible bug
+description: Report a failure using public-safe synthetic evidence.
+labels: [bug]
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: Version, profile and environment
+      description: Commit/version, architecture, source versions and sanitized doctor output. Never include credentials.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction and expected/actual outcome
+      description: Exact command or UI steps, exit code, correlation ID and synthetic fixture.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and affected requirement
+      description: Redacted logs/screenshots, requirement ID and test level; list unperformed checks separately.
+    validations:
+      required: true

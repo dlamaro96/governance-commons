@@ -1,0 +1,20 @@
+[
+  {
+    "path": "LICENSE",
+    "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+    "retrieved_at": "2026-11-15",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "path": "docs/legal/DCO-1.1.txt",
+    "url": "https://developercertificate.org/",
+    "retrieved_at": "2026-11-15",
+    "sha256": "f7ac75b443f4ca16b503241344b41aeff9503b0c30bedc2b119551d83cb0fa90"
+  },
+  {
+    "path": "docs/legal/contributor-covenant-2.1.md",
+    "url": "https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md",
+    "retrieved_at": "2026-11-15",
+    "sha256": "977d781349351fd7c1f076e4c7dc7de2a05b40e12c773542c3815dd4ce7f37ba"
+  }
+]

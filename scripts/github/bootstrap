@@ -1,0 +1,289 @@
+#!/usr/bin/env python3
+"""Inspect/apply only project-owned GitHub settings; never print credentials.
+
+SPDX-License-Identifier: Apache-2.0
+"""
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import hashlib
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+MANAGED_BRANCH = "Governance Commons main and release branches"
+MANAGED_TAG = "Governance Commons immutable version tags"
+REPORT = ROOT / "docs/verification/repository-readiness.json"
+SECRET_RULES = {
+    "private-key": re.compile(rb"-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----"),
+    "github-token": re.compile(rb"(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{50,})"),
+    "aws-access-key": re.compile(rb"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b"),
+    "personal-email": re.compile(rb"[A-Za-z0-9_.+%-]+@(?:gmail|hotmail|outlook|yahoo)\.com\b", re.I),
+}
+
+
+def run(arguments: list[str], data: str | None = None) -> subprocess.CompletedProcess:
+    return subprocess.run(arguments, cwd=ROOT, input=data, text=True, capture_output=True, timeout=90)
+
+
+def git(*args: str) -> str:
+    result = run(["git", *args])
+    return result.stdout.strip() if result.returncode == 0 else ""
+
+
+def api(path: str, method: str = "GET", payload: dict | None = None, host: str = "github.com") -> dict:
+    arguments = ["gh", "api", "--hostname", host, "--method", method,
+                 "-H", "Accept: application/vnd.github+json", "-H", "X-GitHub-Api-Version: 2026-03-10", path]
+    if payload is not None:
+        arguments += ["--input", "-"]
+    result = run(arguments, json.dumps(payload) if payload is not None else None)
+    if result.returncode:
+        match = re.search(r"HTTP (\d{3})", result.stderr)
+        code = int(match.group(1)) if match else None
+        return {"ok": False, "http_status": code,
+                "status": "permission_missing" if code in {401, 403} else "unsupported" if code in {404, 422} else "blocked"}
+    try:
+        data = json.loads(result.stdout) if result.stdout.strip() else None
+    except json.JSONDecodeError:
+        return {"ok": False, "status": "blocked", "reason": "Unexpected non-JSON API response"}
+    return {"ok": True, "data": data}
+
+
+def paginate(path: str, host: str) -> dict:
+    rows = []
+    for page in range(1, 101):
+        response = api(f"{path}{'&' if '?' in path else '?'}per_page=100&page={page}", host=host)
+        if not response["ok"]:
+            return response
+        if not isinstance(response["data"], list):
+            return {"ok": False, "status": "blocked", "reason": "Unexpected pagination response"}
+        rows.extend(response["data"])
+        if len(response["data"]) < 100:
+            return {"ok": True, "data": rows}
+    return {"ok": False, "status": "blocked", "reason": "Pagination safety bound reached; inventory incomplete"}
+
+
+def check_local() -> dict:
+    """Bounded deterministic baseline scan; not a comprehensive secret scanner."""
+    findings = []
+    files = sorted(set(git("ls-files", "--cached", "--others", "--exclude-standard").splitlines()))
+    scanned = 0
+    def scan(label: str, content: bytes) -> None:
+        nonlocal scanned
+        scanned += 1
+        for name, pattern in SECRET_RULES.items():
+            if pattern.search(content):
+                findings.append({"path": label, "rule": name})
+    for name in files:
+        path = ROOT / name
+        if not path.is_file() or path.is_symlink():
+            continue
+        if path.name in {".env", "terraform.tfstate"} or path.suffix.lower() in {".pem", ".key", ".p12", ".pfx", ".dump"}:
+            findings.append({"path": name, "rule": "sensitive-file"})
+        if path.stat().st_size > 64 * 1024 * 1024:
+            findings.append({"path": name, "rule": "oversized-unreviewed-public-file"})
+            continue
+        scan(name, path.read_bytes())
+    # Inspect every historical reachable blob, not only the latest worktree.
+    historical = 0
+    for line in git("rev-list", "--objects", "--all").splitlines():
+        object_id, _, name = line.partition(" ")
+        if git("cat-file", "-t", object_id) != "blob":
+            continue
+        historical += 1
+        result = subprocess.run(["git", "cat-file", "blob", object_id], cwd=ROOT, capture_output=True, timeout=30)
+        if result.returncode:
+            findings.append({"path": object_id, "rule": "history-read-failed"})
+        else:
+            scan(f"history:{object_id}:{name}", result.stdout)
+    for metadata in git("log", "--all", "--format=%ae%n%ce").splitlines():
+        if SECRET_RULES["personal-email"].search(metadata.encode()):
+            findings.append({"path": "git-history-metadata", "rule": "personal-email"})
+    required_files = ["LICENSE", "NOTICE", "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md",
+                      ".github/CODEOWNERS", ".github/workflows/ci.yml", "docs/product/BUILD_SPEC.md"]
+    for name in required_files:
+        if not (ROOT / name).is_file():
+            findings.append({"path": name, "rule": "missing-bootstrap-file"})
+    # Generated pins are provenance, not a guessed GitHub actions.lock file.
+    pins = json.loads((ROOT / ".github/action-pins.json").read_text())
+    accepted = {(entry["repository"], entry["commit"]) for entry in pins}
+    for path in (ROOT / ".github/workflows").glob("*.yml"):
+        text = path.read_text()
+        if "pull_request_target" in text or "write-all" in text:
+            findings.append({"path": str(path.relative_to(ROOT)), "rule": "unsafe-workflow-permission"})
+        for action, revision in re.findall(r"uses:\s*([^\s@]+)@([^\s#]+)", text):
+            if not re.fullmatch(r"[a-f0-9]{40}", revision) or (action, revision) not in accepted:
+                findings.append({"path": str(path.relative_to(ROOT)), "rule": "unverified-action-pin"})
+    for record in json.loads((ROOT / "docs/legal/source-provenance.json").read_text()):
+        if hashlib.sha256((ROOT / record["path"]).read_bytes()).hexdigest() != record["sha256"]:
+            findings.append({"path": record["path"], "rule": "official-legal-text-modified"})
+    return {"outcome": "FAIL" if findings else "PASS", "working_files": len(files),
+            "historical_blobs": historical, "objects_scanned": scanned, "findings": findings,
+            "limitations": ["Baseline pattern scan is not exhaustive secrets detection; an independently pinned comprehensive scanner remains a release gate.",
+                            "No secret values or personal emails are included in findings.",
+                            "DCO certifications and independent human reviews are not inferred from automated checks."]}
+
+
+def inspect(repo: str, host: str) -> dict:
+    prefix = f"repos/{repo}"
+    metadata = api(prefix, host=host)
+    if not metadata["ok"]:
+        return {"repository": repo, "host": host, "status": metadata["status"], "reason": "Repository metadata unavailable", "capabilities": {}}
+    data = metadata["data"]
+    safe = {key: data.get(key) for key in ("full_name", "html_url", "visibility", "default_branch", "archived", "allow_squash_merge", "allow_merge_commit", "allow_rebase_merge", "delete_branch_on_merge", "permissions", "security_and_analysis")}
+    read_paths = {"rulesets": f"{prefix}/rulesets", "workflow_permissions": f"{prefix}/actions/permissions/workflow",
+                  "private_vulnerability_reporting": f"{prefix}/private-vulnerability-reporting",
+                  "dependency_alerts": f"{prefix}/vulnerability-alerts", "codeowners_errors": f"{prefix}/codeowners/errors"}
+    capabilities = {key: api(path, host=host) for key, path in read_paths.items()}
+    capabilities["collaborators"] = paginate(f"{prefix}/collaborators?affiliation=direct", host)
+    if capabilities["collaborators"]["ok"]:
+        capabilities["collaborators"]["data"] = [{"login": person["login"], "permissions": person.get("permissions", {}), "role_name": person.get("role_name")} for person in capabilities["collaborators"]["data"]]
+    return {"repository": repo, "host": host, "metadata": safe, "capabilities": capabilities}
+
+
+def configure(args: argparse.Namespace, before: dict) -> list[dict]:
+    operations = []
+    meta = before.get("metadata", {})
+    if meta.get("full_name", "").lower() != args.repo.lower() or not meta.get("permissions", {}).get("admin") or meta.get("archived"):
+        return [{"feature": "apply", "status": "permission_missing", "reason": "Exact repository identity, active state and admin permission are required"}]
+    prefix = f"repos/{args.repo}"
+    def change(feature: str, method: str, path: str, body: dict | None = None) -> dict:
+        result = api(path, method, body, args.host)
+        operations.append({"feature": feature, "status": "configured_not_enforced" if result["ok"] else result["status"],
+                           "http_status": result.get("http_status"), "read_back_required": True})
+        return result
+    # Narrow PATCHes preserve visibility, ownership and unrelated repository settings.
+    desired = {"allow_squash_merge": True, "delete_branch_on_merge": True}
+    if any(meta.get(key) != value for key, value in desired.items()):
+        change("merge_settings", "PATCH", prefix, desired)
+    permissions = before["capabilities"]["workflow_permissions"]
+    if permissions["ok"] and permissions["data"] != {"default_workflow_permissions": "read", "can_approve_pull_request_reviews": False}:
+        change("workflow_permissions", "PUT", f"{prefix}/actions/permissions/workflow", {"default_workflow_permissions": "read", "can_approve_pull_request_reviews": False})
+    if not before["capabilities"]["dependency_alerts"]["ok"]:
+        change("dependency_alerts", "PUT", f"{prefix}/vulnerability-alerts")
+    reporting = before["capabilities"]["private_vulnerability_reporting"]
+    if not reporting["ok"] or not reporting["data"].get("enabled"):
+        change("private_vulnerability_reporting", "PUT", f"{prefix}/private-vulnerability-reporting")
+    for feature in ("secret_scanning", "secret_scanning_push_protection"):
+        if (meta.get("security_and_analysis") or {}).get(feature, {}).get("status") != "enabled":
+            change(feature, "PATCH", prefix, {"security_and_analysis": {feature: {"status": "enabled"}}})
+    collaborators = before["capabilities"]["collaborators"]
+    eligible = [row["login"] for row in collaborators.get("data", []) if row.get("permissions", {}).get("push")]
+    independent = args.independent_review
+    if independent and len(set(eligible)) < 2:
+        operations.append({"feature": "independent_review", "status": "blocked", "reason": "At least two actual eligible maintainers are required"})
+        independent = False
+    branch_rules = [
+        {"type": "deletion"}, {"type": "non_fast_forward"},
+        {"type": "pull_request", "parameters": {"required_approving_review_count": 1 if independent else 0,
+             "dismiss_stale_reviews_on_push": True, "require_code_owner_review": independent,
+             "require_last_push_approval": independent, "required_review_thread_resolution": True}},
+        {"type": "required_status_checks", "parameters": {"required_status_checks": [{"context": "required"}],
+             "strict_required_status_checks_policy": True, "do_not_enforce_on_create": True}},
+    ]
+    desired_rulesets = [
+        {"name": MANAGED_BRANCH, "target": "branch", "enforcement": "active", "bypass_actors": [],
+         "conditions": {"ref_name": {"include": ["~DEFAULT_BRANCH", "refs/heads/release/**"], "exclude": []}}, "rules": branch_rules},
+        {"name": MANAGED_TAG, "target": "tag", "enforcement": "active", "bypass_actors": [],
+         "conditions": {"ref_name": {"include": ["refs/tags/v*"], "exclude": []}}, "rules": [{"type": "deletion"}, {"type": "update"}]},
+    ]
+    existing = before["capabilities"]["rulesets"]
+    if not existing["ok"]:
+        operations.append({"feature": "rulesets", "status": existing["status"], "reason": "Cannot safely inspect current rulesets"})
+        return operations
+    for desired_ruleset in desired_rulesets:
+        matches = [item for item in existing["data"] if item["name"] == desired_ruleset["name"]]
+        if not matches:
+            change(desired_ruleset["name"], "POST", f"{prefix}/rulesets", desired_ruleset)
+            continue
+        if len(matches) != 1:
+            operations.append({"feature": desired_ruleset["name"], "status": "blocked", "reason": "Ambiguous managed ruleset names"})
+            continue
+        rid = matches[0]["id"]
+        detail = api(f"{prefix}/rulesets/{rid}", host=args.host)
+        if not detail["ok"]:
+            operations.append({"feature": desired_ruleset["name"], "status": detail["status"]})
+            continue
+        current = detail["data"]
+        # Preserve all existing stronger/extra rules. A second invocation never
+        # lowers approvals or drops checks added by another maintainer.
+        merged = {key: current.get(key, desired_ruleset[key]) for key in ("name", "target", "enforcement", "bypass_actors", "conditions", "rules")}
+        merged["enforcement"] = "active"
+        rules = {rule["type"]: rule for rule in merged["rules"]}
+        for rule in desired_ruleset["rules"]:
+            if rule["type"] not in rules:
+                rules[rule["type"]] = rule
+            elif rule["type"] == "pull_request" and independent:
+                parameters = rules[rule["type"]]["parameters"]
+                parameters["required_approving_review_count"] = max(1, parameters.get("required_approving_review_count", 0))
+                parameters["require_code_owner_review"] = True
+                parameters["require_last_push_approval"] = True
+        merged["rules"] = list(rules.values())
+        if any(current.get(key) != value for key, value in merged.items()):
+            change(desired_ruleset["name"], "PUT", f"{prefix}/rulesets/{rid}", merged)
+    return operations
+
+
+def report(args: argparse.Namespace, before: dict, after: dict, operations: list[dict]) -> dict:
+    capabilities = {}
+    for name, value in after.get("capabilities", {}).items():
+        if not value["ok"]:
+            capabilities[name] = {"status": value["status"], "http_status": value.get("http_status")}
+            continue
+        data = value["data"]
+        if name == "private_vulnerability_reporting":
+            capabilities[name] = {"status": "enforced" if data.get("enabled") else "configured_not_enforced", "enabled": bool(data.get("enabled"))}
+        elif name == "dependency_alerts":
+            capabilities[name] = {"status": "enforced"}
+        elif name == "workflow_permissions":
+            capabilities[name] = {"status": "enforced" if data.get("default_workflow_permissions") == "read" and not data.get("can_approve_pull_request_reviews") else "configured_not_enforced", "read_back": data}
+        else:
+            capabilities[name] = {"status": "configured_not_enforced", "read_back": data,
+                                  "reason": "API inspected; behavioral PR/review enforcement is not inferred"}
+    capabilities.update({
+        "independent_human_review": {"status": "configured_not_enforced", "reason": "No completed independent human review recorded"},
+        "private_conduct_reporting": {"status": "blocked", "reason": "Project contact and independent escalation remain unassigned"},
+        "workflow_dependency_lockfile": {"status": "unsupported", "reason": "Official lockfile onboarding is Enterprise Cloud scoped; verified full-commit Action pins used for this personal repository. No hand-authored actions.lock."},
+        "merge_queue": {"status": "unsupported", "reason": "Personal repository; use up-to-date branch validation"},
+        "release_artifact_signing": {"status": "blocked", "reason": "Release build/sign/verify pipeline not yet qualified"},
+        "code_scanning": {"status": "blocked", "reason": "Hosted scanner and portable SAST have not been qualified"},
+    })
+    return {"schema_version": 1, "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+            "command": f"python3 scripts/github/bootstrap {args.command} --repo {args.repo}",
+            "commit": git("rev-parse", "HEAD") or None, "repository": args.repo, "host": args.host,
+            "release_tier": "development", "before": before, "after": after,
+            "operations": operations, "capabilities": capabilities,
+            "qualification": "Repository configuration evidence only; not product, security or release certification"}
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("command", choices=["check-local", "inspect", "apply"])
+    parser.add_argument("--repo", default="dlamaro96/governance-commons")
+    parser.add_argument("--host", default="github.com")
+    parser.add_argument("--independent-review", action="store_true")
+    parser.add_argument("--output", type=Path, default=REPORT)
+    args = parser.parse_args()
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", args.repo) or not re.fullmatch(r"[A-Za-z0-9.-]+", args.host):
+        parser.error("Invalid repository or host")
+    if args.command == "check-local":
+        result = check_local()
+        print(json.dumps(result, indent=2))
+        return 0 if result["outcome"] == "PASS" else 1
+    before = inspect(args.repo, args.host)
+    operations = configure(args, before) if args.command == "apply" and before.get("metadata") else []
+    after = inspect(args.repo, args.host) if args.command == "apply" else before
+    result = report(args, before, after, operations)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(result, indent=2) + "\n")
+    print(json.dumps({"repository": args.repo, "report": str(args.output.relative_to(ROOT)) if args.output.is_relative_to(ROOT) else str(args.output),
+                      "capabilities": result["capabilities"]}, indent=2))
+    return 0 if after.get("metadata") else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

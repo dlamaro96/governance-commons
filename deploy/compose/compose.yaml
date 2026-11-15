@@ -1,0 +1,262 @@
+# SPDX-License-Identifier: Apache-2.0
+name: governance-commons
+x-app: &app
+  image: governance-commons:dev
+  build:
+    context: ../..
+    dockerfile: Dockerfile
+  init: true
+  security_opt: [no-new-privileges:true]
+  cap_drop: [ALL]
+  restart: unless-stopped
+x-api-env: &api-env
+  NODE_ENV: development
+  HOST: 0.0.0.0
+  PORT: 4310
+  DATABASE_URL: postgresql://gc_app:${GC_APP_PASSWORD}@postgres:5432/governance
+  SESSION_KEY: ${SESSION_KEY}
+  OIDC_ISSUER: http://localhost:4311/realms/governance
+  OIDC_INTERNAL_BASE: http://keycloak:8080/realms/governance
+  OIDC_CLIENT_ID: governance-web
+  PUBLIC_URL: http://localhost:4310
+  SITE_TOKEN: ${SITE_TOKEN}
+  SITE_TENANTS: ${SITE_TENANTS}
+  OPENSEARCH_URL: http://opensearch:9200
+  S3_ENDPOINT: http://seaweedfs:8333
+  S3_REGION: us-east-1
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+  S3_BUCKET: governance-evidence
+  S3_FORCE_PATH_STYLE: 'true'
+  TEMPORAL_ADDRESS: temporal:7233
+  TEMPORAL_NAMESPACE: default
+services:
+  init-secrets:
+    image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
+    user: '0:0'
+    network_mode: none
+    entrypoint: [/bin/sh, /init-secrets.sh]
+    restart: 'no'
+    volumes:
+      - postgres-bootstrap:/bootstrap/postgres
+      - source-bootstrap:/bootstrap/source
+      - identity-bootstrap:/bootstrap/identity
+      - ./init-secrets.sh:/init-secrets.sh:ro
+      - ../../.local/postgres-init.sql:/input/postgres-init.sql:ro
+      - ../../.local/source-init.sql:/input/source-init.sql:ro
+      - ../../.local/governance-realm.json:/input/governance-realm.json:ro
+  postgres:
+    image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - postgres-bootstrap:/bootstrap:ro
+      - ./init-postgres.sh:/docker-entrypoint-initdb.d/10-governance.sh:ro
+    depends_on:
+      init-secrets: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U postgres -d governance]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    mem_limit: 512m
+    restart: unless-stopped
+  source-postgres:
+    image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
+    environment:
+      POSTGRES_USER: source_admin
+      POSTGRES_PASSWORD: ${SOURCE_ADMIN_PASSWORD}
+      POSTGRES_DB: harbor
+    volumes:
+      - source-data:/var/lib/postgresql/data
+      - source-bootstrap:/bootstrap:ro
+      - ./init-source.sh:/docker-entrypoint-initdb.d/10-harbor.sh:ro
+    depends_on:
+      init-secrets: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U source_admin -d harbor]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    mem_limit: 256m
+    restart: unless-stopped
+  opensearch:
+    image: opensearchproject/opensearch:3.9.0@sha256:3b55f6b6249cfdb92b52ee59adc8a266203ba9ef9f5d82544fad6f1af2f3609e
+    environment:
+      discovery.type: single-node
+      bootstrap.memory_lock: 'true'
+      DISABLE_SECURITY_PLUGIN: 'true'
+      DISABLE_INSTALL_DEMO_CONFIG: 'true'
+      OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+    ulimits:
+      memlock: {soft: -1, hard: -1}
+      nofile: {soft: 65536, hard: 65536}
+    volumes: [search-data:/usr/share/opensearch/data]
+    healthcheck:
+      test: [CMD-SHELL, 'curl -fsS http://localhost:9200/_cluster/health?wait_for_status=yellow >/dev/null']
+      interval: 5s
+      timeout: 5s
+      retries: 60
+    mem_limit: 1536m
+    restart: unless-stopped
+  temporal:
+    image: temporalio/server:1.32.2@sha256:7bf69188a6232fea14869b9cef3d94aa82a1601d99517f7e86c71f22da4e0670
+    command: [/etc/temporal/entrypoint.sh, autosetup]
+    environment:
+      DB: postgres12
+      DB_PORT: '5432'
+      POSTGRES_SEEDS: postgres
+      POSTGRES_USER: temporal
+      POSTGRES_PWD: ${TEMPORAL_DB_PASSWORD}
+      DBNAME: temporal
+      VISIBILITY_DBNAME: temporal_visibility
+      SKIP_DB_CREATE: 'true'
+      SKIP_ADD_CUSTOM_SEARCH_ATTRIBUTES: 'true'
+      BIND_ON_IP: 0.0.0.0
+      TEMPORAL_ADDRESS: temporal:7233
+      DYNAMIC_CONFIG_FILE_PATH: config/dynamicconfig/development-sql.yaml
+    depends_on:
+      postgres: {condition: service_healthy}
+    healthcheck:
+      test: [CMD-SHELL, 'temporal operator namespace describe --namespace default >/dev/null 2>&1']
+      interval: 5s
+      timeout: 5s
+      retries: 60
+    mem_limit: 768m
+    restart: unless-stopped
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.1@sha256:3f3c5f8e03c614774b4bd9173b88391fefa4153bfc010d8012d59ad825377332
+    command: [start-dev, --import-realm]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KC_BOOTSTRAP_ADMIN_USERNAME: local-admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_HOSTNAME: http://localhost:4311
+      KC_HTTP_ENABLED: 'true'
+      KC_HEALTH_ENABLED: 'true'
+      JAVA_OPTS_APPEND: -Xms128m -Xmx512m
+    ports: [127.0.0.1:4311:8080]
+    volumes:
+      - identity-bootstrap:/opt/keycloak/data/import:ro
+    tmpfs: [/tmp]
+    depends_on:
+      postgres: {condition: service_healthy}
+    healthcheck:
+      test: [CMD-SHELL, 'bash -c "exec 3<>/dev/tcp/127.0.0.1/9000; printf ''GET /health/ready HTTP/1.0\r\n\r\n'' >&3; cat <&3" | grep -q ''200 OK''']
+      interval: 5s
+      timeout: 5s
+      retries: 60
+    mem_limit: 768m
+    restart: unless-stopped
+  seaweedfs:
+    image: chrislusf/seaweedfs:4.51@sha256:f7a49e3f3972ebed5be2ed4befa4a0c68eb7bdddba6e692d42729ceb545134b8
+    command: [server, -dir=/data, -s3, -s3.config=/etc/seaweedfs/s3.json, -volume.max=4, -master.volumeSizeLimitMB=64, -ip=seaweedfs]
+    volumes:
+      - object-data:/data
+      - ../../.local/seaweed-s3.json:/etc/seaweedfs/s3.json:ro
+    healthcheck:
+      test: [CMD-SHELL, 'wget -q -O /dev/null http://localhost:9333/cluster/status']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    mem_limit: 512m
+    restart: unless-stopped
+  migrate:
+    <<: *app
+    restart: 'no'
+    command: [pnpm, db:migrate]
+    environment:
+      MIGRATION_DATABASE_URL: postgresql://gc_owner:${GC_OWNER_PASSWORD}@postgres:5432/governance
+    depends_on:
+      postgres: {condition: service_healthy}
+  api:
+    <<: *app
+    command: [pnpm, api/start]
+    environment: *api-env
+    ports: [127.0.0.1:4310:4310]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      opensearch: {condition: service_healthy}
+      keycloak: {condition: service_healthy}
+      seaweedfs: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://localhost:4310/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    mem_limit: 512m
+  workflow-worker:
+    <<: *app
+    command: [pnpm, workflow/start]
+    environment:
+      API_URL: http://api:4310
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_NAMESPACE: default
+      SITE_TOKEN: ${SITE_TOKEN}
+      SITE_TENANTS: ${SITE_TENANTS}
+    depends_on:
+      api: {condition: service_healthy}
+      temporal: {condition: service_healthy}
+    mem_limit: 512m
+  site-runner:
+    <<: *app
+    command: [pnpm, site/start]
+    environment:
+      API_URL: http://api:4310
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_NAMESPACE: default
+      SITE_TOKEN: ${SITE_TOKEN}
+      SITE_TENANTS: ${SITE_TENANTS}
+      WORKER_TOKEN: ${WORKER_TOKEN}
+      PYTHON_WORKER_URL: http://python-worker:8080
+    depends_on:
+      api: {condition: service_healthy}
+      temporal: {condition: service_healthy}
+      python-worker: {condition: service_healthy}
+    mem_limit: 384m
+  python-worker:
+    image: governance-commons-python:dev
+    build:
+      context: ../..
+      dockerfile: python/Dockerfile
+    user: '${LOCAL_UID}:${LOCAL_GID}'
+    environment:
+      WORKER_TOKEN: ${WORKER_TOKEN}
+      SOURCE_SECRETS_FILE: /run/secrets/source-secrets.json
+    volumes:
+      - ../../.local/source-secrets.json:/run/secrets/source-secrets.json:ro
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD, /worker/.venv/bin/python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8080/health', timeout=3)"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    depends_on:
+      source-postgres: {condition: service_healthy}
+    mem_limit: 256m
+    restart: unless-stopped
+  seed:
+    <<: *app
+    profiles: [tools]
+    restart: 'no'
+    command: [pnpm, db:seed]
+    environment:
+      <<: *api-env
+      MIGRATION_DATABASE_URL: postgresql://gc_owner:${GC_OWNER_PASSWORD}@postgres:5432/governance
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+volumes:
+  postgres-bootstrap:
+  source-bootstrap:
+  identity-bootstrap:
+  postgres-data:
+  source-data:
+  search-data:
+  object-data:
