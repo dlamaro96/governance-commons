@@ -18,6 +18,8 @@ const ModelEditorPage = lazy(() => import('./pages/Models').then(module => ({ de
 const AssetTypesPage = lazy(() => import('./pages/AssetTypes').then(module => ({ default: module.AssetTypesPage })));
 const AssetTypePage = lazy(() => import('./pages/AssetTypes').then(module => ({ default: module.AssetTypePage })));
 const AssetTypeEditorPage = lazy(() => import('./pages/AssetTypes').then(module => ({ default: module.AssetTypeEditorPage })));
+const AssetTypeMigrationPage = lazy(() => import('./pages/AssetTypeMigrations').then(module => ({ default: module.AssetTypeMigrationPage })));
+const AssetTypeMigrationReceiptPage = lazy(() => import('./pages/AssetTypeMigrations').then(module => ({ default: module.AssetTypeMigrationReceiptPage })));
 const ModelMigrationPage = lazy(() => import('./pages/ModelMigrations').then(module => ({ default: module.ModelMigrationPage })));
 const ModelMigrationReceiptPage = lazy(() => import('./pages/ModelMigrations').then(module => ({ default: module.ModelMigrationReceiptPage })));
 
@@ -84,6 +86,9 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   const migrationMatch = path.match(/^\/models\/([^/]+)\/(migrate|migrations\/([a-f0-9-]+))$/i);
   let migrationModelId: string | null = null;
   if (migrationMatch) { try { migrationModelId = decodeURIComponent(migrationMatch[1]); } catch { migrationModelId = null; } }
+  const typeMigrationMatch = path.match(/^\/asset-types\/([^/]+)\/(migrate|migrations\/([a-f0-9-]+))$/i);
+  let migrationTypeId: string | null = null;
+  if (typeMigrationMatch) { try { migrationTypeId = decodeURIComponent(typeMigrationMatch[1]); } catch { migrationTypeId = null; } }
   let content;
   if (path === '/') content = <HomePage/>;
   else if (path === '/catalog') content = can('catalog:read') ? <CatalogPage/> : <PermissionDenied/>;
@@ -91,6 +96,7 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   else if (path === '/sources') content = can('sources:read') ? <SourcesPage/> : <PermissionDenied/>;
   else if (path === '/asset-types') content = can('models:read') ? <AssetTypesPage/> : <PermissionDenied/>;
   else if (path === '/asset-types/new/definition') content = can('models:write') && can('models:read') ? <AssetTypeEditorPage/> : <PermissionDenied/>;
+  else if (migrationTypeId && typeMigrationMatch) content = typeMigrationMatch[3] ? (can('models:read') && can('catalog:read') ? <AssetTypeMigrationReceiptPage id={migrationTypeId} migrationId={typeMigrationMatch[3]}/> : <PermissionDenied/>) : (can('models:read') && can('models:write') && can('catalog:read') && can('catalog:write') ? <AssetTypeMigrationPage id={migrationTypeId}/> : <PermissionDenied/>);
   else if (typeId) content = can('models:read') && (!typeMatch?.[2] || can('models:write') && can('catalog:read')) ? (typeMatch?.[2] ? <AssetTypeEditorPage id={typeId}/> : <AssetTypePage id={typeId}/>) : <PermissionDenied/>;
   else if (path === '/models') content = can('models:read') ? <ModelsPage/> : <PermissionDenied/>;
   else if (path === '/models/new/definition') content = can('models:write') ? <ModelEditorPage/> : <PermissionDenied/>;

@@ -109,6 +109,7 @@ def main():
   ./dev test --suite security         Run locally configured isolation gate
   ./dev test --suite model-upgrade    Verify receipt upgrade in isolated PostgreSQL
   ./dev test --suite asset-type-upgrade Verify inherited-type upgrade in isolated PostgreSQL
+  ./dev test --suite type-migration-upgrade Verify complete typed receipts and principal locking
   ./dev test --suite connectors       Run Python contract/source tests
   ./dev test --suite recovery         Verify repeated seed and persistent restart
   ./dev test --suite histories        Inspect a completed scan's Temporal payloads
@@ -167,6 +168,8 @@ Never use docker compose config output in public logs: it expands secrets.""")
             run([sys.executable, "scripts/runtime-test-model-upgrade.py"], timeout=300)
         elif args.suite == "asset-type-upgrade":
             run([sys.executable, "scripts/runtime-test-asset-type-upgrade.py"], timeout=300)
+        elif args.suite == "type-migration-upgrade":
+            run([sys.executable, "scripts/runtime-test-type-migration-upgrade.py"], timeout=300)
         elif args.suite == "histories":
             run([sys.executable, "scripts/runtime-test-histories.py"], timeout=120)
         else:

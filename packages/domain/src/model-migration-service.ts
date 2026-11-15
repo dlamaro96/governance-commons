@@ -248,7 +248,8 @@ export async function getMigrationReceipt(tx: Tx, principal: Principal, modelId:
   options: MigrationReceiptOptions = {}): Promise<{ receipt: ModelMigrationReceipt }> {
   const actions = options.forExecutionReplay ? writePermissions : readPermissions;
   await persistence.authorize(tx, principal, actions);
-  await persistence.head(tx, principal, modelId);
+  const head = await persistence.head(tx, principal, modelId);
+  if (head.type_id) throw new Problem(422, 'ASSET_TYPE_REQUIRED', 'Read the complete authored-type migration receipt through its type history.');
   if (typeof migrationId !== 'string' || !uuid.test(migrationId)) throw new Problem(400, 'MODEL_MIGRATION_ID_INVALID', 'Provide a valid migration identifier.');
   const row = await tx.selectFrom('governance_model_migrations').selectAll().where('tenant_id', '=', principal.tenantId)
     .where('model_id', '=', modelId).where('id', '=', migrationId).executeTakeFirst();

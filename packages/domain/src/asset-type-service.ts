@@ -161,13 +161,26 @@ async function prepare(tx: Tx, p: Principal, id: string, expectedVersion: number
   const changes = [...schema.value.changes];
   if (current.requiredOwner !== proposed.requiredOwner) changes.push({ code: 'constraints_changed', path: '/requiredOwner', requiresMigration: !compatible });
   if (typeHash(current.lifecycle) !== typeHash(proposed.lifecycle)) changes.push({ code: 'constraints_changed', path: '/lifecycle', requiresMigration: !compatible });
+  const policyChanges = assetTypePolicyChanges(current, proposed);
   const previewDigest = typeHash({ tenantId: p.tenantId, id, expectedVersion, resolution: proposed,
     assets: cohort.map(asset => ({ id: asset.id, version: asset.version, modelVersion: asset.model_version,
       attributes: asset.attributes, ownerId: asset.owner_id, ownerActive: activeOwners.has(asset.owner_id), state: asset.type_state })) });
   return { head, proposed, preview: { typeId: head.type_id, modelId: id, currentVersion: expectedVersion, proposedVersion: proposed.definition.version,
     coverage: 'complete-tenant-model-bindings' as const, assetCount: assets.length, changes, assets,
-    requiresExplicitMigration: schema.value.requiresExplicitMigration || !compatible, compatibleWithProvidedAssets: compatible, pinsPreserved: true as const, previewDigest } };
+    requiresExplicitMigration: schema.value.requiresExplicitMigration || !compatible, compatibleWithProvidedAssets: compatible, pinsPreserved: true as const, previewDigest,
+    target: proposed, policyChanges } };
 }
+
+export function assetTypePolicyChanges(head: ResolvedAssetType, target: ResolvedAssetType) {
+  const changes: ('parents_changed' | 'required_owner_changed' | 'lifecycle_changed')[] = [];
+  const pins = (value: ResolvedAssetType) => [...value.definition.parents].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+  if (typeHash(pins(head)) !== typeHash(pins(target))) changes.push('parents_changed');
+  if (head.requiredOwner !== target.requiredOwner) changes.push('required_owner_changed');
+  if (typeHash(head.lifecycle) !== typeHash(target.lifecycle)) changes.push('lifecycle_changed');
+  return changes.sort();
+}
+/** Internal persistence shared by publication and complete type migration; not an authorization boundary. */
+export const assetTypePersistence = { typeHead, typeRow, resolved, insertVersion, view };
 export async function previewAssetType(tx: Tx, p: Principal, id: string, expectedVersion: number, input: unknown) {
   await persistence.authorize(tx, p, previewPermissions); await persistence.lockTenantModels(tx, p);
   return (await prepare(tx, p, id, expectedVersion, input)).preview;

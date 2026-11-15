@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T18:02:42.044634+00:00",
+  "result": "PASS",
+  "scope": "Hosted qualification of the pinned inherited-type development increment; complete MOD/M2/release remain open.",
+  "repository": "https://github.com/dlamaro96/governance-commons",
+  "pull_request": 7,
+  "implementation_commit": "d518ddbb35200166b38ba88396986fa4827413f1",
+  "head_commit": "7eaa7627dfa4dba99f7e395e8836b862b816658b",
+  "tested_merge_commit": "3b8e5ba562ed327727f457299899e4f6203ef6e5",
+  "merged_commit": "446f05e8577eba21767faf11c8248804c370201d",
+  "merged_at": "2026-11-15T18:00:20Z",
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43743365601",
+  "required_checks": {
+    "quality": "success",
+    "secrets": "success",
+    "behavior": "success",
+    "required": "success"
+  },
+  "behavior": {
+    "schema_version": 1,
+    "timestamp": "2026-11-15T17:59:00.343916+00:00",
+    "commit": "3b8e5ba562ed327727f457299899e4f6203ef6e5",
+    "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43743365601",
+    "profile": "core / GitHub-hosted Ubuntu 24.04 / synthetic PostgreSQL",
+    "steps": {
+      "bootstrap": "success",
+      "services": "success",
+      "object_store": "success",
+      "seed": "success",
+      "connectors": "success",
+      "security": "success",
+      "model_upgrade": "success",
+      "asset_type_upgrade": "success",
+      "browser": "success"
+    },
+    "outcome": "PASS",
+    "tests": [
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 17,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 7340
+      },
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 101,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1774
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 30,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 13792
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 74,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1507
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 77,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 23810
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 257,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 3502
+      },
+      {
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 80,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 20045
+      },
+      {
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 218,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 2699
+      },
+      {
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 97,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 27858
+      },
+      {
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 242,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 44720
+      }
+    ],
+    "screenshots": [
+      "catalog-en-light-390.png",
+      "catalog-en-light-768.png",
+      "catalog-en-light-1024.png",
+      "catalog-en-light-1280.png",
+      "catalog-en-light-1440.png",
+      "catalog-en-dark-1440.png",
+      "catalog-history.png",
+      "catalog-ar-dark-390.png",
+      "catalog-ar-dark-768.png",
+      "catalog-ar-dark-1440.png"
+    ],
+    "limitations": [
+      "No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
+      "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification."
+    ]
+  },
+  "safe_summary_sha256": "0edf6df41952122e8c2a9058ad4c89746d90e03acb00a1ec884789acbe7496f4",
+  "limitations": [
+    "Hosted safe summary records successful upgrade steps, but does not contain individual SQL assertions; it must not be represented as per-case upgrade evidence.",
+    "Local and hosted timestamps/images remain separate; hosted Linux browser execution does not replace recorded local rendered inspection.",
+    "No independent human review, full capability qualification or release certification is inferred."
+  ]
+}
