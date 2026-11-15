@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-15T16:22:06.723051+00:00",
+  "scope": "Bounded M2 declarative migration application-service verification against real local PostgreSQL; source-mounted development code",
+  "implementationStatus": "IN_PROGRESS",
+  "verification": {
+    "outcome": "PASS",
+    "tests": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "command": "docker compose --env-file .local/runtime.env -f deploy/compose/compose.yaml run --rm --no-deps --volume \"$PWD/packages:/app/packages:ro\" --volume \"$PWD/apps/api:/app/apps/api:ro\" --volume \"$PWD/tests/integration:/app/tests/integration:ro\" api node --import tsx --test tests/integration/model-migrations.test.ts",
+    "durationMs": 621.318208,
+    "toolOutputChunks": [
+      "089b2f",
+      "89d6e9"
+    ]
+  },
+  "revision": {
+    "baseCommitAtEvidenceCollection": "2a6aff77d423a650b4fdcc6b034a5de9201787c2",
+    "branch": "codex/m2-models",
+    "sourceBinding": "The executed working-tree service, test, schema and imported dependencies are identified by SHA-256. This is not a claim that tests ran on a clean committed tree. Bind the integrated checkpoint separately."
+  },
+  "sourceHashes": {
+    "packages/domain/src/model.ts": "159a0c33adba506a71948d583e80e89340e8fddcfa842a3050d07d190bd3f7cc",
+    "packages/domain/src/model-service.ts": "60522d01615e5b1e6ce1258166fe925d7935f7141d892ac6f82f5e058e277c4c",
+    "packages/domain/src/model-migration.ts": "b0a42540415ef1cfc71792f132107f56931c9fb0f0c9fcfcdc9f2af4fa1125aa",
+    "packages/domain/src/model-migration-service.ts": "3b01c08c13b4e20313185559ab07102dad799919ecd4c33fa430fcd9ee5f85bb",
+    "tests/integration/model-migrations.test.ts": "c3f2cfd222decca2739a5605165ca662ef8a500c41f6fd92334f8e42756ff99d",
+    "packages/db/migrations/003_governance_models.sql": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa",
+    "packages/db/migrations/004_model_migrations.sql": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f",
+    "packages/db/src/index.ts": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976",
+    "packages/authz/src/index.ts": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be",
+    "apps/api/src/repository.ts": "104806130f15236b983d5d207b49daa498dee7b41a1dff40aad6b66e45a5179f",
+    "package.json": "87bf0ba005fde7f3b64d6ea3a84dacdcb08f9517f56a7fde87d3386882907f78",
+    "pnpm-lock.yaml": "64ba875f705195741265864539885115446d7f24848033b66ebb0f17ee396bef"
+  },
+  "runtime": {
+    "profile": "core",
+    "node": "24.22.3",
+    "typescript": "7.0.2",
+    "tsx": "4.23.15",
+    "dockerEngine": "27.3.1",
+    "dockerCompose": "2.29.7-desktop.1",
+    "postgresql": "17.11 (Debian 17.11-1.pgdg12+2)",
+    "databaseRole": "gc_app",
+    "roleIsSuperuser": false,
+    "roleBypassesRls": false,
+    "containerPlatform": "linux",
+    "containerArchitecture": "arm64",
+    "runtimeProbeOutputChunk": "2cf8c4"
+  },
+  "typecheck": {
+    "outcome": "PASS",
+    "exitCode": 0,
+    "command": "PATH=\"$PWD/.local/toolchain/node/bin:$PWD/.local/pnpm/node_modules/.bin:$PATH\" pnpm typecheck",
+    "scope": "Root TypeScript and web TypeScript",
+    "toolOutputChunks": [
+      "3e1c12"
+    ]
+  },
+  "executedCases": [
+    "Complete preview enumerates current and historical pins with authorized exact before/after values; execution atomically repins both assets, preserves decimal strings, preserves historic definitions, creates immutable revisions and receipt, and appends the production audit/outbox events.",
+    "A deliberately injected failure after the final production model journal write, after receipt insertion and both asset updates, rolls back head, new immutable version, pins, values, revisions, receipt, audit and outbox. The unchanged preview then succeeds on retry.",
+    "Preview digests change for edited plan literals, concurrent asset versions and additional bindings. All stale executions fail before writes. A zero-asset destructive upgrade requires its explicit acknowledgement and creates an empty-cohort receipt.",
+    "Hidden cohorts block preview/context without exposing identifiers, counts or values. Cross-tenant reads are unavailable under RLS. Receipt reads reauthorize original recorded assets even after reassignment and later visibility revocation. Execution replay additionally requires current write permissions.",
+    "Direct service invocation rejects forged database permissions, missing catalog-write permission, an inexact pinned-version declaration and a missing preview digest.",
+    "Full source/target validation rejects missing target values with stable paths and without echoing protected values; no version, revision or receipt is written.",
+    "Small input cohorts that would expand beyond the aggregate transformed byte or node budget are rejected before writes.",
+    "Many historical pinned definitions are rejected when their aggregate stored bytes exceed the definition materialization budget, even with small asset values."
+  ],
+  "limits": {
+    "assets": 1000,
+    "beforeAttributeBytes": 524288,
+    "afterAttributeBytes": 524288,
+    "beforeAttributeNodes": 100000,
+    "afterAttributeNodes": 100000,
+    "distinctStoredDefinitionBytes": 524288,
+    "distinctStoredDefinitionNodes": 100000,
+    "validationIssues": 1000,
+    "planOperations": 64,
+    "objectPathSegments": 8,
+    "notes": "The shared model cohort reader also applies its stricter combined current/proposed input node accounting before migration-specific checks. Complete-cohort failure returns no partial preview or partial committed migration."
+  },
+  "lockOrder": [
+    "tenant ledger advisory transaction lock",
+    "tenant model advisory transaction lock",
+    "model head row",
+    "canonical bound asset rows ordered by id"
+  ],
+  "limitations": [
+    "These tests call application services directly; synthetic fixture setup uses direct SQL. HTTP idempotency, browser interaction and migration UI are separate qualification gates.",
+    "Successful tests use the real repository record and assetView hooks and assert production audit hashes/outbox records. The late fault is deliberately injected to prove database transaction rollback; it is not a naturally occurring production incident.",
+    "Only the explicitly bounded synchronous profile is implemented. Temporal migration scheduling, resumable bulk migrations, arbitrary conversion code, list-index mutation, forward-repair orchestration and restore procedures are not qualified here.",
+    "No full MOD-002 or AT-MOD-01 programme completion, enterprise concurrency/load qualification or release readiness is claimed.",
+    "Database schema 004 is applied locally and immutable. Runtime roles are not superusers and do not bypass row-level security. A separate API/runtime rebuild is required to serve newly wired ingress routes.",
+    "Tenant mutation serialization and row locks are reused from the shared model persistence boundary. Existing canonical-row concurrency tests are separate; this report adds no throughput benchmark.",
+    "The initial run failed because one synthetic direct-SQL fixture omitted the required observed_at timestamp. The fixture was corrected and all eight tests reran successfully.",
+    "Synthetic fixtures and append-only audit/version history remain in the local development database. Nothing was deleted to hide test history.",
+    "The imported production repository hook is hashed above; unrelated changing API route/UI files are excluded from this direct-service evidence.",
+    "The complete eight-test suite reran after extraction of the shared bounded JSON parser. The hashes above bind that final successful run, not the earlier pre-extraction result."
+  ],
+  "releaseQualification": "NOT_RUN"
+}

@@ -1,0 +1,359 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T16:58:37.192857+00:00",
+  "result": "PASS",
+  "scope": "Bounded explicit model migration UI, model search/paging and existing M1/M2 browser regression; partial MOD/UX verification, not full programme or release qualification",
+  "profile": "core / real Docker Linux arm64 / synthetic Harbor and Summit tenants",
+  "target": "http://localhost:4310",
+  "command": "PATH=\"$PWD/.local/toolchain/node/bin:$PWD/.local/pnpm/node_modules/.bin:$PATH\" GC_BROWSER_EXECUTABLE=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" pnpm exec playwright test --config .github/playwright.ci.config.ts",
+  "execution": {
+    "startTime": "2026-11-15T16:54:55.166Z",
+    "duration": 186416.905,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "raw_report": ".local/evidence/playwright-migrations-docker-final-results.json",
+  "raw_report_sha256": "cbbace7489ea78e78d0476ef521b2b5b794a32e0461f4ece2b28612983d892e3",
+  "source_binding": {
+    "base_commit": "a2e9a5d71a9d869aaeef8065e41b0be295523224",
+    "working_tree_dirty": true,
+    "method": "SHA256 binds the executed working tree; final commit binding is recorded separately. All served JavaScript/CSS bytes matched the local production build. Historical evidence remains bound to its own original execution. Changing backend working-tree files are intentionally excluded; the immutable runtime image identifies the backend exercised by this full run.",
+    "files": [
+      {
+        "path": ".github/playwright.ci.config.ts",
+        "sha256": "6a17978bb7d0f6d7882c71bbc74b56e375001ce655e599930a611a4a6557447e"
+      },
+      {
+        "path": "apps/web/package.json",
+        "sha256": "cf72e592f6444959c257e304abb0c455fd28d4e297a4e2601339ea38fd427b3c"
+      },
+      {
+        "path": "apps/web/src/App.tsx",
+        "sha256": "9a63b7c3f19ec7e1f35a88f7fafcfdb9fb15a311185bfadcd62d381919eb5a41"
+      },
+      {
+        "path": "apps/web/src/api.ts",
+        "sha256": "62ca221c1b8ba76a0d20f89699735129768890419a13f8f3a0338b213197bac9"
+      },
+      {
+        "path": "apps/web/src/components.tsx",
+        "sha256": "217df6f66523f65accc3269304660c6ac90db9b84e4ce46937e3d546864f4187"
+      },
+      {
+        "path": "apps/web/src/i18n.tsx",
+        "sha256": "ce8641bb86e5601d03e087c7be93201968a55225e752af5a59f2da9dc3cc243f"
+      },
+      {
+        "path": "apps/web/src/main.tsx",
+        "sha256": "666b70ce5765a222777738d2b1f9120c1d2c2914daa96de87574853fb65e475c"
+      },
+      {
+        "path": "apps/web/src/models/AssetAttributes.tsx",
+        "sha256": "62e956aba1f30623d2487993ba475f4c90a59776f16eec9bce6e4df5b182b89d"
+      },
+      {
+        "path": "apps/web/src/models/MigrationPlanEditor.tsx",
+        "sha256": "3e4cb6d421007ec6be00ec64f3ed3574dadcb1072450fa642bd5eeaf278469df"
+      },
+      {
+        "path": "apps/web/src/models/ModelBrowser.tsx",
+        "sha256": "90af09050c00d68ed3c2ce5f65ed6818d9cad521d93ac9d4187108e246f1ea7b"
+      },
+      {
+        "path": "apps/web/src/models/ModelFeedback.tsx",
+        "sha256": "d5b10fee5d8b321b4ecc6075559ad6790a9f1b812d4b58e1eb42433881904809"
+      },
+      {
+        "path": "apps/web/src/models/SchemaEditor.tsx",
+        "sha256": "c028b4d34d4ee84bc9250b718f2ed1aff5b7f881be29a0fe1cde7ff0da82ca06"
+      },
+      {
+        "path": "apps/web/src/models/ValueFields.tsx",
+        "sha256": "fd0980ca3945be050410da3040a5e7f5cabf55edf372eef4ee9ef1532741335d"
+      },
+      {
+        "path": "apps/web/src/models/VersionPicker.tsx",
+        "sha256": "95781b042c066ebe9e8cd1af841eeb80e6166146e588ac94280038b514756660"
+      },
+      {
+        "path": "apps/web/src/models/contracts.ts",
+        "sha256": "61bf84e2c951a4e815c0cf37df63dce4dbd78c7a7b1ea8ef91a4234787c75f7f"
+      },
+      {
+        "path": "apps/web/src/models/messages.ts",
+        "sha256": "667433010425fa8a457de9edc47a797e828e819b748ef0566736a040cc0bcb5f"
+      },
+      {
+        "path": "apps/web/src/models/migrationMessages.ts",
+        "sha256": "808cb94cbeccb5617a8fddb59dce1f14d214f32b01e787ad0d7ca5b00eb072dc"
+      },
+      {
+        "path": "apps/web/src/models/planMessages.ts",
+        "sha256": "244916806562a9046bce7f4bb364990842f02975c5e17df14d4c57a8f207039f"
+      },
+      {
+        "path": "apps/web/src/navigation.tsx",
+        "sha256": "d15a75f39edb92ee626bd0682353466b433f5be7cb5104bc1b0a256a7d61913c"
+      },
+      {
+        "path": "apps/web/src/pages/Asset.tsx",
+        "sha256": "57c41f720512e8985039541f9bf4a7445e9aeef2e1ccdb6c7d53fb9df1312212"
+      },
+      {
+        "path": "apps/web/src/pages/Audit.tsx",
+        "sha256": "a23e4c96f32216a8e5c3a7791c8263e78596630313213305a8c22d551217840e"
+      },
+      {
+        "path": "apps/web/src/pages/Catalog.tsx",
+        "sha256": "259126c8daccae7b8eb692cf15a2cef8cd359ee12318c0940a2c39fea3f763ed"
+      },
+      {
+        "path": "apps/web/src/pages/Home.tsx",
+        "sha256": "bb08cf9f5b6d107de73ee3dee400ccd0392f4a826811ab6000a224669d1f0f05"
+      },
+      {
+        "path": "apps/web/src/pages/ModelMigrations.tsx",
+        "sha256": "6f8faa7af6c5ca2fe0e3c5e2c346dba0680e4dc2c5591218f56be39eae8326ea"
+      },
+      {
+        "path": "apps/web/src/pages/Models.tsx",
+        "sha256": "56282a50d543884ef3428355fccb0bf8b8ade27f97536953e7881ce60102b2b8"
+      },
+      {
+        "path": "apps/web/src/pages/Sources.tsx",
+        "sha256": "5df5464c6baea87b932433b9fe4dbf9d52cdc0073369598cdc4feb4c40a82f42"
+      },
+      {
+        "path": "apps/web/src/session.tsx",
+        "sha256": "8194132b7f7b979ea515bf8eab8eb9b00c1f4b7699f16740352cbf84a1165cea"
+      },
+      {
+        "path": "apps/web/src/styles.css",
+        "sha256": "c05ab4691cbaa35f46c1a0ff37c9ec2834b4fac565062b015ff108d5dfbf73ee"
+      },
+      {
+        "path": "apps/web/src/types.ts",
+        "sha256": "2c121eba06c772d494ae715a03ea8a473ed4f23ffea6748b3fd361b4804e14c7"
+      },
+      {
+        "path": "apps/web/src/vite-env.d.ts",
+        "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+      },
+      {
+        "path": "apps/web/tsconfig.json",
+        "sha256": "76b2915cb9623d54b4ce6366ac36ce8302a388e67955382075f3b3cfe8baee49"
+      },
+      {
+        "path": "apps/web/vite.config.ts",
+        "sha256": "be49a3fcab78673178e11c775172a65ab07bb80cf95c50f093189929b08b1044"
+      },
+      {
+        "path": "packages/config/routes.json",
+        "sha256": "3c611818997748cdec8ca281efa303e46b9ee7b7fff1af471c9be7346f6fa3a1"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "b0a42540415ef1cfc71792f132107f56931c9fb0f0c9fcfcdc9f2af4fa1125aa"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "3164be5efeed75d16551c25360714c78ca53b5a56f92c72c9021a0a6dc5e5d33"
+      },
+      {
+        "path": "packages/ui/src/index.tsx",
+        "sha256": "9fdb615913bb9d6055b02bf38e7c670fd91ce190b51436dfc9a2d5df8cb584b3"
+      },
+      {
+        "path": "packages/ui/src/tokens.css",
+        "sha256": "b21dd67cae74c186f6d4b1a6bd150ec626b1a3f183d5b5c050c443029aa1d236"
+      },
+      {
+        "path": "playwright.config.ts",
+        "sha256": "f671166e0edf378678ffdde7a643c2cfb4e3e8a5092517e94c38620acf3ffe45"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "64ba875f705195741265864539885115446d7f24848033b66ebb0f17ee396bef"
+      },
+      {
+        "path": "tests/e2e/model-migrations.spec.ts",
+        "sha256": "6da5e76511b535bdef770fdad27d72861cf299a1c4a91c3e6f64d218572b33e8"
+      },
+      {
+        "path": "tests/e2e/models.spec.ts",
+        "sha256": "d25dc12de6cbff6642169b15ca8797d2275a5eab165242b0c88a09b959d73f3f"
+      },
+      {
+        "path": "tests/e2e/ui-accessibility.spec.ts",
+        "sha256": "a55a5c6fdc2506d70c2840e75486d235a8c7440964376a2fa25ee88a7c65e504"
+      },
+      {
+        "path": "tests/e2e/vertical-slice.spec.ts",
+        "sha256": "0833a6f40fb6859aa0c4e43b6ad05627e0762fe1b928a6fc22b42f1b7310298b"
+      }
+    ]
+  },
+  "runtime": {
+    "app_image": "sha256:0f7ebbb1646e8f4eadc8fda961dc494e430034fac1726dbb4d8b13b465d751eb",
+    "image_binding": "Final deployed manifest digest supplied by root; all served JavaScript/CSS hashes verified through HTTP.",
+    "served_bundle_sha256": {
+      "ModelMigrations-OwyBEMlS.js": "5e32c6e1758259bb1cb75ce23d66c9f89edc7021ff669643ab674e6de7bb03ea",
+      "index-CGNPNh3-.js": "04917745b67e94f3169eef24d6a0d983415d50a47e57cc383e97ee1962db8ae3",
+      "index-YXB9h8oP.css": "20bbfc4ab621fefd772a19c526c73733ef6d5a5905996cf62116b830bb6c5bcb"
+    },
+    "authentication": "Real Keycloak OIDC code+PKCE server session",
+    "source": "Real synthetic PostgreSQL source scanned through Temporal/site/Python with OpenSearch projection"
+  },
+  "tools": {
+    "node": "24.22.3",
+    "pnpm": "10.32.1",
+    "playwright": "1.65.1",
+    "axe": "4.14.0",
+    "chrome": "157.0.8103.51"
+  },
+  "methodology": [
+    "CI project dependency order: vertical-slice, accessibility/models, model-migrations depends on models. No test retries or skipped cases in the final run.",
+    "Real OIDC, API, PostgreSQL persistence, source scan and search projection; no mocked responses or authentication.",
+    "Model and migration fixture hooks wait only for the actual X-RateLimit-Reset when fewer than 200 requests remain; maximum 61-second wait with 75-second hook budget. Application controls remain enabled.",
+    "Axe WCAG2A/2AA/2.1AA/2.2AA with no rule/element exclusions. Finite UI animations settle before inspection.",
+    "Model observations describe one authorized page and presence of another cursor; no total or snapshot is inferred. Synthetic canonical history is retained."
+  ],
+  "verified": [
+    "All five visual plan operations (rename, remove, set, enum map, exact conversion), exact destructive acknowledgements, raw duplicate-key rejection and plan export/import roundtrip.",
+    "Invalid transformation and missing acknowledgement return 422 without canonical changes. A concurrent asset edit invalidates execution with 409; draft operations survive, scope reload clears old consent, and the replacement preview needs fresh explicit approval.",
+    "Execution commits new model and asset pins, exact decimal strings, false, nested values, safe integer decimal conversion and immutable receipt. Reload/export and original immutable definition are checked against real API data.",
+    "Consumer migration execution is denied in UI/API; permitted receipt reading works. Other-tenant receipt and model lookup remain unavailable.",
+    "Model list search with one-row forward/back pages, chooser search/paging and persistence of selected off-page model; consumer search and cross-tenant empty search checked.",
+    "Existing OIDC, source registration/scan, catalog search, ownership, audit, role/tenant controls, responsive/theme/RTL and keyboard dialog checks remain passing.",
+    "New migration plan/preview/confirmation/receipt and model list/chooser inspected at 390 and 1440. Mobile values, dark preview and Arabic RTL receipt are explicitly captured."
+  ],
+  "visual_inspection": {
+    "reviewer": "Codex web implementation agent",
+    "kind": "Actual final browser PNG inspection, not independent human sign-off",
+    "screenshots": {
+      "docs/verification/screenshots/m2-migration-confirmation-en-1440.png": "3e348bcf18749a4d4d2ce1fb57bf010b7e16b4498bc938a647868d7e5a8d22d4",
+      "docs/verification/screenshots/m2-migration-confirmation-en-390.png": "826e4070c8543d8a47ad94fed814169e146a614b0c80fd5cf600e57cc4fdc887",
+      "docs/verification/screenshots/m2-migration-model-chooser-en-1440.png": "ee3cd03220f7adf4495dd4bc95aba20f729777da633bc2d7aad5bf7d5e2ed509",
+      "docs/verification/screenshots/m2-migration-model-chooser-en-390.png": "13d1ae755ae75a4b36978af768c3f1c00a2eb45180511a1a1fa7b99d51b98bb1",
+      "docs/verification/screenshots/m2-migration-model-list-en-1440.png": "e91ebdb03d84b99edd614ca2890fe2a15ee46418db822fae0fe62d518579a616",
+      "docs/verification/screenshots/m2-migration-model-list-en-390.png": "a6f188e9a73940d33bc89ed0bad3ce2525780b0272dda9722b3158aa73731a9e",
+      "docs/verification/screenshots/m2-migration-plan-en-1440.png": "1a6c469ec2794b9c4ea567f09ec47474e8a72b0aeb6e4140cec17de061ed8599",
+      "docs/verification/screenshots/m2-migration-plan-en-390.png": "fa28c60be911cf7a11cd0d93174dfeeb193629fbe0f7d6517acf38fdd12ac1e6",
+      "docs/verification/screenshots/m2-migration-preview-dark-390.png": "3ec49553adb3c7d371f0ffe14d4ba41fde404d82d0c83b4d24efaed4bc6db4b5",
+      "docs/verification/screenshots/m2-migration-preview-en-1440.png": "eb87ec3b114072eba03ff0612b629aa45cc72dd539b32be71ccee5a4ada2a3b4",
+      "docs/verification/screenshots/m2-migration-preview-en-390.png": "ce73e5e7aac36f44b6a3d3ac732938b38866b87745d1ca5b4bf420e52904e8a0",
+      "docs/verification/screenshots/m2-migration-receipt-ar-390.png": "4a68a7972cbe2c0182ef83afacccf6b811d46d407b5bbfe7e04d24d161a936a4",
+      "docs/verification/screenshots/m2-migration-receipt-en-1440.png": "450cea4cdded5fbc2fed7b556bd171eabddd80daa3b439556c5a73b0d67f9531",
+      "docs/verification/screenshots/m2-migration-receipt-en-390.png": "5d1e5d617347745d106e7c25820fc713635d683fa1fb67fc641e26daa56cab5d",
+      "docs/verification/screenshots/m2-migration-values-en-390.png": "565da93d4aff5fd3e56f9dbf20295cad1a461410ddaea2db05bbf809b4d96b71"
+    },
+    "findings": "All 15 final new screenshots inspected. Controls wrap within the viewport, model selection remains distinct from page results, long identifiers and hashes wrap, and value comparisons retain intentional internal scrolling. Mobile confirmation clearly binds approval to the preview fingerprint. Arabic receipt uses RTL; synthetic identifiers and hashes remain readable.",
+    "root_spot_check": {
+      "reviewer": "Codex root implementation agent",
+      "scope": "Three displayed views checked separately from the web implementation review; not independent human sign-off",
+      "views": [
+        "m2-migration-values-en-390.png",
+        "m2-migration-confirmation-en-390.png",
+        "m2-migration-model-chooser-en-1440.png"
+      ],
+      "reported_findings": "Text, actions and JSON values legible; no observed overflow or layout defect."
+    }
+  },
+  "historical_evidence": {
+    "tracked_pngs_preserved": 26,
+    "hashes_verified_against_pre_run_inventory": true,
+    "fresh_regression_pngs": {
+      ".local/evidence/migration-regression-screenshots/asset-en-light-1440.png": "aa4f0210d39f631e60ffe6295ed3503e3cea81c1048a433f249a8251f83ae9ea",
+      ".local/evidence/migration-regression-screenshots/asset-en-light-390.png": "8553ce9f3efb399b39aa2998b1efeca7c02a108c53cb088198f44e20a5d8fed6",
+      ".local/evidence/migration-regression-screenshots/audit-en-light-1440.png": "620feac50f1f0911cc017eae52cbbfbd9b09f205db1749efef8d7ceb63f88346",
+      ".local/evidence/migration-regression-screenshots/catalog-ar-dark-1440.png": "fe717b29b245b9e912e02db11e8548ff0901878b8059ded0e079ee621b84d6bf",
+      ".local/evidence/migration-regression-screenshots/catalog-ar-dark-390.png": "6a4c272bef79947ac961e11bd1091b5bf6128f8fbc11821eaafcfd8b5de8e68f",
+      ".local/evidence/migration-regression-screenshots/catalog-ar-dark-768.png": "b4132264d46db92009198fa613984fda5aa7f0ddbead358037e4026465ba7de9",
+      ".local/evidence/migration-regression-screenshots/catalog-en-dark-1440.png": "61a5fccc7c96ea5a95814b4deaee13a29e78d63eba26521bf15fdeedcf664075",
+      ".local/evidence/migration-regression-screenshots/catalog-en-light-1024.png": "69f5551bad1658fad923f0492b31669873aaa65b12c8c8f390da0a4159830fd8",
+      ".local/evidence/migration-regression-screenshots/catalog-en-light-1280.png": "7e8ed7b6a6c9d0b0feda25afbfe1c509f15acf9dc9e69b772e143b934ac22ce0",
+      ".local/evidence/migration-regression-screenshots/catalog-en-light-1440.png": "cadd7c612b4e727adc1804fbc1554209a31232674214798d8c67521810d42270",
+      ".local/evidence/migration-regression-screenshots/catalog-en-light-390.png": "84721bfb7fbae05bd09be56c7bd43a50768cf500077aebd69e60ed6a5f20cc31",
+      ".local/evidence/migration-regression-screenshots/catalog-en-light-768.png": "2168c16308ccb5171c8716642396ae13ac13a6b86e1d4e128dd444f467fe7b97",
+      ".local/evidence/migration-regression-screenshots/catalog-history.png": "7dc84953f316d42136f0dc6571e79fd6c16931570e62b464ca7e254f47e2f25b",
+      ".local/evidence/migration-regression-screenshots/m2-model-editor-ar-390.png": "929817842317534a2a5cd9a0459c9d7bf1e6e051de393f1bd42aa2817f3b6324",
+      ".local/evidence/migration-regression-screenshots/m2-model-editor-en-1440.png": "2f2e41dcd066b18b3617dffa0d071dd34f91b7c476969b1670d12dc9d24e931b",
+      ".local/evidence/migration-regression-screenshots/m2-model-editor-en-390.png": "850b6d9b17a4146e37306ddde4f42c4c0af82db72363cd371a11539494923058",
+      ".local/evidence/migration-regression-screenshots/m2-model-preview-en-1440.png": "c503b9c2ef86fee48ed6cb6ec3688300b40094283183c1ae675a148f213b7aec",
+      ".local/evidence/migration-regression-screenshots/m2-model-preview-en-390.png": "5d7bb519fb2b536f86cdd5e90847f4f8acf6b9f35bbb8c125513d1f24f93dd25",
+      ".local/evidence/migration-regression-screenshots/m2-model-typed-asset-en-1440.png": "1cbe5aeafb11658046b079d8905c1bfe3c0f2795b4adbdbf111f9cae48d85fef",
+      ".local/evidence/migration-regression-screenshots/m2-model-typed-asset-en-390.png": "b2d7e62c18e1912e2fc58b2355924568f4eba83dc3fe7452e77435a7f1fd9e51",
+      ".local/evidence/migration-regression-screenshots/m2-model-typed-form-en-1440.png": "1cc987b98aae2085cc6dfc01b4464fcffb1be418a69477df4414fe438db38bb3",
+      ".local/evidence/migration-regression-screenshots/m2-model-typed-form-en-390.png": "902814983a1f1ba80a963a98dc6ea1d976936e530d6eb8b121c685c8b70ad599",
+      ".local/evidence/migration-regression-screenshots/m2-model-version-en-1440.png": "2ab25fae4fbd6fa3ede97b52c5fb3d374044a045a2640ac08a76267b46dd0e64",
+      ".local/evidence/migration-regression-screenshots/m2-model-version-en-390.png": "65f0ea5213df99743672df8fe541b08a86097ccd9776cefc59206de8de4af87c",
+      ".local/evidence/migration-regression-screenshots/overview-en-light-1440.png": "f7aaae7918d9bc8130e659b62e46970c5463bfcda7497eefe2fe78d069cf9b1f",
+      ".local/evidence/migration-regression-screenshots/sources-en-light-1440.png": "9cd4d755cf97e8f96a6134decb489053509167d1204a21aaaba9a6c7682622ab"
+    }
+  },
+  "diagnostics": [
+    "The initial targeted run exposed a test timing issue after asynchronous definition review; an explicit visible-checkbox wait fixed it. No application mutation was retried.",
+    "The first full run found a 390 px ModelPage overflow from three non-wrapping header actions. A one-line flex-wrap fix changed measured document width from 419 px to 390 px; the final complete suite reran against the rebuilt image."
+  ],
+  "limitations": [
+    "Full MOD/M2 and AT-MOD-01 remain open: inheritance/constrained relations/lifecycle/scoped overrides, all ingress, typed catalog search/filter/sort and remaining programme capabilities are separate work.",
+    "This is the bounded synchronous migration profile. Large/asynchronous/resumable migrations, arbitrary scripts, list-index transformations, forward-repair orchestration and restore qualification remain open.",
+    "Actual late-transaction fault injection/rollback, concurrency and database enforcement are covered by separate backend integration evidence, not simulated by these browser checks.",
+    "Automated axe and agent visual review do not constitute independent accessibility or native-speaker sign-off. Screen-reader, actual 200% zoom and wider browser/device coverage remain pending.",
+    "New plan/list/chooser/confirmation/receipt screens are qualified in light theme; dark qualification here specifically covers migration preview and the existing shared catalog.",
+    "Hosted CI and release/enterprise/external-integration qualification are separate gates."
+  ],
+  "release_qualification": "NOT_RUN",
+  "follow_up_qualification": {
+    "recorded_at": "2026-11-15T17:01:03.153016+00:00",
+    "scope": "Signed model-list cursor API compatibility with unchanged browser UI",
+    "result": "PASS",
+    "app_image": "sha256:d6f56071a8331a0a55b81462b6215498273d5e9e76f321210c7f39a252a6e981",
+    "command": "PATH=\"$PWD/.local/toolchain/node/bin:$PWD/.local/pnpm/node_modules/.bin:$PATH\" GC_BROWSER_EXECUTABLE=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" pnpm exec playwright test --config .github/playwright.ci.config.ts --project=models --no-deps",
+    "execution": {
+      "startTime": "2026-11-15T16:59:29.879Z",
+      "duration": 61839.240999999995,
+      "expected": 2,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "raw_report": ".local/evidence/playwright-migrations-signed-cursor-results.json",
+    "raw_report_sha256": "8a127dde1b56f139a49e1fc7aba113ec49da7b7ef1fff4a0ae20d66db28120f3",
+    "source_binding": {
+      "packages/domain/src/cursor.ts": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d",
+      "packages/domain/src/model-service.ts": "bbed46392a803122d332d7327cf0c35c09e0b034aaa95a1bc1b008f96e7c4a3c",
+      "apps/api/src/models.ts": "9895e1525c5ac77078814a4d7aac9e5e61220fdd5cd8ddfd02b9a82c75850e90",
+      "tests/e2e/models.spec.ts": "d25dc12de6cbff6642169b15ca8797d2275a5eab165242b0c88a09b959d73f3f",
+      "apps/web/src/models/ModelBrowser.tsx": "90af09050c00d68ed3c2ce5f65ed6818d9cad521d93ac9d4187108e246f1ea7b",
+      "apps/web/src/models/AssetAttributes.tsx": "62e956aba1f30623d2487993ba475f4c90a59776f16eec9bce6e4df5b182b89d",
+      "apps/web/src/pages/Models.tsx": "56282a50d543884ef3428355fccb0bf8b8ade27f97536953e7881ce60102b2b8",
+      ".github/playwright.ci.config.ts": "6a17978bb7d0f6d7882c71bbc74b56e375001ce655e599930a611a4a6557447e"
+    },
+    "verified": [
+      "Opaque signed cursor next/previous navigation, search reset, chooser paging and selected off-page preservation.",
+      "All existing typed model roundtrip/persistence/version/preview checks within the same two model tests remain passing.",
+      "Consumer read/search permissions and cross-tenant empty results remain passing."
+    ],
+    "captures": {
+      ".local/evidence/migration-signed-cursor-screenshots/m2-migration-model-chooser-en-1440.png": "5d841c1e8a69f80db5039da62840e2bbc6790c359a2ec5affa7e1aa85187813b",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-migration-model-chooser-en-390.png": "0487a46fdc9c53e101e29b15a6b8de0f3535cee79429a13594e215e82a2610c0",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-migration-model-list-en-1440.png": "202c5ad506e835f91c3c7b2b49eeb4c99022fd6fca1c45d9dc05e0831f4d0398",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-migration-model-list-en-390.png": "debf59c3dce08bfd510fb3ba8b6e29015cd11319aeddc804463a9bfecc838d64",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-model-editor-ar-390.png": "697faa82feb4ef03b8a671d628d576500dfa827aef69b2e8bfe9bd1b101b1113",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-model-editor-en-1440.png": "7943580b4cbe5dc0c05b2e13e66727594034d58b239bbc2df8134a2df6fc74bf",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-model-editor-en-390.png": "694f989c6bb30055f9e6c2a789a078e7ba2353d98988d983a516b1ead446c610",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-model-preview-en-1440.png": "a11a0eda3f25cee2555e15c9550ba0f54ee4ef2cef8ff2bdf8478afac7fea503",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-model-preview-en-390.png": "d13aaed29e802d9807aaaef2b5fd7823df38fa59e365d74c9d5478b7e50e89ba",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-model-typed-asset-en-1440.png": "a6e6bafb7270384de1fb795312a2f27fe292f85bf198732c5bc652ddaceed967",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-model-typed-asset-en-390.png": "8184b9fdd75801c3b2ec6bb93d7068b3f971ed921e3809c57732ec33b6c0703f",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-model-typed-form-en-1440.png": "a8276dd51ecdfbe3d8539d4c3ee9bb7af5b5cec26f0856ad96f211218dbfc087",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-model-typed-form-en-390.png": "14428353dd34ee5dc50690a69f7067bc7f91c7e6d00c7ba20847597d9cb6500b",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-model-version-en-1440.png": "1993c7320d9e1748ef896207fda1c8798489dc48504b290dc6c80a14afc878ae",
+      ".local/evidence/migration-signed-cursor-screenshots/m2-model-version-en-390.png": "4ad39ec7848b63f9977c07877114a5b375dedee0400ed4d8b9d7b14efd511486"
+    },
+    "limits": "This is a separate two-test follow-up on the final signed-cursor API image. The full eight-test run above remains bound to its earlier image; it is not reattributed to this image. All 41 public PNGs were restored to their recorded historical/full-run hashes."
+  }
+}

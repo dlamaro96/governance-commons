@@ -2,6 +2,7 @@
 import { createHash } from 'node:crypto';
 import { lockTenantLedger, sql, type Tx } from '../../db/src/index.ts';
 import { canView, Problem, requirePermission, type Principal } from '../../authz/src/index.ts';
+import { signedCursor } from './cursor.ts';
 import {
   MODEL_LIMITS, parseModelDefinition, previewModelUpgrade, validateAttributes,
   type AttributeValues, type ModelAssetPreview, type ModelChange, type ModelDefinition,
@@ -13,6 +14,8 @@ export interface ModelHooks {
   assetSnapshot: (row: any) => unknown;
 }
 export interface ModelSummary { id: string; currentVersion: number; createdAt: string; createdBy: string }
+export interface ModelListQuery { limit?: number; cursor?: string; q?: string }
+export interface ModelListPage { items: ModelSummary[]; nextCursor: string | null }
 export interface ModelVersionView {
   id: string; version: number; currentVersion: number; definition: ModelDefinition;
   definitionHash: string; createdAt: string; createdBy: string;
@@ -112,12 +115,33 @@ async function assetRow(tx: Tx, principal: Principal, assetId: string, lock = fa
   return row;
 }
 
-export async function listModels(tx: Tx, principal: Principal): Promise<{ items: ModelSummary[] }> {
+export async function listModels(tx: Tx, principal: Principal, query: ModelListQuery = {}): Promise<ModelListPage> {
   await authorize(tx, principal, ['models:read']);
-  const rows = await tx.selectFrom('governance_models').selectAll().where('tenant_id', '=', principal.tenantId)
-    .orderBy('id').limit(MODEL_SERVICE_LIMITS.models + 1).execute();
-  if (rows.length > MODEL_SERVICE_LIMITS.models) throw new Problem(422, 'MODEL_PROFILE_LIMIT', 'This development list supports at most 100 models. Paginated model inventory is not implemented.');
-  return { items: rows.map(row => ({ id: row.id, currentVersion: row.current_version, createdAt: iso(row.created_at), createdBy: row.created_by })) };
+  const invalid = () => new Problem(400, 'MODEL_PAGE_INVALID', 'Provide a valid model search and page cursor.');
+  if (!query || typeof query !== 'object' || Array.isArray(query) || Object.keys(query).some(key => !['limit', 'cursor', 'q'].includes(key))) throw invalid();
+  const pageSize = query.limit ?? 50, search = query.q ?? '';
+  if (!Number.isInteger(pageSize) || pageSize < 1 || pageSize > MODEL_SERVICE_LIMITS.models ||
+      typeof search !== 'string' || search.length > 64 || /[\u0000-\u001f\u007f]/.test(search)) throw invalid();
+  const codec = signedCursor(process.env.SESSION_KEY, 'model-inventory-v2');
+  let after: string | undefined;
+  if (query.cursor !== undefined) {
+    try {
+      const cursor = codec.decode(query.cursor) as Row;
+      if (!cursor || typeof cursor !== 'object' || Object.keys(cursor).sort().join('|') !== 'actorId|after|limit|q|sort|tenantId|v' ||
+          cursor.v !== 2 || cursor.tenantId !== principal.tenantId || cursor.actorId !== principal.id ||
+          cursor.q !== search || cursor.sort !== 'id:asc' || cursor.limit !== pageSize ||
+          typeof cursor.after !== 'string' || !modelIdPattern.test(cursor.after) || reservedIds.has(cursor.after)) throw invalid();
+      after = cursor.after;
+    } catch { throw invalid(); }
+  }
+  let selection = tx.selectFrom('governance_models').selectAll().where('tenant_id', '=', principal.tenantId);
+  if (search) selection = selection.where('id', 'ilike', `%${search.replace(/[\\%_]/g, '\\$&')}%`);
+  if (after) selection = selection.where('id', '>', after);
+  const rows = await selection.orderBy('id').limit(pageSize + 1).execute();
+  const page = rows.slice(0, pageSize);
+  return { items: page.map(row => ({ id: row.id, currentVersion: row.current_version, createdAt: iso(row.created_at), createdBy: row.created_by })),
+    nextCursor: rows.length > pageSize ? codec.encode({ v: 2, tenantId: principal.tenantId, actorId: principal.id,
+      q: search, sort: 'id:asc', limit: pageSize, after: page.at(-1)!.id }) : null };
 }
 
 export async function getModel(tx: Tx, principal: Principal, id: string, version?: number): Promise<{ model: ModelVersionView }> {
@@ -220,7 +244,7 @@ export async function publishModel(tx: Tx, principal: Principal, correlationId: 
   await lockTenantModels(tx, principal);
   const preview = await previewLocked(tx, principal, id, expectedVersion, input);
   if (preview.previewDigest !== expectedPreviewDigest) throw new Problem(409, 'MODEL_PREVIEW_STALE', 'The model or its asset bindings changed. Run a new preview.');
-  if (preview.requiresExplicitMigration) throw new Problem(422, 'MODEL_MIGRATION_REQUIRED', 'This upgrade requires an explicit migration. Migration execution is not implemented; no version was published.');
+  if (preview.requiresExplicitMigration) throw new Problem(422, 'MODEL_MIGRATION_REQUIRED', 'This upgrade requires the explicit migration workflow and a fresh transformation preview. No version was published.');
   const parsed = definition(input);
   const row = await tx.insertInto('governance_model_versions').values({ tenant_id: principal.tenantId, model_id: id,
     version: parsed.version, definition: JSON.stringify(parsed), definition_hash: hash(parsed), created_by: principal.id }).returningAll().executeTakeFirstOrThrow();
@@ -277,3 +301,10 @@ export async function assignAssetModel(tx: Tx, principal: Principal, correlation
   }, correlationId);
   return assetModelView(tx, principal, updated);
 }
+
+/** Internal persistence primitives for the guarded migration application service.
+ * Ingress adapters must call complete services, never these individual helpers. */
+export const modelPersistence = Object.freeze({
+  authorize, lockTenantModels, head, assertHead, definition, storedDefinition,
+  versionRow, modelCohort, hash, view, assetRow, checkVersion,
+});

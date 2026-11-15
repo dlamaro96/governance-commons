@@ -306,18 +306,26 @@ export function parseModelDefinition(input: unknown): ValidationResult<ModelDefi
 }
 
 export function parseModelFile(text: string): ValidationResult<ModelDefinition> {
+  const parsed = parseBoundedJSONFile(text);
+  return parsed.ok ? parseModelDefinition(parsed.value) : parsed;
+}
+
+/** Shared declarative-file boundary: retain duplicate keys until inspection. */
+export function parseBoundedJSONFile(text: string, profile: 'model' | 'migration' = 'model'): ValidationResult<unknown> {
   if (typeof text !== 'string' || text.length > MODEL_LIMITS.fileLength) return { ok: false, issues: [{ code: 'limit', path: '', message: 'Model JSON exceeds the permitted file length.' }] };
-  const documentIssues = inspectModelJSON(text);
+  const documentIssues = inspectModelJSON(text, profile);
   if (documentIssues.length) return { ok: false, issues: documentIssues };
   let value: unknown;
   try { value = JSON.parse(text); }
   catch { return { ok: false, issues: [{ code: 'invalid_json', path: '', message: 'Expected a valid JSON model document.' }] }; }
-  return parseModelDefinition(value);
+  return { ok: true, value };
 }
 
 /** Reject duplicate (including escaped) object keys before JSON.parse can overwrite them. */
-function inspectModelJSON(text: string): readonly ValidationIssue[] {
-  const context = new Context(MODEL_LIMITS.schemaNodes * 8);
+function inspectModelJSON(text: string, profile: 'model' | 'migration'): readonly ValidationIssue[] {
+  const context = new Context(profile === 'migration' ? MODEL_LIMITS.valueNodes : MODEL_LIMITS.schemaNodes * 8);
+  const arrayItems = profile === 'migration' ? Math.max(MODEL_LIMITS.listItems, MODEL_LIMITS.schemaNodes) : MODEL_LIMITS.listItems;
+  const depthLimit = profile === 'migration' ? MODEL_LIMITS.valueDepth + 5 : MODEL_LIMITS.schemaDepth * 3 + 4;
   let offset = 0;
   const skipSpace = (): void => { while (offset < text.length && /[\t\n\r ]/.test(text[offset])) offset += 1; };
   const string = (): string => {
@@ -331,7 +339,7 @@ function inspectModelJSON(text: string): readonly ValidationIssue[] {
     throw new Error('syntax');
   };
   const visit = (path: string, depth: number): void => {
-    if (!context.node(path, depth, MODEL_LIMITS.schemaDepth * 3 + 4)) throw new Error('limit');
+    if (!context.node(path, depth, depthLimit)) throw new Error('limit');
     skipSpace();
     const start = text[offset];
     if (start === '{') {
@@ -357,7 +365,7 @@ function inspectModelJSON(text: string): readonly ValidationIssue[] {
       if (text[offset] === ']') { offset += 1; return; }
       let index = 0;
       while (offset < text.length) {
-        if (index >= MODEL_LIMITS.listItems) { context.issue('limit', path, 'The permitted array length was exceeded.'); throw new Error('limit'); }
+        if (index >= arrayItems) { context.issue('limit', path, 'The permitted array length was exceeded.'); throw new Error('limit'); }
         visit(at(path, index++), depth + 1); skipSpace();
         const delimiter = text[offset++];
         if (delimiter === ']') return;

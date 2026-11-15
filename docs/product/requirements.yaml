@@ -5835,7 +5835,7 @@
       },
       "limitations": [
         "Immutable tenant-scoped typed model versions, explicit asset pins, complete bounded server previews, compatible publication, shared validation, visual editor and model-file import/export are implemented. Scoped real API/service and browser tests pass; full-row verification remains open.",
-        "Inheritance, relation constraints/validity, scoped overrides, lifecycle states, explicit migration execution, bulk/workflow/MCP ingress and typed search/sort/catalog export remain required. The current synchronous preview is bounded to1000 assets/512KiB attribute JSON and lists fail explicitly beyond100 models."
+        "Inheritance, relation constraints/validity, scoped overrides, lifecycle states, bulk/workflow/MCP ingress and typed search/sort/catalog export remain required. The current synchronous preview is bounded to1000 assets/512KiB attribute JSON and inventory pages contain at most100 models; bounded model search/pagination and signed-cursor integration/browser qualification pass for the recorded development scope."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M3",
@@ -5888,14 +5888,27 @@
         "packages/domain/src/model-migration.ts",
         "apps/web/src/models/SchemaEditor.tsx",
         "apps/web/src/models/ValueFields.tsx",
-        "apps/web/src/models/AssetAttributes.tsx"
+        "apps/web/src/models/AssetAttributes.tsx",
+        "packages/domain/src/model-migration-service.ts",
+        "apps/api/src/model-migrations.ts",
+        "packages/db/migrations/004_model_migrations.sql",
+        "apps/web/src/pages/ModelMigrations.tsx",
+        "apps/web/src/models/MigrationPlanEditor.tsx",
+        "docs/runbooks/model-migration-recovery.md",
+        "packages/db/migrations/005_model_migration_integrity.sql",
+        "scripts/runtime-test-model-upgrade.py"
       ],
       "test_ids": [
         "tests/unit/model.test.ts",
         "tests/integration/models.test.ts",
         "tests/integration/model-api.test.ts",
         "tests/e2e/models.spec.ts",
-        "tests/unit/model-migration.test.ts"
+        "tests/unit/model-migration.test.ts",
+        "tests/unit/model-migration-file.test.ts",
+        "tests/integration/model-migrations.test.ts",
+        "tests/integration/model-migration-api.test.ts",
+        "tests/e2e/model-migrations.spec.ts",
+        "tests/integration/model-migration-storage.test.ts"
       ],
       "verification": {
         "fixture": {
@@ -5926,7 +5939,8 @@
       },
       "limitations": [
         "Immutable tenant-scoped typed model versions, explicit asset pins, complete bounded server previews, compatible publication, shared validation, visual editor and model-file import/export are implemented. Scoped real API/service and browser tests pass; full-row verification remains open.",
-        "Inheritance, relation constraints/validity, scoped overrides, lifecycle states, explicit migration execution, bulk/workflow/MCP ingress and typed search/sort/catalog export remain required. The current synchronous preview is bounded to1000 assets/512KiB attribute JSON and lists fail explicitly beyond100 models."
+        "Inheritance, relation constraints/validity, scoped overrides, lifecycle states, bulk/workflow/MCP ingress and typed search/sort/catalog export remain required. The current synchronous preview is bounded to1000 assets/512KiB attribute JSON and inventory pages contain at most100 models; bounded model search/pagination and signed-cursor integration/browser qualification pass for the recorded development scope.",
+        "Explicit bounded transactional migration, production audit/outbox, immutable normalized receipt references and the complete eight-browser development gate pass. The isolated real-PostgreSQL upgrade check passes five cases, including atomic rollback on malformed history. Fifteen historical pre005 synthetic receipts with missing initial revisions are quarantined as explicit unverifiable exceptions; no history is fabricated. Full operating-model AT-MOD-01 and production restore remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M3",
@@ -5935,7 +5949,11 @@
         "docs/verification/m2-model-service.json",
         "docs/verification/m2-model-api.json",
         "docs/verification/model-migration-transform.json",
-        "docs/verification/m2-ui.json"
+        "docs/verification/m2-ui.json",
+        "docs/verification/m2-model-migrations.json",
+        "docs/verification/m2-migration-api.json",
+        "docs/verification/m2-migration-ui.json",
+        "docs/verification/model-migration-upgrade.json"
       ]
     },
     {
@@ -6148,7 +6166,7 @@
       },
       "limitations": [
         "Immutable tenant-scoped typed model versions, explicit asset pins, complete bounded server previews, compatible publication, shared validation, visual editor and model-file import/export are implemented. Scoped real API/service and browser tests pass; full-row verification remains open.",
-        "Inheritance, relation constraints/validity, scoped overrides, lifecycle states, explicit migration execution, bulk/workflow/MCP ingress and typed search/sort/catalog export remain required. The current synchronous preview is bounded to1000 assets/512KiB attribute JSON and lists fail explicitly beyond100 models."
+        "Inheritance, relation constraints/validity, scoped overrides, lifecycle states, bulk/workflow/MCP ingress and typed search/sort/catalog export remain required. The current synchronous preview is bounded to1000 assets/512KiB attribute JSON and inventory pages contain at most100 models; bounded model search/pagination and signed-cursor integration/browser qualification pass for the recorded development scope."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M3",
@@ -53977,9 +53995,16 @@
         "package.json",
         "Dockerfile",
         "apps/api/src",
-        "packages/contracts/src"
+        "packages/contracts/src",
+        "packages/domain/src/cursor.ts",
+        "packages/domain/src/model-service.ts",
+        "apps/web/src/models/ModelBrowser.tsx"
       ],
-      "test_ids": [],
+      "test_ids": [
+        "tests/unit/cursor.test.ts",
+        "tests/integration/model-pagination.test.ts",
+        "tests/e2e/models.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -54008,10 +54033,15 @@
         "evidence": []
       },
       "limitations": [
-        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
+        "Model inventory adds bounded literal search and signed keyset cursors bound to actor, tenant, filters, page size and deterministic sort. Full generated clients, egress schemas, API coverage, durable bulk administration and webhook requirements remain open. See scoped model-migration evidence; no full SYS-API-001 pass."
       ],
       "owner": "governance-commons maintainers",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/m2-migration-api.json",
+        "docs/verification/m2-migration-ui.json"
+      ]
     },
     {
       "id": "SYS-API-001.01",

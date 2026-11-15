@@ -1,0 +1,371 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T17:00:41.738Z",
+  "scope": "Core foundation, bounded declarative model migration HTTP/application services, signed tenant model pagination and SQL005 receipt reference integrity; partial M2 implementation",
+  "implementation_status": "IN_PROGRESS",
+  "verification_status": "PASS_FOR_RECORDED_SCOPE",
+  "release_qualification": "NOT_RUN",
+  "profile": "core / real Docker Linux arm64 / synthetic tenants / PostgreSQL 17.11",
+  "result": "PASS",
+  "integration": {
+    "command": "./dev test --suite security",
+    "underlying_command": "docker compose --env-file .local/runtime.env -f deploy/compose/compose.yaml exec -T api pnpm test:integration",
+    "exit_status": 0,
+    "duration_ms": 1367.672458,
+    "tests": {
+      "total": 35,
+      "passed": 35,
+      "failed": 0,
+      "skipped": 0,
+      "foundation": 5,
+      "model_api": 3,
+      "model_services": 8,
+      "migration_api": 3,
+      "migration_services": 8,
+      "migration_storage": 6,
+      "model_pagination": 2
+    },
+    "tool_output_chunks": [
+      "e58980",
+      "96ac69"
+    ],
+    "historical_storage_observation": {
+      "receipts_inspected": 44,
+      "revision_gap_exceptions": 15,
+      "interpretation": "Counts are the storage test's transaction-time observation, not a fixed tenant inventory. All recorded historical gaps remained explicit and their receipt getters failed closed."
+    }
+  },
+  "unit": {
+    "command": "PATH=\"$PWD/.local/toolchain/node/bin:$PWD/.local/pnpm/node_modules/.bin:$PATH\" pnpm test",
+    "exit_status": 0,
+    "duration_ms": 363.138333,
+    "tests": {
+      "total": 45,
+      "passed": 45,
+      "failed": 0,
+      "skipped": 0
+    },
+    "tool_output_chunks": [
+      "ec4162"
+    ],
+    "scope": "Shared authorization/audit helpers, strict bounded typed-model parsing, precision-preserving migration transformations, complete-bound migration JSON-file regressions, and HMAC cursor authentication/purpose/key/length/Unicode cases."
+  },
+  "evidence_collector": {
+    "command": "python3 policies/test_ci_evidence.py",
+    "exit_status": 0,
+    "duration_seconds": 0.298,
+    "tests": {
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0
+    },
+    "tool_output_chunks": [
+      "39aaa1"
+    ],
+    "scope": "Synthetic collector fixtures verify eight distinct required browser journeys, reject missing/duplicate/skipped/flaky/repeated results and failed service steps, and omit private output from published summaries. These tests do not execute product browser journeys."
+  },
+  "typecheck": {
+    "command": "PATH=\"$PWD/.local/toolchain/node/bin:$PWD/.local/pnpm/node_modules/.bin:$PATH\" pnpm typecheck",
+    "exit_status": 0,
+    "result": "PASS",
+    "scope": "Root and web TypeScript",
+    "tool_output_chunks": [
+      "18cffd",
+      "a502c1",
+      "07e616"
+    ]
+  },
+  "runtime": {
+    "app_image": "sha256:d6f56071a8331a0a55b81462b6215498273d5e9e76f321210c7f39a252a6e981",
+    "image_meaning": "Final signed-cursor API image on which all 35 integration tests executed. Browser qualification is recorded separately.",
+    "container": "governance-commons-api-1",
+    "container_id_prefix": "4d874a960e99",
+    "health_at_binding": "healthy",
+    "source_mounts": [],
+    "node": "24.22.3",
+    "typescript": "7.0.2",
+    "tsx": "4.23.15",
+    "fastify": "5.12.8",
+    "kysely": "0.29.9",
+    "pg": "8.23.1",
+    "platform": "linux",
+    "architecture": "arm64",
+    "host_python": "Python 3.14.5",
+    "postgresql": "17.11 (Debian 17.11-1.pgdg12+2)",
+    "database_role": "gc_app",
+    "applied_migrations": [
+      "001_foundation.sql",
+      "002_audit_envelopes.sql",
+      "003_governance_models.sql",
+      "004_model_migrations.sql",
+      "005_model_migration_integrity.sql"
+    ],
+    "role_qualification": "Real storage tests assert forced RLS, non-runtime table ownership, denied direct reference/exception writes and denied runtime database TEMP. The separate owner-run upgrade harness verifies owner/runtime NOSUPERUSER and NOBYPASSRLS.",
+    "probe_output_chunks": [
+      "4547df",
+      "563516"
+    ]
+  },
+  "source_binding": {
+    "base_commit": "a2e9a5d71a9d869aaeef8065e41b0be295523224",
+    "branch": "codex/model-migrations",
+    "working_tree_dirty": true,
+    "method": "SHA256 read from the final running API container and independently compared with the worktree for all 45 listed files; zero mismatches. The container has no source mounts. This binds an integrated working tree and immutable image, not a claim of testing a clean committed revision.",
+    "compared_files": 45,
+    "mismatches": 0,
+    "tool_output_chunks": [
+      "4547df",
+      "563516",
+      "ca7ab6"
+    ],
+    "files": [
+      {
+        "path": "Dockerfile",
+        "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+      },
+      {
+        "path": "apps/api/src/audit.ts",
+        "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+      },
+      {
+        "path": "apps/api/src/index.ts",
+        "sha256": "7beb82af4cf1fbf4666a6f531afba1739d9c2b64d4c1461a3b0ef03c9146fb00"
+      },
+      {
+        "path": "apps/api/src/model-http.ts",
+        "sha256": "6f23ec8cbd6cc7c3005e71513e98f7798b070e4758c5e9ee6a7077b7180a8956"
+      },
+      {
+        "path": "apps/api/src/model-migrations.ts",
+        "sha256": "b0a9a14132de028166b16ce956362933937888822e21fe14f397b17a28ac893d"
+      },
+      {
+        "path": "apps/api/src/models.ts",
+        "sha256": "9895e1525c5ac77078814a4d7aac9e5e61220fdd5cd8ddfd02b9a82c75850e90"
+      },
+      {
+        "path": "apps/api/src/repository.ts",
+        "sha256": "104806130f15236b983d5d207b49daa498dee7b41a1dff40aad6b66e45a5179f"
+      },
+      {
+        "path": "apps/api/src/search.ts",
+        "sha256": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d"
+      },
+      {
+        "path": "apps/api/src/security.ts",
+        "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+      },
+      {
+        "path": "dev",
+        "sha256": "3933fa6fdbbca26f1af4f1ad9b299cc651b6c7a51448c1cfcfa3468c933a26a5"
+      },
+      {
+        "path": "package.json",
+        "sha256": "87bf0ba005fde7f3b64d6ea3a84dacdcb08f9517f56a7fde87d3386882907f78"
+      },
+      {
+        "path": "packages/authz/src/index.ts",
+        "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "sha256": "8d23a38cad9af4c69471b6369d1106382e34518f1b13a00be6590ee6e28bb453"
+      },
+      {
+        "path": "packages/db/migrations/001_foundation.sql",
+        "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "path": "packages/db/migrations/002_audit_envelopes.sql",
+        "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "path": "packages/db/migrations/003_governance_models.sql",
+        "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "path": "packages/db/migrations/004_model_migrations.sql",
+        "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "path": "packages/db/migrations/005_model_migration_integrity.sql",
+        "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "path": "packages/db/src/index.ts",
+        "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+      },
+      {
+        "path": "packages/db/src/migrate.ts",
+        "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+      },
+      {
+        "path": "packages/db/src/seed.ts",
+        "sha256": "f871502f2215b538199df0a4aef501954a7f558b249311d6cb3b1129c763c151"
+      },
+      {
+        "path": "packages/domain/src/cursor.ts",
+        "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+      },
+      {
+        "path": "packages/domain/src/model-migration-service.ts",
+        "sha256": "d73e10f00f964a715ba063e563f4a6db909ec4f7684669af6c1b8f53fa91d3c9"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "b0a42540415ef1cfc71792f132107f56931c9fb0f0c9fcfcdc9f2af4fa1125aa"
+      },
+      {
+        "path": "packages/domain/src/model-service.ts",
+        "sha256": "bbed46392a803122d332d7327cf0c35c09e0b034aaa95a1bc1b008f96e7c4a3c"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "3164be5efeed75d16551c25360714c78ca53b5a56f92c72c9021a0a6dc5e5d33"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "64ba875f705195741265864539885115446d7f24848033b66ebb0f17ee396bef"
+      },
+      {
+        "path": "pnpm-workspace.yaml",
+        "sha256": "3d0651c8ee104733339c15831fc93e2429ddadf64b25c65f7d8040c5a6aa43bf"
+      },
+      {
+        "path": "policies/ci_evidence.py",
+        "sha256": "1d3060973955bcdef1d999877ff8750c8c878c7e21e7055ea1ca45ff53557a46"
+      },
+      {
+        "path": "policies/test_ci_evidence.py",
+        "sha256": "288ca43a6f81c8f7b2fd46023cd1432bc9a5c1a530aee5715f818e0773d35250"
+      },
+      {
+        "path": "scripts/runtime.py",
+        "sha256": "6f688d10b7e50cad316d1cc350e43b26560d798673eabec845eba4bf05d3c799"
+      },
+      {
+        "path": "scripts/test-security.sh",
+        "sha256": "817a93e601dc5fde10240c4a769e802078c92bdd80a9bb79cc622cdc60f93e7f"
+      },
+      {
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "d265f2d829b5f28b8cd72f1b28043ae4734030619339f7b4acc87436960c1939"
+      },
+      {
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "9369bd959e6d9633788d34cd4a6c87dcecbf500f5d04e95b74c360ad89f8d29d"
+      },
+      {
+        "path": "tests/integration/model-migration-api.test.ts",
+        "sha256": "1fcae0865b43eb53c30474f88a93ce62a1fb019e2b39e68c0840589a3aec80b5"
+      },
+      {
+        "path": "tests/integration/model-migration-storage.test.ts",
+        "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+      },
+      {
+        "path": "tests/integration/model-migrations.test.ts",
+        "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+      },
+      {
+        "path": "tests/integration/model-pagination.test.ts",
+        "sha256": "63140a4748799df85403abd88c27478993fc33900b1b172627764880c58564e6"
+      },
+      {
+        "path": "tests/integration/models.test.ts",
+        "sha256": "8b450fd13803be929f441a33eb424218402bb768ee53c9063cfee641f00280a5"
+      },
+      {
+        "path": "tests/unit/audit.test.ts",
+        "sha256": "5aa3b0ac05a755e7eebfee74d5ed9d0aa776e133315d5f235823b9c7a6349501"
+      },
+      {
+        "path": "tests/unit/authz.test.ts",
+        "sha256": "9f6bad0b18e4025df11f9f4dc61f13f6db47ac42aa6f0cf23d0cea359c8c6b7d"
+      },
+      {
+        "path": "tests/unit/cursor.test.ts",
+        "sha256": "a4afac623ce94760dc7d9d654d61fb82e017655ec7dbf9ed9eb7fece19f9ca6b"
+      },
+      {
+        "path": "tests/unit/model-migration-file.test.ts",
+        "sha256": "130db7830dfc09286dce285721747bfbe1ebf61c411630c92b77ee05e8ad0929"
+      },
+      {
+        "path": "tests/unit/model-migration.test.ts",
+        "sha256": "c790458e26b84189861b48a9e84d650dbb6fb793befb3da967cd882b386c2c92"
+      },
+      {
+        "path": "tests/unit/model.test.ts",
+        "sha256": "bbdfc4842bd1c0496344f306ed7aea1dd9a371fe59e570d08c3d45eaa834118c"
+      }
+    ]
+  },
+  "verified": [
+    "Existing tenant/RLS/CSRF/role/source validation/idempotency and typed model API/service regressions pass on the final image.",
+    "Strict model and migration file parsing rejects duplicate keys, including escaped duplicates, and supports the declared full acknowledgement bound. Typed values retain exact decimal strings and report stable validation paths.",
+    "Migration context and preview require current write permissions, complete visibility of every bound asset and an exact declaration of historical source pins. Hidden/cross-tenant scope does not expose asset identifiers, counts or values.",
+    "Authorized previews show before/after typed values. The digest binds the target definition, exact plan, current head, source definitions, asset versions, pins and attribute hashes; stale or invalid executions fail before canonical writes.",
+    "Successful execution commits the new immutable model version, complete cohort repinning, before/after asset history, receipt, production audit and outbox in one transaction.",
+    "A deliberate late production-journal hook failure rolls back every affected canonical row, revision, receipt, audit and outbox event; the unchanged preview succeeds on retry.",
+    "HTTP execution idempotency permits a corrected retry after failed validation and reauthorizes cached receipts against current write permission and original asset visibility. Rejected replay leaves the already-committed head unchanged.",
+    "Sanitized model.migration_attempt_failed records are committed after the failed request transaction and omit protected values. The event describes the failed attempt and makes no assertion that a prior successful idempotent execution rolled back.",
+    "SQL005 binds receipt identity to its plan and bounded asset metadata. Trigger-maintained normalized rows reference the same tenant's parent receipt, asset, both actual revisions and both model versions. Malformed metadata and missing/cross-tenant references fail atomically without creating exceptions for new writes.",
+    "Runtime callers cannot directly insert, update, delete or truncate normalized references or historical exceptions, and cannot create temporary auxiliary trigger tables. Nested invoker-trigger spoof and duplicate-reference defense are qualified separately by the isolated owner-run upgrade harness.",
+    "Fifteen pre-005 historical fixture revision gaps remain explicitly quarantined without invented snapshots. Reads reject any exception or incomplete normalization with MODEL_MIGRATION_STORAGE_INVALID.",
+    "Model inventory traverses 103 definitions through bounded unique pages, defaults to 50 items, caps pages at 100, treats search metacharacters literally, and authenticates HMAC-SHA256 cursors bound to tenant, actor, search, sort, page size and position. Retaining a genuine signature while changing payload fields fails; changing request filters/page size/actor/tenant also fails; an unchanged signed cursor remains valid. Missing/invalid signatures and inputs beyond 1024 characters fail."
+  ],
+  "bounded_profile": {
+    "model_bindings_per_migration": 1000,
+    "before_attribute_bytes": 524288,
+    "after_attribute_bytes": 524288,
+    "before_attribute_nodes": 100000,
+    "after_attribute_nodes": 100000,
+    "stored_definition_bytes": 524288,
+    "stored_definition_nodes": 100000,
+    "validation_issues": 1000,
+    "plan_operations": 64,
+    "object_path_segments": 8,
+    "lock_order": [
+      "tenant ledger advisory transaction lock",
+      "tenant model advisory transaction lock",
+      "model head row",
+      "canonical asset rows ordered by id"
+    ],
+    "cursor_characters": 1024
+  },
+  "prior_failures_and_resolution": [
+    "The earlier full integration run passed 33 of 35 tests. A fuzzy-search fixture used a UUID fragment and matched an unrelated visible asset; the hidden asset was not returned. The fixture now uses one full unique synthetic canary token and checks protected names and identifiers directly.",
+    "The original nested-trigger setup expected runtime TEMP permission, but gc_app correctly denied CREATE TEMP. The runtime test now verifies that denial. A separate isolated owner-run harness installs the auxiliary trigger and invokes it as gc_app without granting runtime CREATE/TEMP.",
+    "The final image contains those test-only corrections. All 35 integration tests reran and passed. Applied SQL001-005 was not edited."
+  ],
+  "limitations": [
+    "This report does not mark full MOD-001/002/003, AT-MOD-01, M2 or release readiness complete. Inheritance, relation constraints, glossary/reference data, other ingress, typed catalog search/filter/sort and the remaining programme remain open.",
+    "Only the bounded synchronous migration profile is implemented here. Temporal scheduling, resumable bulk migration, enterprise throughput, arbitrary conversion code, list-index mutation, forward repair and restore qualification remain outside this evidence.",
+    "Database checks enforce bounded receipt shape and tenant-scoped reference existence. Full DSL operation/value semantics, exact destructive-change acknowledgement semantics, canonical hash correctness and snapshot-content equivalence remain domain/application responsibilities.",
+    "SQL005's explicit historical exception path addresses pre-005 synthetic development fixtures; no released predecessor upgrade is claimed. Existing append-only evidence was preserved. The actual owner-run checksum-migrator backfill/rollback checks are recorded separately.",
+    "Successful application-service tests use the production journal/snapshot hooks. The late failure is deliberately injected to prove transaction rollback; it is not a naturally occurring production incident.",
+    "Browser/OIDC interaction, rendered UI inspection and accessibility are recorded separately. The six collector tests use synthetic artifact trees and do not qualify browser behavior.",
+    "The documented core launch passed on the earlier migration image. The final signed-cursor API image was activated and all 35 integration tests reran on it. No additional full dev-up execution or browser result is inferred by this report.",
+    "The earlier docs/verification/m2-model-migrations.json remains historical evidence of its own eight-test source-mounted run. It is not rebound to these newer sources.",
+    "No independent human security review, production deployment, load benchmark or supported release qualification is claimed.",
+    "Signed cursors are qualified for model inventory only. This does not establish complete SYS-API-001 coverage across every collection endpoint."
+  ],
+  "prior_verified_runs": [
+    {
+      "image": "sha256:d40e0503e007ed90a495938d283e69bd496474b99177e3307e4528fee3628d6c",
+      "command": "./dev test --suite security",
+      "tests": 35,
+      "passed": 35,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 1296.283042,
+      "tool_output_chunks": [
+        "388f75",
+        "15eb92"
+      ],
+      "scope": "Earlier migration and unsigned-pagination checkpoint. Superseded for current-source qualification by the final signed-cursor 35-test execution above; no claim that these earlier results executed the newer cursor code."
+    }
+  ]
+}

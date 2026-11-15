@@ -51,6 +51,8 @@ jobs:
         run: pnpm typecheck
       - name: tests
         run: pnpm test
+      - name: Fail-closed evidence collection
+        run: python3 policies/test_ci_evidence.py
       - name: build
         run: pnpm build
       - name: Repository publication policy
@@ -137,9 +139,12 @@ jobs:
       - name: Verify database isolation and API authorization
         id: security
         run: ./dev test --suite security
+      - name: Verify model receipt upgrade and rollback
+        id: model_upgrade
+        run: ./dev test --suite model-upgrade
       - name: Verify browser acceptance and accessibility
         id: browser
-        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts
+        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts
       - name: Collect bounded redacted evidence
         if: always()
         env:
@@ -149,6 +154,7 @@ jobs:
           GC_SEED_RESULT: ${{ steps.seed.outcome }}
           GC_CONNECTORS_RESULT: ${{ steps.connectors.outcome }}
           GC_SECURITY_RESULT: ${{ steps.security.outcome }}
+          GC_MODEL_UPGRADE_RESULT: ${{ steps.model_upgrade.outcome }}
           GC_BROWSER_RESULT: ${{ steps.browser.outcome }}
         run: python3 policies/ci_evidence.py
       - name: Preserve only safe behavior summary and catalog screenshots

@@ -103,6 +103,26 @@
       "permission": "catalog:read",
       "mutationPermission": "catalog:write",
       "context": "Governed attribute model binding and typed values"
+    },
+    {
+      "path": "/models/:id/migrate",
+      "screen": "UX-10",
+      "component": "ModelMigrationPage",
+      "permission": "models:write",
+      "additionalPermissions": [
+        "models:read",
+        "catalog:read",
+        "catalog:write"
+      ]
+    },
+    {
+      "path": "/models/:id/migrations/:migrationId",
+      "screen": "UX-10",
+      "component": "ModelMigrationReceiptPage",
+      "permission": "models:read",
+      "additionalPermissions": [
+        "catalog:read"
+      ]
     }
   ]
 }
