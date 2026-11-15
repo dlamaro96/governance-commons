@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "journals": [
+    {
+      "localJournal": ".local/sast/completed-log-compression.json",
+      "bytes": 11145,
+      "sha256": "ab8aaa8988e9cfbc12485b38c9927d1f03b0969aeb517ea58bbfbbe012596f61"
+    },
+    {
+      "localJournal": ".local/sast/completed-log-compression-2.json",
+      "bytes": 10400,
+      "sha256": "b523a7fd6069857f07439310636fa9b1bf71b77d02e6a329bddc95945d986c73"
+    },
+    {
+      "localJournal": ".local/sast/completed-database-cache-removal.json",
+      "bytes": 4961159,
+      "sha256": "f18696dbabb61dd0414b2569981f07a5d741a8b2524e3f6622338c3aed3e1f5f"
+    },
+    {
+      "localJournal": ".local/sast/build-cache-audit/targeted-prune.json",
+      "bytes": 28036,
+      "sha256": "e6cb9e5de656956449ce0ef4c4db75cd7ffcd9c6066cb4a53f70cd77ea00e0bd"
+    }
+  ],
+  "scope": "Only invocation-owned CodeQL logs/database caches and exact obsolete Governance Commons COPY/build cache IDs.",
+  "logCompression": "Lossless gzip; original/compressed hashes plus decompression verification journaled.",
+  "removedDatabaseCacheFiles": 17620,
+  "removedDatabaseCacheLogicalBytes": 331132104,
+  "retainedEvidenceFilesReverified": 80,
+  "buildCacheRecords": [
+    {
+      "id": "xmki6o8ynugdgjvr5d57uf3qt",
+      "reportedSize": "6.754MB",
+      "description": "mount / from exec /bin/sh -c pnpm build"
+    },
+    {
+      "id": "lsfjlojc6ijh7scmifgb6n7wn",
+      "reportedSize": "24.21MB",
+      "description": "[8/9] COPY . ."
+    },
+    {
+      "id": "6zljpsrnojb8ta5qkseyuck0g",
+      "reportedSize": "6.763MB",
+      "description": "mount / from exec /bin/sh -c pnpm build"
+    },
+    {
+      "id": "zrh5qriemm9s5bl22cm6vg6da",
+      "reportedSize": "24.39MB",
+      "description": "[8/9] COPY . ."
+    },
+    {
+      "id": "g3dfqx2g18fmejh92b9lkpgeq",
+      "reportedSize": "6.763MB",
+      "description": "mount / from exec /bin/sh -c pnpm build"
+    },
+    {
+      "id": "r5wv9crr74lz1pja0r6cbob4o",
+      "reportedSize": "24.44MB",
+      "description": "[8/9] COPY . ."
+    },
+    {
+      "id": "ba4hxesekqslkrcjsqz5gyfpi",
+      "reportedSize": "6.763MB",
+      "description": "mount / from exec /bin/sh -c pnpm build"
+    },
+    {
+      "id": "mxdvqbkqalu8dxna7uhk1o5qf",
+      "reportedSize": "25.16MB",
+      "description": "[8/9] COPY . ."
+    },
+    {
+      "id": "xmu3iw633nxbltrn5uj0r9f39",
+      "reportedSize": "6.763MB",
+      "description": "mount / from exec /bin/sh -c pnpm build"
+    },
+    {
+      "id": "cgwgp3lo79emlf19dbpl5x57f",
+      "reportedSize": "26.87MB",
+      "description": "[8/9] COPY . ."
+    },
+    {
+      "id": "lj06y08tgm9rs04ir9kyq1jd1",
+      "reportedSize": "6.765MB",
+      "description": "mount / from exec /bin/sh -c pnpm build"
+    },
+    {
+      "id": "9hatp4nfcdgbsithzabwjkm44",
+      "reportedSize": "27.82MB",
+      "description": "[8/9] COPY . ."
+    },
+    {
+      "id": "2oypt2op5vy6mvgtpko7vn2kw",
+      "reportedSize": "6.764MB",
+      "description": "mount / from exec /bin/sh -c pnpm build"
+    },
+    {
+      "id": "x70vllrb1n6wz97tawqh7x6tk",
+      "reportedSize": "27.8MB",
+      "description": "[8/9] COPY . ."
+    },
+    {
+      "id": "0imw4901hvt7jmgz8or3o46kh",
+      "reportedSize": "6.764MB",
+      "description": "mount / from exec /bin/sh -c pnpm build"
+    },
+    {
+      "id": "z6ynevrf1mwgdp20fhnpj1x4p",
+      "reportedSize": "27.81MB",
+      "description": "[8/9] COPY . ."
+    }
+  ],
+  "allImageContainerVolumeIdentitiesPreserved": true,
+  "currentDependencyAndSharedBuildCachesPreserved": true,
+  "hostFreeBytesBeforeFinalAdmission": 4925825024,
+  "scanAdmissionGiB": 4.5,
+  "hardFloorGiB": 2,
+  "excluded": "No unrelated/Hive Citadel resources, images, containers or volumes removed."
+}

@@ -1,0 +1,313 @@
+{
+  "analysis": "PASS",
+  "bundleSha256": "7dd066f805dfed19c9c4323d5f2003cd24fabd6e7304cdf799b94a84509fe92b",
+  "configurationSha256": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+  "containerImages": {
+    "actions": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+    "javascript-typescript": "sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651",
+    "python": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a"
+  },
+  "dirty": true,
+  "durationSeconds": 192.745,
+  "findingsGate": "BLOCKED",
+  "finishedAt": "2026-11-15T21:11:52.773685+00:00",
+  "freeDiskBytesAtFinish": 5351780352,
+  "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+  "invocation": {
+    "entrypoint": "policies/sast.py",
+    "language": "all",
+    "platform": "linux-arm64"
+  },
+  "languages": {
+    "actions": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+      "coverage": {
+        "databaseFiles": 2,
+        "expectedFiles": 2,
+        "extractedExpectedFiles": 2,
+        "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+      },
+      "coverageQuerySha256": "aad6da298334a842bea221711b0e7c8b1c4864ce2c66632e4d93c846742a4505",
+      "dirty": true,
+      "findings": [],
+      "findingsGate": "PASS",
+      "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+      "language": "actions",
+      "library": "codeql/actions-all",
+      "libraryVersion": "0.7.1",
+      "publishedSarifSha256": "0ba48a8fd9cc82d1ca43b4e4fe24cda27ef19a11c707589d1174157d08c9003e",
+      "queryCount": 24,
+      "queryPack": "codeql/actions-queries",
+      "querySetDigest": "109c0f4a3b614aa9f782d403ecc45e5830ed72620e8fc1eeff93ae613bfb9f6e",
+      "queryVersion": "0.6.39",
+      "rawSarifSha256": "95c03d4c2a88a23224e2d31283af92bd1e05c5d9d7058bc4051ecfa5bec9d0d9",
+      "schemaVersion": 1,
+      "sourceDigest": "f02c9daeb3d0cc1e966502838c5827c378c5e4f22dfa35b543fe0fd120a9716a",
+      "steps": [
+        {
+          "durationSeconds": 0.759,
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "durationSeconds": 2.034,
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 3.039,
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 9.633,
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 18.511,
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.76,
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    },
+    "javascript-typescript": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": "sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651",
+      "coverage": {
+        "databaseFiles": 122,
+        "expectedFiles": 97,
+        "extractedExpectedFiles": 97,
+        "extractedPathsDigest": "6a006f23f839c418366d861ed637fc90f23d352e1ce69984af66c82585a5871b"
+      },
+      "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+      "dirty": true,
+      "extractorRuntime": "v24.22.3",
+      "findings": [
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "4b384d3075f1f9a1b4de88be0294722c6810e8f156280a4bf7b8b355970ba58c",
+          "line": 347,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "33c5e3b6cd16440695cca695fcf13c8cbe334c010797e8571947142b898a809c",
+          "line": 351,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "b24c4dcd5556534b1a64eb3a4b4526f57ff45a1e389df3f1a3ca7edaf8f5d530",
+          "line": 356,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "b61de5787bb6f3604bc638b2ccf919915a56bbe29b3892aaa341cd3823fe9706",
+          "line": 357,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "8762cc5285aec8481d4e043fcfb1418dbf4bf4dff9187acc36a3da481aa28829",
+          "line": 364,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "6b6fc2e78701e0aa2aa9fa4599e47e04484ae59c327c7a6764c809cd82750cf0",
+          "line": 370,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "d58f2d60995414549f7d85fa95d9eb93c01597d4908d7c7e171f79013a32e0a2",
+          "line": 374,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        }
+      ],
+      "findingsGate": "BLOCKED",
+      "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+      "language": "javascript-typescript",
+      "library": "codeql/javascript-all",
+      "libraryVersion": "3.0.0",
+      "publishedSarifSha256": "ed1dc0864bb62bbb371e090975b4874411d2bd078adffe03f5964eeb919a3cc5",
+      "queryCount": 105,
+      "queryPack": "codeql/javascript-queries",
+      "querySetDigest": "213bda4e81b066a5b255ff54cd70bbac5caaafe63742af25eeb890308d3c28dd",
+      "queryVersion": "2.5.0",
+      "rawSarifSha256": "0a282a6fdab20bce45878120cb4225ac25e6072c9c17e38a8a94abc2cbdd7772",
+      "schemaVersion": 1,
+      "sourceDigest": "f02c9daeb3d0cc1e966502838c5827c378c5e4f22dfa35b543fe0fd120a9716a",
+      "steps": [
+        {
+          "durationSeconds": 0.509,
+          "exitCode": 0,
+          "step": "extractor-runtime"
+        },
+        {
+          "durationSeconds": 0.775,
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "durationSeconds": 2.029,
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 12.535,
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 70.767,
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 17.504,
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.761,
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    },
+    "python": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+      "coverage": {
+        "databaseFiles": 43,
+        "expectedFiles": 23,
+        "extractedExpectedFiles": 23,
+        "extractedPathsDigest": "4d2f7b20a32cf6abbd6e7e081ab632e55f46a3484c67de62a295fee0efd2274f"
+      },
+      "coverageQuerySha256": "e3c2c759bc1eda89b0ea538c161831cc41422adfbacdc43a1a5af3bbe4148f15",
+      "dirty": true,
+      "extractorRuntime": "Python 3.14.5",
+      "findings": [
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "6b1491e06ff848c5baeeec4094fb70e8b92f4ac587df0f6ca38587c4d78a2834",
+          "line": 306,
+          "path": "scripts/github/bootstrap",
+          "ruleId": "py/clear-text-logging-sensitive-data",
+          "severity": "high",
+          "sourceSuppressed": false
+        }
+      ],
+      "findingsGate": "BLOCKED",
+      "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+      "language": "python",
+      "library": "codeql/python-all",
+      "libraryVersion": "7.2.9",
+      "publishedSarifSha256": "db38af3812648b1d6d77d05605a0875f9e8ba41788909623c60361d8b1b9cab3",
+      "queryCount": 52,
+      "queryPack": "codeql/python-queries",
+      "querySetDigest": "8d865c71bba12677546d6ed9e9a33b2a2fa4fd0ad90c75c29cd87c457d0bf969",
+      "queryVersion": "1.9.0",
+      "rawSarifSha256": "227ae17c589b1a2d1ae830dfc783c33dc38ee7e20319d7c3f9629960494c149d",
+      "schemaVersion": 1,
+      "sourceDigest": "f02c9daeb3d0cc1e966502838c5827c378c5e4f22dfa35b543fe0fd120a9716a",
+      "steps": [
+        {
+          "durationSeconds": 0.256,
+          "exitCode": 0,
+          "step": "extractor-runtime"
+        },
+        {
+          "durationSeconds": 0.759,
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "durationSeconds": 2.284,
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 11.93,
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 17.23,
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 12.43,
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.765,
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    }
+  },
+  "limitations": [
+    "No hosted ingestion or analysis read-back in this command.",
+    "SQL/RLS, dependencies, images and general IaC are outside this source scan.",
+    "Automated findings do not replace independent security review."
+  ],
+  "outcome": "NOT_PASSED",
+  "platform": "linux-arm64",
+  "policySha256": "830602d29f1396a5e30513299cc7130a638c575d548a7a822e9c77e105bb3f19",
+  "purpose": "REPOSITORY_SOURCE",
+  "runnerSha256": "f795f18be2c781b74f194b15b0a8fb34c3901a9d2e37383d4a81259f6cf09fe7",
+  "schemaVersion": 1,
+  "scope": "ALL_REQUIRED_LANGUAGES",
+  "sourceDigest": "f02c9daeb3d0cc1e966502838c5827c378c5e4f22dfa35b543fe0fd120a9716a",
+  "startedAt": "2026-11-15T21:08:40.028301+00:00",
+  "triageSha256": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+  "upload": "NOT_ATTEMPTED"
+}

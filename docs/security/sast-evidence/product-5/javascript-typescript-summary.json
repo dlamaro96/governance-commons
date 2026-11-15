@@ -1,0 +1,66 @@
+{
+  "analysis": "PASS",
+  "cliVersion": "2.27.4",
+  "containerImage": "sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651",
+  "coverage": {
+    "databaseFiles": 122,
+    "expectedFiles": 97,
+    "extractedExpectedFiles": 97,
+    "extractedPathsDigest": "6a006f23f839c418366d861ed637fc90f23d352e1ce69984af66c82585a5871b"
+  },
+  "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+  "dirty": true,
+  "extractorRuntime": "v24.22.3",
+  "findings": [],
+  "findingsGate": "PASS",
+  "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+  "language": "javascript-typescript",
+  "library": "codeql/javascript-all",
+  "libraryVersion": "3.0.0",
+  "publishedSarifSha256": "8d3a88d6c2011f4156ce2eb32464512dd3d387fb4570ff220a7bc013e4e67ed8",
+  "queryCount": 105,
+  "queryPack": "codeql/javascript-queries",
+  "querySetDigest": "213bda4e81b066a5b255ff54cd70bbac5caaafe63742af25eeb890308d3c28dd",
+  "queryVersion": "2.5.0",
+  "rawSarifSha256": "1d4d1f6f461bc708fa291338354e108d346147966c947569e1974d332b1aaf7a",
+  "schemaVersion": 1,
+  "sourceDigest": "b841349ba0f21dc2d57cdd77b078b318dce41687038a47cce894b716117e73b8",
+  "steps": [
+    {
+      "durationSeconds": 0.521,
+      "exitCode": 0,
+      "step": "extractor-runtime"
+    },
+    {
+      "durationSeconds": 0.775,
+      "exitCode": 0,
+      "step": "version"
+    },
+    {
+      "durationSeconds": 2.315,
+      "exitCode": 0,
+      "step": "queries"
+    },
+    {
+      "durationSeconds": 12.804,
+      "exitCode": 0,
+      "step": "extract"
+    },
+    {
+      "durationSeconds": 74.068,
+      "exitCode": 0,
+      "step": "analyze"
+    },
+    {
+      "durationSeconds": 17.216,
+      "exitCode": 0,
+      "step": "coverage-query"
+    },
+    {
+      "durationSeconds": 0.765,
+      "exitCode": 0,
+      "step": "coverage-decode"
+    }
+  ],
+  "upload": "NOT_ATTEMPTED"
+}

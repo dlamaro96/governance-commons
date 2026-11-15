@@ -197,7 +197,7 @@ function parseProperties(input: unknown, context: Context, path: string, depth: 
       context.issue('invalid_definition', at(path, key), 'Attribute names must be safe identifiers of at most 64 characters.'); continue;
     }
     const parsed = parseSchema(source[key], context, at(path, key), depth, true);
-    if (parsed) result[key] = parsed;
+    if (parsed) Object.defineProperty(result, key, { value: parsed, enumerable: true, writable: true, configurable: true });
     if (context.overflow || context.nodes > context.maxNodes) break;
   }
   return result;
@@ -424,7 +424,7 @@ function validateProperties(schema: Readonly<Record<string, AttributeDefinition>
       continue;
     }
     const value = validateValue(schema[key], source[key], context, at(path, key), depth);
-    if (value !== undefined) output[key] = value;
+    if (value !== undefined) Object.defineProperty(output, key, { value, enumerable: true, writable: true, configurable: true });
     if (context.overflow || context.nodes > context.maxNodes) break;
   }
   return output;

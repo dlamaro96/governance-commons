@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "checks": [
+    {
+      "check": "sast-policy",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "policies",
+        "-p",
+        "test_sast.py",
+        "-v"
+      ],
+      "startedAt": "2026-11-15T21:42:55.804640+00:00",
+      "exitCode": 0,
+      "logSha256": "bbcc78b7793bf86bb5c2477b90639ebaece9f97af915fd9759a276ab77a8393d",
+      "status": "PASS"
+    },
+    {
+      "check": "model-migration",
+      "command": [
+        "<original-checkout>/.local/toolchain/node-v24.22.3-darwin-arm64/bin/node",
+        "--experimental-transform-types",
+        "--test",
+        "tests/unit/model.test.ts",
+        "tests/unit/model-migration.test.ts"
+      ],
+      "startedAt": "2026-11-15T21:42:56.059505+00:00",
+      "exitCode": 0,
+      "logSha256": "656f0ad87837543e07e91ac16822bf2ec8b972a68ab250882708e27bbc6dbb70",
+      "status": "PASS"
+    },
+    {
+      "check": "focused-typecheck",
+      "command": [
+        "<original-checkout>/.local/toolchain/node-v24.22.3-darwin-arm64/bin/node",
+        "<original-checkout>/node_modules/typescript/bin/tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--strict",
+        "--target",
+        "ES2022",
+        "--module",
+        "NodeNext",
+        "--moduleResolution",
+        "NodeNext",
+        "--esModuleInterop",
+        "--skipLibCheck",
+        "--allowImportingTsExtensions",
+        "--types",
+        "node",
+        "--typeRoots",
+        "<original-checkout>/node_modules/@types",
+        "tests/unit/model.test.ts",
+        "tests/unit/model-migration.test.ts"
+      ],
+      "startedAt": "2026-11-15T21:42:56.426174+00:00",
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "PASS"
+    },
+    {
+      "check": "publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "startedAt": "2026-11-15T21:42:56.536845+00:00",
+      "exitCode": 0,
+      "logSha256": "8e3789a50f47723bb41b682a8b99753451d8b43ffbe3587e14ef539cd56fc691",
+      "status": "PASS"
+    },
+    {
+      "check": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "startedAt": "2026-11-15T21:43:05.722033+00:00",
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "PASS"
+    }
+  ],
+  "counts": {
+    "policy": 28,
+    "modelAndMigration": 40,
+    "typedMigrationAndFileComposition": 22
+  },
+  "tools": {
+    "node": "v24.22.3",
+    "typescript": "Version 7.0.2",
+    "python": "Python 3.14.5"
+  },
+  "sourceSha256": {
+    "policies/sast.py": "4a4be36bc3dd5dbd59ee62bf250f021bc46ce9f244c141516e92b21d839f3fd3",
+    "policies/test_sast.py": "2f37f05bf2104531fbf28d51ce37114d2b0cf86850fe6544d83741e04bd67be7",
+    "policies/sast_probe.py": "9c37819538dfa6d71a5fd605c642adbc48f8f8bbdff3f6cd9f4ade87ec013b85",
+    "policies/sast-policy.json": "920038aebeb759097d57f7712b3269ebd29b9e3ff488164ded57a0d772cda581",
+    "policies/sast-triage.json": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+    "packages/domain/src/model.ts": "7d3cf00bfa0248e22d93fb6da1ce9995c2c9d82cddff9ab7eaf3e4bf988183ff",
+    "packages/domain/src/model-migration.ts": "19f375ebf8f424b74e1643255ba776d09234c986e45298c7a0fb5ecd72559ed0",
+    "tests/unit/model.test.ts": "bbdfc4842bd1c0496344f306ed7aea1dd9a371fe59e570d08c3d45eaa834118c",
+    "tests/unit/model-migration.test.ts": "d0ab5cc6c9041430c6c24fa1fb99048c624a1d9e297afdd8133f553d4054d930",
+    "scripts/github/bootstrap": "4e786b1df4360ab97d8c5f57d2dfea05739f4138c871343efc3042f62b69c3f9"
+  },
+  "limitations": [
+    "Tools were read-only from the original checkout; commands normalize its absolute local path.",
+    "Focused source and type tests only; no Docker/application integration or browser rerun."
+  ],
+  "compositionCheck": {
+    "finishedAt": "2026-11-15T21:49:46.340518+00:00",
+    "command": [
+      "<Node24.22.3>",
+      "--experimental-transform-types",
+      "--test",
+      "tests/unit/asset-type-migration.test.ts",
+      "tests/unit/model-migration-file.test.ts"
+    ],
+    "exitCode": 0,
+    "sourceSha256": {
+      "tests/unit/asset-type-migration.test.ts": "bb0c98308b07c3ba0f1fdfc33b8e60b751a87d48c47117324d32ad4b75697c9a",
+      "tests/unit/model-migration-file.test.ts": "130db7830dfc09286dce285721747bfbe1ebf61c411630c92b77ee05e8ad0929"
+    },
+    "logSha256": "3d26ea47edb5bc6b1d53e5d2cd972daececd871494fd286f1aef7a7a195d278b"
+  }
+}

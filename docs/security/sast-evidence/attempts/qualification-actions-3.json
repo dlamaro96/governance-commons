@@ -1,0 +1,70 @@
+{
+  "analysis": "PASS",
+  "bundleSha256": "7dd066f805dfed19c9c4323d5f2003cd24fabd6e7304cdf799b94a84509fe92b",
+  "configurationSha256": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+  "containerImage": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+  "dirty": true,
+  "findingsGate": "PASS",
+  "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+  "languages": {
+    "actions": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "coverage": {
+        "databaseFiles": 2,
+        "expectedFiles": 2,
+        "extractedExpectedFiles": 2,
+        "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+      },
+      "dirty": true,
+      "findings": [],
+      "findingsGate": "PASS",
+      "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+      "language": "actions",
+      "publishedSarifSha256": "cf1ad98a78359d1bce2c5561d04f6fcca0c7cd6ce1f6f28047ac943b84d4d56b",
+      "queryCount": 24,
+      "queryPack": "codeql/actions-queries",
+      "querySetDigest": "109c0f4a3b614aa9f782d403ecc45e5830ed72620e8fc1eeff93ae613bfb9f6e",
+      "queryVersion": "0.6.39",
+      "rawSarifSha256": "4e2a3b627e78fbf20942504e5e8094af3284664d90f04ef6f47c7f42e17d7de9",
+      "schemaVersion": 1,
+      "sourceDigest": "7759d389f864676d7351e2c6e85bdef84a486d0776f71b7dfc4cd400a936d27c",
+      "steps": [
+        {
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    }
+  },
+  "outcome": "PASS",
+  "platform": "linux-arm64",
+  "policySha256": "2931b5fe970e847b773d9663a029e052f5b3b190d27040b677757cf97beec8b7",
+  "purpose": "REPOSITORY_SOURCE",
+  "schemaVersion": 1,
+  "scope": "SINGLE_LANGUAGE",
+  "sourceDigest": "7759d389f864676d7351e2c6e85bdef84a486d0776f71b7dfc4cd400a936d27c",
+  "triageSha256": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+  "upload": "NOT_ATTEMPTED"
+}

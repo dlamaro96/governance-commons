@@ -210,6 +210,114 @@ test('object paths cannot traverse lists or inherited properties, while replacin
     plan: upgrade(source, target, [{ op: 'set', path: ['items'], value: ['B', 'C'], mode: 'replace' }]), attributes: { items: ['A'] } })), { items: ['B', 'C'] });
 });
 
+test('direct transforms reject every reserved path position and hostile source properties without mutation', () => {
+  const source = model({ value: { type: 'text' }, box: { type: 'object', properties: { value: { type: 'text' } } } });
+  const target = model(source.attributes, 2);
+  const attributes = freeze({ value: 'original', box: { value: 'nested' } });
+  const prototypeBefore = Object.getOwnPropertyDescriptors(Object.prototype);
+  for (const reservedKey of ['__proto__', 'constructor', 'prototype']) {
+    for (const path of [[reservedKey], ['box', reservedKey], [reservedKey, 'value']]) {
+      const operations: MigrationOperation[] = [
+        { op: 'set', path, value: 'changed', mode: 'replace' },
+        { op: 'remove', path, onMissing: 'skip' },
+        { op: 'convert', path, conversion: 'textToDecimal', onMissing: 'skip' },
+        { op: 'enumMap', path, mappings: [{ from: 'original', to: 'changed' }], onMissing: 'skip', onUnmapped: 'keep' },
+        { op: 'rename', from: path, to: ['other'], onMissing: 'skip' },
+        { op: 'rename', from: ['value'], to: path, onMissing: 'error' },
+      ];
+      for (const operation of operations) failure(applyModelMigrationToAttributes({ head: source, source, target,
+        plan: upgrade(source, target, [operation]), attributes }), 'format');
+    }
+  }
+  let accessed = false;
+  const accessor = Object.defineProperty({}, 'value', { enumerable: true, get() { accessed = true; throw new Error('must not execute'); } });
+  for (const hostile of [accessor, { box: accessor }, Object.create({ value: 'inherited' }),
+    JSON.parse('{"__proto__":{"polluted":true}}')]) {
+    failure(applyModelMigrationToAttributes({ head: source, source, target, plan: upgrade(source, target, []), attributes: hostile }));
+  }
+  assert.equal(accessed, false);
+  assert.deepEqual(attributes, { value: 'original', box: { value: 'nested' } });
+  assert.deepEqual(Object.getOwnPropertyDescriptors(Object.prototype), prototypeBefore);
+});
+
+test('model normalization and migration create own data fields without invoking an inherited setter', () => {
+  const name = 'gc_sast_optional_field';
+  const source = model({ [name]: { type: 'text' }, box: { type: 'object', properties: { [name]: { type: 'text' } } } });
+  const target = model(source.attributes, 2);
+  const migration = upgrade(source, target, [
+    { op: 'set', path: [name], value: 'top-level', mode: 'ifMissing' },
+    { op: 'set', path: ['box', name], value: 'nested', mode: 'ifMissing' },
+  ]);
+  const previous = Object.getOwnPropertyDescriptor(Object.prototype, name);
+  let invoked = false;
+  Object.defineProperty(Object.prototype, name, { configurable: true, set() { invoked = true; throw new Error('inherited setter must not execute'); } });
+  try {
+    const attributes = freeze({ box: {} });
+    const result = success(applyModelMigrationToAttributes({ head: source, source, target, plan: migration, attributes }));
+    assert.equal(invoked, false);
+    assert.deepEqual(result, { [name]: 'top-level', box: { [name]: 'nested' } });
+    for (const object of [result, result.box as object]) {
+      assert.equal(Object.getPrototypeOf(object), Object.prototype);
+      const descriptor = Object.getOwnPropertyDescriptor(object, name)!;
+      assert.equal(descriptor.enumerable, true);
+      assert.equal(descriptor.writable, true);
+      assert.equal(descriptor.configurable, true);
+    }
+    assert.deepEqual(attributes, { box: {} });
+  } finally {
+    if (previous) Object.defineProperty(Object.prototype, name, previous);
+    else Reflect.deleteProperty(Object.prototype, name);
+  }
+});
+
+test('declared own fields resembling inherited names still obey normal migration behavior', () => {
+  const source = model({ toString: { type: 'text' as const }, hasOwnProperty: { type: 'text' as const } });
+  const target = model(source.attributes, 2);
+  const attributes = Object.assign(Object.create(null), { toString: 'before', hasOwnProperty: 'original' });
+  const result = success(applyModelMigrationToAttributes({ head: source, source, target, attributes,
+    plan: upgrade(source, target, [{ op: 'set', path: ['toString'], value: 'after', mode: 'replace' },
+      { op: 'remove', path: ['hasOwnProperty'], onMissing: 'error' }]) }));
+  assert.deepEqual(result, { toString: 'after' });
+  assert.deepEqual(Object.keys(attributes).sort(), ['hasOwnProperty', 'toString']);
+  assert.equal(attributes.toString, 'before');
+});
+
+test('private working maps round-trip nested object/list literals as plain JSON with exact decimal values', () => {
+  const schema: AttributeDefinition = { type: 'object', properties: {
+    toString: { type: 'text' as const }, items: { type: 'list', items: { type: 'object', properties: {
+      hasOwnProperty: { type: 'text' as const }, amount: { type: 'decimal' },
+    } } },
+  } };
+  const source = model({ original: schema, spare: { type: 'text' } });
+  const target = model({ renamed: schema }, 2);
+  const amount = '90071992547409931234567890.0000000000000000001';
+  const literal = freeze({ toString: 'literal', items: [{ hasOwnProperty: 'owned', amount }] });
+  const attributes = freeze({ original: { toString: 'before', items: [] } });
+  const migration = upgrade(source, target, [
+    { op: 'rename', from: ['original'], to: ['renamed'], onMissing: 'error' },
+    { op: 'set', path: ['renamed'], value: literal, mode: 'replace' },
+    { op: 'remove', path: ['spare'], onMissing: 'skip' },
+    { op: 'set', path: ['renamed', 'toString'], value: 'after', mode: 'replace' },
+  ]);
+  const result = success(applyModelMigrationToAttributes({ head: source, source, target, plan: migration, attributes }));
+  const expected = { renamed: { toString: 'after', items: [{ hasOwnProperty: 'owned', amount }] } };
+  assert.deepEqual(result, expected);
+  assert.deepEqual(JSON.parse(JSON.stringify(result)), expected);
+  const plainJSON = (value: unknown): void => {
+    if (!value || typeof value !== 'object') return;
+    assert.equal(value instanceof Map, false);
+    assert.equal(Object.getPrototypeOf(value), Array.isArray(value) ? Array.prototype : Object.prototype);
+    for (const child of Object.values(value)) plainJSON(child);
+  };
+  plainJSON(result);
+  assert.deepEqual(attributes, { original: { toString: 'before', items: [] } });
+  assert.deepEqual(literal, { toString: 'literal', items: [{ hasOwnProperty: 'owned', amount }] });
+  const unchanged = model(source.attributes, 2);
+  failure(applyModelMigrationToAttributes({ head: source, source, target: unchanged, attributes,
+    plan: upgrade(source, unchanged, [{ op: 'remove', path: ['original', 'items', 'hasOwnProperty'], onMissing: 'skip' }]) }),
+  'invalid_definition', '/plan/operations/0/path');
+});
+
 test('conversion and enum operation types are checked even when optional values are absent', () => {
   const source = model({ value: { type: 'text' } }); const target = model(source.attributes, 2);
   failure(validateMigrationPlanForModels(source, target, upgrade(source, target, [{ op: 'convert', path: ['value'], conversion: 'safeIntegerToDecimal', onMissing: 'skip' }])), 'invalid_definition', '/plan/operations/0/conversion');
