@@ -9,7 +9,7 @@ Public development repository: https://github.com/dlamaro96/governance-commons. 
 - M1 implementation 8232c18; PR3 merged after storage/readiness and safe-artifact fixes. Required CI 43734227796 passed.
 - Initial M2 model authoring e97d813; PR4 merged as a2e9a5d after required CI 43735027282 passed.
 - Explicit attribute-model migration and signed pagination implementation 779dafb, evidence binding c666ca6. PR6 passed all required checks in run 43738876918, including eight distinct browser tests in one attempt each, and merged as 649b8aab308937346b0c6b5041576f84e76fce63. Hosted report retains its tested PR merge revision d3831eb.
-- Current branch codex/inherited-asset-types starts from merged 649b8aa. New implementation/evidence are locally checked and remain uncommitted pending final evidence binding and publication checks.
+- Current branch codex/inherited-asset-types starts from merged 649b8aa. Implementation d518ddbb35200166b38ba88396986fa4827413f1 is locally checked; API58, upgrade25 and UI108 source/screenshot hashes match committed Git blobs. Final publication policy, requirements validation and pinned gitleaks worktree/history scans passed; hosted PR checks remain pending.
 
 Evidence in docs/verification/evidence-manifest.json separates source implementation, scoped execution, runtime health and release qualification. Historical execution timestamps/images remain intact. A source hash bound to a later commit does not imply a test rerun.
 
@@ -35,4 +35,4 @@ Application http://localhost:4310; Keycloak http://localhost:4311/realms/governa
 
 User authorized disk cleanup except a protected unrelated project. Prior disposable cache/selected obsolete image cleanup preserved that project’s code, images, containers and volumes. No global prune or volume deletion. About 7.1 GiB remains free; builds are serial and stop below 2 GiB. Do not download large uncached images without a capacity check. Preserve the Docker backend keepalive process/session 4222.
 
-Run final publication checks, commit and bind exact source hashes, then publish the inherited-type PR and merge only after required hosted checks pass. Continue the existing implementation on a codex/ branch. User delegated conduct-reporting choice: supported private GitHub routes are documented; a dedicated off-platform conduct contact and independent escalation remain explicit release prerequisites, never an invented inbox.
+Publish the inherited-type PR and merge only after required hosted checks pass. Continue the existing implementation on a codex/ branch. User delegated conduct-reporting choice: supported private GitHub routes are documented; a dedicated off-platform conduct contact and independent escalation remain explicit release prerequisites, never an invented inbox.

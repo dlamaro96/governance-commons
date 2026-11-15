@@ -208,15 +208,33 @@
     },
     {
       "path": "docs/verification/asset-type-upgrade.json",
-      "scope": "isolated SQL005-to006 upgrade and nine actual PostgreSQL runtime-role storage invariants; source binding pending coherent implementation commit"
+      "scope": "isolated SQL005-to006 upgrade and nine actual PostgreSQL runtime-role storage invariants",
+      "source_binding": {
+        "implementation_commit": "d518ddbb35200166b38ba88396986fa4827413f1",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
+        "verified_files": 25,
+        "evidence_sha256": "5cabbc089047cb688404c9af656e229ae1b94021e601a85c2c64366df5f12d7e"
+      }
     },
     {
       "path": "docs/verification/m2-asset-type-api.json",
-      "scope": "inherited asset-type API, lifecycle, ownership, storage, pagination and prior regression checks"
+      "scope": "inherited asset-type API, lifecycle, ownership, storage, pagination and prior regression checks",
+      "source_binding": {
+        "implementation_commit": "d518ddbb35200166b38ba88396986fa4827413f1",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
+        "verified_files": 58,
+        "evidence_sha256": "04f0b0c590026c97c73fab1d02b8fce4fd444348f33a2a14b8f41ae66c31b850"
+      }
     },
     {
       "path": "docs/verification/m2-asset-type-ui.json",
-      "scope": "inherited asset-type UI, ten real browser journeys, 17 inspected screenshots and 41 preserved historical screenshots"
+      "scope": "inherited asset-type UI, ten real browser journeys, 17 inspected screenshots and 41 preserved historical screenshots",
+      "source_binding": {
+        "implementation_commit": "d518ddbb35200166b38ba88396986fa4827413f1",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
+        "verified_files": 108,
+        "evidence_sha256": "84b74c9b18fa3a9a15f04dc98d266c2d0cd16f36c392ebf6df03a5776682cea9"
+      }
     }
   ],
   "limitations": [
@@ -224,5 +242,5 @@
     "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "bound_at": "2026-11-15T17:02:24.109952+00:00"
+  "bound_at": "2026-11-15T17:50:06.840020+00:00"
 }
