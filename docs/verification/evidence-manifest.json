@@ -247,25 +247,49 @@
     },
     {
       "path": "docs/verification/type-migration-pure.json",
-      "scope": "complete type migration pure parsing, scope and policy transforms"
+      "scope": "complete type migration pure parsing, scope and policy transforms",
+      "source_binding": {
+        "implementation_commit": "e5910a78cbe9b7aa7600f06b356dd9cefbee4a88",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
+        "verified_files": 7,
+        "evidence_sha256": "62bdb7206c24e2750d80640a9b1071d5ddafc06e8a3d0d56c911cf70d24f5562"
+      }
     },
     {
       "path": "docs/verification/type-migration-upgrade.json",
-      "scope": "isolated complete typed-receipt upgrade, scoped principal locking and numeric storage bounds"
+      "scope": "isolated complete typed-receipt upgrade, scoped principal locking and numeric storage bounds",
+      "source_binding": {
+        "implementation_commit": "e5910a78cbe9b7aa7600f06b356dd9cefbee4a88",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
+        "verified_files": 32,
+        "evidence_sha256": "81a59fe29575b1559bbd282ce9c9e48b4529a0affd7b2c8f7581f4a931b1228a"
+      }
     },
     {
       "path": "docs/verification/m2-type-migration-api.json",
-      "scope": "complete bounded authored-type migration core API/storage and rollback"
+      "scope": "complete bounded authored-type migration core API/storage and rollback",
+      "source_binding": {
+        "implementation_commit": "e5910a78cbe9b7aa7600f06b356dd9cefbee4a88",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
+        "verified_files": 52,
+        "evidence_sha256": "5f576085d8ceccfc46ffba3ffed2918bb56e4eb8d74eba11796e84fc47164163"
+      }
     },
     {
       "path": "docs/verification/m2-type-migration-ui.json",
-      "scope": "Complete type-migration browser workflows and all12 browser regressions;17 inspected new and58 preserved historical screenshots"
+      "scope": "Complete type-migration browser workflows and all12 browser regressions;17 inspected new and58 preserved historical screenshots",
+      "source_binding": {
+        "implementation_commit": "e5910a78cbe9b7aa7600f06b356dd9cefbee4a88",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
+        "verified_files": 131,
+        "evidence_sha256": "7d939da2202370ecf20488deae1d835353a18333399fd6d349827815501141c0"
+      }
     }
   ],
   "limitations": [
     "Passing scoped development gates does not complete compound baseline requirements.",
-    "M1 core local journey passes; full M0 repository/release and M2–M10 programme remain open.",
+    "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "bound_at": "2026-11-15T17:50:06.840020+00:00"
+  "bound_at": "2026-11-15T18:41:32.332105+00:00"
 }
