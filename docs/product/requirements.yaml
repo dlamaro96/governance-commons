@@ -4156,8 +4156,12 @@
         "Domain creation and rename preserve asset identity and audit continuity."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations",
+        "packages/db/src",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -4186,8 +4190,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M1"
     },
     {
@@ -4343,8 +4349,12 @@
       "acceptance_ids": [
         "AT-TEN-01"
       ],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations",
+        "packages/db/src",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -4373,8 +4383,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M1"
     },
     {
@@ -4404,8 +4416,12 @@
         "Same release passes one-tenant and two-tenant suites."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations",
+        "packages/db/src",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -4434,8 +4450,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M1"
     },
     {
@@ -5771,9 +5789,13 @@
         "Invalid relations and missing required fields fail identically in UI, REST, import, workflows and MCP."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/domain/src/model.ts"
+      ],
+      "test_ids": [
+        "tests/unit/model.test.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -5801,9 +5823,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M3"
+      "limitations": [
+        "Shared bounded typed-attribute validator and supplied-record upgrade preview implemented. Persistence, inheritance, relations, visual editor, migration execution and ingress integrations remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M3",
+      "partial_evidence": [
+        "docs/verification/model-validation.json"
+      ]
     },
     {
       "id": "MOD-002",
@@ -5837,9 +5864,13 @@
       "acceptance_ids": [
         "AT-MOD-01"
       ],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/domain/src/model.ts"
+      ],
+      "test_ids": [
+        "tests/unit/model.test.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -5867,9 +5898,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M3"
+      "limitations": [
+        "Shared bounded typed-attribute validator and supplied-record upgrade preview implemented. Persistence, inheritance, relations, visual editor, migration execution and ingress integrations remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M3",
+      "partial_evidence": [
+        "docs/verification/model-validation.json"
+      ]
     },
     {
       "id": "MOD-002.01",
@@ -6035,9 +6071,13 @@
         "Validation, sorting, filtering and export round-trip without losing types."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/domain/src/model.ts"
+      ],
+      "test_ids": [
+        "tests/unit/model.test.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -6065,9 +6105,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M3"
+      "limitations": [
+        "Shared bounded typed-attribute validator and supplied-record upgrade preview implemented. Persistence, inheritance, relations, visual editor, migration execution and ingress integrations remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M3",
+      "partial_evidence": [
+        "docs/verification/model-validation.json"
+      ]
     },
     {
       "id": "MOD-004",
@@ -6552,8 +6597,13 @@
         "Seed records cover every starter type with real relations and working pages."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/api/src",
+        "packages/db/migrations",
+        "apps/web/src/pages",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -6582,8 +6632,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M2"
     },
     {
@@ -6749,8 +6801,13 @@
         "Rename fixture produces one updated asset, not a duplicate."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/api/src",
+        "packages/db/migrations",
+        "apps/web/src/pages",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -6779,8 +6836,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M2"
     },
     {
@@ -6948,8 +7007,13 @@
       "acceptance_ids": [
         "AT-CON-01"
       ],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/api/src",
+        "packages/db/migrations",
+        "apps/web/src/pages",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -6978,8 +7042,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M2"
     },
     {
@@ -7013,8 +7079,13 @@
         "A rescan updates source schema but preserves an approved business definition."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/api/src",
+        "packages/db/migrations",
+        "apps/web/src/pages",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -7043,8 +7114,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M2"
     },
     {
@@ -7212,8 +7285,13 @@
       "acceptance_ids": [
         "AT-TEN-01"
       ],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/api/src",
+        "packages/db/migrations",
+        "apps/web/src/pages",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -7242,8 +7320,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M2"
     },
     {
@@ -24417,8 +24497,13 @@
         "Third-party sample connector passes the same tests as built-ins."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/site-runner/src",
+        "apps/workflow-worker/src",
+        "python",
+        "connectors/manifests/postgresql.json"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -24447,8 +24532,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M8"
     },
     {
@@ -24485,8 +24572,13 @@
         "Read-only credential cannot be used for grants or tags."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/site-runner/src",
+        "apps/workflow-worker/src",
+        "python",
+        "connectors/manifests/postgresql.json"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -24515,8 +24607,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M8"
     },
     {
@@ -24691,8 +24785,13 @@
         "Secret rotation succeeds and old secret is absent from exported evidence/logs."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/site-runner/src",
+        "apps/workflow-worker/src",
+        "python",
+        "connectors/manifests/postgresql.json"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -24721,8 +24820,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M8"
     },
     {
@@ -26270,8 +26371,13 @@
         "Real local database metadata, SQL/table/column lineage, profiling, DQ and scoped native grants; all V2 in Compose."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/site-runner/src",
+        "apps/workflow-worker/src",
+        "python",
+        "connectors/manifests/postgresql.json"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -26300,8 +26406,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M8",
       "public_comparison_baseline": "Native catalog and lineage source in the published matrix"
     },
@@ -26337,9 +26445,19 @@
         "Real local database metadata, SQL/table/column lineage, profiling, DQ and scoped native grants; all V2 in Compose."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "connectors/manifests/postgresql.json",
+        "python/governance_workers/postgresql.py",
+        "python/governance_workers/server.py",
+        "apps/site-runner/src/index.ts",
+        "apps/workflow-worker/src/workflows.ts"
+      ],
+      "test_ids": [
+        "python/tests/test_postgresql.py",
+        "python/tests/test_local_postgres.py",
+        "scripts/runtime-test-connectors.py"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -26362,13 +26480,34 @@
           "evidence": []
         }
       },
-      "qualification_profiles": [],
+      "qualification_profiles": [
+        {
+          "profile_id": "postgresql-17.11-local-arm64-metadata",
+          "scope": [
+            "metadata"
+          ],
+          "source_version": "PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2)",
+          "architecture": "linux/arm64",
+          "verification_level": "V2",
+          "outcome": "PASS",
+          "evidence": [
+            "docs/verification/core-connectors.json"
+          ],
+          "limitations": [
+            "Metadata subset only; SQL/table/column lineage, profiling, DQ and scoped native grants remain unimplemented/unverified.",
+            "Database/cluster recreation and recycled OID detection are not implemented; source-epoch reconciliation remains required and unverified."
+          ]
+        }
+      ],
       "release_qualification": {
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Full PostgreSQL route remains incomplete. Only bounded schema/table/view/column metadata, identity stability and fail-closed permission checks have local V2 evidence.",
+        "Database/cluster recreation and recycled OID detection are not implemented; source-epoch reconciliation remains required and unverified."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M8"
     },
     {
@@ -44912,8 +45051,12 @@
         "OIDC login/logout, expired-session recovery, IdP discovery when configured, safe return URLs, useful denied-access state."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/web/src",
+        "packages/ui/src",
+        "tests/e2e"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -44942,9 +45085,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/m1-browser.json"
+      ]
     },
     {
       "id": "UX-02",
@@ -45036,8 +45184,12 @@
         "Real assigned tasks, recently used assets, followed changes and authorised health summaries; every metric has a definition and drill-down."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/web/src",
+        "packages/ui/src",
+        "tests/e2e"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -45066,9 +45218,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/m1-browser.json"
+      ]
     },
     {
       "id": "UX-04",
@@ -45098,8 +45255,12 @@
         "Keyword and optional semantic search, filters, sorting, facets, saved views, bulk actions by permission, source freshness and visible verification states."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/web/src",
+        "packages/ui/src",
+        "tests/e2e"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -45128,9 +45289,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/m1-browser.json"
+      ]
     },
     {
       "id": "UX-05",
@@ -45160,8 +45326,12 @@
         "Overview, schema, meaning, ownership, quality, lineage, access, contracts, discussions, versions and audit; object-specific tabs appear only when meaningful."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/web/src",
+        "packages/ui/src",
+        "tests/e2e"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -45190,9 +45360,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/m1-browser.json"
+      ]
     },
     {
       "id": "UX-06",
@@ -45222,8 +45397,12 @@
         "Searchable/virtualised columns, types, constraints, classification, field-level permissions, descriptions, profiles and relation to business terms."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/web/src",
+        "packages/ui/src",
+        "tests/e2e"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -45252,9 +45431,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/m1-browser.json"
+      ]
     },
     {
       "id": "UX-07",
@@ -46710,8 +46894,12 @@
         "Pick capability-supported source/version; validate network/auth; select scope and site; preview metadata; schedule; show privileges requested."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/web/src",
+        "packages/ui/src",
+        "tests/e2e"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -46740,9 +46928,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/m1-browser.json"
+      ]
     },
     {
       "id": "UX-31",
@@ -46772,8 +46965,12 @@
         "Capability/object/version matrix, maintained-by, dependencies/licence, test evidence, restrictions and change history."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/web/src",
+        "packages/ui/src",
+        "tests/e2e"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -46802,9 +46999,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/m1-browser.json"
+      ]
     },
     {
       "id": "UX-32",
@@ -46834,8 +47036,12 @@
         "Site trust/versions/health, task queue, scan progress, cancellations, retries, checkpoints, logs and credential references without values."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/web/src",
+        "packages/ui/src",
+        "tests/e2e"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -46864,9 +47070,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/m1-browser.json"
+      ]
     },
     {
       "id": "UX-33",
@@ -47206,8 +47417,12 @@
         "Search by permitted subject/action/correlation/version, verify integrity, controlled exports and immutable event detail."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/web/src",
+        "packages/ui/src",
+        "tests/e2e"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -47236,9 +47451,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/m1-browser.json"
+      ]
     },
     {
       "id": "UX-39",
@@ -48820,8 +49040,13 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "package.json",
+        "Dockerfile",
+        "apps/api/src",
+        "packages/contracts/src"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -48850,8 +49075,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -49922,8 +50149,13 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "package.json",
+        "Dockerfile",
+        "apps/api/src",
+        "packages/contracts/src"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -49952,8 +50184,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -50386,8 +50620,12 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations",
+        "packages/db/src",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -50416,8 +50654,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -50734,8 +50974,13 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/api/src",
+        "packages/db/migrations",
+        "apps/web/src/pages",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -50764,8 +51009,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -51256,8 +51503,13 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/api/src",
+        "packages/db/migrations",
+        "apps/web/src/pages",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -51286,8 +51538,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -51488,8 +51742,13 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/api/src",
+        "packages/db/migrations",
+        "apps/web/src/pages",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -51518,8 +51777,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -51720,8 +51981,12 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/api/src/security.ts",
+        "packages/authz/src/index.ts",
+        "tests/unit/authz.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -51750,8 +52015,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -51894,8 +52161,12 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/api/src/security.ts",
+        "packages/authz/src/index.ts",
+        "tests/unit/authz.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -51924,8 +52195,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -52184,8 +52457,12 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations",
+        "packages/db/src",
+        "tests/integration/foundation.test.ts"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -52214,8 +52491,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -52938,8 +53217,13 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/site-runner/src",
+        "apps/workflow-worker/src",
+        "python",
+        "connectors/manifests/postgresql.json"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -52968,8 +53252,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -53170,8 +53456,13 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/site-runner/src",
+        "apps/workflow-worker/src",
+        "python",
+        "connectors/manifests/postgresql.json"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -53200,8 +53491,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -53634,8 +53927,13 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "package.json",
+        "Dockerfile",
+        "apps/api/src",
+        "packages/contracts/src"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -53664,8 +53962,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -54388,8 +54688,13 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "deploy/compose",
+        "dev",
+        "scripts/runtime.py",
+        "tests"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -54418,8 +54723,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -54794,8 +55101,13 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "deploy/compose",
+        "dev",
+        "scripts/runtime.py",
+        "tests"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -54824,8 +55136,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -55606,8 +55920,13 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "deploy/compose",
+        "dev",
+        "scripts/runtime.py",
+        "tests"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -55636,8 +55955,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -55838,8 +56159,13 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "deploy/compose",
+        "dev",
+        "scripts/runtime.py",
+        "tests"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -55868,8 +56194,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -62211,8 +62539,15 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/legal",
+        "scripts/github/bootstrap",
+        ".github",
+        "LICENSE",
+        "NOTICE",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -62241,8 +62576,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -62559,8 +62896,15 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/legal",
+        "scripts/github/bootstrap",
+        ".github",
+        "LICENSE",
+        "NOTICE",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -62589,8 +62933,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -62965,8 +63311,15 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/legal",
+        "scripts/github/bootstrap",
+        ".github",
+        "LICENSE",
+        "NOTICE",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -62995,8 +63348,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -63429,8 +63784,15 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/legal",
+        "scripts/github/bootstrap",
+        ".github",
+        "LICENSE",
+        "NOTICE",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -63459,8 +63821,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -64647,8 +65011,15 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/legal",
+        "scripts/github/bootstrap",
+        ".github",
+        "LICENSE",
+        "NOTICE",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -64677,8 +65048,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -65111,8 +65484,15 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/legal",
+        "scripts/github/bootstrap",
+        ".github",
+        "LICENSE",
+        "NOTICE",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -65141,8 +65521,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -65923,8 +66305,15 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/legal",
+        "scripts/github/bootstrap",
+        ".github",
+        "LICENSE",
+        "NOTICE",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -65953,8 +66342,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -66329,8 +66720,15 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/legal",
+        "scripts/github/bootstrap",
+        ".github",
+        "LICENSE",
+        "NOTICE",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -66359,8 +66757,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -66909,8 +67309,15 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/legal",
+        "scripts/github/bootstrap",
+        ".github",
+        "LICENSE",
+        "NOTICE",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -66939,8 +67346,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {
@@ -67257,8 +67666,15 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/legal",
+        "scripts/github/bootstrap",
+        ".github",
+        "LICENSE",
+        "NOTICE",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67287,8 +67703,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {

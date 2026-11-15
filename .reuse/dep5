@@ -1,0 +1,24 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Governance Commons
+Source: https://github.com/dlamaro96/governance-commons
+
+Files: *
+Copyright: Rights retained by the respective contributors as recorded in file notices and version history; no collective legal ownership is asserted.
+License: Apache-2.0
+Comment: Original project files use the complete license in LICENSE. Third-party files below retain their own terms. This mapping does not claim a completed REUSE conformance scan.
+
+Files: CODE_OF_CONDUCT.md docs/legal/contributor-covenant-2.1.md
+Copyright: Contributor Covenant contributors; attribution retained in the documents.
+License: CC-BY-4.0
+Comment: Historical upstream commit 91532d80ea5f39b6685aff4892bc6854bf2f6d6f. License text is docs/legal/contributor-covenant-license-CC-BY-4.0.md. Project reporting wording is adapted.
+
+Files: docs/legal/DCO-1.1.txt
+Copyright: 2004, 2006 The Linux Foundation and its contributors.
+License: LicenseRef-DCO-Verbatim
+ Everyone is permitted to copy and distribute verbatim copies of this
+ license document, but changing it is not allowed.
+
+Files: docs/legal/contributor-covenant-license-CC-BY-4.0.md
+Copyright: Creative Commons
+License: CC0-1.0
+Comment: The public license text's own notice dedicates that legal text under CC0; this does not alter the CC-BY-4.0 terms applying to the conduct policy.

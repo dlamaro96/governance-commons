@@ -1,1 +1,47 @@
-{"schema_version":1,"evidence":[],"limitations":["Evidence is added only after execution against an identified revision. No local integration, vendor live, enterprise, accessibility or release gate has yet passed."]}
+{
+  "schema_version": 1,
+  "programme_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "evidence": [
+    {
+      "path": "docs/verification/core-runtime.json",
+      "scope": "core-runtime",
+      "source_binding": "exact implementation file hashes in report; commit binding pending integration checkpoint"
+    },
+    {
+      "path": "docs/verification/core-connectors.json",
+      "scope": "core-connectors",
+      "source_binding": "exact implementation file hashes in report; commit binding pending integration checkpoint"
+    },
+    {
+      "path": "docs/verification/core-temporal-payloads.json",
+      "scope": "core-temporal-payloads",
+      "source_binding": "exact implementation file hashes in report; commit binding pending integration checkpoint"
+    },
+    {
+      "path": "docs/verification/core-recovery.json",
+      "scope": "core-recovery",
+      "source_binding": "exact implementation file hashes in report; commit binding pending integration checkpoint"
+    },
+    {
+      "path": "docs/verification/m1-security.json",
+      "scope": "m1-security",
+      "source_binding": "exact implementation file hashes in report; commit binding pending integration checkpoint"
+    },
+    {
+      "path": "docs/verification/m1-browser.json",
+      "scope": "m1-browser",
+      "source_binding": "exact implementation file hashes in report; commit binding pending integration checkpoint"
+    },
+    {
+      "path": "docs/verification/model-validation.json",
+      "scope": "model-validation",
+      "source_binding": "exact implementation file hashes in report; commit binding pending integration checkpoint"
+    }
+  ],
+  "limitations": [
+    "Passing scoped development gates does not complete compound baseline requirements.",
+    "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
+    "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
+  ]
+}

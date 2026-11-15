@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "suite": "postgresql-local-conformance",
+  "profile": "core",
+  "recorded_at": "2026-11-15T15:18:12.917308+00:00",
+  "execution_date": "2026-11-15",
+  "revision": {
+    "base_commit": "026611973a9fef5d02fb5a879beecf16fdcc44f3",
+    "working_tree": "file-hash-bound; final commit binding pending"
+  },
+  "command": "./dev test --suite connectors",
+  "exit_status": 0,
+  "result": "passed",
+  "versions": {
+    "source_postgresql": "17.11 (Debian 17.11-1.pgdg12+2)",
+    "python": "3.14.5",
+    "psycopg": "3.3.3",
+    "uv": "0.11.14",
+    "docker_engine": "27.3.1",
+    "docker_compose": "2.29.7-desktop.1",
+    "runtime_architecture": "linux/arm64"
+  },
+  "execution_results": {
+    "python_tests": {
+      "run": 7,
+      "passed": 7,
+      "skipped": 0,
+      "failures": 0
+    },
+    "checks": [
+      "read-only credentials cannot write",
+      "tenant destination guard",
+      "metadata without source values",
+      "table rename stable OID",
+      "column rename stable attnum",
+      "permission reduction produces SOURCE_SCOPE_INCOMPLETE",
+      "deletion preserves authorization fingerprint"
+    ],
+    "synthetic_conformance_tables": "removed by finally cleanup; no remaining intentionally revoked source privileges"
+  },
+  "images": {
+    "python_manifest": "sha256:9fc4717b933403d0d25a507431d719ae3701b80ed013905708f267f34538c639",
+    "postgres_digest": "sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5"
+  },
+  "implementation_sha256": {
+    "python/governance_workers/postgresql.py": "5997c01c12b2a696cdb2bd4881af687cef1abe8f3c6d9e42a57eb68c5bb99a7f",
+    "python/governance_workers/server.py": "f3b67a7533b50e28229ca31c0dff5ab13794958c64c78683c2800d379c040d18",
+    "python/tests/test_local_postgres.py": "ea6f8dccbb259e4cd0885c1f33f3d233a84de8bc5f889638080d22972d8a966a",
+    "python/tests/test_postgresql.py": "6c2c62ca9f5ff929e5df543f4e522d1ed26e564d73ce434dcfc3065d652408d1",
+    "python/Dockerfile": "d3aad7ee86fe209d3ab54006a4a1bb50153de15c810781e83b7c17cf94f6edcc",
+    "python/pyproject.toml": "d25c50c349ba164af85f9e381f4345f371338b3fddf29ce857c82d9fafb8359a",
+    "python/uv.lock": "7df05ec5afb240c8eeb25b63dc37bed1bdc72965a173d627177053ecd2c73674",
+    "scripts/runtime-test-connectors.py": "8ac59b37af6f0de156929b40c06440a290a02603473ca9a6858244ff6fd3662d",
+    "deploy/compose/source-fixture.sql": "92a0517568581675ba938979c9b202c3cc88151d2147d508f83c7d03fbde7a3b",
+    "deploy/compose/compose.yaml": "7723b71825baf354cdb3c6ff4f5c4f2cd07ff8a8a848f42e38cdbca3c7d04d0c",
+    "deploy/compose/init-temporal.sh": "c095d1de7a7cbb670998f7ed7a00512b0cf9d50dc3a9e95738f808f984ab4129",
+    "deploy/compose/temporal-dynamic.yaml": "c6dfff741e77f45e1d21fb22a8368855921d7da4710aabee4bdef1887d1a5533"
+  },
+  "limitations": [
+    "Executed against the synthetic local PostgreSQL service only",
+    "Metadata-only connector subset; broader PostgreSQL capabilities remain required",
+    "Does not qualify other architectures, remote source networks, production credentials or enterprise infrastructure",
+    "Does not claim backup/restore, full profile, end-to-end scan UI or in-flight workflow recovery"
+  ]
+}

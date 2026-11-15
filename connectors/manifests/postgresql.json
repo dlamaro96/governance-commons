@@ -2,7 +2,7 @@
   "connector_id": "postgresql",
   "version": "0.1.0",
   "source_versions": [
-    "PostgreSQL 17 (exact patch recorded in live evidence)"
+    "PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2), Linux arm64, local Compose source profile"
   ],
   "license": "Apache-2.0",
   "dependencies": [
@@ -26,7 +26,7 @@
   "network_destinations": [
     "operator-registered PostgreSQL host and port; local profile source-postgres:5432 only"
   ],
-  "source_identity_rules": "database OID + relation OID + column attnum; display paths never identify objects; source recreation needs explicit reconciliation",
+  "source_identity_rules": "Within an existing registered source/database: database OID + relation OID + column attnum; display paths never identify objects. Database recreation/recycled-OID detection and source epochs remain unimplemented.",
   "supported_asset_types": [
     "schema",
     "table",
@@ -45,31 +45,175 @@
   ],
   "deletion_strategy": "only successful complete manifests qualify; permission fingerprint changes prohibit absence-based deletion",
   "features": {
-    "metadata": true,
-    "table_lineage": false,
-    "column_lineage": false,
-    "transformations": false,
-    "profile": false,
-    "sample": false,
-    "dq_pushdown": false,
-    "classification": false,
-    "tag_writeback": false,
-    "grant_read": false,
-    "grant_write": false,
-    "mask_write": false,
-    "row_filter_write": false,
-    "ai_registry": false,
-    "ai_metrics": false,
-    "document_content": false,
-    "acl_sync": false
+    "metadata": {
+      "implemented": true,
+      "tested_source_versions": [
+        "PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2)"
+      ],
+      "verification_level": "V2",
+      "limitations": [
+        "Bounded schema/table/view/column catalog extraction only; exact local destination and tenant allowlist.",
+        "Other PostgreSQL versions, architectures and remote deployment profiles remain unqualified.",
+        "Database/cluster recreation and recycled OID detection are not implemented; source-epoch reconciliation remains required and unverified."
+      ],
+      "test_evidence": [
+        "docs/verification/core-connectors.json"
+      ]
+    },
+    "table_lineage": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "column_lineage": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "transformations": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "profile": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "sample": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "dq_pushdown": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "classification": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "tag_writeback": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "grant_read": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "grant_write": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "mask_write": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "row_filter_write": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "ai_registry": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "ai_metrics": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "document_content": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    },
+    "acl_sync": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "No implementation or verification for this connector feature."
+      ],
+      "test_evidence": []
+    }
   },
   "implementation_status": "partial",
-  "verification_level": "V0",
-  "configuration_status": "unconfigured",
-  "runtime_health": "unknown",
+  "verification_level": "V2",
+  "configuration_status": "deployment-specific",
+  "runtime_health": "deployment-specific",
   "limitations": [
     "Required PostgreSQL lineage, profiling, DQ and scoped native grant capabilities remain unimplemented; metadata-only flag is not full CX-001 completion.",
-    "No deletion occurs on failed or incomplete scans."
+    "No deletion occurs on failed or incomplete scans.",
+    "Database/cluster recreation and recycled OID detection are not implemented; source-epoch reconciliation remains required and unverified."
   ],
-  "manifest_version": "1.0"
+  "manifest_version": "1.0",
+  "verification_scope": "metadata flag only; overall PostgreSQL requirement remains partial"
 }

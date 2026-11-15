@@ -13,9 +13,10 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     const url = new URL(href, window.location.origin);
     if (url.origin !== window.location.origin) return;
     const changed = url.pathname !== window.location.pathname;
-    window.history[replace ? 'replaceState' : 'pushState']({}, '', url.pathname + url.search);
+    window.history[replace ? 'replaceState' : 'pushState']({}, '', url.pathname + url.search + url.hash);
     setLocation({ path: url.pathname, search: url.search });
     if (changed) { window.scrollTo(0, 0); window.setTimeout(() => document.getElementById('main-heading')?.focus(), 0); }
+    if (url.hash) window.setTimeout(() => document.getElementById(decodeURIComponent(url.hash.slice(1)))?.scrollIntoView(), 0);
   }
   return <NavigationContext.Provider value={{ ...location, go }}>{children}</NavigationContext.Provider>;
 }

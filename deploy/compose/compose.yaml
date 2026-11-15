@@ -35,6 +35,7 @@ services:
     image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
     user: '0:0'
     network_mode: none
+    tmpfs: [/var/lib/postgresql/data]
     entrypoint: [/bin/sh, /init-secrets.sh]
     restart: 'no'
     volumes:
@@ -56,7 +57,7 @@ services:
     depends_on:
       init-secrets: {condition: service_completed_successfully}
     healthcheck:
-      test: [CMD-SHELL, pg_isready -U postgres -d governance]
+      test: [CMD-SHELL, pg_isready -h 127.0.0.1 -U postgres -d governance]
       interval: 3s
       timeout: 3s
       retries: 30
@@ -75,7 +76,7 @@ services:
     depends_on:
       init-secrets: {condition: service_completed_successfully}
     healthcheck:
-      test: [CMD-SHELL, pg_isready -U source_admin -d harbor]
+      test: [CMD-SHELL, pg_isready -h 127.0.0.1 -U source_admin -d harbor]
       interval: 3s
       timeout: 3s
       retries: 30
@@ -100,9 +101,19 @@ services:
       retries: 60
     mem_limit: 1536m
     restart: unless-stopped
+  temporal-migrate:
+    image: temporalio/admin-tools:1.32.2@sha256:4a95866efba29d7e17ab012df5232795e8b0ad0f7d5f9d1ec4df321f7792a754
+    entrypoint: [/bin/sh, /init-temporal.sh]
+    environment:
+      SQL_PASSWORD: ${TEMPORAL_DB_PASSWORD}
+    volumes:
+      - ./init-temporal.sh:/init-temporal.sh:ro
+    depends_on:
+      postgres: {condition: service_healthy}
+    restart: 'no'
+    mem_limit: 256m
   temporal:
     image: temporalio/server:1.32.2@sha256:7bf69188a6232fea14869b9cef3d94aa82a1601d99517f7e86c71f22da4e0670
-    command: [/etc/temporal/entrypoint.sh, autosetup]
     environment:
       DB: postgres12
       DB_PORT: '5432'
@@ -111,20 +122,31 @@ services:
       POSTGRES_PWD: ${TEMPORAL_DB_PASSWORD}
       DBNAME: temporal
       VISIBILITY_DBNAME: temporal_visibility
-      SKIP_DB_CREATE: 'true'
-      SKIP_ADD_CUSTOM_SEARCH_ATTRIBUTES: 'true'
       BIND_ON_IP: 0.0.0.0
       TEMPORAL_ADDRESS: temporal:7233
-      DYNAMIC_CONFIG_FILE_PATH: config/dynamicconfig/development-sql.yaml
+      TEMPORAL_ALLOW_NO_AUTH: 'true'
+      NUM_HISTORY_SHARDS: '4'
+    volumes:
+      - ./temporal-dynamic.yaml:/etc/temporal/config/dynamicconfig/docker.yaml:ro
     depends_on:
-      postgres: {condition: service_healthy}
+      temporal-migrate: {condition: service_completed_successfully}
     healthcheck:
-      test: [CMD-SHELL, 'temporal operator namespace describe --namespace default >/dev/null 2>&1']
+      test: [CMD, nc, -z, 127.0.0.1, "7233"]
       interval: 5s
       timeout: 5s
       retries: 60
     mem_limit: 768m
     restart: unless-stopped
+  temporal-namespace:
+    image: temporalio/admin-tools:1.32.2@sha256:4a95866efba29d7e17ab012df5232795e8b0ad0f7d5f9d1ec4df321f7792a754
+    entrypoint: [/bin/sh, -ec]
+    command: ["temporal operator namespace describe --namespace default >/dev/null 2>&1 || temporal operator namespace create --namespace default --retention 24h"]
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+    depends_on:
+      temporal: {condition: service_healthy}
+    restart: 'no'
+    mem_limit: 128m
   keycloak:
     image: quay.io/keycloak/keycloak:26.8.1@sha256:3f3c5f8e03c614774b4bd9173b88391fefa4153bfc010d8012d59ad825377332
     command: [start-dev, --import-realm]
@@ -159,7 +181,7 @@ services:
       - object-data:/data
       - ../../.local/seaweed-s3.json:/etc/seaweedfs/s3.json:ro
     healthcheck:
-      test: [CMD-SHELL, 'wget -q -O /dev/null http://localhost:9333/cluster/status']
+      test: [CMD-SHELL, 'wget -q -O /dev/null http://127.0.0.1:9333/cluster/status']
       interval: 5s
       timeout: 5s
       retries: 30
@@ -200,7 +222,12 @@ services:
       SITE_TENANTS: ${SITE_TENANTS}
     depends_on:
       api: {condition: service_healthy}
-      temporal: {condition: service_healthy}
+      temporal-namespace: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://localhost:8081/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
     mem_limit: 512m
   site-runner:
     <<: *app
@@ -215,8 +242,13 @@ services:
       PYTHON_WORKER_URL: http://python-worker:8080
     depends_on:
       api: {condition: service_healthy}
-      temporal: {condition: service_healthy}
+      temporal-namespace: {condition: service_completed_successfully}
       python-worker: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://localhost:8081/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
     mem_limit: 384m
   python-worker:
     image: governance-commons-python:dev

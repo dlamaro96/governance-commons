@@ -1,0 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
+import {test} from 'node:test';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
+import {verifyAuditChain} from '../../apps/api/src/audit.ts';import {stableString} from '../../apps/api/src/repository.ts';
+const envelope={id:'1',tenantId:'tenant',actorId:'actor',actorName:'Synthetic actor',action:'asset.updated',resourceId:'asset',version:2,changes:{after:{description:'Approved'}},correlationId:'trace',occurredAt:'2026-11-15T12:00:00.000Z',previousHash:'0'.repeat(64)};
+const row={id:'1',tenant_id:'tenant',actor_id:'actor',actor_name:'Synthetic actor',action:'asset.updated',resource_id:'asset',changes:{after:{description:'Approved'},resourceVersion:2},correlation_id:'trace',occurred_at:new Date(envelope.occurredAt),previous_hash:envelope.previousHash,envelope,hash:createHash('sha256').update(stableString(envelope)).digest('hex')};
+test('exact persisted envelope verifies and altered canonical summary fails',()=>{assert.equal(verifyAuditChain([row]).valid,true);assert.equal(verifyAuditChain([{...row,actor_name:'Tampered'}]).valid,false);assert.equal(verifyAuditChain([{...row,hash:'f'.repeat(64)}]).valid,false);assert.equal(verifyAuditChain([{...row,previous_hash:'f'.repeat(64)}]).valid,false);});
+test('legacy hash form reconstructs without quietly trusting omitted envelope',()=>{assert.equal(verifyAuditChain([{...row,envelope:null}]).valid,true);assert.equal(verifyAuditChain([{...row,envelope:null,changes:{...row.changes,resourceVersion:3}}]).valid,false);});

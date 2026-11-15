@@ -6,6 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 from __future__ import annotations
 
 import argparse
+import copy
 import datetime as dt
 import hashlib
 import json
@@ -139,6 +140,20 @@ def inspect(repo: str, host: str) -> dict:
                   "private_vulnerability_reporting": f"{prefix}/private-vulnerability-reporting",
                   "dependency_alerts": f"{prefix}/vulnerability-alerts", "codeowners_errors": f"{prefix}/codeowners/errors"}
     capabilities = {key: api(path, host=host) for key, path in read_paths.items()}
+    capabilities["rulesets"] = paginate(f"{prefix}/rulesets", host)
+    if capabilities["rulesets"]["ok"]:
+        # The list endpoint omits conditions/rules; retain detail readback so
+        # evidence shows exactly which checks and refs are protected.
+        details = []
+        for item in capabilities["rulesets"]["data"]:
+            detail = api(f"{prefix}/rulesets/{item['id']}", host=host)
+            details.append(detail["data"] if detail["ok"] else {**item, "detail_readback": detail})
+        capabilities["rulesets"]["data"] = details
+    check_runs = api(f"{prefix}/commits/{data['default_branch']}/check-runs?check_name=required&per_page=100", host=host)
+    if check_runs["ok"]:
+        capabilities["required_check"] = {"ok": True, "data": [{"name": row["name"], "head_sha": row["head_sha"], "status": row["status"], "conclusion": row["conclusion"], "app_id": row["app"]["id"], "app_slug": row["app"]["slug"], "url": row["html_url"]} for row in check_runs["data"].get("check_runs", [])]}
+    else:
+        capabilities["required_check"] = check_runs
     capabilities["collaborators"] = paginate(f"{prefix}/collaborators?affiliation=direct", host)
     if capabilities["collaborators"]["ok"]:
         capabilities["collaborators"]["data"] = [{"login": person["login"], "permissions": person.get("permissions", {}), "role_name": person.get("role_name")} for person in capabilities["collaborators"]["data"]]
@@ -177,12 +192,16 @@ def configure(args: argparse.Namespace, before: dict) -> list[dict]:
     if independent and len(set(eligible)) < 2:
         operations.append({"feature": "independent_review", "status": "blocked", "reason": "At least two actual eligible maintainers are required"})
         independent = False
+    check_origins = [row["app_id"] for row in before["capabilities"].get("required_check", {}).get("data", []) if row.get("app_slug") == "github-actions"]
+    if not check_origins:
+        operations.append({"feature": "rulesets", "status": "blocked", "reason": "The required check must first be observed from the GitHub Actions app; rerun after initial CI"})
+        return operations
     branch_rules = [
         {"type": "deletion"}, {"type": "non_fast_forward"},
         {"type": "pull_request", "parameters": {"required_approving_review_count": 1 if independent else 0,
              "dismiss_stale_reviews_on_push": True, "require_code_owner_review": independent,
              "require_last_push_approval": independent, "required_review_thread_resolution": True}},
-        {"type": "required_status_checks", "parameters": {"required_status_checks": [{"context": "required"}],
+        {"type": "required_status_checks", "parameters": {"required_status_checks": [{"context": "required", "integration_id": check_origins[0]}],
              "strict_required_status_checks_policy": True, "do_not_enforce_on_create": True}},
     ]
     desired_rulesets = [
@@ -211,7 +230,7 @@ def configure(args: argparse.Namespace, before: dict) -> list[dict]:
         current = detail["data"]
         # Preserve all existing stronger/extra rules. A second invocation never
         # lowers approvals or drops checks added by another maintainer.
-        merged = {key: current.get(key, desired_ruleset[key]) for key in ("name", "target", "enforcement", "bypass_actors", "conditions", "rules")}
+        merged = copy.deepcopy({key: current.get(key, desired_ruleset[key]) for key in ("name", "target", "enforcement", "bypass_actors", "conditions", "rules")})
         merged["enforcement"] = "active"
         rules = {rule["type"]: rule for rule in merged["rules"]}
         for rule in desired_ruleset["rules"]:
@@ -222,6 +241,18 @@ def configure(args: argparse.Namespace, before: dict) -> list[dict]:
                 parameters["required_approving_review_count"] = max(1, parameters.get("required_approving_review_count", 0))
                 parameters["require_code_owner_review"] = True
                 parameters["require_last_push_approval"] = True
+            elif rule["type"] == "required_status_checks":
+                parameters = rules[rule["type"]]["parameters"]
+                checks = parameters.setdefault("required_status_checks", [])
+                required = rule["parameters"]["required_status_checks"][0]
+                existing_required = next((check for check in checks if check.get("context") == required["context"]), None)
+                if existing_required is None:
+                    checks.append(required)
+                elif not existing_required.get("integration_id"):
+                    existing_required["integration_id"] = required["integration_id"]
+                elif existing_required["integration_id"] != required["integration_id"]:
+                    operations.append({"feature": desired_ruleset["name"], "status": "blocked", "reason": "Existing required check uses another app; preserve it for maintainer review"})
+                parameters["strict_required_status_checks_policy"] = True
         merged["rules"] = list(rules.values())
         if any(current.get(key) != value for key, value in merged.items()):
             change(desired_ruleset["name"], "PUT", f"{prefix}/rulesets/{rid}", merged)

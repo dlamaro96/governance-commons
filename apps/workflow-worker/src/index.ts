@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+import { createServer } from 'node:http';
 import { Client, Connection, WorkflowExecutionAlreadyStartedError } from '@temporalio/client';
 import { NativeConnection, Worker } from '@temporalio/worker';
 import { fileURLToPath } from 'node:url';
@@ -13,8 +14,13 @@ const client = new Client({ connection, namespace });
 const workerConnection = await NativeConnection.connect({ address });
 const worker = await Worker.create({ connection: workerConnection, namespace, taskQueue: 'gc-workflow',
   workflowsPath: fileURLToPath(new URL('./workflows.ts', import.meta.url)), maxConcurrentWorkflowTaskExecutions: 8 });
+const health = createServer((request, response) => {
+  const ready = request.url === '/health' && worker.getState() === 'RUNNING';
+  response.writeHead(ready ? 200 : 503, { 'Content-Type': 'application/json' });
+  response.end(JSON.stringify({ status: ready ? 'ready' : 'starting' }));
+}).listen(8081, '0.0.0.0');
 let stopping = false;
-const stop = () => { stopping = true; worker.shutdown(); };
+const stop = () => { stopping = true; health.close(); worker.shutdown(); };
 process.once('SIGINT', stop); process.once('SIGTERM', stop);
 async function dispatch() {
   while (!stopping) {
@@ -41,4 +47,4 @@ async function dispatch() {
   }
 }
 await Promise.all([worker.run(), dispatch()]);
-await connection.close(); await workerConnection.close();
+health.close(); await connection.close(); await workerConnection.close();

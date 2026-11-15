@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
+# The pinned server requires a dynamic configuration file; defaults are sufficient
+# for the isolated, single-node local development profile.
+{}

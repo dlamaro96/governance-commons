@@ -32,6 +32,19 @@ jobs:
           python-version: 3.14.5
       - name: Install exact dependency lock
         run: pnpm install --frozen-lockfile
+      - name: Validate SPDX expression policy
+        run: python3 policies/check_dependencies.py --self-test
+      - name: Dependency licensing for the installed host profile
+        id: dependency_license
+        run: python3 policies/check_dependencies.py --write
+      - name: Preserve the executed dependency inventory
+        if: always() && steps.dependency_license.outcome != 'skipped'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dependency-inventory-${{ github.sha }}
+          path: docs/legal/dependency-inventory.json
+          retention-days: 14
+          if-no-files-found: error
       - name: schemas
         run: python3 scripts/requirements.py validate
       - name: typecheck
@@ -42,10 +55,34 @@ jobs:
         run: pnpm build
       - name: Repository publication policy
         run: python3 scripts/github/bootstrap check-local
+  secrets:
+    name: secrets
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: 3.14.5
+      - name: Scan publishable files and history with pinned gitleaks
+        id: secret_scan
+        run: python3 policies/scan_secrets.py --install --output .local/evidence/secret-scan.json
+      - name: Preserve redacted scanner summary
+        if: always() && steps.secret_scan.outcome != 'skipped'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: secret-scan-${{ github.sha }}
+          path: .local/evidence/secret-scan.json
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: error
   required:
     name: required
     if: always()
-    needs: [quality]
+    needs: [quality, secrets, behavior]
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     permissions: {}
@@ -53,4 +90,72 @@ jobs:
       - name: Require every mandatory child to succeed
         env:
           QUALITY_RESULT: ${{ needs.quality.result }}
-        run: test "$QUALITY_RESULT" = success
+          SECRETS_RESULT: ${{ needs.secrets.result }}
+          BEHAVIOR_RESULT: ${{ needs.behavior.result }}
+        run: |
+          test "$QUALITY_RESULT" = success
+          test "$SECRETS_RESULT" = success
+          test "$BEHAVIOR_RESULT" = success
+  behavior:
+    name: behavior
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 10.32.1
+          run_install: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.22.3
+          package-manager-cache: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: 3.14.5
+      - name: Install exact dependency lock
+        run: pnpm install --frozen-lockfile
+      - name: Install browser and Linux dependencies
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Generate ephemeral synthetic credentials
+        id: bootstrap
+        run: ./dev bootstrap
+      - name: Start real core services
+        id: services
+        run: ./dev up --profile core
+      - name: Seed independent synthetic tenants
+        id: seed
+        run: ./dev seed --dataset harbor-demo
+      - name: Verify PostgreSQL connector against the live source
+        id: connectors
+        run: ./dev test --suite connectors
+      - name: Verify database isolation and API authorization
+        id: security
+        run: ./dev test --suite security
+      - name: Verify browser acceptance and accessibility
+        id: browser
+        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts
+      - name: Collect bounded redacted evidence
+        if: always()
+        env:
+          GC_BOOTSTRAP_RESULT: ${{ steps.bootstrap.outcome }}
+          GC_SERVICES_RESULT: ${{ steps.services.outcome }}
+          GC_SEED_RESULT: ${{ steps.seed.outcome }}
+          GC_CONNECTORS_RESULT: ${{ steps.connectors.outcome }}
+          GC_SECURITY_RESULT: ${{ steps.security.outcome }}
+          GC_BROWSER_RESULT: ${{ steps.browser.outcome }}
+        run: python3 policies/ci_evidence.py
+      - name: Preserve only safe behavior summary and catalog screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: behavior-${{ github.sha }}
+          path: .local/ci-artifacts/
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: error
+      - name: Stop only this Compose project and preserve volumes
+        if: always() && steps.bootstrap.outcome == 'success'
+        run: ./dev down

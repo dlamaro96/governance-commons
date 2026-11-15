@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "exceptions": [
+    {
+      "package": "@axe-core/playwright",
+      "version": "4.14.0",
+      "license_expression": "MPL-2.0",
+      "distribution_context": "installed-development-host-profile",
+      "justification": "Allow unchanged upstream tooling in the local/CI development install. This scoped decision does not qualify release-image redistribution or modified upstream files. MPL file-level requirements are compatible with separate original Apache-2.0 source; preserve upstream files and rights.",
+      "owner": "project-maintainer",
+      "reviewed_at": "2026-11-15",
+      "review_type": "recorded engineering compatibility decision; no claim of independent legal review",
+      "expires_at": "2027-02-15",
+      "sources": [
+        "https://www.mozilla.org/en-US/MPL/2.0/FAQ/"
+      ],
+      "obligations": [
+        "Preserve complete upstream license and attribution.",
+        "If included in a distributed artifact, independently inventory it and satisfy source availability/notice obligations before release.",
+        "Do not relabel upstream material as Apache-2.0."
+      ]
+    },
+    {
+      "package": "axe-core",
+      "version": "4.14.0",
+      "license_expression": "MPL-2.0",
+      "distribution_context": "installed-development-host-profile",
+      "justification": "Allow unchanged upstream tooling in the local/CI development install. This scoped decision does not qualify release-image redistribution or modified upstream files. MPL file-level requirements are compatible with separate original Apache-2.0 source; preserve upstream files and rights.",
+      "owner": "project-maintainer",
+      "reviewed_at": "2026-11-15",
+      "review_type": "recorded engineering compatibility decision; no claim of independent legal review",
+      "expires_at": "2027-02-15",
+      "sources": [
+        "https://www.mozilla.org/en-US/MPL/2.0/FAQ/"
+      ],
+      "obligations": [
+        "Preserve complete upstream license and attribution.",
+        "If included in a distributed artifact, independently inventory it and satisfy source availability/notice obligations before release.",
+        "Do not relabel upstream material as Apache-2.0."
+      ]
+    },
+    {
+      "package": "lightningcss",
+      "version": "1.33.0",
+      "license_expression": "MPL-2.0",
+      "distribution_context": "installed-development-host-profile",
+      "justification": "Allow unchanged upstream tooling in the local/CI development install. This scoped decision does not qualify release-image redistribution or modified upstream files. MPL file-level requirements are compatible with separate original Apache-2.0 source; preserve upstream files and rights.",
+      "owner": "project-maintainer",
+      "reviewed_at": "2026-11-15",
+      "review_type": "recorded engineering compatibility decision; no claim of independent legal review",
+      "expires_at": "2027-02-15",
+      "sources": [
+        "https://www.mozilla.org/en-US/MPL/2.0/FAQ/"
+      ],
+      "obligations": [
+        "Preserve complete upstream license and attribution.",
+        "If included in a distributed artifact, independently inventory it and satisfy source availability/notice obligations before release.",
+        "Do not relabel upstream material as Apache-2.0."
+      ]
+    },
+    {
+      "package": "lightningcss-darwin-arm64",
+      "version": "1.33.0",
+      "license_expression": "MPL-2.0",
+      "distribution_context": "installed-development-host-profile",
+      "justification": "Allow unchanged upstream tooling in the local/CI development install. This scoped decision does not qualify release-image redistribution or modified upstream files. MPL file-level requirements are compatible with separate original Apache-2.0 source; preserve upstream files and rights.",
+      "owner": "project-maintainer",
+      "reviewed_at": "2026-11-15",
+      "review_type": "recorded engineering compatibility decision; no claim of independent legal review",
+      "expires_at": "2027-02-15",
+      "sources": [
+        "https://www.mozilla.org/en-US/MPL/2.0/FAQ/"
+      ],
+      "obligations": [
+        "Preserve complete upstream license and attribution.",
+        "If included in a distributed artifact, independently inventory it and satisfy source availability/notice obligations before release.",
+        "Do not relabel upstream material as Apache-2.0."
+      ]
+    },
+    {
+      "package": "lightningcss-linux-x64-gnu",
+      "version": "1.33.0",
+      "license_expression": "MPL-2.0",
+      "distribution_context": "installed-development-host-profile",
+      "justification": "Allow unchanged upstream tooling in the local/CI development install. This scoped decision does not qualify release-image redistribution or modified upstream files. MPL file-level requirements are compatible with separate original Apache-2.0 source; preserve upstream files and rights.",
+      "owner": "project-maintainer",
+      "reviewed_at": "2026-11-15",
+      "review_type": "recorded engineering compatibility decision; no claim of independent legal review",
+      "expires_at": "2027-02-15",
+      "sources": [
+        "https://www.mozilla.org/en-US/MPL/2.0/FAQ/"
+      ],
+      "obligations": [
+        "Preserve complete upstream license and attribution.",
+        "If included in a distributed artifact, independently inventory it and satisfy source availability/notice obligations before release.",
+        "Do not relabel upstream material as Apache-2.0."
+      ]
+    },
+    {
+      "package": "lightningcss-linux-x64-musl",
+      "version": "1.33.0",
+      "license_expression": "MPL-2.0",
+      "distribution_context": "installed-development-host-profile",
+      "justification": "Allow unchanged upstream tooling in the local/CI development install. This scoped decision does not qualify release-image redistribution or modified upstream files. MPL file-level requirements are compatible with separate original Apache-2.0 source; preserve upstream files and rights.",
+      "owner": "project-maintainer",
+      "reviewed_at": "2026-11-15",
+      "review_type": "recorded engineering compatibility decision; no claim of independent legal review",
+      "expires_at": "2027-02-15",
+      "sources": [
+        "https://www.mozilla.org/en-US/MPL/2.0/FAQ/"
+      ],
+      "obligations": [
+        "Preserve complete upstream license and attribution.",
+        "If included in a distributed artifact, independently inventory it and satisfy source availability/notice obligations before release.",
+        "Do not relabel upstream material as Apache-2.0."
+      ]
+    },
+    {
+      "package": "caniuse-lite",
+      "version": "1.0.30001826",
+      "license_expression": "CC-BY-4.0",
+      "distribution_context": "installed-development-host-profile",
+      "justification": "Allow unchanged upstream tooling in the local/CI development install. This scoped decision does not qualify release-image redistribution or modified upstream files. Browser compatibility data is used by development tooling; preserve attribution and the license.",
+      "owner": "project-maintainer",
+      "reviewed_at": "2026-11-15",
+      "review_type": "recorded engineering compatibility decision; no claim of independent legal review",
+      "expires_at": "2027-02-15",
+      "sources": [
+        "https://creativecommons.org/licenses/by/4.0/"
+      ],
+      "obligations": [
+        "Preserve complete upstream license and attribution.",
+        "If included in a distributed artifact, independently inventory it and satisfy source availability/notice obligations before release.",
+        "Do not relabel upstream material as Apache-2.0."
+      ]
+    }
+  ],
+  "required_fields": [
+    "package",
+    "version",
+    "license_expression",
+    "distribution_context",
+    "justification",
+    "owner",
+    "reviewed_at",
+    "expires_at",
+    "obligations"
+  ],
+  "policy": "No blanket scanner suppression. Any exception must match the actual artifact, version, license and distribution context and must be unexpired. An exception is a compatibility decision, not replacement license terms."
+}

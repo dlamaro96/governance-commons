@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+import { createServer } from 'node:http';
 import { NativeConnection, Worker } from '@temporalio/worker';
 import { ApplicationFailure } from '@temporalio/activity';
 const api = process.env.API_URL ?? 'http://api:4310';
@@ -33,5 +34,11 @@ async function executeScan({ tenantId, jobId }: { tenantId: string; jobId: strin
 const connection = await NativeConnection.connect({ address: process.env.TEMPORAL_ADDRESS ?? 'temporal:7233' });
 const worker = await Worker.create({ connection, namespace: process.env.TEMPORAL_NAMESPACE ?? 'default', taskQueue: 'gc-site',
   activities: { executeScan }, maxConcurrentActivityTaskExecutions: 1 });
-process.once('SIGTERM', () => worker.shutdown()); process.once('SIGINT', () => worker.shutdown());
-await worker.run(); await connection.close();
+const health = createServer((request, response) => {
+  const ready = request.url === '/health' && worker.getState() === 'RUNNING';
+  response.writeHead(ready ? 200 : 503, { 'Content-Type': 'application/json' });
+  response.end(JSON.stringify({ status: ready ? 'ready' : 'starting' }));
+}).listen(8081, '0.0.0.0');
+const stop = () => { health.close(); worker.shutdown(); };
+process.once('SIGTERM', stop); process.once('SIGINT', stop);
+await worker.run(); health.close(); await connection.close();

@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "evidence": [
+    {
+      "package": "unionfs",
+      "version": "4.6.0",
+      "license_expression": "Unlicense",
+      "license_file": "LICENSE",
+      "license_file_sha256": "6b0382b16279f26ff69014300541967a356a666eb0b91b422f6862f6b7dad17e",
+      "source_url": "https://github.com/streamich/unionfs",
+      "reviewed_at": "2026-11-15",
+      "basis": "The distributed exact-version LICENSE contains the Unlicense public-domain dedication and fallback grant. package.json does not declare a license. The scanner requires the reviewed license-file hash before resolving NOASSERTION."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "outcome": "PASS",
+  "working_files": 137,
+  "historical_blobs": 105,
+  "objects_scanned": 242,
+  "findings": [],
+  "limitations": [
+    "Baseline pattern scan is not exhaustive secrets detection; an independently pinned comprehensive scanner remains a release gate.",
+    "No secret values or personal emails are included in findings.",
+    "DCO certifications and independent human reviews are not inferred from automated checks."
+  ],
+  "timestamp": "2026-11-15T15:19:28.073101+00:00",
+  "commit": "026611973a9fef5d02fb5a879beecf16fdcc44f3",
+  "command": "python3 scripts/github/bootstrap check-local",
+  "profile": "development / Darwin arm64"
+}
