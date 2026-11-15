@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { ArrowRight, BookOpen, ClockCounterClockwise, Database, House, List, Moon, Question, SignOut, Sun, X } from '@phosphor-icons/react';
+import { ArrowRight, BookOpen, ClockCounterClockwise, Database, GitBranch, House, List, Moon, Question, SignOut, Sun, X } from '@phosphor-icons/react';
 import { BrandMark, DetailDrawer, EmptyState, LoadingState, Notice, SearchBar } from '../../../packages/ui/src';
 import { api, ApiError, setCsrfToken, useResource } from './api';
 import { useLocale } from './i18n';
@@ -12,6 +12,7 @@ import { CatalogPage } from './pages/Catalog';
 import { AssetPage } from './pages/Asset';
 import { SourcesPage } from './pages/Sources';
 import { AuditPage } from './pages/Audit';
+import { ModelEditorPage, ModelPage, ModelsPage } from './pages/Models';
 
 export default function App() {
   const session = useResource<Session>('/me');
@@ -49,6 +50,7 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
     { href: '/', key: 'home' as const, icon: House, visible: true },
     { href: '/catalog', key: 'catalog' as const, icon: BookOpen, visible: can('catalog:read') },
     { href: '/sources', key: 'sources' as const, icon: Database, visible: can('sources:read') },
+    { href: '/models', key: 'models' as const, icon: GitBranch, visible: can('models:read') },
     { href: '/audit', key: 'audit' as const, icon: ClockCounterClockwise, visible: can('audit:read') },
   ];
   const navigation = <><Link href="/" className="brand" onClick={() => setMenuOpen(false)}><BrandMark size={30}/><span>Governance<br/>Commons</span></Link><nav aria-label={t('workspace')}><div className="nav-section-label">{t('workspace')}</div>{navItems.filter(item => item.visible).map(({ href, key, icon: Icon }) => <Link key={href} href={href} className={`nav-link ${path === href || href !== '/' && path.startsWith(href) ? 'selected' : ''}`} aria-current={path === href || href !== '/' && path.startsWith(href) ? 'page' : undefined} onClick={() => setMenuOpen(false)}><Icon size={20}/>{t(key)}</Link>)}</nav><div className="sidebar-bottom"><button className="sidebar-help" onClick={() => { setMenuOpen(false); setHelpOpen(true); }}><Question size={20}/>{t('help')}</button><div className="sidebar-tagline">{t('tagline')}</div></div></>;
@@ -66,11 +68,17 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   let assetId: string | null = null;
   const assetMatch = path.match(/^\/catalog\/([^/]+)$/);
   if (assetMatch) { try { assetId = decodeURIComponent(assetMatch[1]); } catch { assetId = null; } }
+  const modelMatch = path.match(/^\/models\/([^/]+)(\/edit)?$/);
+  let modelId: string | null = null;
+  if (modelMatch) { try { modelId = decodeURIComponent(modelMatch[1]); } catch { modelId = null; } }
   let content;
   if (path === '/') content = <HomePage/>;
   else if (path === '/catalog') content = can('catalog:read') ? <CatalogPage/> : <PermissionDenied/>;
   else if (assetId) content = can('catalog:read') ? <AssetPage id={assetId}/> : <PermissionDenied/>;
   else if (path === '/sources') content = can('sources:read') ? <SourcesPage/> : <PermissionDenied/>;
+  else if (path === '/models') content = can('models:read') ? <ModelsPage/> : <PermissionDenied/>;
+  else if (path === '/models/new/definition') content = can('models:write') ? <ModelEditorPage/> : <PermissionDenied/>;
+  else if (modelId) content = can(modelMatch?.[2] ? 'models:write' : 'models:read') ? (modelMatch?.[2] ? <ModelEditorPage id={modelId}/> : <ModelPage id={modelId}/>) : <PermissionDenied/>;
   else if (path === '/audit') content = can('audit:read') ? <AuditPage/> : <PermissionDenied/>;
   else content = <EmptyState title={t('invalidRoute')} description={t('notFoundBody')} action={<Link className="button secondary" href="/">{t('backHome')}</Link>}/>;
   return <div className="application"><a className="skip-link" href="#main-content">{t('skip')}</a><aside className="sidebar">{navigation}</aside><div className="workspace-main"><header className="topbar"><button className="icon-button mobile-menu-button" aria-label={t('openNavigation')} onClick={() => setMenuOpen(true)}><List size={23}/></button><div className="tenant-context"><span className="context-label">{t('organization')}</span>{session.tenants.length > 1 ? <><label className="sr-only" htmlFor="tenant">{t('organization')}</label><select id="tenant" value={session.tenant.id} disabled={switching} onChange={event => switchTenant(event.target.value)}>{session.tenants.map(tenant => <option key={tenant.id} value={tenant.id}>{tenant.name}</option>)}</select></> : <strong>{session.tenant.name}</strong>}</div>{can('catalog:read') && <SearchBar label={t('searchGlobal')} value={globalSearch} onChange={setGlobalSearch} onSubmit={search} className="global-search"/>}<div className="topbar-controls">{preferences}<div className="user-identity"><span className="avatar" aria-hidden="true">{session.user.name.slice(0, 1).toUpperCase()}</span><div><strong>{session.user.name}</strong><span>{label(`role_${session.tenant.role}`).startsWith('role_') ? session.tenant.role : label(`role_${session.tenant.role}`)}</span></div></div><button className="icon-button" title={t('signOut')} aria-label={t('signOut')} onClick={logout}><SignOut size={20}/></button></div></header>{locale === 'ar' && <p className="translation-notice">{t('translationStatus')}</p>}<main id="main-content" className="page" key={session.tenant.id} tabIndex={-1}>{error && <RequestError error={error} compact/>}{switching ? <LoadingState label={t('tenantSwitching')}/> : content}</main><footer className="workspace-footer"><span>{session.tenant.name}</span><span>{t('homePermissionNote')}</span></footer></div><DetailDrawer open={menuOpen} onOpenChange={setMenuOpen} title={t('menu')} description={session.tenant.name} closeLabel={t('close')}><div className="mobile-navigation">{navigation}</div></DetailDrawer><DetailDrawer open={helpOpen} onOpenChange={setHelpOpen} title={t('helpTitle')} description={t('tagline')} closeLabel={t('close')}><div className="help-content"><p>{t('helpBody')}</p><p>{t('helpSource')}</p><p>{t('helpAudit')}</p><Notice>{t('helpScope')}</Notice></div></DetailDrawer></div>;

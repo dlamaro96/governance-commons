@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T16:07:19.226094+00:00",
+  "executed_at": "2026-11-15T16:00:13Z",
+  "scope": "Documented core launch with cached images and existing synthetic persistent data",
+  "profile": "core / Docker Desktop27.3.1 / Compose2.29.7 / Linux arm64",
+  "command": "./dev up --profile core",
+  "exit_status": 0,
+  "result": "PASS",
+  "checks": [
+    "Application and Python image builds succeeded",
+    "Ten long-running core services healthy; four initialization jobs exited successfully",
+    "Signed S3 ListBuckets succeeded; anonymous and invalid-signature requests denied",
+    "Doctor reported adequate cached-image disk admission budget and project-owned ports"
+  ],
+  "images": [
+    {
+      "service": "api",
+      "sha256": "2ac137d4f5b83e0f417656cffcae1489fb80a417b9fc9493169776e5dbf52d09"
+    }
+  ],
+  "implementation_files": [
+    {
+      "path": "dev",
+      "sha256": "3933fa6fdbbca26f1af4f1ad9b299cc651b6c7a51448c1cfcfa3468c933a26a5"
+    },
+    {
+      "path": "scripts/runtime.py",
+      "sha256": "a5fb118abbfcff9f25764a8e0649b6098f4a2d188293a46d5ecc0973bded8f2e"
+    },
+    {
+      "path": "scripts/runtime-s3-check.mjs",
+      "sha256": "8fa2bf342caab867b1c1b9b2d6193fc18aa4cd4c40ad986d83613338c596eca4"
+    },
+    {
+      "path": "deploy/compose/compose.yaml",
+      "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+    },
+    {
+      "path": "deploy/compose/init-secrets.sh",
+      "sha256": "ee6a8324867615480263650053e26891da553cbfe880ea3e82e6fc2b9e4cd8fb"
+    },
+    {
+      "path": "deploy/compose/health-seaweed.sh",
+      "sha256": "bbcc60d5e404d0013fb4e9a96004a1ae780a8dd22de56d81cb321141cd8f3159"
+    },
+    {
+      "path": "deploy/compose/seaweed-master.toml",
+      "sha256": "e8e3f86edf8dbd53a364a35b18ff6475e14404d5d4b62968d21b205095c74a48"
+    }
+  ],
+  "limitations": [
+    "Cached local images and existing volumes; not a fresh clean installation or backup/restore test.",
+    "The launch preceded an evidence-format-only update to runtime-test-object-store.py; S3 request implementation and launch logic are unchanged.",
+    "Application image was subsequently rebuilt for a browser accessibility correction; this report preserves the launch image.",
+    "Enterprise/full/AI/offline profiles and production deployment remain unqualified."
+  ]
+}

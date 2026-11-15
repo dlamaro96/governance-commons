@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-15T15:54:38.332016+00:00",
+  "scope": "M2 typed model application-service integration; local core profile, real PostgreSQL, source-mounted development code",
+  "implementationStatus": "IN_PROGRESS",
+  "verification": {
+    "outcome": "PASS",
+    "tests": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "command": "docker compose --env-file .local/runtime.env -f deploy/compose/compose.yaml run --rm --no-deps --volume \"$PWD/packages:/app/packages:ro\" --volume \"$PWD/apps/api:/app/apps/api:ro\" --volume \"$PWD/tests/integration:/app/tests/integration:ro\" api node --import tsx --test tests/integration/models.test.ts",
+    "toolOutputChunk": "4b5603",
+    "durationMs": 401.167126
+  },
+  "revision": {
+    "baseCommit": "341f7fbe0371f7f911c066e70dc57062b31bef4d",
+    "branch": "codex/m2-models",
+    "sourceBinding": "Working-tree files identified by SHA-256 below; this record does not assert that the test ran on a clean committed tree. Root must bind the integrated checkpoint separately."
+  },
+  "sourceHashes": {
+    "packages/domain/src/model.ts": "512103fd025c8d10383aa2285ebdb116d36c614d5c3909e0de599633b1afd1a0",
+    "packages/domain/src/model-service.ts": "5fb22ada8442e2e57b7afa9937f0973256e5282b9609c44115090a67b00ce603",
+    "tests/integration/models.test.ts": "8b450fd13803be929f441a33eb424218402bb768ee53c9063cfee641f00280a5",
+    "packages/db/migrations/003_governance_models.sql": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa",
+    "packages/db/src/index.ts": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976",
+    "packages/authz/src/index.ts": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be",
+    "package.json": "87bf0ba005fde7f3b64d6ea3a84dacdcb08f9517f56a7fde87d3386882907f78",
+    "pnpm-lock.yaml": "64ba875f705195741265864539885115446d7f24848033b66ebb0f17ee396bef"
+  },
+  "runtime": {
+    "profile": "core",
+    "databaseRole": "gc_app",
+    "node": "24.22.3",
+    "typescript": "7.0.2",
+    "dockerEngine": "27.3.1",
+    "dockerCompose": "2.29.7-desktop.1",
+    "postgresql": "17.11",
+    "containerPlatform": "linux",
+    "containerArchitecture": "arm64"
+  },
+  "typecheck": {
+    "outcome": "PASS",
+    "exitCode": 0,
+    "command": "PATH=\"$PWD/.local/toolchain/node/bin:$PWD/.local/pnpm/node_modules/.bin:$PATH\" pnpm typecheck",
+    "scope": "Root TypeScript and web TypeScript",
+    "toolOutputChunk": "fd685b"
+  },
+  "executedCases": [
+    "Current database membership rejects forged model-write permissions; cross-tenant model read is unavailable.",
+    "Injected journal failure rolls back model creation head and immutable version in PostgreSQL.",
+    "Injected journal failure rolls back publication head update and inserted version.",
+    "Injected journal failure rolls back asset typed attributes, pin, optimistic version and immutable revision together.",
+    "Hidden model bindings prevent complete preview without returning hidden asset identifiers, counts or typed values.",
+    "An oversized complete cohort fails explicitly before loading its attributes into the application.",
+    "pg_blocking_pids confirms a concurrent non-model asset UPDATE waits on preview row locks; preview digest changes after that UPDATE commits.",
+    "Direct service invocation rejects asset integer-version overflow before writing."
+  ],
+  "limitations": [
+    "These eight tests exercise the application service directly against the real local PostgreSQL runtime. Synthetic fixture setup uses direct SQL and is not evidence of an end-user creation workflow.",
+    "The deliberately injected failing journal callback proves transaction rollback when audit publication fails. It is not a mock production audit pass. Real production audit/outbox and HTTP idempotency behavior require the separate API integration suite.",
+    "Model APIs, browser/UI behavior, migration execution, inheritance, relation definitions, advanced policy constraints, all import/workflow/MCP ingress adapters and release qualification are not qualified by this report.",
+    "Publication preserves explicit existing asset-version pins. Destructive changes remain blocked; no declarative migration or AT-MOD-01 migration-recovery pass is claimed.",
+    "Authorization is rechecked after waiting for canonical locks. Full enterprise concurrency/revocation/load qualification remains open.",
+    "The synchronous profile is bounded to 100 listable models, 1000 bound assets, 512 KiB combined cohort attribute JSON, 100000 combined validation nodes and 1000 nested validation issues.",
+    "Synthetic fixtures remain in the local development database. No immutable audit/version history was deleted to clean up test data.",
+    "Tenant ledger locking serializes model mutations and complete previews with other participating tenant mutations. Throughput and enterprise concurrency qualification remain open; this report does not establish a throughput target."
+  ],
+  "releaseQualification": "NOT_RUN",
+  "lockOrder": [
+    "tenant ledger advisory transaction lock",
+    "tenant model advisory transaction lock",
+    "model head row",
+    "canonical bound asset rows ordered by id"
+  ]
+}

@@ -4,7 +4,7 @@ An independent open-source data and AI governance platform, built in one monorep
 
 **Development in progress.** This repository preserves the full [product specification](docs/product/BUILD_SPEC.md), [machine-readable requirements](docs/product/requirements.yaml), and [current execution state](docs/execution/STATE.md). A catalog slice is an intermediate milestone; it does not represent the complete target or a supported enterprise release.
 
-The first increment connects Keycloak login, tenant-scoped PostgreSQL persistence, Temporal/site/Python PostgreSQL metadata scans, OpenSearch discovery, ownership and audit. This core journey passes real local browser and isolation tests. PostgreSQL metadata is locally qualified; lineage, DQ and source grants remain open. Full capabilities and enterprise deployment profiles are still being implemented.
+The first increment connects Keycloak login, tenant-scoped PostgreSQL persistence, Temporal/site/Python PostgreSQL metadata scans, OpenSearch discovery, ownership and audit. This core journey passes real local browser and isolation tests. PostgreSQL metadata is locally qualified; lineage, DQ and source grants remain open. The model workspace adds immutable typed definitions, a visual editor, schema import/export, complete bounded impact previews and explicitly pinned asset attributes. Destructive model changes are blocked while transactional migration execution is being implemented. Full capabilities and enterprise deployment profiles are still being implemented.
 
 ```sh
 ./dev doctor
