@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T20:15:45.912836+00:00",
+  "repository": "https://github.com/dlamaro96/governance-commons",
+  "scope": "OSS-004 small actionable backlog, labels and milestones; no implementation or qualification inferred",
+  "created": [
+    {
+      "kind": "label",
+      "name": "area:operating-model"
+    },
+    {
+      "kind": "label",
+      "name": "area:security"
+    },
+    {
+      "kind": "label",
+      "name": "area:operations"
+    },
+    {
+      "kind": "label",
+      "name": "qualification"
+    },
+    {
+      "kind": "milestone",
+      "number": 1,
+      "title": "M0 \u2014 Repository and release gates"
+    },
+    {
+      "kind": "milestone",
+      "number": 2,
+      "title": "M2 \u2014 Models, glossary and reference data"
+    },
+    {
+      "kind": "issue",
+      "number": 9,
+      "title": "Qualify constrained asserted relations and responsive graph workflows",
+      "url": "https://github.com/dlamaro96/governance-commons/issues/9"
+    },
+    {
+      "kind": "issue",
+      "number": 10,
+      "title": "Implement required relation participation and atomic graph migrations",
+      "url": "https://github.com/dlamaro96/governance-commons/issues/10"
+    },
+    {
+      "kind": "issue",
+      "number": 11,
+      "title": "Qualify source security scanning for public contributions",
+      "url": "https://github.com/dlamaro96/governance-commons/issues/11"
+    },
+    {
+      "kind": "issue",
+      "number": 12,
+      "title": "Verify core backup and restore with fresh deployment secrets",
+      "url": "https://github.com/dlamaro96/governance-commons/issues/12"
+    },
+    {
+      "kind": "issue",
+      "number": 13,
+      "title": "Perform independent Arabic and assistive-technology review",
+      "url": "https://github.com/dlamaro96/governance-commons/issues/13"
+    }
+  ],
+  "readback": {
+    "labels": [
+      "accessibility",
+      "area:operating-model",
+      "area:operations",
+      "area:security",
+      "bug",
+      "dependencies",
+      "documentation",
+      "duplicate",
+      "enhancement",
+      "github_actions",
+      "good first issue",
+      "help wanted",
+      "invalid",
+      "qualification",
+      "question",
+      "wontfix"
+    ],
+    "milestones": [
+      {
+        "number": 1,
+        "title": "M0 \u2014 Repository and release gates",
+        "state": "open"
+      },
+      {
+        "number": 2,
+        "title": "M2 \u2014 Models, glossary and reference data",
+        "state": "open"
+      }
+    ],
+    "issues": [
+      {
+        "number": 9,
+        "title": "Qualify constrained asserted relations and responsive graph workflows",
+        "state": "open",
+        "url": "https://github.com/dlamaro96/governance-commons/issues/9",
+        "labels": [
+          "area:operating-model",
+          "qualification"
+        ],
+        "milestone": 2,
+        "assignees": []
+      },
+      {
+        "number": 10,
+        "title": "Implement required relation participation and atomic graph migrations",
+        "state": "open",
+        "url": "https://github.com/dlamaro96/governance-commons/issues/10",
+        "labels": [
+          "enhancement",
+          "area:operating-model"
+        ],
+        "milestone": 2,
+        "assignees": []
+      },
+      {
+        "number": 11,
+        "title": "Qualify source security scanning for public contributions",
+        "state": "open",
+        "url": "https://github.com/dlamaro96/governance-commons/issues/11",
+        "labels": [
+          "area:security",
+          "qualification"
+        ],
+        "milestone": 1,
+        "assignees": []
+      },
+      {
+        "number": 12,
+        "title": "Verify core backup and restore with fresh deployment secrets",
+        "state": "open",
+        "url": "https://github.com/dlamaro96/governance-commons/issues/12",
+        "labels": [
+          "area:operations",
+          "qualification"
+        ],
+        "milestone": 1,
+        "assignees": []
+      },
+      {
+        "number": 13,
+        "title": "Perform independent Arabic and assistive-technology review",
+        "state": "open",
+        "url": "https://github.com/dlamaro96/governance-commons/issues/13",
+        "labels": [
+          "accessibility",
+          "help wanted",
+          "qualification"
+        ],
+        "milestone": 2,
+        "assignees": []
+      }
+    ]
+  },
+  "limitations": [
+    "All issues are open and unassigned; no reviewer or collaborator was invented or invited.",
+    "Existing labels and dependency PRs were preserved.",
+    "The canonical complete requirement register remains authoritative; this small backlog is not a replacement for it."
+  ],
+  "readback_verified_at": "2026-11-15T20:22:48.955152+00:00",
+  "readback_method": "Individually fetched issues 9\u201313 after creation; the initial list request had returned no issue rows."
+}

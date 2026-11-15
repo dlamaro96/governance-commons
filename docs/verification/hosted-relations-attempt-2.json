@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T21:38:20.670276+00:00",
+  "result": "NOT_PASSED",
+  "pull_request": 14,
+  "head_commit": "73d06b3777afa9c555894a016a210f5b2e324b2c",
+  "required_checks": {
+    "quality": "success",
+    "secrets": "success",
+    "behavior": "failure",
+    "required": "failure"
+  },
+  "behavior": {
+    "schema_version": 1,
+    "timestamp": "2026-11-15T21:27:03.940208+00:00",
+    "commit": "2740110716280fc280ec7a4b4ff32a1d16be0863",
+    "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43762586681",
+    "profile": "core / GitHub-hosted Ubuntu 24.04 / synthetic PostgreSQL",
+    "steps": {
+      "bootstrap": "success",
+      "services": "success",
+      "object_store": "success",
+      "seed": "success",
+      "connectors": "success",
+      "security": "success",
+      "model_upgrade": "success",
+      "asset_type_upgrade": "success",
+      "type_migration_upgrade": "success",
+      "relations_upgrade": "success",
+      "browser": "failure"
+    },
+    "outcome": "NOT_PASSED",
+    "tests": [
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 17,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 6978,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 101,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1545,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 30,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 12437,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 74,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1404,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 77,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 20980,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 257,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 3568,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 80,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 20408,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 218,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 2850,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 97,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 24560,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 242,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 48844,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/asset-type-migrations.spec.ts",
+        "line": 97,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 24503,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/asset-type-migrations.spec.ts",
+        "line": 252,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 41679,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/relations.spec.ts",
+        "line": 134,
+        "status": "unknown",
+        "attempts": 1,
+        "duration_ms": 30739,
+        "failure_locations": [
+          {
+            "file": "tests/e2e/relations.spec.ts",
+            "line": 332,
+            "column": 38
+          }
+        ]
+      },
+      {
+        "file": "tests/e2e/relations.spec.ts",
+        "line": 345,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 9291,
+        "failure_locations": []
+      }
+    ],
+    "screenshots": [],
+    "limitations": [
+      "No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
+      "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification."
+    ]
+  },
+  "safe_artifact_sha256": "e097dea5a426b66a184dae9c2379bf166179abc0a158d727bdce05bc97c75031",
+  "limitations": [
+    "The safe artifact identifies assertion coordinates but deliberately omits actual error text and HTTP status.",
+    "A controlled local request-budget reproduction informs the narrow pacing correction; the hosted failure mechanism remains an inference until the corrected gate executes."
+  ]
+}

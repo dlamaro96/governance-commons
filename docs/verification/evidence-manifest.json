@@ -284,6 +284,93 @@
         "verified_files": 131,
         "evidence_sha256": "7d939da2202370ecf20488deae1d835353a18333399fd6d349827815501141c0"
       }
+    },
+    {
+      "path": "docs/verification/hosted-type-migrations.json",
+      "scope": "hosted-complete-type-migrations",
+      "source_binding": {
+        "implementation_commit": "0fa4e7ef2ee46251741304bb9288af2eb34d19d6",
+        "ci_tested_merge_commit": "59ed35bec2d0a668096735a71c1b316387de9e37",
+        "method": "GitHub required-check readback and downloaded allowlisted behavior summary from run43748230994; original tested merge revision retained, tested and final merged trees equal."
+      }
+    },
+    {
+      "path": "docs/verification/relations-pure.json",
+      "scope": "constrained-relations-pure-only",
+      "source_binding": {
+        "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
+        "verified_files": 9,
+        "evidence_sha256": "985ba58b58eeaf296df53a68c3078403659420f3c8b9edbd0cee75e6db2c773a"
+      }
+    },
+    {
+      "path": "docs/verification/relations-upgrade.json",
+      "scope": "isolated SQL007-to008 upgrade, twelve runtime storage tests and nine fence/concurrency tests",
+      "source_binding": {
+        "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
+        "verified_files": 39,
+        "evidence_sha256": "e97483f715d92b73ea76f3567914f3f76753616fa0f22ebe412656dd51b29667"
+      }
+    },
+    {
+      "path": "docs/verification/relations-type-migration-regression.json",
+      "scope": "historical SQL006-to007 storage upgrade and current SQL008 service/concurrency regression",
+      "source_binding": {
+        "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
+        "verified_files": 39,
+        "evidence_sha256": "fbfdeca64cf9ccf5e91b7a6886cd0ff47df3e22bf07f9c1033aae8d287920b52"
+      }
+    },
+    {
+      "path": "docs/verification/relations-model-upgrade-regression.json",
+      "scope": "current-source historical model-upgrade regression; original public evidence preserved",
+      "source_binding": {
+        "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
+        "verified_files": 7,
+        "evidence_sha256": "3613478a69d61a9b7353dfcaae161f53dc28d5c4715ef23e1e18252e539b7439"
+      }
+    },
+    {
+      "path": "docs/verification/relations-asset-type-upgrade-regression.json",
+      "scope": "current-source historical asset-type-upgrade regression; original public evidence preserved",
+      "source_binding": {
+        "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
+        "verified_files": 34,
+        "evidence_sha256": "d06b46a2df1fafebfac6a9fe58c7955fd0fe32da8a98e5c33e8ef7a83a641b06"
+      }
+    },
+    {
+      "path": "docs/verification/m2-relations-api.json",
+      "scope": "Bounded constrained asserted relation service/API: exact pinned policy, canonical values/history, tenant privacy, graph cursor authorization and incident asset mutation guards; partial M2/MOD programme",
+      "source_binding": {
+        "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
+        "verified_files": 60,
+        "evidence_sha256": "c6da07f40c26d16ca54ab71477448a573233a6a54040c9889dcc5044aa39986a"
+      }
+    },
+    {
+      "path": "docs/verification/repository-backlog.json",
+      "scope": "OSS-004 labels, two open milestones and five actionable unassigned issues; configuration readback only"
+    },
+    {
+      "path": "docs/verification/dependency-security-updates.json",
+      "scope": "OSS-007 Dependabot security updates enabled and read back; configuration only, no clean vulnerability claim"
+    },
+    {
+      "path": "docs/verification/m2-relations-ui.json",
+      "scope": "Bounded relation authoring, immutable history and authorized responsive graph; targeted2 and complete14 browser journeys,20 inspected new and75 preserved historical screenshots",
+      "source_binding": {
+        "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
+        "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
+        "verified_files": 160,
+        "evidence_sha256": "11231c7e1f9c36474f1acfc69f151be974c09f18ba430a495d1ca32a1b9f379f"
+      }
     }
   ],
   "limitations": [
@@ -291,5 +378,5 @@
     "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "bound_at": "2026-11-15T18:41:32.332105+00:00"
+  "bound_at": "2026-11-15T20:47:28.101777+00:00"
 }

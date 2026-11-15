@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 import type {FastifyInstance} from 'fastify';
 import {Type} from '@sinclair/typebox';
-import {scope} from '../../../packages/db/src/index.ts';
+import {boundedModelScope as scope} from './model-http.ts';
 import {Problem, requirePermission} from '../../../packages/authz/src/index.ts';
 import {Id} from '../../../packages/contracts/src/index.ts';
 import {parseModelFile} from '../../../packages/domain/src/model.ts';
+import {configureRelationTransaction, relationFailure} from '../../../packages/domain/src/relation-store.ts';
 import {listModels,getModel,createModel,previewModel,publishModel,getAssetModel,assignAssetModel,modelPersistence} from '../../../packages/domain/src/model-service.ts';
 import {authenticate} from './security.ts';
 import {record,once,assetView} from './repository.ts';
@@ -65,13 +66,14 @@ export async function installModels(app:FastifyInstance):Promise<void> {
   const {principal:p}=await authenticate(req);requirePermission(p,'catalog:read');requirePermission(p,'catalog:write');requirePermission(p,'models:read');
   const id=(req.params as {id:string}).id,expected=version(req),body=req.body as {modelId:string;modelVersion:number;attributes:unknown};
   const result=await scope(p.tenantId,p.id,async tx=>{
+   await configureRelationTransaction(tx);
    // A cached response must never bypass a later asset visibility revocation.
    await getAssetModel(tx,p,id);
    const result=await once(tx,p,'asset.model.assign',req.headers['idempotency-key'],{id,expected,...body},()=>assignAssetModel(tx,p,req.id,id,expected,body,hooks));
    await modelPersistence.authorize(tx,p,['catalog:read','catalog:write','models:read']);
    await getAssetModel(tx,p,id);
    return result;
-  });
+  }).catch(error=>{throw relationFailure(error);});
   reply.header('ETag',String(result.assetVersion));return result;
  });
 }

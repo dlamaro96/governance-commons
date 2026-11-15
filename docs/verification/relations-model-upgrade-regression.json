@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-11-15T19:33:32.310828+00:00",
+  "recorded_at": "2026-11-15T19:33:35.436601+00:00",
+  "scope": "SQL004-to005 receipt-integrity development upgrade, actual checksum migrator and isolated PostgreSQL",
+  "command": "./dev test --suite model-upgrade",
+  "result": "PASS",
+  "checks": [
+    "Owner-run forced-RLS backfill visits both tenants and distinguishes complete receipts from missing historical revisions",
+    "Actual checksum migrator replays without reapplying any of the five migrations",
+    "Malformed historical plan identity rejects005 and rolls back all schema work while preserving original receipts",
+    "Migration owner and runtime roles are non-superusers without BYPASSRLS",
+    "Owner-installed nested trigger runs as gc_app: forged parent membership is rejected by the guard and exact duplicate membership by the primary key, without granting runtime TEMP"
+  ],
+  "postgresql": "17.11 (Debian 17.11-1.pgdg12+2)",
+  "postgres_image": "postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+  "app_image": "sha256:51925198c79b15fbed43614b6bfdd527149f68b07d43d29558147295646fa785",
+  "isolation": {
+    "network": "none; migrator shares only the disposable database network namespace",
+    "published_ports": [],
+    "database_storage": "disposable256MiB tmpfs",
+    "production_volumes_used": false
+  },
+  "sources": [
+    {
+      "path": "packages/db/migrations/001_foundation.sql",
+      "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+    },
+    {
+      "path": "packages/db/migrations/002_audit_envelopes.sql",
+      "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+    },
+    {
+      "path": "packages/db/migrations/003_governance_models.sql",
+      "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+    },
+    {
+      "path": "packages/db/migrations/004_model_migrations.sql",
+      "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+    },
+    {
+      "path": "packages/db/migrations/005_model_migration_integrity.sql",
+      "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+    },
+    {
+      "path": "packages/db/src/migrate.ts",
+      "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+    },
+    {
+      "path": "scripts/runtime-test-model-upgrade.py",
+      "sha256": "e82a9361ab119dc9fa10003749be554f3ff801f5b06f72369c91880169274212"
+    }
+  ],
+  "limitations": [
+    "Fixtures deliberately construct pre005 records, including an incomplete initial revision; they are not product user journeys.",
+    "This qualifies a development schema transition, not a released-version upgrade, backup restore, interrupted durable bulk migration, or complete SYS-OPS-003.",
+    "Runtime insert/update/tenant-denial and application getter behavior are qualified separately by real integration tests."
+  ],
+  "disposable_container_removed": true
+}

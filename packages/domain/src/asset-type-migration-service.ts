@@ -23,10 +23,10 @@ type Row = Record<string, any>;
 
 /** Call before idempotency/ledger locks, including cached HTTP execution. */
 export async function configureTypeMigrationTransaction(tx: Tx): Promise<void> {
-  await sql`select set_config('lock_timeout','5s',true), set_config('statement_timeout','30s',true)`.execute(tx);
+  await (await import('./relation-store.ts')).configureRelationTransaction(tx);
 }
 export function typeMigrationFailure(error: unknown): unknown {
-  if (error && typeof error === 'object' && 'code' in error && ['55P03', '40P01', '57014'].includes(String(error.code))) {
+  if (error && typeof error === 'object' && 'code' in error && ['55P03', '40P01', '57014', '40001'].includes(String(error.code))) {
     return new Problem(503, 'ASSET_TYPE_MIGRATION_RETRY', 'The migration could not obtain a stable execution window. Retry with the same idempotency key; a changed scope requires a fresh preview.');
   }
   return error;
@@ -116,6 +116,7 @@ async function prepare(tx: Tx, p: Principal, id: string, expected: number, input
       before, after, beforeTupleHash: typeHash(before), afterTupleHash: typeHash(after), sourceIssues: policy.value.sourceIssues });
   }
   if (issues.length) throw invalid(issues);
+  await (await import('./relation-endpoint-guard.ts')).validateRelationsForEndpointChanges(tx, p, assets.map(asset => ({ assetId: asset.assetId, expectedAssetVersion: asset.fromAssetVersion, modelId: id, modelVersion: target.model.version, state: asset.after.state, policy: target })));
   // PostgreSQL expands exponent notation in JSONB. Bound the actual persisted
   // representation too, before a preview can promise an executable migration.
   const storedAssets = assets.map(({ sourceIssues: _issues, ...asset }) => asset);

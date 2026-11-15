@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "result": "PASS",
+  "started_at": "2026-11-15T19:45:18.850410+00:00",
+  "recorded_at": "2026-11-15T19:45:21.718684+00:00",
+  "command": "./dev test --suite asset-type-upgrade",
+  "scope": "SQL005-to006 inherited asset-type development upgrade and runtime storage integrity",
+  "checks": [
+    "Actual checksum migrator applies001\u2013005 and a pre006 attribute-model asset with exact decimal values and immutable revision is recorded",
+    "SQL006 preserves every preexisting model/asset/revision field and leaves legacy type identity and lifecycle unset",
+    "Actual checksum migrator replays all six migrations without reapplication and recorded checksums match source bytes",
+    "Migration and runtime roles are non-superusers without BYPASSRLS; gc_app owns no tables and has neither TEMP nor schema CREATE; both new tables force RLS",
+    "All9 mounted-source PostgreSQL storage cases pass through the actual gc_app login with no failures, cancellations, skips or todos"
+  ],
+  "storage_tests": {
+    "tests": 9,
+    "pass": 9,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 380.858625
+  },
+  "expected_top_level_tests": 9,
+  "runtime": {
+    "node": "v24.22.3",
+    "platform": "linux",
+    "arch": "arm64",
+    "pg": "8.23.1",
+    "tsx": "4.23.15",
+    "kysely": "0.29.9",
+    "packageSha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7",
+    "lockSha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829",
+    "postgresql": "17.11 (Debian 17.11-1.pgdg12+2)"
+  },
+  "roles": {
+    "ownerSuperuser": false,
+    "ownerBypassRls": false,
+    "runtimeSuperuser": false,
+    "runtimeBypassRls": false,
+    "runtimeLogin": true,
+    "runtimeOwnsTables": false,
+    "runtimeTemporary": false,
+    "runtimeCreateSchema": false,
+    "forcedRlsCount": 2
+  },
+  "postgres_image_reference": "postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+  "postgres_image": "sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+  "app_image": "sha256:7128efc7f4d3e2a43a6a3851572ae025141ce1ae87a8cb4a6bec3789e8691018",
+  "isolation": {
+    "network": "none; helpers share only disposable database network namespace",
+    "published_ports": [],
+    "database_storage": "disposable256MiB tmpfs",
+    "production_volumes_used": false,
+    "runtime_connection": "gc_app login to disposable loopback PostgreSQL; trust authentication only within its isolated namespace"
+  },
+  "baseline": {
+    "tenant_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    "asset_id": "30000000-0000-4000-8000-000000000001",
+    "model_id": "synthetic_pre006_model",
+    "before_hash": "bea5c35d80aba15b227cdec994739bd213f42f4e9ae1d19246a494bae94e0f9a",
+    "after_hash": "bea5c35d80aba15b227cdec994739bd213f42f4e9ae1d19246a494bae94e0f9a"
+  },
+  "applied_migrations": [
+    {
+      "name": "001_foundation.sql",
+      "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+    },
+    {
+      "name": "002_audit_envelopes.sql",
+      "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+    },
+    {
+      "name": "003_governance_models.sql",
+      "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+    },
+    {
+      "name": "004_model_migrations.sql",
+      "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+    },
+    {
+      "name": "005_model_migration_integrity.sql",
+      "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+    },
+    {
+      "name": "006_inherited_asset_types.sql",
+      "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+    }
+  ],
+  "sources": [
+    {
+      "path": "Dockerfile",
+      "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+    },
+    {
+      "path": "apps/api/src/repository.ts",
+      "sha256": "4e267738f18baac5e6e1528b68524187c5b53a45ec98300a00ef1ae38237679e"
+    },
+    {
+      "path": "deploy/compose/compose.yaml",
+      "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+    },
+    {
+      "path": "package.json",
+      "sha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7"
+    },
+    {
+      "path": "packages/authz/src/index.ts",
+      "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+    },
+    {
+      "path": "packages/db/migrations/001_foundation.sql",
+      "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+    },
+    {
+      "path": "packages/db/migrations/002_audit_envelopes.sql",
+      "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+    },
+    {
+      "path": "packages/db/migrations/003_governance_models.sql",
+      "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+    },
+    {
+      "path": "packages/db/migrations/004_model_migrations.sql",
+      "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+    },
+    {
+      "path": "packages/db/migrations/005_model_migration_integrity.sql",
+      "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+    },
+    {
+      "path": "packages/db/migrations/006_inherited_asset_types.sql",
+      "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+    },
+    {
+      "path": "packages/db/src/index.ts",
+      "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+    },
+    {
+      "path": "packages/db/src/migrate.ts",
+      "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+    },
+    {
+      "path": "packages/db/src/seed.ts",
+      "sha256": "f871502f2215b538199df0a4aef501954a7f558b249311d6cb3b1129c763c151"
+    },
+    {
+      "path": "packages/domain/src/asset-type-migration-contracts.ts",
+      "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+    },
+    {
+      "path": "packages/domain/src/asset-type-migration-service.ts",
+      "sha256": "9ab567726a8302f339192b681a4bffaa52646052b117df6217d489c54c72fcd5"
+    },
+    {
+      "path": "packages/domain/src/asset-type-migration.ts",
+      "sha256": "ab1aef383c8cbaca99df276f168e9e9bda3fb9d04fc863f641ae6fd8a2e05319"
+    },
+    {
+      "path": "packages/domain/src/asset-type-policy.ts",
+      "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+    },
+    {
+      "path": "packages/domain/src/asset-type-service.ts",
+      "sha256": "11f6505bd7c977d4415312717a8abb1850acabd7f7d1775401d03e35eb622b41"
+    },
+    {
+      "path": "packages/domain/src/asset-type.ts",
+      "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+    },
+    {
+      "path": "packages/domain/src/cursor.ts",
+      "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+    },
+    {
+      "path": "packages/domain/src/model-migration-service.ts",
+      "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+    },
+    {
+      "path": "packages/domain/src/model-migration.ts",
+      "sha256": "b0a42540415ef1cfc71792f132107f56931c9fb0f0c9fcfcdc9f2af4fa1125aa"
+    },
+    {
+      "path": "packages/domain/src/model-service.ts",
+      "sha256": "eb873185abb13755016982cceb236657e2dd09fcec8ecaffb99057324f91f56f"
+    },
+    {
+      "path": "packages/domain/src/model.ts",
+      "sha256": "b893e432df44c5888b601ef6bbae6c00526cff828a4aa5cbc487405e8c30a550"
+    },
+    {
+      "path": "packages/domain/src/relation-contracts.ts",
+      "sha256": "f114b3787e492d351ae1ffddc635086c5f4a3d28b5d4ab1687bb76f9a13c351b"
+    },
+    {
+      "path": "packages/domain/src/relation-endpoint-guard.ts",
+      "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+    },
+    {
+      "path": "packages/domain/src/relation-graph.ts",
+      "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+    },
+    {
+      "path": "packages/domain/src/relation-service.ts",
+      "sha256": "9ba91452d0ee5b66bd648e3aed1ae2b4904232c172594bc0dfe6d6daaa802913"
+    },
+    {
+      "path": "packages/domain/src/relation-store.ts",
+      "sha256": "0a69db5e0b884b45a1c640c192accaf3042fe08e97f9e2f830fb01362568b101"
+    },
+    {
+      "path": "packages/domain/src/relation.ts",
+      "sha256": "c4624630c377796685d57a5069f0c852e1f18fe74f8f5bfcc968d116b56733dc"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+    },
+    {
+      "path": "scripts/runtime-test-asset-type-upgrade.py",
+      "sha256": "7a20b9edbc3c7a45c6b205331b4baa1c98a7211b29e2b4cd367f48be51556032"
+    },
+    {
+      "path": "tests/integration/asset-type-storage.test.ts",
+      "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+    }
+  ],
+  "limitations": [
+    "Synthetic development schema upgrade, not a released predecessor, backup restore or complete SYS-OPS-003 qualification.",
+    "Storage tests deliberately exercise direct SQL, separate from HTTP authorization, inherited-type application services and browser workflows.",
+    "Complete typed-attribute resolution and validation remain domain-owned; SQL checks identity, referenced inheritance and supported ownership/lifecycle storage invariants.",
+    "Application dependencies come from the recorded cached image; current source is mounted read-only and dependency manifests are checked for equality."
+  ],
+  "disposable_container_removed": true
+}

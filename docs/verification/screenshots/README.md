@@ -1,4 +1,18 @@
-# M1 browser screenshots
+# Rendered browser evidence
+
+Each increment retains its own source/image binding, execution time and inspected
+screenshots. New runs do not rewrite the historical images that earlier reports
+reference. The [evidence manifest](../evidence-manifest.json) and
+[current state](../../execution/STATE.md) distinguish passing execution from
+ongoing qualification and outstanding human review.
+
+Later model evidence is recorded in `m2-ui.json`, `m2-migration-ui.json`,
+`m2-asset-type-ui.json` and `m2-type-migration-ui.json` in the parent directory.
+Constrained-relation execution and inspected screenshots are recorded in
+[m2-relations-ui.json](../m2-relations-ui.json). Screenshots alone never establish
+functionality or completion of the full product programme.
+
+## Historical M1 browser screenshots
 
 These PNGs were captured from the real local Docker `core` profile on 2026-11-15,
 with installed Chrome 157.0.8103.51 and Playwright 1.65.1. They show synthetic
@@ -32,3 +46,33 @@ Arabic review, component stories and the remaining product programme are still
 pending. The source connection UI currently supports the bundled synthetic local
 PostgreSQL profile. These images do not qualify an external vendor integration
 or an enterprise release.
+
+
+## Constrained asserted relations
+
+The 20 `m2-relation-*.png` files come from the final real Docker browser gate
+started at 2026-11-15T20:32:41.290Z. All 14 journeys passed once, without skips or
+retries, in 557.595 seconds. The preceding targeted two-journey gate also passed.
+The implementation agent inspected every final image; the evidence report records
+the separate root-agent spot-check. These are agent observations, not independent
+human accessibility or native Arabic sign-off.
+
+The captures show relation-type editing at 390, 768, 1024 and 1440 CSS pixels;
+relation creation, details, immutable history, tables and removal at 390 and 1440;
+and English/light and Arabic/dark graphs at both widths. Graph cards remain
+complete after resize, and localized actions repaint correctly when language
+changes. Wide tables and JSON snapshots scroll inside their containers.
+
+The real journeys verify constraints, stale-write recovery, type-version pins,
+exact decimal values, lifecycle transitions, authorized graph pagination,
+restricted-edge and tenant isolation, and preservation after a second PostgreSQL
+source scan. Axe checks retain all configured WCAG rules. The final runtime image
+is `sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651`;
+the report binds 65 source files, 19 served assets and all image/source evidence.
+The 60 backend files match the separately executed 98-case API gate; the UI
+rebuild is not reported as another API execution.
+
+All 75 historical screenshot files remain byte-identical to their original
+reports. Earlier failed runs and automated passes with visual defects remain
+recorded separately. Positive participation, explicit relation migrations,
+additional relation authorities and the full M2/release gates remain open.

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T20:32:02.423508+00:00",
+  "repository": "https://github.com/dlamaro96/governance-commons",
+  "scope": "OSS-007 Dependabot security-update setting; configuration readback only",
+  "changed": true,
+  "before": {
+    "http_status": 200,
+    "enabled": false,
+    "paused": false
+  },
+  "after": {
+    "http_status": 200,
+    "enabled": true,
+    "paused": false
+  },
+  "official_contract": "https://docs.github.com/en/rest/repos/repos#enable-dependabot-security-updates",
+  "limitations": [
+    "This setting enables security-fix proposals; it does not establish dependency vulnerability coverage, clean findings or release readiness.",
+    "Existing version-update configuration and dependency pull requests are preserved. No automatic merge policy was enabled."
+  ]
+}
