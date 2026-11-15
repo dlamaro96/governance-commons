@@ -3,7 +3,7 @@ import { defineConfig } from '@playwright/test';
 import base from '../playwright.config';
 
 // Never collect login form values, network headers or cookies into CI artifacts.
-// Tests may explicitly save the reviewed authenticated catalog screenshots only.
+// Tests may explicitly save reviewed authenticated synthetic-data screenshots only.
 export default defineConfig({
   ...base,
   testDir: '../tests/e2e',
@@ -15,5 +15,6 @@ export default defineConfig({
   projects: [
     { name: 'vertical-slice', testMatch: /vertical-slice\.spec\.ts/ },
     { name: 'accessibility', testMatch: /ui-accessibility\.spec\.ts/, dependencies: ['vertical-slice'] },
+    { name: 'models', testMatch: /models\.spec\.ts/, dependencies: ['vertical-slice'] },
   ],
 });

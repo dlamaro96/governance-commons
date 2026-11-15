@@ -72,6 +72,84 @@
         "verified_files": 3,
         "evidence_sha256": "34b2f8173c32796aec1acf84a83c83bb6a63b3a86ae3d609ed541b398ddc12ca"
       }
+    },
+    {
+      "path": "docs/verification/core-object-store.json",
+      "scope": "core-object-store",
+      "source_binding": {
+        "implementation_commit": "7928c59f03ee74f7aaaefe15b4705b66cdc50345",
+        "method": "Recorded implementation digests matched to committed blobs except the explicit evidence-serialization equivalence below; execution times preserved.",
+        "verified_files": 6,
+        "evidence_sha256": "9145dcb8bdf7286a04213526472a1ef87588b5732123d6021707d49b3463aaed",
+        "encoding_only_equivalence": [
+          "scripts/runtime-test-object-store.py"
+        ],
+        "equivalence_note": "runtime-test-object-store.py now serializes digest evidence as explicit path/sha256 and service/sha256 entries; probe inputs, Node S3 implementation, response checks and exit behavior are unchanged. This is source equivalence, not a rerun."
+      }
+    },
+    {
+      "path": "docs/verification/core-runtime-fix.json",
+      "scope": "core-runtime-fix",
+      "source_binding": {
+        "implementation_commit": "7928c59f03ee74f7aaaefe15b4705b66cdc50345",
+        "method": "Recorded implementation digests matched to committed blobs except the explicit evidence-serialization equivalence below; execution times preserved.",
+        "verified_files": 8,
+        "evidence_sha256": "05ef4492652cf05aa23b9cb0f151e11df4600816a93d65fe0a70b9761e8e2f60",
+        "encoding_only_equivalence": [
+          "scripts/runtime-test-object-store.py"
+        ],
+        "equivalence_note": "runtime-test-object-store.py now serializes digest evidence as explicit path/sha256 and service/sha256 entries; probe inputs, Node S3 implementation, response checks and exit behavior are unchanged. This is source equivalence, not a rerun."
+      }
+    },
+    {
+      "path": "docs/verification/core-launch.json",
+      "scope": "core-launch",
+      "source_binding": {
+        "implementation_commit": "e97d8135b54faeea9004f174f914ad39af6aeddb",
+        "method": "Recorded source/screenshot SHA256 digests matched to committed Git blobs. Original execution timestamps, runtime image and dirty-worktree provenance preserved; no test rerun inferred.",
+        "verified_files": 7,
+        "evidence_sha256": "72152fbc5191047219b7c96856a4123a8962000431701db4d1fa1289f4728562"
+      }
+    },
+    {
+      "path": "docs/verification/m2-model-service.json",
+      "scope": "m2-model-service",
+      "source_binding": {
+        "implementation_commit": "e97d8135b54faeea9004f174f914ad39af6aeddb",
+        "method": "Recorded source/screenshot SHA256 digests matched to committed Git blobs. Original execution timestamps, runtime image and dirty-worktree provenance preserved; no test rerun inferred.",
+        "verified_files": 8,
+        "evidence_sha256": "d8aa10d03dcf75207ea6827d0f878730ca8a968fdbb4f747a024014c1dc3481b"
+      }
+    },
+    {
+      "path": "docs/verification/m2-model-api.json",
+      "scope": "m2-model-api",
+      "source_binding": {
+        "implementation_commit": "e97d8135b54faeea9004f174f914ad39af6aeddb",
+        "method": "Recorded source/screenshot SHA256 digests matched to committed Git blobs. Original execution timestamps, runtime image and dirty-worktree provenance preserved; no test rerun inferred.",
+        "verified_files": 15,
+        "evidence_sha256": "027418811b2df2bab52d5b6aeaa5939a15b06518436c80a9710e1da1eba9aa77"
+      }
+    },
+    {
+      "path": "docs/verification/model-migration-transform.json",
+      "scope": "model-migration-transform",
+      "source_binding": {
+        "implementation_commit": "e97d8135b54faeea9004f174f914ad39af6aeddb",
+        "method": "Recorded source/screenshot SHA256 digests matched to committed Git blobs. Original execution timestamps, runtime image and dirty-worktree provenance preserved; no test rerun inferred.",
+        "verified_files": 5,
+        "evidence_sha256": "745fe322a73366f953863eedb9c61dd966fe5067ed08bcb5b575032de675053f"
+      }
+    },
+    {
+      "path": "docs/verification/m2-ui.json",
+      "scope": "m2-ui",
+      "source_binding": {
+        "implementation_commit": "e97d8135b54faeea9004f174f914ad39af6aeddb",
+        "method": "Recorded source/screenshot SHA256 digests matched to committed Git blobs. Original execution timestamps, runtime image and dirty-worktree provenance preserved; no test rerun inferred.",
+        "verified_files": 45,
+        "evidence_sha256": "ac67e3deb679f5076d8895f644682d0a589637c8edbffa004cebe10c843294cc"
+      }
     }
   ],
   "limitations": [
@@ -79,5 +157,5 @@
     "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "bound_at": "2026-11-15T15:38:14.996552+00:00"
+  "bound_at": "2026-11-15T16:18:55.809176+00:00"
 }

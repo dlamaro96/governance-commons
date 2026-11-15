@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T16:10:18.389300+00:00",
+  "scope": "Pure bounded declarative attribute migration parser and transformer; no persistence execution claim",
+  "result": "PASS",
+  "command": "pnpm test",
+  "tests": {
+    "total": 39,
+    "passed": 39,
+    "failed": 0,
+    "skipped": 0,
+    "new_migration_tests": 18
+  },
+  "duration_ms": 202.008166,
+  "tool_output_chunk": "ab700a",
+  "typecheck": {
+    "command": "pnpm typecheck",
+    "result": "PASS",
+    "tool_output_chunk": "90f047"
+  },
+  "source_binding": {
+    "base_commit": "7928c59f03ee74f7aaaefe15b4705b66cdc50345",
+    "working_tree_dirty": true,
+    "files": [
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "512103fd025c8d10383aa2285ebdb116d36c614d5c3909e0de599633b1afd1a0"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "b0a42540415ef1cfc71792f132107f56931c9fb0f0c9fcfcdc9f2af4fa1125aa"
+      },
+      {
+        "path": "tests/unit/model-migration.test.ts",
+        "sha256": "c790458e26b84189861b48a9e84d650dbb6fb793befb3da967cd882b386c2c92"
+      },
+      {
+        "path": "package.json",
+        "sha256": "87bf0ba005fde7f3b64d6ea3a84dacdcb08f9517f56a7fde87d3386882907f78"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "64ba875f705195741265864539885115446d7f24848033b66ebb0f17ee396bef"
+      }
+    ]
+  },
+  "verified": [
+    "Explicit ordered rename/remove/set/enumMap/conversion operations without executable expressions",
+    "Exact destructive-change acknowledgement and explicit source-version scope",
+    "No input mutation, overwrite, implicit parent creation, floating-point decimal conversion, trimming or rounding",
+    "Static destination, literal and enum checks even when optional source values are absent",
+    "Prototype/accessor/cycle/non-JSON rejection and bounded nodes, nesting, strings, cardinalities and issues"
+  ],
+  "limitations": [
+    "Only pure transformation is implemented here; no persisted model migration, receipt, authorization, rollback or browser migration pass is claimed.",
+    "Inherited types, relations and all-ingress AT-MOD-01 remain unimplemented."
+  ]
+}

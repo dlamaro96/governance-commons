@@ -4,12 +4,14 @@ export class ApiError extends Error {
   status: number;
   code?: string;
   correlationId?: string;
-  constructor(status: number, body: { detail?: string; title?: string; code?: string; correlationId?: string }) {
+  issues: readonly { code: string; path: string; message: string }[];
+  constructor(status: number, body: { detail?: string; title?: string; code?: string; correlationId?: string; issues?: { code: string; path: string; message: string }[] }) {
     super(body.detail || body.title || `HTTP ${status}`);
     this.name = 'ApiError';
     this.status = status;
     this.code = body.code;
     this.correlationId = body.correlationId;
+    this.issues = Array.isArray(body.issues) ? body.issues : [];
   }
 }
 let csrfToken = '';

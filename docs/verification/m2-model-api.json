@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T15:57:56.320155+00:00",
+  "scope": "Core foundation plus persisted typed attribute model API and application services; not complete MOD/AT-MOD requirements",
+  "profile": "core / real Docker Linux arm64 / synthetic tenants and PostgreSQL17.11",
+  "result": "PASS",
+  "command": "docker compose --env-file .local/runtime.env -f deploy/compose/compose.yaml exec -T api pnpm test:integration",
+  "exit_status": 0,
+  "tests": {
+    "total": 16,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "foundation": 5,
+    "model_api": 3,
+    "model_services": 8
+  },
+  "app_image": "sha256:659914416f2046f8b221a9c2a6521321e11df823ba53bea98a7590af4fd83c71",
+  "source_binding": {
+    "base_commit": "341f7fbe0371f7f911c066e70dc57062b31bef4d",
+    "working_tree_dirty": true,
+    "method": "SHA256 of each tested file read from the running API container and matched to worktree; commit binding pending",
+    "files": [
+      {
+        "path": "apps/api/src/index.ts",
+        "sha256": "8ddb645f6fadca26e6b7b221640fdc2c2a0ed4e08cdf41af614ec214b70bd5a3"
+      },
+      {
+        "path": "apps/api/src/models.ts",
+        "sha256": "b7cf958e7d5bbbfe67f1646402ba1c8e548bdfea1b97bfbbfbab6bd586dc9861"
+      },
+      {
+        "path": "apps/api/src/repository.ts",
+        "sha256": "104806130f15236b983d5d207b49daa498dee7b41a1dff40aad6b66e45a5179f"
+      },
+      {
+        "path": "apps/api/src/security.ts",
+        "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+      },
+      {
+        "path": "apps/api/src/audit.ts",
+        "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+      },
+      {
+        "path": "packages/db/src/index.ts",
+        "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+      },
+      {
+        "path": "packages/db/src/seed.ts",
+        "sha256": "f871502f2215b538199df0a4aef501954a7f558b249311d6cb3b1129c763c151"
+      },
+      {
+        "path": "packages/authz/src/index.ts",
+        "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "sha256": "8d23a38cad9af4c69471b6369d1106382e34518f1b13a00be6590ee6e28bb453"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "512103fd025c8d10383aa2285ebdb116d36c614d5c3909e0de599633b1afd1a0"
+      },
+      {
+        "path": "packages/domain/src/model-service.ts",
+        "sha256": "5fb22ada8442e2e57b7afa9937f0973256e5282b9609c44115090a67b00ce603"
+      },
+      {
+        "path": "packages/db/migrations/003_governance_models.sql",
+        "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "3d12628e6621695ac148c368517e001aee23f60ba557003d92a33f464dba4b1c"
+      },
+      {
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "9369bd959e6d9633788d34cd4a6c87dcecbf500f5d04e95b74c360ad89f8d29d"
+      },
+      {
+        "path": "tests/integration/models.test.ts",
+        "sha256": "8b450fd13803be929f441a33eb424218402bb768ee53c9063cfee641f00280a5"
+      }
+    ]
+  },
+  "verified": [
+    "Tenant/RLS/CSRF/role/source SSRF/idempotency foundation",
+    "Raw model-file duplicate-key rejection and structured issues",
+    "Immutable version export and definition import roundtrip",
+    "Exact large decimal preservation, typed errors and stale asset versions",
+    "Current canonical visibility rechecked before cached attribute response",
+    "Server preview digest becomes stale after asset edit",
+    "Compatible publication preserves existing pins and old definitions",
+    "Destructive schema publication blocked without explicit migration",
+    "Asset audit history excludes model events even for equal logical identifiers",
+    "Fresh service permission checks, complete visibility and cohort limits",
+    "Actual PostgreSQL row-lock blocking observed",
+    "Injected journal failure rolls back canonical data/revisions/head together"
+  ],
+  "limitations": [
+    "Browser journey and automated accessibility recorded separately after UI fixes.",
+    "Direct rollback tests inject a failing journal port; production HTTP tests use real audit/outbox.",
+    "Migration execution, inheritance/relations, every ingress, typed search/filter/sort and full model requirement coverage remain incomplete.",
+    "Serial tenant mutation locking is a development correctness profile; enterprise throughput is unmeasured.",
+    "No independent human security review or supported release qualification."
+  ]
+}

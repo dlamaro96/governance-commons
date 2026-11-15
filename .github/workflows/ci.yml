@@ -139,7 +139,7 @@ jobs:
         run: ./dev test --suite security
       - name: Verify browser acceptance and accessibility
         id: browser
-        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts
+        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts
       - name: Collect bounded redacted evidence
         if: always()
         env:

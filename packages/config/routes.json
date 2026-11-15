@@ -1,15 +1,108 @@
 {
   "schemaVersion": 1,
-  "description": "Implemented M1 UI routes only. Required programme screens remain tracked in docs/product/requirements.yaml.",
+  "description": "Implemented M1 and partial M2 UI routes. Required programme screens remain tracked in docs/product/requirements.yaml.",
   "routes": [
-    { "path": "/", "screen": "UX-01", "state": "unauthenticated", "component": "App sign-in", "permission": null },
-    { "path": "/", "screen": "UX-03", "state": "authenticated", "component": "HomePage", "permission": "catalog:read" },
-    { "path": "/catalog", "screen": "UX-04", "component": "CatalogPage", "permission": "catalog:read", "query": ["q", "type", "sort", "cursor"] },
-    { "path": "/catalog/:id", "screen": "UX-05", "component": "AssetPage", "permission": "catalog:read", "query": ["tab"] },
-    { "path": "/catalog/:id?tab=schema", "screen": "UX-06", "component": "AssetPage columns", "permission": "catalog:read" },
-    { "path": "/catalog/:id?tab=history", "screen": "UX-38", "component": "AssetPage history", "permission": "audit:read" },
-    { "path": "/sources", "screen": "UX-30", "component": "SourcesPage", "permission": "sources:read", "mutationPermission": "sources:write" },
-    { "path": "/sources#jobs", "screen": "UX-32", "component": "SourcesPage jobs", "permission": "sources:read" },
-    { "path": "/audit", "screen": "UX-38", "component": "AuditPage", "permission": "audit:read" }
+    {
+      "path": "/",
+      "screen": "UX-01",
+      "state": "unauthenticated",
+      "component": "App sign-in",
+      "permission": null
+    },
+    {
+      "path": "/",
+      "screen": "UX-03",
+      "state": "authenticated",
+      "component": "HomePage",
+      "permission": "catalog:read"
+    },
+    {
+      "path": "/catalog",
+      "screen": "UX-04",
+      "component": "CatalogPage",
+      "permission": "catalog:read",
+      "query": [
+        "q",
+        "type",
+        "sort",
+        "cursor"
+      ]
+    },
+    {
+      "path": "/catalog/:id",
+      "screen": "UX-05",
+      "component": "AssetPage",
+      "permission": "catalog:read",
+      "query": [
+        "tab"
+      ]
+    },
+    {
+      "path": "/catalog/:id?tab=schema",
+      "screen": "UX-06",
+      "component": "AssetPage columns",
+      "permission": "catalog:read"
+    },
+    {
+      "path": "/catalog/:id?tab=history",
+      "screen": "UX-38",
+      "component": "AssetPage history",
+      "permission": "audit:read"
+    },
+    {
+      "path": "/sources",
+      "screen": "UX-30",
+      "component": "SourcesPage",
+      "permission": "sources:read",
+      "mutationPermission": "sources:write"
+    },
+    {
+      "path": "/sources#jobs",
+      "screen": "UX-32",
+      "component": "SourcesPage jobs",
+      "permission": "sources:read"
+    },
+    {
+      "path": "/audit",
+      "screen": "UX-38",
+      "component": "AuditPage",
+      "permission": "audit:read"
+    },
+    {
+      "path": "/models",
+      "screen": "UX-10",
+      "component": "ModelsPage",
+      "permission": "models:read",
+      "mutationPermission": "models:write"
+    },
+    {
+      "path": "/models/new/definition",
+      "screen": "UX-10",
+      "component": "ModelEditorPage",
+      "permission": "models:write"
+    },
+    {
+      "path": "/models/:id",
+      "screen": "UX-10",
+      "component": "ModelPage",
+      "permission": "models:read",
+      "query": [
+        "version"
+      ]
+    },
+    {
+      "path": "/models/:id/edit",
+      "screen": "UX-10",
+      "component": "ModelEditorPage",
+      "permission": "models:write"
+    },
+    {
+      "path": "/catalog/:id",
+      "screen": "UX-05",
+      "component": "AssetAttributesPanel",
+      "permission": "catalog:read",
+      "mutationPermission": "catalog:write",
+      "context": "Governed attribute model binding and typed values"
+    }
   ]
 }

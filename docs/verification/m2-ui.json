@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T16:15:04.426692+00:00",
+  "result": "PASS",
+  "scope": "M2 typed attribute model UI, real browser workflow and M1 browser regression; partial MOD/UX scope, not release qualification",
+  "profile": "core / real Docker Linux arm64 / synthetic Harbor and Summit tenants",
+  "target": "http://localhost:4310",
+  "command": "PATH=\"$PWD/.local/toolchain/node/bin:$PWD/.local/pnpm/node_modules/.bin:$PATH\" GC_BROWSER_EXECUTABLE=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" pnpm exec playwright test",
+  "execution": {
+    "startTime": "2026-11-15T16:12:46.766Z",
+    "duration": 95835.479,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "source_binding": {
+    "base_commit": "6773bf9813091badc584e957f83b91a030de4286",
+    "working_tree_dirty": true,
+    "method": "SHA256 of UI source/tests/config at final run; served JavaScript/CSS bytes matched the local built assets",
+    "files": [
+      {
+        "path": "apps/web/package.json",
+        "sha256": "cf72e592f6444959c257e304abb0c455fd28d4e297a4e2601339ea38fd427b3c"
+      },
+      {
+        "path": "apps/web/src/App.tsx",
+        "sha256": "8bf75a1b4b4bafd3b82b56825b81630d3b84d4e45142d34d5c7c4508bf30fd8e"
+      },
+      {
+        "path": "apps/web/src/api.ts",
+        "sha256": "62ca221c1b8ba76a0d20f89699735129768890419a13f8f3a0338b213197bac9"
+      },
+      {
+        "path": "apps/web/src/components.tsx",
+        "sha256": "217df6f66523f65accc3269304660c6ac90db9b84e4ce46937e3d546864f4187"
+      },
+      {
+        "path": "apps/web/src/i18n.tsx",
+        "sha256": "d92b84aef23417e50094f612a1e8ae1911071a7de653772e278900f58dd1fcee"
+      },
+      {
+        "path": "apps/web/src/main.tsx",
+        "sha256": "666b70ce5765a222777738d2b1f9120c1d2c2914daa96de87574853fb65e475c"
+      },
+      {
+        "path": "apps/web/src/models/AssetAttributes.tsx",
+        "sha256": "3c499adfb14501a3f533b955a72f11e1d4eb694cced27c1bfad875f73a9a0d43"
+      },
+      {
+        "path": "apps/web/src/models/ModelFeedback.tsx",
+        "sha256": "d5b10fee5d8b321b4ecc6075559ad6790a9f1b812d4b58e1eb42433881904809"
+      },
+      {
+        "path": "apps/web/src/models/SchemaEditor.tsx",
+        "sha256": "c028b4d34d4ee84bc9250b718f2ed1aff5b7f881be29a0fe1cde7ff0da82ca06"
+      },
+      {
+        "path": "apps/web/src/models/ValueFields.tsx",
+        "sha256": "fd0980ca3945be050410da3040a5e7f5cabf55edf372eef4ee9ef1532741335d"
+      },
+      {
+        "path": "apps/web/src/models/VersionPicker.tsx",
+        "sha256": "95781b042c066ebe9e8cd1af841eeb80e6166146e588ac94280038b514756660"
+      },
+      {
+        "path": "apps/web/src/models/contracts.ts",
+        "sha256": "61bf84e2c951a4e815c0cf37df63dce4dbd78c7a7b1ea8ef91a4234787c75f7f"
+      },
+      {
+        "path": "apps/web/src/models/messages.ts",
+        "sha256": "5ca7b881cf6f516511fa8d6c3cc40a069063084adcf4524bf5bbb54c8bc024c9"
+      },
+      {
+        "path": "apps/web/src/navigation.tsx",
+        "sha256": "d15a75f39edb92ee626bd0682353466b433f5be7cb5104bc1b0a256a7d61913c"
+      },
+      {
+        "path": "apps/web/src/pages/Asset.tsx",
+        "sha256": "57c41f720512e8985039541f9bf4a7445e9aeef2e1ccdb6c7d53fb9df1312212"
+      },
+      {
+        "path": "apps/web/src/pages/Audit.tsx",
+        "sha256": "a23e4c96f32216a8e5c3a7791c8263e78596630313213305a8c22d551217840e"
+      },
+      {
+        "path": "apps/web/src/pages/Catalog.tsx",
+        "sha256": "259126c8daccae7b8eb692cf15a2cef8cd359ee12318c0940a2c39fea3f763ed"
+      },
+      {
+        "path": "apps/web/src/pages/Home.tsx",
+        "sha256": "bb08cf9f5b6d107de73ee3dee400ccd0392f4a826811ab6000a224669d1f0f05"
+      },
+      {
+        "path": "apps/web/src/pages/Models.tsx",
+        "sha256": "57196dfdfdfcc4503c33c6b610d60684849518c675efa7502f789f6f5f07e3d0"
+      },
+      {
+        "path": "apps/web/src/pages/Sources.tsx",
+        "sha256": "5df5464c6baea87b932433b9fe4dbf9d52cdc0073369598cdc4feb4c40a82f42"
+      },
+      {
+        "path": "apps/web/src/session.tsx",
+        "sha256": "8194132b7f7b979ea515bf8eab8eb9b00c1f4b7699f16740352cbf84a1165cea"
+      },
+      {
+        "path": "apps/web/src/styles.css",
+        "sha256": "2ecaa43f18955c4ca1c0c550219d2edac75540b5f6fb4281b238c431f558c46a"
+      },
+      {
+        "path": "apps/web/src/types.ts",
+        "sha256": "2c121eba06c772d494ae715a03ea8a473ed4f23ffea6748b3fd361b4804e14c7"
+      },
+      {
+        "path": "apps/web/src/vite-env.d.ts",
+        "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+      },
+      {
+        "path": "apps/web/tsconfig.json",
+        "sha256": "2cbb2a3beb6ceaad8b63a422b269dbab19fcb3187722f90354353eae892c7e26"
+      },
+      {
+        "path": "apps/web/vite.config.ts",
+        "sha256": "be49a3fcab78673178e11c775172a65ab07bb80cf95c50f093189929b08b1044"
+      },
+      {
+        "path": "packages/config/routes.json",
+        "sha256": "99e55a3abb1e893cd8b288e71d294296e075dc3caea28cfb6e444881a9f86f2e"
+      },
+      {
+        "path": "packages/ui/src/index.tsx",
+        "sha256": "9fdb615913bb9d6055b02bf38e7c670fd91ce190b51436dfc9a2d5df8cb584b3"
+      },
+      {
+        "path": "packages/ui/src/tokens.css",
+        "sha256": "b21dd67cae74c186f6d4b1a6bd150ec626b1a3f183d5b5c050c443029aa1d236"
+      },
+      {
+        "path": "playwright.config.ts",
+        "sha256": "f671166e0edf378678ffdde7a643c2cfb4e3e8a5092517e94c38620acf3ffe45"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "64ba875f705195741265864539885115446d7f24848033b66ebb0f17ee396bef"
+      },
+      {
+        "path": "tests/e2e/models.spec.ts",
+        "sha256": "21e928c2ac051d72a7ae203e7e210a8173db394c9105df95d65a3e7b445ba560"
+      },
+      {
+        "path": "tests/e2e/ui-accessibility.spec.ts",
+        "sha256": "a55a5c6fdc2506d70c2840e75486d235a8c7440964376a2fa25ee88a7c65e504"
+      },
+      {
+        "path": "tests/e2e/vertical-slice.spec.ts",
+        "sha256": "0833a6f40fb6859aa0c4e43b6ad05627e0762fe1b928a6fc22b42f1b7310298b"
+      }
+    ]
+  },
+  "runtime": {
+    "app_image": "sha256:11b3da6538177d7ba81bf4cd4e8ef6aace03442847e42813a29683e392c93446",
+    "image_binding": "Deployed digest supplied by root after rebuild; served bundles verified by HTTP SHA256",
+    "served_bundle_sha256": {
+      "index-B9q0sL2w.js": "266bc6c73edce4bebd649c6871a5e6d6887eb2566ad184aa6f914137cf0b3d6d",
+      "index-BcSr_bKc.css": "86232154e7eec141a8184b4bf3bdeb405c463a9cb12013288ef13186065dd379"
+    },
+    "authentication": "Real Keycloak OIDC code+PKCE session",
+    "source": "Real PostgreSQL synthetic harbor source with Temporal/site/Python scan and OpenSearch projection"
+  },
+  "tools": {
+    "node": "24.22.3",
+    "pnpm": "10.32.1",
+    "playwright": "1.65.1",
+    "axe": "4.14.0",
+    "chrome": "157.0.8103.51"
+  },
+  "test_files": [
+    "tests/e2e/models.spec.ts",
+    "tests/e2e/ui-accessibility.spec.ts",
+    "tests/e2e/vertical-slice.spec.ts"
+  ],
+  "methodology": [
+    "No mocked authentication, API responses, source scan or persistence.",
+    "Test-only before/after model-suite guard waits for the actual X-RateLimit-Reset when remaining request budget is below 200; bounded to a 61-second wait with 75-second hook timeout. Runtime 300/min limit remains enabled; failed acceptance assertions are not retried.",
+    "Final run exercised both guards: 17s before and 50s after. Initial model inventory 42/100, final 44/100; canonical test history retained.",
+    "Axe WCAG2A/2AA/2.1AA/2.2AA without rule or element exclusions; finite CSS animations settle before inspection."
+  ],
+  "verified": [
+    "Visual decimal field authoring plus server-validated JSON import/export roundtrip for all 12 supported attribute types.",
+    "Raw duplicate JSON keys and invalid typed values rejected with structured paths.",
+    "Typed values bound to real scanned asset, persisted after reload; exact decimal, number, false, nested object/list and optional unset retained.",
+    "Stale asset edit preserves draft and allows explicit comparison and reuse of current revision.",
+    "Server-enumerated impact preview discloses checked assets with separate keyboard-accessible link.",
+    "Changed binding invalidates preview; compatible next version preserves immutable old definition and asset pin.",
+    "Destructive proposal publication blocked with migration limitation visible.",
+    "Consumer create denied in UI and API; other tenant definition inaccessible.",
+    "M1 real OIDC/source registration/scan/search/ownership/audit/role-and-tenant checks pass.",
+    "M1 responsive/theme/RTL/keyboard checks remain passing; M2 editor/detail/typed form/value/preview pass axe at 390 and 1440 plus Arabic editor at 390."
+  ],
+  "visual_inspection": {
+    "reviewer": "Codex web implementation agent",
+    "kind": "Actual final browser PNG inspection, not independent human sign-off",
+    "screenshots": {
+      "docs/verification/screenshots/m2-model-editor-ar-390.png": "4bbb8b732e6777a0a97758f73cade5a716a667d943d6b15610a2e977da3939b4",
+      "docs/verification/screenshots/m2-model-editor-en-1440.png": "bf0ace849e6888fe9c0992838ca6315403c814df713bafc6abf0d3966882f068",
+      "docs/verification/screenshots/m2-model-editor-en-390.png": "c7be11ca2cd43ad22645afd89b1e671d4c7549832efd6015423b041cfbaa3c09",
+      "docs/verification/screenshots/m2-model-preview-en-1440.png": "22551575526066e779ca6785ced75e6bcb7e16cb5c4f5e9b988a812f29c863e9",
+      "docs/verification/screenshots/m2-model-preview-en-390.png": "d27d248a79811d1960f98530c8d0dd5346fad424e7b4fbc1f0edeffd91a1c50c",
+      "docs/verification/screenshots/m2-model-typed-asset-en-1440.png": "2ab48d3d51ff1cda5a03aa737629940aad0ef46223d67dee1c488cdfe6d5d792",
+      "docs/verification/screenshots/m2-model-typed-asset-en-390.png": "6bc6ce7c72c122c49f9303a7c882e319aff00d99289e67e2a3db379cacda22df",
+      "docs/verification/screenshots/m2-model-typed-form-en-1440.png": "55616f8b4fe828936e19df8ad7e0dacd51f53d7cc1e65a7162e63d911c4a699b",
+      "docs/verification/screenshots/m2-model-typed-form-en-390.png": "ac69fefd2c5819156ac1ee2001e9b68501e5bce2feedfc2803e81a66bf29e69d",
+      "docs/verification/screenshots/m2-model-version-en-1440.png": "5ae326bcc28b795080f3d709f4d06b5b688d5a2d8cc0939d813ac41fb07dd0ad",
+      "docs/verification/screenshots/m2-model-version-en-390.png": "ae39469ce9753bd32e4d3528df05e8b949f3bf7184e00211c2e53c438adf6bd5"
+    },
+    "findings": "All 11 final M2 screenshots inspected. Forms, model details and preview reflow without overlap or unintended document overflow. Dialogs and nested JSON retain intentional internal scrolling. Exact decimal strings remain readable; optional values and type labels are distinct. Preview controls are separated and adequately spaced. Arabic shell and editor use RTL; synthetic user-authored labels stay unchanged."
+  },
+  "historical_evidence": {
+    "m1_tracked_pngs_restored_from_head": true,
+    "fresh_m1_regression_pngs_stored_locally": {
+      ".local/evidence/m2-regression-screenshots/asset-en-light-1440.png": "723b8b087f6c9c380451167b611183128db9ca596cd615c50acf0faf73e3fc9f",
+      ".local/evidence/m2-regression-screenshots/asset-en-light-390.png": "08cfca203f0b80b8a0f7ce28280e3fa85bdd4ae91f2f580a3cb22869088fcfbc",
+      ".local/evidence/m2-regression-screenshots/audit-en-light-1440.png": "14a149c68b44a4037e2087b0f6bf290d86f8b5cedf13d08a5342c0d31c1289ad",
+      ".local/evidence/m2-regression-screenshots/catalog-ar-dark-1440.png": "e628c0ff1bf6b93738c5bfbb1977524f388b23060f1c12918768e3046033e754",
+      ".local/evidence/m2-regression-screenshots/catalog-ar-dark-390.png": "c2065a8cc6e0d548b8f025586239b8193cacbefd7b143e1d832b635a3bfdea75",
+      ".local/evidence/m2-regression-screenshots/catalog-ar-dark-768.png": "abf4570808ed1b255901a93c8b08eee24066227bbd3a9ea043ae42b69b658c43",
+      ".local/evidence/m2-regression-screenshots/catalog-en-dark-1440.png": "8e4d3a4e0158fdf05d8262067876a46b22640d044e955590727c55004d6730f9",
+      ".local/evidence/m2-regression-screenshots/catalog-en-light-1024.png": "60e1e8691a7509654ed3704c185103a2b5de5298cf5473d12e59d20939e93a2d",
+      ".local/evidence/m2-regression-screenshots/catalog-en-light-1280.png": "33d70559fa3cbadbdeeb08f7b547913d6de19e2ff6ee482eecee8339a826d758",
+      ".local/evidence/m2-regression-screenshots/catalog-en-light-1440.png": "80b1ce1edd2d4296dab6ab740fe2f4183831b4248be3221d15206aa248cc2019",
+      ".local/evidence/m2-regression-screenshots/catalog-en-light-390.png": "480faa2ab0c9b1d09eee83e03a192472c9f4c411b7b321da629c50ed0efe1473",
+      ".local/evidence/m2-regression-screenshots/catalog-en-light-768.png": "b8ab25e0cfac7546e1dec987dc585838cb2f048d6ca1928a62d9818b3c73a9ea",
+      ".local/evidence/m2-regression-screenshots/catalog-history.png": "11fdef0e8477d8b897b663f4fcc91368f7f62bbec345e34677b9ffef50a433f3",
+      ".local/evidence/m2-regression-screenshots/overview-en-light-1440.png": "91318f1c55d0dc94f000a8690b2499eb4095d1e16a87188c8fd7fd88c178520f",
+      ".local/evidence/m2-regression-screenshots/sources-en-light-1440.png": "9cd4d755cf97e8f96a6134decb489053509167d1204a21aaaba9a6c7682622ab"
+    }
+  },
+  "limitations": [
+    "No full MOD-001/002/003 or AT-MOD-01 completion: inheritance, constrained relations, lifecycle rules, layouts, migration execution/rollback, every ingress and typed search/filter/sort remain open.",
+    "Rich text currently uses safe plain Markdown source without formatted rendering.",
+    "Model list is explicitly bounded to 100; repeated tests retain synthetic canonical history.",
+    "No independent accessibility/native-speaker review, screen-reader session, actual 200% zoom or component stories.",
+    "New M2 screens qualified in light theme; M1 shared shell/catalog light and dark checks rerun. M2 dark-theme specific qualification remains open.",
+    "Hosted CI execution and enterprise/external vendor/release qualification are separate gates."
+  ]
+}

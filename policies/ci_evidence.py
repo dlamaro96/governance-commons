@@ -44,15 +44,21 @@ if source.is_file():
                     results = test.get("results", [])
                     status = test.get("status", "unknown")
                     filename = Path(str(spec.get("file", ""))).name
-                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts"}:
+                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts"}:
                         continue
                     line = spec.get("line")
                     report["tests"].append({"file": "tests/e2e/" + filename, "line": line if isinstance(line, int) else None,
                         "status": status if status in {"expected", "unexpected", "flaky", "skipped"} else "unknown",
                         "attempts": len(results), "duration_ms": sum(r.get("duration", 0) for r in results)})
     collect(data.get("suites", []))
-if outcomes["browser"] == "success" and (not report["tests"] or any(test["status"] != "expected" for test in report["tests"])):
-    report["outcome"] = "NOT_PASSED"
+if outcomes["browser"] == "success":
+    # A successful filtered run is not the mandatory browser gate. Require all
+    # registered journeys, once each, as well as their successful outcomes.
+    expected = {f"tests/e2e/{name}.spec.ts": 2 for name in ("vertical-slice", "ui-accessibility", "models")}
+    observed = {name: sum(test["file"] == name for test in report["tests"]) for name in expected}
+    locations = {(test["file"], test["line"]) for test in report["tests"]}
+    if observed != expected or len(locations) != sum(expected.values()) or any(test["status"] != "expected" for test in report["tests"]):
+        report["outcome"] = "NOT_PASSED"
 if outcomes["browser"] == "success":
     names = [f"catalog-en-light-{width}.png" for width in (390, 768, 1024, 1280, 1440)]
     names += ["catalog-en-dark-1440.png", "catalog-history.png"]
