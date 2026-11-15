@@ -22,13 +22,24 @@ async function headers(page: Page) {
 }
 async function paceRequestBudget({ browser }: { browser: Browser }) {
   test.setTimeout(75_000); const context = await browser.newContext(); const response = await context.request.get('/api/v1/me');
-  const reset = Number(response.headers()['x-ratelimit-reset']), remaining = Number(response.headers()['x-ratelimit-remaining']); await context.close();
-  if (Number.isFinite(reset) && reset >= 0 && reset <= 60 && Number.isFinite(remaining) && remaining < 220) {
+  await waitForRequestBudget(response, 220); await context.close();
+}
+async function waitForRequestBudget(response: APIResponse, reserve: number) {
+  const reset = Number(response.headers()['x-ratelimit-reset']), remaining = Number(response.headers()['x-ratelimit-remaining']);
+  expect(Number.isFinite(reset) && reset >= 0 && reset <= 60 && Number.isFinite(remaining) && remaining >= 0).toBeTruthy();
+  if (remaining < reserve) {
     console.info(`Relation fixture pacing: waiting ${reset + 1}s for the configured request budget to reset`);
     await new Promise(resolve => setTimeout(resolve, (reset + 1) * 1000));
   }
 }
 test.beforeAll(paceRequestBudget); test.beforeEach(paceRequestBudget); test.afterAll(paceRequestBudget);
+// A complete relation journey can exceed one request window. Pace at explicit
+// phase boundaries; never retry a failed assertion or weaken the server limit.
+async function paceJourney(page: Page) {
+  const response = await page.request.get('/api/v1/me');
+  expect([200, 429]).toContain(response.status());
+  await waitForRequestBudget(response, 160);
+}
 async function capture(page: Page, name: string, selector?: string, widths = [1440, 390]) {
   mkdirSync('docs/verification/screenshots', { recursive: true });
   for (const width of widths) {
@@ -260,6 +271,7 @@ test('MOD: authored relations preserve exact values and pins, enforce constraint
   await page.goto(`/relation-types/${id}/edit`); await page.getByRole('button', { name: 'Remove field amount', exact: true }).click();
   expect((await previewType(page, id)).requiresExplicitMigration).toBeTruthy();
   await expect(page.getByRole('button', { name: 'Publish relation type', exact: true })).toBeDisabled();
+  await paceJourney(page);
   console.info('Relation stage: table and graph pagination');
   // Table pages are bound to the current graph fence, not blindly appended.
   await page.goto(`/catalog/${first.id}?tab=relations&relationTypeId=${type.relationTypeId}`);
@@ -302,6 +314,7 @@ test('MOD: authored relations preserve exact values and pins, enforce constraint
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl'); await capture(page, 'graph-ar-dark', '.relation-graph-section');
   await page.locator('#language').selectOption('en'); await page.getByRole('button', { name: 'Colour theme: Light', exact: true }).click();
   console.info('Relation stage: post-assertion real connector rescan');
+  await paceJourney(page);
   // Run the actual connector again after governed assertions exist. Connector
   // observations may advance endpoint revisions, but cannot rewrite assertions
   // or any previously recorded relation snapshot.

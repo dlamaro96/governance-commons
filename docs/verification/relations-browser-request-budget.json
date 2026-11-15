@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T21:38:20.670276+00:00",
+  "result": "PASS",
+  "scope": "one controlled relation-authoring journey; not the full browser gate",
+  "starting_request_allowance": 222,
+  "application_rate_limit": "300 requests per minute, unchanged",
+  "application_image": "sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651",
+  "browser": "Google Chrome 157.0.8103.51",
+  "command": "pnpm exec playwright test --config .github/playwright.ci.config.ts --project relations --no-deps --grep \"authored relations preserve\" --reporter=line,json",
+  "attempts": [
+    {
+      "attempt": 1,
+      "change": "none",
+      "stats": {
+        "startTime": "2026-11-15T21:32:47.791Z",
+        "duration": 61307.586,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "private_report_sha256": "7e65f9e0bc4a8ff7fb63c9f9c76170a689afa6acabec3822b1d39f056c2c4279"
+    },
+    {
+      "attempt": 2,
+      "change": "explicit phase-boundary request-budget pacing",
+      "stats": {
+        "startTime": "2026-11-15T21:35:54.682Z",
+        "duration": 69479.728,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "private_report_sha256": "7be0c7f2a3d7fd14141a80399566845e6494cbe5f716d8388ce7415304f1ba1d"
+    }
+  ],
+  "observed_failure": {
+    "expected_http_status": 200,
+    "actual_http_status": 429,
+    "file": "tests/e2e/relations.spec.ts",
+    "line": 79,
+    "calling_line": 280
+  },
+  "test_source_sha256_after_execution": "70cd56fe9ad19943ed35bf6735bb992a7b06a47a92d72a1c926a1f91d155a9f5",
+  "historical_screenshots_restored_byte_identical": 95,
+  "limitations": [
+    "No application limit or acceptance assertion was weakened. Pacing uses observed reset headers; failed mutations are never retried.",
+    "The corrected journey passed once from the same controlled allowance. Hosted and full-suite qualification remain pending.",
+    "The first local raw console log was overwritten on retry; its original full Playwright JSON report and command/exit record were retained before the second run completed.",
+    "No additional source API test run or new application image is claimed."
+  ]
+}
