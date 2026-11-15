@@ -1,6 +1,6 @@
 # ADR0007 — Pinned asserted relations and authorized graph snapshots
 
-Status: implemented in the development branch with scoped local API, upgrade and browser gates passing; hosted checks pending. SQL008 passed its isolated upgrade gate and was applied at2026-11-15T19:32:41.221Z; it is immutable. Full M2 and release qualification remain open.
+Status: implemented and merged through PR14 after scoped local API, upgrade, browser and required hosted gates passed. Hosted run43764871580 executed14 distinct browser journeys, one attempt each, and11 service/browser steps; see `docs/verification/hosted-relations.json`. SQL008 passed its isolated upgrade gate and was applied at2026-11-15T19:32:41.221Z; it is immutable. Full M2 and release qualification remain open.
 
 Relations are canonical governed records with immutable endpoint/type identities, exact type-version pins, typed values, owner, lifecycle, half-open business validity and asserted provenance. A source scan cannot replace curator intent. Source status and governed lifecycle have separate meanings. Imported and derived claims need their own required future implementations; a manual graph does not establish technical lineage.
 

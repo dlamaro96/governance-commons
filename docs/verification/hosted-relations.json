@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-15T21:53:45.748135+00:00",
+  "pullRequest": "https://github.com/dlamaro96/governance-commons/pull/14",
+  "head": "3ad8d3f78539bdbcae6880703f2d1b20a929dc51",
+  "testedMerge": "2218573964896a9f33309b421416b310c7f606e1",
+  "mergedCommit": "a8cfef10cc6e677f164d20bc41c76c33cd6d4424",
+  "mergedAt": "2026-11-15T21:53:17Z",
+  "requiredChecks": {
+    "quality": "PASS",
+    "secrets": "PASS",
+    "behavior": "PASS",
+    "required": "PASS"
+  },
+  "checksObservedVia": "public GitHub pull request checks page",
+  "artifactSha256": "1e9ba0d7377798e72513048ee22caefa29beb2cd121ac0d34c887179d0ef61f0",
+  "artifact": {
+    "schema_version": 1,
+    "timestamp": "2026-11-15T21:51:32.774262+00:00",
+    "commit": "2218573964896a9f33309b421416b310c7f606e1",
+    "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43764871580",
+    "profile": "core / GitHub-hosted Ubuntu 24.04 / synthetic PostgreSQL",
+    "steps": {
+      "bootstrap": "success",
+      "services": "success",
+      "object_store": "success",
+      "seed": "success",
+      "connectors": "success",
+      "security": "success",
+      "model_upgrade": "success",
+      "asset_type_upgrade": "success",
+      "type_migration_upgrade": "success",
+      "relations_upgrade": "success",
+      "browser": "success"
+    },
+    "outcome": "PASS",
+    "tests": [
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 17,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 8629,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 101,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1737,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 30,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 15605,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 74,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1655,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 77,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 23913,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 257,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 3060,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 80,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 20008,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 218,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 2880,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 97,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 27802,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 242,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 44740,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/asset-type-migrations.spec.ts",
+        "line": 97,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 27556,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/asset-type-migrations.spec.ts",
+        "line": 252,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 38135,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/relations.spec.ts",
+        "line": 145,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 66175,
+        "failure_locations": []
+      },
+      {
+        "file": "tests/e2e/relations.spec.ts",
+        "line": 358,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 10698,
+        "failure_locations": []
+      }
+    ],
+    "screenshots": [
+      "catalog-en-light-390.png",
+      "catalog-en-light-768.png",
+      "catalog-en-light-1024.png",
+      "catalog-en-light-1280.png",
+      "catalog-en-light-1440.png",
+      "catalog-en-dark-1440.png",
+      "catalog-history.png",
+      "catalog-ar-dark-390.png",
+      "catalog-ar-dark-768.png",
+      "catalog-ar-dark-1440.png"
+    ],
+    "limitations": [
+      "No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
+      "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification."
+    ]
+  },
+  "priorAttempts": [
+    "hosted-relations-attempt-1.json",
+    "hosted-relations-attempt-2.json"
+  ],
+  "limitations": [
+    "This is the constrained-relations increment only. Required participation SQL009 and new source have not run.",
+    "Hosted success does not constitute independent human review or full programme/release qualification."
+  ]
+}

@@ -9,6 +9,7 @@ import { assetTypePolicy, typeHash } from './asset-type-policy.ts';
 import { assetTypePersistence as types, assetTypePolicyChanges, getAssetType } from './asset-type-service.ts';
 import { MODEL_SERVICE_LIMITS, modelPersistence as persistence, type ModelHooks } from './model-service.ts';
 import type { ResolvedAssetType } from './asset-type.ts';
+import type { GraphAssetPolicyEvidence, TypeMigrationDiscoveryResult, GraphOperationHandle, PreparedAssetChanges } from './relation-migration-contracts.ts';
 import type { TypeMigrationContext, TypeMigrationPreview, TypeMigrationRequest, TypeMigrationExecutionRequest,
   TypeMigrationTuple, TypeMigrationAssetReceipt, TypeMigrationReceipt } from './asset-type-migration-contracts.ts';
 
@@ -75,6 +76,45 @@ async function cohort(tx: Tx, p: Principal, id: string) {
   try { return await persistence.modelCohort(tx, p, id); }
   catch (error) { if (error instanceof Problem && error.code === 'MODEL_PREVIEW_LIMIT') throw limit(); throw error; }
 }
+/** Internal graph discovery. The parent owns the tenant scope, has authorized
+ * every target's complete scope before materialization limits, and will lock and
+ * recapture the complete union. This function acquires no canonical/principal locks. */
+export async function discoverTypeMigration(tx: Tx, p: Principal, id: string, expected: number,
+  input: TypeMigrationRequest): Promise<TypeMigrationDiscoveryResult> {
+  await persistence.authorize(tx, p, TYPE_MIGRATION_WRITE);
+  const headRow = await types.typeHead(tx, p, id); persistence.assertHead(headRow, expected);
+  const parsed = parseAssetTypeMigrationPlan(input.plan); if (!parsed.ok) throw invalid(parsed.issues);
+  const target = await types.resolved(tx, p, input.definition);
+  let rows: { id: string; model_version: number }[];
+  try { rows = await persistence.discoverModelCohort(tx, p, id); }
+  catch (error) { if (error instanceof Problem && error.code === 'MODEL_PREVIEW_LIMIT') throw limit(); throw error; }
+  const sourceVersions = [...new Set(rows.map(row => row.model_version))].sort((a, b) => a - b);
+  const versions = [...new Set([...sourceVersions, expected])].sort((a, b) => a - b);
+  const sources = await policies(tx, p, id, versions), head = sources.get(expected)!;
+  const checked = validateAssetTypeMigrationPlan({ typeId: headRow.type_id, head, target,
+    sources: sourceVersions.map(version => sources.get(version)!),
+    cohort: rows.map(row => ({ assetId: row.id, sourceVersion: row.model_version })) }, parsed.value);
+  if (!checked.ok) throw invalid(checked.issues);
+  const envelopes: GraphAssetPolicyEvidence[] = [];
+  for (const resolution of [...sources.values(), target]) {
+    const keys = [id, ...resolution.dependencies.map(pin => pin.id)];
+    const identities = await tx.selectFrom('governance_models').select(['id', 'type_id'])
+      .where('tenant_id', '=', p.tenantId).where('id', 'in', keys).execute();
+    if (identities.length !== keys.length || identities.some(row => !row.type_id)) throw storage();
+    const byId = new Map<string, string>(identities.map(row => [row.id, row.type_id]));
+    if (byId.get(id) !== headRow.type_id) throw storage();
+    envelopes.push({ kind: 'authored', typeId: headRow.type_id, resolution,
+      definitionHash: typeHash(resolution.definition), resolutionHash: typeHash(resolution),
+      ancestorTypes: resolution.dependencies.map(pin => ({ typeId: byId.get(pin.id)!, id: pin.id, version: pin.version })) });
+  }
+  const result: TypeMigrationDiscoveryResult = { discovery: { typeId: headRow.type_id, modelId: id,
+    expectedHeadVersion: expected, headPolicy: { modelId: id, modelVersion: expected },
+    targetPolicy: { modelId: id, modelVersion: target.model.version },
+    sourcePolicies: sourceVersions.map(modelVersion => ({ modelId: id, modelVersion })),
+    plan: checked.value, assetIds: rows.map(row => row.id) }, policies: envelopes };
+  if (Buffer.byteLength(JSON.stringify(result)) > MODEL_SERVICE_LIMITS.previewBytes) throw limit(); budget(result);
+  return result;
+}
 async function prepare(tx: Tx, p: Principal, id: string, expected: number, input: TypeMigrationRequest) {
   await persistence.authorize(tx, p, TYPE_MIGRATION_WRITE);
   const headRow = await types.typeHead(tx, p, id, true); persistence.assertHead(headRow, expected);
@@ -117,16 +157,7 @@ async function prepare(tx: Tx, p: Principal, id: string, expected: number, input
   }
   if (issues.length) throw invalid(issues);
   await (await import('./relation-endpoint-guard.ts')).validateRelationsForEndpointChanges(tx, p, assets.map(asset => ({ assetId: asset.assetId, expectedAssetVersion: asset.fromAssetVersion, modelId: id, modelVersion: target.model.version, state: asset.after.state, policy: target })));
-  // PostgreSQL expands exponent notation in JSONB. Bound the actual persisted
-  // representation too, before a preview can promise an executable migration.
-  const storedAssets = assets.map(({ sourceIssues: _issues, ...asset }) => asset);
-  const physical = await sql<{ plan_bytes: number; assets_bytes: number; definition_bytes: number; resolved_bytes: number }>`select
-    octet_length(${JSON.stringify(plan)}::jsonb::text) as plan_bytes,
-    octet_length(${JSON.stringify(storedAssets)}::jsonb::text) as assets_bytes,
-    octet_length(${JSON.stringify(target.definition)}::jsonb::text) as definition_bytes,
-    octet_length(${JSON.stringify(target)}::jsonb::text) as resolved_bytes`.execute(tx);
-  const sizes = physical.rows[0];
-  if (sizes.plan_bytes > 8_388_608 || sizes.assets_bytes > 8_388_608 || sizes.definition_bytes > 262_144 || sizes.resolved_bytes > 524_288) throw limit();
+  await preflightTypeMigrationStorage(tx, plan, assets, target);
   const changes = previewModelUpgrade(head.model, target.model, []); if (!changes.ok) throw invalid(changes.issues);
   const sourceResolutions = versions.map(version => ({ version, resolutionHash: typeHash(source.get(version)!) }));
   const definitionHash = typeHash(target.definition), resolutionHash = typeHash(target), planHash = typeHash(plan);
@@ -139,6 +170,21 @@ async function prepare(tx: Tx, p: Principal, id: string, expected: number, input
     assets, previewDigest, planHash, ready: true };
   return { headRow, target, plan, preview };
 }
+
+async function preflightTypeMigrationStorage(tx: Tx, plan: TypeMigrationPreviewInputPlan,
+  assets: TypeMigrationPreview['assets'], target: ResolvedAssetType): Promise<void> {
+  // PostgreSQL expands exponent notation in JSONB. Bound the actual persisted
+  // representation too, before a preview can promise an executable migration.
+  const storedAssets = assets.map(({ sourceIssues: _issues, ...asset }) => asset);
+  const physical = await sql<{ plan_bytes: number; assets_bytes: number; definition_bytes: number; resolved_bytes: number }>`select
+    octet_length(${JSON.stringify(plan)}::jsonb::text) as plan_bytes,
+    octet_length(${JSON.stringify(storedAssets)}::jsonb::text) as assets_bytes,
+    octet_length(${JSON.stringify(target.definition)}::jsonb::text) as definition_bytes,
+    octet_length(${JSON.stringify(target)}::jsonb::text) as resolved_bytes`.execute(tx);
+  const sizes = physical.rows[0];
+  if (sizes.plan_bytes > 8_388_608 || sizes.assets_bytes > 8_388_608 || sizes.definition_bytes > 262_144 || sizes.resolved_bytes > 524_288) throw limit();
+}
+type TypeMigrationPreviewInputPlan = Awaited<ReturnType<typeof prepare>>['plan'];
 
 export async function getTypeMigrationContext(tx: Tx, p: Principal, id: string): Promise<TypeMigrationContext> {
   return bounded(tx, async () => {
@@ -166,41 +212,105 @@ const receiptAssets = (preview: TypeMigrationPreview): TypeMigrationAssetReceipt
 const baseAssets = (assets: TypeMigrationAssetReceipt[]) => assets.map(({ assetId, fromAssetVersion, toAssetVersion, fromModelVersion, toModelVersion, beforeHash, afterHash }) =>
   ({ assetId, fromAssetVersion, toAssetVersion, fromModelVersion, toModelVersion, beforeHash, afterHash }));
 
+/** Internal writer: caller has validated the complete projection and owns all locks.
+ * The graph parent seals all companion writes; this primitive cannot finalize it. */
+async function persistTypeMigrationProjection(tx: Tx, p: Principal, correlationId: string,
+  id: string, expected: number, prepared: Pick<Awaited<ReturnType<typeof prepare>>, 'target' | 'plan' | 'preview'>,
+  migrationId: string, hooks: ModelHooks): Promise<void> {
+  const { target, plan, preview } = prepared;
+  await types.insertVersion(tx, p, target);
+  const changed = await tx.updateTable('governance_models').set({ current_version: target.model.version }).where('tenant_id', '=', p.tenantId)
+    .where('id', '=', id).where('current_version', '=', expected).executeTakeFirst();
+  if (Number(changed.numUpdatedRows) !== 1) throw new Problem(409, 'VERSION_CONFLICT', 'The type changed. Run a fresh preview.');
+  const assets = receiptAssets(preview);
+  for (const asset of assets) {
+    const updated = await tx.updateTable('assets').set({ model_version: target.model.version, attributes: JSON.stringify(asset.after.attributes),
+      owner_id: asset.after.ownerId, type_state: asset.after.state, version: asset.toAssetVersion, updated_at: new Date() })
+      .where('tenant_id', '=', p.tenantId).where('id', '=', asset.assetId).where('model_id', '=', id)
+      .where('model_version', '=', asset.fromModelVersion).where('version', '=', asset.fromAssetVersion).returningAll().executeTakeFirst();
+    if (!updated) throw new Problem(409, 'ASSET_TYPE_MIGRATION_PREVIEW_STALE', 'An affected asset changed. Run a fresh preview.');
+    await tx.insertInto('asset_revisions').values({ tenant_id: p.tenantId, asset_id: asset.assetId, version: asset.toAssetVersion,
+      snapshot: JSON.stringify(hooks.assetSnapshot(updated)) }).execute();
+    await hooks.record(tx, p, 'asset.type_migrated', asset.assetId, asset.toAssetVersion, { migrationId, modelId: id, typeId: preview.typeId,
+      before: { modelVersion: asset.fromModelVersion, tupleHash: asset.beforeTupleHash },
+      after: { modelVersion: asset.toModelVersion, tupleHash: asset.afterTupleHash }, revision: asset.toAssetVersion }, correlationId);
+  }
+  await tx.insertInto('governance_model_migrations').values({ tenant_id: p.tenantId, id: migrationId, model_id: id,
+    from_version: expected, to_version: target.model.version, plan: JSON.stringify(plan.attributes), plan_hash: typeHash(plan.attributes),
+    preview_digest: preview.previewDigest, asset_count: assets.length, assets: JSON.stringify(baseAssets(assets)), executed_by: p.id }).execute();
+  await tx.insertInto('asset_type_migrations').values({ tenant_id: p.tenantId, id: migrationId, model_id: id, type_id: preview.typeId,
+    from_version: expected, to_version: target.model.version, plan: JSON.stringify(plan), plan_hash: preview.planHash,
+    preview_digest: preview.previewDigest, definition_hash: preview.definitionHash, resolution_hash: preview.resolutionHash,
+    source_resolutions: JSON.stringify(preview.sourceResolutions), asset_count: assets.length, assets: JSON.stringify(assets),
+    executed_by: p.id }).execute();
+  await hooks.record(tx, p, 'model.type_migrated', id, target.model.version, { migrationId, typeId: preview.typeId, previousVersion: expected,
+    definitionHash: preview.definitionHash, resolutionHash: preview.resolutionHash, planHash: preview.planHash, previewDigest: preview.previewDigest }, correlationId);
+}
+
+/** Internal graph adapter. SQL begin has allocated this receipt identity and
+ * protects the exact operation/tuple claims. Neither an object nor a UUID is
+ * authority to bypass those database checks. No locks/deadline/finalization here. */
+export async function persistPreparedTypeMigration(tx: Tx, p: Principal, correlationId: string,
+  operation: GraphOperationHandle, id: string, migrationId: string, prepared: PreparedAssetChanges,
+  hooks: ModelHooks): Promise<TypeMigrationReceipt> {
+  const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+  if (!uuid.test(operation.id) || !uuid.test(migrationId)) throw storage();
+  const migrations = prepared.typeMigrations.filter(item => item.modelId === id);
+  if (migrations.length !== 1) throw storage();
+  const migration = migrations[0], expected = migration.expectedHeadVersion, plan = migration.plan;
+  const evidence = (version: number) => {
+    const matches = prepared.policies.filter(item => item.kind === 'authored' && item.resolution.model.id === id && item.resolution.model.version === version);
+    if (matches.length !== 1 || matches[0].kind !== 'authored' || matches[0].typeId !== migration.typeId) throw storage();
+    return matches[0];
+  };
+  const targetEvidence = evidence(migration.targetPolicy.modelVersion), target = targetEvidence.resolution;
+  const changes = prepared.changes.filter(item => item.kind === 'type-migrate' && item.after.modelId === id);
+  if (typeHash(changes.map(item => item.assetId)) !== typeHash(migration.assetIds)) throw storage();
+  const assets: TypeMigrationPreview['assets'] = changes.map(change => {
+    if (change.before.modelId !== id || change.after.modelId !== id || change.before.modelVersion === null ||
+      change.after.modelVersion !== target.model.version || change.before.state === null || change.after.state === null) throw storage();
+    const before: TypeMigrationTuple = { ...change.before, modelId: id, modelVersion: change.before.modelVersion, state: change.before.state };
+    const after: TypeMigrationTuple = { ...change.after, modelId: id, modelVersion: change.after.modelVersion, state: change.after.state };
+    return { assetId: change.assetId, fromAssetVersion: change.fromAssetVersion, toAssetVersion: change.toAssetVersion,
+      fromModelVersion: before.modelVersion, toModelVersion: after.modelVersion,
+      beforeHash: typeHash(before.attributes), afterHash: typeHash(after.attributes), before, after,
+      beforeTupleHash: typeHash(before), afterTupleHash: typeHash(after), sourceIssues: change.sourceIssues };
+  });
+  // These identities were stabilized once by the parent. A read does not create a
+  // second lock phase; retain the standalone digest's exact activity/source issues.
+  const requested = [...new Set([p.id, ...assets.map(item => item.before.ownerId), ...plan.owner.overrides.map(item => item.ownerId)]
+    .filter((value): value is string => value !== null))].sort();
+  if (requested.length > 2001) throw limit();
+  const activeRows = await tx.selectFrom('memberships').innerJoin('identities', 'identities.id', 'memberships.identity_id')
+    .select('memberships.identity_id').where('memberships.tenant_id', '=', p.tenantId).where('memberships.identity_id', 'in', requested)
+    .where('memberships.active', '=', true).where('identities.active', '=', true).execute();
+  const active = new Set<string>(activeRows.map(row => row.identity_id)), activity = requested.map(id => ({ id, active: active.has(id) }));
+  await persistence.authorize(tx, p, TYPE_MIGRATION_WRITE);
+  const versions = [...new Set([expected, ...migration.sourcePolicies.map(item => item.modelVersion)])].sort((a, b) => a - b);
+  const sourceResolutions = versions.map(version => ({ version, resolutionHash: evidence(version).resolutionHash }));
+  const definitionHash = targetEvidence.definitionHash, resolutionHash = targetEvidence.resolutionHash, planHash = typeHash(plan);
+  const previewDigest = typeHash({ formatVersion: 1, purpose: 'complete-asset-type-migration', tenantId: p.tenantId,
+    typeId: migration.typeId, modelId: id, expectedVersion: expected, plan, definitionHash, resolutionHash,
+    dependencies: target.dependencies, sourceResolutions, activity, assets });
+  const preview: TypeMigrationPreview = { typeId: migration.typeId, modelId: id, currentVersion: expected,
+    proposedVersion: target.model.version, coverage: 'complete-tenant-model-bindings', assetCount: assets.length,
+    changes: migration.changes, policyChanges: migration.policyChanges, sourceResolutions, definitionHash, resolutionHash,
+    assets, previewDigest, planHash, ready: true };
+  await preflightTypeMigrationStorage(tx, plan, assets, target);
+  await persistTypeMigrationProjection(tx, p, correlationId, id, expected, { target, plan, preview }, migrationId, hooks);
+  return (await readTypeMigrationReceipt(tx, p, id, migrationId, true)).receipt;
+}
+
 export async function executeTypeMigration(tx: Tx, p: Principal, correlationId: string, id: string, expected: number,
   input: TypeMigrationExecutionRequest, hooks: ModelHooks) {
   return bounded(tx, async () => {
     await persistence.authorize(tx, p, TYPE_MIGRATION_WRITE);
     if (typeof input.previewDigest !== 'string' || !sha256.test(input.previewDigest)) throw new Problem(428, 'ASSET_TYPE_MIGRATION_PREVIEW_REQUIRED', 'Run a complete type migration preview before execution.');
     await persistence.lockTenantModels(tx, p);
-    const prepared = await prepare(tx, p, id, expected, input), { preview, target, plan } = prepared;
+    const prepared = await prepare(tx, p, id, expected, input), { preview } = prepared;
     if (preview.previewDigest !== input.previewDigest) throw new Problem(409, 'ASSET_TYPE_MIGRATION_PREVIEW_STALE', 'The type, plan, assets or owner eligibility changed. Run a fresh preview.');
-    await types.insertVersion(tx, p, target);
-    const changed = await tx.updateTable('governance_models').set({ current_version: target.model.version }).where('tenant_id', '=', p.tenantId)
-      .where('id', '=', id).where('current_version', '=', expected).executeTakeFirst();
-    if (Number(changed.numUpdatedRows) !== 1) throw new Problem(409, 'VERSION_CONFLICT', 'The type changed. Run a fresh preview.');
-    const migrationId = randomUUID(), assets = receiptAssets(preview);
-    for (const asset of assets) {
-      const updated = await tx.updateTable('assets').set({ model_version: target.model.version, attributes: JSON.stringify(asset.after.attributes),
-        owner_id: asset.after.ownerId, type_state: asset.after.state, version: asset.toAssetVersion, updated_at: new Date() })
-        .where('tenant_id', '=', p.tenantId).where('id', '=', asset.assetId).where('model_id', '=', id)
-        .where('model_version', '=', asset.fromModelVersion).where('version', '=', asset.fromAssetVersion).returningAll().executeTakeFirst();
-      if (!updated) throw new Problem(409, 'ASSET_TYPE_MIGRATION_PREVIEW_STALE', 'An affected asset changed. Run a fresh preview.');
-      await tx.insertInto('asset_revisions').values({ tenant_id: p.tenantId, asset_id: asset.assetId, version: asset.toAssetVersion,
-        snapshot: JSON.stringify(hooks.assetSnapshot(updated)) }).execute();
-      await hooks.record(tx, p, 'asset.type_migrated', asset.assetId, asset.toAssetVersion, { migrationId, modelId: id, typeId: preview.typeId,
-        before: { modelVersion: asset.fromModelVersion, tupleHash: asset.beforeTupleHash },
-        after: { modelVersion: asset.toModelVersion, tupleHash: asset.afterTupleHash }, revision: asset.toAssetVersion }, correlationId);
-    }
-    await tx.insertInto('governance_model_migrations').values({ tenant_id: p.tenantId, id: migrationId, model_id: id,
-      from_version: expected, to_version: target.model.version, plan: JSON.stringify(plan.attributes), plan_hash: typeHash(plan.attributes),
-      preview_digest: preview.previewDigest, asset_count: assets.length, assets: JSON.stringify(baseAssets(assets)), executed_by: p.id }).execute();
-    await tx.insertInto('asset_type_migrations').values({ tenant_id: p.tenantId, id: migrationId, model_id: id, type_id: preview.typeId,
-      from_version: expected, to_version: target.model.version, plan: JSON.stringify(plan), plan_hash: preview.planHash,
-      preview_digest: preview.previewDigest, definition_hash: preview.definitionHash, resolution_hash: preview.resolutionHash,
-      source_resolutions: JSON.stringify(preview.sourceResolutions), asset_count: assets.length, assets: JSON.stringify(assets),
-      executed_by: p.id }).execute();
-    await hooks.record(tx, p, 'model.type_migrated', id, target.model.version, { migrationId, typeId: preview.typeId, previousVersion: expected,
-      definitionHash: preview.definitionHash, resolutionHash: preview.resolutionHash, planHash: preview.planHash, previewDigest: preview.previewDigest }, correlationId);
+    const migrationId = randomUUID();
+    await persistTypeMigrationProjection(tx, p, correlationId, id, expected, prepared, migrationId, hooks);
     // Force deferred companion/revision checks before returning to idempotency serialization.
     await sql`set constraints all immediate`.execute(tx);
     return { ...(await getAssetType(tx, p, id)), ...(await getTypeMigrationReceipt(tx, p, id, migrationId, true)) };
@@ -210,49 +320,61 @@ export async function executeTypeMigration(tx: Tx, p: Principal, correlationId: 
 function tupleFromSnapshot(snapshot: Row): TypeMigrationTuple {
   return { modelId: snapshot.modelId, modelVersion: snapshot.modelVersion, attributes: snapshot.attributes, ownerId: snapshot.ownerId, state: snapshot.typeState };
 }
+async function readTypeMigrationReceipt(tx: Tx, p: Principal, modelId: string, migrationId: string, forReplay: boolean): Promise<{ receipt: TypeMigrationReceipt }> {
+  const actions = forReplay ? TYPE_MIGRATION_WRITE : readPermissions;
+  await persistence.authorize(tx, p, actions);
+  const head = await types.typeHead(tx, p, modelId);
+  const row = await tx.selectFrom('asset_type_migrations').selectAll().where('tenant_id', '=', p.tenantId).where('id', '=', migrationId).where('model_id', '=', modelId).executeTakeFirst();
+  if (!row) throw new Problem(404, 'ASSET_TYPE_MIGRATION_NOT_FOUND', 'The complete type migration receipt is unavailable.');
+  if (!Array.isArray(row.assets) || row.assets.length !== row.asset_count || row.asset_count > 1000 || row.type_id !== head.type_id) throw storage();
+  if (Buffer.byteLength(JSON.stringify(row)) > 2_097_152) throw limit(); budget(row);
+  const ids = row.assets.map((asset: Row) => asset.assetId);
+  const currentAssets = ids.length ? await tx.selectFrom('assets').select(['tenant_id', 'id', 'visibility', 'allowed_identities'])
+    .where('tenant_id', '=', p.tenantId).where('id', 'in', ids).execute() : [];
+  if (currentAssets.length !== ids.length || currentAssets.some(asset => !canView(p, { tenantId: asset.tenant_id, visibility: asset.visibility, allowedIdentities: asset.allowed_identities }))) throw unavailable();
+  const parsed = parseAssetTypeMigrationPlan(row.plan);
+  const base = await tx.selectFrom('governance_model_migrations').selectAll().where('tenant_id', '=', p.tenantId).where('id', '=', migrationId).executeTakeFirst();
+  if (!parsed.ok || !base || typeHash(parsed.value) !== row.plan_hash || parsed.value.typeId !== row.type_id ||
+    parsed.value.attributes.modelId !== modelId || parsed.value.attributes.targetVersion !== row.to_version ||
+    base.from_version !== row.from_version || base.to_version !== row.to_version || base.model_id !== modelId ||
+    typeHash(base.plan) !== typeHash(parsed.value.attributes) || base.plan_hash !== typeHash(parsed.value.attributes) ||
+    base.preview_digest !== row.preview_digest || !sha256.test(row.preview_digest) || base.asset_count !== row.asset_count ||
+    base.executed_by !== row.executed_by || new Date(base.executed_at).getTime() !== new Date(row.executed_at).getTime() ||
+    typeHash(base.assets) !== typeHash(baseAssets(row.assets))) throw storage();
+  const target = await assetTypePolicy(tx, p, modelId, row.to_version);
+  if (!target || typeHash(target) !== row.resolution_hash || typeHash(target.definition) !== row.definition_hash) throw storage();
+  const versions = [...new Set<number>([row.from_version, ...parsed.value.attributes.sourceVersions])].sort((a, b) => a - b);
+  const sources = await policies(tx, p, modelId, versions);
+  if (typeHash(row.source_resolutions) !== typeHash(versions.map(version => ({ version, resolutionHash: typeHash(sources.get(version)!) })))) throw storage();
+  const normalized = await tx.selectFrom('asset_type_migration_assets').select(tx.fn.countAll().as('count')).where('tenant_id', '=', p.tenantId).where('migration_id', '=', migrationId).executeTakeFirstOrThrow();
+  if (Number(normalized.count) !== row.asset_count) throw storage();
+  let previous = '';
+  for (const asset of row.assets as TypeMigrationAssetReceipt[]) {
+    if (asset.assetId <= previous || asset.fromAssetVersion + 1 !== asset.toAssetVersion || asset.toModelVersion !== row.to_version ||
+      !parsed.value.attributes.sourceVersions.includes(asset.fromModelVersion) || typeHash(asset.before) !== asset.beforeTupleHash ||
+      typeHash(asset.after) !== asset.afterTupleHash || typeHash(asset.before.attributes) !== asset.beforeHash || typeHash(asset.after.attributes) !== asset.afterHash ||
+      asset.before.modelId !== modelId || asset.after.modelId !== modelId || asset.before.modelVersion !== asset.fromModelVersion || asset.after.modelVersion !== asset.toModelVersion) throw storage();
+    previous = asset.assetId;
+    const revisions = await tx.selectFrom('asset_revisions').select(['version', 'snapshot']).where('tenant_id', '=', p.tenantId).where('asset_id', '=', asset.assetId)
+      .where('version', 'in', [asset.fromAssetVersion, asset.toAssetVersion]).orderBy('version').execute();
+    if (revisions.length !== 2 || typeHash(tupleFromSnapshot(revisions[0].snapshot)) !== asset.beforeTupleHash || typeHash(tupleFromSnapshot(revisions[1].snapshot)) !== asset.afterTupleHash) throw storage();
+  }
+  await persistence.authorize(tx, p, actions);
+  return { receipt: { id: row.id, typeId: row.type_id, modelId, fromVersion: row.from_version, toVersion: row.to_version,
+    plan: parsed.value, planHash: row.plan_hash, previewDigest: row.preview_digest, definitionHash: row.definition_hash, resolutionHash: row.resolution_hash,
+    sourceResolutions: row.source_resolutions, assetCount: row.asset_count, assets: row.assets, executedBy: row.executed_by, executedAt: new Date(row.executed_at).toISOString() } };
+}
 export async function getTypeMigrationReceipt(tx: Tx, p: Principal, modelId: string, migrationId: string, forReplay = false): Promise<{ receipt: TypeMigrationReceipt }> {
   return bounded(tx, async () => {
     const actions = forReplay ? TYPE_MIGRATION_WRITE : readPermissions;
-    await persistence.authorize(tx, p, actions);
-    const head = await types.typeHead(tx, p, modelId);
-    const row = await tx.selectFrom('asset_type_migrations').selectAll().where('tenant_id', '=', p.tenantId).where('id', '=', migrationId).where('model_id', '=', modelId).executeTakeFirst();
-    if (!row) throw new Problem(404, 'ASSET_TYPE_MIGRATION_NOT_FOUND', 'The complete type migration receipt is unavailable.');
-    if (!Array.isArray(row.assets) || row.assets.length !== row.asset_count || row.asset_count > 1000 || row.type_id !== head.type_id) throw storage();
-    if (Buffer.byteLength(JSON.stringify(row)) > 2_097_152) throw limit(); budget(row);
-    const ids = row.assets.map((asset: Row) => asset.assetId);
-    const currentAssets = ids.length ? await tx.selectFrom('assets').select(['tenant_id', 'id', 'visibility', 'allowed_identities'])
-      .where('tenant_id', '=', p.tenantId).where('id', 'in', ids).execute() : [];
-    if (currentAssets.length !== ids.length || currentAssets.some(asset => !canView(p, { tenantId: asset.tenant_id, visibility: asset.visibility, allowedIdentities: asset.allowed_identities }))) throw unavailable();
-    const parsed = parseAssetTypeMigrationPlan(row.plan);
-    const base = await tx.selectFrom('governance_model_migrations').selectAll().where('tenant_id', '=', p.tenantId).where('id', '=', migrationId).executeTakeFirst();
-    if (!parsed.ok || !base || typeHash(parsed.value) !== row.plan_hash || parsed.value.typeId !== row.type_id ||
-      parsed.value.attributes.modelId !== modelId || parsed.value.attributes.targetVersion !== row.to_version ||
-      base.from_version !== row.from_version || base.to_version !== row.to_version || base.model_id !== modelId ||
-      typeHash(base.plan) !== typeHash(parsed.value.attributes) || base.plan_hash !== typeHash(parsed.value.attributes) ||
-      base.preview_digest !== row.preview_digest || !sha256.test(row.preview_digest) || base.asset_count !== row.asset_count ||
-      base.executed_by !== row.executed_by || new Date(base.executed_at).getTime() !== new Date(row.executed_at).getTime() ||
-      typeHash(base.assets) !== typeHash(baseAssets(row.assets))) throw storage();
-    const target = await assetTypePolicy(tx, p, modelId, row.to_version);
-    if (!target || typeHash(target) !== row.resolution_hash || typeHash(target.definition) !== row.definition_hash) throw storage();
-    const versions = [...new Set<number>([row.from_version, ...parsed.value.attributes.sourceVersions])].sort((a, b) => a - b);
-    const sources = await policies(tx, p, modelId, versions);
-    if (typeHash(row.source_resolutions) !== typeHash(versions.map(version => ({ version, resolutionHash: typeHash(sources.get(version)!) })))) throw storage();
-    const normalized = await tx.selectFrom('asset_type_migration_assets').select(tx.fn.countAll().as('count')).where('tenant_id', '=', p.tenantId).where('migration_id', '=', migrationId).executeTakeFirstOrThrow();
-    if (Number(normalized.count) !== row.asset_count) throw storage();
-    let previous = '';
-    for (const asset of row.assets as TypeMigrationAssetReceipt[]) {
-      if (asset.assetId <= previous || asset.fromAssetVersion + 1 !== asset.toAssetVersion || asset.toModelVersion !== row.to_version ||
-        !parsed.value.attributes.sourceVersions.includes(asset.fromModelVersion) || typeHash(asset.before) !== asset.beforeTupleHash ||
-        typeHash(asset.after) !== asset.afterTupleHash || typeHash(asset.before.attributes) !== asset.beforeHash || typeHash(asset.after.attributes) !== asset.afterHash ||
-        asset.before.modelId !== modelId || asset.after.modelId !== modelId || asset.before.modelVersion !== asset.fromModelVersion || asset.after.modelVersion !== asset.toModelVersion) throw storage();
-      previous = asset.assetId;
-      const revisions = await tx.selectFrom('asset_revisions').select(['version', 'snapshot']).where('tenant_id', '=', p.tenantId).where('asset_id', '=', asset.assetId)
-        .where('version', 'in', [asset.fromAssetVersion, asset.toAssetVersion]).orderBy('version').execute();
-      if (revisions.length !== 2 || typeHash(tupleFromSnapshot(revisions[0].snapshot)) !== asset.beforeTupleHash || typeHash(tupleFromSnapshot(revisions[1].snapshot)) !== asset.afterTupleHash) throw storage();
-    }
-    await persistence.authorize(tx, p, actions);
-    return { receipt: { id: row.id, typeId: row.type_id, modelId, fromVersion: row.from_version, toVersion: row.to_version,
-      plan: parsed.value, planHash: row.plan_hash, previewDigest: row.preview_digest, definitionHash: row.definition_hash, resolutionHash: row.resolution_hash,
-      sourceResolutions: row.source_resolutions, assetCount: row.asset_count, assets: row.assets, executedBy: row.executed_by, executedAt: new Date(row.executed_at).toISOString() } };
+    const { lockRelationScope, lockRelationPrincipals, relationQuery } = await import('./relation-store.ts');
+    await lockRelationScope(tx, p, actions);
+    await lockRelationPrincipals(tx, p, [], actions);
+    // A nested receipt is still part of its whole original graph operation.
+    // Authorize protected normalized scope before materializing receipt JSON.
+    const parent = await relationQuery(tx, () => tx.selectFrom('relation_graph_receipt_type_migrations').select('operation_id')
+      .where('tenant_id', '=', p.tenantId).where('migration_id', '=', migrationId).executeTakeFirst());
+    if (parent) await (await import('./relation-migration-read.ts')).authorizeRelationOperation(tx, p, parent.operation_id);
+    return readTypeMigrationReceipt(tx, p, modelId, migrationId, forReplay);
   });
 }

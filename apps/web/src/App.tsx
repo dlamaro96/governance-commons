@@ -44,10 +44,12 @@ export default function App() {
 const RelationTypesPage = lazy(() => import('./pages/RelationTypes').then(module => ({ default: module.RelationTypesPage })));
 const RelationTypePage = lazy(() => import('./pages/RelationTypes').then(module => ({ default: module.RelationTypePage })));
 const RelationTypeEditorPage = lazy(() => import('./pages/RelationTypes').then(module => ({ default: module.RelationTypeEditorPage })));
+const RelationMigrationPage = lazy(() => import('./pages/RelationMigrations').then(module => ({ default: module.RelationMigrationPage })));
+const RelationMigrationReceiptPage = lazy(() => import('./pages/RelationMigrations').then(module => ({ default: module.RelationMigrationReceiptPage })));
 const RelationPage = lazy(() => import('./pages/Relation').then(module => ({ default: module.RelationPage })));
 function Shell({ session, reloadSession, preferences }: { session: Session; reloadSession: () => void; preferences: React.ReactNode }) {
   const { t, label, locale } = useLocale();
-  const { path, go } = useNavigation();
+  const { path, go, search: routeSearch } = useNavigation();
   const [globalSearch, setGlobalSearch] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
@@ -66,7 +68,7 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
     { href: '/models', key: 'models' as const, icon: GitBranch, visible: can('models:read') },
     { href: '/audit', key: 'audit' as const, icon: ClockCounterClockwise, visible: can('audit:read') },
   ];
-  const navigation = <><Link href="/" className="brand" onClick={() => setMenuOpen(false)}><BrandMark size={30}/><span>Governance<br/>Commons</span></Link><nav aria-label={t('workspace')}><div className="nav-section-label">{t('workspace')}</div>{navItems.filter(item => item.visible).map(({ href, key, icon: Icon }) => <Link key={href} href={href} className={`nav-link ${path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/asset-types') || path.startsWith('/relation-types')) || key === 'catalog' && path.startsWith('/relations/') ? 'selected' : ''}`} aria-current={path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/asset-types') || path.startsWith('/relation-types')) || key === 'catalog' && path.startsWith('/relations/') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><Icon size={20}/>{t(key)}</Link>)}</nav><div className="sidebar-bottom"><button className="sidebar-help" onClick={() => { setMenuOpen(false); setHelpOpen(true); }}><Question size={20}/>{t('help')}</button><div className="sidebar-tagline">{t('tagline')}</div></div></>;
+  const navigation = <><Link href="/" className="brand" onClick={() => setMenuOpen(false)}><BrandMark size={30}/><span>Governance<br/>Commons</span></Link><nav aria-label={t('workspace')}><div className="nav-section-label">{t('workspace')}</div>{navItems.filter(item => item.visible).map(({ href, key, icon: Icon }) => <Link key={href} href={href} className={`nav-link ${path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'selected' : ''}`} aria-current={path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><Icon size={20}/>{t(key)}</Link>)}</nav><div className="sidebar-bottom"><button className="sidebar-help" onClick={() => { setMenuOpen(false); setHelpOpen(true); }}><Question size={20}/>{t('help')}</button><div className="sidebar-tagline">{t('tagline')}</div></div></>;
   async function switchTenant(tenantId: string) {
     setSwitching(true); setError(null);
     try { await api('/session/tenant', { method: 'POST', body: JSON.stringify({ tenantId }) }); window.location.assign('/'); }
@@ -94,6 +96,7 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   let migrationTypeId: string | null = null;
   if (typeMigrationMatch) { try { migrationTypeId = decodeURIComponent(typeMigrationMatch[1]); } catch { migrationTypeId = null; } }
   const relationTypeMatch = path.match(/^\/relation-types\/([^/]+)(\/edit)?$/);
+  const relationMigrationMatch = path.match(/^\/relation-migrations\/([a-f0-9-]+)$/i);
   const relationMatch = path.match(/^\/relations\/([a-f0-9-]+)$/i);
   let relationTypeId: string | null = null;
   if (relationTypeMatch) { try { relationTypeId = decodeURIComponent(relationTypeMatch[1]); } catch { relationTypeId = null; } }
@@ -101,6 +104,8 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   if (path === '/') content = <HomePage/>;
   else if (path === '/catalog') content = can('catalog:read') ? <CatalogPage/> : <PermissionDenied/>;
   else if (assetId) content = can('catalog:read') ? <AssetPage id={assetId}/> : <PermissionDenied/>;
+  else if (path === '/relation-migrations/new') content = can('models:read') && can('models:write') && can('catalog:read') && can('catalog:write') ? <RelationMigrationPage key={routeSearch}/> : <PermissionDenied/>;
+  else if (relationMigrationMatch) content = can('models:read') && can('catalog:read') ? <RelationMigrationReceiptPage key={relationMigrationMatch[1]} id={relationMigrationMatch[1]}/> : <PermissionDenied/>;
   else if (path === '/relation-types') content = can('models:read') ? <RelationTypesPage/> : <PermissionDenied/>;
   else if (path === '/relation-types/new/definition') content = can('models:read') && can('models:write') ? <RelationTypeEditorPage/> : <PermissionDenied/>;
   else if (relationTypeId) content = can('models:read') && (!relationTypeMatch?.[2] || can('models:write') && can('catalog:read')) ? (relationTypeMatch?.[2] ? <RelationTypeEditorPage key={relationTypeId} id={relationTypeId}/> : <RelationTypePage key={relationTypeId} id={relationTypeId}/>) : <PermissionDenied/>;

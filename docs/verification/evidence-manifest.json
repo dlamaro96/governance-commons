@@ -371,12 +371,35 @@
         "verified_files": 160,
         "evidence_sha256": "11231c7e1f9c36474f1acfc69f151be974c09f18ba430a495d1ca32a1b9f379f"
       }
+    },
+    {
+      "path": "docs/verification/hosted-relations.json",
+      "scope": "hosted-constrained-relations",
+      "source_binding": {
+        "implementation_commit": "3ad8d3f78539bdbcae6880703f2d1b20a929dc51",
+        "ci_tested_merge_commit": "2218573964896a9f33309b421416b310c7f606e1",
+        "merged_commit": "a8cfef10cc6e677f164d20bc41c76c33cd6d4424",
+        "method": "Public GitHub required-check readback and downloaded allowlisted behavior summary from run43764871580. Original tested pull-request merge revision and earlier failed attempts retained; no root participation execution is inferred.",
+        "evidence_sha256": "4883c95b2cf05e148739f9c58e3977fcabfbb9f7b8cba8493b5a14b9299b486a"
+      }
+    },
+    {
+      "path": "docs/verification/relation-participation-upgrade.json",
+      "scope": "relation-participation-storage-and-concurrency"
+    },
+    {
+      "path": "docs/verification/relation-scope-discovery-review.json",
+      "scope": "relation-scope-discovery-correction-review"
+    },
+    {
+      "path": "docs/verification/m2-relation-participation-api.json",
+      "scope": "Bounded required participation and complete graph-operation core API/service execution;123 passing cases with76 actual-image source hashes; original failures and isolated-snapshot drift retained."
     }
   ],
   "limitations": [
     "Passing scoped development gates does not complete compound baseline requirements.",
-    "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
+    "M1 core local journey passes; full M0 repository/release and M2–M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "bound_at": "2026-11-15T20:47:28.101777+00:00"
+  "bound_at": "2026-11-15T22:23:28.996008+00:00"
 }

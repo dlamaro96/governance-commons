@@ -8,6 +8,7 @@ Read `docs/execution/STATE.md` and relevant rows of `docs/product/requirements.y
 - Tenant scope derives from authenticated membership. Every tenant table, FK, job, search and audit boundary is scoped. Runtime roles must not own tables or bypass RLS.
 - Browser auth uses OIDC code+PKCE and server-side HttpOnly sessions, CSRF checks, no stored browser bearer tokens. No connector execution in request handlers; secrets stay outside source/history and Temporal payloads.
 - Mutations commit canonical data, append-only audit and outbox together. Validate versions/idempotency; authorize before counts/facets. Failed scans cannot delete assets.
+- Applied SQL001–010 migrations are immutable. Database corrections require a forward migration and an isolated upgrade gate.
 - Use `./dev help`, `./dev doctor`, `./dev bootstrap`, `./dev up --profile core`, `./dev seed --dataset harbor-demo`, `./dev test --suite smoke`. Commands under implementation must fail explicitly, never report unrun checks as passing.
 - Run type/schema checks and relevant real integration/security/browser gates. Keep implementation, verification, release readiness and runtime health distinct.
 - Canonical requirements live in YAML; use `python3 scripts/requirements.py` for generated views. Never hand-edit projections or remove failing requirements.

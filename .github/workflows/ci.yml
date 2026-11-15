@@ -151,9 +151,12 @@ jobs:
       - name: Verify constrained relation upgrade and graph concurrency
         id: relations_upgrade
         run: ./dev test --suite relations-upgrade
+      - name: Verify required participation upgrade and atomic graph operations
+        id: relation_participation_upgrade
+        run: ./dev test --suite relation-participation-upgrade
       - name: Verify browser acceptance and accessibility
         id: browser
-        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts
+        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts
       - name: Collect bounded redacted evidence
         if: always()
         env:
@@ -167,6 +170,7 @@ jobs:
           GC_ASSET_TYPE_UPGRADE_RESULT: ${{ steps.asset_type_upgrade.outcome }}
           GC_TYPE_MIGRATION_UPGRADE_RESULT: ${{ steps.type_migration_upgrade.outcome }}
           GC_RELATIONS_UPGRADE_RESULT: ${{ steps.relations_upgrade.outcome }}
+          GC_RELATION_PARTICIPATION_UPGRADE_RESULT: ${{ steps.relation_participation_upgrade.outcome }}
           GC_BROWSER_RESULT: ${{ steps.browser.outcome }}
         run: python3 policies/ci_evidence.py
       - name: Preserve only safe behavior summary and catalog screenshots

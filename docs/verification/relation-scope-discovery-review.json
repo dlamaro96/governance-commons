@@ -1,0 +1,369 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T23:15:07.167826+00:00",
+  "scope": "Local development evidence for required participation and the forward SQL010 discovery correction. This record qualifies only the explicitly executed checks; it is not release approval.",
+  "implementation_revision_binding": "Pending the implementation commit; the executed 51-file source snapshot remains in the unmodified public upgrade report.",
+  "chronology": [
+    {
+      "result": "PASS",
+      "started_at": "2026-11-15T22:38:50.821317+00:00",
+      "recorded_at": "2026-11-15T22:43:48.460708+00:00",
+      "storage_tests": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 260618.538995
+      },
+      "concurrency_tests": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 31957.812181
+      },
+      "app_image": "sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651",
+      "disposable_container_removed": true,
+      "stage": "isolated_sql009",
+      "upgrade_check_count": 7,
+      "source_count": 50,
+      "artifact": {
+        "path": ".local/evidence/relation-participation-upgrade-attempts/20261115T230438-4594c710-relation-participation-upgrade.json",
+        "sha256": "88c1a1e35881cdec8332ebc275067906e0bc1b7855df11940a1f9d36cea222be",
+        "published": false
+      },
+      "qualification": "PASS for its exact original source snapshot and synthetic fixture; not a later core/API qualification or equal-source performance baseline."
+    },
+    {
+      "result": "FAIL",
+      "started_at": "2026-11-15T22:45:21.779675+00:00",
+      "recorded_at": "2026-11-15T22:49:54.798901+00:00",
+      "counts": {
+        "tests": 78,
+        "pass": 70,
+        "fail": 5,
+        "cancelled": 3,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 272552.173082
+      },
+      "images": {
+        "api": "sha256:9fb71c7b451212a639d080c9f07c419f342a7938e3ac76a384cf5fc10868dfd3",
+        "workflow-worker": "sha256:9fb71c7b451212a639d080c9f07c419f342a7938e3ac76a384cf5fc10868dfd3",
+        "site-runner": "sha256:9fb71c7b451212a639d080c9f07c419f342a7938e3ac76a384cf5fc10868dfd3"
+      },
+      "stage": "first_core_api_attempt_sql009",
+      "artifact": {
+        "path": ".local/evidence/participation-api-attempt-1/participation-api-execution.json",
+        "sha256": "c86bbb31d93a3d9c1e2292cfd97a8929e40421cf6f6110b80a225883132171b5",
+        "published": false
+      },
+      "diagnosis": "The five new REST contexts/previews completed, but their execute requests returned 503 RELATION_RETRY at the 30-second service deadline. A later direct-SQL begin remained active beyond 60 seconds. The owned runner was interrupted after demonstrated failures; the remaining suite was not executed.",
+      "interruption": {
+        "path": ".local/evidence/participation-api-attempt-1/interruption.json",
+        "sha256": "98517a874df88aa77daa0250f9d301b6b9fa17224b1c93ec336ceb62f34c60e6",
+        "published": false
+      },
+      "raw_log": {
+        "path": ".local/evidence/participation-api-attempt-1/participation-security.log",
+        "sha256": "7890b11425bf2378ef669e816d1fbffe06c49f8e7416a562538a515f86fd27ae",
+        "published": false
+      }
+    },
+    {
+      "result": "FAIL",
+      "started_at": "2026-11-15T23:04:39.001485+00:00",
+      "recorded_at": "2026-11-15T23:04:44.200060+00:00",
+      "stage": "first_isolated_sql010_parse",
+      "artifact": {
+        "path": ".local/evidence/relation-participation-upgrade-attempts/20261115T230528-7d4ce11f-relation-participation-upgrade.json",
+        "sha256": "6d425e2628896e9cff43b305c59c517dc8f9af6bcdadf013eb110f138aa47b09",
+        "published": false
+      },
+      "sql010_sha256": "cd1c6f905505a143186919f0444640a52c329b26cd3301403b34fd899e47523a",
+      "sqlstate": "42601",
+      "error": "syntax error at or near \"authorization\"",
+      "position": 11963,
+      "correction": "Rename the reserved CTE alias authorization to scope_access.",
+      "storage_concurrency_tests_run": false,
+      "qualification": "Historical SQL009 upgrade checks preceded the parse failure. The full corrected gate was rerun separately; this failure remains retained.",
+      "raw_log": {
+        "path": ".local/evidence/relation-participation-upgrade-attempts/20261115T230528-7d4ce11f-relation-participation-upgrade-private.log",
+        "sha256": "83c405ebc96fbd18bf63bce5ed68545391feec1b433ed984c3b904ed5c2fb52a",
+        "published": false
+      }
+    },
+    {
+      "result": "PASS",
+      "started_at": "2026-11-15T23:05:28.709532+00:00",
+      "recorded_at": "2026-11-15T23:07:17.853217+00:00",
+      "storage_tests": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 3766.134043
+      },
+      "concurrency_tests": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 99720.468837
+      },
+      "app_image": "sha256:9fb71c7b451212a639d080c9f07c419f342a7938e3ac76a384cf5fc10868dfd3",
+      "disposable_container_removed": true,
+      "stage": "final_isolated_sql009_upgrade_and_sql010_regression",
+      "upgrade_check_count": 8,
+      "source_count": 51,
+      "artifact": {
+        "path": "docs/verification/relation-participation-upgrade.json",
+        "sha256": "9aacfd1cfc7d875037c861df868c998acb151c72064d2e88c1c7a80b2dcb4655",
+        "published": true,
+        "byte_identical_to_original": true
+      },
+      "raw_log": {
+        "path": ".local/evidence/relation-participation-upgrade-private.log",
+        "sha256": "68f9c13882aa2315f4459f5bc1aa28aae2df756f52b80f5178628f6581eda68b",
+        "published": false
+      },
+      "source_hash_readback": {
+        "recorded_at": "2026-11-15T23:13:33.946947+00:00",
+        "matched": 51,
+        "mismatched": 0
+      },
+      "qualification": "Exact SQL008-to009 preservation/rollback is separate from the forward SQL010 schema and current storage/concurrency regression. Current source was mounted read-only using the recorded cached image dependencies."
+    },
+    {
+      "result": "FAIL",
+      "started_at": "2026-11-15T23:09:47.835907+00:00",
+      "recorded_at": "2026-11-15T23:11:15.179810+00:00",
+      "counts": {
+        "tests": 123,
+        "pass": 120,
+        "fail": 3,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 86875.590873
+      },
+      "images": {
+        "api": "sha256:30d7bc1f6698a4468471b0b8a33cb3006cef2baac24a6a7277bd2229e6388280",
+        "workflow-worker": "sha256:30d7bc1f6698a4468471b0b8a33cb3006cef2baac24a6a7277bd2229e6388280",
+        "site-runner": "sha256:30d7bc1f6698a4468471b0b8a33cb3006cef2baac24a6a7277bd2229e6388280"
+      },
+      "stage": "second_core_api_attempt_sql010",
+      "artifact": {
+        "path": ".local/evidence/participation-api-attempt-2/participation-api-execution.json",
+        "sha256": "f862d30123b646623a4e66bd677b761ce4cb8a5ecfb6f697444379514d9b2c5b",
+        "published": false
+      },
+      "raw_log": {
+        "path": ".local/evidence/participation-api-attempt-2/participation-security.log",
+        "sha256": "7c7ff2386198d0a16dc61c6b51a201b8241d667b3882e68c43c72d82f627146d",
+        "published": false
+      },
+      "qualification": "All 123 test cases were observed, with 120 passes and three failures. There were no cancellations, skips or todos; this is a failed full gate.",
+      "diagnosis": "Root review identified nonempty query objects rejected by strict parsing, stale expected-edge execution returning 422 instead of the stale conflict, and a test conflating hidden linked-receipt 404 with unlinked complete-scope 403. Corrections require a separate subsequent gate."
+    }
+  ],
+  "discovery_profile": {
+    "method": "Read-only core EXPLAIN/timing with a separately prearmed 15-second statement timeout, followed by a session-temporary materialized discovery comparison. All diagnostic transactions were rolled back. No canonical rows or persistent core function definitions changed.",
+    "tenant_scale": {
+      "assets": 3638,
+      "authored_assets": 593,
+      "relation_type_heads": 127,
+      "active_relations": 184,
+      "active_bindings": 0
+    },
+    "request_scope": "One existing relation type; no changed assets.",
+    "jit": "on",
+    "baseline": {
+      "artifact": {
+        "path": ".local/evidence/relation-scope-profile/baseline.log",
+        "sha256": "f8146015ad1bb7b30ba68500efc31b6c04733ff561df6f624a4029d109b2515b",
+        "published": false
+      },
+      "file_timestamp_utc": "2026-11-15T22:52:59.646422+00:00",
+      "result": "STATEMENT_TIMEOUT",
+      "sqlstate": "57014",
+      "outer_statement_timeout_ms": 15000,
+      "wall_seconds": 15.242,
+      "observation": "The candidate closure entered canonical policy hashing and endpoint projection despite an empty changed-asset set."
+    },
+    "materialized_comparison": {
+      "artifact": {
+        "path": ".local/evidence/relation-scope-profile/materialized.log",
+        "sha256": "da14ffed4875326a5d4487a3b1e0f7a5623242fe68f0a5f374fb7e6042c8bce7",
+        "published": false
+      },
+      "file_timestamp_utc": "2026-11-15T22:53:55.893959+00:00",
+      "planning_ms": 0.012,
+      "execution_ms": 514.612,
+      "result_rows": 2,
+      "candidate_assets_calls": 1,
+      "candidate_types_calls": 1,
+      "endpoint_eligibility_calls": 14546,
+      "empty_changed_set_project_endpoint_calls": 0
+    },
+    "limitation": "This measures a discovery closure with temporary comparison functions, not a complete API request or operation throughput benchmark. File timestamps identify retained artifacts, not a separately recorded command start time."
+  },
+  "forward_change": {
+    "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+    "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a",
+    "scope": "Materialize the candidate closure once, apply changed-asset filtering before expensive projection, and reuse bounded authorized identity sets within begin. Charge retained discovered-scope JSON against the shared budget and check the original operation clock during eligibility and projection.",
+    "preserved_invariants": [
+      "Complete proposed scope including zero-edge participants",
+      "Authorization before counts and bounded identity materialization",
+      "Private claims, forced RLS and runtime privilege restrictions",
+      "Existing lock order, exact before/after history, deferred completeness and immutable receipts"
+    ],
+    "sql009_sha256_unchanged": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+  },
+  "independent_source_review": {
+    "reviewer_kind": "Independent automated code-review agent",
+    "reviewed_sql010_sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a",
+    "finding_and_resolution": "The newly retained discovered-scope JSON needed an explicit shared-budget charge. The final source charges it immediately and uses per-row projection clock checks.",
+    "final_source_verdict": "No remaining concrete blocker found in the reviewed discovery change. Scope predicates, authorization-gated counts/physical bounds, private claims, lock order, RLS and finalization were reviewed.",
+    "human_approval": false,
+    "runtime_verdict": "The independent review was read-only. Executed qualification is the separately recorded isolated gate."
+  },
+  "new_concurrency_cases": [
+    {
+      "name": "SQL010 captures an exact small graph once amid 3600 unrelated assets and 127 unrelated relation heads",
+      "result": "PASS",
+      "test_duration_ms_including_setup": 37912.759475,
+      "total_fixture_assets": 3602,
+      "total_relation_heads": 128,
+      "asserted_outcome": "Completed repair has exactly two scoped assets and one edge at revision two, with no bindings; the measured execution phase is less than 30 seconds.",
+      "exact_execution_duration_ms": null,
+      "limitation": "The exact execution duration was asserted but not separately logged; the total test duration includes fixture setup."
+    },
+    {
+      "name": "SQL010 cooperative scan deadline interrupts direct begin with outer timeouts disabled during controlled expensive discovery",
+      "result": "PASS",
+      "test_duration_ms_including_setup": 30111.686639,
+      "sqlstate": "57014",
+      "error": "Graph operation deadline exceeded",
+      "asserted_rejection_window_ms": [
+        29000,
+        35000
+      ],
+      "watchdog_ms": 36000,
+      "watchdog_used": false,
+      "method": "Within the isolated database only, an owner-installed 20 ms delay exercises the actual eligibility clock check. Runtime statement_timeout and lock_timeout are zero. The original function definition is restored exactly.",
+      "limitation": "This verifies cooperative discovery checks, not a universal hard timer for arbitrary direct SQL."
+    }
+  ],
+  "deadline_model": {
+    "budget_ms": 30000,
+    "service": "The service configures the remaining statement timeout in a separate database command before each operation statement, sharing the original operation deadline across nested work.",
+    "direct_sql_discovery": "SQL010 checks the original protected operation start during eligibility and projection, and aborts controlled expensive discovery without refreshing the budget.",
+    "limitation": "Changing statement_timeout inside an already executing SQL function does not arm a timeout for that outer statement. Inherited set-based final-validation work retains phase-boundary checks; the cooperative scan test does not establish a universal hard 30-second wall-clock bound for direct SQL with outer timeouts disabled."
+  },
+  "core_schema_readback": {
+    "artifact": {
+      "path": ".local/evidence/participation-core-migrations-010.json",
+      "sha256": "cc55a2ff648243d879874a18574d9613eaf11c4eb2187ce4d2ec9f1fce983fe4",
+      "published": false
+    },
+    "recorded_at": "2026-11-15T23:09:47.474012+00:00",
+    "applied_migrations": [
+      {
+        "name": "001_foundation.sql",
+        "checksum": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa",
+        "applied_at": "2026-11-15T15:14:15.244Z"
+      },
+      {
+        "name": "002_audit_envelopes.sql",
+        "checksum": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728",
+        "applied_at": "2026-11-15T15:14:15.269Z"
+      },
+      {
+        "name": "003_governance_models.sql",
+        "checksum": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa",
+        "applied_at": "2026-11-15T15:46:50.014Z"
+      },
+      {
+        "name": "004_model_migrations.sql",
+        "checksum": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f",
+        "applied_at": "2026-11-15T16:18:28.803Z"
+      },
+      {
+        "name": "005_model_migration_integrity.sql",
+        "checksum": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763",
+        "applied_at": "2026-11-15T16:40:50.754Z"
+      },
+      {
+        "name": "006_inherited_asset_types.sql",
+        "checksum": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8",
+        "applied_at": "2026-11-15T17:31:20.099Z"
+      },
+      {
+        "name": "007_asset_type_migrations.sql",
+        "checksum": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7",
+        "applied_at": "2026-11-15T18:16:37.942Z"
+      },
+      {
+        "name": "008_constrained_relations.sql",
+        "checksum": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2",
+        "applied_at": "2026-11-15T19:32:41.221Z"
+      },
+      {
+        "name": "009_relation_participation.sql",
+        "checksum": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe",
+        "applied_at": "2026-11-15T22:44:55.949Z"
+      },
+      {
+        "name": "010_relation_scope_discovery.sql",
+        "checksum": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a",
+        "applied_at": "2026-11-15T23:09:01.017Z"
+      }
+    ],
+    "checksum_matches": 10,
+    "images": {
+      "api": "sha256:30d7bc1f6698a4468471b0b8a33cb3006cef2baac24a6a7277bd2229e6388280",
+      "workflow-worker": "sha256:30d7bc1f6698a4468471b0b8a33cb3006cef2baac24a6a7277bd2229e6388280",
+      "site-runner": "sha256:30d7bc1f6698a4468471b0b8a33cb3006cef2baac24a6a7277bd2229e6388280"
+    },
+    "qualification": "SQL010 was applied after the final isolated pass. All ten checksums match. The subsequent full core API gate failed with 120 passes and three failures, as recorded separately; schema/readiness success is not an API pass."
+  },
+  "remaining_qualification_at_recording": [
+    "Corrected and rebuilt core full API/security execution after the retained second failure",
+    "Browser workflows and rendered UI inspection",
+    "Real-time unused-preparation expiry and completed replay after expiry",
+    "Hosted qualification, full programme requirements and release gates",
+    "Production restore and durable large-cohort migrations"
+  ],
+  "diagnostic_preservation": {
+    "archived_isolated_reports": 9,
+    "results": {
+      "FAIL": 8,
+      "PASS": 1
+    },
+    "qualification_test_retries": 0,
+    "raw_logs_public": false,
+    "note": "Public summaries contain only synthetic development facts and hashes. Detailed database/runner logs remain ignored; no historical failure is relabeled by a later source binding."
+  },
+  "later_source_readback": {
+    "recorded_at": "2026-11-15T23:15:07.167743+00:00",
+    "matched": 50,
+    "mismatched": 1,
+    "changes": [
+      {
+        "path": "packages/domain/src/relation-migration-service.ts",
+        "executed_sha256": "064252362d991fcfe01f1282a0fb099085e57e9bbf646af4bdf29a7429b6c2d2",
+        "later_sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+      }
+    ],
+    "interpretation": "Later API/service corrections are outside the recorded isolated execution snapshot. The original 51-source report and its earlier matching readback remain unchanged. This readback does not qualify changed sources or rebind the prior gate to a future implementation commit."
+  }
+}

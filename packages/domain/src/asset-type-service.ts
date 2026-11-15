@@ -180,7 +180,7 @@ export function assetTypePolicyChanges(head: ResolvedAssetType, target: Resolved
   return changes.sort();
 }
 /** Internal persistence shared by publication and complete type migration; not an authorization boundary. */
-export const assetTypePersistence = { typeHead, typeRow, resolved, insertVersion, view };
+export const assetTypePersistence = { typeHead, typeRow, resolved, insertVersion, view, persistTransition };
 export async function previewAssetType(tx: Tx, p: Principal, id: string, expectedVersion: number, input: unknown) {
   await persistence.authorize(tx, p, previewPermissions); await persistence.lockTenantModels(tx, p);
   return (await prepare(tx, p, id, expectedVersion, input)).preview;
@@ -225,10 +225,18 @@ export async function transitionAssetTypeState(tx: Tx, p: Principal, correlation
   }
   await validatePinnedType(tx, p, asset);
   await (await import('./relation-endpoint-guard.ts')).validateRelationsForEndpointChanges(tx, p, [{ assetId, expectedAssetVersion: expectedVersion, modelId: asset.model_id, modelVersion: asset.model_version, state, policy }]);
-  const updated = await tx.updateTable('assets').set({ type_state: state, version: expectedVersion + 1, updated_at: new Date() })
-    .where('tenant_id', '=', p.tenantId).where('id', '=', assetId).where('version', '=', expectedVersion).returningAll().executeTakeFirstOrThrow();
-  await tx.insertInto('asset_revisions').values({ tenant_id: p.tenantId, asset_id: assetId, version: updated.version, snapshot: JSON.stringify(hooks.assetSnapshot(updated)) }).execute();
-  await hooks.record(tx, p, 'asset.type_transitioned', assetId, updated.version,
-    { modelId: asset.model_id, modelVersion: asset.model_version, before: asset.type_state, after: state }, correlationId);
+  await persistTransition(tx, p, correlationId, asset, state, hooks);
   return getAssetTypeState(tx, p, assetId);
+}
+
+/** Internal write-only primitive shared with an already validated parent graph
+ * operation. It performs no new lock/validation phase or constraint finalization. */
+async function persistTransition(tx: Tx, p: Principal, correlationId: string,
+  asset: Record<string, any>, state: string, hooks: ModelHooks): Promise<Record<string, any>> {
+  const updated = await tx.updateTable('assets').set({ type_state: state, version: asset.version + 1, updated_at: new Date() })
+    .where('tenant_id', '=', p.tenantId).where('id', '=', asset.id).where('version', '=', asset.version).returningAll().executeTakeFirstOrThrow();
+  await tx.insertInto('asset_revisions').values({ tenant_id: p.tenantId, asset_id: asset.id, version: updated.version, snapshot: JSON.stringify(hooks.assetSnapshot(updated)) }).execute();
+  await hooks.record(tx, p, 'asset.type_transitioned', asset.id, updated.version,
+    { modelId: asset.model_id, modelVersion: asset.model_version, before: asset.type_state, after: state }, correlationId);
+  return updated;
 }

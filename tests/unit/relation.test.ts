@@ -24,7 +24,7 @@ function definition(change: Partial<RelationTypeDefinition> = {}): RelationTypeD
     sourceStates: null, targetStates: null, cardinality: { outgoing: { min: 0, max: null }, incoming: { min: 0, max: null } },
     allowSelf: false, cycles: 'allow', attributes: {}, requiredOwner: false, lifecycle: structuredClone(lifecycle), ...change };
 }
-const pin = (value = definition()): RelationPolicyPin => ({ relationTypeId: relationType, policy: ok(resolveRelationType(value)) });
+const pin = (value = definition()) => ({ relationTypeId: relationType, policy: ok(resolveRelationType(value)) });
 function asset(assetId = id(10), changes: Partial<RelationEndpointPolicyState> = {}): RelationEndpointPolicyState {
   const authored: AssetTypeDefinition = { formatVersion: 1, id: 'Dataset', version: 1, parents: [], attributes: {}, overrideAttributes: [], requiredOwner: false, lifecycle };
   return { assetId, assetVersion: 1, modelId: 'Dataset', modelVersion: 1, state: 'draft', typeId: typeA, policy: ok(resolveAssetType(authored, [])), ancestorTypes: [], ...changes };
