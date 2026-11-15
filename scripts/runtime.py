@@ -110,6 +110,7 @@ def main():
   ./dev test --suite connectors       Run Python contract/source tests
   ./dev test --suite recovery         Verify repeated seed and persistent restart
   ./dev test --suite histories        Inspect a completed scan's Temporal payloads
+  ./dev test --suite object-store     Verify authenticated S3 and a synthetic roundtrip
   ./dev down                          Stop this project, preserve volumes
 
 Full/AI profiles, complete acceptance, upgrade, benchmark, Kubernetes,
@@ -137,6 +138,7 @@ Never use docker compose config output in public logs: it expands secrets.""")
                 raise SystemExit("Build stopped: less than 2 GiB free disk. Preserve unrelated resources and recover space before retrying.")
             run(COMPOSE + ["build", service], timeout=1800, env={**os.environ, "COMPOSE_PARALLEL_LIMIT": "1"})
         run(COMPOSE + ["up", "-d", "--no-build", "--wait", "--wait-timeout", "240", "api", "workflow-worker", "site-runner", "python-worker"], timeout=360)
+        run([sys.executable, "scripts/runtime-test-object-store.py", "--readiness"], timeout=60)
         print("Core stack is ready at http://localhost:4310. Run ./dev seed --dataset harbor-demo.")
     elif args.command == "seed":
         if args.dataset != "harbor-demo":
@@ -157,6 +159,8 @@ Never use docker compose config output in public logs: it expands secrets.""")
             run([sys.executable, "scripts/runtime-test-connectors.py"], timeout=300)
         elif args.suite == "recovery":
             run([sys.executable, "scripts/runtime-test-recovery.py"], timeout=600)
+        elif args.suite == "object-store":
+            run([sys.executable, "scripts/runtime-test-object-store.py"], timeout=120)
         elif args.suite == "histories":
             run([sys.executable, "scripts/runtime-test-histories.py"], timeout=120)
         else:

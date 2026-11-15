@@ -125,6 +125,9 @@ jobs:
       - name: Start real core services
         id: services
         run: ./dev up --profile core
+      - name: Verify authenticated object storage and denial paths
+        id: object_store
+        run: ./dev test --suite object-store
       - name: Seed independent synthetic tenants
         id: seed
         run: ./dev seed --dataset harbor-demo
@@ -142,6 +145,7 @@ jobs:
         env:
           GC_BOOTSTRAP_RESULT: ${{ steps.bootstrap.outcome }}
           GC_SERVICES_RESULT: ${{ steps.services.outcome }}
+          GC_OBJECT_STORE_RESULT: ${{ steps.object_store.outcome }}
           GC_SEED_RESULT: ${{ steps.seed.outcome }}
           GC_CONNECTORS_RESULT: ${{ steps.connectors.outcome }}
           GC_SECURITY_RESULT: ${{ steps.security.outcome }}

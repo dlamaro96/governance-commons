@@ -15,7 +15,7 @@ if any(DEST.iterdir()):
     raise SystemExit("Artifact staging must be empty; refusing to publish a mixed or stale directory")
 allowed_outcomes = {"success", "failure", "cancelled", "skipped"}
 outcomes = {}
-for step in ("bootstrap", "services", "seed", "connectors", "security", "browser"):
+for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "browser"):
     value = os.environ.get(f"GC_{step.upper()}_RESULT", "skipped")
     outcomes[step] = value if value in allowed_outcomes else "unknown"
 report = {

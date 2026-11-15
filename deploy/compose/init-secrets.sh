@@ -6,6 +6,8 @@ set -eu
 cp /input/postgres-init.sql /bootstrap/postgres/postgres-init.sql
 cp /input/source-init.sql /bootstrap/source/source-init.sql
 cp /input/governance-realm.json /bootstrap/identity/governance-realm.json
-chmod 600 /bootstrap/postgres/* /bootstrap/source/* /bootstrap/identity/*
+cp /input/seaweed-s3.json /bootstrap/object/s3.json
+chmod 600 /bootstrap/postgres/* /bootstrap/source/* /bootstrap/identity/* /bootstrap/object/*
 chown 999:999 /bootstrap/postgres/postgres-init.sql /bootstrap/source/source-init.sql
 chown 1000:0 /bootstrap/identity/governance-realm.json
+chown 1000:1000 /bootstrap/object/s3.json

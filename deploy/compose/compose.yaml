@@ -42,10 +42,12 @@ services:
       - postgres-bootstrap:/bootstrap/postgres
       - source-bootstrap:/bootstrap/source
       - identity-bootstrap:/bootstrap/identity
+      - object-bootstrap:/bootstrap/object
       - ./init-secrets.sh:/init-secrets.sh:ro
       - ../../.local/postgres-init.sql:/input/postgres-init.sql:ro
       - ../../.local/source-init.sql:/input/source-init.sql:ro
       - ../../.local/governance-realm.json:/input/governance-realm.json:ro
+      - ../../.local/seaweed-s3.json:/input/seaweed-s3.json:ro
   postgres:
     image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
     environment:
@@ -176,12 +178,16 @@ services:
     restart: unless-stopped
   seaweedfs:
     image: chrislusf/seaweedfs:4.51@sha256:f7a49e3f3972ebed5be2ed4befa4a0c68eb7bdddba6e692d42729ceb545134b8
-    command: [server, -dir=/data, -s3, -s3.config=/etc/seaweedfs/s3.json, -volume.max=4, -master.volumeSizeLimitMB=64, -ip=seaweedfs]
+    command: [server, -dir=/data, -s3, -s3.config=/run/secrets/seaweedfs/s3.json, -s3.iam=false, -volume.max=16, -master.volumeSizeLimitMB=64, -ip=seaweedfs]
     volumes:
       - object-data:/data
-      - ../../.local/seaweed-s3.json:/etc/seaweedfs/s3.json:ro
+      - object-bootstrap:/run/secrets/seaweedfs:ro
+      - ./seaweed-master.toml:/etc/seaweedfs/master.toml:ro
+      - ./health-seaweed.sh:/health-seaweed.sh:ro
+    depends_on:
+      init-secrets: {condition: service_completed_successfully}
     healthcheck:
-      test: [CMD-SHELL, 'wget -q -O /dev/null http://127.0.0.1:9333/cluster/status']
+      test: [CMD, /bin/sh, /health-seaweed.sh]
       interval: 5s
       timeout: 5s
       retries: 30
@@ -288,6 +294,7 @@ volumes:
   postgres-bootstrap:
   source-bootstrap:
   identity-bootstrap:
+  object-bootstrap:
   postgres-data:
   source-data:
   search-data:
