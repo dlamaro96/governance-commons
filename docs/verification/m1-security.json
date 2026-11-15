@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T15:16:49.213312+00:00",
+  "profile": "core/local Docker Linux arm64",
+  "source": {
+    "base_commit": "026611973a9fef5d02fb5a879beecf16fdcc44f3",
+    "state": "uncommitted integration worktree; exact tested file hashes below",
+    "sha256": {
+      "apps/api/src/index.ts": "a4c3465267c4b61515441f12a2bd2311a1c64991a0714efa099ddfc83ea954a0",
+      "apps/api/src/security.ts": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f",
+      "apps/api/src/repository.ts": "c683d02d46209164ee350b11b451fa999ec2cd847715f57f5768a7be9690e336",
+      "apps/api/src/search.ts": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d",
+      "apps/api/src/audit.ts": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c",
+      "packages/db/src/index.ts": "d94d87e999cedc0b4f1f381c1f957a0e3a8fe7b3288de565b82247c9c8a95c57",
+      "packages/db/migrations/001_foundation.sql": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa",
+      "packages/db/migrations/002_audit_envelopes.sql": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728",
+      "tests/integration/foundation.test.ts": "3d12628e6621695ac148c368517e001aee23f60ba557003d92a33f464dba4b1c"
+    }
+  },
+  "runs": [
+    {
+      "command": "./dev test --suite security",
+      "outcome": "PASS",
+      "exit_code": 0,
+      "tests": 5,
+      "failed": 0,
+      "skipped": 0,
+      "checks": [
+        "runtime gc_app does not bypass forced RLS; connection context resets; schema ledger and cross-tenant foreign-key writes denied",
+        "Unauthenticated, CSRF, tenant tampering, role escalation and non-allowlisted source targets denied",
+        "Source idempotency binds request hash and audit remains append-only",
+        "Hidden asset excluded from direct access, stale search counts/facets, audit and overview",
+        "Scan completion rechecks requester authority, cancellation is terminal, audit hash chain validates"
+      ]
+    },
+    {
+      "command": "pnpm test",
+      "outcome": "PASS",
+      "tests": 3,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "command": "pnpm typecheck",
+      "outcome": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "limitations": [
+    "Integration tests create server-side test sessions; real OIDC is qualified separately by browser acceptance.",
+    "Only the described foundation is tested; complete AT-TEN-01 and full SYS-SEC/SYS-DATA requirements remain open.",
+    "No vendor-live, production, independent human security, enterprise scale, HA or disaster-recovery qualification."
+  ]
+}

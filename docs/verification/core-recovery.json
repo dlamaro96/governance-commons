@@ -1,0 +1,450 @@
+{
+  "schema_version": 1,
+  "suite": "core-restart-persistence",
+  "profile": "core",
+  "started_at": "2026-11-15T15:31:16.662983+00:00",
+  "revision": {
+    "base_commit": "026611973a9fef5d02fb5a879beecf16fdcc44f3",
+    "working_tree": "file-hash-bound; final commit binding pending"
+  },
+  "limitations": [
+    "Existing initialized synthetic local volumes only",
+    "No concurrent mutating tests or browser actions allowed",
+    "No in-flight workflow interruption tested",
+    "No clean installation, restore, upgrade, HA or enterprise qualification"
+  ],
+  "commands": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "governance-commons",
+        "--env-file",
+        ".local/runtime.env",
+        "-f",
+        "deploy/compose/compose.yaml",
+        "exec",
+        "-T",
+        "postgres",
+        "psql",
+        "-U",
+        "postgres",
+        "-d",
+        "governance",
+        "-qAt",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT count(*) FROM jobs WHERE status IN ('queued','running')"
+      ],
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "governance-commons",
+        "--env-file",
+        ".local/runtime.env",
+        "-f",
+        "deploy/compose/compose.yaml",
+        "exec",
+        "-T",
+        "postgres",
+        "psql",
+        "-U",
+        "postgres",
+        "-d",
+        "governance",
+        "-qAt",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "BEGIN TRANSACTION READ ONLY; SELECT jsonb_build_object('tenants', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM tenants t),'identities', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM identities t),'memberships', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM memberships t),'sources', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM sources t),'assets', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM assets t),'asset_revisions', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM asset_revisions t),'jobs', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM jobs t),'audit', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM audit t),'idempotency', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM idempotency t),'schema_migrations', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM schema_migrations t)); COMMIT;"
+      ],
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "governance-commons",
+        "--env-file",
+        ".local/runtime.env",
+        "-f",
+        "deploy/compose/compose.yaml",
+        "run",
+        "--rm",
+        "seed"
+      ],
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "governance-commons",
+        "--env-file",
+        ".local/runtime.env",
+        "-f",
+        "deploy/compose/compose.yaml",
+        "exec",
+        "-T",
+        "postgres",
+        "psql",
+        "-U",
+        "postgres",
+        "-d",
+        "governance",
+        "-qAt",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "BEGIN TRANSACTION READ ONLY; SELECT jsonb_build_object('tenants', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM tenants t),'identities', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM identities t),'memberships', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM memberships t),'sources', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM sources t),'assets', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM assets t),'asset_revisions', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM asset_revisions t),'jobs', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM jobs t),'audit', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM audit t),'idempotency', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM idempotency t),'schema_migrations', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM schema_migrations t)); COMMIT;"
+      ],
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "governance-commons",
+        "--env-file",
+        ".local/runtime.env",
+        "-f",
+        "deploy/compose/compose.yaml",
+        "run",
+        "--rm",
+        "seed"
+      ],
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "governance-commons",
+        "--env-file",
+        ".local/runtime.env",
+        "-f",
+        "deploy/compose/compose.yaml",
+        "exec",
+        "-T",
+        "postgres",
+        "psql",
+        "-U",
+        "postgres",
+        "-d",
+        "governance",
+        "-qAt",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "BEGIN TRANSACTION READ ONLY; SELECT jsonb_build_object('tenants', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM tenants t),'identities', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM identities t),'memberships', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM memberships t),'sources', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM sources t),'assets', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM assets t),'asset_revisions', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM asset_revisions t),'jobs', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM jobs t),'audit', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM audit t),'idempotency', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM idempotency t),'schema_migrations', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM schema_migrations t)); COMMIT;"
+      ],
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "governance-commons",
+        "--env-file",
+        ".local/runtime.env",
+        "-f",
+        "deploy/compose/compose.yaml",
+        "stop",
+        "--timeout",
+        "30",
+        "api",
+        "workflow-worker",
+        "site-runner",
+        "python-worker",
+        "keycloak",
+        "temporal",
+        "opensearch",
+        "seaweedfs",
+        "source-postgres",
+        "postgres"
+      ],
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "governance-commons",
+        "--env-file",
+        ".local/runtime.env",
+        "-f",
+        "deploy/compose/compose.yaml",
+        "up",
+        "-d",
+        "--no-build",
+        "--wait",
+        "--wait-timeout",
+        "240",
+        "api",
+        "workflow-worker",
+        "site-runner",
+        "python-worker"
+      ],
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "governance-commons",
+        "--env-file",
+        ".local/runtime.env",
+        "-f",
+        "deploy/compose/compose.yaml",
+        "exec",
+        "-T",
+        "postgres",
+        "psql",
+        "-U",
+        "postgres",
+        "-d",
+        "governance",
+        "-qAt",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "BEGIN TRANSACTION READ ONLY; SELECT jsonb_build_object('tenants', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM tenants t),'identities', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM identities t),'memberships', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM memberships t),'sources', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM sources t),'assets', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM assets t),'asset_revisions', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM asset_revisions t),'jobs', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM jobs t),'audit', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM audit t),'idempotency', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM idempotency t),'schema_migrations', (SELECT jsonb_build_object('count',count(*),'sha256',encode(sha256(convert_to(coalesce(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),''),'UTF8')),'hex')) FROM schema_migrations t)); COMMIT;"
+      ],
+      "exit_status": 0
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "governance-commons",
+        "--env-file",
+        ".local/runtime.env",
+        "-f",
+        "deploy/compose/compose.yaml",
+        "ps",
+        "--all",
+        "--format",
+        "json"
+      ],
+      "exit_status": 0
+    }
+  ],
+  "seed_invocations": 2,
+  "before": {
+    "jobs": {
+      "count": 8,
+      "sha256": "1b99c5e6d3c9386d7b8dc45fdcb122b5dbb056739ca067f34a52ead1c9489164"
+    },
+    "audit": {
+      "count": 239,
+      "sha256": "e1396ecf6aacf3f312866314428b1446be3cd662f430f8bffc9f998616e3306c"
+    },
+    "assets": {
+      "count": 210,
+      "sha256": "5a87c05b84a45616e3907596f76350ed0b2398af8da12ebf04c86b63038d455e"
+    },
+    "sources": {
+      "count": 9,
+      "sha256": "573a43865f8e1784440376137c7f7f9d7ba7197251e377e041c498ade0b647f2"
+    },
+    "tenants": {
+      "count": 2,
+      "sha256": "813a1a49cbfb4dcda36a6c42b7fe41f65cc365c13d392f4a3bd7f2583b3cc86f"
+    },
+    "identities": {
+      "count": 6,
+      "sha256": "880f5eacb31d63e81258322dd179122017bd1fabdf9b61ec18194217f24b1216"
+    },
+    "idempotency": {
+      "count": 16,
+      "sha256": "9c6a4b9d1e5b928f6d8357f5302ec36601217d3642a49672cda41b2603df12dd"
+    },
+    "memberships": {
+      "count": 6,
+      "sha256": "f9e363abaf28a9921313ad980fe837f2242f4cbb92cf2d37ac230140e586aec4"
+    },
+    "asset_revisions": {
+      "count": 214,
+      "sha256": "cff6c72d1bcd051d9f70341c2ce705c9f914961ca48ee9cb541fd82d88fd6e47"
+    },
+    "schema_migrations": {
+      "count": 2,
+      "sha256": "19f2039b47e89e3f5a0cd734fff4b416ff9f1b63d91e10b6a34877073ebe2eef"
+    }
+  },
+  "after": {
+    "jobs": {
+      "count": 8,
+      "sha256": "1b99c5e6d3c9386d7b8dc45fdcb122b5dbb056739ca067f34a52ead1c9489164"
+    },
+    "audit": {
+      "count": 239,
+      "sha256": "e1396ecf6aacf3f312866314428b1446be3cd662f430f8bffc9f998616e3306c"
+    },
+    "assets": {
+      "count": 210,
+      "sha256": "5a87c05b84a45616e3907596f76350ed0b2398af8da12ebf04c86b63038d455e"
+    },
+    "sources": {
+      "count": 9,
+      "sha256": "573a43865f8e1784440376137c7f7f9d7ba7197251e377e041c498ade0b647f2"
+    },
+    "tenants": {
+      "count": 2,
+      "sha256": "813a1a49cbfb4dcda36a6c42b7fe41f65cc365c13d392f4a3bd7f2583b3cc86f"
+    },
+    "identities": {
+      "count": 6,
+      "sha256": "880f5eacb31d63e81258322dd179122017bd1fabdf9b61ec18194217f24b1216"
+    },
+    "idempotency": {
+      "count": 16,
+      "sha256": "9c6a4b9d1e5b928f6d8357f5302ec36601217d3642a49672cda41b2603df12dd"
+    },
+    "memberships": {
+      "count": 6,
+      "sha256": "f9e363abaf28a9921313ad980fe837f2242f4cbb92cf2d37ac230140e586aec4"
+    },
+    "asset_revisions": {
+      "count": 214,
+      "sha256": "cff6c72d1bcd051d9f70341c2ce705c9f914961ca48ee9cb541fd82d88fd6e47"
+    },
+    "schema_migrations": {
+      "count": 2,
+      "sha256": "19f2039b47e89e3f5a0cd734fff4b416ff9f1b63d91e10b6a34877073ebe2eef"
+    }
+  },
+  "services": [
+    {
+      "service": "api",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "init-secrets",
+      "state": "exited",
+      "health": "",
+      "exit_status": 0
+    },
+    {
+      "service": "keycloak",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "migrate",
+      "state": "exited",
+      "health": "",
+      "exit_status": 0
+    },
+    {
+      "service": "opensearch",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "postgres",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "python-worker",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "seaweedfs",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "site-runner",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "source-postgres",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "temporal",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "temporal-migrate",
+      "state": "exited",
+      "health": "",
+      "exit_status": 0
+    },
+    {
+      "service": "temporal-namespace",
+      "state": "exited",
+      "health": "",
+      "exit_status": 0
+    },
+    {
+      "service": "workflow-worker",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    }
+  ],
+  "result": "passed",
+  "checks": [
+    "two idempotent seed invocations",
+    "canonical data digests unchanged",
+    "graceful persistent-volume restart",
+    "all ten long-running services healthy"
+  ],
+  "finished_at": "2026-11-15T15:32:19.852423+00:00",
+  "implementation_sha256": {
+    "scripts/runtime-test-recovery.py": "ded9d3cdbb0b68c531cdd4905599a5f33cbb737956155c178304e8d694e40d5f",
+    "scripts/runtime.py": "00e545eb48398f94667216fc60fb6fd2e63b0f472d2c5fef891b6234d9201888",
+    "deploy/compose/compose.yaml": "7723b71825baf354cdb3c6ff4f5c4f2cd07ff8a8a848f42e38cdbca3c7d04d0c",
+    "deploy/compose/init-temporal.sh": "c095d1de7a7cbb670998f7ed7a00512b0cf9d50dc3a9e95738f808f984ab4129",
+    "deploy/compose/temporal-dynamic.yaml": "c6dfff741e77f45e1d21fb22a8368855921d7da4710aabee4bdef1887d1a5533",
+    "packages/db/src/seed.ts": "4be67bc4ae27cc93aef243a36d201189217688927110a58a55a04c327420208d"
+  },
+  "images_observed_after_recovery": {
+    "observed_at": "2026-11-15T15:32:46.791974+00:00",
+    "images": {
+      "governance-commons:dev": "sha256:7e1a66b7dcf167daf97294a1e2734ad06b79aa28dcd7ca48183c110a0df57674",
+      "governance-commons-python:dev": "sha256:9fc4717b933403d0d25a507431d719ae3701b80ed013905708f267f34538c639"
+    },
+    "command": "docker image inspect --format {{.Id}} governance-commons:dev governance-commons-python:dev",
+    "exit_status": 0
+  }
+}

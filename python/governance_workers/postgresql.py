@@ -34,7 +34,7 @@ def scan(source, secret, tenant_id):
                 row_factory=dict_row) as conn:
             conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY")
             identity = conn.execute("SELECT current_user AS role, current_setting('server_version') AS version, oid::text AS db_oid FROM pg_database WHERE datname=current_database()").fetchone()
-            role = conn.execute("SELECT rolsuper, rolbypassrls FROM pg_roles WHERE rolname=current_user").fetchone()
+            role = conn.execute("SELECT oid::text AS role_oid, rolsuper, rolbypassrls FROM pg_roles WHERE rolname=current_user").fetchone()
             if role["rolsuper"] or role["rolbypassrls"]:
                 raise ScanFailure("SOURCE_PRIVILEGE_TOO_BROAD")
             schema = conn.execute("SELECT oid::text, nspname, has_schema_privilege(oid, 'USAGE') AS allowed FROM pg_namespace WHERE nspname=%s", (source["schema"],)).fetchone()
@@ -43,7 +43,8 @@ def scan(source, secret, tenant_id):
             # All relations are inspected for scope completeness before SELECT privilege filtering.
             relations = conn.execute("""SELECT c.oid::text, c.relname, c.relkind,
                 has_table_privilege(c.oid, 'SELECT') AS allowed,
-                obj_description(c.oid, 'pg_class') AS description
+                left(obj_description(c.oid, 'pg_class'),4096) AS description,
+                length(obj_description(c.oid, 'pg_class')) > 4096 AS description_truncated
                 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
                 WHERE n.nspname=%s AND c.relkind IN ('r','p','v','m','f') ORDER BY c.oid LIMIT %s""",
                 (source["schema"], MAX_RECORDS + 1)).fetchall()
@@ -61,20 +62,24 @@ def scan(source, secret, tenant_id):
                 qualified = f"{namespace}.{rel['relname']}"
                 records.append({"externalId": rel_id, "name": rel["relname"], "qualifiedName": qualified,
                     "type": "view" if rel["relkind"] in ("v", "m") else "table", "parentExternalId": schema_id,
-                    "metadata": {"oid": rel["oid"], "relationKind": rel["relkind"], "schema": source["schema"], "table": rel["relname"], "sourceDescription": rel["description"], "provenance": "source-observed"}})
+                    "metadata": {"oid": rel["oid"], "relationKind": rel["relkind"], "schema": source["schema"], "table": rel["relname"], "sourceDescription": rel["description"], "sourceDescriptionTruncated": bool(rel["description_truncated"]), "provenance": "source-observed"}})
                 columns = conn.execute("""SELECT a.attnum, a.attname, format_type(a.atttypid,a.atttypmod) AS data_type,
-                    a.attnotnull, col_description(a.attrelid,a.attnum) AS description,
+                    a.attnotnull, left(col_description(a.attrelid,a.attnum),4096) AS description,
+                    length(col_description(a.attrelid,a.attnum)) > 4096 AS description_truncated,
                     EXISTS (SELECT 1 FROM pg_constraint c WHERE c.conrelid=a.attrelid AND c.contype='p' AND a.attnum=ANY(c.conkey)) AS primary_key
                     FROM pg_attribute a WHERE a.attrelid=%s::oid AND a.attnum>0 AND NOT a.attisdropped ORDER BY a.attnum""", (rel["oid"],)).fetchall()
                 for col in columns:
                     records.append({"externalId": f"{rel_id}:column:{col['attnum']}", "name": col["attname"],
                         "qualifiedName": f"{qualified}.{col['attname']}", "type": "column", "parentExternalId": rel_id,
                         "metadata": {"dataType": col["data_type"], "nullable": not col["attnotnull"], "ordinalPosition": col["attnum"],
-                            "primaryKey": col["primary_key"], "sourceDescription": col["description"], "provenance": "source-observed"}})
+                            "primaryKey": col["primary_key"], "sourceDescription": col["description"], "sourceDescriptionTruncated": bool(col["description_truncated"]), "provenance": "source-observed"}})
                 if len(records) > MAX_RECORDS:
                     raise ScanFailure("SOURCE_RECORD_LIMIT")
-            # Names intentionally excluded: a rename preserves the authorization-context fingerprint.
-            permissions = {"role": identity["role"], "schemaOid": schema["oid"], "relationOids": [r["oid"] for r in relations]}
+            # Inventory is not authorization: excluding relation OIDs permits confirmed absence
+            # reconciliation. Every extant relation was checked above; reduced SELECT
+            # privilege fails the entire scan rather than changing a completeness claim.
+            permissions = {"databaseOid": identity["db_oid"], "roleOid": role["role_oid"],
+                "schemaOid": schema["oid"], "requiredPrivileges": ["USAGE_SCHEMA", "SELECT_ALL_EXTANT_RELATIONS"]}
             result = {"observedAt": datetime.now(timezone.utc).isoformat(), "sourceVersion": identity["version"],
                 "permissionFingerprint": hashlib.sha256(json.dumps(permissions, sort_keys=True).encode()).hexdigest(),
                 "records": records, "complete": True}

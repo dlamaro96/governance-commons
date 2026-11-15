@@ -9,8 +9,9 @@ there is no LTS commitment, contractual SLA or guaranteed response time.
 
 The intended private route is GitHub's repository vulnerability report:
 [dlamaro96/governance-commons security advisory](https://github.com/dlamaro96/governance-commons/security/advisories/new).
-**Enablement has not yet been verified.** The repository readiness report records
-the read-back result; a link in this file does not prove that reporting is on.
+Enablement was confirmed by GitHub API read-back on 15 November 2026; the
+repository readiness report retains the result. No test vulnerability report was
+submitted, and no guaranteed response service is implied.
 If GitHub does not offer the private form, open a public issue asking only for a
 private security contact, without vulnerability details, secrets or affected
 customer information. No project security email address has been appointed.

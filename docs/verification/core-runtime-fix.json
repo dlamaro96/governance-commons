@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "scope": "M1 core SeaweedFS startup, secret ownership and authenticated S3 qualification",
+  "profile": "core",
+  "recorded_at": "2026-11-15T15:58:42.682474+00:00",
+  "revision": {
+    "base_commit": "341f7fbe0371f7f911c066e70dc57062b31bef4d",
+    "working_tree": "isolated fix worktree; implementation file hashes bind this execution; final commit binding pending"
+  },
+  "implementation_status": "corrected local infrastructure; application object workflows remain unimplemented",
+  "verification": {
+    "local_targeted": "PASS",
+    "hosted_clean_install": "NOT_RUN_AFTER_FIX",
+    "full_launch_wrapper_after_fix": "NOT_RUN_LOCALLY",
+    "release_qualified": false
+  },
+  "trigger": {
+    "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43730999286",
+    "head_commit": "341f7fbe0371f7f911c066e70dc57062b31bef4d",
+    "outcome": "FAILURE",
+    "step": "Start real core services",
+    "observed": "SeaweedFS unhealthy; downstream behavior tests skipped; required aggregate failed"
+  },
+  "findings": [
+    {
+      "issue": "S3 credential bind mount unreadable by upstream runtime UID1000",
+      "evidence": "Isolated pinned-image test under UID1000:1000 returned1 for original0600 bind mount; prepared volume under actual runtime returned0, stat0600 owner1000:1000",
+      "correction": "Dedicated object-bootstrap volume populated by network-isolated initializer; no permission widening"
+    },
+    {
+      "issue": "HTTP200 master status preceded leader election and failed bucket writes",
+      "evidence": "First immediate roundtrip failed; bounded redacted server diagnostics showed Not current leader; prior master health still reported healthy",
+      "correction": "Require elected leader and registered volume server, plus filer/S3 endpoints; launcher verifies signed and denied requests"
+    },
+    {
+      "issue": "Four volume slots consumed by default internal collection",
+      "evidence": "64KiB synthetic upload failed; master reported Max4 Free0 and no writable volume for bucket collection",
+      "correction": "Bounded16 slots at64MiB, one-volume growth per local single-copy collection"
+    },
+    {
+      "issue": "Five-second probe timeout shorter than initial allocation deferral",
+      "evidence": "First64KiB request timed out; pinned image scaffold documents15-second initial allocation deferral",
+      "correction": "20-second per-request bound; upstream safety deferral remains enabled, no automatic retry hides a failed check"
+    }
+  ],
+  "executed_checks": [
+    {
+      "command": "docker compose --project-name governance-commons --env-file .local/runtime.env -f deploy/compose/compose.yaml config --quiet",
+      "exit_status": 0
+    },
+    {
+      "command": "docker compose --project-name governance-commons --env-file .local/runtime.env -f deploy/compose/compose.yaml run --rm --no-deps init-secrets",
+      "exit_status": 0
+    },
+    {
+      "command": "docker compose --project-name governance-commons --env-file .local/runtime.env -f deploy/compose/compose.yaml up -d --no-deps --no-build --force-recreate --wait --wait-timeout 120 seaweedfs",
+      "exit_status": 0
+    },
+    {
+      "command": "python3 scripts/runtime-test-object-store.py --readiness",
+      "exit_status": 0,
+      "checks": 4
+    },
+    {
+      "command": "./dev test --suite object-store",
+      "exit_status": 0,
+      "checks": 11,
+      "object_bytes": 65536,
+      "evidence": "docs/verification/core-object-store.json"
+    },
+    {
+      "command": "python3 -m py_compile scripts/runtime.py scripts/runtime-test-object-store.py policies/ci_evidence.py",
+      "exit_status": 0
+    },
+    {
+      "command": "sh -n deploy/compose/health-seaweed.sh deploy/compose/init-secrets.sh",
+      "exit_status": 0
+    },
+    {
+      "command": "python3 scripts/requirements.py validate",
+      "exit_status": 0,
+      "registered_requirements": 1106
+    },
+    {
+      "command": "git diff --check",
+      "exit_status": 0
+    },
+    {
+      "command": "temporary fixture harness for policies/ci_evidence.py",
+      "exit_status": 0,
+      "checks": 3,
+      "scope": "collector only: failed/skipped object-store blocks gate; all required successful fixture outcomes permit gate, not a product/browser execution"
+    }
+  ],
+  "runtime": {
+    "docker_version": "27.3.1",
+    "architecture": "aarch64",
+    "cpus": 11,
+    "memory_bytes": 8217825280,
+    "seaweed_image": "chrislusf/seaweedfs:4.51@sha256:f7a49e3f3972ebed5be2ed4befa4a0c68eb7bdddba6e692d42729ceb545134b8",
+    "observed_data_allocated_kib": 472
+  },
+  "prior_evidence_correction": "core-runtime.json and core-recovery.json observed master HTTP health only. Their observations are retained as historical scoped evidence and do not establish authenticated S3 readiness or clean-install qualification.",
+  "limitations": [
+    "Existing local arm64 service/data volume; clean amd64 startup awaits hosted CI after this fix",
+    "No app/Python image rebuild or full core restart performed for this fix; S3 probe uses existing API image solely as Node execution transport",
+    "No per-tenant object policy, application document/evidence workflow, STS, at-rest encryption, HA, restore or enterprise qualification",
+    "Only init-secrets one-shot and SeaweedFS service changed; unrelated resources were not modified; earlier failed temporary allocations remain bounded in existing object-data, no volume deletion performed"
+  ],
+  "implementation_files": [
+    {
+      "path": "deploy/compose/compose.yaml",
+      "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+    },
+    {
+      "path": "deploy/compose/init-secrets.sh",
+      "sha256": "ee6a8324867615480263650053e26891da553cbfe880ea3e82e6fc2b9e4cd8fb"
+    },
+    {
+      "path": "deploy/compose/health-seaweed.sh",
+      "sha256": "bbcc60d5e404d0013fb4e9a96004a1ae780a8dd22de56d81cb321141cd8f3159"
+    },
+    {
+      "path": "deploy/compose/seaweed-master.toml",
+      "sha256": "e8e3f86edf8dbd53a364a35b18ff6475e14404d5d4b62968d21b205095c74a48"
+    },
+    {
+      "path": "scripts/runtime.py",
+      "sha256": "a5fb118abbfcff9f25764a8e0649b6098f4a2d188293a46d5ecc0973bded8f2e"
+    },
+    {
+      "path": "scripts/runtime-test-object-store.py",
+      "sha256": "1f4303946414e7ac3efdec498bed20e8595d2b0a31e05668fbbecbf17cd165a6"
+    },
+    {
+      "path": "scripts/runtime-s3-check.mjs",
+      "sha256": "8fa2bf342caab867b1c1b9b2d6193fc18aa4cd4c40ad986d83613338c596eca4"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "63b58e350d6a9ac4e1d84d837646ded9f0afbc2cc7026dc4b493a014daba59b2"
+    },
+    {
+      "path": "policies/ci_evidence.py",
+      "sha256": "2fddbf68a85faaa9eaa4a5e1749f6941a287fd517de548ce60ef4a3489523750"
+    }
+  ],
+  "evidence_encoding_note": "Digest records changed to explicit path/service and sha256 fields after generic-api-key false positives. Original execution times and implementation digests are preserved; this formatting change does not infer a test rerun."
+}

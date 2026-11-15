@@ -1,4 +1,4 @@
-import type { FormEvent, ReactNode } from 'react';
+import { useRef, type FormEvent, type ReactNode } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import { Check, CircleNotch, MagnifyingGlass, WarningCircle, X } from '@phosphor-icons/react';
@@ -34,7 +34,8 @@ export function Notice({ children, tone = 'info' }: { children: ReactNode; tone?
   return <div className={`notice ${tone}`} role={tone === 'error' ? 'alert' : 'status'}>{tone === 'success' ? <Check size={19} aria-hidden="true"/> : tone === 'error' ? <WarningCircle size={19} aria-hidden="true"/> : null}<div>{children}</div></div>;
 }
 export function DetailDrawer({ open, onOpenChange, title, description, closeLabel, children, wide = false }: { open: boolean; onOpenChange: (open: boolean) => void; title: string; description: string; closeLabel: string; children: ReactNode; wide?: boolean }) {
-  return <Dialog.Root open={open} onOpenChange={onOpenChange}><Dialog.Portal><Dialog.Overlay className="dialog-overlay"/><Dialog.Content className={`dialog-content ${wide ? 'wide' : ''}`}><div className="dialog-header"><div><Dialog.Title>{title}</Dialog.Title><Dialog.Description>{description}</Dialog.Description></div><Dialog.Close asChild><button className="icon-button" aria-label={closeLabel}><X size={20}/></button></Dialog.Close></div>{children}</Dialog.Content></Dialog.Portal></Dialog.Root>;
+  const returnFocus = useRef<HTMLElement | null>(null);
+  return <Dialog.Root open={open} onOpenChange={onOpenChange}><Dialog.Portal><Dialog.Overlay className="dialog-overlay"/><Dialog.Content className={`dialog-content ${wide ? 'wide' : ''}`} onOpenAutoFocus={() => { returnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; }} onCloseAutoFocus={event => { if (returnFocus.current?.isConnected) { event.preventDefault(); returnFocus.current.focus(); } }}><div className="dialog-header"><div><Dialog.Title>{title}</Dialog.Title><Dialog.Description>{description}</Dialog.Description></div><Dialog.Close asChild><button className="icon-button" aria-label={closeLabel}><X size={20}/></button></Dialog.Close></div>{children}</Dialog.Content></Dialog.Portal></Dialog.Root>;
 }
 export function Timeline({ items, label }: { items: { id: string; title: ReactNode; meta: ReactNode; detail?: ReactNode }[]; label: string }) {
   return <ol className="timeline" aria-label={label}>{items.map(item => <li key={item.id}><span className="timeline-point" aria-hidden="true"/><div className="timeline-content"><div className="timeline-title">{item.title}</div><div className="timeline-meta">{item.meta}</div>{item.detail && <div className="timeline-detail">{item.detail}</div>}</div></li>)}</ol>;

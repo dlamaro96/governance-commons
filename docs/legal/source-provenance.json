@@ -13,8 +13,18 @@
   },
   {
     "path": "docs/legal/contributor-covenant-2.1.md",
-    "url": "https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md",
+    "url": "https://github.com/EthicalSource/contributor_covenant/blob/91532d80ea5f39b6685aff4892bc6854bf2f6d6f/content/version/2/1/code_of_conduct.md",
     "retrieved_at": "2026-11-15",
-    "sha256": "977d781349351fd7c1f076e4c7dc7de2a05b40e12c773542c3815dd4ce7f37ba"
+    "upstream_commit": "91532d80ea5f39b6685aff4892bc6854bf2f6d6f",
+    "sha256": "c1a8d6aca7701da989fd35287e3a01329eaf57e609e30151481d882183d2ee74",
+    "license": "CC-BY-4.0"
+  },
+  {
+    "path": "docs/legal/contributor-covenant-license-CC-BY-4.0.md",
+    "url": "https://github.com/EthicalSource/contributor_covenant/blob/91532d80ea5f39b6685aff4892bc6854bf2f6d6f/LICENSE.md",
+    "retrieved_at": "2026-11-15",
+    "upstream_commit": "91532d80ea5f39b6685aff4892bc6854bf2f6d6f",
+    "sha256": "81156f8a90f8614a5c5e0a4f7e8ce9b14fb371f8e8a9b0f128a9071ae8f809c6",
+    "license": "CC-BY-4.0"
   }
 ]

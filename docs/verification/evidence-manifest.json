@@ -1,1 +1,83 @@
-{"schema_version":1,"evidence":[],"limitations":["Evidence is added only after execution against an identified revision. No local integration, vendor live, enterprise, accessibility or release gate has yet passed."]}
+{
+  "schema_version": 1,
+  "programme_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "evidence": [
+    {
+      "path": "docs/verification/core-runtime.json",
+      "scope": "core-runtime",
+      "source_binding": {
+        "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
+        "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
+        "verified_files": 8,
+        "evidence_sha256": "9ecfc5a4aef9532c6ff1313b1641be223e6b3fdfe64c21c2cf32f13a0b62be42"
+      }
+    },
+    {
+      "path": "docs/verification/core-connectors.json",
+      "scope": "core-connectors",
+      "source_binding": {
+        "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
+        "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
+        "verified_files": 12,
+        "evidence_sha256": "f4a90d9bb5c4e0b32474f97b0da7d5cf8c6f6a2f50bed1889e6b1a912f135308"
+      }
+    },
+    {
+      "path": "docs/verification/core-temporal-payloads.json",
+      "scope": "core-temporal-payloads",
+      "source_binding": {
+        "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
+        "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
+        "verified_files": 4,
+        "evidence_sha256": "a60b1b9415f002b20b2885e9a01654149586a1bdd82b48b9791bce41973846c6"
+      }
+    },
+    {
+      "path": "docs/verification/core-recovery.json",
+      "scope": "core-recovery",
+      "source_binding": {
+        "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
+        "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
+        "verified_files": 6,
+        "evidence_sha256": "29050dd6a543a755b89d1397a7f9297b117b04a744776f4993d00d09e58e79fe"
+      }
+    },
+    {
+      "path": "docs/verification/m1-security.json",
+      "scope": "m1-security",
+      "source_binding": {
+        "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
+        "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
+        "verified_files": 9,
+        "evidence_sha256": "1d4ea7a20074101257645e0b9b8a08414a50a555087c14ec30a11196c7337843"
+      }
+    },
+    {
+      "path": "docs/verification/m1-browser.json",
+      "scope": "m1-browser",
+      "source_binding": {
+        "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
+        "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
+        "verified_files": 39,
+        "evidence_sha256": "761253ac9424e3346f22a47cdef91a026c4f2a92d12653d37cc74e267e6449b3"
+      }
+    },
+    {
+      "path": "docs/verification/model-validation.json",
+      "scope": "model-validation",
+      "source_binding": {
+        "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
+        "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
+        "verified_files": 3,
+        "evidence_sha256": "34b2f8173c32796aec1acf84a83c83bb6a63b3a86ae3d609ed541b398ddc12ca"
+      }
+    }
+  ],
+  "limitations": [
+    "Passing scoped development gates does not complete compound baseline requirements.",
+    "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
+    "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
+  ],
+  "bound_at": "2026-11-15T15:38:14.996552+00:00"
+}

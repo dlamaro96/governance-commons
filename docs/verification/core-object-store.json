@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "profile": "core",
+  "started_at": "2026-11-15T15:57:55.734575+00:00",
+  "command": "./dev test --suite object-store",
+  "revision": {
+    "base_commit": "341f7fbe0371f7f911c066e70dc57062b31bef4d",
+    "working_tree": "file-hash-bound; commit binding pending"
+  },
+  "limitations": [
+    "Local single-node S3 with static application credentials only",
+    "No product document/evidence object workflows, per-tenant buckets/policies, STS, encryption at rest, HA, backup or enterprise qualification",
+    "Prior core-runtime and core-recovery records checked Seaweed master health only; neither established authenticated S3 readiness"
+  ],
+  "suite": "s3-object-roundtrip",
+  "result": "passed",
+  "checks": [
+    "S3 configuration present",
+    "signed ListBuckets succeeds",
+    "anonymous ListBuckets denied",
+    "invalid signature denied",
+    "synthetic isolated bucket created",
+    "signed synthetic object write succeeds",
+    "signed object read matches bytes",
+    "anonymous object read denied",
+    "invalid object signature denied",
+    "synthetic object removed",
+    "synthetic bucket removed"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "resource": "root",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "resource": "root",
+      "authentication": "anonymous",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "resource": "root",
+      "authentication": "invalid",
+      "status": 403
+    },
+    {
+      "method": "PUT",
+      "resource": "bucket",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "resource": "object",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "resource": "object",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "resource": "object",
+      "authentication": "anonymous",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "resource": "object",
+      "authentication": "invalid",
+      "status": 403
+    },
+    {
+      "method": "DELETE",
+      "resource": "object",
+      "authentication": "valid",
+      "status": 204
+    },
+    {
+      "method": "DELETE",
+      "resource": "bucket",
+      "authentication": "valid",
+      "status": 204
+    }
+  ],
+  "qualification_object_bytes": 65536,
+  "cleanup_failed": false,
+  "error": null,
+  "node_version": "v24.22.3",
+  "architecture": "arm64",
+  "exit_status": 0,
+  "finished_at": "2026-11-15T15:57:56.528487+00:00",
+  "implementation_files": [
+    {
+      "path": "scripts/runtime.py",
+      "sha256": "a5fb118abbfcff9f25764a8e0649b6098f4a2d188293a46d5ecc0973bded8f2e"
+    },
+    {
+      "path": "scripts/runtime-test-object-store.py",
+      "sha256": "1f4303946414e7ac3efdec498bed20e8595d2b0a31e05668fbbecbf17cd165a6"
+    },
+    {
+      "path": "scripts/runtime-s3-check.mjs",
+      "sha256": "8fa2bf342caab867b1c1b9b2d6193fc18aa4cd4c40ad986d83613338c596eca4"
+    },
+    {
+      "path": "deploy/compose/compose.yaml",
+      "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+    },
+    {
+      "path": "deploy/compose/init-secrets.sh",
+      "sha256": "ee6a8324867615480263650053e26891da553cbfe880ea3e82e6fc2b9e4cd8fb"
+    },
+    {
+      "path": "deploy/compose/health-seaweed.sh",
+      "sha256": "bbcc60d5e404d0013fb4e9a96004a1ae780a8dd22de56d81cb321141cd8f3159"
+    },
+    {
+      "path": "deploy/compose/seaweed-master.toml",
+      "sha256": "e8e3f86edf8dbd53a364a35b18ff6475e14404d5d4b62968d21b205095c74a48"
+    }
+  ],
+  "images": [
+    {
+      "service": "seaweedfs",
+      "sha256": "f7a49e3f3972ebed5be2ed4befa4a0c68eb7bdddba6e692d42729ceb545134b8"
+    },
+    {
+      "service": "api",
+      "sha256": "659914416f2046f8b221a9c2a6521321e11df823ba53bea98a7590af4fd83c71"
+    }
+  ],
+  "evidence_encoding_note": "Digest records changed to explicit path/service and sha256 fields after generic-api-key false positives. Original execution times and implementation digests are preserved; this formatting change does not infer a test rerun."
+}

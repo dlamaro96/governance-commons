@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
+# Local single-copy profile: avoid reserving seven slots per small S3 bucket.
+[master.volume_growth]
+copy_1 = 1

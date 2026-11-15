@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T15:33:44.521695+00:00",
+  "scope": "M2 typed-attribute model shared library only",
+  "commands": [
+    {
+      "command": "pnpm test",
+      "outcome": "PASS",
+      "tests": 21,
+      "model_tests": 18,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "command": "pnpm typecheck",
+      "outcome": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "source_sha256": {
+    "packages/domain/src/model.ts": "512103fd025c8d10383aa2285ebdb116d36c614d5c3909e0de599633b1afd1a0",
+    "packages/domain/README.md": "079395594a8f99fc53b8b01021dd8e834ace2d4ae693e0f596d049752704e787",
+    "tests/unit/model.test.ts": "bbdfc4842bd1c0496344f306ed7aea1dd9a371fe59e570d08c3d45eaa834118c"
+  },
+  "limitations": [
+    "No persistence, API/editor integration, inheritance, relations or migration execution is claimed.",
+    "Preview covers supplied records only; it cannot prove complete tenant coverage or approve a migration."
+  ]
+}

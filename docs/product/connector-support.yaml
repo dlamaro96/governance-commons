@@ -41,181 +41,192 @@
       "target_scope": "Real local database metadata, SQL/table/column lineage, profiling, DQ and scoped native grants; all V2 in Compose.",
       "required": true,
       "unreconciled_inventory": false,
-      "implementation_status": "NOT_STARTED",
-      "adapter_paths": [],
-      "manifest_path": null,
+      "implementation_status": "IN_PROGRESS",
+      "adapter_paths": [
+        "python/governance_workers/postgresql.py",
+        "python/governance_workers/server.py"
+      ],
+      "manifest_path": "connectors/manifests/postgresql.json",
       "planned_manifest_path": "connectors/manifests/postgresql.json",
-      "source_versions": [],
+      "source_versions": [
+        "PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2), Linux arm64, local Compose source profile"
+      ],
       "capabilities": {
         "metadata": {
-          "implemented": false,
-          "tested_source_versions": [],
-          "verification_level": null,
-          "verification_outcome": "NOT_RUN",
-          "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+          "implemented": true,
+          "tested_source_versions": [
+            "PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2)"
           ],
-          "test_evidence": []
+          "verification_level": "V2",
+          "limitations": [
+            "Bounded schema/table/view/column catalog extraction only; exact local destination and tenant allowlist.",
+            "Other PostgreSQL versions, architectures and remote deployment profiles remain unqualified.",
+            "Database/cluster recreation and recycled OID detection are not implemented; source-epoch reconciliation remains required and unverified."
+          ],
+          "test_evidence": [
+            "docs/verification/core-connectors.json"
+          ],
+          "verification_outcome": "PASS"
         },
         "table_lineage": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "column_lineage": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "transformations": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "profile": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "sample": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "dq_pushdown": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "classification": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "tag_writeback": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "grant_read": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "grant_write": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "mask_write": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "row_filter_write": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "ai_registry": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "ai_metrics": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "document_content": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         },
         "acl_sync": {
           "implemented": false,
           "tested_source_versions": [],
           "verification_level": null,
-          "verification_outcome": "NOT_RUN",
           "limitations": [
-            "No adapter or per-feature capability declaration has been qualified."
+            "No implementation or verification for this connector feature."
           ],
-          "test_evidence": []
+          "test_evidence": [],
+          "verification_outcome": "NOT_RUN"
         }
       },
       "verification": {
@@ -233,13 +244,33 @@
         }
       },
       "qualification_prerequisites": [
-        "Document the supported PostgreSQL source/API version and authorized interface.",
-        "Implement source-specific fixtures and conformance tests.",
-        "For a live claim: an authorized isolated source, scoped test identity, required operation permissions, and redacted run evidence."
+        "Finish and independently test SQL/table/column lineage, profiling, DQ and scoped native grant implementations against the real local source.",
+        "Qualify each additional source version, architecture and remote network profile separately.",
+        "For external V3: an authorized isolated PostgreSQL source, scoped test identity, required operation permissions, and redacted run evidence."
       ],
-      "installations": [],
+      "installations": [
+        {
+          "installation_id": "synthetic-local-core",
+          "profile": "core",
+          "source_version": "PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2)",
+          "configuration_status": "configured",
+          "runtime_health": "healthy",
+          "observed_at": "2026-11-15T15:16:39+00:00",
+          "scope": [
+            "metadata"
+          ],
+          "evidence": [
+            "docs/verification/core-connectors.json"
+          ],
+          "limitations": [
+            "Point-in-time health only; runtime may change."
+          ]
+        }
+      ],
       "limitations": [
-        "Baseline target only; no implementation or supported-version claim."
+        "Metadata feature has exact local V2 evidence; the complete PostgreSQL route is not qualified.",
+        "SQL/table/column lineage, profiling, DQ and scoped native grants remain required and unimplemented.",
+        "Database/cluster recreation and recycled OID detection are not implemented; source-epoch reconciliation remains required and unverified."
       ]
     },
     {

@@ -6,6 +6,7 @@ WORKDIR /app
 RUN npm install --global pnpm@10.32.1 --ignore-scripts --no-audit --no-fund
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web/package.json ./apps/web/package.json
+COPY packages/ui/package.json ./packages/ui/package.json
 RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm build

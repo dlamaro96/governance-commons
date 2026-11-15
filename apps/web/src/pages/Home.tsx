@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, ClockCounterClockwise, Database, Users } from '@phosphor-icons/react';
+import { ArrowRight, BookOpen, ClockCounterClockwise, Database } from '@phosphor-icons/react';
 import { EmptyState, EntityHeader, LoadingState } from '../../../../packages/ui/src';
 import { useResource } from '../api';
 import { RequestError } from '../components';
@@ -15,7 +15,6 @@ export function HomePage() {
   const overview = useResource<Overview>(session.permissions.length ? '/overview' : null);
   const metrics = overview.data ? [
     { key: 'totalAssets' as const, definition: 'assetsDefinition' as const, count: overview.data.assetCount, href: '/catalog', icon: BookOpen, show: can('catalog:read') },
-    { key: 'ownedCount' as const, definition: 'ownedDefinition' as const, count: overview.data.ownedCount, href: '/catalog', icon: Users, show: can('catalog:read') },
     { key: 'sourceCount' as const, definition: 'sourcesDefinition' as const, count: overview.data.sourceCount, href: '/sources', icon: Database, show: can('sources:read') },
     { key: 'jobCount' as const, definition: 'jobsDefinition' as const, count: overview.data.jobCount, href: '/sources#jobs', icon: ClockCounterClockwise, show: can('sources:read') },
   ].filter(item => item.show) : [];

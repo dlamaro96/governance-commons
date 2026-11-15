@@ -24,6 +24,9 @@ def capture(args, timeout=15):
     return run(args, capture_output=True, text=True, timeout=timeout).stdout.strip()
 
 def require_local():
+    override = os.environ.get("DOCKER_HOST", "")
+    if override and not override.startswith(("unix://", "npipe://")):
+        raise SystemExit("Refusing non-local DOCKER_HOST override; this launcher is authorized for local services only.")
     try:
         endpoint = json.loads(capture(["docker", "context", "inspect"]))[0]["Endpoints"]["docker"]["Host"]
     except Exception:
@@ -58,7 +61,7 @@ def doctor():
         cached = True
     except subprocess.SubprocessError:
         pass
-    required_disk = 1.5 if cached else 8.0
+    required_disk = 2.0 if cached else 8.0
     check("disk", disk >= required_disk, f"{disk:.2f} GiB free; admission budget {required_disk:.1f} GiB ({'images cached' if cached else 'images or build missing'}); measured qualification pending")
     running = []
     if (LOCAL / "runtime.env").exists():
@@ -105,6 +108,9 @@ def main():
   ./dev test --suite smoke            Run locally configured smoke acceptance gate
   ./dev test --suite security         Run locally configured isolation gate
   ./dev test --suite connectors       Run Python contract/source tests
+  ./dev test --suite recovery         Verify repeated seed and persistent restart
+  ./dev test --suite histories        Inspect a completed scan's Temporal payloads
+  ./dev test --suite object-store     Verify authenticated S3 and a synthetic roundtrip
   ./dev down                          Stop this project, preserve volumes
 
 Full/AI profiles, complete acceptance, upgrade, benchmark, Kubernetes,
@@ -127,8 +133,12 @@ Never use docker compose config output in public logs: it expands secrets.""")
         if not doctor():
             raise SystemExit("Doctor failed; correct the reported prerequisite before startup.")
         run(COMPOSE + ["config", "--quiet"], timeout=30)
-        run(COMPOSE + ["build"], timeout=1800)
-        run(COMPOSE + ["up", "-d", "--wait", "--wait-timeout", "240"], timeout=360)
+        for service in ("api", "python-worker"):
+            if shutil.disk_usage(ROOT).free < 2 * 1024**3:
+                raise SystemExit("Build stopped: less than 2 GiB free disk. Preserve unrelated resources and recover space before retrying.")
+            run(COMPOSE + ["build", service], timeout=1800, env={**os.environ, "COMPOSE_PARALLEL_LIMIT": "1"})
+        run(COMPOSE + ["up", "-d", "--no-build", "--wait", "--wait-timeout", "240", "api", "workflow-worker", "site-runner", "python-worker"], timeout=360)
+        run([sys.executable, "scripts/runtime-test-object-store.py", "--readiness"], timeout=60)
         print("Core stack is ready at http://localhost:4310. Run ./dev seed --dataset harbor-demo.")
     elif args.command == "seed":
         if args.dataset != "harbor-demo":
@@ -146,7 +156,13 @@ Never use docker compose config output in public logs: it expands secrets.""")
         if script.exists():
             run(["sh", str(script)], timeout=900)
         elif args.suite == "connectors":
-            run(COMPOSE + ["run", "--rm", "--no-deps", "python-worker", "/worker/.venv/bin/python", "-m", "unittest", "discover", "-s", "tests", "-v"], timeout=120)
+            run([sys.executable, "scripts/runtime-test-connectors.py"], timeout=300)
+        elif args.suite == "recovery":
+            run([sys.executable, "scripts/runtime-test-recovery.py"], timeout=600)
+        elif args.suite == "object-store":
+            run([sys.executable, "scripts/runtime-test-object-store.py"], timeout=120)
+        elif args.suite == "histories":
+            run([sys.executable, "scripts/runtime-test-histories.py"], timeout=120)
         else:
             raise SystemExit(f"TEST NOT IMPLEMENTED: {args.suite}; no gate has been claimed as passing.")
 

@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: Apache-2.0
+import { defineConfig } from '@playwright/test';
+import base from '../playwright.config';
+
+// Never collect login form values, network headers or cookies into CI artifacts.
+// Tests may explicitly save the reviewed authenticated catalog screenshots only.
+export default defineConfig({
+  ...base,
+  testDir: '../tests/e2e',
+  // Reporter paths resolve relative to this config directory, unlike the root
+  // config. Keep the raw report private at the collector's exact input path.
+  reporter: [['list'], ['json', { outputFile: '../.local/evidence/playwright-results.json' }]],
+  use: { ...base.use, trace: 'off', video: 'off', screenshot: 'off' },
+  outputDir: '../.local/ci-test-results',
+  projects: [
+    { name: 'vertical-slice', testMatch: /vertical-slice\.spec\.ts/ },
+    { name: 'accessibility', testMatch: /ui-accessibility\.spec\.ts/, dependencies: ['vertical-slice'] },
+  ],
+});

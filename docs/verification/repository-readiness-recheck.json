@@ -1,0 +1,609 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-11-15T15:14:03.012205+00:00",
+  "command": "python3 scripts/github/bootstrap apply --repo dlamaro96/governance-commons",
+  "commit": "026611973a9fef5d02fb5a879beecf16fdcc44f3",
+  "repository": "dlamaro96/governance-commons",
+  "host": "github.com",
+  "release_tier": "development",
+  "before": {
+    "repository": "dlamaro96/governance-commons",
+    "host": "github.com",
+    "metadata": {
+      "full_name": "dlamaro96/governance-commons",
+      "html_url": "https://github.com/dlamaro96/governance-commons",
+      "visibility": "public",
+      "default_branch": "main",
+      "archived": false,
+      "allow_squash_merge": true,
+      "allow_merge_commit": true,
+      "allow_rebase_merge": true,
+      "delete_branch_on_merge": true,
+      "permissions": {
+        "admin": true,
+        "maintain": true,
+        "push": true,
+        "triage": true,
+        "pull": true
+      },
+      "security_and_analysis": {
+        "secret_scanning": {
+          "status": "enabled"
+        },
+        "secret_scanning_push_protection": {
+          "status": "enabled"
+        },
+        "dependabot_security_updates": {
+          "status": "disabled"
+        },
+        "secret_scanning_non_provider_patterns": {
+          "status": "disabled"
+        },
+        "secret_scanning_validity_checks": {
+          "status": "disabled"
+        }
+      }
+    },
+    "capabilities": {
+      "rulesets": {
+        "ok": true,
+        "data": [
+          {
+            "id": 27317249,
+            "name": "Governance Commons immutable version tags",
+            "target": "tag",
+            "source_type": "Repository",
+            "source": "dlamaro96/governance-commons",
+            "enforcement": "active",
+            "conditions": {
+              "ref_name": {
+                "exclude": [],
+                "include": [
+                  "refs/tags/v*"
+                ]
+              }
+            },
+            "rules": [
+              {
+                "type": "deletion"
+              },
+              {
+                "type": "update"
+              }
+            ],
+            "node_id": "RRS_lACqUmVwb3NpdG9yec5W9UljzgGg1AE",
+            "created_at": "2026-11-15T19:03:05.462+04:00",
+            "updated_at": "2026-11-15T19:03:05.479+04:00",
+            "bypass_actors": [],
+            "current_user_can_bypass": "never",
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/dlamaro96/governance-commons/rulesets/27317249"
+              },
+              "html": {
+                "href": "https://github.com/dlamaro96/governance-commons/rules/27317249"
+              }
+            }
+          },
+          {
+            "id": 27317248,
+            "name": "Governance Commons main and release branches",
+            "target": "branch",
+            "source_type": "Repository",
+            "source": "dlamaro96/governance-commons",
+            "enforcement": "active",
+            "conditions": {
+              "ref_name": {
+                "exclude": [],
+                "include": [
+                  "~DEFAULT_BRANCH",
+                  "refs/heads/release/**"
+                ]
+              }
+            },
+            "rules": [
+              {
+                "type": "deletion"
+              },
+              {
+                "type": "non_fast_forward"
+              },
+              {
+                "type": "pull_request",
+                "parameters": {
+                  "required_approving_review_count": 0,
+                  "dismiss_stale_reviews_on_push": true,
+                  "required_reviewers": [],
+                  "require_code_owner_review": false,
+                  "require_last_push_approval": false,
+                  "required_review_thread_resolution": true,
+                  "require_extra_approval_for_unattributed_changes": true,
+                  "allowed_merge_methods": [
+                    "merge",
+                    "squash",
+                    "rebase"
+                  ]
+                }
+              },
+              {
+                "type": "required_status_checks",
+                "parameters": {
+                  "strict_required_status_checks_policy": true,
+                  "do_not_enforce_on_create": true,
+                  "required_status_checks": [
+                    {
+                      "context": "required",
+                      "integration_id": 15368
+                    }
+                  ]
+                }
+              }
+            ],
+            "node_id": "RRS_lACqUmVwb3NpdG9yec5W9UljzgGg1AA",
+            "created_at": "2026-11-15T19:03:04.639+04:00",
+            "updated_at": "2026-11-15T19:03:04.752+04:00",
+            "bypass_actors": [],
+            "current_user_can_bypass": "never",
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/dlamaro96/governance-commons/rulesets/27317248"
+              },
+              "html": {
+                "href": "https://github.com/dlamaro96/governance-commons/rules/27317248"
+              }
+            }
+          }
+        ]
+      },
+      "workflow_permissions": {
+        "ok": true,
+        "data": {
+          "default_workflow_permissions": "read",
+          "can_approve_pull_request_reviews": false
+        }
+      },
+      "private_vulnerability_reporting": {
+        "ok": true,
+        "data": {
+          "enabled": true
+        }
+      },
+      "dependency_alerts": {
+        "ok": true,
+        "data": null
+      },
+      "codeowners_errors": {
+        "ok": true,
+        "data": {
+          "errors": []
+        }
+      },
+      "required_check": {
+        "ok": true,
+        "data": [
+          {
+            "name": "required",
+            "head_sha": "026611973a9fef5d02fb5a879beecf16fdcc44f3",
+            "status": "completed",
+            "conclusion": "success",
+            "app_id": 15368,
+            "app_slug": "github-actions",
+            "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43727376708/job/132852349076"
+          }
+        ]
+      },
+      "collaborators": {
+        "ok": true,
+        "data": [
+          {
+            "login": "dlamaro96",
+            "permissions": {
+              "admin": true,
+              "maintain": true,
+              "push": true,
+              "triage": true,
+              "pull": true
+            },
+            "role_name": "admin"
+          }
+        ]
+      }
+    }
+  },
+  "after": {
+    "repository": "dlamaro96/governance-commons",
+    "host": "github.com",
+    "metadata": {
+      "full_name": "dlamaro96/governance-commons",
+      "html_url": "https://github.com/dlamaro96/governance-commons",
+      "visibility": "public",
+      "default_branch": "main",
+      "archived": false,
+      "allow_squash_merge": true,
+      "allow_merge_commit": true,
+      "allow_rebase_merge": true,
+      "delete_branch_on_merge": true,
+      "permissions": {
+        "admin": true,
+        "maintain": true,
+        "push": true,
+        "triage": true,
+        "pull": true
+      },
+      "security_and_analysis": {
+        "secret_scanning": {
+          "status": "enabled"
+        },
+        "secret_scanning_push_protection": {
+          "status": "enabled"
+        },
+        "dependabot_security_updates": {
+          "status": "disabled"
+        },
+        "secret_scanning_non_provider_patterns": {
+          "status": "disabled"
+        },
+        "secret_scanning_validity_checks": {
+          "status": "disabled"
+        }
+      }
+    },
+    "capabilities": {
+      "rulesets": {
+        "ok": true,
+        "data": [
+          {
+            "id": 27317249,
+            "name": "Governance Commons immutable version tags",
+            "target": "tag",
+            "source_type": "Repository",
+            "source": "dlamaro96/governance-commons",
+            "enforcement": "active",
+            "conditions": {
+              "ref_name": {
+                "exclude": [],
+                "include": [
+                  "refs/tags/v*"
+                ]
+              }
+            },
+            "rules": [
+              {
+                "type": "deletion"
+              },
+              {
+                "type": "update"
+              }
+            ],
+            "node_id": "RRS_lACqUmVwb3NpdG9yec5W9UljzgGg1AE",
+            "created_at": "2026-11-15T19:03:05.462+04:00",
+            "updated_at": "2026-11-15T19:03:05.479+04:00",
+            "bypass_actors": [],
+            "current_user_can_bypass": "never",
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/dlamaro96/governance-commons/rulesets/27317249"
+              },
+              "html": {
+                "href": "https://github.com/dlamaro96/governance-commons/rules/27317249"
+              }
+            }
+          },
+          {
+            "id": 27317248,
+            "name": "Governance Commons main and release branches",
+            "target": "branch",
+            "source_type": "Repository",
+            "source": "dlamaro96/governance-commons",
+            "enforcement": "active",
+            "conditions": {
+              "ref_name": {
+                "exclude": [],
+                "include": [
+                  "~DEFAULT_BRANCH",
+                  "refs/heads/release/**"
+                ]
+              }
+            },
+            "rules": [
+              {
+                "type": "deletion"
+              },
+              {
+                "type": "non_fast_forward"
+              },
+              {
+                "type": "pull_request",
+                "parameters": {
+                  "required_approving_review_count": 0,
+                  "dismiss_stale_reviews_on_push": true,
+                  "required_reviewers": [],
+                  "require_code_owner_review": false,
+                  "require_last_push_approval": false,
+                  "required_review_thread_resolution": true,
+                  "require_extra_approval_for_unattributed_changes": true,
+                  "allowed_merge_methods": [
+                    "merge",
+                    "squash",
+                    "rebase"
+                  ]
+                }
+              },
+              {
+                "type": "required_status_checks",
+                "parameters": {
+                  "strict_required_status_checks_policy": true,
+                  "do_not_enforce_on_create": true,
+                  "required_status_checks": [
+                    {
+                      "context": "required",
+                      "integration_id": 15368
+                    }
+                  ]
+                }
+              }
+            ],
+            "node_id": "RRS_lACqUmVwb3NpdG9yec5W9UljzgGg1AA",
+            "created_at": "2026-11-15T19:03:04.639+04:00",
+            "updated_at": "2026-11-15T19:03:04.752+04:00",
+            "bypass_actors": [],
+            "current_user_can_bypass": "never",
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/dlamaro96/governance-commons/rulesets/27317248"
+              },
+              "html": {
+                "href": "https://github.com/dlamaro96/governance-commons/rules/27317248"
+              }
+            }
+          }
+        ]
+      },
+      "workflow_permissions": {
+        "ok": true,
+        "data": {
+          "default_workflow_permissions": "read",
+          "can_approve_pull_request_reviews": false
+        }
+      },
+      "private_vulnerability_reporting": {
+        "ok": true,
+        "data": {
+          "enabled": true
+        }
+      },
+      "dependency_alerts": {
+        "ok": true,
+        "data": null
+      },
+      "codeowners_errors": {
+        "ok": true,
+        "data": {
+          "errors": []
+        }
+      },
+      "required_check": {
+        "ok": true,
+        "data": [
+          {
+            "name": "required",
+            "head_sha": "026611973a9fef5d02fb5a879beecf16fdcc44f3",
+            "status": "completed",
+            "conclusion": "success",
+            "app_id": 15368,
+            "app_slug": "github-actions",
+            "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43727376708/job/132852349076"
+          }
+        ]
+      },
+      "collaborators": {
+        "ok": true,
+        "data": [
+          {
+            "login": "dlamaro96",
+            "permissions": {
+              "admin": true,
+              "maintain": true,
+              "push": true,
+              "triage": true,
+              "pull": true
+            },
+            "role_name": "admin"
+          }
+        ]
+      }
+    }
+  },
+  "operations": [],
+  "capabilities": {
+    "rulesets": {
+      "status": "configured_not_enforced",
+      "read_back": [
+        {
+          "id": 27317249,
+          "name": "Governance Commons immutable version tags",
+          "target": "tag",
+          "source_type": "Repository",
+          "source": "dlamaro96/governance-commons",
+          "enforcement": "active",
+          "conditions": {
+            "ref_name": {
+              "exclude": [],
+              "include": [
+                "refs/tags/v*"
+              ]
+            }
+          },
+          "rules": [
+            {
+              "type": "deletion"
+            },
+            {
+              "type": "update"
+            }
+          ],
+          "node_id": "RRS_lACqUmVwb3NpdG9yec5W9UljzgGg1AE",
+          "created_at": "2026-11-15T19:03:05.462+04:00",
+          "updated_at": "2026-11-15T19:03:05.479+04:00",
+          "bypass_actors": [],
+          "current_user_can_bypass": "never",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/dlamaro96/governance-commons/rulesets/27317249"
+            },
+            "html": {
+              "href": "https://github.com/dlamaro96/governance-commons/rules/27317249"
+            }
+          }
+        },
+        {
+          "id": 27317248,
+          "name": "Governance Commons main and release branches",
+          "target": "branch",
+          "source_type": "Repository",
+          "source": "dlamaro96/governance-commons",
+          "enforcement": "active",
+          "conditions": {
+            "ref_name": {
+              "exclude": [],
+              "include": [
+                "~DEFAULT_BRANCH",
+                "refs/heads/release/**"
+              ]
+            }
+          },
+          "rules": [
+            {
+              "type": "deletion"
+            },
+            {
+              "type": "non_fast_forward"
+            },
+            {
+              "type": "pull_request",
+              "parameters": {
+                "required_approving_review_count": 0,
+                "dismiss_stale_reviews_on_push": true,
+                "required_reviewers": [],
+                "require_code_owner_review": false,
+                "require_last_push_approval": false,
+                "required_review_thread_resolution": true,
+                "require_extra_approval_for_unattributed_changes": true,
+                "allowed_merge_methods": [
+                  "merge",
+                  "squash",
+                  "rebase"
+                ]
+              }
+            },
+            {
+              "type": "required_status_checks",
+              "parameters": {
+                "strict_required_status_checks_policy": true,
+                "do_not_enforce_on_create": true,
+                "required_status_checks": [
+                  {
+                    "context": "required",
+                    "integration_id": 15368
+                  }
+                ]
+              }
+            }
+          ],
+          "node_id": "RRS_lACqUmVwb3NpdG9yec5W9UljzgGg1AA",
+          "created_at": "2026-11-15T19:03:04.639+04:00",
+          "updated_at": "2026-11-15T19:03:04.752+04:00",
+          "bypass_actors": [],
+          "current_user_can_bypass": "never",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/dlamaro96/governance-commons/rulesets/27317248"
+            },
+            "html": {
+              "href": "https://github.com/dlamaro96/governance-commons/rules/27317248"
+            }
+          }
+        }
+      ],
+      "reason": "API inspected; behavioral PR/review enforcement is not inferred"
+    },
+    "workflow_permissions": {
+      "status": "enforced",
+      "read_back": {
+        "default_workflow_permissions": "read",
+        "can_approve_pull_request_reviews": false
+      }
+    },
+    "private_vulnerability_reporting": {
+      "status": "enforced",
+      "enabled": true
+    },
+    "dependency_alerts": {
+      "status": "enforced"
+    },
+    "codeowners_errors": {
+      "status": "configured_not_enforced",
+      "read_back": {
+        "errors": []
+      },
+      "reason": "API inspected; behavioral PR/review enforcement is not inferred"
+    },
+    "required_check": {
+      "status": "configured_not_enforced",
+      "read_back": [
+        {
+          "name": "required",
+          "head_sha": "026611973a9fef5d02fb5a879beecf16fdcc44f3",
+          "status": "completed",
+          "conclusion": "success",
+          "app_id": 15368,
+          "app_slug": "github-actions",
+          "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43727376708/job/132852349076"
+        }
+      ],
+      "reason": "API inspected; behavioral PR/review enforcement is not inferred"
+    },
+    "collaborators": {
+      "status": "configured_not_enforced",
+      "read_back": [
+        {
+          "login": "dlamaro96",
+          "permissions": {
+            "admin": true,
+            "maintain": true,
+            "push": true,
+            "triage": true,
+            "pull": true
+          },
+          "role_name": "admin"
+        }
+      ],
+      "reason": "API inspected; behavioral PR/review enforcement is not inferred"
+    },
+    "independent_human_review": {
+      "status": "configured_not_enforced",
+      "reason": "No completed independent human review recorded"
+    },
+    "private_conduct_reporting": {
+      "status": "blocked",
+      "reason": "Project contact and independent escalation remain unassigned"
+    },
+    "workflow_dependency_lockfile": {
+      "status": "unsupported",
+      "reason": "Official lockfile onboarding is Enterprise Cloud scoped; verified full-commit Action pins used for this personal repository. No hand-authored actions.lock."
+    },
+    "merge_queue": {
+      "status": "unsupported",
+      "reason": "Personal repository; use up-to-date branch validation"
+    },
+    "release_artifact_signing": {
+      "status": "blocked",
+      "reason": "Release build/sign/verify pipeline not yet qualified"
+    },
+    "code_scanning": {
+      "status": "blocked",
+      "reason": "Hosted scanner and portable SAST have not been qualified"
+    }
+  },
+  "qualification": "Repository configuration evidence only; not product, security or release certification"
+}

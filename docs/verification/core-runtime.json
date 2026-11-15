@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "profile": "core",
+  "recorded_at": "2026-11-15T15:21:20.810266+00:00",
+  "revision": {
+    "base_commit": "026611973a9fef5d02fb5a879beecf16fdcc44f3",
+    "working_tree": "file-hash-bound; final commit binding pending"
+  },
+  "implementation_status": "partial; M1 foundation only",
+  "runtime_health": "healthy at observed time",
+  "startup_commands": [
+    {
+      "command": "COMPOSE_PARALLEL_LIMIT=1 docker compose --project-name governance-commons --env-file .local/runtime.env -f deploy/compose/compose.yaml build api",
+      "exit_status": 0
+    },
+    {
+      "command": "COMPOSE_PARALLEL_LIMIT=1 docker compose --project-name governance-commons --env-file .local/runtime.env -f deploy/compose/compose.yaml build python-worker",
+      "exit_status": 0
+    },
+    {
+      "command": "docker compose --project-name governance-commons --env-file .local/runtime.env -f deploy/compose/compose.yaml up -d --no-build --wait --wait-timeout 180 api workflow-worker site-runner python-worker",
+      "exit_status": 0
+    }
+  ],
+  "services": [
+    {
+      "service": "api",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "init-secrets",
+      "state": "exited",
+      "health": "",
+      "exit_status": 0
+    },
+    {
+      "service": "keycloak",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "migrate",
+      "state": "exited",
+      "health": "",
+      "exit_status": 0
+    },
+    {
+      "service": "opensearch",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "postgres",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "python-worker",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "seaweedfs",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "site-runner",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "source-postgres",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "temporal",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    },
+    {
+      "service": "temporal-migrate",
+      "state": "exited",
+      "health": "",
+      "exit_status": 0
+    },
+    {
+      "service": "temporal-namespace",
+      "state": "exited",
+      "health": "",
+      "exit_status": 0
+    },
+    {
+      "service": "workflow-worker",
+      "state": "running",
+      "health": "healthy",
+      "exit_status": 0
+    }
+  ],
+  "tools": {
+    "docker": "27.3.1",
+    "compose": "2.29.7-desktop.1",
+    "docker_architecture": "aarch64",
+    "docker_cpus": 11,
+    "docker_memory_bytes": 8217825280
+  },
+  "images": {
+    "governance-commons:dev": "sha256:f34751e7a2e88d3a0afc678a3c360076cddeb8a34500927b94d24e904212ad77",
+    "governance-commons-python:dev": "sha256:9fc4717b933403d0d25a507431d719ae3701b80ed013905708f267f34538c639"
+  },
+  "implementation_sha256": {
+    "deploy/compose/compose.yaml": "7723b71825baf354cdb3c6ff4f5c4f2cd07ff8a8a848f42e38cdbca3c7d04d0c",
+    "deploy/compose/init-temporal.sh": "c095d1de7a7cbb670998f7ed7a00512b0cf9d50dc3a9e95738f808f984ab4129",
+    "deploy/compose/temporal-dynamic.yaml": "c6dfff741e77f45e1d21fb22a8368855921d7da4710aabee4bdef1887d1a5533",
+    "python/Dockerfile": "d3aad7ee86fe209d3ab54006a4a1bb50153de15c810781e83b7c17cf94f6edcc",
+    "Dockerfile": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0",
+    "apps/site-runner/src/index.ts": "d865e76e317ec784bd7c90cff4f11555022e73948f2a8a571a761a0b9a2df6d7",
+    "apps/workflow-worker/src/index.ts": "2da4bad00e77a37caa9d24fc140b1d88dabe96300ccc78f9c957299484220d15",
+    "apps/workflow-worker/src/workflows.ts": "627720148248703a529fbdc2ddf819aff348f8e09f89e0496852761ac0f737a4"
+  },
+  "limitations": [
+    "Startup used existing initialized local volumes; clean-install qualification remains pending.",
+    "No sustained workload resource benchmark, amd64 run, enterprise infrastructure or full/AI profile qualification.",
+    "API/workers include latest restricted-audit correction rebuilt after initial startup.",
+    "Initial 5GiB disk attempt failed; successful serial builds followed separately authorized non-Hive cleanup.",
+    "This health record is not browser, connector-feature, recovery or release acceptance evidence."
+  ],
+  "latest_application_rollout": {
+    "observed_at": "2026-11-15T15:32:46.791974+00:00",
+    "build_exit_status": 0,
+    "restart_exit_status": 0,
+    "image_manifest": "sha256:7e1a66b7dcf167daf97294a1e2734ad06b79aa28dcd7ca48183c110a0df57674",
+    "image_config": "sha256:7e1a66b7dcf167daf97294a1e2734ad06b79aa28dcd7ca48183c110a0df57674",
+    "bundles": [
+      "index-D0nVuQoj.js",
+      "index-C6JDWdw6.css"
+    ],
+    "restart_command": "docker compose --project-name governance-commons --env-file .local/runtime.env -f deploy/compose/compose.yaml up -d --no-build --no-deps --wait --wait-timeout 120 api workflow-worker site-runner",
+    "recovery_evidence": "docs/verification/core-recovery.json"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "encoding": "JSON-compatible YAML 1.2",
+  "distribution_license": "Apache-2.0",
+  "default": "REVIEW_REQUIRED",
+  "allow": {
+    "Apache-2.0": ["Preserve license, applicable NOTICE, attribution and change notices."],
+    "MIT": ["Preserve copyright and license notice."],
+    "BSD-2-Clause": ["Preserve copyright, conditions and disclaimer."],
+    "BSD-3-Clause": ["Preserve copyright, conditions and disclaimer; no endorsement implication."],
+    "ISC": ["Preserve copyright and permission notice."],
+    "0BSD": ["Retain supplied license and attribution as distribution provenance."],
+    "Zlib": ["Do not misrepresent origin; mark altered source; preserve notice."],
+    "CC0-1.0": ["Retain dedication and provenance; trademark/patent rights are separate."],
+    "Unlicense": ["Retain public-domain dedication and warranty disclaimer."],
+    "BlueOak-1.0.0": ["Preserve license and attribution."],
+    "Python-2.0": ["Preserve license and notices; review derivative change notices."]
+  },
+  "allowed_exceptions": {},
+  "review_categories": ["copyleft", "source-available", "noncommercial", "field-of-use restrictions", "custom", "NOASSERTION", "missing", "unknown"],
+  "spdx_rules": "Parse AND, OR and WITH and parentheses. AND requires every obligation; OR records the selected allowed option; WITH requires an explicitly reviewed exception. Unknown identifiers are not permission.",
+  "required_inventory": ["direct and transitive application dependencies", "base image digests and OS packages", "vendored code", "fonts and icons", "synthetic fixtures/documents", "drivers and SDKs", "optional model weights"],
+  "artifact_gate": "Scan finished images/packages and retain per-artifact SPDX/CycloneDX SBOM plus notices. A development package inventory is not an artifact SBOM.",
+  "restricted_vendor_artifacts": "Do not redistribute without permission; provide a separately configured operator-supplied path while preserving a runnable open local profile."
+}

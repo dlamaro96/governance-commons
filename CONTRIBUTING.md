@@ -17,6 +17,10 @@ python3 scripts/requirements.py validate
 pnpm typecheck
 pnpm test
 pnpm build
+python3 policies/check_dependencies.py --self-test
+python3 policies/check_dependencies.py --write
+python3 policies/scan_secrets.py --install
+python3 scripts/github/bootstrap check-local
 ./dev doctor
 ./dev bootstrap
 ./dev up --profile core
@@ -24,7 +28,10 @@ pnpm build
 ./dev test --suite smoke
 ```
 
-The first five checks are the initial pull-request gate. Docker, acceptance,
+The static, unit, dependency-license and secret checks form the development
+pull-request gate. The secret scanner downloads a pinned official release on
+first use and scans publishable files and reachable history, without publishing
+secret matches. Docker, acceptance,
 security, connector, upgrade and release qualifications remain separate gates;
 inspect STATE and readiness records for what has actually run. A command that
 reports an unavailable prerequisite is not passing evidence. `./dev down`
