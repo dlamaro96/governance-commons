@@ -81,8 +81,9 @@ async function authorize(tx: Tx, principal: Principal, actions: readonly string[
 
 /** Shared lock order: tenant ledger, tenant models, canonical rows. */
 async function lockTenantModels(tx: Tx, principal: Principal): Promise<void> {
-  await lockTenantLedger(tx, principal.tenantId);
-  await sql`select pg_advisory_xact_lock(hashtextextended(${`governance-models:${principal.tenantId}`},0))`.execute(tx);
+  const { relationQuery } = await import('./relation-store.ts');
+  await relationQuery(tx, () => lockTenantLedger(tx, principal.tenantId));
+  await relationQuery(tx, () => sql`select pg_advisory_xact_lock(hashtextextended(${`governance-models:${principal.tenantId}`},0))`.execute(tx));
 }
 async function head(tx: Tx, principal: Principal, id: string, lock = false): Promise<Row> {
   checkId(id);
@@ -178,6 +179,9 @@ async function modelCohort(tx: Tx, principal: Principal, modelId: string): Promi
   if (Number(size.rows[0].count) > MODEL_LIMITS.previewAssets || Number(size.rows[0].bytes) > MODEL_SERVICE_LIMITS.previewBytes) {
     throw new Problem(422, 'MODEL_PREVIEW_LIMIT', 'This model exceeds the bounded synchronous preview profile. No partial preview or publication was performed.');
   }
+  // Discover the entire incident endpoint union before the first canonical row lock.
+  const cohortIds = await tx.selectFrom('assets').select('id').where('tenant_id', '=', principal.tenantId).where('model_id', '=', modelId).orderBy('id').execute();
+  await (await import('./relation-endpoint-guard.ts')).lockRelationEndpointUnion(tx, principal, cohortIds.map(row => row.id));
   // Canonical asset locks also protect digest generation against scanner/normal PATCH changes.
   const rows = await tx.selectFrom('assets').select(['tenant_id', 'id', 'version', 'model_id', 'model_version', 'attributes', 'visibility', 'allowed_identities', 'owner_id', 'type_state'])
     .where('tenant_id', '=', principal.tenantId).where('model_id', '=', modelId).orderBy('id').forUpdate().execute();
@@ -276,6 +280,7 @@ export async function getAssetModel(tx: Tx, principal: Principal, assetId: strin
 
 export async function assignAssetModel(tx: Tx, principal: Principal, correlationId: string, assetId: string,
   expectedAssetVersion: number, input: AssetModelInput, hooks: ModelHooks): Promise<AssetModelView> {
+  await (await import('./relation-store.ts')).configureRelationTransaction(tx);
   await authorize(tx, principal, ['catalog:read', 'catalog:write', 'models:read']);
   checkVersion(expectedAssetVersion);
   if (expectedAssetVersion === MODEL_SERVICE_LIMITS.databaseVersion) throw new Problem(422, 'ASSET_VERSION_LIMIT', 'The supported asset version range has been exhausted.');
@@ -283,6 +288,7 @@ export async function assignAssetModel(tx: Tx, principal: Principal, correlation
   await lockTenantModels(tx, principal);
   await head(tx, principal, input.modelId, true);
   const model = storedDefinition(await versionRow(tx, principal, input.modelId, input.modelVersion));
+  await (await import('./relation-endpoint-guard.ts')).lockRelationEndpointUnion(tx, principal, [assetId]);
   const asset = await assetRow(tx, principal, assetId, true);
   await authorize(tx, principal, ['catalog:read', 'catalog:write', 'models:read']);
   if (asset.version !== expectedAssetVersion) throw new Problem(409, 'VERSION_CONFLICT', 'The asset changed. Load its current version before saving.');
@@ -295,6 +301,7 @@ export async function assignAssetModel(tx: Tx, principal: Principal, correlation
     if (!policy.lifecycle.states.includes(state!)) throw new Problem(422, 'ASSET_TYPE_STATE_INVALID', 'The current state is not valid for the selected type version.');
   }
   if (Buffer.byteLength(JSON.stringify(parsed.value), 'utf8') > MODEL_SERVICE_LIMITS.previewBytes) throw new Problem(422, 'ATTRIBUTE_PROFILE_LIMIT', 'The typed attributes exceed this development storage profile.');
+  await (await import('./relation-endpoint-guard.ts')).validateRelationsForEndpointChanges(tx, principal, [{ assetId, expectedAssetVersion, modelId: input.modelId, modelVersion: input.modelVersion, state, policy }]);
   // An explicit pin and full replacement are required; no source metadata is interpreted as governed attributes.
   const updated = await tx.updateTable('assets').set({ model_id: input.modelId, model_version: input.modelVersion,
     attributes: JSON.stringify(parsed.value), type_state: state, version: asset.version + 1, updated_at: new Date() })

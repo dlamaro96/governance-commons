@@ -21,7 +21,7 @@ export const MODEL_LIMITS = Object.freeze({
 export type ValidationIssueCode =
   | 'invalid_json' | 'unknown_field' | 'unknown_type' | 'invalid_definition'
   | 'type' | 'required' | 'format' | 'range' | 'enum' | 'duplicate'
-  | 'limit' | 'cycle' | 'model_identity' | 'model_version';
+  | 'limit' | 'cycle' | 'model_identity' | 'model_version' | 'unsupported';
 export interface ValidationIssue { readonly code: ValidationIssueCode; readonly path: string; readonly message: string }
 export type ValidationResult<T> = { readonly ok: true; readonly value: T } | { readonly ok: false; readonly issues: readonly ValidationIssue[] };
 
@@ -319,6 +319,17 @@ export function parseBoundedJSONFile(text: string, profile: 'model' | 'migration
   try { value = JSON.parse(text); }
   catch { return { ok: false, issues: [{ code: 'invalid_json', path: '', message: 'Expected a valid JSON model document.' }] }; }
   return { ok: true, value };
+}
+
+/** Trusted HTTP adapter profile: duplicate-safe envelopes, independent of the authored-file limit. */
+export function parseBoundedJSONEnvelope(text: string): ValidationResult<unknown> {
+  if (typeof text !== 'string' || text.length > 1048576 || new TextEncoder().encode(text).length > 1048576) {
+    return { ok: false, issues: [{ code: 'limit', path: '', message: 'JSON request exceeds the permitted envelope size.' }] };
+  }
+  const issues = inspectModelJSON(text, 'migration');
+  if (issues.length) return { ok: false, issues };
+  try { return { ok: true, value: JSON.parse(text) }; }
+  catch { return { ok: false, issues: [{ code: 'invalid_json', path: '', message: 'Expected a valid JSON request.' }] }; }
 }
 
 /** Reject duplicate (including escaped) object keys before JSON.parse can overwrite them. */

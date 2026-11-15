@@ -76,7 +76,7 @@ def source_hashes():
              ROOT / "dev", ROOT / "scripts/runtime.py"}
     for folder in ("packages/db/src", "packages/domain/src", "packages/authz/src"):
         paths.update((ROOT / folder).rglob("*.ts"))
-    paths.update(MIGRATIONS / name for name in NAMES)
+    paths.update(MIGRATIONS.glob("*.sql"))
     return [{"path": str(path.relative_to(ROOT)), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
             for path in sorted(paths)]
 
@@ -302,9 +302,18 @@ COMMIT;""", "gc_app"))
             tested = command([*runtime, "node", "--import", "tsx", "--test", "--test-reporter=tap", "tests/integration/asset-type-migration-storage.test.ts"])
             tests = tap_summary(tested.stdout, expected_tests)
             checks.append(f"All{tests['tests']} mounted-source PostgreSQL storage cases pass through the actual gc_app login with no failures, cancellations, skips or todos")
+            # The original SQL006→007 checks and storage cases above run on exactly
+            # seven migrations. Current application services may depend on later
+            # guards; qualify their regression separately on the current schema.
+            later_migrations = sorted(path for path in MIGRATIONS.glob("*.sql") if path.name not in NAMES)
+            for path in later_migrations:
+                shutil.copyfile(path, target / path.name)
+            if later_migrations:
+                migrate(target)
+            concurrency_schema = json.loads(sql("SELECT json_agg(json_build_object('name',name,'sha256',checksum) ORDER BY name) FROM schema_migrations;"))
             concurrent = command([*runtime, "node", "--import", "tsx", "--test", "--test-reporter=tap", "tests/qualification/asset-type-migration-concurrency.test.ts"], timeout=180)
             concurrency_tests = tap_summary(concurrent.stdout, expected_concurrency)
-            checks.append(f"All{concurrency_tests['tests']} mounted-source principal-lock and concurrency cases pass with actual isolated owner/runtime logins and no failures, cancellations, skips or todos")
+            checks.append(f"All{concurrency_tests['tests']} mounted-source principal-lock and concurrency cases pass on the separately recorded service regression schema with actual isolated owner/runtime logins and no failures, cancellations, skips or todos")
             require(baseline() == original, "Storage/concurrency tests changed the preserved baseline fixtures")
             require(source_hashes() == sources, "Qualification sources changed during execution; rerun against a frozen snapshot")
             inspected = json.loads(command(["docker", "inspect", name]).stdout)[0]
@@ -313,7 +322,7 @@ COMMIT;""", "gc_app"))
             postgres_version = sql("SHOW server_version;")
             report = {"schema_version": 1, "result": "PASS", "started_at": started,
                       "recorded_at": datetime.now(timezone.utc).isoformat(), "command": "./dev test --suite type-migration-upgrade",
-                      "scope": "SQL006-to007 complete authored-type migration development upgrade, runtime storage integrity and principal-lock concurrency",
+                      "scope": "SQL006-to007 upgrade and storage integrity; current-schema principal-lock service/concurrency regression",
                       "checks": checks, "storage_tests": tests, "expected_top_level_tests": expected_tests,
                       "concurrency_tests": concurrency_tests, "expected_concurrency_tests": expected_concurrency,
                       "runtime": {**runtime_info, "postgresql": postgres_version,
@@ -325,6 +334,7 @@ COMMIT;""", "gc_app"))
                                     "runtime_connection": "gc_app login to disposable loopback PostgreSQL; trust authentication only within its isolated namespace"},
                       "baseline": {"tenant_id": TENANT, "asset_ids": [ASSET, TYPED_ASSET], "model_ids": [MODEL, TYPED_MODEL], "legacy_receipt_id": RECEIPT, "before_hash": digest(original), "after_hash": digest(baseline())},
                       "applied_migrations": applied_checksums, "sources": sources,
+                      "service_regression_schema": {"applied_migrations": concurrency_schema, "note": "Original upgrade/storage gates execute on001–007; current service/concurrency regressions execute after any explicitly recorded later migrations."},
                       "diagnostic_history": {"archived_prior_attempts": len(prior_attempts), "result_counts": prior_results,
                                              "private_reports_and_database_logs_retained": True,
                                              "qualification_test_retries": 0},

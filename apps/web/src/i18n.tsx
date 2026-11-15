@@ -6,8 +6,10 @@ import { planEn, planAr } from './models/planMessages';
 import { assetTypeEn, assetTypeAr } from './assetTypes/messages';
 import { typeMigrationEn, typeMigrationAr } from './assetTypes/migrationMessages';
 
+import { relationEn, relationAr } from './relations/messages';
+
 const en = {
-  ...modelEn, ...migrationEn, ...planEn, ...assetTypeEn, ...typeMigrationEn,
+  ...modelEn, ...migrationEn, ...planEn, ...assetTypeEn, ...typeMigrationEn, ...relationEn,
   product: 'Governance Commons', tagline: 'A shared understanding of your data.',
   home: 'Overview', catalog: 'Data catalog', sources: 'Sources & scans', audit: 'Audit history',
   discover: 'Discover', operate: 'Operate', workspace: 'Workspace', organization: 'Organisation',
@@ -104,7 +106,7 @@ const en = {
 } as const;
 export type MessageKey = keyof typeof en;
 const ar: Record<MessageKey, string> = {
-  ...modelAr, ...migrationAr, ...planAr, ...assetTypeAr, ...typeMigrationAr,
+  ...modelAr, ...migrationAr, ...planAr, ...assetTypeAr, ...typeMigrationAr, ...relationAr,
   product: 'Governance Commons', tagline: 'فهم مشترك لبياناتك.',
   home: 'نظرة عامة', catalog: 'كتالوج البيانات', sources: 'المصادر وعمليات المسح', audit: 'سجل التدقيق',
   discover: 'اكتشف', operate: 'الإدارة', workspace: 'مساحة العمل', organization: 'المؤسسة',

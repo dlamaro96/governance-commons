@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { after, test } from 'node:test';
 import { createHash, randomUUID } from 'node:crypto';
 import { setTimeout as delay } from 'node:timers/promises';
-import { db, scope, sql } from '../../packages/db/src/index.ts';
+import { db, lockTenantLedger, scope, sql } from '../../packages/db/src/index.ts';
 import { Problem, type Principal } from '../../packages/authz/src/index.ts';
 import { parseModelDefinition, type ModelDefinition } from '../../packages/domain/src/model.ts';
 import {
@@ -129,29 +129,44 @@ test('cohort byte limit rejects the whole preview before materializing oversized
 
 test('preview locks canonical asset rows against concurrent non-model edits until its transaction completes', { timeout: 15_000 }, async () => {
   const current = await fixtureModel(); const assetId = await fixtureAsset(current);
-  const locked = deferred<void>(); const release = deferred<void>(); const writerPid = deferred<number>();
+  const locked = deferred<number>(); const release = deferred<void>(); const writerPid = deferred<number>();
   const reader = scope(tenant, steward, async tx => {
+    const pid = await sql<{ pid: number }>`select pg_backend_pid() as pid`.execute(tx);
     const result = await previewModel(tx, principal, current.id, 1, { ...current, version: 2 });
-    locked.resolve();
+    locked.resolve(pid.rows[0].pid);
     await release.promise;
     return result;
   });
-  await locked.promise;
-  const writer = scope(tenant, steward, async tx => {
-    const pid = await sql<{ pid: number }>`select pg_backend_pid() as pid`.execute(tx);
-    writerPid.resolve(pid.rows[0].pid);
-    await tx.updateTable('assets').set({ description: 'Synthetic concurrent edit', version: 2 }).where('id', '=', assetId).execute();
-  });
+  // Observe rejection immediately; cleanup below still awaits every transaction before propagating failures.
+  const readerSettled = Promise.allSettled([reader]);
+  let writer: Promise<void> | undefined;
+  let writerSettled: Promise<PromiseSettledResult<void>[]> | undefined;
   try {
-    const pid = await writerPid.promise;
+    const readerPid = await Promise.race([locked.promise, reader.then(() => { throw new Error('Preview completed before its release.'); })]);
+    // SELECT bypasses the statement mutation fence, proving that preview also holds the canonical row lock.
+    await assert.rejects(() => scope(tenant, steward, tx => sql`select id from assets
+      where tenant_id = ${tenant} and id = ${assetId} for update nowait`.execute(tx)), { code: '55P03' });
+    writer = scope(tenant, steward, async tx => {
+      const pid = await sql<{ pid: number }>`select pg_backend_pid() as pid`.execute(tx);
+      writerPid.resolve(pid.rows[0].pid);
+      await lockTenantLedger(tx, tenant);
+      await tx.updateTable('assets').set({ description: 'Synthetic concurrent edit', version: 2 })
+        .where('tenant_id', '=', tenant).where('id', '=', assetId).execute();
+    });
+    writerSettled = Promise.allSettled([writer]);
+    const prematureWriter = writer.then(() => { throw new Error('Writer completed before the preview transaction released its locks.'); });
+    const pid = await Promise.race([writerPid.promise, prematureWriter]);
     let blocked = false;
     for (let attempt = 0; attempt < 100; attempt += 1) {
       const waiters = await sql<{ blockers: number[] }>`select pg_blocking_pids(${pid}) as blockers`.execute(db);
-      if (waiters.rows[0].blockers.length) { blocked = true; break; }
-      await delay(20);
+      if (waiters.rows[0].blockers.includes(readerPid)) { blocked = true; break; }
+      await Promise.race([delay(20), prematureWriter]);
     }
-    assert.equal(blocked, true, 'The concurrent PostgreSQL writer must wait on the canonical asset row lock.');
-  } finally { release.resolve(); }
+    assert.equal(blocked, true, 'The conforming PostgreSQL writer must wait for the preview transaction to release the tenant ledger.');
+  } finally {
+    release.resolve();
+    await Promise.all([readerSettled, writerSettled]);
+  }
   const before = await reader;
   await writer;
   const afterPreview = await scope(tenant, steward, tx => previewModel(tx, principal, current.id, 1, { ...current, version: 2 }));

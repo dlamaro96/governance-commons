@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T18:57:30.267794+00:00",
+  "result": "PASS",
+  "scope": "Hosted qualification of complete bounded authored asset-type migrations; full MOD/M2/programme/release remain open.",
+  "repository": "https://github.com/dlamaro96/governance-commons",
+  "pull_request": 8,
+  "implementation_commit": "e5910a78cbe9b7aa7600f06b356dd9cefbee4a88",
+  "head_commit": "0fa4e7ef2ee46251741304bb9288af2eb34d19d6",
+  "tested_merge_commit": "59ed35bec2d0a668096735a71c1b316387de9e37",
+  "merged_commit": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+  "merged_at": "2026-11-15T18:53:13Z",
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43748230994",
+  "required_checks": {
+    "quality": "success",
+    "secrets": "success",
+    "behavior": "success",
+    "required": "success"
+  },
+  "behavior": {
+    "schema_version": 1,
+    "timestamp": "2026-11-15T18:51:29.762349+00:00",
+    "commit": "59ed35bec2d0a668096735a71c1b316387de9e37",
+    "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43748230994",
+    "profile": "core / GitHub-hosted Ubuntu 24.04 / synthetic PostgreSQL",
+    "steps": {
+      "bootstrap": "success",
+      "services": "success",
+      "object_store": "success",
+      "seed": "success",
+      "connectors": "success",
+      "security": "success",
+      "model_upgrade": "success",
+      "asset_type_upgrade": "success",
+      "type_migration_upgrade": "success",
+      "browser": "success"
+    },
+    "outcome": "PASS",
+    "tests": [
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 17,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 6693
+      },
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 101,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1269
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 30,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 8710
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 74,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1009
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 77,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 18620
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 257,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 3520
+      },
+      {
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 80,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 15796
+      },
+      {
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 218,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 2903
+      },
+      {
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 97,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 24483
+      },
+      {
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 242,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 48351
+      },
+      {
+        "file": "tests/e2e/asset-type-migrations.spec.ts",
+        "line": 97,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 20531
+      },
+      {
+        "file": "tests/e2e/asset-type-migrations.spec.ts",
+        "line": 252,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 45285
+      }
+    ],
+    "screenshots": [
+      "catalog-en-light-390.png",
+      "catalog-en-light-768.png",
+      "catalog-en-light-1024.png",
+      "catalog-en-light-1280.png",
+      "catalog-en-light-1440.png",
+      "catalog-en-dark-1440.png",
+      "catalog-history.png",
+      "catalog-ar-dark-390.png",
+      "catalog-ar-dark-768.png",
+      "catalog-ar-dark-1440.png"
+    ],
+    "limitations": [
+      "No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
+      "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification."
+    ]
+  },
+  "safe_artifact_sha256": "8a390719692dbd77d4b1314cf5a37296d26d94964188acb846568a2409fb8bb7",
+  "tree_equivalence": {
+    "tested_tree": "e01c45f7941ae4ad4c67cde02be8843e90cad884",
+    "merged_tree": "e01c45f7941ae4ad4c67cde02be8843e90cad884",
+    "equal": true
+  },
+  "limitations": [
+    "This safe hosted summary records the executed development gate, not full programme qualification or a supported release.",
+    "Original local evidence remains bound to its own images, sources and execution times.",
+    "No independent human review, DCO sign-off or vendor-live qualification is inferred."
+  ]
+}

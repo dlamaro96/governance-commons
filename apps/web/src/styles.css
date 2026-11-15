@@ -633,3 +633,50 @@ p { margin-bottom: 12px; }
 }
 .type-migration-source-policies details + details { margin-block-start: 8px; }
 .type-migration-source-policies summary, .type-migration-source-hashes summary { min-height: 44px; padding-block: 12px; cursor: pointer; }
+
+/* Authored relation policies and authorised graph views share the existing shell. */
+.relation-type-fields, .relation-edit-form, .relation-type-chooser { display: grid; gap: 20px; }
+.relation-policy-section, .relation-asset-picker { min-width: 0; border: 1px solid var(--border); border-radius: 5px; padding: 18px; margin: 16px 0; }
+.relation-policy-section legend, .relation-asset-picker legend { padding-inline: 8px; font-weight: 600; }
+.relation-rule-browser > summary, .relation-asset-picker summary, .relation-filters > summary, .relation-history-list summary, .relation-type-preview summary { min-height: 44px; padding-block: 12px; cursor: pointer; }
+.relation-rule-browser[open] { padding-block-end: 18px; }
+.relation-endpoint-rule { display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, 1fr) auto; gap: 16px; align-items: center; border-block-start: 1px solid var(--border); padding-block: 16px; }
+.relation-endpoint-rule > div { display: grid; gap: 8px; min-width: 0; }
+.relation-definition { min-width: 0; }
+.relation-definition > legend { margin-inline: 20px; padding-inline: 8px; font-weight: 600; }
+.relation-definition .model-editor-toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-block-end: 24px; }
+.relation-endpoint-identities { display: flex; gap: 16px; flex-wrap: wrap; margin-block: 20px; }
+.relation-history-list { list-style: none; padding: 0; margin: 0; }
+.relation-history-list > li { border-block-start: 1px solid var(--border); padding-block: 16px; display: grid; gap: 8px; min-width: 0; }
+.relation-history-list details { min-width: 0; }
+.relation-selected-asset, .relation-endpoint-pair > div { display: grid; gap: 8px; min-width: 0; padding-block: 12px; overflow-wrap: anywhere; }
+.relation-endpoint-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+.relation-member-list { display: grid; gap: 12px; max-height: 360px; overflow: auto; border: 1px solid var(--border); padding: 16px; }
+.relation-unknown-field { display: grid; gap: 8px; border-block-start: 1px solid var(--border); padding-block: 16px; }
+.relation-filters { padding: 0 20px; }
+.relation-filters .panel-body { padding-inline: 0; }
+.relation-table { margin-block: 20px; }
+.relation-graph-canvas { height: 540px; border: 1px solid var(--border); background: var(--surface); border-radius: 6px; overflow: hidden; margin-block: 16px; direction: ltr; }
+.relation-graph-node { width: 240px; min-height: 120px; padding: 14px; display: grid; gap: 8px; border: 1px solid var(--border); border-radius: 5px; background: var(--surface); color: var(--text); box-shadow: 0 2px 5px #001a2b12; overflow-wrap: anywhere; }
+.relation-graph-node.is-root { border-width: 2px; border-color: var(--accent); }
+.relation-graph-node > span { font-size: 12px; color: var(--text-secondary); }
+.relation-graph-node > a { min-height: 28px; padding-block: 3px; font-weight: 600; }
+.relation-expand-link { font-size: 12px; }
+.relation-graph-canvas .react-flow__controls-button { width: 44px; height: 44px; background: var(--surface); color: var(--text); border-color: var(--border); }
+.relation-graph-canvas .react-flow__controls-button svg { fill: currentColor; }
+.relation-graph-canvas .react-flow__edge-path { stroke: var(--text-secondary); stroke-width: 1.6; }
+.relation-graph-canvas .react-flow__edge-textbg { fill: var(--surface); }
+.relation-graph-canvas .react-flow__edge-text { fill: var(--text); }
+.relation-graph-canvas .react-flow__attribution { background: var(--surface); color: var(--text-secondary); }
+.relation-graph-canvas .react-flow__attribution a { min-height: 24px; display: inline-block; padding: 4px; color: var(--text-secondary); }
+[dir="rtl"] .relation-graph-node { direction: rtl; }
+@media (max-width: 768px) {
+ .relation-endpoint-rule { grid-template-columns: minmax(0,1fr) auto; }
+ .relation-endpoint-rule .checkbox-field { grid-column: 1 / -1; grid-row: 2; }
+ .relation-endpoint-pair { grid-template-columns: 1fr; }
+ .relation-policy-section, .relation-asset-picker { padding: 12px; }
+ .relation-graph-canvas { height: 540px; }
+ .relation-definition .model-editor-toolbar > * { flex: 1 1 auto; }
+}
+
+.relation-form-fields { display: grid; gap: 20px; min-width: 0; border: 0; padding: 0; margin: 0; }

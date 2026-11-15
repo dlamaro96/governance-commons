@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "result": "PASS",
+  "recorded_at": "2026-11-15T19:15:11.281071+00:00",
+  "scope": "Pure strict relation definition, exact typed values, endpoint/structural/upgrade validation, bounded authorized traversal and duplicate-safe HTTP JSON envelope only",
+  "command": "pnpm test",
+  "profile": "local Node24.22.3 / pnpm10.32.1 / Darwin arm64",
+  "execution": {
+    "suite_tests": 103,
+    "suite_pass": 103,
+    "suite_fail": 0,
+    "suite_skipped": 0,
+    "suite_cancelled": 0,
+    "suite_duration_ms": 322.63775,
+    "new_relation_tests": 20,
+    "new_json_envelope_tests": 1,
+    "tool_output_chunks": [
+      "0bb1f5"
+    ]
+  },
+  "source_snapshot": {
+    "git_base_commit": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+    "dirty_worktree": true,
+    "files": [
+      {
+        "path": "packages/domain/src/relation.ts",
+        "sha256": "c4624630c377796685d57a5069f0c852e1f18fe74f8f5bfcc968d116b56733dc"
+      },
+      {
+        "path": "packages/domain/src/relation-contracts.ts",
+        "sha256": "f114b3787e492d351ae1ffddc635086c5f4a3d28b5d4ab1687bb76f9a13c351b"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "b893e432df44c5888b601ef6bbae6c00526cff828a4aa5cbc487405e8c30a550"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "b0a42540415ef1cfc71792f132107f56931c9fb0f0c9fcfcdc9f2af4fa1125aa"
+      },
+      {
+        "path": "tests/unit/relation.test.ts",
+        "sha256": "3b8560f2df70952a8e20e42fdc80d465189a22298ba59ea4a786bf41d657f769"
+      },
+      {
+        "path": "tests/unit/json-envelope.test.ts",
+        "sha256": "fe6eae3e6ba41a3922f70f6b480428ce6f08e428dc543d746fb02df2b7a8ab21"
+      },
+      {
+        "path": "package.json",
+        "sha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+      }
+    ]
+  },
+  "limitations": [
+    "Pure tests do not execute PostgreSQL, HTTP, concurrent storage or rendered browser workflows.",
+    "Full MOD/M2 and release qualification remain open."
+  ]
+}

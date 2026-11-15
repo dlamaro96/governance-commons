@@ -15,7 +15,7 @@ if any(DEST.iterdir()):
     raise SystemExit("Artifact staging must be empty; refusing to publish a mixed or stale directory")
 allowed_outcomes = {"success", "failure", "cancelled", "skipped"}
 outcomes = {}
-for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "browser"):
+for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "browser"):
     value = os.environ.get(f"GC_{step.upper()}_RESULT", "skipped")
     outcomes[step] = value if value in allowed_outcomes else "unknown"
 report = {
@@ -44,7 +44,7 @@ if source.is_file():
                     results = test.get("results", [])
                     status = test.get("status", "unknown")
                     filename = Path(str(spec.get("file", ""))).name
-                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts"}:
+                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts"}:
                         continue
                     line = spec.get("line")
                     report["tests"].append({"file": "tests/e2e/" + filename, "line": line if isinstance(line, int) else None,
@@ -54,7 +54,7 @@ if source.is_file():
 if outcomes["browser"] == "success":
     # A successful filtered run is not the mandatory browser gate. Require all
     # registered journeys, once each, as well as their successful outcomes.
-    expected = {f"tests/e2e/{name}.spec.ts": 2 for name in ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations")}
+    expected = {f"tests/e2e/{name}.spec.ts": 2 for name in ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations")}
     observed = {name: sum(test["file"] == name for test in report["tests"]) for name in expected}
     locations = {(test["file"], test["line"]) for test in report["tests"]}
     if observed != expected or len(locations) != sum(expected.values()) or any(test["status"] != "expected" or test["attempts"] != 1 for test in report["tests"]):

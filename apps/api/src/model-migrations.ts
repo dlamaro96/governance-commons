@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import type { FastifyInstance } from 'fastify';
 import { Type } from '@sinclair/typebox';
-import { scope } from '../../../packages/db/src/index.ts';
+import { boundedModelScope as scope } from './model-http.ts';
 import { Problem, requirePermission } from '../../../packages/authz/src/index.ts';
 import { Id } from '../../../packages/contracts/src/index.ts';
 import { parseBoundedJSONFile } from '../../../packages/domain/src/model.ts';
