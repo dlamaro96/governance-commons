@@ -12,7 +12,12 @@ import { CatalogPage } from './pages/Catalog';
 import { AssetPage } from './pages/Asset';
 import { SourcesPage } from './pages/Sources';
 import { AuditPage } from './pages/Audit';
-import { ModelEditorPage, ModelPage, ModelsPage } from './pages/Models';
+const ModelsPage = lazy(() => import('./pages/Models').then(module => ({ default: module.ModelsPage })));
+const ModelPage = lazy(() => import('./pages/Models').then(module => ({ default: module.ModelPage })));
+const ModelEditorPage = lazy(() => import('./pages/Models').then(module => ({ default: module.ModelEditorPage })));
+const AssetTypesPage = lazy(() => import('./pages/AssetTypes').then(module => ({ default: module.AssetTypesPage })));
+const AssetTypePage = lazy(() => import('./pages/AssetTypes').then(module => ({ default: module.AssetTypePage })));
+const AssetTypeEditorPage = lazy(() => import('./pages/AssetTypes').then(module => ({ default: module.AssetTypeEditorPage })));
 const ModelMigrationPage = lazy(() => import('./pages/ModelMigrations').then(module => ({ default: module.ModelMigrationPage })));
 const ModelMigrationReceiptPage = lazy(() => import('./pages/ModelMigrations').then(module => ({ default: module.ModelMigrationReceiptPage })));
 
@@ -55,7 +60,7 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
     { href: '/models', key: 'models' as const, icon: GitBranch, visible: can('models:read') },
     { href: '/audit', key: 'audit' as const, icon: ClockCounterClockwise, visible: can('audit:read') },
   ];
-  const navigation = <><Link href="/" className="brand" onClick={() => setMenuOpen(false)}><BrandMark size={30}/><span>Governance<br/>Commons</span></Link><nav aria-label={t('workspace')}><div className="nav-section-label">{t('workspace')}</div>{navItems.filter(item => item.visible).map(({ href, key, icon: Icon }) => <Link key={href} href={href} className={`nav-link ${path === href || href !== '/' && path.startsWith(href) ? 'selected' : ''}`} aria-current={path === href || href !== '/' && path.startsWith(href) ? 'page' : undefined} onClick={() => setMenuOpen(false)}><Icon size={20}/>{t(key)}</Link>)}</nav><div className="sidebar-bottom"><button className="sidebar-help" onClick={() => { setMenuOpen(false); setHelpOpen(true); }}><Question size={20}/>{t('help')}</button><div className="sidebar-tagline">{t('tagline')}</div></div></>;
+  const navigation = <><Link href="/" className="brand" onClick={() => setMenuOpen(false)}><BrandMark size={30}/><span>Governance<br/>Commons</span></Link><nav aria-label={t('workspace')}><div className="nav-section-label">{t('workspace')}</div>{navItems.filter(item => item.visible).map(({ href, key, icon: Icon }) => <Link key={href} href={href} className={`nav-link ${path === href || href !== '/' && path.startsWith(href) || key === 'models' && path.startsWith('/asset-types') ? 'selected' : ''}`} aria-current={path === href || href !== '/' && path.startsWith(href) || key === 'models' && path.startsWith('/asset-types') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><Icon size={20}/>{t(key)}</Link>)}</nav><div className="sidebar-bottom"><button className="sidebar-help" onClick={() => { setMenuOpen(false); setHelpOpen(true); }}><Question size={20}/>{t('help')}</button><div className="sidebar-tagline">{t('tagline')}</div></div></>;
   async function switchTenant(tenantId: string) {
     setSwitching(true); setError(null);
     try { await api('/session/tenant', { method: 'POST', body: JSON.stringify({ tenantId }) }); window.location.assign('/'); }
@@ -73,6 +78,9 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   const modelMatch = path.match(/^\/models\/([^/]+)(\/edit)?$/);
   let modelId: string | null = null;
   if (modelMatch) { try { modelId = decodeURIComponent(modelMatch[1]); } catch { modelId = null; } }
+  const typeMatch = path.match(/^\/asset-types\/([^/]+)(\/edit)?$/);
+  let typeId: string | null = null;
+  if (typeMatch) { try { typeId = decodeURIComponent(typeMatch[1]); } catch { typeId = null; } }
   const migrationMatch = path.match(/^\/models\/([^/]+)\/(migrate|migrations\/([a-f0-9-]+))$/i);
   let migrationModelId: string | null = null;
   if (migrationMatch) { try { migrationModelId = decodeURIComponent(migrationMatch[1]); } catch { migrationModelId = null; } }
@@ -81,6 +89,9 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   else if (path === '/catalog') content = can('catalog:read') ? <CatalogPage/> : <PermissionDenied/>;
   else if (assetId) content = can('catalog:read') ? <AssetPage id={assetId}/> : <PermissionDenied/>;
   else if (path === '/sources') content = can('sources:read') ? <SourcesPage/> : <PermissionDenied/>;
+  else if (path === '/asset-types') content = can('models:read') ? <AssetTypesPage/> : <PermissionDenied/>;
+  else if (path === '/asset-types/new/definition') content = can('models:write') && can('models:read') ? <AssetTypeEditorPage/> : <PermissionDenied/>;
+  else if (typeId) content = can('models:read') && (!typeMatch?.[2] || can('models:write') && can('catalog:read')) ? (typeMatch?.[2] ? <AssetTypeEditorPage id={typeId}/> : <AssetTypePage id={typeId}/>) : <PermissionDenied/>;
   else if (path === '/models') content = can('models:read') ? <ModelsPage/> : <PermissionDenied/>;
   else if (path === '/models/new/definition') content = can('models:write') ? <ModelEditorPage/> : <PermissionDenied/>;
   else if (migrationModelId && migrationMatch) content = migrationMatch[3] ? (can('models:read') && can('catalog:read') ? <ModelMigrationReceiptPage id={migrationModelId} migrationId={migrationMatch[3]}/> : <PermissionDenied/>) : (can('models:read') && can('models:write') && can('catalog:read') && can('catalog:write') ? <ModelMigrationPage id={migrationModelId}/> : <PermissionDenied/>);

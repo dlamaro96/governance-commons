@@ -142,9 +142,12 @@ jobs:
       - name: Verify model receipt upgrade and rollback
         id: model_upgrade
         run: ./dev test --suite model-upgrade
+      - name: Verify inherited-type upgrade and storage invariants
+        id: asset_type_upgrade
+        run: ./dev test --suite asset-type-upgrade
       - name: Verify browser acceptance and accessibility
         id: browser
-        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts
+        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts
       - name: Collect bounded redacted evidence
         if: always()
         env:
@@ -155,6 +158,7 @@ jobs:
           GC_CONNECTORS_RESULT: ${{ steps.connectors.outcome }}
           GC_SECURITY_RESULT: ${{ steps.security.outcome }}
           GC_MODEL_UPGRADE_RESULT: ${{ steps.model_upgrade.outcome }}
+          GC_ASSET_TYPE_UPGRADE_RESULT: ${{ steps.asset_type_upgrade.outcome }}
           GC_BROWSER_RESULT: ${{ steps.browser.outcome }}
         run: python3 policies/ci_evidence.py
       - name: Preserve only safe behavior summary and catalog screenshots

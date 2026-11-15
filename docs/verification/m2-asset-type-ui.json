@@ -1,0 +1,615 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T17:44:44.903866+00:00",
+  "result": "PASS",
+  "scope": "Verified inherited asset-type development increment and regression of the eight existing browser journeys. This does not complete MOD-001/002/003, AT-MOD-01, E2E-06, M2 or the full programme.",
+  "profile": "core / real Docker Linux arm64 / synthetic Harbor Retail and Summit Logistics tenants",
+  "target": "http://localhost:4310",
+  "command": "PATH=\"$PWD/.local/toolchain/node/bin:$PWD/.local/pnpm/node_modules/.bin:$PATH\" GC_BROWSER_EXECUTABLE=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" pnpm exec playwright test --config .github/playwright.ci.config.ts",
+  "execution": {
+    "startTime": "2026-11-15T17:38:23.175Z",
+    "duration": 311116.315,
+    "expected": 10,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "raw_report": ".local/evidence/playwright-asset-types-full-pass-results.json",
+  "raw_report_sha256": "18a46eb7d4d22ed25d84409b87e953afbd1e6f264e552014b9c4b1c8645091a8",
+  "source_binding": {
+    "base_commit": "649b8aab308937346b0c6b5041576f84e76fce63",
+    "working_tree_dirty": true,
+    "method": "Exact source hashes bind the executed working tree before the checkpoint commit. Public served JS/CSS bytes match the local production build; the frozen runtime image identifies backend code. Historical reports remain bound to their original execution.",
+    "files": [
+      {
+        "path": ".github/playwright.ci.config.ts",
+        "sha256": "8fde2c142e8f08592c5e7e037cbd44589321d33df8254627cf53017b77184db9"
+      },
+      {
+        "path": "apps/web/package.json",
+        "sha256": "cf72e592f6444959c257e304abb0c455fd28d4e297a4e2601339ea38fd427b3c"
+      },
+      {
+        "path": "apps/web/src/App.tsx",
+        "sha256": "78c6771130d55b5a0c6c8cb2199c83a2502c3238bc8a068ec29ef6aed556888d"
+      },
+      {
+        "path": "apps/web/src/api.ts",
+        "sha256": "62ca221c1b8ba76a0d20f89699735129768890419a13f8f3a0338b213197bac9"
+      },
+      {
+        "path": "apps/web/src/assetTypes/DefinitionEditor.tsx",
+        "sha256": "8ef28c0de32b7d5bfae5a5fe581ba4270ebffa6d20613ea295c4582715c711b7"
+      },
+      {
+        "path": "apps/web/src/assetTypes/LifecyclePanel.tsx",
+        "sha256": "cc72e38f95de507c8def9f069deacc3bcfb607dc3a7f4e21b8d616be1a1bea07"
+      },
+      {
+        "path": "apps/web/src/assetTypes/contracts.ts",
+        "sha256": "30219291a4a91b6bc62bb460c839d274b14926d88e6bd1c8cbe7713a1bc7ed20"
+      },
+      {
+        "path": "apps/web/src/assetTypes/messages.ts",
+        "sha256": "9959bea4f6424971680d266030dbc8fc60169d22c3ba5c0a5b7e6d6b778560eb"
+      },
+      {
+        "path": "apps/web/src/components.tsx",
+        "sha256": "217df6f66523f65accc3269304660c6ac90db9b84e4ce46937e3d546864f4187"
+      },
+      {
+        "path": "apps/web/src/i18n.tsx",
+        "sha256": "d24a30cc8f19c1d393f30cc7fb69ef3d9a36b71070cffb634c806c064d5d830a"
+      },
+      {
+        "path": "apps/web/src/main.tsx",
+        "sha256": "666b70ce5765a222777738d2b1f9120c1d2c2914daa96de87574853fb65e475c"
+      },
+      {
+        "path": "apps/web/src/models/AssetAttributes.tsx",
+        "sha256": "553c2ef43d1463fd60a511b2570049e9eae8437e9f37e72b10802392fa50fbb5"
+      },
+      {
+        "path": "apps/web/src/models/MigrationPlanEditor.tsx",
+        "sha256": "3e4cb6d421007ec6be00ec64f3ed3574dadcb1072450fa642bd5eeaf278469df"
+      },
+      {
+        "path": "apps/web/src/models/ModelBrowser.tsx",
+        "sha256": "c1452c9b036daec1e0ff8d49f58a276a3dcd6917098fd300c2bf834657017830"
+      },
+      {
+        "path": "apps/web/src/models/ModelFeedback.tsx",
+        "sha256": "8465edcd291003061871a6288610ed6739efcecf81c960385cbaf834b5120bff"
+      },
+      {
+        "path": "apps/web/src/models/SchemaEditor.tsx",
+        "sha256": "c028b4d34d4ee84bc9250b718f2ed1aff5b7f881be29a0fe1cde7ff0da82ca06"
+      },
+      {
+        "path": "apps/web/src/models/ValueFields.tsx",
+        "sha256": "fd0980ca3945be050410da3040a5e7f5cabf55edf372eef4ee9ef1532741335d"
+      },
+      {
+        "path": "apps/web/src/models/VersionPicker.tsx",
+        "sha256": "95781b042c066ebe9e8cd1af841eeb80e6166146e588ac94280038b514756660"
+      },
+      {
+        "path": "apps/web/src/models/contracts.ts",
+        "sha256": "a0204509d5e69bf1974288399098b334564c7d4cc9b001a004d2aa804630f18e"
+      },
+      {
+        "path": "apps/web/src/models/messages.ts",
+        "sha256": "667433010425fa8a457de9edc47a797e828e819b748ef0566736a040cc0bcb5f"
+      },
+      {
+        "path": "apps/web/src/models/migrationMessages.ts",
+        "sha256": "808cb94cbeccb5617a8fddb59dce1f14d214f32b01e787ad0d7ca5b00eb072dc"
+      },
+      {
+        "path": "apps/web/src/models/planMessages.ts",
+        "sha256": "244916806562a9046bce7f4bb364990842f02975c5e17df14d4c57a8f207039f"
+      },
+      {
+        "path": "apps/web/src/navigation.tsx",
+        "sha256": "d15a75f39edb92ee626bd0682353466b433f5be7cb5104bc1b0a256a7d61913c"
+      },
+      {
+        "path": "apps/web/src/pages/Asset.tsx",
+        "sha256": "7049778316a185895933ff931db5521cd221909c1888b8e58c5e74a3ae9ae30c"
+      },
+      {
+        "path": "apps/web/src/pages/AssetTypes.tsx",
+        "sha256": "d4c0c54025cac63880e8bc61f61914fa44b96eff805160ad4d5a56b531b4d4fd"
+      },
+      {
+        "path": "apps/web/src/pages/Audit.tsx",
+        "sha256": "a23e4c96f32216a8e5c3a7791c8263e78596630313213305a8c22d551217840e"
+      },
+      {
+        "path": "apps/web/src/pages/Catalog.tsx",
+        "sha256": "259126c8daccae7b8eb692cf15a2cef8cd359ee12318c0940a2c39fea3f763ed"
+      },
+      {
+        "path": "apps/web/src/pages/Home.tsx",
+        "sha256": "bb08cf9f5b6d107de73ee3dee400ccd0392f4a826811ab6000a224669d1f0f05"
+      },
+      {
+        "path": "apps/web/src/pages/ModelMigrations.tsx",
+        "sha256": "cc23198090ba7896bb9d5c684dca255df57d4b75dad9fe8752810be95ac804aa"
+      },
+      {
+        "path": "apps/web/src/pages/Models.tsx",
+        "sha256": "72acf1d7e32d001bb2f32dcd350494451477371a55f7d418dda362100d500b47"
+      },
+      {
+        "path": "apps/web/src/pages/Sources.tsx",
+        "sha256": "5df5464c6baea87b932433b9fe4dbf9d52cdc0073369598cdc4feb4c40a82f42"
+      },
+      {
+        "path": "apps/web/src/session.tsx",
+        "sha256": "8194132b7f7b979ea515bf8eab8eb9b00c1f4b7699f16740352cbf84a1165cea"
+      },
+      {
+        "path": "apps/web/src/styles.css",
+        "sha256": "fd136f0ba84f3d59f77cba890a87f09c072c8944d6c9432d5eb6a2ec46cc628a"
+      },
+      {
+        "path": "apps/web/src/types.ts",
+        "sha256": "2c121eba06c772d494ae715a03ea8a473ed4f23ffea6748b3fd361b4804e14c7"
+      },
+      {
+        "path": "apps/web/src/vite-env.d.ts",
+        "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+      },
+      {
+        "path": "apps/web/tsconfig.json",
+        "sha256": "76b2915cb9623d54b4ce6366ac36ce8302a388e67955382075f3b3cfe8baee49"
+      },
+      {
+        "path": "apps/web/vite.config.ts",
+        "sha256": "be49a3fcab78673178e11c775172a65ab07bb80cf95c50f093189929b08b1044"
+      },
+      {
+        "path": "packages/config/routes.json",
+        "sha256": "c5d865348008787a79b312f3ca6ab414b82d86856d828633f6a88e5ccb817a25"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "b0a42540415ef1cfc71792f132107f56931c9fb0f0c9fcfcdc9f2af4fa1125aa"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "3164be5efeed75d16551c25360714c78ca53b5a56f92c72c9021a0a6dc5e5d33"
+      },
+      {
+        "path": "packages/ui/src/index.tsx",
+        "sha256": "9fdb615913bb9d6055b02bf38e7c670fd91ce190b51436dfc9a2d5df8cb584b3"
+      },
+      {
+        "path": "packages/ui/src/tokens.css",
+        "sha256": "b21dd67cae74c186f6d4b1a6bd150ec626b1a3f183d5b5c050c443029aa1d236"
+      },
+      {
+        "path": "playwright.config.ts",
+        "sha256": "f671166e0edf378678ffdde7a643c2cfb4e3e8a5092517e94c38620acf3ffe45"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "64ba875f705195741265864539885115446d7f24848033b66ebb0f17ee396bef"
+      },
+      {
+        "path": "tests/e2e/asset-types.spec.ts",
+        "sha256": "8d6e7f8ccedb3774557f71470e52ec7bea8ee60e2b86d1ee414bc17b5ec5ac04"
+      },
+      {
+        "path": "tests/e2e/model-migrations.spec.ts",
+        "sha256": "6da5e76511b535bdef770fdad27d72861cf299a1c4a91c3e6f64d218572b33e8"
+      },
+      {
+        "path": "tests/e2e/models.spec.ts",
+        "sha256": "d25dc12de6cbff6642169b15ca8797d2275a5eab165242b0c88a09b959d73f3f"
+      },
+      {
+        "path": "tests/e2e/ui-accessibility.spec.ts",
+        "sha256": "a55a5c6fdc2506d70c2840e75486d235a8c7440964376a2fa25ee88a7c65e504"
+      },
+      {
+        "path": "tests/e2e/vertical-slice.spec.ts",
+        "sha256": "0833a6f40fb6859aa0c4e43b6ad05627e0762fe1b928a6fc22b42f1b7310298b"
+      }
+    ]
+  },
+  "runtime": {
+    "api_image": "sha256:de9b7c6c33f995ea7c01abde6035ab5585fe8d32b8c6e15f09a439aee039b282",
+    "identity_method": "docker inspect .Image for running API container, checked against frozen integration image",
+    "observed_at": "2026-11-15T17:41:35.731108+00:00",
+    "chrome": "Google Chrome 157.0.8103.51",
+    "served_assets": [
+      {
+        "path": "/assets/AssetTypes-B4nw79Sw.js",
+        "sha256": "0a4fd47f24db162bb6ba4b093afef87a391b3d21285e1de3455cfe61fc9f4f3c",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/LifecyclePanel-ok-lgCys.js",
+        "sha256": "3ced74848a81de76c25c11198e2541cb67f41aa7eeef647c9ca4ae450d038529",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/ModelFeedback-6uWfxQTk.js",
+        "sha256": "bafe531a52e6a7c4d54734852f9229336e99c199af941b939919af037d46b50b",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/ModelMigrations-CAj1BdNc.js",
+        "sha256": "5638f8aaf9db9132099824c4865ee3cbb1acb752db5a63529d6aaefcb203ea6a",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/Models-B5SeQYTY.js",
+        "sha256": "d6a959956a8a247bca1beac0c514911334f514018bfb31d56c84d69b3ff3e697",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/SchemaEditor-DZYeWZxA.js",
+        "sha256": "c50330783e865c14b3fef88279f54ae32dbb2141646669e284d621458fd586d7",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/index-aqmA9HS7.js",
+        "sha256": "93e2b308d1b1344c057ff2ff9d3be825f9accacaef4cf930f27f58b5585c5f1a",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/index-hHf8i4aE.css",
+        "sha256": "9ba6e8022a239876b017d35ce683248f931ad8fec6a316e0ffbdd44046c8a1fb",
+        "matches_local_build": true
+      }
+    ]
+  },
+  "tools": {
+    "node": "24.22.3",
+    "pnpm": "10.32.1",
+    "typescript": "7.0.2",
+    "playwright": "1.65.1",
+    "axe": "4.14.0",
+    "chrome": "Google Chrome 157.0.8103.51"
+  },
+  "methodology": [
+    "Real Keycloak OIDC, authenticated server sessions, PostgreSQL source scans, typed canonical writes and read-back assertions. No mocked identity, API response or source service.",
+    "CI projects execute with one worker, zero test retries/skips, and automatic trace/video/screenshots disabled to avoid recording login credentials. Explicit screenshots contain authenticated synthetic data only.",
+    "Asset-type beforeAll/beforeEach/afterAll hooks read the actual X-RateLimit-Remaining and X-RateLimit-Reset. When fewer than 200 requests remain, they wait at most 61 seconds within a 75-second hook budget before proceeding. No failed mutation or assertion is retried and production limits remain enabled.",
+    "Axe WCAG2A/2AA/2.1AA/2.2AA runs after finite animations settle, with no rule or element exclusions. Horizontal document overflow is checked at each captured width.",
+    "Exact type-preview consent is exercised with keyboard focus and Space; the existing source drawer keyboard/focus tests run in the same full gate."
+  ],
+  "verified": [
+    "Visual root-type creation, exact decimal field schema, active-owner rule and lifecycle; duplicate-key raw import denial, return to last valid draft, valid import and authored JSON export roundtrip.",
+    "Visual child authoring with an exact parent version, explicit copied local override, inherited required ownership and inherited lifecycle. Resolved metadata and immutable dependency pins are read back from the real API.",
+    "A real scanned PostgreSQL asset cannot receive the required-owner type without an active owner. UI ownership assignment then succeeds, and ordinary owner removal is rejected without losing the binding.",
+    "Legal lifecycle transition is committed; illegal transition returns 422 and leaves the full type-state response unchanged. Reassigning a newer version of the same authored type preserves the active state and exact decimal string.",
+    "A parent upgrade leaves existing child definitions/resolution hashes and asset version pins unchanged. An explicit child parent-pin upgrade requires a complete preview and digest-bound consent.",
+    "Concurrent canonical asset edit makes publication return 409, leaves the child head unchanged and preserves the draft parent pin. Reload and fresh preview/consent allow compatible publication while prior child versions remain immutable.",
+    "Consumers can read permitted type/lifecycle information but cannot author or transition in UI or API. The other tenant sees 404 for foreign type/asset state, empty scoped type search, and can create its own independent same-identifier type.",
+    "Authored types link from the model list to their type page. Legacy model edit/migration routes display the authored-type route and expose no misleading publication or migration action.",
+    "The existing OIDC/source scan/catalog/ownership/audit, model editor/typed values/pagination, explicit migration/receipt, role/tenant and accessibility journeys all pass in the full ten-test gate."
+  ],
+  "visual_inspection": {
+    "status": "PASS_FOR_RECORDED_SCREENSHOTS",
+    "method": "Implementation agent visually inspected all 17 final-run PNGs with the image viewing tool; this is not independent human sign-off.",
+    "screenshots": [
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-ar-dark-390.png",
+        "sha256": "44f7154cfa9d04bdd51dc9aa94ec8d5e16abfe33a19fba79fa8df6b893f15162"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-en-1024.png",
+        "sha256": "5699a4f8876d69bafd84810351251173f023170575bd6a1edcae568a14938513"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-en-1440.png",
+        "sha256": "99e3f8e50de7944a7f5d7b45c46bb853cc83823b956f132c5ffd220fd10c5bb0"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-en-390.png",
+        "sha256": "ed93ce074f4dfa35073944a59d89b00adc46475cd4671cc7400f52cc0423085c"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-en-768.png",
+        "sha256": "7a2830e5f927dd64fed1c45507453684767042fbd7a29682800c5abd14a66bbf"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-inheritance-en-1440.png",
+        "sha256": "1b3cf83a5306c0aaa33538208af4616a8ae3745fce2faac4f4fcf9e0f9f465c7"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-inheritance-en-390.png",
+        "sha256": "e4b160946ffb35d2a0d300eb37dbb92b97dfc562a4343727ec96b3fbbd1d9cc5"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-ar-dark-390.png",
+        "sha256": "97177a368b88c055c4edd7f232d63d371557c665404f36d9bf9edfa440bcb24a"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-editor-en-1440.png",
+        "sha256": "d03d99af756fd6405037a7a7045d2fbb6545c3879915ecd440aa0d1fc9cdec9e"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-editor-en-390.png",
+        "sha256": "e14d653844c8ee4bba6587092868ba3ed329b9a6ed203b03d5d8a091af8ecdbb"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-en-1440.png",
+        "sha256": "14ee21c85e1c5fe7c06090d932bb2161c1dc658d7b6a689f327371a34f3c27ea"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-en-390.png",
+        "sha256": "c52867c5a37a2c496aff950864d9d67e2e4634e79ff68cf515980e88a4cb5dce"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-preview-en-1440.png",
+        "sha256": "f599eed9ca99cdf9207ed76fb3904cbeff24370b8aa44f020758bb0298f4af0b"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-preview-en-390.png",
+        "sha256": "6db06036e208989a76a0cfa2c06e4e4b9e9d1791179e014dbb517d37e5f55b61"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-readonly-en-390.png",
+        "sha256": "5676d037cbb78dd054c06936439b0d99a340edf8e368e6d85daa902b904f0226"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-resolved-en-1440.png",
+        "sha256": "612a3a34a384ebcd98cf5cf2bc7a0e58934a6a98f529a1bb422c9f1b607b0279"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-resolved-en-390.png",
+        "sha256": "a7d37d9ce5290a83b9d059aea977fa26ba4665a5038beb78cee68b66d7185807"
+      }
+    ],
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 960
+      },
+      {
+        "width": 1024,
+        "height": 960
+      },
+      {
+        "width": 768,
+        "height": 960
+      },
+      {
+        "width": 390,
+        "height": 960
+      }
+    ],
+    "observed": "Authored fields, parent pins, lifecycle controls, impact scope and review consent are legible. No observed horizontal document overflow, overlapping controls or clipped primary actions at the recorded views. English/light and Arabic/dark layouts are shown.",
+    "preliminary_root_spot_check": {
+      "scope": [
+        "m2-asset-type-editor-en-1440.png",
+        "m2-asset-type-editor-ar-dark-390.png",
+        "m2-asset-type-lifecycle-en-390.png"
+      ],
+      "run": "Initial targeted run, first journey passed. Those preliminary screenshots are preserved privately and are not rebound to the final run.",
+      "result": "Root agent observed legible fields/RTL/controls and no visible horizontal overflow."
+    }
+  },
+  "historical_evidence": {
+    "preserved_files": [
+      {
+        "path": "docs/verification/screenshots/asset-en-light-1440.png",
+        "sha256": "9b495a82d5e0b573c6e2dfbc9145a5ad69ee073bcf4d19ad130b2ed046d138e2"
+      },
+      {
+        "path": "docs/verification/screenshots/asset-en-light-390.png",
+        "sha256": "a2a5235ad78141002ce97cba7cd1132723942adbb413b0ff95251019756b146e"
+      },
+      {
+        "path": "docs/verification/screenshots/audit-en-light-1440.png",
+        "sha256": "880ca7769db8a669cb1a748ec90f74829f2cf3cbeb0b374143590d1de7974172"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-ar-dark-1440.png",
+        "sha256": "9e118b83bd8d786e240183751340702fd7e3bcdb53f2b676a66cb87349e747d0"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-ar-dark-390.png",
+        "sha256": "0020afa07937035dcee1186e66b3cc183eeb6c8d75efd5ace8051d7e7946ff94"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-ar-dark-768.png",
+        "sha256": "118898141ad94cb5ee445ef8b585c0f074d1c41a8d7da2ef896f42bd1bab4945"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-dark-1440.png",
+        "sha256": "e7686c0e2b06c3f1b49ffc4c8e5f3e0095b91036c1eb138d4c81a1930a263023"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-1024.png",
+        "sha256": "49f67ea46ef95c6e76897c08aad96fa26a56f79af5dfb022dbe0b8c76e7fcd39"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-1280.png",
+        "sha256": "87dfff7d741e8aa68a0269fa19f77049794e74d0ff641a4518865721b5f37edc"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-1440.png",
+        "sha256": "67920e53017c28f2665bdbe931bb8eefc85e97186d62f483c20ef53f589c9767"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-390.png",
+        "sha256": "02d905c4c80c38e9b9075cd60c1e3f6dd33a830e597e8c79ac2fe3ed7be4350e"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-768.png",
+        "sha256": "e8fa1bababc049412a3f8e794706b0cd99a976bec90c21571dcf2379d91abda8"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-history.png",
+        "sha256": "f56ada27dd2e44b22dd20e24ec9607017ecb8bdee59554e6b6efb3eefb9abf63"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-confirmation-en-1440.png",
+        "sha256": "3e348bcf18749a4d4d2ce1fb57bf010b7e16b4498bc938a647868d7e5a8d22d4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-confirmation-en-390.png",
+        "sha256": "826e4070c8543d8a47ad94fed814169e146a614b0c80fd5cf600e57cc4fdc887"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-model-chooser-en-1440.png",
+        "sha256": "ee3cd03220f7adf4495dd4bc95aba20f729777da633bc2d7aad5bf7d5e2ed509"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-model-chooser-en-390.png",
+        "sha256": "13d1ae755ae75a4b36978af768c3f1c00a2eb45180511a1a1fa7b99d51b98bb1"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-model-list-en-1440.png",
+        "sha256": "e91ebdb03d84b99edd614ca2890fe2a15ee46418db822fae0fe62d518579a616"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-model-list-en-390.png",
+        "sha256": "a6f188e9a73940d33bc89ed0bad3ce2525780b0272dda9722b3158aa73731a9e"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-plan-en-1440.png",
+        "sha256": "1a6c469ec2794b9c4ea567f09ec47474e8a72b0aeb6e4140cec17de061ed8599"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-plan-en-390.png",
+        "sha256": "fa28c60be911cf7a11cd0d93174dfeeb193629fbe0f7d6517acf38fdd12ac1e6"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-preview-dark-390.png",
+        "sha256": "3ec49553adb3c7d371f0ffe14d4ba41fde404d82d0c83b4d24efaed4bc6db4b5"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-preview-en-1440.png",
+        "sha256": "eb87ec3b114072eba03ff0612b629aa45cc72dd539b32be71ccee5a4ada2a3b4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-preview-en-390.png",
+        "sha256": "ce73e5e7aac36f44b6a3d3ac732938b38866b87745d1ca5b4bf420e52904e8a0"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-receipt-ar-390.png",
+        "sha256": "4a68a7972cbe2c0182ef83afacccf6b811d46d407b5bbfe7e04d24d161a936a4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-receipt-en-1440.png",
+        "sha256": "450cea4cdded5fbc2fed7b556bd171eabddd80daa3b439556c5a73b0d67f9531"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-receipt-en-390.png",
+        "sha256": "5d1e5d617347745d106e7c25820fc713635d683fa1fb67fc641e26daa56cab5d"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-values-en-390.png",
+        "sha256": "565da93d4aff5fd3e56f9dbf20295cad1a461410ddaea2db05bbf809b4d96b71"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-editor-ar-390.png",
+        "sha256": "4bbb8b732e6777a0a97758f73cade5a716a667d943d6b15610a2e977da3939b4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-editor-en-1440.png",
+        "sha256": "bf0ace849e6888fe9c0992838ca6315403c814df713bafc6abf0d3966882f068"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-editor-en-390.png",
+        "sha256": "c7be11ca2cd43ad22645afd89b1e671d4c7549832efd6015423b041cfbaa3c09"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-preview-en-1440.png",
+        "sha256": "22551575526066e779ca6785ced75e6bcb7e16cb5c4f5e9b988a812f29c863e9"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-preview-en-390.png",
+        "sha256": "d27d248a79811d1960f98530c8d0dd5346fad424e7b4fbc1f0edeffd91a1c50c"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-typed-asset-en-1440.png",
+        "sha256": "2ab48d3d51ff1cda5a03aa737629940aad0ef46223d67dee1c488cdfe6d5d792"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-typed-asset-en-390.png",
+        "sha256": "6bc6ce7c72c122c49f9303a7c882e319aff00d99289e67e2a3db379cacda22df"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-typed-form-en-1440.png",
+        "sha256": "55616f8b4fe828936e19df8ad7e0dacd51f53d7cc1e65a7162e63d911c4a699b"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-typed-form-en-390.png",
+        "sha256": "ac69fefd2c5819156ac1ee2001e9b68501e5bce2feedfc2803e81a66bf29e69d"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-version-en-1440.png",
+        "sha256": "5ae326bcc28b795080f3d709f4d06b5b688d5a2d8cc0939d813ac41fb07dd0ad"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-version-en-390.png",
+        "sha256": "ae39469ce9753bd32e4d3528df05e8b949f3bf7184e00211c2e53c438adf6bd5"
+      },
+      {
+        "path": "docs/verification/screenshots/overview-en-light-1440.png",
+        "sha256": "5d5302325c57bd79005c8696bc116bdb79e18a890699a05154e638d9b5bfa7d9"
+      },
+      {
+        "path": "docs/verification/screenshots/sources-en-light-1440.png",
+        "sha256": "873c8fc0cfce9dd92d16b777a9192c9d9131440c8ea28b3fe3c22c766955678b"
+      }
+    ],
+    "method": "The 41 public M1/model/migration PNGs were copied with hashes before execution and restored byte-for-byte afterward. Fresh regression captures from this run remain private under .local/evidence/asset-type-regression-screenshots; historical manifests were not rewritten."
+  },
+  "targeted_qualification": {
+    "command": "Same command with --project=asset-types --no-deps",
+    "execution": {
+      "startTime": "2026-11-15T17:35:43.564Z",
+      "duration": 123592.29199999999,
+      "expected": 2,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "raw_report": ".local/evidence/playwright-asset-types-targeted-pass-results.json",
+    "raw_report_sha256": "b9b1e2887bae9bfe1ac3e69263e8f19644797cdb4dc30634fb1fcf6fab805934",
+    "api_image": "sha256:de9b7c6c33f995ea7c01abde6035ab5585fe8d32b8c6e15f09a439aee039b282"
+  },
+  "diagnostics": [
+    {
+      "kind": "initial_targeted_request_budget_exhaustion",
+      "execution": {
+        "startTime": "2026-11-15T17:32:16.591Z",
+        "duration": 62383.041,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "raw_report": ".local/evidence/playwright-asset-types-diagnostic-rate-limit-results.json",
+      "raw_report_sha256": "265eb34a0d05486792e624c57d0d937fb2856a903f5f4cddaf906afbb9dac9cf",
+      "api_image": "sha256:de9b7c6c33f995ea7c01abde6035ab5585fe8d32b8c6e15f09a439aee039b282",
+      "observed": "First journey passed; second reached expected tenant API 404 responses but the final unavailable-type page heading did not appear. API completion logs recorded three 429 GET responses at the failure time. Log URLs were redacted and the error context contained no DOM snapshot; the final page heading/status cannot be reconstructed.",
+      "evidence": {
+        "path": ".local/evidence/asset-type-rate-limit-diagnostic.json",
+        "sha256": "dced5a94f4e20dd791ce98ce5923ae4bd988114e4ca90eb9d6a2a8a4dddee418"
+      },
+      "resolution": "Added header-based per-test pacing and sanitized 429 method/status/path diagnostics. Application code, image, rate limits and functional assertions were unchanged. The subsequent targeted and full gates pass."
+    }
+  ],
+  "limitations": [
+    "This is a scoped browser/development qualification, not a full accessibility audit, independent human language review, vendor-live test, enterprise sign-off or release approval.",
+    "Arabic remains provisionally translated; manual screen-reader review, full 200% zoom and all platform/browser combinations remain open.",
+    "Inherited-type destructive migrations, constrained relations, domain/attribute types, scoped overrides, other responsibility roles and bulk/workflow/MCP ingress remain required programme work. Blocked migrations are not presented as functional.",
+    "The browser suite exercises parent search and exact version selection; complete cyclic/conflicting ancestry, hidden cohort, storage/FK and rollback qualification is separately scoped in API/domain/upgrade reports.",
+    "Synthetic fixture history is retained. No inventory total or frozen pagination snapshot is inferred."
+  ],
+  "release_qualification": "NOT_CLAIMED"
+}

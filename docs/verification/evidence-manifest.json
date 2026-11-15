@@ -196,6 +196,27 @@
         "verified_files": 7,
         "evidence_sha256": "aa389350cb7bb6b6ca3d7449d18ed3f1bb1af63a8d0b7e77a00d35f4eb6d0798"
       }
+    },
+    {
+      "path": "docs/verification/hosted-model-migrations.json",
+      "scope": "hosted-model-migrations",
+      "source_binding": {
+        "implementation_commit": "c666ca64a05f357efb130bd78f0470c4f7c82cc3",
+        "ci_tested_merge_commit": "d3831ebbdacc88441bf605b8ff6eb289b93ef842",
+        "method": "GitHub required-check readback and downloaded allowlisted behavior summary from run43738876918; original tested pull-request merge revision retained."
+      }
+    },
+    {
+      "path": "docs/verification/asset-type-upgrade.json",
+      "scope": "isolated SQL005-to006 upgrade and nine actual PostgreSQL runtime-role storage invariants; source binding pending coherent implementation commit"
+    },
+    {
+      "path": "docs/verification/m2-asset-type-api.json",
+      "scope": "inherited asset-type API, lifecycle, ownership, storage, pagination and prior regression checks"
+    },
+    {
+      "path": "docs/verification/m2-asset-type-ui.json",
+      "scope": "inherited asset-type UI, ten real browser journeys, 17 inspected screenshots and 41 preserved historical screenshots"
     }
   ],
   "limitations": [

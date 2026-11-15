@@ -29,14 +29,14 @@ function boundedSize(value: number): number {
 }
 
 /** Cursor history belongs to one applied query and page size. It is not a snapshot. */
-export function useModelBrowser(limit = 20): ModelBrowser {
+export function useModelBrowser(limit = 20, endpoint: '/models' | '/asset-types' = '/models'): ModelBrowser {
   const [draftQuery, setDraft] = useState('');
   const [position, setPosition] = useState<BrowsePosition>(() => ({ query: '', cursors: [null], pageSize: boundedSize(limit) }));
   const params = new URLSearchParams({ limit: String(position.pageSize) });
   if (position.query !== '') params.set('q', position.query);
   const cursor = position.cursors[position.cursors.length - 1];
   if (cursor) params.set('cursor', cursor);
-  const path = `/models?${params.toString()}`;
+  const path = `${endpoint}?${params.toString()}`;
   const resource = useResource<ModelPage>(path);
   const requestedPath = useRef(path);
   const changingPath = requestedPath.current !== path;
@@ -75,26 +75,26 @@ export function useModelBrowser(limit = 20): ModelBrowser {
 }
 
 /** Explicit buttons keep this usable inside an existing asset-edit form. */
-export function ModelBrowserControls({ browser, disabled = false }: { browser: ModelBrowser; disabled?: boolean }) {
+export function ModelBrowserControls({ browser, disabled = false, assetTypes = false }: { browser: ModelBrowser; disabled?: boolean; assetTypes?: boolean }) {
   const { t, number } = useLocale();
   const hintId = useId();
   const busy = disabled || browser.loading;
   const sizes = [...new Set([1, 20, 50, 100, browser.pageSize])].sort((left, right) => left - right);
   return <div className="model-browser">
     <div className="model-search">
-      <label className="form-field"><span>{t('searchModels')}</span><input type="search" dir="ltr" value={browser.draftQuery} maxLength={64} disabled={disabled} aria-describedby={hintId} onChange={event => browser.setDraftQuery(event.target.value)} onKeyDown={event => {
+      <label className="form-field"><span>{t(assetTypes ? 'searchAssetTypes' : 'searchModels')}</span><input type="search" dir="ltr" value={browser.draftQuery} maxLength={64} disabled={disabled} aria-describedby={hintId} onChange={event => browser.setDraftQuery(event.target.value)} onKeyDown={event => {
         if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
           event.preventDefault();
           if (!busy) browser.applySearch();
         }
       }}/></label>
-      <button type="button" className="button secondary" disabled={busy} onClick={browser.applySearch}>{t('searchModelsAction')}</button>
+      <button type="button" className="button secondary" disabled={busy} onClick={browser.applySearch}>{t(assetTypes ? 'searchAssetTypesAction' : 'searchModelsAction')}</button>
     </div>
-    <p className="supporting-text" id={hintId}>{t('modelBrowseHint')}</p>
+    <p className="supporting-text" id={hintId}>{t(assetTypes ? 'assetTypeBrowseHint' : 'modelBrowseHint')}</p>
     <div className="model-pager">
       <label className="form-field"><span>{t('pageSize')}</span><select value={browser.pageSize} disabled={busy} onChange={event => browser.setPageSize(Number(event.target.value))}>{sizes.map(size => <option key={size} value={size}>{number(size)}</option>)}</select></label>
-      <p className="supporting-text" aria-live="polite">{t('page')} {number(browser.page)}{!browser.error && <> · {browser.loading ? t('loading') : `${t('modelPageRows')}: ${number(browser.items.length)}`}</>}</p>
-      <nav aria-label={t('modelPage')}>
+      <p className="supporting-text" aria-live="polite">{t('page')} {number(browser.page)}{!browser.error && <> · {browser.loading ? t('loading') : `${t(assetTypes ? 'assetTypePageRows' : 'modelPageRows')}: ${number(browser.items.length)}`}</>}</p>
+      <nav aria-label={t(assetTypes ? 'assetTypePage' : 'modelPage')}>
         <button type="button" className="button secondary" disabled={busy || !browser.hasPrevious} onClick={browser.previousPage}>{t('previous')}</button>
         <button type="button" className="button secondary" disabled={busy || !browser.hasNext} onClick={browser.nextPage}>{t('more')}</button>
       </nav>

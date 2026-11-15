@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PencilSimple } from '@phosphor-icons/react';
 import { DetailDrawer, EmptyState, LoadingState, Notice } from '../../../../packages/ui/src';
 import { api, ApiError, useResource } from '../api';
@@ -13,13 +13,15 @@ import { ModelError } from './ModelFeedback';
 import { VersionPicker } from './VersionPicker';
 import { ModelBrowserControls, useModelBrowser } from './ModelBrowser';
 
-export function AssetAttributesPanel({ assetId, onSaved }: { assetId: string; onSaved: () => void }) {
+export function AssetAttributesPanel({ assetId, assetVersion, onSaved }: { assetId: string; assetVersion: number; onSaved: () => void }) {
   const { t, number } = useLocale();
   const resource = useResource<AssetAttributes>(`/assets/${encodeURIComponent(assetId)}/attributes`);
+  const observedVersion = useRef(assetVersion);
+  useEffect(() => { if (observedVersion.current !== assetVersion) { observedVersion.current = assetVersion; resource.reload(); } }, [assetVersion, resource.reload]);
   const canEdit = usePermission('catalog:write');
   const [open, setOpen] = useState(false);
   const [saved, setSaved] = useState(false);
-  return <section className="panel governed-attributes"><div className="panel-heading"><div><h2>{t('attributes')}</h2><p>{t('attributesDescription')}</p></div>{canEdit && resource.data && <button className="text-button" onClick={() => { setOpen(true); setSaved(false); }}><PencilSimple size={15}/>{t(resource.data.modelId ? 'editAttributes' : 'assignModel')}</button>}</div>{resource.error ? <div className="panel-body"><RequestError error={resource.error} retry={resource.reload} compact/></div> : !resource.data ? <LoadingState label={t('loading')}/> : <div className="panel-body">{saved && <Notice tone="success">{t('attributesSaved')}</Notice>}{resource.data.definition && resource.data.modelId ? <><div className="attribute-model-pin"><Link href={`/models/${encodeURIComponent(resource.data.modelId)}?version=${resource.data.modelVersion}`}>{resource.data.modelId}</Link><span>{t('modelVersion')} {number(resource.data.modelVersion!)}</span></div><AttributeReadout fields={resource.data.definition.attributes} values={resource.data.attributes}/><p className="supporting-text">{t('attributePin')}</p></> : <EmptyState compact title={t('noAttributeModel')} description={t('noAttributeModelBody')}/>}</div>}{open && resource.data && <AttributeEditor initial={resource.data} onClose={() => setOpen(false)} onSaved={() => { setOpen(false); setSaved(true); resource.reload(); onSaved(); }}/>}</section>;
+  return <section className="panel governed-attributes"><div className="panel-heading"><div><h2>{t('attributes')}</h2><p>{t('attributesDescription')}</p></div>{canEdit && resource.data && <button className="text-button" disabled={resource.loading} onClick={() => { setOpen(true); setSaved(false); }}><PencilSimple size={15}/>{t(resource.data.modelId ? 'editAttributes' : 'assignModel')}</button>}</div>{resource.error ? <div className="panel-body"><RequestError error={resource.error} retry={resource.reload} compact/></div> : !resource.data ? <LoadingState label={t('loading')}/> : <div className="panel-body">{saved && <Notice tone="success">{t('attributesSaved')}</Notice>}{resource.data.definition && resource.data.modelId ? <><div className="attribute-model-pin"><Link href={`/models/${encodeURIComponent(resource.data.modelId)}?version=${resource.data.modelVersion}`}>{resource.data.modelId}</Link><span>{t('modelVersion')} {number(resource.data.modelVersion!)}</span></div><AttributeReadout fields={resource.data.definition.attributes} values={resource.data.attributes}/><p className="supporting-text">{t('attributePin')}</p></> : <EmptyState compact title={t('noAttributeModel')} description={t('noAttributeModelBody')}/>}</div>}{open && resource.data && <AttributeEditor initial={resource.data} onClose={() => setOpen(false)} onSaved={() => { setOpen(false); setSaved(true); resource.reload(); onSaved(); }}/>}</section>;
 }
 function AttributeEditor({ initial, onClose, onSaved }: { initial: AssetAttributes; onClose: () => void; onSaved: () => void }) {
   const { t, number } = useLocale();
