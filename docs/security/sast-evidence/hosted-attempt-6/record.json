@@ -1,0 +1,571 @@
+{
+  "development": {
+    "artifactArchiveSha256Observed": "5ee9cee12033ec960c325a113ee63e6b6e922187f5a7baac30d57ce52ef3f042",
+    "behaviorSummarySha256": "91b0c674a8ff0d7d014f2c7f0ecce5856d0b83b5456403c7b3219fa49dd77c30",
+    "browserTests": 14,
+    "checks": {
+      "behavior": "PASS",
+      "quality": "PASS",
+      "required": "PASS",
+      "secrets": "PASS"
+    },
+    "durationSeconds": 787,
+    "fullWorkflowOutcome": "PASS",
+    "limitations": [
+      "This historical workflow does not execute the subsequent Map materialization repair."
+    ],
+    "publicUiObservedAt": "2026-11-15T23:52:50Z",
+    "runUrl": "https://github.com/dlamaro96/governance-commons/actions/runs/43775987149",
+    "safeBehaviorArtifactOutcome": "PASS",
+    "steps": 11,
+    "testedMergeCommit": "a8443c4af88c9c77a37e9d4c7f9411262f6845fb"
+  },
+  "limitations": [
+    "All three analyses, coverage and stored-analysis read-back pass; one high JavaScript finding still blocks the gate at the own-property sink.",
+    "The earlier setter regression passes with the first repair, but that semantic improvement did not close the pinned scanner result. No suppression or risk acceptance is inferred.",
+    "The subsequent private-Map materialization repair has local pure/type evidence only; its source scan and hosted execution are NOT_RUN.",
+    "The separate Development workflow passes all four required checks and its safe artifact passes14 browser journeys/11 steps on the historical tested merge; it does not execute the later Map materialization source.",
+    "Fork/Dependabot, default-branch and complete programme/release qualification remain open."
+  ],
+  "preservedCopiesSha256": {
+    "actions/actions-summary.json": "6e616d76e3113f412a65019b3d353ff24e36964ce7c71bdae408efdc073bbd5a",
+    "actions/source-manifest.json": "75260e017e69bc34fdbee3d8a4c1580e5d7029acbb5e4caf37d341fabea61de5",
+    "actions/summary.json": "af10bd53bd20512a36faf5f735d46e82340a4eace64aa3a30b23d79f9871338b",
+    "actions/upload-status.json": "0dd35c3c7174229bdd630241835f23fa89ee27ca139d7a81bd63307386de1787",
+    "behavior-summary.json": "91b0c674a8ff0d7d014f2c7f0ecce5856d0b83b5456403c7b3219fa49dd77c30",
+    "javascript-typescript/javascript-typescript-summary.json": "f3866dd56d017f8c0fccee6dfb73eb89c63161aa139fa7a20df23e01413e7748",
+    "javascript-typescript/source-manifest.json": "75260e017e69bc34fdbee3d8a4c1580e5d7029acbb5e4caf37d341fabea61de5",
+    "javascript-typescript/summary.json": "f1ad56d9599a45a7dfab82f38cd371f279c841d5db909e43b1d72a13a125f665",
+    "javascript-typescript/upload-status.json": "4718cd7313ecf1586676a9fb234fe8a13962f0a0a023f58fd7d5a35622de4842",
+    "python/python-summary.json": "ad3455f53e468aa78ff6517f6c0ef00285be6d62abb963999836381953681ac6",
+    "python/source-manifest.json": "75260e017e69bc34fdbee3d8a4c1580e5d7029acbb5e4caf37d341fabea61de5",
+    "python/summary.json": "370fd3ac5de741c043e6cff50b3a401ff3883308a759ee5af537c23b97eb9a65",
+    "python/upload-status.json": "1aeeee80ff692b5635228b08dac9d3b74ba3cf7787cbeb72504336ec58d28ed2"
+  },
+  "pullRequest": "https://github.com/dlamaro96/governance-commons/pull/15",
+  "purpose": "SIXTH_HOSTED_ATTEMPT_OWN_PROPERTY_SINK_REMAINS_BLOCKED",
+  "recordedAt": "2026-11-15T23:46:53.812282+00:00",
+  "schemaVersion": 1,
+  "sourceDigest": "65f9ff043bd134025c79ee204fd4a3c2ce7de7446c6e2eefda49b53d3c02ed98",
+  "sourceHead": "b6328a3962607d4e808750cc0afb8cd2b7e487bd",
+  "sourceSecurity": {
+    "aggregate": "FAIL",
+    "analysisReadBack": "ALL_THREE_STORED_ANALYSES_VERIFIED_EXACT_COMMIT_FINDING_REMAINS_BLOCKED",
+    "durationSeconds": 131,
+    "jobStatusEvidence": "Root agent observed public workflow UI; safe language artifacts independently establish analysis and findings results.",
+    "languages": {
+      "actions": {
+        "analysis": "PASS",
+        "coverage": {
+          "databaseFiles": 2,
+          "expectedFiles": 2,
+          "extractedExpectedFiles": 2,
+          "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+        },
+        "durationSeconds": 28.063,
+        "findings": [],
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-15T23:40:36.408330+00:00",
+        "lastMemoryAdmission": {
+          "availableBytes": 15132819456,
+          "finiteCgroupLimits": [],
+          "hostAvailableBytes": 15132819456,
+          "inheritedSoftLimitBytes": {},
+          "physicalBytes": 16464302080,
+          "requiredAvailableBytes": 6442450944,
+          "status": "ADMITTED",
+          "system": "Linux"
+        },
+        "queryCount": 24,
+        "resources": {
+          "hardMemoryLimitBytes": null,
+          "mode": "NATIVE",
+          "ramSemantics": "CodeQL evaluator/extractor request, not a hard process cap",
+          "requestedRamMiB": 4096,
+          "reserveMiB": 2048,
+          "threads": 2
+        },
+        "steps": [
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15286124544,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15286124544,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464302080,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.001,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15239262208,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15239262208,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464302080,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 3.504,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15252148224,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15252148224,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464302080,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 8.262,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15171796992,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15171796992,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464302080,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "analyze"
+          },
+          {
+            "durationSeconds": 10.267,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15260758016,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15260758016,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464302080,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "coverage-query"
+          },
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15132819456,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15132819456,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464302080,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "coverage-decode"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "success",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "a8443c4af88c9c77a37e9d4c7f9411262f6845fb",
+          "language": "actions",
+          "sarifId": "f5ecf74e-e14d-11f1-8fa8-897da81ea646",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "success"
+        }
+      },
+      "javascript-typescript": {
+        "analysis": "PASS",
+        "coverage": {
+          "databaseFiles": 143,
+          "expectedFiles": 118,
+          "extractedExpectedFiles": 118,
+          "extractedPathsDigest": "3e7d33a3a11abe114f9706fc6df5b1cc764751e90d1ff38b29599eae7cc3a86c"
+        },
+        "durationSeconds": 69.371,
+        "findings": [
+          {
+            "blocking": true,
+            "disposition": "untriaged",
+            "fingerprint": "83d664f9fbc1a19e2df6fd2fa4252d7a9d45a67795a3526bc68e0b56695244d4",
+            "line": 91,
+            "path": "packages/domain/src/relation.ts",
+            "ruleId": "js/remote-property-injection",
+            "severity": "high",
+            "sourceSuppressed": false
+          }
+        ],
+        "findingsGate": "BLOCKED",
+        "finishedAt": "2026-11-15T23:41:21.048037+00:00",
+        "lastMemoryAdmission": {
+          "availableBytes": 15046860800,
+          "finiteCgroupLimits": [],
+          "hostAvailableBytes": 15046860800,
+          "inheritedSoftLimitBytes": {},
+          "physicalBytes": 16464289792,
+          "requiredAvailableBytes": 6442450944,
+          "status": "ADMITTED",
+          "system": "Linux"
+        },
+        "queryCount": 105,
+        "resources": {
+          "hardMemoryLimitBytes": null,
+          "mode": "NATIVE",
+          "ramSemantics": "CodeQL evaluator/extractor request, not a hard process cap",
+          "requestedRamMiB": 4096,
+          "reserveMiB": 2048,
+          "threads": 2
+        },
+        "steps": [
+          {
+            "durationSeconds": 0.251,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15261847552,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15261847552,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464289792,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "extractor-runtime"
+          },
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15263428608,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15263428608,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464289792,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.001,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15233953792,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15233953792,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464289792,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 14.519,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15250587648,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15250587648,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464289792,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 31.788,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15106879488,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15106879488,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464289792,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "analyze"
+          },
+          {
+            "durationSeconds": 16.775,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15230701568,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15230701568,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464289792,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "coverage-query"
+          },
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15046860800,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15046860800,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16464289792,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "coverage-decode"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "failure",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "a8443c4af88c9c77a37e9d4c7f9411262f6845fb",
+          "language": "javascript-typescript",
+          "sarifId": "107a7dfc-e14e-11f1-991b-b9cda115c4c9",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "success"
+        }
+      },
+      "python": {
+        "analysis": "PASS",
+        "coverage": {
+          "databaseFiles": 44,
+          "expectedFiles": 25,
+          "extractedExpectedFiles": 25,
+          "extractedPathsDigest": "e688c8917445c800d41ad89449f4ac7c3d48fb5c7444a26e90554c70a3eebaf7"
+        },
+        "durationSeconds": 55.329,
+        "findings": [],
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-15T23:41:12.307985+00:00",
+        "lastMemoryAdmission": {
+          "availableBytes": 15538577408,
+          "finiteCgroupLimits": [],
+          "hostAvailableBytes": 15538577408,
+          "inheritedSoftLimitBytes": {},
+          "physicalBytes": 16759304192,
+          "requiredAvailableBytes": 6442450944,
+          "status": "ADMITTED",
+          "system": "Linux"
+        },
+        "queryCount": 52,
+        "resources": {
+          "hardMemoryLimitBytes": null,
+          "mode": "NATIVE",
+          "ramSemantics": "CodeQL evaluator/extractor request, not a hard process cap",
+          "requestedRamMiB": 4096,
+          "reserveMiB": 2048,
+          "threads": 2
+        },
+        "steps": [
+          {
+            "durationSeconds": 0.251,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15504314368,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15504314368,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759304192,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "extractor-runtime"
+          },
+          {
+            "durationSeconds": 0.751,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15509651456,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15509651456,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759304192,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.502,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15554670592,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15554670592,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759304192,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 12.27,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15456460800,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15456460800,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759304192,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 18.527,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15514337280,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15514337280,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759304192,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "analyze"
+          },
+          {
+            "durationSeconds": 17.771,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15526916096,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15526916096,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759304192,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "coverage-query"
+          },
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15538577408,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15538577408,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759304192,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "coverage-decode"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "success",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "a8443c4af88c9c77a37e9d4c7f9411262f6845fb",
+          "language": "python",
+          "sarifId": "0b695ea0-e14e-11f1-9468-f7ced2ecaaf7",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "success"
+        }
+      }
+    },
+    "originalArtifactFiles": {
+      "actions": {
+        "actions-summary.json": {
+          "bytes": 4152,
+          "sha256": "6e616d76e3113f412a65019b3d353ff24e36964ce7c71bdae408efdc073bbd5a"
+        },
+        "actions.sarif": {
+          "bytes": 171394,
+          "sha256": "5b5d3131cbf4dff4e3b5a879c3057bcae8e77e122e24ef882594c31d6ec48b85"
+        },
+        "source-manifest.json": {
+          "bytes": 107974,
+          "sha256": "75260e017e69bc34fdbee3d8a4c1580e5d7029acbb5e4caf37d341fabea61de5"
+        },
+        "summary.json": {
+          "bytes": 6255,
+          "sha256": "af10bd53bd20512a36faf5f735d46e82340a4eace64aa3a30b23d79f9871338b"
+        },
+        "upload-status.json": {
+          "bytes": 290,
+          "sha256": "0dd35c3c7174229bdd630241835f23fa89ee27ca139d7a81bd63307386de1787"
+        }
+      },
+      "javascript-typescript": {
+        "javascript-typescript-summary.json": {
+          "bytes": 4983,
+          "sha256": "f3866dd56d017f8c0fccee6dfb73eb89c63161aa139fa7a20df23e01413e7748"
+        },
+        "javascript-typescript.sarif": {
+          "bytes": 442875,
+          "sha256": "4282597a0cef9fe4eca5970019ae7fb801bfc4c515719009237bc37f16388727"
+        },
+        "source-manifest.json": {
+          "bytes": 107974,
+          "sha256": "75260e017e69bc34fdbee3d8a4c1580e5d7029acbb5e4caf37d341fabea61de5"
+        },
+        "summary.json": {
+          "bytes": 7231,
+          "sha256": "f1ad56d9599a45a7dfab82f38cd371f279c841d5db909e43b1d72a13a125f665"
+        },
+        "upload-status.json": {
+          "bytes": 304,
+          "sha256": "4718cd7313ecf1586676a9fb234fe8a13962f0a0a023f58fd7d5a35622de4842"
+        }
+      },
+      "python": {
+        "python-summary.json": {
+          "bytes": 4622,
+          "sha256": "ad3455f53e468aa78ff6517f6c0ef00285be6d62abb963999836381953681ac6"
+        },
+        "python.sarif": {
+          "bytes": 242251,
+          "sha256": "c4f03aa169daf27c5d6ea40fb238018a4c6cbd7c69e7ce7f678bcfd02ace5158"
+        },
+        "source-manifest.json": {
+          "bytes": 107974,
+          "sha256": "75260e017e69bc34fdbee3d8a4c1580e5d7029acbb5e4caf37d341fabea61de5"
+        },
+        "summary.json": {
+          "bytes": 6787,
+          "sha256": "370fd3ac5de741c043e6cff50b3a401ff3883308a759ee5af537c23b97eb9a65"
+        },
+        "upload-status.json": {
+          "bytes": 289,
+          "sha256": "1aeeee80ff692b5635228b08dac9d3b74ba3cf7787cbeb72504336ec58d28ed2"
+        }
+      }
+    },
+    "policyJob": "PASS",
+    "runAttempt": 1,
+    "runUrl": "https://github.com/dlamaro96/governance-commons/actions/runs/43775987154"
+  },
+  "testedMergeCommit": "a8443c4af88c9c77a37e9d4c7f9411262f6845fb"
+}

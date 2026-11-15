@@ -3,11 +3,11 @@
 Status: the isolated Linux arm64 qualification has executed all three source
 analyses and the real vulnerable-fixture rejection control. Their exact source,
 findings and artifact-hygiene results are recorded separately in
-`SAST_QUALIFICATION.md`; this is **not a full security/release pass**. The fifth
+`SAST_QUALIFICATION.md`; this is **not a full security/release pass**. The sixth
 hosted attempt completes all three analyses, exact extraction coverage and
 independent stored-analysis read-back. One high JavaScript finding blocks its
-findings gate; the narrow relation-copy repair has passed local unit/type checks
-and still requires a new source scan. See `SAST_HOSTED_QUALIFICATION.md` for exact
+findings gate at the own-property sink; private-Map materialization in the relation
+and migration copiers passes111 units and root/web types but needs a new scan. See `SAST_HOSTED_QUALIFICATION.md` for exact
 attempts, original failures and the open finding. Clean integrated-source,
 fork/Dependabot and default-branch qualification remain open. No human finding
 disposition is inferred.
@@ -263,3 +263,11 @@ that side effect before the repair and passes afterward, while reserved keys,
 getter rejection, ordinary object prototypes and dense arrays retain their
 existing behavior. This is a source repair with no scanner suppression or risk
 waiver; its hosted rescan remains required.
+
+The relation, asset-type migration and model-migration bounded copiers collect
+validated children in private Maps before `Object.fromEntries`/`Array.from`
+materialization. This avoids input-derived destination-property writes entirely.
+Equivalent inherited-setter regressions fail before and pass after the repair;
+validation, order, budgets, ordinary prototypes and dense output are preserved.
+The sixth hosted scan retains its original blocked finding; no rescan is inferred
+from these local checks.

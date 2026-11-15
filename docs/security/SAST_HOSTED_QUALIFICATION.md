@@ -1,9 +1,9 @@
 # Hosted source scanning attempts
 
-Latest checkpoint: attempt 5 completes all three analyses and independent stored
-analysis read-back. Its JavaScript findings gate blocks one untriaged high result.
-The narrow relation-copy source repair passes local checks and requires a new
-hosted scan. Earlier attempts retain their original outcomes and limitations.
+Latest checkpoint: attempt 6 completes all three analyses and independent stored
+analysis read-back, but its JavaScript gate still blocks the own-property write
+sink. Private-Map materialization now passes111 pure tests and root/web types;
+its hosted source scan remains required. Earlier outcomes are preserved.
 
 Status: source-security run [43768124973](https://github.com/dlamaro96/governance-commons/actions/runs/43768124973)
 **failed** on PR15 merge commit `1bb4637def199c12226d1d337dcd2eece61ee57e`.
@@ -275,3 +275,43 @@ preserved byte-identically as `hosted-attempt-5/behavior-summary.json`; full
 workflow and all four required checks independently pass in the root public UI
 (observed2026-11-15T23:37Z; total12m10s). This
 historical behavior result does not qualify the later relation-copy repair.
+
+
+## Sixth hosted attempt: own-property sink remains blocked
+
+[Source-security run43775987154](https://github.com/dlamaro96/governance-commons/actions/runs/43775987154)
+tests source `b6328a3962607d4e808750cc0afb8cd2b7e487bd`, merge
+`a8443c4af88c9c77a37e9d4c7f9411262f6845fb`, source digest
+`65f9ff043bd134025c79ee204fd4a3c2ce7de7446c6e2eefda49b53d3c02ed98`.
+All three analyses and exact coverage pass; JavaScript again has one untriaged
+high `js/remote-property-injection`, now at the `Object.defineProperty` key.
+The pinned property-write model and four recorded taint paths explain why the
+first semantic repair did not close the scanner finding. Its inherited-setter
+regression remains valid; no clean scan was claimed. Original safe reports are
+preserved under `sast-evidence/hosted-attempt-6/`.
+
+Independent security API reads bind stored analyses2172726215(JavaScript),
+2172725793(Python) and2172724251(Actions) to the exact merge, categories, SARIF IDs,
+hashes and1/0/0 result counts. The complete ref-scoped alert inventory has two
+alerts: the previous assignment alert is fixed and the own-property result is
+open. Ingestion success and an alert identity change do not override the failure.
+
+The copier now collects validated children in a private Map and materializes
+ordinary objects with `Object.fromEntries` and dense arrays with `Array.from`
+over the ordered values. This removes input-derived destination-property writes
+while preserving ordinary prototypes and own enumerable data. The equivalent
+asset-type and model-migration copiers use the same construction; their hostile
+inherited-setter regressions both fail on the original source and pass after
+repair. Existing relation inheritance/reserved-key regressions also pass. All111
+pure tests and root/web types pass with validation order, key restrictions,
+cycle checks, limits and output immutability preserved. No query/coverage change,
+suppression or risk acceptance was added. Exact source hashes and paired test
+evidence are in `copy-materialization.json`.
+
+This source repair still needs a new hosted scan. Separate Development
+run43775987149 passes all four required checks in13m7s (root public UI observed
+2026-11-15T23:52:50Z). Its original safe summary passes14 browser journeys and11
+steps on mergea8443c4 and is retained byte-identically beside attempt6; that
+historical behavior pass does not execute the subsequent Map repair.
+Fork/Dependabot, default-branch, independent review and full release qualification
+remain open.

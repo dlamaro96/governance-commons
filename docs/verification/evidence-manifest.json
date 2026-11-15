@@ -485,6 +485,36 @@
     {
       "path": "docs/security/sast-evidence/hosted-attempt-5/secret-scan.json",
       "scope": "Pinned gitleaks publication worktree/history scan for narrow relation-copy repair and preserved attempt5 evidence"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-6/record.json",
+      "scope": "Sixth hosted SAST attempt: all analysis/coverage pass, own-property key finding still blocks;13 original reports including separate passing behavior retained",
+      "source_binding": {
+        "ci_tested_merge_commit": "a8443c4af88c9c77a37e9d4c7f9411262f6845fb",
+        "evidence_sha256": "176b6af2049ed5bf804e8454bdc91633a577162ba84d60a029bd1b98ab75409b",
+        "implementation_commit": "b6328a3962607d4e808750cc0afb8cd2b7e487bd",
+        "method": "Original safe artifacts preserved byte-identically; subsequent private-Map repair has separate local checks."
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-6/analysis-readback.json",
+      "scope": "Independent exact stored analyses/category/SARIF/hash/count read-back; one high finding remains blocking"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-6/alert-metadata.json",
+      "scope": "Bounded independent all-state ref alert metadata; prior assignment fixed, own-property result open"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-6/copy-materialization.json",
+      "scope": "Private-Map materialization of three pure copiers, two genuine pre-fix failures and four focused passes;111 final units/types"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-6/repair-checks.json",
+      "scope": "Pure/type/policy/requirements/publication/whitespace checks, no corrected-source scan inferred"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-6/secret-scan.json",
+      "scope": "Pinned worktree and reachable-history secret check for copier repair and original attempt6 evidence"
     }
   ],
   "limitations": [
