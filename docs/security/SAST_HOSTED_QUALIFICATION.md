@@ -1,4 +1,4 @@
-# First hosted source scanning attempt
+# Hosted source scanning attempts
 
 Status: source-security run [43768124973](https://github.com/dlamaro96/governance-commons/actions/runs/43768124973)
 **failed** on PR15 merge commit `1bb4637def199c12226d1d337dcd2eece61ee57e`.
@@ -42,7 +42,7 @@ This comparison did not reproduce the hosted Linux x64 failure and did not run
 queries, coverage or a findings gate. It does not establish native x64 success.
 The runner's environment and scanner configuration remain unchanged.
 
-## Diagnostic change awaiting hosted execution
+## First diagnostic change and its hosted execution
 
 Failed commands can now add fixed allowlisted markers, stream sizes and hashes
 to their existing failure summary. Sampling is bounded to the first and last
@@ -55,11 +55,53 @@ The focused policy checks exercise a real failing subprocess, preserved rejectio
 success reset, private-content exclusion, head/tail limits, oversized logs and
 symlink refusal. Their exact executable hashes and results are recorded in
 `sast-evidence/hosted-attempt-1/diagnostic-checks.json`. These are tooling tests;
-the changed runner still needs its hosted scan and failure diagnostic read-back.
+at that checkpoint, the changed runner still needed hosted execution. The second
+attempt below records that execution separately.
 
-Next, review and publish the diagnostic patch, inspect the next safe artifact,
-then fix the demonstrated failure. Complete all three hosted analyses and
-independently read back the exact commit/category analyses. Fork/Dependabot
-permissions and default-branch execution still need evidence. The earlier
-isolated `product-5` pass qualifies only its own source digest; complete OSS-007
-and release readiness remain open.
+That diagnostic patch was published as `61543a062b9818d08f2b7a7904383d58303d562a`.
+The second attempt below executed it; the historical focused checks do not change.
+
+## Second hosted attempt
+
+[Source-security run 43770132214](https://github.com/dlamaro96/governance-commons/actions/runs/43770132214)
+failed on tested merge `6521d92cab468ad434117cfe2eebe8d53d3272be`, with clean source
+digest `f3f93d9944b9f143068cdfea8e34ed8648f2da41258f1ead46142e1bd009f904`.
+Byte-identical safe summaries, upload statuses and source manifests are preserved
+under `sast-evidence/hosted-attempt-2/`; the record hashes every original artifact,
+including the Python and Actions SARIF files retained in local downloaded evidence.
+
+JavaScript verified its runtime, CLI and 105 queries, then extraction exited 2 after
+3.503 seconds. Its fixed markers confirm database initialization, the build and
+extractor command starting, a fatal error, and an abnormal subprocess exit. No
+existing specific error marker matched. Standard output was 3,994 bytes and standard
+error 554 bytes; their original hashes are retained. These facts do not identify
+an error class or establish a root cause. No JavaScript analysis, findings gate or
+SARIF exists for this attempt. Python and Actions both pass analysis, coverage and
+zero-findings gates; their SARIF upload and processing pass. Independent analysis
+read-back remains open. The aggregate correctly fails.
+
+The next additive diagnostic change covers the pinned extractor's fixed early
+phases, Node/TypeScript start failures, known public Java exception classes,
+filesystem and JVM failures. It also extracts at most 16 distinct signed 32-bit child
+exit statuses, exclusively from CodeQL's fixed subprocess-failure syntax. All
+markers remain fixed labels; arbitrary exception names, descriptions, source,
+paths, command lines and environment values cannot enter the public report.
+The original first/last 32 KiB bounds and failure-only behavior remain intact.
+A marker is still a diagnostic hint, not a causal determination.
+
+The literal signatures were checked against the locally checksum-verified
+CodeQL 2.27.4 JavaScript extractor JAR and scripts; upstream
+[AutoBuild.java at codeql-cli/v2.27.4](https://github.com/github/codeql/blob/codeql-cli/v2.27.4/javascript/extractor/src/com/semmle/js/extractor/AutoBuild.java)
+provides the corresponding public phase/error paths. No execution environment,
+resource budget, query, coverage, findings, triage or workflow change was made.
+The focused tests verify private-content exclusion, fixed markers, contextual
+numeric parsing, integer bounds, duplicate removal and the 16-code cap. See
+`hosted-attempt-2/diagnostic-checks.json` for exact files and executed checks.
+The separate `hosted-attempt-2/secret-scan.json` records the pinned publication
+secret scan. This is diagnostic tooling qualification, not a corrected source scan.
+
+Next, publish and execute the reviewed diagnostic change, inspect its safe report,
+and correct only a demonstrated failure. All three hosted analyses, exact
+commit/category analysis read-back, fork/Dependabot permissions and default-branch
+execution remain required. Earlier isolated `product-5` evidence qualifies only
+its own source digest; complete OSS-007 and release readiness remain open.

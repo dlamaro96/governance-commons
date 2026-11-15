@@ -1,0 +1,60 @@
+{
+  "analysis": "PASS",
+  "cliVersion": "2.27.4",
+  "containerImage": null,
+  "coverage": {
+    "databaseFiles": 2,
+    "expectedFiles": 2,
+    "extractedExpectedFiles": 2,
+    "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+  },
+  "coverageQuerySha256": "aad6da298334a842bea221711b0e7c8b1c4864ce2c66632e4d93c846742a4505",
+  "dirty": false,
+  "findings": [],
+  "findingsGate": "PASS",
+  "head": "6521d92cab468ad434117cfe2eebe8d53d3272be",
+  "language": "actions",
+  "library": "codeql/actions-all",
+  "libraryVersion": "0.7.1",
+  "publishedSarifSha256": "7ee60666d895c954287d64d0e998eab80edc3aee947db44e882c994481da53ad",
+  "queryCount": 24,
+  "queryPack": "codeql/actions-queries",
+  "querySetDigest": "109c0f4a3b614aa9f782d403ecc45e5830ed72620e8fc1eeff93ae613bfb9f6e",
+  "queryVersion": "0.6.39",
+  "rawSarifSha256": "0294ea44ed0bfb1db19a1a4d1e3a84b190ed42b2cb6b9acdf07b871c4d20f37f",
+  "schemaVersion": 1,
+  "sourceDigest": "f3f93d9944b9f143068cdfea8e34ed8648f2da41258f1ead46142e1bd009f904",
+  "steps": [
+    {
+      "durationSeconds": 0.501,
+      "exitCode": 0,
+      "step": "version"
+    },
+    {
+      "durationSeconds": 1.003,
+      "exitCode": 0,
+      "step": "queries"
+    },
+    {
+      "durationSeconds": 3.758,
+      "exitCode": 0,
+      "step": "extract"
+    },
+    {
+      "durationSeconds": 8.513,
+      "exitCode": 0,
+      "step": "analyze"
+    },
+    {
+      "durationSeconds": 11.266,
+      "exitCode": 0,
+      "step": "coverage-query"
+    },
+    {
+      "durationSeconds": 0.501,
+      "exitCode": 0,
+      "step": "coverage-decode"
+    }
+  ],
+  "upload": "NOT_ATTEMPTED"
+}

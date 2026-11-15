@@ -309,6 +309,42 @@ class FailureDiagnosticTests(unittest.TestCase):
             self.assertEqual(sast.scanner_failure_diagnostics(stdout, stderr, 1024)['streams']['stderr'],
                              {'available': False, 'reason': 'diagnostic-unavailable'})
 
+    def test_extractor_diagnostic_signatures_are_fixed_and_never_publish_exception_text(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary); stdout = root / 'out'; stderr = root / 'err'
+            stdout.write_bytes(b'Parallel extraction with 2 threads. Found Node.js at: /private/node\n'
+                               b'Found Node.js version: v99-private. Opening project /private/source.ts\n'
+                               b'java.nio.file.InvalidPathException: private-sensitive-description\n'
+                               b'com.semmle.util.exception.ResourceError: private-context\n'
+                               b'com.private.CustomSensitiveException: private-custom-value\n'
+                               b'Spawned process exited abnormally (code 137; tried to run: [/private/tool])')
+            stderr.write_bytes(b'')
+            result = sast.scanner_failure_diagnostics(stdout, stderr, 4096)
+            markers = result['streams']['stdout']['markers']
+            self.assertEqual(markers, ['extractor_resource_error', 'java_invalid_path',
+                'node_runtime_located', 'node_runtime_version_observed', 'parallel_extraction_started',
+                'spawn_abnormal', 'typescript_project_opening'])
+            self.assertEqual(result['streams']['stdout']['subprocessExitCodes'], [137])
+            self.assertFalse(result['streams']['stdout']['subprocessExitCodesTruncated'])
+            rendered = json.dumps(result)
+            for private in ('private', 'Sensitive', 'Exception', '/node', 'source.ts', 'v99'):
+                self.assertNotIn(private, rendered)
+
+    def test_subprocess_status_is_contextual_integer_bounded_deduplicated_and_capped(self):
+        sample = (b'code 999; secret=1046; '
+                  b'spawned process exited abnormally (code 1; ignored) '
+                  b'spawned process exited abnormally (code 1; duplicate) '
+                  b'spawned process exited abnormally (code -1073740791; ignored) '
+                  b'spawned process exited abnormally (code 2147483648; outside signed range) '
+                  b'spawned process exited abnormally (code -2147483649; outside signed range) '
+                  b'spawned process exited abnormally (code 123456789012345; too many digits) '
+                  b'spawned process exited abnormally (code 2.5; not integer) '
+                  b'spawned process exited abnormally (code 25 extra; malformed)')
+        self.assertEqual(sast.subprocess_exit_codes(sample), ([-1073740791, 1], False))
+        many = b' '.join(f'spawned process exited abnormally (code {code}; ignored)'.encode()
+                         for code in range(17))
+        self.assertEqual(sast.subprocess_exit_codes(many), (list(range(16)), True))
+
     def test_real_failed_command_retains_rejection_and_success_has_no_diagnostic(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary); runner = sast.Runner(root, POLICY)

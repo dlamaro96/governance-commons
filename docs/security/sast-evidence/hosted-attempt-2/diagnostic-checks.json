@@ -1,0 +1,66 @@
+{
+  "checks": [
+    {
+      "check": "policy",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "policies",
+        "-p",
+        "test_sast.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "logSha256": "120ecc4a540891455be5840981827900963fe6d733a0b9d9b1968e36570b945c",
+      "startedAt": "2026-11-15T22:45:09.190529+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "b8b4e0ef1a425020539628c3e642a1575556e7b56280e79cc3cabc5627986ea6",
+      "startedAt": "2026-11-15T22:45:09.994553+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-15T22:45:22.768588+00:00",
+      "status": "PASS"
+    }
+  ],
+  "dirty": true,
+  "head": "61543a062b9818d08f2b7a7904383d58303d562a",
+  "limitations": [
+    "Focused tooling policy tests, publication and whitespace only.",
+    "No modified scanner execution, application tests, hosted execution or analysis read-back.",
+    "Unchanged scanner policy, configuration, workflow and triage hashes recorded for comparison.",
+    "Pinned secret scanning is recorded separately in secret-scan.json. Root handles final publication."
+  ],
+  "policyTests": 32,
+  "python": "3.14.5",
+  "scanExecution": "NOT_RUN_FOR_SECOND_DIAGNOSTIC_PATCH",
+  "schemaVersion": 1,
+  "sourceSha256": {
+    ".github/codeql/codeql-config.yml": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+    ".github/workflows/security.yml": "87704b640679588d83b0c4d76a4fe35e07e74ee60f821da2f926f3ed10fa89ed",
+    "policies/sast-policy.json": "920038aebeb759097d57f7712b3269ebd29b9e3ff488164ded57a0d772cda581",
+    "policies/sast-triage.json": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+    "policies/sast.py": "e5e8a26c7acd404763581f03040baa6019d21c600b85888057e7b035ea7722d1",
+    "policies/test_sast.py": "03ec385c53fbbaded1c2cdc2714e2f8cb3d743aae67f57e9d7b07d57047a973c"
+  }
+}

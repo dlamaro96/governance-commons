@@ -391,6 +391,24 @@
         "evidence_sha256": "1c255703f39d67912e057c0aa854d74a2280b6f3f8f5148c1b71541f4a1a85f4",
         "method": "Original sanitized hosted manifests and summaries preserved byte-identically; public job status readback. Failed JavaScript extraction remains NOT_PASSED; no complete SAST qualification inferred."
       }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-2/record.json",
+      "scope": "Second integrated hosted source-security failure with fixed failure markers; original safe artifacts preserved, cause undetermined",
+      "source_binding": {
+        "implementation_commit": "61543a062b9818d08f2b7a7904383d58303d562a",
+        "ci_tested_merge_commit": "6521d92cab468ad434117cfe2eebe8d53d3272be",
+        "evidence_sha256": "4e091db6b8d4fa4acea7bb139f57e76f85b471a884fe12149cf1d97abb102d07",
+        "method": "Original safe hosted manifests, summaries and upload statuses preserved byte-identically. JavaScript extraction remains NOT_PASSED; Python and Actions pass separately. Expanded diagnostics are tooling changes and do not establish a scan pass."
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-2/diagnostic-checks.json",
+      "scope": "Focused additive failure-diagnostic policy tests, publication and whitespace checks; no scanner execution"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-2/secret-scan.json",
+      "scope": "Pinned gitleaks worktree and reachable-history publication check for the second diagnostic increment; not SAST qualification"
     }
   ],
   "limitations": [
@@ -398,5 +416,5 @@
     "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "bound_at": "2026-11-15T20:47:28.101777+00:00"
+  "bound_at": "2026-11-15T22:46:19.849768+00:00"
 }

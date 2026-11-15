@@ -448,7 +448,65 @@ FAILURE_MARKERS = {
     'syntax_error': b'syntax error',
     'connection_refused': b'connection refused',
     'name_resolution': b'name or service not known',
+    # The pinned JavaScript extractor's fixed phases and public exception names.
+    # Keep these literal: arbitrary exception names/messages may contain source.
+    'parallel_extraction_started': b'parallel extraction with',
+    'single_thread_extraction_started': b'single-threaded extraction',
+    'node_runtime_located': b'found node.js at:',
+    'node_runtime_version_observed': b'found node.js version:',
+    'typescript_project_opening': b'opening project',
+    'typescript_project_opened': b'done opening project',
+    'node_runtime_start_failed': b'could not start node.js',
+    'typescript_wrapper_start_failed': b'could not start typescript parser wrapper',
+    'typescript_wrapper_communication_failed': b'could not communicate with typescript parser wrapper',
+    'typescript_parser_missing': b'could not find typescript parser',
+    'typescript_wrapper_memory_error': b'typescriptwrapperoomerror',
+    'extractor_internal_error': b'internal error:',
+    'extractor_user_error': b'com.semmle.util.exception.usererror',
+    'extractor_resource_error': b'com.semmle.util.exception.resourceerror',
+    'extractor_catastrophic_error': b'com.semmle.util.exception.catastrophicerror',
+    'extractor_command_error': b'com.semmle.util.exception.commanderror',
+    'extractor_interrupted_error': b'com.semmle.util.exception.interruptederror',
+    'java_assertion_error': b'java.lang.assertionerror',
+    'java_illegal_state': b'java.lang.illegalstateexception',
+    'java_security_exception': b'java.lang.securityexception',
+    'java_io_exception': b'java.io.ioexception',
+    'java_file_not_found': b'java.io.filenotfoundexception',
+    'java_invalid_path': b'java.nio.file.invalidpathexception',
+    'java_access_denied': b'java.nio.file.accessdeniedexception',
+    'java_missing_file': b'java.nio.file.nosuchfileexception',
+    'java_filesystem_exception': b'java.nio.file.filesystemexception',
+    'java_service_configuration_error': b'java.util.serviceconfigurationerror',
+    'java_unsupported_class_version': b'unsupportedclassversionerror',
+    'java_class_definition_missing': b'noclassdeffounderror',
+    'java_vm_create_failed': b'could not create the java virtual machine',
+    'java_vm_initialization_failed': b'error occurred during initialization of vm',
+    'java_memory_reservation_failed': b'could not reserve enough space',
+    'java_vm_option_unrecognized': b'unrecognized vm option',
+    'java_runtime_fatal_error': b'a fatal error has been detected by the java runtime environment',
+    'temporary_directory_failed': b'failed to create temporary directory',
+    'real_path_failed': b'could not compute real path for',
+    'directory_listing_failed': b'could not list the contents of directory',
+    'file_write_failed': b'failed to write to file',
+    'shell_variable_unset': b'parameter not set',
+    'shell_variable_unbound': b'unbound variable',
+    'process_killed': b'killed',
+    'process_aborted': b'aborted',
+    'segmentation_fault': b'segmentation fault',
+    'illegal_instruction': b'illegal instruction',
 }
+
+
+def subprocess_exit_codes(sample):
+    # Parse only CodeQL's fixed diagnostic syntax, never arbitrary log numbers.
+    # At most sixteen distinct signed 32-bit statuses can reach the public report.
+    codes = set()
+    for match in re.finditer(rb'spawned process exited abnormally \(code (-?[0-9]{1,10});', sample):
+        code = int(match.group(1))
+        if -(2 ** 31) <= code < 2 ** 31:
+            codes.add(code)
+    ordered = sorted(codes)
+    return ordered[:16], len(ordered) > 16
 
 
 def scanner_failure_diagnostics(stdout, stderr, max_bytes):
@@ -465,9 +523,11 @@ def scanner_failure_diagnostics(stdout, stderr, max_bytes):
                 stream.seek(max(len(first), size - 32768))
                 last = stream.read(32768)
             sample = first.lower() + b'\n' + last.lower()
+            exit_codes, codes_truncated = subprocess_exit_codes(sample)
             result['streams'][label] = {'bytes': size, 'sha256': file_hash(path), 'available': True,
                 'sample': 'HEAD_AND_TAIL_UP_TO_64_KIB',
-                'markers': sorted(marker for marker, needle in FAILURE_MARKERS.items() if needle in sample)}
+                'markers': sorted(marker for marker, needle in FAILURE_MARKERS.items() if needle in sample),
+                'subprocessExitCodes': exit_codes, 'subprocessExitCodesTruncated': codes_truncated}
         except (OSError, Rejected):
             result['streams'][label] = {'available': False, 'reason': 'diagnostic-unavailable'}
     return result
