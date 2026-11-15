@@ -1,0 +1,204 @@
+{
+  "analysis": "PASS",
+  "bundleSha256": "89ed56c8ec6bfccef6a0d2e7fe86da0469ca24b4db08b88016ec134b942c17a4",
+  "configurationSha256": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+  "containerImages": null,
+  "dirty": false,
+  "durationSeconds": 100.731,
+  "findingsGate": "BLOCKED",
+  "finishedAt": "2026-11-15T23:24:15.454963+00:00",
+  "freeDiskBytesAtFinish": 89352253440,
+  "head": "45fa82d11f11ec23d28bdd7cafea080432c46c40",
+  "invocation": {
+    "entrypoint": "policies/sast.py",
+    "language": "javascript-typescript",
+    "platform": "linux-x64"
+  },
+  "languages": {
+    "javascript-typescript": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": null,
+      "coverage": {
+        "databaseFiles": 143,
+        "expectedFiles": 118,
+        "extractedExpectedFiles": 118,
+        "extractedPathsDigest": "3e7d33a3a11abe114f9706fc6df5b1cc764751e90d1ff38b29599eae7cc3a86c"
+      },
+      "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+      "dirty": false,
+      "extractorRuntime": "v24.22.3",
+      "findings": [
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "8eef7d20e673a8cb904b5374acc4420ebd9fa5309737bc984c3e55e9c24b0aad",
+          "line": 91,
+          "path": "packages/domain/src/relation.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        }
+      ],
+      "findingsGate": "BLOCKED",
+      "head": "45fa82d11f11ec23d28bdd7cafea080432c46c40",
+      "language": "javascript-typescript",
+      "lastMemoryAdmission": {
+        "availableBytes": 15501533184,
+        "finiteCgroupLimits": [],
+        "hostAvailableBytes": 15501533184,
+        "inheritedSoftLimitBytes": {},
+        "physicalBytes": 16760344576,
+        "requiredAvailableBytes": 6442450944,
+        "status": "ADMITTED",
+        "system": "Linux"
+      },
+      "library": "codeql/javascript-all",
+      "libraryVersion": "3.0.0",
+      "publishedSarifSha256": "7bf161b526a62e7e6a4f66b10dca8512d482a49a7fcb3713ec4eb72188f3923f",
+      "queryCount": 105,
+      "queryPack": "codeql/javascript-queries",
+      "querySetDigest": "213bda4e81b066a5b255ff54cd70bbac5caaafe63742af25eeb890308d3c28dd",
+      "queryVersion": "2.5.0",
+      "rawSarifSha256": "362ba85e2b98b28ec4def3df7deca2b3f6e6b0260c2ff963e6bba6ad3a62f8f3",
+      "resources": {
+        "hardMemoryLimitBytes": null,
+        "mode": "NATIVE",
+        "ramSemantics": "CodeQL evaluator/extractor request, not a hard process cap",
+        "requestedRamMiB": 4096,
+        "reserveMiB": 2048,
+        "threads": 2
+      },
+      "schemaVersion": 1,
+      "sourceDigest": "ea37d5aa145b25230a0fff49861067b1b0827d6b56b0349900e5cfe8eb0137a1",
+      "steps": [
+        {
+          "durationSeconds": 0.251,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15611195392,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15611195392,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "extractor-runtime"
+        },
+        {
+          "durationSeconds": 0.751,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15611052032,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15611052032,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "version"
+        },
+        {
+          "durationSeconds": 1.753,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15574192128,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15574192128,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 20.275,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15617200128,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15617200128,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 45.304,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15211626496,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15211626496,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 24.789,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15547969536,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15547969536,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.752,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15501533184,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15501533184,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    }
+  },
+  "limitations": [
+    "No hosted ingestion or analysis read-back in this command.",
+    "SQL/RLS, dependencies, images and general IaC are outside this source scan.",
+    "Automated findings do not replace independent security review."
+  ],
+  "nativePackageScope": {
+    "mode": "EXPLICIT_COMMONJS",
+    "packageSha256": "7d38de102f9d211b8a221ab5943610473c4b23aeee36e9a9cf0e22848e04b9d4"
+  },
+  "outcome": "NOT_PASSED",
+  "platform": "linux-x64",
+  "policySha256": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+  "purpose": "REPOSITORY_SOURCE",
+  "runnerSha256": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7",
+  "schemaVersion": 1,
+  "scope": "SINGLE_LANGUAGE",
+  "sourceDigest": "ea37d5aa145b25230a0fff49861067b1b0827d6b56b0349900e5cfe8eb0137a1",
+  "startedAt": "2026-11-15T23:22:34.724400+00:00",
+  "triageSha256": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+  "upload": "NOT_ATTEMPTED"
+}

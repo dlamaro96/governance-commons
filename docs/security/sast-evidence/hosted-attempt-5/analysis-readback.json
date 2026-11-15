@@ -1,0 +1,131 @@
+{
+  "alertInventory": {
+    "completePagination": true,
+    "count": 1,
+    "mostRecentInstanceCommitCounts": {
+      "45fa82d11f11ec23d28bdd7cafea080432c46c40": 1
+    },
+    "openCount": 1,
+    "ref": "refs/pull/15/merge",
+    "stateFilter": "NONE_ALL_STATES",
+    "tool": "CodeQL"
+  },
+  "apiVersion": "2026-03-10",
+  "languages": {
+    "actions": {
+      "analysisId": 2172670477,
+      "category": "governance-commons/actions",
+      "commit": "45fa82d11f11ec23d28bdd7cafea080432c46c40",
+      "createdAt": "2026-11-15T23:22:54Z",
+      "exactCommitCategorySarifIdAndCountsMatch": true,
+      "findingsGate": "PASS",
+      "hasError": false,
+      "hasWarning": false,
+      "languageSummarySha256": "c651eccf4f436dbe62297b7fb6a576c87e22bb516568f91d4422620d36fe26e6",
+      "publishedSarifSha256": "24c67b4a73c8ffe5b3b975fc01cdce7f2e2e4876dda52bffdb479d7c4532aeed",
+      "readBack": "STORED_ANALYSIS_VERIFIED_FOR_THIS_LANGUAGE_AND_COMMIT",
+      "resolvedQueryCount": 24,
+      "resultsCount": 0,
+      "sarifId": "7b134692-e14b-11f1-8baa-37421a7f0e60",
+      "storedRuleCount": 23,
+      "tool": {
+        "guid": null,
+        "name": "CodeQL",
+        "version": "2.27.4"
+      },
+      "uploadStatusSha256": "a659ecba5842bfc7c7061fdb4f544e21aea186200f08edfeb476dcff40df6a6d"
+    },
+    "javascript-typescript": {
+      "analysisId": 2172674760,
+      "category": "governance-commons/javascript-typescript",
+      "commit": "45fa82d11f11ec23d28bdd7cafea080432c46c40",
+      "createdAt": "2026-11-15T23:24:18Z",
+      "exactCommitCategorySarifIdAndCountsMatch": true,
+      "findingsGate": "BLOCKED",
+      "hasError": false,
+      "hasWarning": false,
+      "languageSummarySha256": "7b84efd119d2ab5e471f2a8c4ac070ce633c403868b778667305ca109b7f295f",
+      "publishedSarifSha256": "7bf161b526a62e7e6a4f66b10dca8512d482a49a7fcb3713ec4eb72188f3923f",
+      "readBack": "STORED_ANALYSIS_VERIFIED_FOR_THIS_LANGUAGE_AND_COMMIT",
+      "resolvedQueryCount": 105,
+      "resultsCount": 1,
+      "sarifId": "ad52166a-e14b-11f1-8a75-465c9fb7883d",
+      "storedRuleCount": 103,
+      "tool": {
+        "guid": null,
+        "name": "CodeQL",
+        "version": "2.27.4"
+      },
+      "uploadStatusSha256": "9b88c04743558cdca41db1c2e4665fb22c21bbc4951736473f9475533d0dad08"
+    },
+    "python": {
+      "analysisId": 2172672023,
+      "category": "governance-commons/python",
+      "commit": "45fa82d11f11ec23d28bdd7cafea080432c46c40",
+      "createdAt": "2026-11-15T23:23:25Z",
+      "exactCommitCategorySarifIdAndCountsMatch": true,
+      "findingsGate": "PASS",
+      "hasError": false,
+      "hasWarning": false,
+      "languageSummarySha256": "8f2e0a4e250614f4445675d8fd0686577de376a7ec16265e67da382f68b437ed",
+      "publishedSarifSha256": "39752d79234a40f02ddd358746aadef5110774e18f08e994fa502a6081172945",
+      "readBack": "STORED_ANALYSIS_VERIFIED_FOR_THIS_LANGUAGE_AND_COMMIT",
+      "resolvedQueryCount": 52,
+      "resultsCount": 0,
+      "sarifId": "8d918266-e14b-11f1-8dda-d8e4bc3883b2",
+      "storedRuleCount": 50,
+      "tool": {
+        "guid": null,
+        "name": "CodeQL",
+        "version": "2.27.4"
+      },
+      "uploadStatusSha256": "a4669ec45ff3e03486b9c3ff2ed7c3dc1d29cc0faaf1dc8fda2c9f66fb741976"
+    }
+  },
+  "limitations": [
+    "All three analyses read-back is bound to exact commit/category/SARIF ID, stored counts and original published SARIF hash; this is separate from upload-step success.",
+    "The ref-scoped all-state alert list is an independent observation; the open high JavaScript finding blocks the complete gate despite successful analysis and ingestion.",
+    "No Actions/check/log endpoints queried; no raw API payload, alert content, error text or credentials published. Raw responses remain private and access-restricted.",
+    "Fork/Dependabot permissions and default-branch qualification are not established."
+  ],
+  "observedAt": "2026-11-15T23:30:02.592153+00:00",
+  "overallQualification": "NOT_PASSED_OPEN_HIGH_JAVASCRIPT_FINDING",
+  "purpose": "INDEPENDENT_STORED_SECURITY_ANALYSIS_READBACK_NOT_CI_DIAGNOSTICS",
+  "ref": "refs/pull/15/merge",
+  "repository": "dlamaro96/governance-commons",
+  "requests": {
+    "actions": {
+      "hasNextPage": false,
+      "httpStatus": 200,
+      "responseBytes": 2062,
+      "responseSha256": "186fa53e9a6477aead60f3486462065ef259015fae982b8e7aed9ed071fa84dd"
+    },
+    "alerts": {
+      "hasNextPage": false,
+      "httpStatus": 200,
+      "responseBytes": 6744,
+      "responseSha256": "8d880d0dde684413ef591fcc4fbd4e501ab2ce90e40261697f75371cc943e349"
+    },
+    "analyses": {
+      "hasNextPage": false,
+      "httpStatus": 200,
+      "responseBytes": 7478,
+      "responseSha256": "0416e8080f3f76177bf97673544cde029ae114961dcf4630386b2aac4cbf9804"
+    },
+    "javascript-typescript": {
+      "hasNextPage": false,
+      "httpStatus": 200,
+      "responseBytes": 2090,
+      "responseSha256": "367bf0d5151e28b37e1a3cfeeea68f776f4d88b5ae83be8683a82107b781e1c6"
+    },
+    "python": {
+      "hasNextPage": false,
+      "httpStatus": 200,
+      "responseBytes": 2057,
+      "responseSha256": "2faa79cafc12bacb0d0b85f933233ad1131a22de963b3bcf07488cd43dcc5339"
+    }
+  },
+  "schemaVersion": 1,
+  "sourceHead": "d3bf25ba86d31d84534bb78249c3e5168ec43fdf",
+  "testedMergeCommit": "45fa82d11f11ec23d28bdd7cafea080432c46c40"
+}

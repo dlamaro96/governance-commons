@@ -3,12 +3,14 @@
 Status: the isolated Linux arm64 qualification has executed all three source
 analyses and the real vulnerable-fixture rejection control. Their exact source,
 findings and artifact-hygiene results are recorded separately in
-`SAST_QUALIFICATION.md`; this is **not a full security/release pass**. Three
-hosted integrated attempts passed Python and Actions but failed JavaScript during
-extraction; findings for that language were not evaluated. See
-`SAST_HOSTED_QUALIFICATION.md` for exact run evidence. Complete hosted analysis,
-ingestion read-back and fork behavior remain open. No human finding disposition
-is inferred.
+`SAST_QUALIFICATION.md`; this is **not a full security/release pass**. The fifth
+hosted attempt completes all three analyses, exact extraction coverage and
+independent stored-analysis read-back. One high JavaScript finding blocks its
+findings gate; the narrow relation-copy repair has passed local unit/type checks
+and still requires a new source scan. See `SAST_HOSTED_QUALIFICATION.md` for exact
+attempts, original failures and the open finding. Clean integrated-source,
+fork/Dependabot and default-branch qualification remain open. No human finding
+disposition is inferred.
 This implements the bounded source-scanning part of issue 11 and OSS-006/007;
 SQL/RLS, dependency vulnerabilities, images, general IaC, ASVS and independent
 review remain separate required work.
@@ -110,8 +112,9 @@ These are admission estimates. Native execution adds no hard memory cap, does
 not reserve memory against concurrent work, and does not use an address-space
 RLIMIT as a resident-memory bound. CodeQL's
 [`--ram` option](https://docs.github.com/en/code-security/reference/code-scanning/codeql/codeql-cli-manual/database-analyze)
-is an evaluator/extractor budget request. The increased native budget still
-requires an actual hosted analysis; policy tests do not qualify that scan.
+is an evaluator/extractor budget request. The fifth hosted attempt completes all
+three analyses with this budget; its open high finding separately blocks the
+complete gate. Admission estimates and policy tests alone do not qualify a scan.
 
 Outputs are unique directories beneath `.local/sast/`; an existing output path
 is refused. `--output .local/sast/my-attempt` selects a fresh location. The
@@ -123,8 +126,9 @@ absent; symlinks and differing existing content fail without overwriting them.
 Custom toolchain ancestors remain untouched; native execution refuses an
 incompatible nearest package scope and records its hash. The package-boundary
 correction has exact-wrapper handshake evidence and hosted extraction now passes.
-The fourth hosted attempt subsequently fails analysis with CodeQL out of memory;
-its complete source-security gate remains unqualified.
+The fourth hosted attempt subsequently failed analysis with CodeQL out of memory.
+The fifth passes analysis with the revised native budget and blocks an actual
+high finding; its complete source-security gate remains unqualified.
 `--archive PATH`
 reuses already-downloaded bytes only after the same exact size/checksum checks.
 
@@ -250,3 +254,12 @@ policy rejects an explicitly private hosted repository. No paid runner, plan,
 subscription or production deployment is introduced. SQL/RLS correctness,
 connector security, dependency/image/IaC scanning and independent review remain
 outside the capabilities asserted here.
+
+
+The relation JSON copier now also creates own data properties explicitly. The
+single guarded dynamic assignment could invoke an inherited setter for an
+otherwise valid field name. A synthetic hostile-prototype regression reproduced
+that side effect before the repair and passes afterward, while reserved keys,
+getter rejection, ordinary object prototypes and dense arrays retain their
+existing behavior. This is a source repair with no scanner suppression or risk
+waiver; its hosted rescan remains required.

@@ -88,7 +88,7 @@ function copyJSON(input: unknown, issues: Issues, maximumBytes: number = RELATIO
         if (!isArray && !charge(encoder.encode(JSON.stringify(key)).length + 1, path)) break;
         const descriptor = Object.getOwnPropertyDescriptor(value, key);
         if (!descriptor?.enumerable || !Object.hasOwn(descriptor, 'value')) issues.add('invalid_json', at(path, key), 'Only enumerable data properties are supported.');
-        else (output as Fields)[key] = copy(descriptor.value, at(path, key), depth + 1);
+        else Object.defineProperty(output, key, { value: copy(descriptor.value, at(path, key), depth + 1), enumerable: true, writable: true, configurable: true });
         if (exhausted || issues.overflow) break;
       }
     } finally { active.delete(value); }

@@ -1,9 +1,9 @@
 # Hosted source scanning attempts
 
-Latest checkpoint: attempt 4 fixes hosted JavaScript extraction but fails its
-analysis with CodeQL out of memory. Python and Actions have independent stored
-analysis read-back; full source-security qualification remains open. Earlier
-attempts below retain their original outcomes and limitations.
+Latest checkpoint: attempt 5 completes all three analyses and independent stored
+analysis read-back. Its JavaScript findings gate blocks one untriaged high result.
+The narrow relation-copy source repair passes local checks and requires a new
+hosted scan. Earlier attempts retain their original outcomes and limitations.
 
 Status: source-security run [43768124973](https://github.com/dlamaro96/governance-commons/actions/runs/43768124973)
 **failed** on PR15 merge commit `1bb4637def199c12226d1d337dcd2eece61ee57e`.
@@ -218,3 +218,60 @@ passed all four required checks on tested merge `b3596f3525e26b8e01ce6bd8d538cf9
 Its original safe `behavior-summary.json` is retained with this attempt. That
 behavior pass does not override the source-security failure or qualify the later
 native-memory policy correction.
+
+
+## Fifth hosted attempt: complete analyses, blocked high finding
+
+[Source-security run 43774391740](https://github.com/dlamaro96/governance-commons/actions/runs/43774391740)
+tests source `d3bf25ba86d31d84534bb78249c3e5168ec43fdf`, merge
+`45fa82d11f11ec23d28bdd7cafea080432c46c40`, source digest
+`ea37d5aa145b25230a0fff49861067b1b0827d6b56b0349900e5cfe8eb0137a1`.
+All three language analyses and exact extraction-coverage gates pass. JavaScript
+extracts in 20.275 seconds, analyzes all 105 resolved queries in 45.304 seconds
+and accounts for all 118 expected executable files. Native admission records
+about 15.2 billion available bytes before analysis and the requested 4,096 MiB
+budget plus 2 GiB reserve. No memory failure is reported. The successful analysis
+finds one untriaged high `js/remote-property-injection` result at
+`packages/domain/src/relation.ts:91`, so JavaScript and the aggregate correctly
+fail their findings gate. Python, Actions and policy pass. Original safe artifacts
+are preserved byte-identically under `sast-evidence/hosted-attempt-5/`.
+
+Independent security API reads verify stored JavaScript analysis `2172674760`,
+Python `2172672023` and Actions `2172670477` for this exact merge, categories,
+SARIF IDs, tool version and published SARIF hashes. Stored result counts are
+1/0/0 and rule-definition counts 103/50/23, matching the artifacts. The independent
+complete ref-scoped alert inventory contains one open high finding. Analysis and
+ingestion success do not override that finding; no suppression, severity change,
+risk acceptance or clean-source claim has been made.
+
+The relation copier filters reserved names and source accessors, but assigned
+other input-derived keys onto normal objects. Such an assignment invokes an
+already-existing inherited setter. A targeted regression deliberately installed
+a hostile inherited setter for a valid attribute field: the old source invoked
+it once and rejected the parse afterward. Replacing only the destination
+assignment with `Object.defineProperty`, using an own data value and ordinary
+enumerable/writable/configurable flags, makes the same test pass without calling
+the setter. The test also covers an inherited read-only property and legitimate
+`toString`/`hasOwnProperty` fields. A separate regression retains rejection of
+`__proto__`, `constructor` and `prototype` keys and verifies shared prototypes are
+unchanged. Normal output prototypes, input immutability and dense-array behavior
+are preserved. This demonstrates a concrete construction hazard under a hostile
+shared prototype; it does not assert that this input alone lets a remote caller
+install that prototype property.
+
+The exact pre-fix failure, post-fix pass and final source hashes are in
+`relation-copy-remediation.json`. All 109 unit tests and root/web type checks pass.
+An initial missing local loader did not execute tests; the existing dependency
+cache was reused only after manifests matched. A later fixture-only type error
+for shadowing-field literals was corrected before final checks. Original private
+logs remain retained. Root's separate current product runtime stayed frozen, and
+no API/browser execution or source rescan of this repair is inferred. Hosted
+qualification must pass again on the corrected source; fork/Dependabot,
+default-branch and complete release/security requirements remain open.
+
+The original safe behavior artifact from separate Development run43774391731
+passes14 browser journeys and11 service steps on tested merge45fa82d. It is
+preserved byte-identically as `hosted-attempt-5/behavior-summary.json`; full
+workflow and all four required checks independently pass in the root public UI
+(observed2026-11-15T23:37Z; total12m10s). This
+historical behavior result does not qualify the later relation-copy repair.

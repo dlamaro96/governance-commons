@@ -1,5 +1,5 @@
 {
-  "bound_at": "2026-11-15T23:15:37.924817+00:00",
+  "bound_at": "2026-11-15T23:33:36.600655+00:00",
   "evidence": [
     {
       "path": "docs/verification/core-runtime.json",
@@ -455,6 +455,36 @@
     {
       "path": "docs/security/sast-evidence/hosted-attempt-4/secret-scan.json",
       "scope": "Pinned gitleaks publication worktree/history check for native memory correction and sanitized attempt4 evidence"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-5/record.json",
+      "scope": "Fifth hosted SAST attempt: all analyses/coverage pass, actual high JavaScript finding blocks gate; originals preserved",
+      "source_binding": {
+        "ci_tested_merge_commit": "45fa82d11f11ec23d28bdd7cafea080432c46c40",
+        "evidence_sha256": "45e28f5b81a2a96554878e0b660e0f0267846356a9819f81a5a5d250fcfa0c40",
+        "implementation_commit": "d3bf25ba86d31d84534bb78249c3e5168ec43fdf",
+        "method": "Original safe reports preserved byte-identically; source repair has separate local tests and no corrected-source scan yet."
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-5/analysis-readback.json",
+      "scope": "Exact stored analysis/commit/category/SARIF/hash/count read-back for all languages; ingestion passes while high finding remains blocking"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-5/alert-metadata.json",
+      "scope": "Bounded independent metadata of the open high relation-copy alert, without raw alert payload"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-5/relation-copy-remediation.json",
+      "scope": "Same targeted regression fails before own-property repair and passes after;109 final units and root/web types, no scanner/API/browser execution inferred"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-5/repair-checks.json",
+      "scope": "Focused policy, publication, requirements and whitespace checks for relation copier correction, separate from full source-scanning qualification"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-5/secret-scan.json",
+      "scope": "Pinned gitleaks publication worktree/history scan for narrow relation-copy repair and preserved attempt5 evidence"
     }
   ],
   "limitations": [
