@@ -284,6 +284,16 @@
         "verified_files": 131,
         "evidence_sha256": "7d939da2202370ecf20488deae1d835353a18333399fd6d349827815501141c0"
       }
+    },
+    {
+      "path": "docs/verification/source-sast.json",
+      "scope": "local-source-sast",
+      "source_binding": {
+        "implementation_commit": "5ea6eee38ac6aaf129e225d45be57e15762b0722",
+        "method": "Recorded final scan executable hashes match committed Git blobs. This binding is not a scan rerun.",
+        "verified_files": 123,
+        "evidence_sha256": "7b43f2ee5ee0390867ce0db4b294a74f1b8619b4eb9171fb837f75adf9a3adf5"
+      }
     }
   ],
   "limitations": [
