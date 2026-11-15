@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 import type { FastifyInstance } from 'fastify';
 import { Type } from '@sinclair/typebox';
-import { scope } from '../../../packages/db/src/index.ts';
+import { boundedModelScope as scope } from './model-http.ts';
 import { Problem } from '../../../packages/authz/src/index.ts';
 import { Id } from '../../../packages/contracts/src/index.ts';
 import { parseAssetTypeFile } from '../../../packages/domain/src/asset-type.ts';
+import { configureRelationTransaction, relationFailure } from '../../../packages/domain/src/relation-store.ts';
 import { modelPersistence } from '../../../packages/domain/src/model-service.ts';
 import { createAssetType, getAssetType, listAssetTypes, previewAssetType, publishAssetType,
   getAssetTypeState, transitionAssetTypeState } from '../../../packages/domain/src/asset-type-service.ts';
@@ -70,6 +71,7 @@ export async function installAssetTypes(app: FastifyInstance): Promise<void> {
   app.post('/api/v1/assets/:id/type-state', { schema: { params: Type.Object({ id: Id }, { additionalProperties: false }), body: Type.Object({ state: Type.String({ minLength: 1, maxLength: 64 }) }, { additionalProperties: false }) } }, async req => {
     const { principal: p } = await authenticate(req), id = (req.params as any).id, expected = version(req), state = (req.body as any).state;
     return scope(p.tenantId, p.id, async tx => {
+      await configureRelationTransaction(tx);
       await modelPersistence.authorize(tx, p, ['catalog:read', 'catalog:write', 'models:read']);
       const result = await once(tx, p, 'asset.type-transition', req.headers['idempotency-key'], { id, expected, state },
         () => transitionAssetTypeState(tx, p, req.id, id, expected, state, hooks));
@@ -77,6 +79,6 @@ export async function installAssetTypes(app: FastifyInstance): Promise<void> {
       await modelPersistence.authorize(tx, p, ['catalog:read', 'catalog:write', 'models:read']);
       await getAssetTypeState(tx, p, id);
       return result;
-    });
+    }).catch(error => { throw relationFailure(error); });
   });
 }

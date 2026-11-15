@@ -209,11 +209,13 @@ export async function getAssetTypeState(tx: Tx, p: Principal, assetId: string) {
 }
 export async function transitionAssetTypeState(tx: Tx, p: Principal, correlationId: string, assetId: string,
   expectedVersion: number, state: string, hooks: ModelHooks) {
+  await (await import('./relation-store.ts')).configureRelationTransaction(tx);
   const permissions = ['catalog:read', 'catalog:write', 'models:read'];
   await persistence.authorize(tx, p, permissions); persistence.checkVersion(expectedVersion);
   if (expectedVersion === MODEL_SERVICE_LIMITS.databaseVersion) throw new Problem(422, 'ASSET_VERSION_LIMIT', 'The supported asset version range has been exhausted.');
   if (typeof state !== 'string' || !/^[A-Za-z_][A-Za-z0-9_.-]{0,63}$/.test(state)) throw new Problem(422, 'ASSET_TYPE_STATE_INVALID', 'Choose a supported lifecycle state.');
   await persistence.lockTenantModels(tx, p);
+  await (await import('./relation-endpoint-guard.ts')).lockRelationEndpointUnion(tx, p, [assetId]);
   const asset = await persistence.assetRow(tx, p, assetId, true);
   await persistence.authorize(tx, p, permissions);
   if (asset.version !== expectedVersion) throw new Problem(409, 'VERSION_CONFLICT', 'The asset changed. Load its current version.');
@@ -222,6 +224,7 @@ export async function transitionAssetTypeState(tx: Tx, p: Principal, correlation
     throw new Problem(422, 'ASSET_TYPE_TRANSITION_INVALID', 'This transition is not allowed by the pinned lifecycle.');
   }
   await validatePinnedType(tx, p, asset);
+  await (await import('./relation-endpoint-guard.ts')).validateRelationsForEndpointChanges(tx, p, [{ assetId, expectedAssetVersion: expectedVersion, modelId: asset.model_id, modelVersion: asset.model_version, state, policy }]);
   const updated = await tx.updateTable('assets').set({ type_state: state, version: expectedVersion + 1, updated_at: new Date() })
     .where('tenant_id', '=', p.tenantId).where('id', '=', assetId).where('version', '=', expectedVersion).returningAll().executeTakeFirstOrThrow();
   await tx.insertInto('asset_revisions').values({ tenant_id: p.tenantId, asset_id: assetId, version: updated.version, snapshot: JSON.stringify(hooks.assetSnapshot(updated)) }).execute();

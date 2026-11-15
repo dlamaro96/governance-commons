@@ -1,6 +1,6 @@
 # Constrained relations implementation contract
 
-Status: **PLANNED — NOT IMPLEMENTED OR QUALIFIED.** This is the next bounded increment after complete authored-type migrations. It advances MOD-001/002/004, CORE-002/006/007, SYS-DATA-001–005 and SYS-SEC-002/003; it does not complete those requirements, AT-MOD-01, E2E-06 or M2. The full specification and canonical requirement register remain authoritative. Optional activation does not remove any later required implementation.
+Status: **IMPLEMENTATION IN PROGRESS — NOT QUALIFIED.** This is the next bounded increment after complete authored-type migrations. It advances MOD-001/002/004, CORE-002/006/007, SYS-DATA-001–005 and SYS-SEC-002/003; it does not complete those requirements, AT-MOD-01, E2E-06 or M2. The full specification and canonical requirement register remain authoritative. Optional activation does not remove any later required implementation.
 
 SQL001–007 and existing authored asset/model/plan formats remain unchanged once applied. SQL008 is a new migration, subject to root review and isolated upgrade qualification before core application. Do not modify application source or runtime while the preceding increment's qualification is frozen.
 
@@ -68,6 +68,7 @@ interface RelationTypeSummary {
 interface RelationTypeView extends RelationTypeSummary {
   version: number; definition: RelationTypeDefinition; definitionHash: string;
   versionCreatedAt: string; versionCreatedBy: string;
+  endpointTypeIdentities: readonly { typeId: string; id: string }[];
 }
 interface RelationEndpointView {
   assetId: string; name: string; assetVersion: number;
@@ -113,6 +114,8 @@ interface RelationTypePreview {
   pinsPreserved: true; previewDigest: string;
 }
 ```
+
+`RelationTypeView.endpointTypeIdentities` maps the requested definition’s at-most64 distinct endpoint rule UUIDs to same-tenant logical asset-type keys. Live relation endpoints carry current canonical asset versions/pins/states; revision snapshots preserve the values recorded at that revision.
 
 `RelationEndpointView` permits null type fields for a visible untyped graph root with no eligible relations. Actual relation endpoints always have valid non-null authored type/model pins and lifecycle states. An attribute-only graph root may retain its attribute model fields while `typeId` and `state` remain null.
 

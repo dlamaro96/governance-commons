@@ -54,6 +54,7 @@ test('worker completion rechecks requester authority and publishes no revoked sc
  assert.equal(completed.status,200);assert.equal((await completed.json() as any).job.status,'cancelled');
  assert.equal((await scope(A,steward,tx=>tx.selectFrom('assets').selectAll().where('source_id','=',source.id).execute())).length,0);
  const failed=await fetch(base+`/internal/jobs/${id}/fail`,{method:'POST',headers:workerHeaders,body:JSON.stringify({code:'RETRY_AFTER_CANCELLATION'})});assert.equal((await failed.json() as any).job.status,'cancelled');
- const integrity=await fetch(base+'/api/v1/audit/integrity',{headers});assert.equal(integrity.status,200);const chain=await integrity.json() as any;assert.equal(chain.valid,true);assert.ok(chain.checked>0);
+ // The deleted/restricted canary leaves an immutable event outside current resource access.
+ const integrity=await fetch(base+'/api/v1/audit/integrity',{headers});assert.equal(integrity.status,403);const chain=await integrity.json() as any;assert.equal(chain.code,'AUDIT_SCOPE_UNAVAILABLE');assert.equal('checked' in chain,false);assert.equal('head' in chain,false);assert.equal('failedId' in chain,false);
 });
 after(async()=>{await db.destroy();});

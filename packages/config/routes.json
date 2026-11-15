@@ -189,6 +189,75 @@
         "catalog:read"
       ],
       "context": "Immutable complete asset tuples and source policy hashes"
+    },
+    {
+      "path": "/relation-types",
+      "screen": "UX-10",
+      "component": "RelationTypesPage",
+      "permission": "models:read",
+      "mutationPermission": "models:write",
+      "query": [
+        "q"
+      ]
+    },
+    {
+      "path": "/relation-types/new/definition",
+      "screen": "UX-10",
+      "component": "RelationTypeEditorPage",
+      "permission": "models:write",
+      "additionalPermissions": [
+        "models:read"
+      ]
+    },
+    {
+      "path": "/relation-types/:id",
+      "screen": "UX-10",
+      "component": "RelationTypePage",
+      "permission": "models:read",
+      "query": [
+        "version"
+      ]
+    },
+    {
+      "path": "/relation-types/:id/edit",
+      "screen": "UX-10",
+      "component": "RelationTypeEditorPage",
+      "permission": "models:write",
+      "additionalPermissions": [
+        "models:read",
+        "catalog:read"
+      ]
+    },
+    {
+      "path": "/relations/:id",
+      "screen": "UX-05",
+      "component": "RelationPage",
+      "permission": "catalog:read",
+      "additionalPermissions": [
+        "models:read"
+      ],
+      "mutationPermission": "catalog:write",
+      "query": [
+        "tab"
+      ]
+    },
+    {
+      "path": "/catalog/:id?tab=relations",
+      "screen": "UX-05",
+      "component": "AssetRelations",
+      "permission": "catalog:read",
+      "additionalPermissions": [
+        "models:read"
+      ],
+      "mutationPermission": "catalog:write",
+      "query": [
+        "view",
+        "direction",
+        "relationTypeId",
+        "validAt",
+        "depth"
+      ],
+      "context": "Asserted relations with accessible table and bounded authorised graph; not technical lineage"
     }
   ]
 }

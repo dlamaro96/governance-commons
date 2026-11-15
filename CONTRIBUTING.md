@@ -53,7 +53,9 @@ needs the same authorization boundary. Source credentials never belong in code,
 test output, the browser, Temporal history or public fixtures.
 
 Start with a small issue describing an observable outcome and its requirement
-ID. For a routine fix, make a focused `codex/` or descriptive short-lived branch
+ID. Browse the [actionable backlog](https://github.com/dlamaro96/governance-commons/issues)
+and [open milestones](https://github.com/dlamaro96/governance-commons/milestones)
+first; discuss scope before starting overlapping work. For a routine fix, make a focused `codex/` or descriptive short-lived branch
 and open a pull request. Use an ADR for architecture, security or compatibility
 changes; a typo does not need one. Good first contributions include improving a
 reproducible error message, adding an adversarial authorization case, or adding

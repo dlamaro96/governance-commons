@@ -4,6 +4,7 @@
 from datetime import datetime, timezone
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import sys
@@ -15,7 +16,7 @@ if any(DEST.iterdir()):
     raise SystemExit("Artifact staging must be empty; refusing to publish a mixed or stale directory")
 allowed_outcomes = {"success", "failure", "cancelled", "skipped"}
 outcomes = {}
-for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "browser"):
+for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "browser"):
     value = os.environ.get(f"GC_{step.upper()}_RESULT", "skipped")
     outcomes[step] = value if value in allowed_outcomes else "unknown"
 report = {
@@ -31,6 +32,32 @@ report = {
     "limitations": ["No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
                     "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification."],
 }
+def failure_locations(results, filename):
+    """Only reviewed repository coordinates; never copy exception text/paths."""
+    locations = set()
+    for result in results[:4]:
+        if result.get("status") == "passed":
+            continue
+        errors = result.get("errors", [])
+        if not isinstance(errors, list):
+            errors = []
+        if isinstance(result.get("error"), dict):
+            errors = [result["error"], *errors]
+        for error in errors[:8]:
+            if not isinstance(error, dict):
+                continue
+            # Playwright source frames include the actual assertion/helper line.
+            # Extract only this already-allowlisted test file, with bounded numeric
+            # coordinates. Absolute prefixes, snippets and messages remain private.
+            stack = error.get("stack", "")
+            if not isinstance(stack, str):
+                continue
+            pattern = r"(?:^|[/\\])tests[/\\]e2e[/\\]" + re.escape(filename) + r":([1-9][0-9]{0,5}):([1-9][0-9]{0,5})(?=[)\s]|$)"
+            for line, column in re.findall(pattern, stack[:65536]):
+                locations.add((int(line), int(column)))
+    return [{"file": "tests/e2e/" + filename, "line": line, "column": column}
+            for line, column in sorted(locations)[:8]]
+
 source = ROOT / ".local/evidence/playwright-results.json"
 if source.is_file():
     data = json.loads(source.read_text())
@@ -44,17 +71,18 @@ if source.is_file():
                     results = test.get("results", [])
                     status = test.get("status", "unknown")
                     filename = Path(str(spec.get("file", ""))).name
-                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts"}:
+                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts"}:
                         continue
                     line = spec.get("line")
                     report["tests"].append({"file": "tests/e2e/" + filename, "line": line if isinstance(line, int) else None,
                         "status": status if status in {"expected", "unexpected", "flaky", "skipped"} and results and all(r.get("status") == "passed" for r in results) else "unknown",
-                        "attempts": len(results), "duration_ms": sum(r.get("duration", 0) for r in results)})
+                        "attempts": len(results), "duration_ms": sum(r.get("duration", 0) for r in results),
+                        "failure_locations": failure_locations(results, filename)})
     collect(data.get("suites", []))
 if outcomes["browser"] == "success":
     # A successful filtered run is not the mandatory browser gate. Require all
     # registered journeys, once each, as well as their successful outcomes.
-    expected = {f"tests/e2e/{name}.spec.ts": 2 for name in ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations")}
+    expected = {f"tests/e2e/{name}.spec.ts": 2 for name in ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations")}
     observed = {name: sum(test["file"] == name for test in report["tests"]) for name in expected}
     locations = {(test["file"], test["line"]) for test in report["tests"]}
     if observed != expected or len(locations) != sum(expected.values()) or any(test["status"] != "expected" or test["attempts"] != 1 for test in report["tests"]):

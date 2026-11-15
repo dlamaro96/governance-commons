@@ -13,6 +13,7 @@ import {installModels} from './models.ts';
 import {installAssetTypes} from './asset-types.ts';
 import {installAssetTypeMigrations} from './asset-type-migrations.ts';
 import {installModelMigrations} from './model-migrations.ts';
+import {installRelations} from './relations.ts';
 import {validatePinnedType} from '../../../packages/domain/src/asset-type-policy.ts';
 import {modelPersistence} from '../../../packages/domain/src/model-service.ts';
 export const app=Fastify({logger:{level:'info',redact:['req.headers.authorization','req.headers.cookie','req.url','res.headers.set-cookie']},bodyLimit:8*1024*1024,requestTimeout:20000,trustProxy:false,genReqId:()=>randomUUID()});
@@ -23,6 +24,7 @@ await app.register(swagger,{openapi:{openapi:'3.1.0',info:{title:'Governance Com
 app.addHook('onSend',async(req,reply,payload)=>{reply.header('X-Correlation-Id',req.id);reply.header('Cache-Control','no-store');return payload;});
 app.setErrorHandler((error,req,reply)=>{
  const e=error as any;const status=e instanceof Problem?e.status:e.validation?400:(e.statusCode>=400&&e.statusCode<500?e.statusCode:500);
+ if(e instanceof Problem && e.status===503 && e.code==='RELATION_RETRY')reply.header('Retry-After','5');
  if(status===500)req.log.error({code:e.code??'INTERNAL',correlationId:req.id},'Request failed (details redacted)');
  reply.code(status).type('application/problem+json').send({type:'about:blank',title:status>=500?'Service unavailable':'Request rejected',status,code:e instanceof Problem?e.code:e.validation?'VALIDATION_FAILED':'INTERNAL_ERROR',detail:e instanceof Problem?e.message:e.validation?'Check the submitted fields.':'The request could not be completed. Use the correlation ID for support.',correlationId:req.id,...(e instanceof Problem&&e.issues?{issues:e.issues}:{})});
 });
@@ -33,6 +35,7 @@ await installModels(app);
 await installAssetTypes(app);
 await installAssetTypeMigrations(app);
 await installModelMigrations(app);
+await installRelations(app);
 const params={params:Type.Object({id:Id})};
 app.get('/api/v1/me',async req=>{const a=await authenticate(req);return {user:{id:a.principal.id,name:a.principal.name},tenant:a.tenants.find(x=>x.id===a.principal.tenantId),tenants:a.tenants,permissions:a.principal.permissions,csrfToken:a.csrf};});
 app.post('/api/v1/session/tenant',{schema:{body:Type.Object({tenantId:Id},{additionalProperties:false})}},async req=>{const a=await authenticate(req),tenant=(req.body as any).tenantId;if(!a.tenants.some(x=>x.id===tenant))throw new Problem(403,'TENANT_DENIED','Organization access is not permitted.');await db.updateTable('sessions').set({tenant_id:tenant,csrf:random()}).where('id_hash','=',a.sessionHash).execute();return {changed:true};});
@@ -82,7 +85,7 @@ app.post('/api/v1/sources/:id/scans',{schema:{...params,body:Type.Object({},{add
 app.get('/api/v1/jobs',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'sources:read');return scope(p.tenantId,p.id,async tx=>({items:(await tx.selectFrom('jobs').selectAll().orderBy('created_at','desc').limit(100).execute()).map(jobView)}));});
 app.get('/api/v1/jobs/:id',{schema:params},async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'sources:read');return scope(p.tenantId,p.id,async tx=>{const j=await tx.selectFrom('jobs').selectAll().where('id','=',(req.params as any).id).executeTakeFirst();if(!j)throw new Problem(404,'JOB_NOT_FOUND','Job is unavailable.');return {job:jobView(j)};});});
 app.get('/api/v1/audit',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'audit:read');return scope(p.tenantId,p.id,async tx=>({items:(await visibleAudit(tx,p).orderBy('sequence','desc').limit(200).execute()).map(auditView)}));});
-app.get('/api/v1/audit/integrity',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'audit:read');return scope(p.tenantId,p.id,async tx=>{const rows=await tx.selectFrom('audit').selectAll().orderBy('sequence').limit(10001).execute();if(rows.length>10000)throw new Problem(422,'AUDIT_PROFILE_LIMIT','This development verifier is limited to 10,000 entries. Verification of larger audit chains is not yet implemented.');return verifyAuditChain(rows);});});
+app.get('/api/v1/audit/integrity',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'audit:read');return scope(p.tenantId,p.id,async tx=>{const rows=await tx.selectFrom('audit').selectAll().orderBy('sequence').limit(10001).execute();if(rows.length>10000)throw new Problem(422,'AUDIT_PROFILE_LIMIT','This development verifier is limited to 10,000 entries. Verification of larger audit chains is not yet implemented.');const visible=await visibleAudit(tx,p).clearSelect().select(sql<string>`count(*)::text`.as('count')).executeTakeFirstOrThrow();if(Number(visible.count)!==rows.length)throw new Problem(403,'AUDIT_SCOPE_UNAVAILABLE','The complete audit scope is unavailable for this operation.');return verifyAuditChain(rows);});});
 app.get('/api/v1/overview',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'catalog:read');return scope(p.tenantId,p.id,async tx=>{const a=await visibleAssets(tx,p).where('assets.status','=','active').execute();const sources=p.permissions.includes('sources:read')?await tx.selectFrom('sources').select('id').execute():[];const jobs=p.permissions.includes('sources:read')?await tx.selectFrom('jobs').select('id').execute():[];const recent=p.permissions.includes('audit:read')?await visibleAudit(tx,p).orderBy('sequence','desc').limit(8).execute():[];return {assetCount:a.length,sourceCount:sources.length,ownedCount:a.filter(x=>x.owner_id).length,jobCount:jobs.length,recentAudit:recent.map(auditView)};});});
 app.get('/api/v1/capabilities',async req=>{await authenticate(req);return {release:'development',items:[{id:'postgresql',name:'PostgreSQL metadata',implementation:'IN_PROGRESS',verification:'NOT_RUN',limitations:['Metadata scans only in this development increment.','Lineage, DQ and grants remain open requirements.']}],aiEnabled:false};});
 const sitePrincipal=(tenant:string):Principal=>({id:'site:local',name:'Local execution site',tenantId:tenant,permissions:[]});
