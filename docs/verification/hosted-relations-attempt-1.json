@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T21:13:04.970656+00:00",
+  "result": "NOT_PASSED",
+  "pull_request": 14,
+  "head_commit": "639d4c23954745a9acf83926432c55d35a462284",
+  "required_checks": {
+    "quality": "success",
+    "secrets": "success",
+    "behavior": "failure",
+    "required": "failure"
+  },
+  "behavior": {
+    "schema_version": 1,
+    "timestamp": "2026-11-15T21:00:27.797543+00:00",
+    "commit": "cc9021f2312f913465677af83c23ead77215528b",
+    "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43760095927",
+    "profile": "core / GitHub-hosted Ubuntu 24.04 / synthetic PostgreSQL",
+    "steps": {
+      "bootstrap": "success",
+      "services": "success",
+      "object_store": "success",
+      "seed": "success",
+      "connectors": "success",
+      "security": "success",
+      "model_upgrade": "success",
+      "asset_type_upgrade": "success",
+      "type_migration_upgrade": "success",
+      "relations_upgrade": "success",
+      "browser": "failure"
+    },
+    "outcome": "NOT_PASSED",
+    "tests": [
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 17,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 7217
+      },
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 101,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1503
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 30,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 12349
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 74,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 1202
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 77,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 23025
+      },
+      {
+        "file": "tests/e2e/models.spec.ts",
+        "line": 257,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 3689
+      },
+      {
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 80,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 17427
+      },
+      {
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 218,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 3276
+      },
+      {
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 97,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 24602
+      },
+      {
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 242,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 49110
+      },
+      {
+        "file": "tests/e2e/asset-type-migrations.spec.ts",
+        "line": 97,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 24263
+      },
+      {
+        "file": "tests/e2e/asset-type-migrations.spec.ts",
+        "line": 252,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 41091
+      },
+      {
+        "file": "tests/e2e/relations.spec.ts",
+        "line": 134,
+        "status": "unknown",
+        "attempts": 1,
+        "duration_ms": 28081
+      },
+      {
+        "file": "tests/e2e/relations.spec.ts",
+        "line": 345,
+        "status": "expected",
+        "attempts": 1,
+        "duration_ms": 9515
+      }
+    ],
+    "screenshots": [],
+    "limitations": [
+      "No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
+      "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification."
+    ]
+  },
+  "safe_artifact_sha256": "c4e6b6794cf1aa6c449052f347b3f1ebb3d590cd66cb4042cf7fbcff590a70b4",
+  "limitations": [
+    "Original failed hosted attempt retained. No merge or successful hosted qualification is inferred.",
+    "Existing local qualification remains bound to its own actual images and source.",
+    "The safe artifact omits raw error text; source-coordinate-only diagnostics are being added for the next execution."
+  ]
+}
