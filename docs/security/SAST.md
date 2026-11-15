@@ -3,8 +3,8 @@
 Status: the isolated Linux arm64 qualification has executed all three source
 analyses and the real vulnerable-fixture rejection control. Their exact source,
 findings and artifact-hygiene results are recorded separately in
-`SAST_QUALIFICATION.md`; this is **not a full security/release pass**. The first
-hosted integrated attempt passed Python and Actions but failed JavaScript during
+`SAST_QUALIFICATION.md`; this is **not a full security/release pass**. Three
+hosted integrated attempts passed Python and Actions but failed JavaScript during
 extraction; findings for that language were not evaluated. See
 `SAST_HOSTED_QUALIFICATION.md` for exact run evidence. Complete hosted analysis,
 ingestion read-back and fork behavior remain open. No human finding disposition
@@ -51,7 +51,8 @@ are the primary configuration references. Review pin updates through normal PRs.
 
 ## Local commands
 
-Python 3.9+ and Git are required for the stdlib runner. Extraction additionally
+Python 3.9+ and Git are required for the stdlib runner. The policy regression
+suite also requires Node for its synthetic package-scope handshake. Extraction additionally
 requires the pinned Node 24.22.3 and Python 3.14.5 runtimes; CI installs those exact
 runtimes, and the scanner verifies their versions. Native runs with an ambient
 `~/.config/codeql/config` refuse to proceed; use the isolated runtime instead. Linux x64/arm64, macOS and
@@ -98,7 +99,14 @@ stopped or modified. The CodeQL CLI remains outside application images.
 Outputs are unique directories beneath `.local/sast/`; an existing output path
 is refused. `--output .local/sast/my-attempt` selects a fresh location. The
 installer refuses overwriting an existing tool directory and validates every
-cached file/symlink against its install provenance before use. `--archive PATH`
+cached file/symlink against its install provenance before use. The owned cache
+also has a fixed CommonJS `package.json` outside the verified bundle, so Node
+cannot inherit the application's ES-module scope. This file is created only if
+absent; symlinks and differing existing content fail without overwriting them.
+Custom toolchain ancestors remain untouched; native execution refuses an
+incompatible nearest package scope and records its hash. The package-boundary
+correction has exact-wrapper handshake evidence; its hosted scan is still pending.
+`--archive PATH`
 reuses already-downloaded bytes only after the same exact size/checksum checks.
 
 The installer admits a conservative compressed+unpacked+2 GiB disk budget. Scans

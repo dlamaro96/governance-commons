@@ -409,6 +409,28 @@
     {
       "path": "docs/security/sast-evidence/hosted-attempt-2/secret-scan.json",
       "scope": "Pinned gitleaks worktree and reachable-history publication check for the second diagnostic increment; not SAST qualification"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-3/record.json",
+      "scope": "Third hosted source-security failure and separately reproduced native package-scope defect; no corrected hosted scan yet",
+      "source_binding": {
+        "implementation_commit": "123d9b8b8960cedd4817da776fe2953749d50e89",
+        "ci_tested_merge_commit": "fba921b340943af4ca811eb09ce4cc761d7dc1bc",
+        "evidence_sha256": "f1086dc0d8c8b8d1dbe6737b2b4292e4ab768a6991c566e6996454b233796e7f",
+        "method": "Original hosted safe artifacts preserved byte-identically. Native wrapper reproduction and repair are a separate exact-byte protocol probe; no source scan rerun or hosted pass is inferred."
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-3/native-package-boundary.json",
+      "scope": "Exact bundled TypeScript wrapper metadata handshake fails under inherited ES-module scope and passes with owned CommonJS boundary; all137 wrapper files unchanged, no CodeQL source scan"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-3/boundary-checks.json",
+      "scope": "Focused package-boundary policy tests, publication and whitespace; no scanner execution"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-3/secret-scan.json",
+      "scope": "Pinned gitleaks worktree and reachable-history publication check for native package-boundary correction; not SAST qualification"
     }
   ],
   "limitations": [
@@ -416,5 +438,5 @@
     "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "bound_at": "2026-11-15T22:46:19.849768+00:00"
+  "bound_at": "2026-11-15T22:58:14.519034+00:00"
 }

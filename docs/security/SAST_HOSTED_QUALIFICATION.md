@@ -100,8 +100,50 @@ numeric parsing, integer bounds, duplicate removal and the 16-code cap. See
 The separate `hosted-attempt-2/secret-scan.json` records the pinned publication
 secret scan. This is diagnostic tooling qualification, not a corrected source scan.
 
-Next, publish and execute the reviewed diagnostic change, inspect its safe report,
-and correct only a demonstrated failure. All three hosted analyses, exact
-commit/category analysis read-back, fork/Dependabot permissions and default-branch
-execution remain required. Earlier isolated `product-5` evidence qualifies only
-its own source digest; complete OSS-007 and release readiness remain open.
+That additive diagnostic patch was published as `123d9b8b8960cedd4817da776fe2953749d50e89`.
+The third attempt below records its execution separately.
+
+
+## Third hosted attempt and native package-boundary correction
+
+[Source-security run 43771280988](https://github.com/dlamaro96/governance-commons/actions/runs/43771280988)
+failed on tested merge `fba921b340943af4ca811eb09ce4cc761d7dc1bc`, source digest
+`2ae949bd3d7b7bd842e4dbe171d43909bbf6178bb99104a77d0e9f63d6fb99ff`.
+JavaScript extraction exited 2 after 2.254 seconds. The expanded fixed markers
+show parallel extraction starting, successful Node location/version detection,
+then a `CatastrophicError` and child exit 1. The original stdout is 3,994 bytes
+and stderr 554 bytes. Python and Actions pass analysis, coverage, zero findings
+and upload/processing; policy passes and the aggregate fails. Original safe
+artifacts are preserved under `sast-evidence/hosted-attempt-3/`.
+
+A bounded local probe demonstrated a native installation defect. The exact
+bundled TypeScript parser is CommonJS JavaScript without its own `package.json`.
+In the repository's `.local/security-tools` directory, Node inherits the
+repository's `"type":"module"`, interprets the wrapper as an ES module and rejects
+its CommonJS `exports` reference. The isolated container mounts the bundle alone,
+so the repository's ancestor `package.json` is absent there. This explains why
+that specific local layout defect does not affect the earlier container probe;
+it does not retrospectively expose the unavailable hosted exception message.
+
+Using Node 24.22.3, the original wrapper exited 1 in 0.030 seconds with fixed
+ES-module mismatch markers. Adding only an owned CommonJS package boundary
+outside the bundle made the identical wrapper return its metadata response and
+exit 0 in 0.108 seconds. All 137 wrapper/dependency files matched the installed
+bundle provenance and stayed byte-identical. Both attempts' private stdout/stderr
+are retained with restrictive permissions; the public record contains only fixed
+flags, byte counts and hashes. See `hosted-attempt-3/native-package-boundary.json`.
+No CodeQL CLI, database extraction, security query or upload ran in this probe.
+
+The correction creates or verifies only `.local/security-tools/package.json`,
+with fixed `private` and `type: commonjs` fields. It refuses symlinked cache
+components and conflicting existing content, never overwrites a package file,
+and leaves verified bundle bytes unchanged. Custom cache ancestors are never
+modified. Native execution verifies the nearest package scope and reports its
+hash; an incompatible custom scope fails with an actionable reason. Focused
+regressions exercise the real Node module-type boundary with a clearly synthetic
+protocol, preserve bundle/source bytes, and reject symlinks and foreign content.
+
+This concrete local defect is corrected, but hosted Linux x64 qualification is
+pending. Publish the reviewed correction and require all three real hosted
+analyses, then perform exact commit/category read-back. Fork/Dependabot permissions,
+default-branch execution, complete OSS-007 and release readiness remain open.

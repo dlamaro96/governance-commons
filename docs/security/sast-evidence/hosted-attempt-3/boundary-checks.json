@@ -1,0 +1,67 @@
+{
+  "checks": [
+    {
+      "check": "policy",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "policies",
+        "-p",
+        "test_sast.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "logSha256": "a69073fe54299a940c54c69665eff889913f7112c682f2403f7ae6da819737cf",
+      "startedAt": "2026-11-15T22:58:14.522466+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "fdc242eb15f9bc36adc70543edb81cc0b1429b8618ee48e74565424b261ed7d1",
+      "startedAt": "2026-11-15T22:58:15.512890+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-15T22:58:26.151079+00:00",
+      "status": "PASS"
+    }
+  ],
+  "dirty": true,
+  "head": "123d9b8b8960cedd4817da776fe2953749d50e89",
+  "limitations": [
+    "Focused policy tooling tests, publication and whitespace only.",
+    "Exact bundled wrapper handshake is separately recorded in native-package-boundary.json; this is not a source scan.",
+    "Pinned secret scanning is recorded separately in secret-scan.json. Root handles final publication.",
+    "Full native Linux x64 hosted execution, findings and analysis read-back remain unqualified."
+  ],
+  "nodeVersion": "v24.22.3",
+  "policyTests": 35,
+  "python": "3.14.5",
+  "scanExecution": "NOT_RUN_FOR_PACKAGE_BOUNDARY_CORRECTION",
+  "schemaVersion": 1,
+  "sourceSha256": {
+    ".github/codeql/codeql-config.yml": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+    ".github/workflows/security.yml": "87704b640679588d83b0c4d76a4fe35e07e74ee60f821da2f926f3ed10fa89ed",
+    "policies/sast-policy.json": "920038aebeb759097d57f7712b3269ebd29b9e3ff488164ded57a0d772cda581",
+    "policies/sast-triage.json": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+    "policies/sast.py": "b94eedcde7dc1d2a1f1b866a036b36e4b360f0e41cebe95b937c650aac94755a",
+    "policies/test_sast.py": "6630187a58633c9ba3066c3bd7f195b9d187b6cb1d6075accd388163a29fc2ce"
+  }
+}

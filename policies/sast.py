@@ -194,8 +194,49 @@ def tool_inventory(directory):
     return rows
 
 
+TOOL_CACHE_PACKAGE = b'{"private":true,"type":"commonjs"}\n'
+
+
+def prepare_owned_tool_cache(toolchain, policy):
+    # The verified bundle contains CommonJS .js files without a package boundary.
+    # Keep the fixed boundary outside that bundle and only in our own ignored cache.
+    cache = ROOT / '.local/security-tools'
+    if toolchain != cache / ('codeql-' + policy['cliVersion']):
+        return None  # Never mutate a caller-supplied toolchain's ancestors.
+    for directory in (ROOT / '.local', cache):
+        require(not directory.is_symlink(), 'tool-cache-symlink')
+        directory.mkdir(exist_ok=True)
+        require(directory.is_dir(), 'tool-cache-not-directory')
+    boundary = cache / 'package.json'
+    try:
+        with boundary.open('xb') as stream:
+            stream.write(TOOL_CACHE_PACKAGE)
+    except FileExistsError:
+        pass  # Existing content is verified below, never overwritten.
+    require(not boundary.is_symlink() and boundary.is_file(), 'tool-cache-package-not-regular')
+    require(boundary.stat().st_size == len(TOOL_CACHE_PACKAGE)
+            and boundary.read_bytes() == TOOL_CACHE_PACKAGE, 'tool-cache-package-conflict')
+    return digest(TOOL_CACHE_PACKAGE)
+
+
+def native_package_scope(toolchain):
+    # Node resolves .js module type from the nearest package.json, even when the
+    # process is launched by CodeQL. Inspect that scope without changing custom caches.
+    wrapper = toolchain / 'javascript/tools/typescript-parser-wrapper/main.js'
+    for directory in wrapper.parents:
+        boundary = directory / 'package.json'
+        if boundary.exists() or boundary.is_symlink():
+            record = read_json(boundary, 1024 * 1024)
+            require(isinstance(record, dict) and record.get('type') in (None, 'commonjs'),
+                    'native-toolchain-requires-commonjs-package-scope')
+            return {'mode': 'EXPLICIT_COMMONJS' if record.get('type') == 'commonjs' else 'DEFAULT_COMMONJS',
+                    'packageSha256': file_hash(boundary)}
+    return {'mode': 'DEFAULT_COMMONJS', 'packageSha256': None}
+
+
 def install(toolchain, policy, target_platform=None, archive_path=None):
     require(not toolchain.exists(), 'toolchain-already-exists-no-overwrite')
+    prepare_owned_tool_cache(toolchain, policy)
     selected_platform = target_platform or platform_key()
     require(selected_platform in policy['bundles'], 'unsupported-target-platform')
     bundle = policy['bundles'][selected_platform]
@@ -460,6 +501,10 @@ FAILURE_MARKERS = {
     'typescript_wrapper_start_failed': b'could not start typescript parser wrapper',
     'typescript_wrapper_communication_failed': b'could not communicate with typescript parser wrapper',
     'typescript_parser_missing': b'could not find typescript parser',
+    'commonjs_exports_in_es_module': b'exports is not defined in es module scope',
+    'commonjs_require_in_es_module': b'require is not defined in es module scope',
+    'node_treats_js_as_es_module': b'this file is being treated as an es module',
+    'typescript_wrapper_crashed': b'the typescript parser wrapper crashed with exit code',
     'typescript_wrapper_memory_error': b'typescriptwrapperoomerror',
     'extractor_internal_error': b'internal error:',
     'extractor_user_error': b'com.semmle.util.exception.usererror',
@@ -728,8 +773,10 @@ def run_scan(args, policy):
     try:
         toolchain = Path(args.toolchain).resolve() if args.toolchain else ROOT / '.local/security-tools' / ('codeql-' + policy['cliVersion'])
         require(toolchain.exists(), 'toolchain-missing-run-explicit-install')
+        prepare_owned_tool_cache(toolchain, policy)
         selected_platform = args.platform or platform_key()
         if not images:
+            result['nativePackageScope'] = native_package_scope(toolchain)
             require(not (Path.home() / '.config/codeql/config').exists(), 'native-user-codeql-config-present-use-isolated-runtime')
         require(selected_platform == platform_key() or images, 'cross-platform-scan-requires-container')
         container = None

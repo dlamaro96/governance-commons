@@ -7,6 +7,7 @@ import importlib.util
 import importlib.machinery
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import sys
@@ -281,6 +282,72 @@ class CoverageAndSnapshotTests(unittest.TestCase):
             self.assertEqual(decoded['tool']['extensions'][0]['locations'][0]['uri'], 'file:///codeql/qlpack.yml')
             self.assertEqual(decoded['tool']['extensions'][0]['locations'][1]['uri'], '%2Fcodeql%2Fqlpack.yml')
             self.assertEqual(decoded['message'], '/codeql/query.ql')
+
+
+class NativePackageScopeTests(unittest.TestCase):
+    def test_owned_boundary_restores_commonjs_protocol_without_modifying_bundle(self):
+        node = shutil.which('node')
+        self.assertIsNotNone(node, 'Node is required for the native package-scope regression')
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'package.json').write_text('{"type":"module"}\n')
+            toolchain = root / '.local/security-tools' / ('codeql-' + POLICY['cliVersion'])
+            wrapper = toolchain / 'javascript/tools/typescript-parser-wrapper/main.js'
+            wrapper.parent.mkdir(parents=True)
+            # Explicit synthetic CommonJS protocol, separate from real extractor qualification.
+            wrapper.write_text("exports.protocol = 'metadata'; console.log(JSON.stringify({type: exports.protocol}));")
+            original = sast.tool_inventory(toolchain)
+            failed = subprocess.run([node, str(wrapper)], capture_output=True, timeout=5)
+            self.assertEqual(failed.returncode, 1)
+            self.assertIn(b'exports is not defined in ES module scope', failed.stderr)
+            with self.assertRaisesRegex(sast.Rejected, 'requires-commonjs-package-scope'):
+                sast.native_package_scope(toolchain)
+            with mock.patch.object(sast, 'ROOT', root):
+                boundary_hash = sast.prepare_owned_tool_cache(toolchain, POLICY)
+                self.assertEqual(sast.prepare_owned_tool_cache(toolchain, POLICY), boundary_hash)
+            passed = subprocess.run([node, str(wrapper)], capture_output=True, timeout=5)
+            self.assertEqual(passed.returncode, 0)
+            self.assertEqual(json.loads(passed.stdout), {'type': 'metadata'})
+            self.assertEqual(sast.native_package_scope(toolchain),
+                             {'mode': 'EXPLICIT_COMMONJS', 'packageSha256': boundary_hash})
+            self.assertEqual(sast.tool_inventory(toolchain), original)
+            self.assertEqual((root / 'package.json').read_text(), '{"type":"module"}\n')
+
+    def test_owned_boundary_refuses_symlinks_and_foreign_content_without_overwriting(self):
+        for obstruction in ('local-symlink', 'cache-symlink', 'package-symlink', 'foreign-package'):
+            with self.subTest(obstruction=obstruction), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary); foreign = root / 'foreign'; foreign.mkdir()
+                local = root / '.local'; cache = local / 'security-tools'
+                if obstruction == 'local-symlink':
+                    local.symlink_to(foreign, target_is_directory=True)
+                else:
+                    local.mkdir()
+                    if obstruction == 'cache-symlink':
+                        cache.symlink_to(foreign, target_is_directory=True)
+                    else:
+                        cache.mkdir()
+                        protected = foreign / 'package.json'; protected.write_text('{"type":"module"}\n')
+                        if obstruction == 'package-symlink':
+                            (cache / 'package.json').symlink_to(protected)
+                        else:
+                            (cache / 'package.json').write_bytes(protected.read_bytes())
+                before = {str(p):p.read_bytes() for p in root.rglob('*') if p.is_file()}
+                with mock.patch.object(sast, 'ROOT', root), self.assertRaises(sast.Rejected):
+                    sast.prepare_owned_tool_cache(cache / ('codeql-' + POLICY['cliVersion']), POLICY)
+                after = {str(p):p.read_bytes() for p in root.rglob('*') if p.is_file()}
+                self.assertEqual(after, before)
+
+    def test_custom_toolchain_ancestors_are_never_modified(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary); toolchain = root / 'custom-tools/codeql'
+            with mock.patch.object(sast, 'ROOT', root):
+                self.assertIsNone(sast.prepare_owned_tool_cache(toolchain, POLICY))
+            self.assertEqual(list(root.iterdir()), [])
+            self.assertEqual(sast.native_package_scope(toolchain),
+                             {'mode': 'DEFAULT_COMMONJS', 'packageSha256': None})
+            (root / 'package.json').symlink_to(root / 'missing.json')
+            with self.assertRaises(sast.Rejected):
+                sast.native_package_scope(toolchain)
 
 
 class FailureDiagnosticTests(unittest.TestCase):

@@ -1,0 +1,80 @@
+{
+  "analysis": "NOT_PASSED",
+  "cliVersion": "2.27.4",
+  "containerImage": null,
+  "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+  "dirty": false,
+  "extractorRuntime": "v24.22.3",
+  "failure": "scanner-command-failed:extract",
+  "failureDiagnostics": {
+    "schemaVersion": 1,
+    "scope": "FIXED_MARKERS_ONLY_NOT_A_CAUSE_DETERMINATION",
+    "streams": {
+      "stderr": {
+        "available": true,
+        "bytes": 554,
+        "markers": [
+          "build_command_started",
+          "database_initializing",
+          "extractor_command_started",
+          "fatal_error"
+        ],
+        "sample": "HEAD_AND_TAIL_UP_TO_64_KIB",
+        "sha256": "a2b0334cb593659d2c30e62dfc8bd89be0f0fb0b7efcc150cab0689b45a4d703",
+        "subprocessExitCodes": [],
+        "subprocessExitCodesTruncated": false
+      },
+      "stdout": {
+        "available": true,
+        "bytes": 3994,
+        "markers": [
+          "extractor_catastrophic_error",
+          "node_runtime_located",
+          "node_runtime_version_observed",
+          "parallel_extraction_started",
+          "spawn_abnormal"
+        ],
+        "sample": "HEAD_AND_TAIL_UP_TO_64_KIB",
+        "sha256": "286d5935d3a54ce713e01c6b2480a546b86a3c47e8a317c5f4b912a0faffb921",
+        "subprocessExitCodes": [
+          1
+        ],
+        "subprocessExitCodesTruncated": false
+      }
+    }
+  },
+  "findingsGate": "NOT_EVALUATED",
+  "head": "fba921b340943af4ca811eb09ce4cc761d7dc1bc",
+  "language": "javascript-typescript",
+  "library": "codeql/javascript-all",
+  "libraryVersion": "3.0.0",
+  "queryCount": 105,
+  "queryPack": "codeql/javascript-queries",
+  "querySetDigest": "213bda4e81b066a5b255ff54cd70bbac5caaafe63742af25eeb890308d3c28dd",
+  "queryVersion": "2.5.0",
+  "schemaVersion": 1,
+  "sourceDigest": "2ae949bd3d7b7bd842e4dbe171d43909bbf6178bb99104a77d0e9f63d6fb99ff",
+  "steps": [
+    {
+      "durationSeconds": 0.25,
+      "exitCode": 0,
+      "step": "extractor-runtime"
+    },
+    {
+      "durationSeconds": 0.501,
+      "exitCode": 0,
+      "step": "version"
+    },
+    {
+      "durationSeconds": 1.002,
+      "exitCode": 0,
+      "step": "queries"
+    },
+    {
+      "durationSeconds": 2.254,
+      "exitCode": 2,
+      "step": "extract"
+    }
+  ],
+  "upload": "NOT_ATTEMPTED"
+}

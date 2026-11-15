@@ -1,0 +1,115 @@
+{
+  "analysis": "NOT_PASSED",
+  "bundleSha256": "89ed56c8ec6bfccef6a0d2e7fe86da0469ca24b4db08b88016ec134b942c17a4",
+  "configurationSha256": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+  "containerImages": null,
+  "dirty": false,
+  "durationSeconds": 7.951,
+  "findingsGate": "NOT_EVALUATED",
+  "finishedAt": "2026-11-15T22:48:46.319650+00:00",
+  "freeDiskBytesAtFinish": 92955455488,
+  "head": "fba921b340943af4ca811eb09ce4cc761d7dc1bc",
+  "invocation": {
+    "entrypoint": "policies/sast.py",
+    "language": "javascript-typescript",
+    "platform": "linux-x64"
+  },
+  "languages": {
+    "javascript-typescript": {
+      "analysis": "NOT_PASSED",
+      "cliVersion": "2.27.4",
+      "containerImage": null,
+      "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+      "dirty": false,
+      "extractorRuntime": "v24.22.3",
+      "failure": "scanner-command-failed:extract",
+      "failureDiagnostics": {
+        "schemaVersion": 1,
+        "scope": "FIXED_MARKERS_ONLY_NOT_A_CAUSE_DETERMINATION",
+        "streams": {
+          "stderr": {
+            "available": true,
+            "bytes": 554,
+            "markers": [
+              "build_command_started",
+              "database_initializing",
+              "extractor_command_started",
+              "fatal_error"
+            ],
+            "sample": "HEAD_AND_TAIL_UP_TO_64_KIB",
+            "sha256": "a2b0334cb593659d2c30e62dfc8bd89be0f0fb0b7efcc150cab0689b45a4d703",
+            "subprocessExitCodes": [],
+            "subprocessExitCodesTruncated": false
+          },
+          "stdout": {
+            "available": true,
+            "bytes": 3994,
+            "markers": [
+              "extractor_catastrophic_error",
+              "node_runtime_located",
+              "node_runtime_version_observed",
+              "parallel_extraction_started",
+              "spawn_abnormal"
+            ],
+            "sample": "HEAD_AND_TAIL_UP_TO_64_KIB",
+            "sha256": "286d5935d3a54ce713e01c6b2480a546b86a3c47e8a317c5f4b912a0faffb921",
+            "subprocessExitCodes": [
+              1
+            ],
+            "subprocessExitCodesTruncated": false
+          }
+        }
+      },
+      "findingsGate": "NOT_EVALUATED",
+      "head": "fba921b340943af4ca811eb09ce4cc761d7dc1bc",
+      "language": "javascript-typescript",
+      "library": "codeql/javascript-all",
+      "libraryVersion": "3.0.0",
+      "queryCount": 105,
+      "queryPack": "codeql/javascript-queries",
+      "querySetDigest": "213bda4e81b066a5b255ff54cd70bbac5caaafe63742af25eeb890308d3c28dd",
+      "queryVersion": "2.5.0",
+      "schemaVersion": 1,
+      "sourceDigest": "2ae949bd3d7b7bd842e4dbe171d43909bbf6178bb99104a77d0e9f63d6fb99ff",
+      "steps": [
+        {
+          "durationSeconds": 0.25,
+          "exitCode": 0,
+          "step": "extractor-runtime"
+        },
+        {
+          "durationSeconds": 0.501,
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "durationSeconds": 1.002,
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 2.254,
+          "exitCode": 2,
+          "step": "extract"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    }
+  },
+  "limitations": [
+    "No hosted ingestion or analysis read-back in this command.",
+    "SQL/RLS, dependencies, images and general IaC are outside this source scan.",
+    "Automated findings do not replace independent security review."
+  ],
+  "outcome": "NOT_PASSED",
+  "platform": "linux-x64",
+  "policySha256": "920038aebeb759097d57f7712b3269ebd29b9e3ff488164ded57a0d772cda581",
+  "purpose": "REPOSITORY_SOURCE",
+  "runnerSha256": "e5e8a26c7acd404763581f03040baa6019d21c600b85888057e7b035ea7722d1",
+  "schemaVersion": 1,
+  "scope": "SINGLE_LANGUAGE",
+  "sourceDigest": "2ae949bd3d7b7bd842e4dbe171d43909bbf6178bb99104a77d0e9f63d6fb99ff",
+  "startedAt": "2026-11-15T22:48:38.368403+00:00",
+  "triageSha256": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+  "upload": "NOT_ATTEMPTED"
+}
