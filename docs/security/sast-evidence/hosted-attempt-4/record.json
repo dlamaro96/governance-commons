@@ -1,0 +1,321 @@
+{
+  "development": {
+    "behaviorSummarySha256": "85e040c2389a7aa704a1666e22d01bb10924f9c02672c37e519cad8cebce099c",
+    "browserTests": 14,
+    "checks": {
+      "behavior": "PASS",
+      "quality": "PASS",
+      "required": "PASS",
+      "secrets": "PASS"
+    },
+    "jobStatusEvidence": "Root observed completed public Actions UI; original safe behavior summary is independently preserved byte-identically.",
+    "limitations": [
+      "Historical behavior execution at the exact tested merge; not execution of the new memory-policy source.",
+      "Original screenshots remain in ignored downloaded evidence and are not republished here."
+    ],
+    "outcome": "PASS",
+    "runUrl": "https://github.com/dlamaro96/governance-commons/actions/runs/43772519043",
+    "steps": 11,
+    "testedMergeCommit": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1"
+  },
+  "limitations": [
+    "JavaScript extraction passes with the corrected external CommonJS package boundary, but analysis exits99 with fixed OutOfMemoryError marker before findings, coverage query or SARIF publication.",
+    "Python and Actions analysis, exact extraction coverage, zero-findings and upload/processing pass; separate individual-analysis API read-back matches exact merge/category/SARIF IDs/counts.",
+    "The native4GiB requested budget and2GiB admission reserve correction is implemented and tested separately; it has not executed a source scan.",
+    "No full source-security pass, new required repository check, fork/Dependabot/default-branch qualification or release readiness is claimed.",
+    "Raw hosted logs and actual host memory measurements for this historical failure are unavailable; fixed markers establish CodeQL OOM, not physical-host exhaustion or an exact heap subtype."
+  ],
+  "preservedCopiesSha256": {
+    "actions/actions-summary.json": "78b7c33519b37f1c840d6660a74cba725e26dcb4b23146b39361b14933f21572",
+    "actions/source-manifest.json": "269f87d15021e87600658589af3079249ca8dee361c2e5e030f8bc81e9c828da",
+    "actions/summary.json": "d5a58ab344193243dfb6fb2a4b06a5c0f70ab56b0c90fb024a38f17ef64e002d",
+    "actions/upload-status.json": "26823e81f61317e9d2453b037476005c9222ea79af9098e53ecf9b93fc6393ed",
+    "behavior-summary.json": "85e040c2389a7aa704a1666e22d01bb10924f9c02672c37e519cad8cebce099c",
+    "javascript-typescript/javascript-typescript-summary.json": "3477e2b97c6f481ca35fc64c5ce1b7e080a6aef009490e9d586340ba5fe6b44d",
+    "javascript-typescript/source-manifest.json": "269f87d15021e87600658589af3079249ca8dee361c2e5e030f8bc81e9c828da",
+    "javascript-typescript/summary.json": "799f795b09bd6091fa5d454619d1eb097f3c5f417a7a2c2fee8ae25bb68067b0",
+    "javascript-typescript/upload-status.json": "006ead013cd802c9b5ded4f230c4f4e432ed509a261aa9e7549098592a640663",
+    "python/python-summary.json": "05f5f144ecf613887eaff5fde0e1763ce8d882965f89cd170b81ca32df66e7cf",
+    "python/source-manifest.json": "269f87d15021e87600658589af3079249ca8dee361c2e5e030f8bc81e9c828da",
+    "python/summary.json": "8aca6ca4e23d5e465d2ab37a390f11d1bc9b845d93bb36403799968a4a3ff23d",
+    "python/upload-status.json": "2a76a372de62f72bd96d4ad8514baf416d959174f0745cfc77a641eca908ca1f"
+  },
+  "pullRequest": "https://github.com/dlamaro96/governance-commons/pull/15",
+  "purpose": "FOURTH_HOSTED_INTEGRATED_ATTEMPT_NOT_A_PASS",
+  "recordedAt": "2026-11-15T23:13:18.528280+00:00",
+  "schemaVersion": 1,
+  "sourceDigest": "e70eb504e06494664ba853222592eedfa05fa757b3ec0e783319e251e38c7a68",
+  "sourceHead": "3a5de6090a5a04e056c3e848d8fe272d20a713e4",
+  "sourceSecurity": {
+    "aggregate": "FAIL",
+    "analysisReadBack": "PARTIAL_PYTHON_ACTIONS_PASS_EXACT_COMMIT_JS_ABSENT",
+    "jobStatusEvidence": "Root agent observed public Actions UI; individual outcomes independently read from downloaded safe artifacts.",
+    "languages": {
+      "actions": {
+        "analysis": "PASS",
+        "coverage": {
+          "databaseFiles": 2,
+          "expectedFiles": 2,
+          "extractedExpectedFiles": 2,
+          "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+        },
+        "durationSeconds": 27.531,
+        "findingCount": 0,
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-15T23:02:38.251746+00:00",
+        "nativePackageScope": {
+          "mode": "EXPLICIT_COMMONJS",
+          "packageSha256": "7d38de102f9d211b8a221ab5943610473c4b23aeee36e9a9cf0e22848e04b9d4"
+        },
+        "queryCount": 24,
+        "steps": [
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.002,
+            "exitCode": 0,
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 3.504,
+            "exitCode": 0,
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 8.014,
+            "exitCode": 0,
+            "step": "analyze"
+          },
+          {
+            "durationSeconds": 10.017,
+            "exitCode": 0,
+            "step": "coverage-query"
+          },
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "step": "coverage-decode"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "success",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1",
+          "language": "actions",
+          "sarifId": "a801d89c-e148-11f1-9834-714c829b404f",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "success"
+        }
+      },
+      "javascript-typescript": {
+        "analysis": "NOT_PASSED",
+        "durationSeconds": 46.582,
+        "failure": "scanner-command-failed:analyze",
+        "failureDiagnostics": {
+          "schemaVersion": 1,
+          "scope": "FIXED_MARKERS_ONLY_NOT_A_CAUSE_DETERMINATION",
+          "streams": {
+            "stderr": {
+              "available": true,
+              "bytes": 21228,
+              "markers": [
+                "out_of_memory"
+              ],
+              "sample": "HEAD_AND_TAIL_UP_TO_64_KIB",
+              "sha256": "5ebae36e3a8b40c242e2a163f51d3bf52dcca99eb22caae94f4239afc063e002",
+              "subprocessExitCodes": [],
+              "subprocessExitCodesTruncated": false
+            },
+            "stdout": {
+              "available": true,
+              "bytes": 0,
+              "markers": [],
+              "sample": "HEAD_AND_TAIL_UP_TO_64_KIB",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "subprocessExitCodes": [],
+              "subprocessExitCodesTruncated": false
+            }
+          }
+        },
+        "findingsGate": "NOT_EVALUATED",
+        "finishedAt": "2026-11-15T23:03:10.691052+00:00",
+        "nativePackageScope": {
+          "mode": "EXPLICIT_COMMONJS",
+          "packageSha256": "7d38de102f9d211b8a221ab5943610473c4b23aeee36e9a9cf0e22848e04b9d4"
+        },
+        "queryCount": 105,
+        "steps": [
+          {
+            "durationSeconds": 0.251,
+            "exitCode": 0,
+            "step": "extractor-runtime"
+          },
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.251,
+            "exitCode": 0,
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 15.27,
+            "exitCode": 0,
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 25.288,
+            "exitCode": 99,
+            "step": "analyze"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "failure",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1",
+          "language": "javascript-typescript",
+          "sarifId": "",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "skipped"
+        }
+      },
+      "python": {
+        "analysis": "PASS",
+        "coverage": {
+          "databaseFiles": 44,
+          "expectedFiles": 25,
+          "extractedExpectedFiles": 25,
+          "extractedPathsDigest": "e688c8917445c800d41ad89449f4ac7c3d48fb5c7444a26e90554c70a3eebaf7"
+        },
+        "durationSeconds": 53.264,
+        "findingCount": 0,
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-15T23:03:14.861797+00:00",
+        "nativePackageScope": {
+          "mode": "EXPLICIT_COMMONJS",
+          "packageSha256": "7d38de102f9d211b8a221ab5943610473c4b23aeee36e9a9cf0e22848e04b9d4"
+        },
+        "queryCount": 52,
+        "steps": [
+          {
+            "durationSeconds": 0.251,
+            "exitCode": 0,
+            "step": "extractor-runtime"
+          },
+          {
+            "durationSeconds": 0.751,
+            "exitCode": 0,
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.502,
+            "exitCode": 0,
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 11.515,
+            "exitCode": 0,
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 17.027,
+            "exitCode": 0,
+            "step": "analyze"
+          },
+          {
+            "durationSeconds": 17.772,
+            "exitCode": 0,
+            "step": "coverage-query"
+          },
+          {
+            "durationSeconds": 0.502,
+            "exitCode": 0,
+            "step": "coverage-decode"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "success",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1",
+          "language": "python",
+          "sarifId": "bdbef502-e148-11f1-8efb-c6e7bd66f3dc",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "success"
+        }
+      }
+    },
+    "originalArtifactFiles": {
+      "actions": {
+        "actions-summary.json": {
+          "bytes": 1641,
+          "sha256": "78b7c33519b37f1c840d6660a74cba725e26dcb4b23146b39361b14933f21572"
+        },
+        "actions.sarif": {
+          "bytes": 171394,
+          "sha256": "c67b80aa6c6797c9304ff8bbe1c0671083f7577f6bf5f610f9cb76a342a9bebb"
+        },
+        "source-manifest.json": {
+          "bytes": 99949,
+          "sha256": "269f87d15021e87600658589af3079249ca8dee361c2e5e030f8bc81e9c828da"
+        },
+        "summary.json": {
+          "bytes": 3432,
+          "sha256": "d5a58ab344193243dfb6fb2a4b06a5c0f70ab56b0c90fb024a38f17ef64e002d"
+        },
+        "upload-status.json": {
+          "bytes": 290,
+          "sha256": "26823e81f61317e9d2453b037476005c9222ea79af9098e53ecf9b93fc6393ed"
+        }
+      },
+      "javascript-typescript": {
+        "javascript-typescript-summary.json": {
+          "bytes": 2067,
+          "sha256": "3477e2b97c6f481ca35fc64c5ce1b7e080a6aef009490e9d586340ba5fe6b44d"
+        },
+        "source-manifest.json": {
+          "bytes": 99949,
+          "sha256": "269f87d15021e87600658589af3079249ca8dee361c2e5e030f8bc81e9c828da"
+        },
+        "summary.json": {
+          "bytes": 3963,
+          "sha256": "799f795b09bd6091fa5d454619d1eb097f3c5f417a7a2c2fee8ae25bb68067b0"
+        },
+        "upload-status.json": {
+          "bytes": 268,
+          "sha256": "006ead013cd802c9b5ded4f230c4f4e432ed509a261aa9e7549098592a640663"
+        }
+      },
+      "python": {
+        "python-summary.json": {
+          "bytes": 1781,
+          "sha256": "05f5f144ecf613887eaff5fde0e1763ce8d882965f89cd170b81ca32df66e7cf"
+        },
+        "python.sarif": {
+          "bytes": 242251,
+          "sha256": "c1add2f1f054db0e4184e6d768c2d10dad30aeae365c4307b1d6defd04db5122"
+        },
+        "source-manifest.json": {
+          "bytes": 99949,
+          "sha256": "269f87d15021e87600658589af3079249ca8dee361c2e5e030f8bc81e9c828da"
+        },
+        "summary.json": {
+          "bytes": 3594,
+          "sha256": "8aca6ca4e23d5e465d2ab37a390f11d1bc9b845d93bb36403799968a4a3ff23d"
+        },
+        "upload-status.json": {
+          "bytes": 289,
+          "sha256": "2a76a372de62f72bd96d4ad8514baf416d959174f0745cfc77a641eca908ca1f"
+        }
+      }
+    },
+    "policyJob": "PASS",
+    "runAttempt": 1,
+    "runUrl": "https://github.com/dlamaro96/governance-commons/actions/runs/43772519032"
+  },
+  "testedMergeCommit": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1"
+}

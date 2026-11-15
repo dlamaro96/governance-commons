@@ -1,0 +1,102 @@
+{
+  "alertInventory": {
+    "completePagination": true,
+    "count": 0,
+    "mostRecentInstanceCommitCounts": {},
+    "openCount": 0,
+    "ref": "refs/pull/15/merge",
+    "stateFilter": "NONE_ALL_STATES",
+    "tool": "CodeQL"
+  },
+  "apiVersion": "2026-03-10",
+  "languages": {
+    "actions": {
+      "analysisId": 2172607137,
+      "category": "governance-commons/actions",
+      "commit": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1",
+      "createdAt": "2026-11-15T23:02:40Z",
+      "exactCommitCategorySarifIdAndCountsMatch": true,
+      "hasError": false,
+      "hasWarning": false,
+      "languageSummarySha256": "78b7c33519b37f1c840d6660a74cba725e26dcb4b23146b39361b14933f21572",
+      "publishedSarifSha256": "c67b80aa6c6797c9304ff8bbe1c0671083f7577f6bf5f610f9cb76a342a9bebb",
+      "readBack": "PASS_FOR_THIS_LANGUAGE_AND_COMMIT",
+      "resolvedQueryCount": 24,
+      "resultsCount": 0,
+      "sarifId": "a801d89c-e148-11f1-9834-714c829b404f",
+      "storedRuleCount": 23,
+      "tool": {
+        "guid": null,
+        "name": "CodeQL",
+        "version": "2.27.4"
+      },
+      "uploadStatusSha256": "26823e81f61317e9d2453b037476005c9222ea79af9098e53ecf9b93fc6393ed"
+    },
+    "javascript-typescript": {
+      "readBack": "NOT_QUALIFIED_ANALYSIS_FAILED_BEFORE_UPLOAD",
+      "storedAnalysisCountAtExactCommit": 0
+    },
+    "python": {
+      "analysisId": 2172609160,
+      "category": "governance-commons/python",
+      "commit": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1",
+      "createdAt": "2026-11-15T23:03:16Z",
+      "exactCommitCategorySarifIdAndCountsMatch": true,
+      "hasError": false,
+      "hasWarning": false,
+      "languageSummarySha256": "05f5f144ecf613887eaff5fde0e1763ce8d882965f89cd170b81ca32df66e7cf",
+      "publishedSarifSha256": "c1add2f1f054db0e4184e6d768c2d10dad30aeae365c4307b1d6defd04db5122",
+      "readBack": "PASS_FOR_THIS_LANGUAGE_AND_COMMIT",
+      "resolvedQueryCount": 52,
+      "resultsCount": 0,
+      "sarifId": "bdbef502-e148-11f1-8efb-c6e7bd66f3dc",
+      "storedRuleCount": 50,
+      "tool": {
+        "guid": null,
+        "name": "CodeQL",
+        "version": "2.27.4"
+      },
+      "uploadStatusSha256": "2a76a372de62f72bd96d4ad8514baf416d959174f0745cfc77a641eca908ca1f"
+    }
+  },
+  "limitations": [
+    "Python/Actions read-back is bound to exact commit/category/SARIF ID, stored counts and original published SARIF hash; this is separate from upload-step success.",
+    "The ref-scoped all-state alert list is an independent observation; absence of alerts does not establish JavaScript scan coverage or a full SAST pass.",
+    "No Actions/check/log endpoints queried; no raw API payload, alert content, error text or credentials published. Raw responses remain private and access-restricted.",
+    "Fork/Dependabot permissions and default-branch qualification are not established."
+  ],
+  "observedAt": "2026-11-15T23:11:38.489774+00:00",
+  "overallQualification": "NOT_PASSED_JAVASCRIPT_ANALYSIS_FAILED",
+  "purpose": "INDEPENDENT_STORED_SECURITY_ANALYSIS_READBACK_NOT_CI_DIAGNOSTICS",
+  "ref": "refs/pull/15/merge",
+  "repository": "dlamaro96/governance-commons",
+  "requests": {
+    "actions": {
+      "hasNextPage": false,
+      "httpStatus": 200,
+      "responseBytes": 2059,
+      "responseSha256": "e1c683c58842d938525ff5ef5aeaa9c047f060bb1c2220303aa3d8d63d2047bd"
+    },
+    "alerts": {
+      "hasNextPage": false,
+      "httpStatus": 200,
+      "responseBytes": 1542,
+      "responseSha256": "96269f6750ab762cda0effbc6bf0538dacd9c7e51ad61e5d93c1f1251b45ff0f"
+    },
+    "analyses": {
+      "hasNextPage": false,
+      "httpStatus": 200,
+      "responseBytes": 5835,
+      "responseSha256": "53c39041502e33cd3c7229bb3b2d51808e12dbb6c5cc4954376ea51cb5661b81"
+    },
+    "python": {
+      "hasNextPage": false,
+      "httpStatus": 200,
+      "responseBytes": 2059,
+      "responseSha256": "705d74a1bd183129e969787f61298f5e5f568106ca93ac844aef01327cd162cc"
+    }
+  },
+  "schemaVersion": 1,
+  "sourceHead": "3a5de6090a5a04e056c3e848d8fe272d20a713e4",
+  "testedMergeCommit": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1"
+}

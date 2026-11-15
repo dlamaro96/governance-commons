@@ -10,6 +10,7 @@ import os
 from pathlib import Path, PurePosixPath
 import platform
 import re
+import resource
 import shutil
 import signal
 import stat
@@ -578,6 +579,123 @@ def scanner_failure_diagnostics(stdout, stderr, max_bytes):
     return result
 
 
+def memory_text(path):
+    # Kernel counters only; never publish their raw content or an exception message.
+    try:
+        with Path(path).open('rb') as stream:
+            data = stream.read(65537)
+        require(len(data) <= 65536, 'native-memory-counter-size')
+        return data.decode('ascii')
+    except (OSError, UnicodeError):
+        raise Rejected('native-memory-counter-unavailable') from None
+
+
+def native_memory_available():
+    system = platform.system()
+    constraints = []
+    if system == 'Linux':
+        text = memory_text('/proc/meminfo')
+        counters = {}
+        for key in ('MemTotal', 'MemAvailable'):
+            matches = re.findall(r'^' + key + r':\s+([0-9]+) kB$', text, re.MULTILINE)
+            require(len(matches) == 1, 'native-memory-counter-format')
+            counters[key] = int(matches[0]) * 1024
+        require(0 <= counters['MemAvailable'] <= counters['MemTotal'], 'native-memory-counter-range')
+        constraints.append(counters['MemAvailable'])
+        groups = memory_text('/proc/self/cgroup').splitlines()
+        rows = [row.split(':') for row in groups]
+        require(all(len(row) == 3 and row[0].isdecimal() and row[2].startswith('/')
+                    and ((row[0] == '0') == (row[1] == '')) for row in rows),
+                'native-memory-cgroup-format')
+        # Walk the unified hierarchy: a parent limit also constrains its descendants.
+        require(not any('memory' in row.split(':')[1].split(',') for row in groups if row.count(':') == 2),
+                'native-memory-v1-accounting-unsupported')
+        unified = [row[3:] for row in groups if row.startswith('0::')]
+        require(len(unified) <= 1, 'native-memory-cgroup-format')
+        cgroups = []
+        if unified:
+            relative = PurePosixPath(unified[0])
+            require(relative.is_absolute() and '..' not in relative.parts and len(relative.parts) <= 128,
+                    'native-memory-cgroup-path')
+            root = Path('/sys/fs/cgroup')
+            current = root / str(relative).lstrip('/')
+            while True:
+                # A root cgroup may have no memory controller (no limit at that level).
+                if (current / 'memory.max').exists():
+                    ceiling = memory_text(current / 'memory.max').strip()
+                    usage = memory_text(current / 'memory.current').strip()
+                    require(usage.isdecimal() and (ceiling == 'max' or ceiling.isdecimal()),
+                            'native-memory-cgroup-counter-format')
+                    if ceiling != 'max':
+                        headroom = max(0, int(ceiling) - int(usage))
+                        constraints.append(headroom)
+                        cgroups.append({'limitBytes': int(ceiling), 'currentBytes': int(usage), 'availableBytes': headroom})
+                elif current != root:
+                    raise Rejected('native-memory-cgroup-counter-unavailable')
+                if current == root:
+                    break
+                current = current.parent
+        evidence = {'system': system, 'physicalBytes': counters['MemTotal'],
+                    'hostAvailableBytes': counters['MemAvailable'], 'finiteCgroupLimits': cgroups}
+    elif system == 'Darwin':
+        values = []
+        for command in (['/usr/sbin/sysctl', '-n', 'hw.memsize'], ['/usr/bin/vm_stat']):
+            result = subprocess.run(command, capture_output=True, timeout=5, check=False,
+                                    env={'PATH': '/usr/bin:/usr/sbin:/bin:/sbin'})
+            require(result.returncode == 0 and len(result.stdout) <= 65536 and len(result.stderr) <= 65536,
+                    'native-memory-counter-unavailable')
+            try:
+                values.append(result.stdout.decode('ascii'))
+            except UnicodeError:
+                raise Rejected('native-memory-counter-format') from None
+        require(values[0].strip().isdecimal(), 'native-memory-counter-format')
+        page = re.search(r'page size of ([0-9]+) bytes', values[1])
+        require(page is not None, 'native-memory-counter-format')
+        pages = []
+        for label in ('free', 'inactive', 'speculative'):
+            matches = re.findall(r'^Pages ' + label + r':\s+([0-9]+)\.$', values[1], re.MULTILINE)
+            require(len(matches) == 1, 'native-memory-counter-format')
+            pages.append(int(matches[0]))
+        available = sum(pages) * int(page.group(1))
+        physical = int(values[0])
+        require(0 <= available <= physical, 'native-memory-counter-range')
+        constraints.append(available)
+        evidence = {'system': system, 'physicalBytes': physical, 'hostAvailableBytes': available,
+                    'darwinAvailabilityBasis': 'free+inactive+speculative-pages'}
+    else:
+        raise Rejected('native-memory-accounting-unsupported')
+    # Do not install a virtual-address RLIMIT: it is not a resident-memory cap.
+    # Existing finite limits are conservative additional admission ceilings.
+    inherited = {}
+    for name in ('RLIMIT_AS', 'RLIMIT_DATA'):
+        soft, _hard = resource.getrlimit(getattr(resource, name))
+        if soft != resource.RLIM_INFINITY:
+            require(soft >= 0, 'native-memory-rlimit-format')
+            constraints.append(soft)
+            inherited[name] = soft
+    evidence.update(inheritedSoftLimitBytes=inherited, availableBytes=min(constraints))
+    return evidence
+
+
+def execution_resources(policy, container):
+    ram = policy['ramMiB'] if container else policy['nativeRamMiB']
+    reserve = 0 if container else policy['nativeReserveMiB']
+    require(type(ram) is int and 2048 <= ram <= (2048 if container else 4096), 'scanner-ram-policy')
+    require(type(reserve) is int and reserve == (0 if container else 2048), 'scanner-reserve-policy')
+    require(type(policy['threads']) is int and 1 <= policy['threads'] <= 2, 'scanner-thread-policy')
+    return {'mode': 'CONTAINER' if container else 'NATIVE', 'requestedRamMiB': ram,
+            'reserveMiB': reserve, 'threads': policy['threads'],
+            'hardMemoryLimitBytes': 4 * GIB if container else None,
+            'ramSemantics': 'CodeQL evaluator/extractor request, not a hard process cap'}
+
+
+def admit_native_memory(resources):
+    observed = native_memory_available()
+    required = (resources['requestedRamMiB'] + resources['reserveMiB']) * 1024 ** 2
+    return {**observed, 'requiredAvailableBytes': required,
+            'status': 'ADMITTED' if observed['availableBytes'] >= required else 'REJECTED'}
+
+
 def container_command(container, args, cwd, name):
     platform_name = 'linux/arm64' if container['platform'] == 'linux-arm64' else 'linux/amd64'
     output, toolchain = container['output'], container['toolchain']
@@ -599,11 +717,17 @@ class Runner:
         self.deadline = time.monotonic() + policy['languageTimeoutSeconds']
         self.steps = []
         self.failure_diagnostics = None
+        self.resources = None
+        self.memory_admission = None
 
     def command(self, name, args, cwd):
         started = time.monotonic()
         self.failure_diagnostics = None
         capacity(self.output, self.policy['diskFloorGiB'] * GIB)
+        self.memory_admission = None
+        admission = admit_native_memory(self.resources) if self.resources and not self.container else None
+        self.memory_admission = admission
+        require(admission is None or admission['status'] == 'ADMITTED', 'native-memory-reserve-unavailable')
         log = self.output / f'{name}.log'
         stdout = self.output / f'{name}.stdout'
         env = {key: os.environ[key] for key in ('PATH', 'LANG', 'LC_ALL', 'TMPDIR', 'SYSTEMROOT') if key in os.environ}
@@ -624,7 +748,8 @@ class Runner:
                     time.sleep(0.25)
                 require(time.monotonic() < self.deadline, 'language-timeout')
                 require(log.stat().st_size + stdout.stat().st_size <= self.policy['maxReportBytes'], 'scanner-log-limit')
-                self.steps.append({'step': name, 'exitCode': process.returncode, 'durationSeconds': round(time.monotonic() - started, 3)})
+                self.steps.append({'step': name, 'exitCode': process.returncode, 'durationSeconds': round(time.monotonic() - started, 3),
+                                   **({'memoryAdmission': admission} if admission else {})})
                 if process.returncode != 0:
                     self.failure_diagnostics = scanner_failure_diagnostics(stdout, log, self.policy['maxReportBytes'])
                 require(process.returncode == 0, f'scanner-command-failed:{name}')
@@ -655,6 +780,9 @@ def scan_language(language, output, source, manifest, toolchain, policy, decisio
                'cliVersion': policy['cliVersion'], 'queryPack': spec['queryPack'], 'queryVersion': spec['queryVersion'],
                'containerImage': container['image'] if container else None}
     try:
+        runner.resources = execution_resources(policy, container)
+        summary['resources'] = runner.resources
+        resource_args = [f'--threads={runner.resources["threads"]}', f'--ram={runner.resources["requestedRamMiB"]}']
         cli = toolchain / 'codeql'
         if 'runtime' in spec:
             runtime = runner.command('extractor-runtime', [spec['runtime']['command'], '--version'], source).read_text().strip()
@@ -689,18 +817,18 @@ def scan_language(language, output, source, manifest, toolchain, policy, decisio
         db = folder / 'database'
         runner.command('extract', [cli, 'database', 'create', db, f'--language={spec["extractor"]}',
                        '--build-mode=none', f'--source-root={source}', f'--codescanning-config={source / ".github/codeql/codeql-config.yml"}',
-                       f'--threads={policy["threads"]}', f'--ram={policy["ramMiB"]}', *common], source)
+                       *resource_args, *common], source)
         raw = folder / 'raw.sarif'
         runner.command('analyze', [cli, 'database', 'analyze', db, *suites, search, *common,
                        '--format=sarifv2.1.0', f'--output={raw}', f'--sarif-category=governance-commons/{language}',
                        '--sarif-add-baseline-file-info', '--sarif-include-diagnostics',
                        '--no-sarif-add-file-contents', '--no-sarif-add-snippets', '--sarif-include-query-help=never',
                        '--no-default-compilation-cache', '--min-disk-free=2048',
-                       f'--threads={policy["threads"]}', f'--ram={policy["ramMiB"]}'], source)
+                       *resource_args], source)
         bqrs = folder / 'coverage.bqrs'
         runner.command('coverage-query', [cli, 'query', 'run', source / f'policies/codeql/{language}/ExtractedPaths.ql',
                        f'--database={db}', f'--output={bqrs}', search, *common, '--no-default-compilation-cache',
-                       '--min-disk-free=2048', f'--threads={policy["threads"]}', f'--ram={policy["ramMiB"]}'], source)
+                       '--min-disk-free=2048', *resource_args], source)
         decoded = folder / 'coverage.json'
         runner.command('coverage-decode', [cli, 'bqrs', 'decode', bqrs, '--format=json', f'--output={decoded}', *common], source)
         summary['coverage'] = coverage(read_json(decoded), manifest, language)
@@ -719,6 +847,8 @@ def scan_language(language, output, source, manifest, toolchain, policy, decisio
         if isinstance(error, Rejected) and str(error) == 'scanner-cancelled':
             raise
     finally:
+        if runner.memory_admission is not None:
+            summary['lastMemoryAdmission'] = runner.memory_admission
         write_json(output / 'public' / f'{language}-summary.json', summary)
     return summary
 

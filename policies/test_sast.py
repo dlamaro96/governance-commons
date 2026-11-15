@@ -426,6 +426,123 @@ class FailureDiagnosticTests(unittest.TestCase):
             self.assertEqual(runner.steps[-1]['exitCode'], 0)
 
 
+class MemoryAdmissionTests(unittest.TestCase):
+    def test_execution_modes_select_bounded_distinct_budgets(self):
+        native = sast.execution_resources(POLICY, None)
+        container = sast.execution_resources(POLICY, {'image': 'synthetic'})
+        self.assertEqual((native['requestedRamMiB'], native['reserveMiB'], native['threads']), (4096, 2048, 2))
+        self.assertIsNone(native['hardMemoryLimitBytes'])
+        self.assertEqual((container['requestedRamMiB'], container['reserveMiB'], container['threads']), (2048, 0, 2))
+        self.assertEqual(container['hardMemoryLimitBytes'], 4 * sast.GIB)
+        for key, value in [('nativeRamMiB', 4097), ('nativeRamMiB', True), ('nativeReserveMiB', 0), ('threads', 3)]:
+            changed = {**POLICY, key: value}
+            with self.subTest(key=key, value=value), self.assertRaises(sast.Rejected):
+                sast.execution_resources(changed, None)
+
+    def test_reserve_is_checked_at_exact_boundary_before_any_scanner_process(self):
+        resources = sast.execution_resources(POLICY, None)
+        with mock.patch.object(sast, 'native_memory_available', return_value={'availableBytes': 6 * sast.GIB}):
+            self.assertEqual(sast.admit_native_memory(resources)['status'], 'ADMITTED')
+        with tempfile.TemporaryDirectory() as temporary:
+            runner = sast.Runner(Path(temporary), POLICY)
+            runner.resources = resources
+            with mock.patch.object(sast, 'native_memory_available', return_value={'availableBytes': 6 * sast.GIB - 1}), \
+                    mock.patch.object(sast.subprocess, 'Popen') as start:
+                with self.assertRaisesRegex(sast.Rejected, 'native-memory-reserve-unavailable'):
+                    runner.command('fixture', [sys.executable, '-c', 'raise SystemExit(0)'], Path(temporary))
+                start.assert_not_called()
+                self.assertEqual(runner.memory_admission['status'], 'REJECTED')
+                self.assertEqual(runner.memory_admission['availableBytes'], 6 * sast.GIB - 1)
+                self.assertEqual(runner.memory_admission['requiredAvailableBytes'], 6 * sast.GIB)
+
+    def test_refused_scan_publishes_safe_numeric_prerequisite_and_no_success(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary)
+            source = output / 'source'; source.mkdir()
+            with mock.patch.object(sast, 'native_memory_available', return_value={'availableBytes': 1024}), \
+                    mock.patch.object(sast.subprocess, 'Popen') as start:
+                summary = sast.scan_language('python', output, source,
+                    {'sourceDigest': 'synthetic', 'head': 'synthetic', 'dirty': True},
+                    output / 'absent-toolchain', POLICY, {})
+                start.assert_not_called()
+            published = json.loads((output / 'public/python-summary.json').read_text())
+            self.assertEqual(published, summary)
+            self.assertEqual(summary['analysis'], 'NOT_PASSED')
+            self.assertEqual(summary['findingsGate'], 'NOT_EVALUATED')
+            self.assertEqual(summary['failure'], 'native-memory-reserve-unavailable')
+            self.assertEqual(summary['lastMemoryAdmission'], {
+                'availableBytes': 1024, 'requiredAvailableBytes': 6 * sast.GIB, 'status': 'REJECTED'})
+
+    def linux(self, counters, exists=()):
+        def read(path):
+            try:
+                return counters[str(path)]
+            except KeyError:
+                raise sast.Rejected('native-memory-counter-unavailable') from None
+        return (mock.patch.object(sast.platform, 'system', return_value='Linux'),
+                mock.patch.object(sast, 'memory_text', side_effect=read),
+                mock.patch.object(sast.Path, 'exists', lambda path: str(path) in exists),
+                mock.patch.object(sast.resource, 'getrlimit', return_value=(sast.resource.RLIM_INFINITY, sast.resource.RLIM_INFINITY)))
+
+    def test_linux_hierarchy_accounts_for_parent_limit_and_current_usage(self):
+        counters = {'/proc/meminfo': 'MemTotal: 16777216 kB\nMemAvailable: 12582912 kB\n',
+                    '/proc/self/cgroup': '0::/job/child\n',
+                    '/sys/fs/cgroup/memory.max': 'max', '/sys/fs/cgroup/memory.current': str(4 * sast.GIB),
+                    '/sys/fs/cgroup/job/memory.max': str(8 * sast.GIB),
+                    '/sys/fs/cgroup/job/memory.current': str(3 * sast.GIB),
+                    '/sys/fs/cgroup/job/child/memory.max': 'max',
+                    '/sys/fs/cgroup/job/child/memory.current': str(sast.GIB)}
+        a, b, c, d = self.linux(counters, [key for key in counters if key.endswith('memory.max')])
+        with a, b, c, d:
+            observed = sast.native_memory_available()
+        self.assertEqual(observed['availableBytes'], 5 * sast.GIB)
+        self.assertEqual(len(observed['finiteCgroupLimits']), 1)
+        self.assertNotIn('/job', json.dumps(observed))
+
+    def test_unknown_malformed_or_unaccounted_native_memory_is_rejected(self):
+        baseline = {'/proc/meminfo': 'MemTotal: 16777216 kB\nMemAvailable: 12582912 kB\n',
+                    '/proc/self/cgroup': ''}
+        cases = [{'/proc/meminfo': 'MemTotal: 16777216 kB'},
+                 {'/proc/meminfo': 'MemTotal: 1 kB\nMemAvailable: 2 kB'},
+                 {'/proc/self/cgroup': '0::/../../outside'},
+                 {'/proc/self/cgroup': '5:memory:/legacy'},
+                 {'/proc/self/cgroup': '0::/missing'},
+                 {'/proc/self/cgroup': 'malformed-nonempty-line'},
+                 {'/proc/self/cgroup': '1::/invalid-controller'},
+                 {'/proc/self/cgroup': '0:memory:/invalid-unified'}]
+        for changes in cases:
+            a, b, c, d = self.linux({**baseline, **changes})
+            with self.subTest(changes=changes), a, b, c, d, self.assertRaises(sast.Rejected):
+                sast.native_memory_available()
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / 'counter'; path.write_bytes(b'0' * 65537)
+            with self.assertRaisesRegex(sast.Rejected, 'native-memory-counter-size'):
+                sast.memory_text(path)
+
+    def test_inherited_address_limit_is_only_an_admission_ceiling(self):
+        a, b, c, d = self.linux({'/proc/meminfo': 'MemTotal: 16777216 kB\nMemAvailable: 12582912 kB\n',
+                                '/proc/self/cgroup': ''})
+        with a, b, c, d, mock.patch.object(sast.resource, 'getrlimit', return_value=(4 * sast.GIB, -1)), \
+                mock.patch.object(sast.resource, 'setrlimit') as limit:
+            observed = sast.native_memory_available()
+            self.assertEqual(observed['availableBytes'], 4 * sast.GIB)
+            self.assertEqual(observed['inheritedSoftLimitBytes']['RLIMIT_AS'], 4 * sast.GIB)
+            limit.assert_not_called()
+
+    def test_darwin_counts_reclaimable_pages_once_and_rejects_missing_counters(self):
+        vm = b'Mach Virtual Memory Statistics: (page size of 16384 bytes)\nPages free: 100.\nPages inactive: 200.\nPages speculative: 300.\n'
+        replies = [subprocess.CompletedProcess([], 0, str(16 * sast.GIB).encode(), b''),
+                   subprocess.CompletedProcess([], 0, vm, b'')]
+        with mock.patch.object(sast.platform, 'system', return_value='Darwin'), \
+                mock.patch.object(sast.subprocess, 'run', side_effect=replies), \
+                mock.patch.object(sast.resource, 'getrlimit', return_value=(sast.resource.RLIM_INFINITY, sast.resource.RLIM_INFINITY)):
+            self.assertEqual(sast.native_memory_available()['availableBytes'], 600 * 16384)
+        replies[1] = subprocess.CompletedProcess([], 0, b'not a memory counter', b'')
+        with mock.patch.object(sast.platform, 'system', return_value='Darwin'), \
+                mock.patch.object(sast.subprocess, 'run', side_effect=replies), self.assertRaises(sast.Rejected):
+            sast.native_memory_available()
+
+
 class WorkflowTests(unittest.TestCase):
     def test_aggregate_rejects_failed_cancelled_skipped_missing_extra_children(self):
         good = dict.fromkeys(sast.LANGUAGES, 'success')

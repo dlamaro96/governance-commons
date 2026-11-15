@@ -96,6 +96,23 @@ network, no application volume, no Docker socket, read-only root/bundle/source,
 interrupted. The selected Docker endpoint must be local. No app service is
 stopped or modified. The CodeQL CLI remains outside application images.
 
+The shared policy requests 4,096 MiB for native CodeQL and retains 2,048 MiB
+inside the 4 GiB container cap; both use two threads. Native commands require an
+estimated 2 GiB reserve beyond their requested budget before startup. Linux
+admission takes the minimum of `MemAvailable`, visible cgroup v2 ancestor
+headroom and inherited finite address/data limits. Darwin estimates available
+memory from free, inactive and speculative pages, also checking inherited
+limits. Unknown/malformed accounting, cgroup v1 memory limits or insufficient
+capacity fail before the scanner starts. Safe summaries preserve numeric
+admission observations, including a rejected request's available/required bytes.
+
+These are admission estimates. Native execution adds no hard memory cap, does
+not reserve memory against concurrent work, and does not use an address-space
+RLIMIT as a resident-memory bound. CodeQL's
+[`--ram` option](https://docs.github.com/en/code-security/reference/code-scanning/codeql/codeql-cli-manual/database-analyze)
+is an evaluator/extractor budget request. The increased native budget still
+requires an actual hosted analysis; policy tests do not qualify that scan.
+
 Outputs are unique directories beneath `.local/sast/`; an existing output path
 is refused. `--output .local/sast/my-attempt` selects a fresh location. The
 installer refuses overwriting an existing tool directory and validates every
@@ -105,7 +122,9 @@ cannot inherit the application's ES-module scope. This file is created only if
 absent; symlinks and differing existing content fail without overwriting them.
 Custom toolchain ancestors remain untouched; native execution refuses an
 incompatible nearest package scope and records its hash. The package-boundary
-correction has exact-wrapper handshake evidence; its hosted scan is still pending.
+correction has exact-wrapper handshake evidence and hosted extraction now passes.
+The fourth hosted attempt subsequently fails analysis with CodeQL out of memory;
+its complete source-security gate remains unqualified.
 `--archive PATH`
 reuses already-downloaded bytes only after the same exact size/checksum checks.
 

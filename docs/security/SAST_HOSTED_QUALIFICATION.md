@@ -1,5 +1,10 @@
 # Hosted source scanning attempts
 
+Latest checkpoint: attempt 4 fixes hosted JavaScript extraction but fails its
+analysis with CodeQL out of memory. Python and Actions have independent stored
+analysis read-back; full source-security qualification remains open. Earlier
+attempts below retain their original outcomes and limitations.
+
 Status: source-security run [43768124973](https://github.com/dlamaro96/governance-commons/actions/runs/43768124973)
 **failed** on PR15 merge commit `1bb4637def199c12226d1d337dcd2eece61ee57e`.
 The exact clean source digest is
@@ -143,7 +148,73 @@ hash; an incompatible custom scope fails with an actionable reason. Focused
 regressions exercise the real Node module-type boundary with a clearly synthetic
 protocol, preserve bundle/source bytes, and reject symlinks and foreign content.
 
-This concrete local defect is corrected, but hosted Linux x64 qualification is
-pending. Publish the reviewed correction and require all three real hosted
-analyses, then perform exact commit/category read-back. Fork/Dependabot permissions,
-default-branch execution, complete OSS-007 and release readiness remain open.
+At this checkpoint, the local defect was corrected and hosted Linux x64
+qualification was pending. The correction was published as
+`3a5de6090a5a04e056c3e848d8fe272d20a713e4`; attempt 4 below records its execution
+without changing this historical evidence.
+
+
+## Fourth hosted attempt, stored analyses and native memory correction
+
+[Source-security run 43772519032](https://github.com/dlamaro96/governance-commons/actions/runs/43772519032)
+failed on tested merge `b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1`, source digest
+`e70eb504e06494664ba853222592eedfa05fa757b3ec0e783319e251e38c7a68`.
+All three jobs verify the exact owned CommonJS package hash. JavaScript extraction
+now passes in 15.270 seconds; analysis exits 99 after 25.288 seconds. Its bounded
+stderr diagnostic contains the fixed `out_of_memory` marker. No JavaScript
+findings, coverage-query result or SARIF upload is claimed. Python and Actions
+pass analysis, coverage, zero findings and upload/processing. Policy passes;
+the aggregate correctly fails. Twelve byte-identical original JSON reports and
+hashes of every downloaded artifact are preserved under
+`sast-evidence/hosted-attempt-4/`; raw logs are not published.
+
+GitHub documents [exit 99](https://docs.github.com/en/code-security/reference/code-scanning/codeql/codeql-cli/exit-codes)
+as CodeQL running out of memory; that does not prove exhaustion of physical
+host RAM. The failed runner requested 2,048 MiB with two threads and imposed no
+native RLIMIT. It did not record actual hosted available memory. The standard
+public `ubuntu-24.04` runner is
+[documented with 16 GB RAM](https://docs.github.com/en/actions/reference/runners/github-hosted-runners);
+that platform specification is separate from measurements of this failed job.
+
+The correction requests 4,096 MiB in native mode, retains the existing 2,048 MiB
+budget and 4 GiB cap in containers, and leaves two threads, all pinned queries,
+coverage, findings, triage and workflow permissions unchanged. Before each native
+command, bounded kernel counters estimate capacity including visible Linux
+cgroup v2 ancestor headroom or Darwin reclaimable pages and inherited finite
+limits. At least 6 GiB must be available: the requested 4 GiB plus a 2 GiB reserve.
+Malformed/unsupported accounting and insufficient capacity fail closed. Rejected
+admission retains safe available/required numbers and never starts a scanner.
+These checks are admission estimates, not a native hard cap or a guarantee
+against concurrent memory use. A host-counter-only probe found less than 6 GiB
+available and correctly would reject a local native scan; no heavy scan or Docker
+operation ran alongside the separate SQL work. See `resource-diagnosis.json`.
+
+Independent authenticated reads of GitHub's security-analysis endpoints bind
+Python analysis `2172609160` and Actions analysis `2172607137` to this exact merge,
+category, SARIF ID, published SARIF hash and CodeQL 2.27.4. Stored result counts
+are zero; stored rule definitions are 50 and 23, respectively, matching their
+actual SARIF definitions. Resolved query counts remain 52 and 24 and are a
+different measure. Both stored analyses have no error or warning. The separate
+complete CodeQL alert inventory for `refs/pull/15/merge`, with no state filter,
+contains zero alerts. No JavaScript analysis exists at this merge. Consequently,
+these two language read-backs and the empty alert list do not qualify the complete
+scan. Safe projections and private-response hashes are in `analysis-readback.json`;
+no Actions/check/log API or raw alert payload was used.
+
+Forty-two focused policy regressions cover mode budgets, admission thresholds,
+parent cgroup limits, malformed counters, inherited limits, Darwin counters and
+rejected-summary publication before process launch. Their exact source hashes and
+executed results are recorded in `memory-checks.json`; pinned publication secret
+scanning is separate. The first test run had two portable-fixture errors caused
+by assuming a platform-independent RLIM_INFINITY value; the fixture correction
+is recorded and no scan pass is inferred. A new hosted run must pass all three
+analyses and exact ingestion read-back before complete hosted qualification can
+be claimed. Fork/Dependabot permissions, default-branch execution, full OSS-007
+and release readiness remain open; no new required repository check is enabled.
+
+
+The separate [Development run 43772519043](https://github.com/dlamaro96/governance-commons/actions/runs/43772519043)
+passed all four required checks on tested merge `b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1`.
+Its original safe `behavior-summary.json` is retained with this attempt. That
+behavior pass does not override the source-security failure or qualify the later
+native-memory policy correction.

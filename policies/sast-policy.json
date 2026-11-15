@@ -71,6 +71,8 @@
   "languageTimeoutSeconds": 1800,
   "threads": 2,
   "ramMiB": 2048,
+  "nativeRamMiB": 4096,
+  "nativeReserveMiB": 2048,
   "maxSourceBytes": 104857600,
   "maxSourceFiles": 10000,
   "maxReportBytes": 20971520,

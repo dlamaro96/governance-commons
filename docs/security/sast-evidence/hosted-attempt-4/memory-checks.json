@@ -1,0 +1,93 @@
+{
+  "checks": [
+    {
+      "check": "policy",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "policies",
+        "-p",
+        "test_sast.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "logSha256": "cd9597d27f3a5b4a2330de09ddc5b598377ae15bfef56244a97ebf30571e7c93",
+      "startedAt": "2026-11-15T23:16:38.052462+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "6fac24dc29fcaffcef69252aed6f37e32eb2f18c9e71478bb445aa61a144210e",
+      "startedAt": "2026-11-15T23:16:39.030793+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-15T23:16:51.463032+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "secret-scan",
+      "command": [
+        "python3",
+        "policies/scan_secrets.py",
+        "--install",
+        "--output",
+        "docs/security/sast-evidence/hosted-attempt-4/secret-scan.json"
+      ],
+      "exitCode": 0,
+      "logSha256": "8436af212e785ab8aab4db59b4a372c79e663206d17f98ddc03e9f23748c0ca5",
+      "startedAt": "2026-11-15T23:16:51.472739+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "final-publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "a5b3df5960df8024a8d2ea7f99b8e1f5948076323241377466b5ef815efd3cc9",
+      "startedAt": "2026-11-15T23:16:53.330223+00:00",
+      "status": "PASS"
+    }
+  ],
+  "dirty": true,
+  "head": "3a5de6090a5a04e056c3e848d8fe272d20a713e4",
+  "limitations": [
+    "Policy regressions use explicitly synthetic capacity fixtures; they are not source scans.",
+    "A separate actual host-counter-only probe ran without starting CodeQL or Docker; it is not scanner or hosted qualification.",
+    "The first41-test development run had two RLIM_INFINITY fixture errors; corrected fixtures and the additional rejected-summary regression are evaluated here.",
+    "Pinned secret scanning is separately recorded; root reviews and publishes. Full hosted/fork/default-branch/release qualification remains open."
+  ],
+  "nodeVersion": "v24.22.3",
+  "policyTests": 42,
+  "python": "3.14.5",
+  "scanExecution": "NOT_RUN_FOR_NATIVE_MEMORY_CORRECTION",
+  "schemaVersion": 1,
+  "sourceSha256": {
+    ".github/codeql/codeql-config.yml": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+    ".github/workflows/security.yml": "87704b640679588d83b0c4d76a4fe35e07e74ee60f821da2f926f3ed10fa89ed",
+    "policies/sast-policy.json": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+    "policies/sast-triage.json": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+    "policies/sast.py": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7",
+    "policies/test_sast.py": "015c11e7092ed1a8dfd630d495e3b5f05cb36caf55754ad7cbab79cfa769fdc5"
+  }
+}
