@@ -5,11 +5,19 @@ import { DataGrid, DetailDrawer, DiffViewer, EmptyState, EntityHeader, EvidenceP
 import { useResource } from '../api';
 import { RequestError } from '../components';
 import { useLocale } from '../i18n';
+import { Link } from '../navigation';
+import { usePermission } from '../session';
 import type { Audit } from '../types';
 
 function EventDetail({ event, onClose }: { event: Audit | null; onClose: () => void }) {
   const { t, label, date } = useLocale();
-  return <DetailDrawer open={!!event} onOpenChange={open => { if (!open) onClose(); }} title={t('auditRecord')} description={event ? label(`action.${event.action}`) : ''} closeLabel={t('close')} wide>{event && <><dl className="detail-list"><div><dt>{t('eventId')}</dt><dd className="mono">{event.id}</dd></div><div><dt>{t('action')}</dt><dd>{label(`action.${event.action}`) === `action.${event.action}` ? event.action : label(`action.${event.action}`)}</dd></div><div><dt>{t('actor')}</dt><dd>{event.actorName}</dd></div><div><dt>{t('occurred')}</dt><dd>{date(event.occurredAt)}</dd></div><div><dt>{t('resource')}</dt><dd className="mono">{event.resourceId}</dd></div></dl><h3>{t('changes')}</h3><DiffViewer value={event.changes} label={t('changes')}/><EvidencePanel title={t('integrity')} note={t('hashNote')}><dl className="detail-list"><div><dt>{t('eventHash')}</dt><dd className="mono break-all">{event.hash}</dd></div><div><dt>{t('previousHash')}</dt><dd className="mono break-all">{event.previousHash || '—'}</dd></div></dl></EvidencePanel></>}</DetailDrawer>;
+  const canReadModels = usePermission('models:read');
+  const canReadCatalog = usePermission('catalog:read');
+  const canReadReceipt = canReadModels && canReadCatalog;
+  const migrationId = event?.changes.migrationId;
+  const migrationModelId = event?.action === 'model.type_migrated' ? event.resourceId : event?.action === 'asset.type_migrated' ? event.changes.modelId : null;
+  const receiptHref = canReadReceipt && typeof migrationModelId === 'string' && typeof migrationId === 'string' ? `/asset-types/${encodeURIComponent(migrationModelId)}/migrations/${encodeURIComponent(migrationId)}` : null;
+  return <DetailDrawer open={!!event} onOpenChange={open => { if (!open) onClose(); }} title={t('auditRecord')} description={event ? label(`action.${event.action}`) : ''} closeLabel={t('close')} wide>{event && <><dl className="detail-list"><div><dt>{t('eventId')}</dt><dd className="mono">{event.id}</dd></div><div><dt>{t('action')}</dt><dd>{label(`action.${event.action}`) === `action.${event.action}` ? event.action : label(`action.${event.action}`)}</dd></div><div><dt>{t('actor')}</dt><dd>{event.actorName}</dd></div><div><dt>{t('occurred')}</dt><dd>{date(event.occurredAt)}</dd></div><div><dt>{t('resource')}</dt><dd className="mono">{event.resourceId}</dd></div></dl>{receiptHref && <p><Link className="button secondary" href={receiptHref} onClick={onClose}>{t('typeMigrationReceipt')}</Link></p>}<h3>{t('changes')}</h3><DiffViewer value={event.changes} label={t('changes')}/><EvidencePanel title={t('integrity')} note={t('hashNote')}><dl className="detail-list"><div><dt>{t('eventHash')}</dt><dd className="mono break-all">{event.hash}</dd></div><div><dt>{t('previousHash')}</dt><dd className="mono break-all">{event.previousHash || '—'}</dd></div></dl></EvidencePanel></>}</DetailDrawer>;
 }
 function actionName(action: string, label: (key: string) => string) { const value = label(`action.${action}`); return value.startsWith('action.') ? action : value; }
 export function AuditTimeline({ events }: { events: Audit[] }) {

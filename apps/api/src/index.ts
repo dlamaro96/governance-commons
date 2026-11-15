@@ -11,6 +11,7 @@ import {searchRequest,index,startProjector} from './search.ts';
 import {verifyAuditChain} from './audit.ts';
 import {installModels} from './models.ts';
 import {installAssetTypes} from './asset-types.ts';
+import {installAssetTypeMigrations} from './asset-type-migrations.ts';
 import {installModelMigrations} from './model-migrations.ts';
 import {validatePinnedType} from '../../../packages/domain/src/asset-type-policy.ts';
 import {modelPersistence} from '../../../packages/domain/src/model-service.ts';
@@ -30,12 +31,13 @@ app.get('/health/ready',async()=>{await sql`select 1`.execute(db);return {status
 await installAuth(app);
 await installModels(app);
 await installAssetTypes(app);
+await installAssetTypeMigrations(app);
 await installModelMigrations(app);
 const params={params:Type.Object({id:Id})};
 app.get('/api/v1/me',async req=>{const a=await authenticate(req);return {user:{id:a.principal.id,name:a.principal.name},tenant:a.tenants.find(x=>x.id===a.principal.tenantId),tenants:a.tenants,permissions:a.principal.permissions,csrfToken:a.csrf};});
 app.post('/api/v1/session/tenant',{schema:{body:Type.Object({tenantId:Id},{additionalProperties:false})}},async req=>{const a=await authenticate(req),tenant=(req.body as any).tenantId;if(!a.tenants.some(x=>x.id===tenant))throw new Problem(403,'TENANT_DENIED','Organization access is not permitted.');await db.updateTable('sessions').set({tenant_id:tenant,csrf:random()}).where('id_hash','=',a.sessionHash).execute();return {changed:true};});
 app.get('/api/v1/openapi',async req=>{await authenticate(req);return app.swagger();});
-app.get('/api/v1/members',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'catalog:write');return scope(p.tenantId,p.id,async tx=>({items:await tx.selectFrom('memberships').innerJoin('identities','identities.id','memberships.identity_id').select(['identities.id','identities.name','memberships.role']).where('memberships.active','=',true).where('memberships.tenant_id','=',p.tenantId).execute()}));});
+app.get('/api/v1/members',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'catalog:write');return scope(p.tenantId,p.id,async tx=>({items:await tx.selectFrom('memberships').innerJoin('identities','identities.id','memberships.identity_id').select(['identities.id','identities.name','memberships.role']).where('memberships.active','=',true).where('identities.active','=',true).where('memberships.tenant_id','=',p.tenantId).execute()}));});
 function cursorDecode(input:string|undefined,binding:string){if(!input)return 0;try{const [payload,signature]=input.split('.');const expected=createHmac('sha256',process.env.SESSION_KEY??'').update(payload).digest('base64url');if(!equal(signature,expected))throw Error();const data=JSON.parse(Buffer.from(payload,'base64url').toString());if(data.binding!==binding||!Number.isInteger(data.offset)||data.offset<0||data.offset>9000)throw Error();return data.offset;}catch{throw new Problem(400,'CURSOR_INVALID','This page cursor is invalid or belongs to another search.');}}
 function cursorEncode(offset:number,binding:string){const payload=Buffer.from(JSON.stringify({offset,binding})).toString('base64url');return payload+'.'+createHmac('sha256',process.env.SESSION_KEY??'').update(payload).digest('base64url');}
 app.get('/api/v1/assets',{schema:{querystring:Type.Object({q:Type.Optional(Type.String({maxLength:200})),type:Type.Optional(Type.String({maxLength:64})),limit:Type.Optional(Type.Integer({minimum:1,maximum:100})),cursor:Type.Optional(Type.String({maxLength:2048}))},{additionalProperties:false})}},async req=>{
@@ -61,7 +63,7 @@ app.patch('/api/v1/assets/:id',{schema:{...params,body:AssetEdit}},async(req,rep
   await modelPersistence.authorize(tx,p,['catalog:read','catalog:write']);
   const a=await visibleAssets(tx,p).where('assets.id','=',id).executeTakeFirst();if(!a)throw new Problem(404,'ASSET_NOT_FOUND','Asset is unavailable.');
   await validatePinnedType(tx,p,a,'ownerId'in body?body.ownerId:a.owner_id);
-  if(body.ownerId){const owner=await tx.selectFrom('memberships').select('identity_id').where('identity_id','=',body.ownerId).where('active','=',true).executeTakeFirst();if(!owner)throw new Problem(422,'OWNER_INVALID','Choose an active owner in this organization.');}
+  if(body.ownerId){const owner=await tx.selectFrom('memberships').innerJoin('identities','identities.id','memberships.identity_id').select('memberships.identity_id').where('memberships.tenant_id','=',p.tenantId).where('memberships.identity_id','=',body.ownerId).where('memberships.active','=',true).where('identities.active','=',true).executeTakeFirst();if(!owner)throw new Problem(422,'OWNER_INVALID','Choose an active owner in this organization.');}
   const updated=await tx.updateTable('assets').set({...('description'in body?{description:body.description}:{}),...('ownerId'in body?{owner_id:body.ownerId}:{}),version:version+1,updated_at:new Date()}).where('id','=',id).where('version','=',version).returningAll().executeTakeFirst();if(!updated)throw new Problem(409,'VERSION_CONFLICT','This asset changed. Reload before saving your edits.');
   await tx.insertInto('asset_revisions').values({tenant_id:p.tenantId,asset_id:id,version:updated.version,snapshot:JSON.stringify(assetView(updated))}).execute();
   await record(tx,p,'asset.updated',id,updated.version,{before:{description:a.description,ownerId:a.owner_id},after:{description:updated.description,ownerId:updated.owner_id}},req.id);

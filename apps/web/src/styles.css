@@ -618,3 +618,18 @@ p { margin-bottom: 12px; }
   .lifecycle-transition-row { gap: 8px; }
   .lifecycle-transition-form > button { flex: 1; }
 }
+
+/* Authored-type migrations keep exact historical policies visible alongside values. */
+.type-migration-policy-editor > section { margin-block: 24px; }
+.type-migration-policy-editor .model-field { margin-block: 16px; }
+.type-migration-mapping-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.type-migration-tuples .detail-list { margin-block: 12px; }
+.type-migration-tuples .code-block { max-height: 480px; }
+.type-migration-tuples .mono, .type-migration-source-hashes { font-size: 12px; }
+.type-migration-source-hashes { margin-block: 20px; }
+.type-migration-policy-acks .checkbox-field { margin-block: 12px; }
+@media (max-width: 640px) {
+  .type-migration-mapping-grid { grid-template-columns: minmax(0, 1fr); }
+}
+.type-migration-source-policies details + details { margin-block-start: 8px; }
+.type-migration-source-policies summary, .type-migration-source-hashes summary { min-height: 44px; padding-block: 12px; cursor: pointer; }

@@ -1,0 +1,409 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T18:19:15.389611+00:00",
+  "result": "PASS",
+  "scope": "Complete bounded authored asset-type migrations: attributes, owner, lifecycle, pinned ancestry, immutable receipts and HTTP authorization; partial M2/MOD programme",
+  "implementation_status": "IN_PROGRESS",
+  "verification_status": "PASS_FOR_RECORDED_SCOPE",
+  "release_qualification": "NOT_RUN",
+  "profile": "core / real Docker Linux arm64 / synthetic tenants / PostgreSQL17.11",
+  "runtime": {
+    "images": {
+      "api": "sha256:e3eaf3b79f235bbcc16c090813b9b8377f5e0a8b69380931c12d9fe3cb9c7dc5",
+      "workflow-worker": "sha256:e3eaf3b79f235bbcc16c090813b9b8377f5e0a8b69380931c12d9fe3cb9c7dc5",
+      "site-runner": "sha256:e3eaf3b79f235bbcc16c090813b9b8377f5e0a8b69380931c12d9fe3cb9c7dc5"
+    },
+    "node": "24.22.3",
+    "pnpm": "10.32.1",
+    "typescript": "7.0.2",
+    "pg": "8.23.1",
+    "kysely": "0.29.9"
+  },
+  "launch": {
+    "command": "./dev up --profile core",
+    "exit_status": 0,
+    "long_running_services_healthy": 10,
+    "init_jobs_successful": 4,
+    "authenticated_s3_readiness": "PASS",
+    "applied_migrations": [
+      {
+        "name": "001_foundation.sql",
+        "checksum": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa",
+        "applied_at": "2026-11-15T15:14:15.244Z"
+      },
+      {
+        "name": "002_audit_envelopes.sql",
+        "checksum": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728",
+        "applied_at": "2026-11-15T15:14:15.269Z"
+      },
+      {
+        "name": "003_governance_models.sql",
+        "checksum": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa",
+        "applied_at": "2026-11-15T15:46:50.014Z"
+      },
+      {
+        "name": "004_model_migrations.sql",
+        "checksum": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f",
+        "applied_at": "2026-11-15T16:18:28.803Z"
+      },
+      {
+        "name": "005_model_migration_integrity.sql",
+        "checksum": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763",
+        "applied_at": "2026-11-15T16:40:50.754Z"
+      },
+      {
+        "name": "006_inherited_asset_types.sql",
+        "checksum": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8",
+        "applied_at": "2026-11-15T17:31:20.099Z"
+      },
+      {
+        "name": "007_asset_type_migrations.sql",
+        "checksum": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7",
+        "applied_at": "2026-11-15T18:16:37.942Z"
+      }
+    ],
+    "all_checksums_match_workspace": true,
+    "private_log": {
+      "path": ".local/evidence/type-migration-core-up.log",
+      "sha256": "3a07b952d1fb65e00f62fb272ad9c9b0c85a6f72bbc1fd9173241da6085db658"
+    },
+    "tool_output_chunks": [
+      "7da686",
+      "e621e6",
+      "b3c5a7",
+      "52d1c0",
+      "9644cb"
+    ]
+  },
+  "integration": {
+    "command": "./dev test --suite security",
+    "exit_status": 0,
+    "duration_ms": 3270.244293,
+    "tests": {
+      "total": 69,
+      "passed": 69,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "existing_regression": 55,
+      "new_type_migration_storage": 9,
+      "new_type_migration_service_http": 5
+    },
+    "private_log": {
+      "path": ".local/evidence/type-migration-security.log",
+      "sha256": "237961a0883ce1b6f3cae12b30e691cc36915ec99647f6f4ee51d0b7a3423c24"
+    },
+    "tool_output_chunks": [
+      "d6aa58",
+      "bf5e8f"
+    ],
+    "historical_receipt_observation": {
+      "inspected": 62,
+      "pre005_revision_gap_exceptions": 15,
+      "note": "Transaction-time synthetic inventory; existing historical exceptions remain explicit."
+    }
+  },
+  "unit": {
+    "report": "docs/verification/type-migration-pure.json",
+    "execution": {
+      "suite_tests": 82,
+      "suite_pass": 82,
+      "suite_fail": 0,
+      "suite_skipped": 0,
+      "suite_cancelled": 0,
+      "suite_duration_ms": 325.717584,
+      "new_type_migration_tests": 19,
+      "tool_output_chunks": [
+        "01c769",
+        "a3892d"
+      ]
+    },
+    "scope": "Recorded 82-unit suite, including19 new strict plan/policy cases; pure report binds the new unit implementation separately."
+  },
+  "isolated_upgrade": {
+    "report": "docs/verification/type-migration-upgrade.json",
+    "checks": 6,
+    "storage_passed": 9,
+    "service_concurrency_passed": 9,
+    "scope": "Disposable PostgreSQL with actual current read-only source mounts and exact dependency equivalence; distinct from core API image execution."
+  },
+  "evidence_collector": {
+    "command": "python3 policies/test_ci_evidence.py",
+    "tests": 6,
+    "exit_status": 0,
+    "duration_seconds": 0.42,
+    "scope": "Collector validation only; it does not execute browser journeys."
+  },
+  "source_snapshot": {
+    "recorded_at": "2026-11-15T18:17:22.586816+00:00",
+    "git_base_commit": "446f05e8577eba21767faf11c8248804c370201d",
+    "worktree_dirty": true,
+    "method": "SHA256 read from actual running API image and compared to workspace; no host-source mounts in core API.",
+    "runtime_images": {
+      "api": "sha256:e3eaf3b79f235bbcc16c090813b9b8377f5e0a8b69380931c12d9fe3cb9c7dc5",
+      "workflow-worker": "sha256:e3eaf3b79f235bbcc16c090813b9b8377f5e0a8b69380931c12d9fe3cb9c7dc5",
+      "site-runner": "sha256:e3eaf3b79f235bbcc16c090813b9b8377f5e0a8b69380931c12d9fe3cb9c7dc5"
+    },
+    "files": [
+      {
+        "path": "Dockerfile",
+        "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+      },
+      {
+        "path": "apps/api/src/asset-type-migrations.ts",
+        "sha256": "02f530c3715801c222f4f98d65807f06d0b58d0193b05c6c4e9f3f0b78a00c92"
+      },
+      {
+        "path": "apps/api/src/asset-types.ts",
+        "sha256": "75e10d65b0974272afe35c761159d5cdd9dfc22ce991e71f84bf05c89f7e9dec"
+      },
+      {
+        "path": "apps/api/src/audit.ts",
+        "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+      },
+      {
+        "path": "apps/api/src/index.ts",
+        "sha256": "e0e5e471926d5831b7744efb7c2ab92780f3e6a68f3d938ac82ccb06c3311419"
+      },
+      {
+        "path": "apps/api/src/model-http.ts",
+        "sha256": "6f23ec8cbd6cc7c3005e71513e98f7798b070e4758c5e9ee6a7077b7180a8956"
+      },
+      {
+        "path": "apps/api/src/model-migrations.ts",
+        "sha256": "b0a9a14132de028166b16ce956362933937888822e21fe14f397b17a28ac893d"
+      },
+      {
+        "path": "apps/api/src/models.ts",
+        "sha256": "aed9c93342747161e08b408e22053fd0cf83498659b487746b90346e2299d907"
+      },
+      {
+        "path": "apps/api/src/repository.ts",
+        "sha256": "e4826fcf06b840d601c848fa414fe996b57e48109ac210697605d3e1fe7cbc60"
+      },
+      {
+        "path": "apps/api/src/search.ts",
+        "sha256": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d"
+      },
+      {
+        "path": "apps/api/src/security.ts",
+        "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+      },
+      {
+        "path": "apps/site-runner/src/index.ts",
+        "sha256": "d865e76e317ec784bd7c90cff4f11555022e73948f2a8a571a761a0b9a2df6d7"
+      },
+      {
+        "path": "apps/workflow-worker/src/index.ts",
+        "sha256": "2da4bad00e77a37caa9d24fc140b1d88dabe96300ccc78f9c957299484220d15"
+      },
+      {
+        "path": "apps/workflow-worker/src/workflows.ts",
+        "sha256": "627720148248703a529fbdc2ddf819aff348f8e09f89e0496852761ac0f737a4"
+      },
+      {
+        "path": "deploy/compose/compose.yaml",
+        "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+      },
+      {
+        "path": "package.json",
+        "sha256": "87bf0ba005fde7f3b64d6ea3a84dacdcb08f9517f56a7fde87d3386882907f78"
+      },
+      {
+        "path": "packages/authz/src/index.ts",
+        "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "sha256": "8d23a38cad9af4c69471b6369d1106382e34518f1b13a00be6590ee6e28bb453"
+      },
+      {
+        "path": "packages/db/migrations/001_foundation.sql",
+        "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "path": "packages/db/migrations/002_audit_envelopes.sql",
+        "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "path": "packages/db/migrations/003_governance_models.sql",
+        "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "path": "packages/db/migrations/004_model_migrations.sql",
+        "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "path": "packages/db/migrations/005_model_migration_integrity.sql",
+        "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "path": "packages/db/migrations/006_inherited_asset_types.sql",
+        "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "path": "packages/db/migrations/007_asset_type_migrations.sql",
+        "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "path": "packages/db/src/index.ts",
+        "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+      },
+      {
+        "path": "packages/db/src/migrate.ts",
+        "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+      },
+      {
+        "path": "packages/db/src/seed.ts",
+        "sha256": "f871502f2215b538199df0a4aef501954a7f558b249311d6cb3b1129c763c151"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-contracts.ts",
+        "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-service.ts",
+        "sha256": "c2bf093f040fd6a7997c1e63be6b17f98e02af2dfb34b9390ae505517b494772"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration.ts",
+        "sha256": "ab1aef383c8cbaca99df276f168e9e9bda3fb9d04fc863f641ae6fd8a2e05319"
+      },
+      {
+        "path": "packages/domain/src/asset-type-policy.ts",
+        "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+      },
+      {
+        "path": "packages/domain/src/asset-type-service.ts",
+        "sha256": "792caf678bed91cdd944dbb45b438b89ef36c29215e5d6bf687354869b149313"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/cursor.ts",
+        "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+      },
+      {
+        "path": "packages/domain/src/model-migration-service.ts",
+        "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "b0a42540415ef1cfc71792f132107f56931c9fb0f0c9fcfcdc9f2af4fa1125aa"
+      },
+      {
+        "path": "packages/domain/src/model-service.ts",
+        "sha256": "fb0a8f7e12e57f3f4a7e5f4d72f02daac7b80ee8240772d6f0db509197c3fd59"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "3164be5efeed75d16551c25360714c78ca53b5a56f92c72c9021a0a6dc5e5d33"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "64ba875f705195741265864539885115446d7f24848033b66ebb0f17ee396bef"
+      },
+      {
+        "path": "tests/integration/asset-type-api-limits.test.ts",
+        "sha256": "330a70646ef74dff3465b53c32a525f0b6cbeb46778fc68c745f6a84238754ee"
+      },
+      {
+        "path": "tests/integration/asset-type-migration-storage.test.ts",
+        "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+      },
+      {
+        "path": "tests/integration/asset-type-migrations.test.ts",
+        "sha256": "e0d8e0f7f7009bb76e04031d9b9785959ebc95c22f8470aa72b5a00275165f39"
+      },
+      {
+        "path": "tests/integration/asset-type-storage.test.ts",
+        "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+      },
+      {
+        "path": "tests/integration/asset-types.test.ts",
+        "sha256": "10d35157a009617f9f3c8578b1e7664ea2f80d0e9896fc1314d4ff4ace48428b"
+      },
+      {
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "d265f2d829b5f28b8cd72f1b28043ae4734030619339f7b4acc87436960c1939"
+      },
+      {
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "9369bd959e6d9633788d34cd4a6c87dcecbf500f5d04e95b74c360ad89f8d29d"
+      },
+      {
+        "path": "tests/integration/model-migration-api.test.ts",
+        "sha256": "1fcae0865b43eb53c30474f88a93ce62a1fb019e2b39e68c0840589a3aec80b5"
+      },
+      {
+        "path": "tests/integration/model-migration-storage.test.ts",
+        "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+      },
+      {
+        "path": "tests/integration/model-migrations.test.ts",
+        "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+      },
+      {
+        "path": "tests/integration/model-pagination.test.ts",
+        "sha256": "63140a4748799df85403abd88c27478993fc33900b1b172627764880c58564e6"
+      },
+      {
+        "path": "tests/integration/models.test.ts",
+        "sha256": "8b450fd13803be929f441a33eb424218402bb768ee53c9063cfee641f00280a5"
+      }
+    ]
+  },
+  "verified": [
+    "Mixed historical source pins, changed parent types, exact decimal conversion, required attribute defaults, active owner repair and source-version state mapping commit together; descendant definitions and bindings remain pinned.",
+    "Stale plans, states, cohorts and owner activity, hidden bindings, foreign owners, foreign receipts, revoked authority and inaccessible idempotency replays fail closed.",
+    "A late production journal failure rolls back heads, definitions, pins, values, owner/state, revisions, base/typed/normalized receipts, audit, outbox and idempotency success. The same key retries to exactly one receipt.",
+    "Immutable receipt tuples and hashes match actual before/after revision snapshots. SQL rejects missing companions, forged tuples, malformed nested policy plans, mismatched source/target references and normalized-row mutations.",
+    "Real HTTP preview/execution/read-back enforce CSRF, If-Match, digest consent and idempotency. Legacy receipt routes reject incomplete attribute-only presentation of typed migrations.",
+    "An empty cohort still binds the current authored head resolution and records a zero-asset immutable receipt.",
+    "Disposable concurrency cases prove both revocation lock orderings, explicit tenant principal scope, inactive-owner repair, rollback lock release and forged nested-trigger denial.",
+    "Finite numeric boundaries and aggregate exponent expansion preserve cross-runtime hashes. Physical JSONB limits reject oversized receipts before preview or execution writes."
+  ],
+  "limitations": [
+    "This is a bounded synchronous development qualification, not full MOD/AT-MOD/M2 acceptance or a release.",
+    "Browser, accessibility and rendered UI verification are recorded separately and must not be inferred from this API report.",
+    "Durable large-cohort migrations, constrained relations, other model kinds, scopes/responsibilities, glossary/reference data and later ingress enforcement remain required programme work.",
+    "Transaction rollback and a disposable schema upgrade do not establish production backup/restore, released-predecessor upgrade, enterprise HA or scale.",
+    "The scoped SQL canonical serializer supports contract-safe ASCII object keys and finite JavaScript JSON numbers; decimal attributes remain exact strings. It is not a general canonical JSON standard."
+  ],
+  "later_ui_image_equivalence": {
+    "recorded_at": "2026-11-15T18:22:38.739028+00:00",
+    "api_tested_image": "sha256:e3eaf3b79f235bbcc16c090813b9b8377f5e0a8b69380931c12d9fe3cb9c7dc5",
+    "browser_runtime_image": "sha256:2d2f04f1b75e774b7831d8d0d9e1df928e142c442138b8f451f7506385fdfa34",
+    "backend_source_hashes_identical": true,
+    "source_files": 52,
+    "method": "Actual current API image source hashes equal all52 files from the earlier69-case tested image. CSS-only UI correction; this is equivalence evidence, not an API rerun.",
+    "launch": {
+      "command": "./dev up --profile core",
+      "exit_status": 0,
+      "private_log": {
+        "path": ".local/evidence/type-migration-ui-core-up.log",
+        "sha256": "abc19c6e4fbca2074b344254de5b51bf190f3a4131a3d52ed9d61947872a9b47"
+      },
+      "tool_output_chunks": [
+        "3e22ee",
+        "624114",
+        "df5f1e",
+        "aa13fd"
+      ]
+    }
+  },
+  "typecheck": {
+    "command": "pnpm typecheck with project-local Node24.22.3/pnpm10.32.1",
+    "exit_status": 0,
+    "scope": "Root and web after final service/storage changes and CSS correction",
+    "private_log": {
+      "path": ".local/evidence/type-migration-typecheck.log",
+      "sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+    },
+    "tool_output_chunks": [
+      "32c65b"
+    ]
+  }
+}

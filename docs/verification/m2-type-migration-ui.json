@@ -1,0 +1,754 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T18:33:37.222673+00:00",
+  "result": "PASS",
+  "scope": "Verified authored asset-type attribute/owner/lifecycle migration development increment plus regression of the ten existing browser journeys. Full MOD-001/002/003, AT-MOD-01, E2E-06, M2 and programme qualification remain open.",
+  "profile": "core / real Docker Linux arm64 / synthetic Harbor Retail and Summit Logistics tenants",
+  "target": "http://localhost:4310",
+  "command": "PATH=\"$PWD/.local/toolchain/node/bin:$PWD/.local/pnpm/node_modules/.bin:$PATH\" GC_BROWSER_EXECUTABLE=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" pnpm exec playwright test --config .github/playwright.ci.config.ts",
+  "execution": {
+    "startTime": "2026-11-15T18:26:36.422Z",
+    "duration": 358136.359,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "raw_report": ".local/evidence/playwright-type-migrations-full-pass-results.json",
+  "raw_report_sha256": "dca282fa7889d8a28126ae63890c3a016f68b2bf4d2885245465aae89749995e",
+  "source_binding": {
+    "base_commit": "446f05e8577eba21767faf11c8248804c370201d",
+    "working_tree_dirty": true,
+    "method": "Exact source hashes bind the executed working tree before checkpoint publication. All served JS/CSS bytes match the local production build; the inspected running image identifies the frozen runtime. Historical reports retain their original execution bindings.",
+    "files": [
+      {
+        "path": ".github/playwright.ci.config.ts",
+        "sha256": "8398da5769130ea92d0efd0e64499c0c97cd7864aeba72e8d1779cd993b4f6b0"
+      },
+      {
+        "path": "apps/web/package.json",
+        "sha256": "cf72e592f6444959c257e304abb0c455fd28d4e297a4e2601339ea38fd427b3c"
+      },
+      {
+        "path": "apps/web/src/App.tsx",
+        "sha256": "32a1bed8b2a461d9136696cdb65f140b0c5b9b696322b4b330abe50cbcf3eef3"
+      },
+      {
+        "path": "apps/web/src/api.ts",
+        "sha256": "62ca221c1b8ba76a0d20f89699735129768890419a13f8f3a0338b213197bac9"
+      },
+      {
+        "path": "apps/web/src/assetTypes/DefinitionEditor.tsx",
+        "sha256": "8ef28c0de32b7d5bfae5a5fe581ba4270ebffa6d20613ea295c4582715c711b7"
+      },
+      {
+        "path": "apps/web/src/assetTypes/LifecyclePanel.tsx",
+        "sha256": "cc72e38f95de507c8def9f069deacc3bcfb607dc3a7f4e21b8d616be1a1bea07"
+      },
+      {
+        "path": "apps/web/src/assetTypes/TypeMigrationPolicyEditor.tsx",
+        "sha256": "a42f5da323a3a2587c39d1fb53939e359057aff4e48d5ecf8bf8b112e49d267a"
+      },
+      {
+        "path": "apps/web/src/assetTypes/contracts.ts",
+        "sha256": "30219291a4a91b6bc62bb460c839d274b14926d88e6bd1c8cbe7713a1bc7ed20"
+      },
+      {
+        "path": "apps/web/src/assetTypes/messages.ts",
+        "sha256": "2217173a00d9f9ac2548ba1dd3a983d032f0495fb03f7457cccd9b35c57a7516"
+      },
+      {
+        "path": "apps/web/src/assetTypes/migrationMessages.ts",
+        "sha256": "d876d2eeaa69153e4c44a7e5e56a74136e16cd5c4b131407a8cb472667e992d8"
+      },
+      {
+        "path": "apps/web/src/components.tsx",
+        "sha256": "217df6f66523f65accc3269304660c6ac90db9b84e4ce46937e3d546864f4187"
+      },
+      {
+        "path": "apps/web/src/i18n.tsx",
+        "sha256": "e2dd813ebc799337ff3d4eb8623e29b6111cc8223d6d4b7c60aee560b5cecb58"
+      },
+      {
+        "path": "apps/web/src/main.tsx",
+        "sha256": "666b70ce5765a222777738d2b1f9120c1d2c2914daa96de87574853fb65e475c"
+      },
+      {
+        "path": "apps/web/src/models/AssetAttributes.tsx",
+        "sha256": "553c2ef43d1463fd60a511b2570049e9eae8437e9f37e72b10802392fa50fbb5"
+      },
+      {
+        "path": "apps/web/src/models/MigrationPlanEditor.tsx",
+        "sha256": "3e4cb6d421007ec6be00ec64f3ed3574dadcb1072450fa642bd5eeaf278469df"
+      },
+      {
+        "path": "apps/web/src/models/ModelBrowser.tsx",
+        "sha256": "c1452c9b036daec1e0ff8d49f58a276a3dcd6917098fd300c2bf834657017830"
+      },
+      {
+        "path": "apps/web/src/models/ModelFeedback.tsx",
+        "sha256": "dfcbb815be6aafd6f4f224700c7d6ddf9b27f9cc0b05035d99b1586c3feadf4c"
+      },
+      {
+        "path": "apps/web/src/models/SchemaEditor.tsx",
+        "sha256": "c028b4d34d4ee84bc9250b718f2ed1aff5b7f881be29a0fe1cde7ff0da82ca06"
+      },
+      {
+        "path": "apps/web/src/models/ValueFields.tsx",
+        "sha256": "fd0980ca3945be050410da3040a5e7f5cabf55edf372eef4ee9ef1532741335d"
+      },
+      {
+        "path": "apps/web/src/models/VersionPicker.tsx",
+        "sha256": "95781b042c066ebe9e8cd1af841eeb80e6166146e588ac94280038b514756660"
+      },
+      {
+        "path": "apps/web/src/models/contracts.ts",
+        "sha256": "a0204509d5e69bf1974288399098b334564c7d4cc9b001a004d2aa804630f18e"
+      },
+      {
+        "path": "apps/web/src/models/messages.ts",
+        "sha256": "667433010425fa8a457de9edc47a797e828e819b748ef0566736a040cc0bcb5f"
+      },
+      {
+        "path": "apps/web/src/models/migrationMessages.ts",
+        "sha256": "808cb94cbeccb5617a8fddb59dce1f14d214f32b01e787ad0d7ca5b00eb072dc"
+      },
+      {
+        "path": "apps/web/src/models/planMessages.ts",
+        "sha256": "244916806562a9046bce7f4bb364990842f02975c5e17df14d4c57a8f207039f"
+      },
+      {
+        "path": "apps/web/src/navigation.tsx",
+        "sha256": "d15a75f39edb92ee626bd0682353466b433f5be7cb5104bc1b0a256a7d61913c"
+      },
+      {
+        "path": "apps/web/src/pages/Asset.tsx",
+        "sha256": "7049778316a185895933ff931db5521cd221909c1888b8e58c5e74a3ae9ae30c"
+      },
+      {
+        "path": "apps/web/src/pages/AssetTypeMigrations.tsx",
+        "sha256": "bb23a2ee373fcfceb30f47bb29878302552a0505390ed520b13c1ae98e7d4929"
+      },
+      {
+        "path": "apps/web/src/pages/AssetTypes.tsx",
+        "sha256": "bb034cd0d6532378553976e1e7fafbd1c5dc844fae69f9a38454d477d9c5046f"
+      },
+      {
+        "path": "apps/web/src/pages/Audit.tsx",
+        "sha256": "1e21cd2dc93bddea0335ce103c50f0dbf7474002074597e4cf7caa4b63002954"
+      },
+      {
+        "path": "apps/web/src/pages/Catalog.tsx",
+        "sha256": "259126c8daccae7b8eb692cf15a2cef8cd359ee12318c0940a2c39fea3f763ed"
+      },
+      {
+        "path": "apps/web/src/pages/Home.tsx",
+        "sha256": "bb08cf9f5b6d107de73ee3dee400ccd0392f4a826811ab6000a224669d1f0f05"
+      },
+      {
+        "path": "apps/web/src/pages/ModelMigrations.tsx",
+        "sha256": "cc23198090ba7896bb9d5c684dca255df57d4b75dad9fe8752810be95ac804aa"
+      },
+      {
+        "path": "apps/web/src/pages/Models.tsx",
+        "sha256": "72acf1d7e32d001bb2f32dcd350494451477371a55f7d418dda362100d500b47"
+      },
+      {
+        "path": "apps/web/src/pages/Sources.tsx",
+        "sha256": "5df5464c6baea87b932433b9fe4dbf9d52cdc0073369598cdc4feb4c40a82f42"
+      },
+      {
+        "path": "apps/web/src/session.tsx",
+        "sha256": "8194132b7f7b979ea515bf8eab8eb9b00c1f4b7699f16740352cbf84a1165cea"
+      },
+      {
+        "path": "apps/web/src/styles.css",
+        "sha256": "774eb96c1518377624b5dd4e31d689537870c2516cd3ead427337408f9f5ec84"
+      },
+      {
+        "path": "apps/web/src/types.ts",
+        "sha256": "2c121eba06c772d494ae715a03ea8a473ed4f23ffea6748b3fd361b4804e14c7"
+      },
+      {
+        "path": "apps/web/src/vite-env.d.ts",
+        "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+      },
+      {
+        "path": "apps/web/tsconfig.json",
+        "sha256": "76b2915cb9623d54b4ce6366ac36ce8302a388e67955382075f3b3cfe8baee49"
+      },
+      {
+        "path": "apps/web/vite.config.ts",
+        "sha256": "be49a3fcab78673178e11c775172a65ab07bb80cf95c50f093189929b08b1044"
+      },
+      {
+        "path": "packages/config/routes.json",
+        "sha256": "e520f17ea760cf56f770bbc97033c6f84c3c1254cb6b64dc704f914022375906"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-contracts.ts",
+        "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration.ts",
+        "sha256": "ab1aef383c8cbaca99df276f168e9e9bda3fb9d04fc863f641ae6fd8a2e05319"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "b0a42540415ef1cfc71792f132107f56931c9fb0f0c9fcfcdc9f2af4fa1125aa"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "3164be5efeed75d16551c25360714c78ca53b5a56f92c72c9021a0a6dc5e5d33"
+      },
+      {
+        "path": "packages/ui/src/index.tsx",
+        "sha256": "9fdb615913bb9d6055b02bf38e7c670fd91ce190b51436dfc9a2d5df8cb584b3"
+      },
+      {
+        "path": "packages/ui/src/tokens.css",
+        "sha256": "b21dd67cae74c186f6d4b1a6bd150ec626b1a3f183d5b5c050c443029aa1d236"
+      },
+      {
+        "path": "playwright.config.ts",
+        "sha256": "f671166e0edf378678ffdde7a643c2cfb4e3e8a5092517e94c38620acf3ffe45"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "64ba875f705195741265864539885115446d7f24848033b66ebb0f17ee396bef"
+      },
+      {
+        "path": "tests/e2e/asset-type-migrations.spec.ts",
+        "sha256": "b6b0fa5dd017c13595db91ee785a9d44f6c59958d79d48e582cd8cbaaf4b4329"
+      },
+      {
+        "path": "tests/e2e/asset-types.spec.ts",
+        "sha256": "8d6e7f8ccedb3774557f71470e52ec7bea8ee60e2b86d1ee414bc17b5ec5ac04"
+      },
+      {
+        "path": "tests/e2e/model-migrations.spec.ts",
+        "sha256": "6da5e76511b535bdef770fdad27d72861cf299a1c4a91c3e6f64d218572b33e8"
+      },
+      {
+        "path": "tests/e2e/models.spec.ts",
+        "sha256": "d25dc12de6cbff6642169b15ca8797d2275a5eab165242b0c88a09b959d73f3f"
+      },
+      {
+        "path": "tests/e2e/ui-accessibility.spec.ts",
+        "sha256": "a55a5c6fdc2506d70c2840e75486d235a8c7440964376a2fa25ee88a7c65e504"
+      },
+      {
+        "path": "tests/e2e/vertical-slice.spec.ts",
+        "sha256": "0833a6f40fb6859aa0c4e43b6ad05627e0762fe1b928a6fc22b42f1b7310298b"
+      }
+    ]
+  },
+  "runtime": {
+    "api_image": "sha256:2d2f04f1b75e774b7831d8d0d9e1df928e142c442138b8f451f7506385fdfa34",
+    "identity_method": "docker inspect .Image for running API container; all served production JS/CSS bytes compared to local build",
+    "observed_at": "2026-11-15T18:23:40.816192+00:00",
+    "chrome": "Google Chrome 157.0.8103.51",
+    "served_assets": [
+      {
+        "path": "/assets/AssetTypeMigrations-CRa8zWs0.js",
+        "sha256": "b0257386999c3c40ff0a26de222088427cc390fa28021b5aead844cbc64f04ad",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/AssetTypes-qan7SpD4.js",
+        "sha256": "b463a0f2a59c72c3579bce16c88e070daff18927df5d582c8acd08466a90cf65",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/DefinitionEditor-CZBzO5UQ.js",
+        "sha256": "ea27055547e73cc2a22d57132e0d0a60c58d6e0dc6705e44fe6d2c9c1f07b90d",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/LifecyclePanel-Bm31zTb-.js",
+        "sha256": "5c3d9d93f7a0738533990ccf1457df61a74a8a5d12c877a2782a551661e216c7",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/MigrationPlanEditor-C9U9i6j7.js",
+        "sha256": "55dfff9f1beb74417907d4d50056633a5f50625f0610faba70c66300292cbf04",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/ModelFeedback-DBc-32KP.js",
+        "sha256": "8db750fa6e17a1b20b5e55ff61bcaf012a4ee5d504a0a92cb62da02fe6b37b54",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/ModelMigrations-DjQdygfb.js",
+        "sha256": "0739f157b698c3ac4632275647b09521bad5c8c5a41e6e60f00e3448d996ba83",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/Models-CiRdHTSj.js",
+        "sha256": "cd0ad15301db4985b8becfe5694eeb3bc497e059a8cf494ca76ec6f5aed9b5e8",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/SchemaEditor-eyS1BIo6.js",
+        "sha256": "b796ea92d6b297ac57c2fa723c1a63deead76a0e1e3f7b35d6dcbe2f59a51b2e",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/index-CXLjZYuP.css",
+        "sha256": "63a186dc9c4fd1cf4ed8742d136dd027b03c06aeb6a7f97ea6a0662a605495a7",
+        "matches_local_build": true
+      },
+      {
+        "path": "/assets/index-hPgbHqpo.js",
+        "sha256": "39ebf407e36de05d1d01668a498f3e86b10e945ba37741dfd200fe75f5a5d19f",
+        "matches_local_build": true
+      }
+    ]
+  },
+  "tools": {
+    "node": "24.22.3",
+    "pnpm": "10.32.1",
+    "typescript": "7.0.2",
+    "playwright": "1.65.1",
+    "axe": "4.14.0",
+    "chrome": "Google Chrome 157.0.8103.51"
+  },
+  "methodology": [
+    "Real Keycloak OIDC, server sessions, real PostgreSQL source scanning, API-backed fixture creation and canonical read-back assertions. No mocked identity, responses or source service.",
+    "CI project ordering uses one worker with zero retries/skips. Automatic traces/video/screenshots are disabled; explicit captures contain authenticated synthetic data only.",
+    "The new project reads actual rate-budget headers in beforeAll/beforeEach/afterAll. With fewer than 220 requests remaining it waits at most 61 seconds within a 75-second hook budget; production limits and all mutation/assertion semantics remain unchanged.",
+    "Axe WCAG2A/2AA/2.1AA/2.2AA checks run after finite animations settle with no rule or element exclusions. Each captured viewport also checks document overflow.",
+    "Digest-specific execution consent is toggled with keyboard focus and Space. Existing drawer focus/keyboard checks run in the full gate."
+  ],
+  "verified": [
+    "Visual target parent replacement and field removal, explicit attribute operation, separate destructive-schema and policy acknowledgements, per-asset active owner replacement and mixed-source-version lifecycle mappings.",
+    "An invalid owner/state plan returns 422 without changing canonical assets or the type head. Exported plan JSON round-trips; duplicate-key import is rejected through server validation.",
+    "A concurrent type publication produces a stale target error. Scope reload preserves an unfinished blank visual owner choice, field operation and draft label without requiring a valid final plan.",
+    "An asset added to an existing source-version cohort produces validation failure; always-available scope refresh exposes that new asset for owner repair and preserves other draft choices.",
+    "Changing the target while the plan is in JSON mode invalidates old schema/policy acknowledgements; switching back to the visual editor does not reinstate consent.",
+    "The complete server preview enumerates all three affected assets with before/after attribute-owner-state tuples. Exact decimal strings survive the transformation.",
+    "Concurrent asset mutation invalidates the approved digest: execution returns 409, closes the confirmation dialog and leaves migration state unchanged. Fresh scope review and preview require fresh consent before successful atomic migration.",
+    "The immutable receipt survives reload/export/read-back and matches canonical migrated assets. Descendant definitions and their bound assets retain their old exact parent/version pins. Asset audit history links to the typed receipt.",
+    "Consumers see no migration ingress and receive 403 for write/context APIs while allowed receipt reads succeed. The foreign tenant receives 404 for the other tenant context/receipt.",
+    "All ten existing source/catalog/ownership/audit, model authoring, model migration, inherited type/lifecycle, role/tenant and accessibility journeys pass in the same full twelve-test gate."
+  ],
+  "visual_inspection": {
+    "status": "PASS_FOR_RECORDED_SCREENSHOTS",
+    "recorded_at": "2026-11-15T18:33:04.360373+00:00",
+    "method": "Implementation agent visually inspected all 17 final full-gate PNGs using the image viewing tool. This is not independent human sign-off.",
+    "screenshots": [
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-confirmation-en-1440.png",
+        "sha256": "ae926702e553b7cbb7358feab91e20a3e217b1c9dd90c6698591a8f623f32d41"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-confirmation-en-390.png",
+        "sha256": "54e339c69ca3523c5da25a9a75255c22cae569e9efefe6cd94f150cf5917e9e4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-definition-en-1024.png",
+        "sha256": "aa804307ba4ce5b1a2fc88c296400e70bfefa1b490f71db5f2f232b30b98f560"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-definition-en-1440.png",
+        "sha256": "bc8b65d8a9881cb8aee0184cb0d049cdf3e721a235950072da94a86bc6a71617"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-definition-en-390.png",
+        "sha256": "3a16a24f9efdbb40d8b7726a631f26f913905fe8eabad6497e470cf55b0954c4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-definition-en-768.png",
+        "sha256": "947b9055465270205ab88a07255c44dbb8d7a7fd7c255db12da1b65ed73e315b"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-editor-ar-dark-390.png",
+        "sha256": "5b2f02574a2ae4ed5204c4308c2a5353e87ec47266b9d38e6d6efc471c7a7251"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-policy-en-1440.png",
+        "sha256": "b2025e0ec10c929cedaf1305a65188df99d1ea846d1d7c9899bdc7bee830e2a9"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-policy-en-390.png",
+        "sha256": "9e3d8a57d7394fbf9a9f78983153a5dcb2117ea1718cc7b6d46282f9b15d4f6a"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-preview-en-1440.png",
+        "sha256": "03445b824089e932cd90e67d70843637851cf1b7a0c8f98679bd62c8de6bc407"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-preview-en-390.png",
+        "sha256": "0d790df93fe11788dbd0c8f140a0d84f70cc73d9b56de2f8d5b4912cbacc058f"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-readonly-en-390.png",
+        "sha256": "0296aa1b73f04190ad14cca1e05e78d757218aa0751c9fa310da093f3f6ce390"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-receipt-ar-dark-390.png",
+        "sha256": "c24ac2c16b209c652c9d8c8e21b9ac77ae7138f58d05c2feb60b476d6d8aa3b2"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-receipt-en-1440.png",
+        "sha256": "91b763d91971fb6ad47e7128957326665d9a6a809cc418a5167fe5da338d56ce"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-receipt-en-390.png",
+        "sha256": "577949980e2bfdb00a9ff92d302763a2f7f3c4954d01cb796f3f59ce8da8c776"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-values-en-1440.png",
+        "sha256": "7ef5b370801584c85ac175dc3549367d00df27b8c908b09c073ad90f92b024d5"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-values-en-390.png",
+        "sha256": "364e77cfbc151863c8e243f9bbd129f909312664d496bc8b4049cfa8191b1b0b"
+      }
+    ],
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 960
+      },
+      {
+        "width": 1024,
+        "height": 960
+      },
+      {
+        "width": 768,
+        "height": 960
+      },
+      {
+        "width": 390,
+        "height": 960
+      }
+    ],
+    "observed": "Definition editing, parent pins, explicit owner choices, impact summary, before/after tuples, digest consent and immutable receipt metadata are legible in the recorded views. No observed overlap, clipped primary action or horizontal document overflow. Mobile tuple JSON uses confined horizontal scrolling; digest text wraps. English/light and Arabic/dark RTL layouts are shown.",
+    "preliminary_root_spot_check": {
+      "scope": [
+        "m2-type-migration-definition-en-1440.png",
+        "m2-type-migration-preview-en-390.png",
+        "m2-type-migration-receipt-ar-dark-390.png"
+      ],
+      "run": "Targeted pass screenshots preserved privately under .local/evidence/type-migration-targeted-pass-screenshots; not rebound to the full gate.",
+      "result": "Root agent observed legible controls, no overlap or horizontal page overflow, wrapped mobile hashes and readable RTL details."
+    },
+    "root_final_spot_check": {
+      "method": "Root agent separately viewed these three final full-gate images with the image viewing tool; this is automated agent review, not human or native-Arabic sign-off.",
+      "screenshots": [
+        {
+          "path": "docs/verification/screenshots/m2-type-migration-definition-en-1440.png",
+          "sha256": "bc8b65d8a9881cb8aee0184cb0d049cdf3e721a235950072da94a86bc6a71617"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-type-migration-preview-en-390.png",
+          "sha256": "0d790df93fe11788dbd0c8f140a0d84f70cc73d9b56de2f8d5b4912cbacc058f"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-type-migration-receipt-ar-dark-390.png",
+          "sha256": "c24ac2c16b209c652c9d8c8e21b9ac77ae7138f58d05c2feb60b476d6d8aa3b2"
+        }
+      ],
+      "result": "Clear controls and legible labels, wrapped hashes, and no observed horizontal overflow, overlap or clipped primary actions in these three views."
+    }
+  },
+  "historical_evidence": {
+    "preserved_files": [
+      {
+        "path": "docs/verification/screenshots/asset-en-light-1440.png",
+        "sha256": "9b495a82d5e0b573c6e2dfbc9145a5ad69ee073bcf4d19ad130b2ed046d138e2"
+      },
+      {
+        "path": "docs/verification/screenshots/asset-en-light-390.png",
+        "sha256": "a2a5235ad78141002ce97cba7cd1132723942adbb413b0ff95251019756b146e"
+      },
+      {
+        "path": "docs/verification/screenshots/audit-en-light-1440.png",
+        "sha256": "880ca7769db8a669cb1a748ec90f74829f2cf3cbeb0b374143590d1de7974172"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-ar-dark-1440.png",
+        "sha256": "9e118b83bd8d786e240183751340702fd7e3bcdb53f2b676a66cb87349e747d0"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-ar-dark-390.png",
+        "sha256": "0020afa07937035dcee1186e66b3cc183eeb6c8d75efd5ace8051d7e7946ff94"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-ar-dark-768.png",
+        "sha256": "118898141ad94cb5ee445ef8b585c0f074d1c41a8d7da2ef896f42bd1bab4945"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-dark-1440.png",
+        "sha256": "e7686c0e2b06c3f1b49ffc4c8e5f3e0095b91036c1eb138d4c81a1930a263023"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-1024.png",
+        "sha256": "49f67ea46ef95c6e76897c08aad96fa26a56f79af5dfb022dbe0b8c76e7fcd39"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-1280.png",
+        "sha256": "87dfff7d741e8aa68a0269fa19f77049794e74d0ff641a4518865721b5f37edc"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-1440.png",
+        "sha256": "67920e53017c28f2665bdbe931bb8eefc85e97186d62f483c20ef53f589c9767"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-390.png",
+        "sha256": "02d905c4c80c38e9b9075cd60c1e3f6dd33a830e597e8c79ac2fe3ed7be4350e"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-768.png",
+        "sha256": "e8fa1bababc049412a3f8e794706b0cd99a976bec90c21571dcf2379d91abda8"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-history.png",
+        "sha256": "f56ada27dd2e44b22dd20e24ec9607017ecb8bdee59554e6b6efb3eefb9abf63"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-ar-dark-390.png",
+        "sha256": "44f7154cfa9d04bdd51dc9aa94ec8d5e16abfe33a19fba79fa8df6b893f15162"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-en-1024.png",
+        "sha256": "5699a4f8876d69bafd84810351251173f023170575bd6a1edcae568a14938513"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-en-1440.png",
+        "sha256": "99e3f8e50de7944a7f5d7b45c46bb853cc83823b956f132c5ffd220fd10c5bb0"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-en-390.png",
+        "sha256": "ed93ce074f4dfa35073944a59d89b00adc46475cd4671cc7400f52cc0423085c"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-en-768.png",
+        "sha256": "7a2830e5f927dd64fed1c45507453684767042fbd7a29682800c5abd14a66bbf"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-inheritance-en-1440.png",
+        "sha256": "1b3cf83a5306c0aaa33538208af4616a8ae3745fce2faac4f4fcf9e0f9f465c7"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-inheritance-en-390.png",
+        "sha256": "e4b160946ffb35d2a0d300eb37dbb92b97dfc562a4343727ec96b3fbbd1d9cc5"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-ar-dark-390.png",
+        "sha256": "97177a368b88c055c4edd7f232d63d371557c665404f36d9bf9edfa440bcb24a"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-editor-en-1440.png",
+        "sha256": "d03d99af756fd6405037a7a7045d2fbb6545c3879915ecd440aa0d1fc9cdec9e"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-editor-en-390.png",
+        "sha256": "e14d653844c8ee4bba6587092868ba3ed329b9a6ed203b03d5d8a091af8ecdbb"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-en-1440.png",
+        "sha256": "14ee21c85e1c5fe7c06090d932bb2161c1dc658d7b6a689f327371a34f3c27ea"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-en-390.png",
+        "sha256": "c52867c5a37a2c496aff950864d9d67e2e4634e79ff68cf515980e88a4cb5dce"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-preview-en-1440.png",
+        "sha256": "f599eed9ca99cdf9207ed76fb3904cbeff24370b8aa44f020758bb0298f4af0b"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-preview-en-390.png",
+        "sha256": "6db06036e208989a76a0cfa2c06e4e4b9e9d1791179e014dbb517d37e5f55b61"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-readonly-en-390.png",
+        "sha256": "5676d037cbb78dd054c06936439b0d99a340edf8e368e6d85daa902b904f0226"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-resolved-en-1440.png",
+        "sha256": "612a3a34a384ebcd98cf5cf2bc7a0e58934a6a98f529a1bb422c9f1b607b0279"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-resolved-en-390.png",
+        "sha256": "a7d37d9ce5290a83b9d059aea977fa26ba4665a5038beb78cee68b66d7185807"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-confirmation-en-1440.png",
+        "sha256": "3e348bcf18749a4d4d2ce1fb57bf010b7e16b4498bc938a647868d7e5a8d22d4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-confirmation-en-390.png",
+        "sha256": "826e4070c8543d8a47ad94fed814169e146a614b0c80fd5cf600e57cc4fdc887"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-model-chooser-en-1440.png",
+        "sha256": "ee3cd03220f7adf4495dd4bc95aba20f729777da633bc2d7aad5bf7d5e2ed509"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-model-chooser-en-390.png",
+        "sha256": "13d1ae755ae75a4b36978af768c3f1c00a2eb45180511a1a1fa7b99d51b98bb1"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-model-list-en-1440.png",
+        "sha256": "e91ebdb03d84b99edd614ca2890fe2a15ee46418db822fae0fe62d518579a616"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-model-list-en-390.png",
+        "sha256": "a6f188e9a73940d33bc89ed0bad3ce2525780b0272dda9722b3158aa73731a9e"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-plan-en-1440.png",
+        "sha256": "1a6c469ec2794b9c4ea567f09ec47474e8a72b0aeb6e4140cec17de061ed8599"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-plan-en-390.png",
+        "sha256": "fa28c60be911cf7a11cd0d93174dfeeb193629fbe0f7d6517acf38fdd12ac1e6"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-preview-dark-390.png",
+        "sha256": "3ec49553adb3c7d371f0ffe14d4ba41fde404d82d0c83b4d24efaed4bc6db4b5"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-preview-en-1440.png",
+        "sha256": "eb87ec3b114072eba03ff0612b629aa45cc72dd539b32be71ccee5a4ada2a3b4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-preview-en-390.png",
+        "sha256": "ce73e5e7aac36f44b6a3d3ac732938b38866b87745d1ca5b4bf420e52904e8a0"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-receipt-ar-390.png",
+        "sha256": "4a68a7972cbe2c0182ef83afacccf6b811d46d407b5bbfe7e04d24d161a936a4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-receipt-en-1440.png",
+        "sha256": "450cea4cdded5fbc2fed7b556bd171eabddd80daa3b439556c5a73b0d67f9531"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-receipt-en-390.png",
+        "sha256": "5d1e5d617347745d106e7c25820fc713635d683fa1fb67fc641e26daa56cab5d"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-values-en-390.png",
+        "sha256": "565da93d4aff5fd3e56f9dbf20295cad1a461410ddaea2db05bbf809b4d96b71"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-editor-ar-390.png",
+        "sha256": "4bbb8b732e6777a0a97758f73cade5a716a667d943d6b15610a2e977da3939b4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-editor-en-1440.png",
+        "sha256": "bf0ace849e6888fe9c0992838ca6315403c814df713bafc6abf0d3966882f068"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-editor-en-390.png",
+        "sha256": "c7be11ca2cd43ad22645afd89b1e671d4c7549832efd6015423b041cfbaa3c09"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-preview-en-1440.png",
+        "sha256": "22551575526066e779ca6785ced75e6bcb7e16cb5c4f5e9b988a812f29c863e9"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-preview-en-390.png",
+        "sha256": "d27d248a79811d1960f98530c8d0dd5346fad424e7b4fbc1f0edeffd91a1c50c"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-typed-asset-en-1440.png",
+        "sha256": "2ab48d3d51ff1cda5a03aa737629940aad0ef46223d67dee1c488cdfe6d5d792"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-typed-asset-en-390.png",
+        "sha256": "6bc6ce7c72c122c49f9303a7c882e319aff00d99289e67e2a3db379cacda22df"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-typed-form-en-1440.png",
+        "sha256": "55616f8b4fe828936e19df8ad7e0dacd51f53d7cc1e65a7162e63d911c4a699b"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-typed-form-en-390.png",
+        "sha256": "ac69fefd2c5819156ac1ee2001e9b68501e5bce2feedfc2803e81a66bf29e69d"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-version-en-1440.png",
+        "sha256": "5ae326bcc28b795080f3d709f4d06b5b688d5a2d8cc0939d813ac41fb07dd0ad"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-version-en-390.png",
+        "sha256": "ae39469ce9753bd32e4d3528df05e8b949f3bf7184e00211c2e53c438adf6bd5"
+      },
+      {
+        "path": "docs/verification/screenshots/overview-en-light-1440.png",
+        "sha256": "5d5302325c57bd79005c8696bc116bdb79e18a890699a05154e638d9b5bfa7d9"
+      },
+      {
+        "path": "docs/verification/screenshots/sources-en-light-1440.png",
+        "sha256": "873c8fc0cfce9dd92d16b777a9192c9d9131440c8ea28b3fe3c22c766955678b"
+      }
+    ],
+    "method": "All 58 historical public PNGs were backed up with hashes before execution and restored byte-for-byte afterward. Fresh regression captures are private under .local/evidence/type-migration-regression-screenshots. Historical manifests were not rewritten."
+  },
+  "targeted_qualification": {
+    "command": "Same command with --project=asset-type-migrations --no-deps",
+    "execution": {
+      "startTime": "2026-11-15T18:24:53.665Z",
+      "duration": 89802.166,
+      "expected": 2,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "raw_report": ".local/evidence/playwright-type-migrations-targeted-pass-results.json",
+    "raw_report_sha256": "59740b2e2ba7bd3a47864abb4149f51238dbe0ad6af8cadf78225723b874b94d",
+    "api_image": "sha256:2d2f04f1b75e774b7831d8d0d9e1df928e142c442138b8f451f7506385fdfa34"
+  },
+  "diagnostics": [
+    {
+      "kind": "initial_targeted_touch_target_size",
+      "execution": {
+        "startTime": "2026-11-15T18:17:58.805Z",
+        "duration": 62434.482,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "raw_report": ".local/evidence/type-migration-targeted-target-size/playwright-results.json",
+      "raw_report_sha256": "c0bc0741e24deb2ab10935abaedf7a79ab23d5610ccfc347332fb4fa7f9174c6",
+      "api_image": "sha256:e3eaf3b79f235bbcc16c090813b9b8377f5e0a8b69380931c12d9fe3cb9c7dc5",
+      "observed": "First journey failed the unchanged axe target-size assertion: adjacent source-policy summary controls were 21px high with only 18px neighboring spacing. Second permissions/tenant journey passed.",
+      "resolution": "Scoped CSS provides minimum 44px summary targets and 8px spacing. The application image was rebuilt before subsequent qualification; no axe rules or assertions were excluded."
+    },
+    {
+      "kind": "targeted_plan_accessible_name_selector",
+      "execution": {
+        "startTime": "2026-11-15T18:23:12.851Z",
+        "duration": 67072.816,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "raw_report": ".local/evidence/type-migration-targeted-plan-selector/playwright-results.json",
+      "raw_report_sha256": "ddb377ea78f1f8c5c189e5dfe88a7302b9aba18e9149dbfcf5e805ba1973555f",
+      "api_image": "sha256:2d2f04f1b75e774b7831d8d0d9e1df928e142c442138b8f451f7506385fdfa34",
+      "observed": "The first journey reached the JSON-plan acknowledgement regression after passing unfinished-owner and expanded-cohort recovery. The test exact name Migration plan JSON did not match the textarea label because it includes the visible explanatory hint. Second permission/tenant journey passed.",
+      "resolution": "Test-only selector matches the labelled Migration plan JSON prefix, retaining the same textarea-value and acknowledgement assertions. Application code unchanged."
+    }
+  ],
+  "limitations": [
+    "Scoped development/browser qualification only; no full accessibility audit, independent human language review, vendor-live test, enterprise sign-off or release approval.",
+    "Arabic translations are provisional; manual screen-reader review, full 200% zoom and all browser/platform combinations remain open.",
+    "Constrained relations, other model kinds, scoped overrides, other responsibility roles and bulk/workflow/MCP ingress remain required programme work.",
+    "Hidden-cohort authorization, storage integrity, inactive-owner concurrency, aggregate receipt limits and transactional rollback beyond these browser paths are separately qualified in API/domain/upgrade evidence.",
+    "This bounded transaction does not establish durable large-cohort execution or production restore qualification. Synthetic fixture history is retained; no total or snapshot pagination claim is inferred."
+  ],
+  "release_qualification": "NOT_CLAIMED"
+}

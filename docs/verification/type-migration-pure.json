@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "result": "PASS",
+  "recorded_at": "2026-11-15T18:07:05.635111+00:00",
+  "scope": "Strict complete asset-type migration parser and pure owner/lifecycle transformation only",
+  "command": "pnpm test",
+  "profile": "local Node24.22.3 / pnpm10.32.1 / Darwin arm64",
+  "execution": {
+    "suite_tests": 82,
+    "suite_pass": 82,
+    "suite_fail": 0,
+    "suite_skipped": 0,
+    "suite_cancelled": 0,
+    "suite_duration_ms": 325.717584,
+    "new_type_migration_tests": 19,
+    "tool_output_chunks": [
+      "01c769",
+      "a3892d"
+    ]
+  },
+  "source_snapshot": {
+    "git_base_commit": "446f05e8577eba21767faf11c8248804c370201d",
+    "dirty_worktree": true,
+    "files": [
+      {
+        "path": "packages/domain/src/asset-type-migration.ts",
+        "sha256": "ab1aef383c8cbaca99df276f168e9e9bda3fb9d04fc863f641ae6fd8a2e05319"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "3164be5efeed75d16551c25360714c78ca53b5a56f92c72c9021a0a6dc5e5d33"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "b0a42540415ef1cfc71792f132107f56931c9fb0f0c9fcfcdc9f2af4fa1125aa"
+      },
+      {
+        "path": "tests/unit/asset-type-migration.test.ts",
+        "sha256": "bb0c98308b07c3ba0f1fdfc33b8e60b751a87d48c47117324d32ad4b75697c9a"
+      },
+      {
+        "path": "package.json",
+        "sha256": "87bf0ba005fde7f3b64d6ea3a84dacdcb08f9517f56a7fde87d3386882907f78"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "64ba875f705195741265864539885115446d7f24848033b66ebb0f17ee396bef"
+      }
+    ]
+  },
+  "limitations": [
+    "This records pure validation and transformation, not PostgreSQL persistence, concurrent principal locking, HTTP or rendered browser qualification.",
+    "All remaining operating-model capabilities and full MOD/AT-MOD/M2/release qualification remain open."
+  ]
+}

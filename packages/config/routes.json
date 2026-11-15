@@ -167,6 +167,28 @@
       "permission": "catalog:read",
       "mutationPermission": "catalog:write",
       "context": "Lifecycle and required ownership follow the exact assigned asset-type version"
+    },
+    {
+      "path": "/asset-types/:id/migrate",
+      "screen": "UX-10",
+      "component": "AssetTypeMigrationPage",
+      "permission": "models:write",
+      "additionalPermissions": [
+        "models:read",
+        "catalog:read",
+        "catalog:write"
+      ],
+      "context": "Explicit complete attribute, owner and lifecycle migration with digest-bound review"
+    },
+    {
+      "path": "/asset-types/:id/migrations/:migrationId",
+      "screen": "UX-10",
+      "component": "AssetTypeMigrationReceiptPage",
+      "permission": "models:read",
+      "additionalPermissions": [
+        "catalog:read"
+      ],
+      "context": "Immutable complete asset tuples and source policy hashes"
     }
   ]
 }
