@@ -57,7 +57,7 @@ test('LIN-001/004/006: real PostgreSQL view dependencies, evidence, paged explor
  await page.goto(`/catalog/${view.id}?tab=lineage`);await expect(page.getByRole('heading',{level:1,name:view.name,exact:true})).toBeVisible();
  const panel=page.getByRole('region',{name:'Lineage',exact:true});
  const upstreamResponse=changed(page,view.id,q=>q.get('direction')==='upstream'&&q.get('limit')==='25');
- await panel.getByLabel('Direction',{exact:true}).selectOption('upstream');expect(await observedBody(await upstreamResponse)).toEqual(observed);
+ await panel.getByRole('combobox',{name:'Direction',exact:true}).selectOption('upstream');expect(await observedBody(await upstreamResponse)).toEqual(observed);
  await expect(panel.getByRole('region',{name:'Dependency graph',exact:true})).toBeVisible();await expect(panel.locator('.react-flow__node')).toHaveCount(3);await expect(panel.locator('.react-flow__edge')).toHaveCount(2);
  await expect(panel.getByText('Column mappings have not been collected.',{exact:true})).toBeVisible();await expect(panel.getByText('SQL bodies have not been analyzed.',{exact:true})).toBeVisible();
  await panel.scrollIntoViewIfNeeded();await capture(page,info,'graph-en',1440);
@@ -70,19 +70,19 @@ test('LIN-001/004/006: real PostgreSQL view dependencies, evidence, paged explor
  await capture(page,info,'evidence-en',1440);await page.keyboard.press('Escape');await expect(drawer).toBeHidden();await expect(inspect).toBeFocused();
  // Exercise actual signed cursor pagination and filter reset; neither page
  // may silently append stale edges to the newly authorized response.
- const firstResponse=changed(page,view.id,q=>q.get('limit')==='1'&&!q.has('cursor'));await panel.getByLabel('Dependencies per page',{exact:true}).selectOption('1');
+ const firstResponse=changed(page,view.id,q=>q.get('limit')==='1'&&!q.has('cursor'));await panel.getByRole('combobox',{name:'Dependencies per page',exact:true}).selectOption('1');
  const first=await observedBody(await firstResponse);expect(first.edges).toHaveLength(1);expect(first.nextCursor).not.toBeNull();
  await expect(panel.locator('tbody tr')).toHaveCount(1);
  const secondResponse=changed(page,view.id,q=>q.get('cursor')===first.nextCursor);await panel.getByRole('button',{name:'Next page',exact:true}).click();
  const second=await observedBody(await secondResponse);expect(second.edges).toHaveLength(1);expect(second.edges[0].id).not.toBe(first.edges[0].id);expect(second.nextCursor).toBeNull();
  expect([first.edges[0].id,second.edges[0].id].sort()).toEqual(observed.edges.map(edge=>edge.id).sort());await expect(panel.locator('tbody tr')).toHaveCount(1);await expect(panel.getByRole('button',{name:'Next page',exact:true})).toBeDisabled();
- const resetResponse=changed(page,view.id,q=>q.get('direction')==='downstream'&&!q.has('cursor'));await panel.getByLabel('Direction',{exact:true}).selectOption('downstream');
+ const resetResponse=changed(page,view.id,q=>q.get('direction')==='downstream'&&!q.has('cursor'));await panel.getByRole('combobox',{name:'Direction',exact:true}).selectOption('downstream');
  expect((await observedBody(await resetResponse)).edges).toEqual([]);await expect(panel.getByRole('heading',{name:'No dependencies on this page',exact:true})).toBeVisible();await expect(panel.getByRole('button',{name:'First page',exact:true})).toBeDisabled();
  const consumer=await browser.newContext({viewport:{width:390,height:960}}),foreign=await browser.newContext({viewport:{width:390,height:960}});
  try{
   const reader=await consumer.newPage();await domainLogin(reader,'consumer');const me=await domainBody<{permissions:string[]}>(await reader.request.get('/api/v1/me'));expect(me.permissions).toContain('catalog:read');expect(me.permissions).not.toContain('catalog:write');
   expect(await lineage(reader,view.id)).toEqual(observed);await reader.goto(`/catalog/${view.id}?tab=lineage`);await language(reader,'ar');
-  const translated=reader.getByRole('region',{name:'تتبّع البيانات',exact:true});await translated.getByLabel('الاتجاه',{exact:true}).selectOption('upstream');await translated.getByRole('button',{name:'جدول التبعيات',exact:true}).click();
+  const translated=reader.getByRole('region',{name:'تتبّع البيانات',exact:true});await translated.getByRole('combobox',{name:'الاتجاه',exact:true}).selectOption('upstream');await translated.getByRole('button',{name:'جدول التبعيات',exact:true}).click();
   await expect(translated.getByRole('table',{name:'جدول التبعيات',exact:true}).locator('tbody tr')).toHaveCount(2);await expect(translated.getByText('لم تُجمع تعيينات الأعمدة.',{exact:true})).toBeVisible();
   await translated.scrollIntoViewIfNeeded();await capture(reader,info,'table-ar',390);
   const outsider=await foreign.newPage();await domainLogin(outsider,'summit');const denied=await outsider.request.get(`/api/v1/assets/${view.id}/lineage?direction=upstream&depth=1&limit=25`);
