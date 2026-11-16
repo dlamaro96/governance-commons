@@ -126,6 +126,8 @@ def scan(source, secret, tenant_id):
 
 
 def _metadata(conn, source):
+    from .postgres_lineage import extract as extract_lineage
+
     conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY")
     identity = conn.execute("SELECT current_user AS role, current_setting('server_version') AS version, oid::text AS db_oid FROM pg_database WHERE datname=current_database()").fetchone()
     role = conn.execute("SELECT oid::text AS role_oid, rolsuper, rolbypassrls FROM pg_roles WHERE rolname=current_user").fetchone()
@@ -176,7 +178,8 @@ def _metadata(conn, source):
         "schemaOid": schema["oid"], "requiredPrivileges": ["USAGE_SCHEMA", "SELECT_ALL_EXTANT_RELATIONS"]}
     result = {"observedAt": datetime.now(timezone.utc).isoformat(), "sourceVersion": identity["version"],
         "permissionFingerprint": hashlib.sha256(json.dumps(permissions, sort_keys=True).encode()).hexdigest(),
-        "records": records, "complete": True}
+        "records": records, "complete": True,
+        "lineage": extract_lineage(conn, identity["db_oid"], schema["oid"], relations)}
     if len(json.dumps(result).encode()) > MAX_BYTES:
         raise ScanFailure("SOURCE_BYTE_LIMIT")
     return result
