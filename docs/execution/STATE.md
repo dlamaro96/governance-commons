@@ -1,5 +1,13 @@
 # Current state — 2026-11-16
 
+## Business-domain qualification checkpoint — 2026-11-16T01:54Z
+
+The combined a55731c source passed the second isolated SQL010-to011 upgrade gate: eight upgrade checks,18 storage cases and nine concurrency cases, with75 source hashes stable. The byte-identical original report is business-domains-upgrade-integrated.json; the first PASS is retained separately. Core still has only SQL001–010. SQL011 remains unapplied there; real domain seed/API/browser qualification is NOT_RUN.
+
+The final authored acceptance adds a real PostgreSQL rescan after domain placement to both API and browser journeys. It checks stable asset identity, advanced observed metadata/version, unchanged placement/domain history, and unassignment against the latest asset revision. Static discovery is nine domain API tests and three domain browser journeys. Root/web types and the25 CI collector controls pass; these are not runtime passes. The new explicit seed-recovery harness is source-reviewed and fails closed on repeat-seed, revoked/deleted-membership recovery and uncertain cleanup; it has not executed. Hosted CI now requires the domain upgrade, seed recovery and all19 registered browser journeys.
+
+SCOPED_AUTHORITY_DRAFT.md and SCOPED_AUTHORITY_INGRESS_INVENTORY.md are proposals only. Root must adopt the exact action/resource/compatibility and storage contracts before implementation or activation. The root participation checkout is correcting an audit scope-before-limit bug and a controlled scan-fixture/live-dispatch race revealed by its122/124 API run; retain that failed attempt and merge its checked correction before rebuilding this checkout. No affected milestone or release gate advances.
+
 ## PR16 repair-reference follow-up — 2026-11-16T01:20Z
 
 PR16 first hosted attempt failed. Source run43781088999 uploaded all three analyses for tested merge6a3f53ab: JS/TS has one high js/user-controlled-bypass finding, Actions/Python zero; independent stored-analysis readback agrees. Development43781089046 failed at the security step; original safe evidence contains no assertion coordinates, so its precise cause remains unknown. Both original failures are preserved in docs/verification/participation-repair-reference.json and13 byte-identical hosted reports.

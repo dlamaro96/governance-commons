@@ -691,6 +691,15 @@
       "scope": "Unconditional repair-reference authorization, bounded private API diagnostics and repeatable source-specific catalog browser acceptance. Full required-participation/M2 and hosted requalification remain open.",
       "implementation_status": "IN_PROGRESS",
       "verification_status": "PASS_FOR_RECORDED_LOCAL_SCOPE"
+    },
+    {
+      "path": "docs/verification/business-domains-upgrade-integrated.json",
+      "scope": "SQL010-to011 isolated combined-source upgrade:8checks18storage9concurrency; core application/seed/API/browser not run",
+      "source_binding": {
+        "implementation_commit": "a55731cd1deec054cafbf8e2955f07f4fb78a18d",
+        "method": "Exact75 unchanged source hashes; original report copied byte-identically; original first PASS retained separately.",
+        "evidence_sha256": "26953bab85365da66896f8c6db7ed3ff1e89d5eab60c0b6675df26648fbf5400"
+      }
     }
   ],
   "limitations": [

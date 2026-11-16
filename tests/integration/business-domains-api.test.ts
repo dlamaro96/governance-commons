@@ -4,6 +4,7 @@
 import assert from 'node:assert/strict';
 import { after, before, test } from 'node:test';
 import { createHash, randomUUID } from 'node:crypto';
+import { setTimeout as delay } from 'node:timers/promises';
 import { db, lockTenantLedger, scope, sql } from '../../packages/db/src/index.ts';
 import { assetView, record } from '../../apps/api/src/repository.ts';
 import type { Principal } from '../../packages/authz/src/index.ts';
@@ -89,8 +90,49 @@ async function place(headers: Headers, asset: { id: string; version: number }, d
 }
 const page = <T>(path: string, headers: Headers) => request(path, headers).then(r => response<Page<T>>(r));
 
-// The scanned source/browser journey exercises ingestion separately; this case
-// compares real canonical asset rows and immutable legacy snapshots byte-for-byte.
+interface ScanJob { id: string; sourceId: string; status: string; assetCount: number; errorCode: string | null }
+async function realScan(headers: Headers, sourceId: string): Promise<ScanJob> {
+  const started = await response<{ job: ScanJob }>(await request(`/sources/${sourceId}/scans`, mutation(headers), 'POST', {}), 202);
+  const deadline = Date.now() + 100_000;
+  while (Date.now() < deadline) {
+    const { job } = await response<{ job: ScanJob }>(await request(`/jobs/${started.job.id}`, headers));
+    assert.equal(job.sourceId, sourceId);
+    if (job.status === 'succeeded') { assert.ok(job.assetCount > 0); return job; }
+    assert.ok(['queued', 'running'].includes(job.status), `Real PostgreSQL scan terminated as ${job.status} (${job.errorCode})`);
+    await delay(1500);
+  }
+  assert.fail('Real PostgreSQL scan did not complete within 100 seconds');
+}
+async function scanPlacementState(assetId: string, domainId: string, key: string) {
+  return scope(tenant, steward, async tx => ({
+    asset: await tx.selectFrom('assets').selectAll().where('id', '=', assetId).executeTakeFirstOrThrow(),
+    assetRevisions: await tx.selectFrom('asset_revisions').selectAll().where('asset_id', '=', assetId).orderBy('version').execute(),
+    domain: await tx.selectFrom('domains').selectAll().where('id', '=', domainId).executeTakeFirstOrThrow(),
+    domainRevisions: await tx.selectFrom('domain_revisions').selectAll().where('domain_id', '=', domainId).orderBy('version').execute(),
+    placement: await tx.selectFrom('asset_domain_placements').selectAll().where('asset_id', '=', assetId).executeTakeFirstOrThrow(),
+    placementRevisions: await tx.selectFrom('asset_domain_placement_revisions').selectAll().where('asset_id', '=', assetId).orderBy('version').execute(),
+    audit: await tx.selectFrom('audit').selectAll().where('resource_id', 'in', [assetId, domainId]).orderBy('sequence').execute(),
+    // Delivery is asynchronous. Compare every immutable event field here, and
+    // separately require the real projector to deliver the exact event IDs.
+    outbox: await tx.selectFrom('outbox').select(sql<any>`to_jsonb(outbox) - 'processed_at' - 'attempts'`.as('row'))
+      .where('resource_id', 'in', [assetId, domainId]).orderBy('id').execute(),
+    idempotency: await tx.selectFrom('idempotency').selectAll().where('actor_id', '=', steward)
+      .where('operation', '=', 'domain.placement').where('key', '=', key).execute(),
+  }));
+}
+async function deliveredEvents(ids: string[]) {
+  assert.ok(ids.length > 0); assert.equal(new Set(ids).size, ids.length);
+  const deadline = Date.now() + 30_000;
+  while (Date.now() < deadline) {
+    const rows = await scope(tenant, steward, tx => tx.selectFrom('outbox').selectAll().where('id', 'in', ids).execute());
+    assert.equal(rows.length, ids.length, 'Every committed audit must have its actual outbox event');
+    if (rows.every(row => row.processed_at !== null)) return rows;
+    await delay(500);
+  }
+  assert.fail('The real projector did not deliver the recorded event IDs within 30 seconds');
+}
+
+// This case compares real canonical asset rows and immutable legacy snapshots.
 test('domain HTTP type creation, placement, rename, move and history preserve asset identity and legacy snapshots', async () => {
   const headers = await session(), type = await createType(headers), parent = await createDomain(headers, type, 'Synthetic parent');
   const child = await createDomain(headers, type, '😀'.repeat(200)), asset = await assetFixture();
@@ -113,6 +155,90 @@ test('domain HTTP type creation, placement, rename, move and history preserve as
   assert.deepEqual(await scope(tenant, steward, tx => tx.selectFrom('asset_revisions').selectAll().where('asset_id', '=', asset.id).orderBy('version').execute()), saved);
   assert.equal(Object.hasOwn(original.asset, 'domainId'), false); assert.equal(Object.hasOwn(original.asset, 'placementVersion'), false);
   const replay = await response(await request(`/assets/${asset.id}/domain-placement`, assigned.key, 'PUT', assigned.body)); assert.deepEqual(replay, { placement: assigned.placement, domain: assigned.domain });
+});
+
+test('domain HTTP real PostgreSQL rescan preserves placement history and service journals while stale unassignment cannot write', { timeout: 300_000 }, async () => {
+  const headers = await session();
+  const { source } = await response<{ source: { id: string } }>(await request('/sources', mutation(headers), 'POST', {
+    name: `Independent domain rescan ${randomUUID()}`, host: 'source-postgres', port: 5432,
+    database: 'harbor', schema: 'public', secretRef: 'demo-postgres',
+  }), 201);
+  // Only the public scan request starts execution: Temporal, the site runner and
+  // the Python PostgreSQL worker must produce the canonical rows and journals.
+  const firstJob = await realScan(headers, source.id);
+  const scannedAssets = await scope(tenant, steward, tx => tx.selectFrom('assets').selectAll()
+    .where('source_id', '=', source.id).where('name', '=', 'orders').where('type', '=', 'table').execute());
+  assert.equal(scannedAssets.length, 1); const scanned = scannedAssets[0]!; assert.equal(scanned.version, 1); assert.equal(scanned.metadata.scanId, firstJob.id);
+  const initialAsset = (await response(await request(`/assets/${scanned.id}`, headers))).asset;
+  assert.equal(initialAsset.id, scanned.id); assert.equal(initialAsset.sourceId, source.id);
+  const type = await createType(headers), domain = await createDomain(headers, type, 'Independent rescan placement');
+  const assigned = await place(headers, initialAsset, domain, 0), staleKey = mutation(headers, 1);
+  assert.equal(assigned.placement.version, 1); assert.equal(assigned.placement.recordedAssetVersion, 1);
+  const before = await scanPlacementState(scanned.id, domain.id, staleKey['Idempotency-Key']!);
+  const placementHistory = await page<DomainPlacementRevision>(`/assets/${scanned.id}/domain-placement/history`, headers);
+  assert.equal(before.assetRevisions.length, 1); assert.equal(before.placementRevisions.length, 1);
+
+  const secondJob = await realScan(headers, source.id);
+  assert.notEqual(secondJob.id, firstJob.id);
+  const currentAsset = (await response(await request(`/assets/${scanned.id}`, headers))).asset;
+  assert.equal(currentAsset.id, initialAsset.id); assert.equal(currentAsset.sourceId, source.id);
+  assert.equal(currentAsset.version, initialAsset.version + 1); assert.equal(currentAsset.metadata.scanId, secondJob.id);
+  const after = await scanPlacementState(scanned.id, domain.id, staleKey['Idempotency-Key']!);
+  assert.equal(after.asset.external_id, before.asset.external_id);
+  assert.deepEqual(after.assetRevisions.slice(0, before.assetRevisions.length), before.assetRevisions);
+  assert.equal(after.assetRevisions.length, before.assetRevisions.length + 1);
+  assert.equal(after.assetRevisions.at(-1)!.version, currentAsset.version);
+  assert.deepEqual(after.assetRevisions.at(-1)!.snapshot, JSON.parse(JSON.stringify(assetView(after.asset))));
+  for (const key of ['domain', 'domainRevisions', 'placement', 'placementRevisions'] as const) assert.deepEqual(after[key], before[key]);
+  assert.equal(after.audit.length, before.audit.length + 1); assert.equal(after.outbox.length, before.outbox.length + 1);
+  assert.deepEqual(after.audit.slice(0, before.audit.length), before.audit);
+  for (const event of before.outbox) assert.deepEqual(after.outbox.find(row => row.row.id === event.row.id), event);
+  assert.deepEqual(await getDomain(headers, domain.id), domain);
+  assert.deepEqual(await response(await request(`/assets/${scanned.id}/domain-placement`, headers)), { placement: assigned.placement, domain });
+  assert.deepEqual(await page(`/assets/${scanned.id}/domain-placement/history`, headers), placementHistory);
+  const members = await page<{ assetId: string; assetVersion: number; placementVersion: number }>(`/domains/${domain.id}/assets`, headers);
+  assert.equal(members.items.length, 1); assert.equal(members.items[0]!.assetId, scanned.id);
+  assert.equal(members.items[0]!.assetVersion, currentAsset.version); assert.equal(members.items[0]!.placementVersion, 1);
+
+  const observed = after.audit.filter(row => row.action === 'asset.observed' && row.changes.scanId === secondJob.id);
+  assert.equal(observed.length, 1); assert.equal(observed[0]!.actor_id, 'site:local');
+  assert.equal(observed[0]!.changes.resourceVersion, currentAsset.version);
+  const completed = await scope(tenant, steward, tx => tx.selectFrom('audit').selectAll()
+    .where('resource_id', '=', secondJob.id).where('action', '=', 'scan.completed').execute());
+  assert.equal(completed.length, 1); assert.equal(completed[0]!.actor_id, 'site:local');
+  const events = await deliveredEvents([...after.audit.map(row => row.id as string), completed[0]!.id]);
+  for (const event of [observed[0]!, completed[0]!]) {
+    const delivered = events.find(row => row.id === event.id)!;
+    assert.equal(delivered.event_type, event.action); assert.equal(delivered.payload.actorId, 'site:local');
+    assert.equal(delivered.resource_id, event.resource_id); assert.equal(delivered.resource_version, event.changes.resourceVersion);
+  }
+
+  const unchanged = await scanPlacementState(scanned.id, domain.id, staleKey['Idempotency-Key']!);
+  const stale = await failure(await request(`/assets/${scanned.id}/domain-placement`, staleKey, 'PUT', {
+    assetVersion: initialAsset.version, domainId: null, domainVersion: null, reason,
+  }), 409, 'VERSION_CONFLICT');
+  assert.deepEqual(await scanPlacementState(scanned.id, domain.id, staleKey['Idempotency-Key']!), unchanged);
+  assert.equal(unchanged.idempotency.length, 0);
+  const rejectedJournal = await scope(tenant, steward, async tx => ({
+    audit: await tx.selectFrom('audit').select('id').where('correlation_id', '=', stale.correlationId).execute(),
+    outbox: await tx.selectFrom('outbox').select('id').where(sql<string>`payload->>'correlationId'`, '=', stale.correlationId).execute(),
+  }));
+  assert.deepEqual(rejectedJournal, { audit: [], outbox: [] });
+
+  const unassigned = await place(headers, currentAsset, null, 1);
+  assert.equal(unassigned.placement.version, 2); assert.equal(unassigned.placement.recordedAssetVersion, currentAsset.version);
+  assert.equal(unassigned.placement.domainId, null); assert.equal(unassigned.domain, null);
+  const final = await scanPlacementState(scanned.id, domain.id, staleKey['Idempotency-Key']!);
+  for (const key of ['asset', 'assetRevisions', 'domain', 'domainRevisions'] as const) assert.deepEqual(final[key], after[key]);
+  assert.equal(final.audit.length, after.audit.length + 1); assert.equal(final.outbox.length, after.outbox.length + 1);
+  assert.equal(final.placementRevisions.length, 2); assert.deepEqual(final.placementRevisions[0], before.placementRevisions[0]);
+  assert.equal(final.placement.recorded_asset_version, currentAsset.version);
+  assert.deepEqual(final.placementRevisions[1]!.snapshot.placement, unassigned.placement);
+  const finalHistory = await page<DomainPlacementRevision>(`/assets/${scanned.id}/domain-placement/history`, headers);
+  assert.deepEqual(finalHistory.items.map(row => row.placement.version), [2, 1]);
+  assert.deepEqual(finalHistory.items[1], placementHistory.items[0]);
+  assert.deepEqual(finalHistory.items[0]!.placement, unassigned.placement);
+  await deliveredEvents(final.audit.map(row => row.id as string));
 });
 
 test('domain HTTP lifecycle, nonempty retirement, unassignment and restoration retain independent revision streams', async () => {

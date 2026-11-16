@@ -13,15 +13,15 @@ from api_evidence import collect as collect_api
 import test_api_evidence
 
 COLLECTOR = Path(__file__).with_name("ci_evidence.py")
-FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations")
-STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "browser")
+FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations", "business-domains")
+STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "browser")
 
 
 class EvidenceGateTests(unittest.TestCase):
-    def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False):
+    def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False, omitted_step=None):
         specs = [{"file": f"{name}.spec.ts", "line": line, "title": "PRIVATE_SYNTHETIC_TITLE",
                   "tests": [{"status": "expected", "results": [{"status": "passed", "duration": 1, "stdout": ["PRIVATE_SYNTHETIC_OUTPUT"]}]}]}
-                 for name in FILES for line in (10, 20)]
+                 for name in FILES for line in ((10, 20, 30) if name == "business-domains" else (10, 20))]
         if mutation:
             mutation(specs)
         with tempfile.TemporaryDirectory(prefix="gc-ci-evidence-") as temporary:
@@ -44,6 +44,8 @@ class EvidenceGateTests(unittest.TestCase):
                    "GITHUB_SHA": "a" * 40, "GITHUB_REPOSITORY": "example/fixture", "GITHUB_RUN_ID": "1"}
             if failed_step:
                 env[f"GC_{failed_step.upper()}_RESULT"] = "failure"
+            if omitted_step:
+                env.pop(f"GC_{omitted_step.upper()}_RESULT", None)
             result = subprocess.run([sys.executable, str(root / "policies/ci_evidence.py")],
                                     env=env, capture_output=True, text=True, timeout=10)
             report = json.loads((root / ".local/ci-artifacts/behavior-summary.json").read_text())
@@ -53,16 +55,36 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertNotIn("PRIVATE_SYNTHETIC", artifact.read_text())
             return result.returncode, report
 
-    def test_all_sixteen_required_journeys_are_accepted_and_private_payloads_omitted(self):
+    def test_all_nineteen_required_journeys_are_accepted_and_private_payloads_omitted(self):
         code, report = self.collect()
         self.assertEqual(code, 0)
         self.assertEqual(report["outcome"], "PASS")
-        self.assertEqual(len(report["tests"]), 16)
+        self.assertEqual(len(report["tests"]), 19)
 
-    def test_older_fourteen_test_gate_cannot_hide_missing_participation_journeys(self):
-        code, report = self.collect(lambda specs: specs.__delitem__(slice(14, None)))
+    def test_required_participation_journeys_cannot_be_replaced_by_domain_journeys(self):
+        code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "relation-migrations.spec.ts"]))
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
+
+    def test_older_sixteen_test_gate_cannot_hide_missing_business_domain_journeys(self):
+        code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "business-domains.spec.ts"]))
+        self.assertEqual(len(report["tests"]), 16)
+        self.assertEqual(code, 1)
+        self.assertEqual(report["outcome"], "NOT_PASSED")
+
+    def test_each_business_domain_journey_must_execute(self):
+        code, report = self.collect(lambda specs: specs.pop())
+        self.assertEqual(len(report["tests"]), 18)
+        self.assertEqual(code, 1)
+        self.assertEqual(report["outcome"], "NOT_PASSED")
+
+    def test_missing_business_domain_qualification_steps_fail_closed(self):
+        for step in ("business_domains_upgrade", "business_domain_seed"):
+            with self.subTest(step=step):
+                code, report = self.collect(omitted_step=step)
+                self.assertEqual(code, 1)
+                self.assertEqual(report["steps"][step], "skipped")
+                self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_duplicate_source_locations_cannot_replace_an_unexecuted_journey(self):
         code, _ = self.collect(lambda specs: specs[-1].update(line=10))
@@ -75,27 +97,32 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
 
     def test_real_service_failure_cannot_be_overridden_by_successful_browser_results(self):
-        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade"):
+        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed"):
             with self.subTest(step=step):
                 code, report = self.collect(failed_step=step)
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_failed_assertion_coordinates_are_allowlisted_without_private_payloads(self):
-        failure = {"status": "failed", "duration": 3, "error": {
-            "message": "PRIVATE_SYNTHETIC_MESSAGE", "stack": (
-                "PRIVATE_SYNTHETIC_ERROR\n"
-                "    at capture (/PRIVATE_SYNTHETIC_PATH/tests/e2e/relation-migrations.spec.ts:65:9)\n"
-                "    at /PRIVATE_SYNTHETIC_PATH/tests/e2e/relation-migrations.spec.ts:173:3\n"
-                "    at /PRIVATE_SYNTHETIC_PATH/tests/e2e/private.spec.ts:4:5\n")}}
-        code, report = self.collect(lambda specs: specs[-1]["tests"][0].update(results=[failure]), failed_step="browser")
-        self.assertEqual(code, 1)
-        self.assertEqual(report["tests"][-1]["failure_locations"], [
-            {"file": "tests/e2e/relation-migrations.spec.ts", "line": 65, "column": 9},
-            {"file": "tests/e2e/relation-migrations.spec.ts", "line": 173, "column": 3}])
+        for filename in ("relation-migrations.spec.ts", "business-domains.spec.ts"):
+            with self.subTest(filename=filename):
+                failure = {"status": "failed", "duration": 3, "error": {
+                    "message": "PRIVATE_SYNTHETIC_MESSAGE", "stack": (
+                        "PRIVATE_SYNTHETIC_ERROR\n"
+                        f"    at capture (/PRIVATE_SYNTHETIC_PATH/tests/e2e/{filename}:65:9)\n"
+                        f"    at /PRIVATE_SYNTHETIC_PATH/tests/e2e/{filename}:173:3\n"
+                        "    at /PRIVATE_SYNTHETIC_PATH/tests/e2e/private.spec.ts:4:5\n")}}
+                def mutate(specs):
+                    next(spec for spec in specs if spec["file"] == filename)["tests"][0].update(results=[failure])
+                code, report = self.collect(mutate, failed_step="browser")
+                self.assertEqual(code, 1)
+                target = next(record for record in report["tests"] if record["file"] == "tests/e2e/" + filename)
+                self.assertEqual(target["failure_locations"], [
+                    {"file": "tests/e2e/" + filename, "line": 65, "column": 9},
+                    {"file": "tests/e2e/" + filename, "line": 173, "column": 3}])
 
     def test_untrusted_or_successful_error_fields_cannot_publish_payloads(self):
-        for stack in (None, {"PRIVATE_SYNTHETIC": True}, "tests/e2e/relation-migrations.spec.ts:0:2", "tests/e2e/relation-migrations.spec.ts:1:1000000"):
+        for stack in (None, {"PRIVATE_SYNTHETIC": True}, "tests/e2e/business-domains.spec.ts:0:2", "tests/e2e/business-domains.spec.ts:1:1000000"):
             with self.subTest(stack=stack):
                 code, report = self.collect(lambda specs: specs[-1]["tests"][0]["results"][0].update(error={"stack": stack}))
                 self.assertEqual(code, 0)

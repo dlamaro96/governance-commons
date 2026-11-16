@@ -28,11 +28,46 @@ export async function hierarchy(page: Page, row: DomainView, kind: 'retire' | 'r
   const { preview } = await domainBody(await page.request.post(`/api/v1/domains/${row.id}/hierarchy-previews`, { headers, data: { change } })); expect(preview.ready).toBe(true);
   return (await domainBody<{ domain: DomainView }>(await page.request.post(`/api/v1/domains/${row.id}/hierarchy-changes`, { headers: await domainHeaders(page, row.version), data: { change, previewDigest: preview.previewDigest } }))).domain;
 }
-export async function scanDomainBrowserAsset(page: Page, name: string) {
-  const { source } = await domainBody(await page.request.post('/api/v1/sources', { headers: await domainHeaders(page), data: { name, host: 'source-postgres', port: 5432, database: 'harbor', schema: 'public', secretRef: 'demo-postgres' } }), 201);
-  const { job } = await domainBody(await page.request.post(`/api/v1/sources/${source.id}/scans`, { headers: await domainHeaders(page), data: {} }), 202);
-  await expect.poll(async () => (await domainBody(await page.request.get(`/api/v1/jobs/${job.id}`))).job.status, { timeout: 100_000, intervals: [1000, 2000] }).toBe('succeeded');
-  let assetId: string | undefined;
-  await expect.poll(async () => { let cursor: string | null = null; for (let i = 0; i < 30; i++) { const result: { items: { id: string; name: string; sourceId: string }[]; nextCursor: string | null } = await domainBody(await page.request.get(`/api/v1/assets?q=orders&type=table&limit=100${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''}`)); assetId = result.items.find(row => row.sourceId === source.id && row.name === 'orders')?.id; cursor = result.nextCursor; if (assetId || !cursor) break; } return !!assetId; }, { timeout: 30_000 }).toBe(true);
-  return (await domainBody(await page.request.get(`/api/v1/assets/${assetId}`))).asset as { id: string; version: number; name: string; sourceId: string };
+export interface DomainBrowserAsset {
+  id: string; version: number; name: string; sourceId: string;
+  metadata: { scanId?: string };
+}
+async function runDomainBrowserScan(page: Page, sourceId: string): Promise<string> {
+  const { job } = await domainBody<{ job: { id: string; sourceId: string } }>(await page.request.post(`/api/v1/sources/${sourceId}/scans`, { headers: await domainHeaders(page), data: {} }), 202);
+  expect(job.sourceId).toBe(sourceId);
+  await expect.poll(async () => (await domainBody<{ job: { status: string } }>(await page.request.get(`/api/v1/jobs/${job.id}`))).job.status,
+    { timeout: 100_000, intervals: [1000, 2000] }).toBe('succeeded');
+  return job.id;
+}
+async function readScannedDomainBrowserAsset(page: Page, sourceId: string, scanId: string, previous?: DomainBrowserAsset): Promise<DomainBrowserAsset> {
+  let asset: DomainBrowserAsset | undefined;
+  // Real signed catalog pagination handles an existing core with earlier sources;
+  // no fixture lookup, response interception or first-page assumption is used.
+  await expect.poll(async () => {
+    let cursor: string | null = null; const seen = new Set<string>();
+    for (let visited = 0; visited < 100; visited++) {
+      const result: { items: { id: string; name: string; sourceId: string }[]; nextCursor: string | null } = await domainBody(await page.request.get(`/api/v1/assets?q=orders&type=table&limit=100${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''}`));
+      const match = result.items.find(row => row.sourceId === sourceId && row.name === 'orders');
+      if (match) {
+        asset = (await domainBody<{ asset: DomainBrowserAsset }>(await page.request.get(`/api/v1/assets/${match.id}`))).asset;
+        expect(asset.sourceId).toBe(sourceId); expect(asset.name).toBe('orders');
+        if (previous) expect(asset.id).toBe(previous.id);
+        return asset.metadata.scanId === scanId && asset.version > (previous?.version ?? 0);
+      }
+      cursor = result.nextCursor;
+      if (!cursor) return false;
+      expect(seen.has(cursor)).toBe(false); seen.add(cursor);
+    }
+    throw new Error('Synthetic source exceeds the bounded browser catalog pagination profile');
+  }, { timeout: 30_000, intervals: [500, 1000, 2000] }).toBe(true);
+  expect(asset).toBeDefined(); return asset!;
+}
+export async function scanDomainBrowserAsset(page: Page, name: string): Promise<DomainBrowserAsset> {
+  const { source } = await domainBody<{ source: { id: string } }>(await page.request.post('/api/v1/sources', { headers: await domainHeaders(page), data: { name, host: 'source-postgres', port: 5432, database: 'harbor', schema: 'public', secretRef: 'demo-postgres' } }), 201);
+  return readScannedDomainBrowserAsset(page, source.id, await runDomainBrowserScan(page, source.id));
+}
+export async function rescanDomainBrowserAsset(page: Page, previous: DomainBrowserAsset): Promise<DomainBrowserAsset> {
+  const scanId = await runDomainBrowserScan(page, previous.sourceId);
+  expect(scanId).not.toBe(previous.metadata.scanId);
+  return readScannedDomainBrowserAsset(page, previous.sourceId, scanId, previous);
 }

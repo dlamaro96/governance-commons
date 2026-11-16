@@ -3,8 +3,8 @@
 import { test, expect, type Browser, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { mkdirSync, readFileSync } from 'node:fs';
-import type { DomainTypeDefinition, DomainTypeMigrationPlan, DomainTypeMigrationReceipt, DomainTypePreview, DomainTypeView } from '../../packages/domain/src/business-domain-contracts.ts';
-import { createDomain, createDomainType, domainBody, domainDefinition, domainHeaders, domainLogin, editDomain, hierarchy, readDomain, scanDomainBrowserAsset, stewardIdentity } from '../fixtures/business-domains-browser.ts';
+import type { DomainPlacementRevision, DomainRevision, DomainTypeDefinition, DomainTypeMigrationPlan, DomainTypeMigrationReceipt, DomainTypePreview, DomainTypeView } from '../../packages/domain/src/business-domain-contracts.ts';
+import { createDomain, createDomainType, domainBody, domainDefinition, domainHeaders, domainLogin, editDomain, hierarchy, readDomain, rescanDomainBrowserAsset, scanDomainBrowserAsset, stewardIdentity } from '../fixtures/business-domains-browser.ts';
 async function pacing({ browser }: { browser: Browser }) { test.setTimeout(75_000); const context = await browser.newContext(); const response = await context.request.get('/api/v1/me'); const remaining = Number(response.headers()['x-ratelimit-remaining']), reset = Number(response.headers()['x-ratelimit-reset']); await context.close(); if (Number.isFinite(remaining) && remaining < 220 && Number.isFinite(reset) && reset >= 0 && reset <= 60) await new Promise(resolve => setTimeout(resolve, Math.min(60, reset + 1) * 1000)); }
 test.beforeAll(pacing); test.beforeEach(pacing); test.afterAll(pacing);
 async function pace(page: Page) { const response = await page.request.get('/api/v1/me'); const remaining = Number(response.headers()['x-ratelimit-remaining']), reset = Number(response.headers()['x-ratelimit-reset']); if (remaining < 160 && reset >= 0 && reset <= 60) await new Promise(resolve => setTimeout(resolve, Math.min(60, reset + 1) * 1000)); }
@@ -22,7 +22,7 @@ async function createThroughUI(page: Page, type: DomainTypeView, name: string) {
 async function previewHierarchy(page: Page, kind: string, reason: string) { await page.getByRole('combobox', { name: 'Hierarchy operation', exact: true }).selectOption(kind); const form = page.locator('form').filter({ has: page.getByRole('button', { name: 'Preview hierarchy change', exact: true }) }); await form.getByLabel('Reason for change', { exact: true }).fill(reason); const response = page.waitForResponse(r => r.request().method() === 'POST' && r.url().includes('/hierarchy-previews')); await form.getByRole('button', { name: 'Preview hierarchy change', exact: true }).click(); return (await (await response).json()).preview; }
 async function confirmHierarchy(page: Page) { await page.getByRole('checkbox', { name: 'I reviewed the complete subtree and placement impact for this exact change.', exact: true }).check(); const response = page.waitForResponse(r => r.request().method() === 'POST' && r.url().includes('/hierarchy-changes')); await page.getByRole('button', { name: 'Confirm hierarchy change', exact: true }).click(); expect((await response).status()).toBe(200); }
 
-test('DOM: visual type authoring, real scanned placement, rename, lifecycle, move and retirement preserve asset identity', async ({ page }) => {
+test('DOM: visual type authoring, placement survives a real rescan, rename, lifecycle, move and retirement preserve asset identity', async ({ page }) => {
   test.setTimeout(420_000); await domainLogin(page); const prefix = `browser_domain_${Date.now()}`;
   const scanned = await scanDomainBrowserAsset(page, `${prefix} source`);
   const parent = await createDomainType(page, { ...domainDefinition(`${prefix}_base`), attributes: {}, requiredOwner: false });
@@ -35,12 +35,44 @@ test('DOM: visual type authoring, real scanned placement, rename, lifecycle, mov
   const downloadEvent = page.waitForEvent('download'); await page.getByRole('button', { name: 'Export definition', exact: true }).click(); const exported = await downloadEvent, exportedPath = await exported.path(); expect(exportedPath).not.toBeNull(); expect(JSON.parse(readFileSync(exportedPath!, 'utf8'))).toEqual(type.definition);
   const a = await createThroughUI(page, type, `${prefix} Finance`), b = await createThroughUI(page, type, `${prefix} Operations`); await pace(page);
   await page.goto(`/catalog/${scanned.id}`); await page.getByRole('button', { name: 'Assign or unassign domain', exact: true }).click(); await chooseDomain(page, 'Target domain (none means unassign)', a.id, a.name); const placementForm = page.locator('.domain-placement form'); await placementForm.getByLabel('Reason for change', { exact: true }).fill('Synthetic ownership context'); const assigned = page.waitForResponse(r => r.request().method() === 'PUT' && r.url().includes('/domain-placement')); await page.getByRole('button', { name: 'Save domain assignment', exact: true }).click(); expect((await assigned).status()).toBe(200); expect((await domainBody(await page.request.get(`/api/v1/assets/${scanned.id}`))).asset.version).toBe(scanned.version);
+  // The second actual PostgreSQL observation happens after placement exists.
+  // It must advance the same asset while leaving every governed domain and
+  // placement snapshot value unchanged through the supported APIs.
+  const placementBeforeRescan = await domainBody(await page.request.get(`/api/v1/assets/${scanned.id}/domain-placement`));
+  const placementHistoryBeforeRescan = await domainBody<{ items: DomainPlacementRevision[]; nextCursor: string | null }>(await page.request.get(`/api/v1/assets/${scanned.id}/domain-placement/history`));
+  const domainBeforeRescan = await readDomain(page, a.id);
+  const domainHistoryBeforeRescan = await domainBody<{ items: DomainRevision[]; nextCursor: string | null }>(await page.request.get(`/api/v1/domains/${a.id}/history`));
+  expect(placementBeforeRescan.placement.version).toBe(1);
+  expect(placementBeforeRescan.placement.domainId).toBe(a.id);
+  expect(placementHistoryBeforeRescan.items).toHaveLength(1);
+  expect(placementHistoryBeforeRescan.nextCursor).toBeNull();
+  expect(domainHistoryBeforeRescan.items).toHaveLength(1);
+  expect(domainHistoryBeforeRescan.nextCursor).toBeNull();
+  await pace(page); console.info('Business domain stage: real connector rescan after placement');
+  const rescanned = await rescanDomainBrowserAsset(page, scanned);
+  expect(rescanned.id).toBe(scanned.id); expect(rescanned.sourceId).toBe(scanned.sourceId);
+  expect(rescanned.version).toBeGreaterThan(scanned.version);
+  expect(await domainBody(await page.request.get(`/api/v1/assets/${scanned.id}/domain-placement`))).toEqual(placementBeforeRescan);
+  expect(await domainBody(await page.request.get(`/api/v1/assets/${scanned.id}/domain-placement/history`))).toEqual(placementHistoryBeforeRescan);
+  expect(await readDomain(page, a.id)).toEqual(domainBeforeRescan);
+  expect(await domainBody(await page.request.get(`/api/v1/domains/${a.id}/history`))).toEqual(domainHistoryBeforeRescan);
+  await page.goto(`/catalog/${rescanned.id}`);
+  await expect(page.locator('.domain-placement').getByRole('link', { name: a.name, exact: true }).first()).toBeVisible();
+  await page.getByRole('button', { name: 'Placement history', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Placement version 1', exact: true })).toBeVisible();
   await page.goto(`/domains/${a.id}/edit`); await page.getByLabel('Domain name', { exact: true }).fill(`${prefix} Finance renamed`); await page.getByLabel('Reason for change', { exact: true }).fill('Synthetic name clarification'); await page.getByRole('button', { name: 'Save domain', exact: true }).click(); await expect(page).toHaveURL(new RegExp(`/domains/${a.id}$`));
   const stateForm = page.locator('form').filter({ has: page.getByRole('button', { name: 'Apply lifecycle transition', exact: true }) }); await stateForm.getByLabel('Next lifecycle state', { exact: true }).selectOption('active'); await stateForm.getByLabel('Reason for change', { exact: true }).fill('Synthetic activation'); const stateResponse = page.waitForResponse(r => r.request().method() === 'POST' && new URL(r.url()).pathname === `/api/v1/domains/${a.id}/state`); await stateForm.getByRole('button', { name: 'Apply lifecycle transition', exact: true }).click(); expect((await stateResponse).status()).toBe(200);
   await chooseDomain(page, 'New organizational parent', b.id, b.name); expect((await previewHierarchy(page, 'move', 'Synthetic hierarchy alignment')).ready).toBe(true); await capture(page, 'hierarchy-preview-en', '.domain-hierarchy-preview'); await confirmHierarchy(page); await expect.poll(async () => (await readDomain(page, a.id)).parentId).toBe(b.id);
   expect((await previewHierarchy(page, 'retire', 'Retirement must reject an assigned asset')).ready).toBe(false); await expect(page.getByRole('button', { name: 'Confirm hierarchy change', exact: true })).toBeDisabled(); await capture(page, 'retirement-blocked-en', '.domain-hierarchy-preview');
-  await page.goto(`/catalog/${scanned.id}`); await page.getByRole('button', { name: 'Assign or unassign domain', exact: true }).click(); await page.getByRole('combobox', { name: 'Target domain (none means unassign)', exact: true }).selectOption(''); await page.locator('.domain-placement form').getByLabel('Reason for change', { exact: true }).fill('Synthetic unassignment'); const unassigned = page.waitForResponse(r => r.request().method() === 'PUT' && r.url().includes('/domain-placement')); await page.getByRole('button', { name: 'Confirm unassignment', exact: true }).click(); expect((await unassigned).status()).toBe(200); await page.getByRole('button', { name: 'Placement history', exact: true }).click(); await expect(page.getByRole('heading', { name: 'Placement version 2', exact: true })).toBeVisible(); await capture(page, 'placement-history-en', '.domain-placement');
-  const history = await domainBody(await page.request.get(`/api/v1/assets/${scanned.id}/domain-placement/history`)); expect(history.items.map((row: any) => row.placement.version)).toEqual([2, 1]); expect(history.items[1].placement.recordedAssetVersion).toBe(scanned.version); expect(history.items[1].placement.recordedDomainVersion).toBe(a.version); expect((await domainBody(await page.request.get(`/api/v1/assets/${scanned.id}`))).asset.version).toBe(scanned.version);
+  await page.goto(`/catalog/${scanned.id}`); await page.getByRole('button', { name: 'Assign or unassign domain', exact: true }).click(); await page.getByRole('combobox', { name: 'Target domain (none means unassign)', exact: true }).selectOption(''); await page.locator('.domain-placement form').getByLabel('Reason for change', { exact: true }).fill('Synthetic unassignment'); const unassigned = page.waitForResponse(r => r.request().method() === 'PUT' && r.url().includes('/domain-placement')); await page.getByRole('button', { name: 'Confirm unassignment', exact: true }).click(); const unassignedResponse = await unassigned; expect(unassignedResponse.status()).toBe(200); expect(unassignedResponse.request().postDataJSON().assetVersion).toBe(rescanned.version); await page.getByRole('button', { name: 'Placement history', exact: true }).click(); await expect(page.getByRole('heading', { name: 'Placement version 2', exact: true })).toBeVisible(); await capture(page, 'placement-history-en', '.domain-placement');
+  const history = await domainBody<{ items: DomainPlacementRevision[]; nextCursor: string | null }>(await page.request.get(`/api/v1/assets/${scanned.id}/domain-placement/history`));
+  expect(history.items.map(row => row.placement.version)).toEqual([2, 1]);
+  expect(history.items[0].placement.recordedAssetVersion).toBe(rescanned.version);
+  expect(history.items[0].placement.domainId).toBeNull();
+  expect(history.items[1]).toEqual(placementHistoryBeforeRescan.items[0]);
+  expect(history.items[1].placement.recordedAssetVersion).toBe(scanned.version);
+  expect(history.items[1].placement.recordedDomainVersion).toBe(a.version);
+  expect((await domainBody(await page.request.get(`/api/v1/assets/${scanned.id}`))).asset.version).toBe(rescanned.version);
   await pace(page); await page.goto(`/domains/${a.id}`); expect((await previewHierarchy(page, 'retire', 'Synthetic retirement after unassignment')).ready).toBe(true); await confirmHierarchy(page); await expect.poll(async () => (await readDomain(page, a.id)).status).toBe('retired'); expect((await previewHierarchy(page, 'restore', 'Synthetic restoration')).ready).toBe(true); await confirmHierarchy(page); await page.getByRole('button', { name: 'Domain history', exact: true }).click(); await expect(page.getByRole('heading', { name: 'Immutable domain history', exact: true })).toBeVisible();
   await page.getByRole('combobox', { name: 'Language', exact: true }).selectOption('ar'); await expect(page.locator('html')).toHaveAttribute('dir', 'rtl'); await capture(page, 'history-ar'); await page.getByRole('button', { name: 'نمط الألوان: داكن', exact: true }).click(); await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark'); await capture(page, 'history-ar-dark');
 });
