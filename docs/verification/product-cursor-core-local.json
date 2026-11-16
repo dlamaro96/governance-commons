@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "scope": "catalog empty-cursor repair and current core browser regression",
+  "base_commit": "64a13ed44dfc091193514e289f067e2574c7e07e",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "profile": "core",
+  "source_files": [
+    {
+      "path": "apps/api/src/asset-search.ts",
+      "sha256": "7395a589ea7e61d2ffc4c87c4af5c7f299370833d1d0cddd2d5af9ee8d273fe8"
+    },
+    {
+      "path": "tests/unit/asset-search.test.ts",
+      "sha256": "e717df3cedd43fba6a11691c7b7a6c4b295ab7edab82e8147189c2a42b5a17f2"
+    },
+    {
+      "path": "tests/integration/asset-search.test.ts",
+      "sha256": "8d026478614a77300a2798e6e2f21db7159ff503c228f05800d160d610648c31"
+    },
+    {
+      "path": "scripts/test-smoke.sh",
+      "sha256": "a1ab171d0cf9509d7e506d1b7f95ce4b546b182ded7e194eda8488fde57cbaeb"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "51ad6083773cfbe70c39a427b2cf87266706f62d0dd42350a7e31736f3e97609"
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "sha256": "607bf09b9ca5bbc379c9409cefd1604205c197870503437daa746fa4227b84fb"
+    },
+    {
+      "path": ".gitleaksignore",
+      "sha256": "83d9bff560409ebc42dba2f68fc79a45ea18b5fbc89bf001bbbf170da671344f"
+    },
+    {
+      "path": "policies/test_secret_fingerprints.py",
+      "sha256": "cf8fcaef153ede4836a999ca5364c310623a55c62a734308797dc7182cf69a5d"
+    }
+  ],
+  "checks": {
+    "host_units": {
+      "passed": 552,
+      "failed": 0,
+      "skipped": 0,
+      "command": "node --import tsx --test tests/unit/*.test.ts"
+    },
+    "native_search_and_authorization": {
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0
+    },
+    "browser": {
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "retries": 0,
+      "command": [
+        "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/.local/toolchain/node-v24.22.3-darwin-arm64/bin/node",
+        "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/.local/pnpm/node_modules/pnpm/bin/pnpm.cjs",
+        "exec",
+        "playwright",
+        "test",
+        "--config",
+        "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/.local/evidence/product-full-browser-attempt-4/playwright.config.ts",
+        "--workers=1",
+        "--retries=0",
+        "--max-failures=0",
+        "--global-timeout=2700000"
+      ],
+      "execution_sha256": "85709ee9984b77e6cf6a9981ae0706006800abe8edcbd74bfc434f16d1150e42",
+      "source_count": 364,
+      "source_stable": true,
+      "owned_cleanup": {
+        "result": "PASS",
+        "remaining_owned_processes": 0
+      },
+      "historical_captures_restored": true
+    },
+    "inactive_authority_foundation": {
+      "result": "PASS",
+      "storage": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 3624.311127
+      },
+      "loader": {
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 194907.292922
+      },
+      "concurrency": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 35608.643682
+      },
+      "cleanup": {
+        "ownedRemoved": true,
+        "resourceInventoryPreserved": true
+      }
+    },
+    "historical_secret_fingerprint_regressions": {
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "runtime": {
+    "node": "24.22.3",
+    "playwright": "1.65.1",
+    "application_manifest": "sha256:a8e58a3fdf0e4d2e15f8a35c99a83400824d8ed8980b6ac306c3a1c73b94a2e4",
+    "application_config": "sha256:1d64dae0e82a6899bbe1f6e4b49955bf9c8330cf9541bd281dfe62ef66c9ca48"
+  },
+  "limitations": [
+    "The built application contains unused draft glossary/approval files later moved into a separate worktree; the tested API/search source is individually bound. No whole-image/current-tree equivalence is asserted.",
+    "Twenty representative original captures were reviewed separately, plus two model/migration captures; this is not an all149 visual or linguistic review.",
+    "The earlier failing browser and hosted source/development attempts remain failures. Fresh hosted qualification is still required.",
+    "Unity Catalog external credentials and production Microsoft Entra qualification remain separate prerequisites. Approval/glossary implementation is in a separate worktree and is not included in this product runtime pass."
+  ]
+}

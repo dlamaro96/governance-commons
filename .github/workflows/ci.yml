@@ -86,6 +86,8 @@ jobs:
       - name: Scan publishable files and history with pinned gitleaks
         id: secret_scan
         run: python3 policies/scan_secrets.py --install --output .local/evidence/secret-scan.json
+      - name: Verify exact historical secret dispositions
+        run: python3 policies/test_secret_fingerprints.py -v
       - name: Preserve redacted scanner summary
         if: always() && steps.secret_scan.outcome != 'skipped'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

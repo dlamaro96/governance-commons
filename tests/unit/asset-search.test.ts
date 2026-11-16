@@ -78,6 +78,20 @@ test('type filtering uses canonical values rather than stale indexed type or raw
   assert.deepEqual(value.facets,[{type:'view',count:1}]);
 });
 
+test('empty UI query fields and cursor select the same authorized first page as absent fields',async()=>{
+  const f=fixture({hits:[hit(10),hit(11),hit(12)],allow:value=>value!==id(11),type:value=>value===id(12)?'view':'table'});
+  const first=await f.run(auth,{limit:1});
+  const ui=await f.run(auth,{q:'',type:'',limit:1,cursor:''});
+  assert.deepEqual(ui,first);assert.equal(ui.total,2);assert.deepEqual(ui.items.map(row=>row.id),[id(10)]);
+  assert.deepEqual(ui.facets,[{type:'table',count:1},{type:'view',count:1}]);assert.ok(ui.nextCursor);
+  const next=await f.run(auth,{q:'',type:'',limit:1,cursor:ui.nextCursor});
+  assert.deepEqual(next.items.map(row=>row.id),[id(12)]);assert.equal(next.nextCursor,null);
+  assert.equal(next.total,2);assert.deepEqual(next.facets,first.facets);
+  const acquisitions=f.sql.length;
+  for(const cursor of [' ','\t','\n','.',ui.nextCursor+' '])await assert.rejects(f.run(auth,{q:'',type:'',limit:1,cursor}),error('CURSOR_INVALID'));
+  assert.equal(f.sql.length,acquisitions,'Nonempty malformed cursors still refuse before database acquisition');
+});
+
 test('complete10001 matching traversal and logical offset beyond9000 preserve complete totals and usable pagination',async()=>{
   const f=fixture({hits:Array.from({length:10001},(_,i)=>hit(i+10))});
   const first=await f.run(auth,{limit:100});assert.equal(first.total,10001);assert.equal(first.items.length,100);

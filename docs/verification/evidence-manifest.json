@@ -1457,7 +1457,17 @@
       "source_binding": {
         "base_commit": "0c7982f83cd9c66c377e7eb804e6ca5d70205d18",
         "method": "Recorded dirty-worktree source hashes; scoped executions only.",
-        "evidence_sha256": "33261438f5072b40a07eaa5ffe01f5cf8d6c5cc8838e4e158b7fe4f2e7c61606"
+        "evidence_sha256": "4e45aa6fea365f600144a04f766ca5b3e058be0685a1026a9cb6c9585a46b294"
+      }
+    },
+    {
+      "path": "docs/verification/product-cursor-core-local.json",
+      "scope": "catalog-cursor-and-core-browser",
+      "source_binding": {
+        "implementation_commit": "64a13ed44dfc091193514e289f067e2574c7e07e",
+        "method": "Working-source hashes and private original execution records; base commit plus explicitly hashed repair. Hosted qualification remains separate.",
+        "verified_files": 8,
+        "evidence_sha256": "f86cacb6c5a9afd7c32a02936ee0605bc99b2b597b89a8a4226dde173d3a6b26"
       }
     }
   ],

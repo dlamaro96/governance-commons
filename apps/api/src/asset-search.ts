@@ -61,7 +61,9 @@ function queryInput(query:AssetSearchQuery){
     ||query.type!==undefined&&(!text(query.type,256)||Array.from(query.type).length>64)
     ||query.limit!==undefined&&(!integer(query.limit)||query.limit<1||query.limit>100)
     ||query.cursor!==undefined&&!text(query.cursor,2048))throw new Problem(400,'VALIDATION_FAILED','Check the submitted search fields.');
-  return {q:query.q??'',type:query.type??'',limit:query.limit??50,cursor:query.cursor};
+  // The catalog serializes its first page as cursor=. Only that exact empty
+  // value is absence; every nonempty cursor still requires its bound signature.
+  return {q:query.q??'',type:query.type??'',limit:query.limit??50,cursor:query.cursor===''?undefined:query.cursor};
 }
 function binding(auth:SearchAuth,q:ReturnType<typeof queryInput>){
   return createHash('sha256').update(JSON.stringify([auth.principal.tenantId,auth.principal.id,q.q,q.type,q.limit])).digest('hex');

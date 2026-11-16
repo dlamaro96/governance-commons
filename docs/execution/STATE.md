@@ -1,5 +1,11 @@
 # Current state — 2026-11-16
 
+## Product checkpoint — 2026-11-16T16:00Z
+
+The current core now passes all21 browser journeys without retries or skips, including configurable PostgreSQL and Unity registration;10 real search/authorization cases and552 public-tree units pass. Empty catalog cursors now behave like omitted cursors. The isolated inactive-authority gate passes native storage18, loader21 and concurrency14 cases with exact cleanup. See `../verification/product-cursor-core-local.json`; prior failures remain retained and new hosted qualification is required.
+
+Product work continues in isolated `codex/glossary-workflow`: approval storage, API, Temporal orchestration and inbox are under implementation. Its initial SQL015 candidate passes8 native storage cases after correcting a trigger defect; it is not applied to the shared runtime and is not a completed glossary/workflow capability. Presentation and private report work remain deferred. SQL001–014 stay immutable.
+
 ## Product checkpoint — 2026-11-16T14:56Z
 
 Product first; private reports, cost estimates and presentation polish remain deferred. Bounded catalog search now passes9 real PostgreSQL/OpenSearch/API cases, including10,005 assets, all9,101 paginated matches, canonical ACL/count/facet isolation and revoked sessions. Dedicated nonlogin test tenants avoid changing demo authority; repeated owner preparation validates existing state without resetting it. Host checks pass551 units, root/web types and174 focused Python policy/collector/provider cases on386 stable source/config files. PostgreSQL worker passes149 cases plus real metadata conformance; the corrected isolated TLS gate passes12 native checks. See `../verification/product-search-postgres-local.json`.

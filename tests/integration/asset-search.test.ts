@@ -168,6 +168,25 @@ test('narrow real search succeeds above10000 tenant assets and materializes only
   assert.ok(reads.filter(row=>!row.keys.includes('metadata')).every(row=>row.keys.every(key=>['id','type','bytes'].includes(key))));
 });
 
+test('real catalog empty query type and cursor return the same authorized first page as omitted fields', {timeout:60_000},async t=>{
+  const visible=asset('0-ui-empty-cursor-visible','dataset',{visibility:'restricted',allowed:[consumer]});
+  const hidden=asset('1-ui-empty-cursor-hidden','hidden-cursor-type',{visibility:'restricted',allowed:[steward]});
+  const foreignRow=asset('2-ui-empty-cursor-foreign','foreign-cursor-type',{tenantId:foreign});
+  await insert([visible,hidden,foreignRow]);
+  // Even a stale document claiming the requesting tenant cannot establish
+  // canonical visibility, counts or facets for a foreign asset.
+  await project([visible,hidden,foreignRow].map(row=>({id:row.id,value:document(row,{tenantId:tenant})})));
+  const current=await session(t),outside=await session(t,summit,foreign);
+  const first=await http({limit:2},current.headers,200,t.signal);
+  const ui=await http({q:'',type:'',limit:2,cursor:''},current.headers,200,t.signal);
+  assert.deepEqual(ui,first);checkPage(ui,[visible,bulkRows[0]!],[visible,...bulkRows,...narrowRows]);
+  assert.ok(ui.nextCursor);assert.equal(JSON.stringify(ui).includes(hidden.id),false);assert.equal(JSON.stringify(ui).includes(foreignRow.id),false);
+  checkPage(await http({q:'',type:'',limit:2,cursor:ui.nextCursor},current.headers,200,t.signal),
+    bulkRows.slice(1,3),[visible,...bulkRows,...narrowRows]);
+  assert.deepEqual(await http({q:'',type:'',limit:2,cursor:''},outside.headers,200,t.signal),{items:[],total:0,nextCursor:null,facets:[]});
+  assert.equal((await http({q:'',type:'',limit:2,cursor:' '},current.headers,400,t.signal)).code,'CURSOR_INVALID');
+});
+
 test('real HTTP cursors traverse all9101 authorized matches beyond9000 with canonical totals and facets', {timeout:300_000},async t=>{
   const current=await session(t),seen:string[]=[],cursors=new Set<string>();let cursor:string|undefined;
   for(let page=0;page<92;page++) {

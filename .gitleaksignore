@@ -1,0 +1,36 @@
+# Exact immutable source-digest false positives; no credential exemption.
+# Source commit: 64a13ed44dfc091193514e289f067e2574c7e07e
+# Evidence blob SHA256: 33261438f5072b40a07eaa5ffe01f5cf8d6c5cc8838e4e158b7fe4f2e7c61606
+# All 29 values equal SHA256 of their named source file at that commit.
+# Only the recorded generic-api-key history fingerprints are ignored.
+# Working-tree findings, other paths/commits/rules/lines remain actionable.
+# Verified by policies/test_secret_fingerprints.py using pinned Gitleaks.
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:221
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:283
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:298
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:374
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:384
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:389
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:391
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:394
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:399
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:402
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:410
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:414
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:420
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:422
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:425
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:440
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:450
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:452
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:453
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:458
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:476
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:480
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:487
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:490
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:491
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:497
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:510
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:511
+64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:533
