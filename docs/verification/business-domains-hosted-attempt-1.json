@@ -1,0 +1,858 @@
+{
+  "schema_version": 1,
+  "status": "HOSTED_SOURCE_AND_DEVELOPMENT_NOT_PASSED",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "recorded_at": "2026-11-16T04:31:28.798604Z",
+  "repository": "dlamaro96/governance-commons",
+  "pull_request": 17,
+  "attempt": 1,
+  "scope": "Preserved failed PR17 hosted Source and Development invocation at the exact tested merge. Artifact consistency checks pass; the source findings and API failures remain failures. This report does not qualify a repair, production exploitability, a later source, runtime authority or release.",
+  "workflow_observations": {
+    "source": {
+      "run_id": 43802306031,
+      "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43802306031",
+      "outcome": "NOT_PASSED",
+      "provenance": "Root supplied the public UI observations and exact artifact names; existing artifact/stored-analysis handoff reused without new Actions metadata reads."
+    },
+    "development": {
+      "run_id": 43802305909,
+      "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43802305909",
+      "outcome": "NOT_PASSED",
+      "provenance": "Root supplied the public UI observations and exact artifact names; original safe Development artifacts revalidated locally."
+    }
+  },
+  "source_binding": {
+    "tested_merge": "23c610201015a8c9bc013fd41b0febf7f5047215",
+    "head_commit": "c6c27bcf2fcf68fc48a5ce37550afbf024fcfbca",
+    "ref": "refs/pull/17/merge",
+    "identical_tree": "d9f7ddb2f7d3125ba10c7edc0902bdad3e0288f0",
+    "immutable_git_blobs": 787,
+    "source_digest": "15345b20c4dcbf7a7001be69f4714c251d4a2abbd87bcbb1cbc04e3bf07ca803",
+    "method": "The original commit metadata establishes identical tested-merge/local-head trees. Consolidation re-ran the provided static validator against all787 immutable local Git blobs and their exact paths, lengths, hashes, expected languages and canonical manifest digest; no mutable repaired worktree substituted.",
+    "original_private_binding": {
+      "bytes": 160227,
+      "path": ".local/evidence/business-domains-hosted-attempt-1/source/source-binding.json",
+      "sha256": "7060c920a6cbb3042bef0b8aa27e3f0f87d4731745b751621d7a0f6ce8a777f0"
+    },
+    "public_source_manifests": [
+      {
+        "path": "docs/security/sast-evidence/business-domains-attempt-1/actions/source-manifest.json",
+        "sha256": "92afcca44d78a591a1733e4d13e462e726b773a27d92c7eaabefe4cee91baf29"
+      },
+      {
+        "path": "docs/security/sast-evidence/business-domains-attempt-1/python/source-manifest.json",
+        "sha256": "92afcca44d78a591a1733e4d13e462e726b773a27d92c7eaabefe4cee91baf29"
+      },
+      {
+        "path": "docs/security/sast-evidence/business-domains-attempt-1/javascript-typescript/source-manifest.json",
+        "sha256": "92afcca44d78a591a1733e4d13e462e726b773a27d92c7eaabefe4cee91baf29"
+      }
+    ],
+    "runtime_binding_limit": "The API artifact compares20 executed test-file hashes with immutable source. It contains no full application-image digest/source manifest;787 source-scan blobs do not establish runtime application-image equivalence."
+  },
+  "source_security": {
+    "gate": "NOT_PASSED",
+    "extraction_and_analysis": "PASS_RECORDED_THREE_LANGUAGES",
+    "blocking_results": 7,
+    "open_stored_alerts": 7,
+    "languages": [
+      {
+        "language": "actions",
+        "outcome": "PASS",
+        "analysis": "PASS",
+        "findingsGate": "PASS",
+        "coverage": {
+          "databaseFiles": 2,
+          "expectedFiles": 2,
+          "extractedExpectedFiles": 2,
+          "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+        },
+        "expectedPathsVerifiedAgainstImmutableSource": 2,
+        "resolvedQueryCount": 24,
+        "sarifRules": 23,
+        "results": 0,
+        "toolVersion": "2.27.4",
+        "queryPack": "codeql/actions-queries",
+        "queryVersion": "0.6.39",
+        "libraryVersion": "0.7.1",
+        "extractorRuntime": null,
+        "analysisId": 2173655979,
+        "category": "governance-commons/actions",
+        "startedAt": "2026-11-16T04:09:43.707892+00:00",
+        "finishedAt": "2026-11-16T04:10:11.880868+00:00",
+        "scanDurationSeconds": 28.173,
+        "published_sarif": {
+          "path": "docs/security/sast-evidence/business-domains-attempt-1/actions/actions.sarif",
+          "sha256": "b32348f29f1a7447485752e91ef41ed75bc0e346981fba644d539c23eb1ffc52"
+        },
+        "stored_analysis": {
+          "id": 2173655979,
+          "commit_sha": "23c610201015a8c9bc013fd41b0febf7f5047215",
+          "ref": "refs/pull/17/merge",
+          "results_count": 0,
+          "rules_count": 23,
+          "sarif_id": "9f5993c6-e173-11f1-8ed5-d0c3dc3fe6aa",
+          "error": "",
+          "warning": "",
+          "created_at": "2026-11-16T04:10:14Z",
+          "url": "https://api.github.com/repos/dlamaro96/governance-commons/code-scanning/analyses/2173655979"
+        },
+        "archive_observation": {
+          "name": "sast-actions-43802306031-1",
+          "sha256": "ae1ebd044c5db92c1454a46ddeafeb1b9927e1f7c1f6fb7d813624bce5132ad9"
+        }
+      },
+      {
+        "language": "python",
+        "outcome": "PASS",
+        "analysis": "PASS",
+        "findingsGate": "PASS",
+        "coverage": {
+          "databaseFiles": 49,
+          "expectedFiles": 30,
+          "extractedExpectedFiles": 30,
+          "extractedPathsDigest": "33afb6b7321d50567ce32ad2dfbc3e8c3e2d30864315adf10f09c4153057f455"
+        },
+        "expectedPathsVerifiedAgainstImmutableSource": 30,
+        "resolvedQueryCount": 52,
+        "sarifRules": 50,
+        "results": 0,
+        "toolVersion": "2.27.4",
+        "queryPack": "codeql/python-queries",
+        "queryVersion": "1.9.0",
+        "libraryVersion": "7.2.9",
+        "extractorRuntime": "Python 3.14.5",
+        "analysisId": 2173658071,
+        "category": "governance-commons/python",
+        "startedAt": "2026-11-16T04:09:51.168205+00:00",
+        "finishedAt": "2026-11-16T04:10:43.519073+00:00",
+        "scanDurationSeconds": 52.351,
+        "published_sarif": {
+          "path": "docs/security/sast-evidence/business-domains-attempt-1/python/python.sarif",
+          "sha256": "a2452657f5ab757feb8cbc2f166487b1d139d8564d1065cbe9ac29e3b63931f6"
+        },
+        "stored_analysis": {
+          "id": 2173658071,
+          "commit_sha": "23c610201015a8c9bc013fd41b0febf7f5047215",
+          "ref": "refs/pull/17/merge",
+          "results_count": 0,
+          "rules_count": 50,
+          "sarif_id": "b20ea934-e173-11f1-940c-85d7283e1ad3",
+          "error": "",
+          "warning": "",
+          "created_at": "2026-11-16T04:10:45Z",
+          "url": "https://api.github.com/repos/dlamaro96/governance-commons/code-scanning/analyses/2173658071"
+        },
+        "archive_observation": {
+          "name": "sast-python-43802306031-1",
+          "sha256": "6b5ad4b5631f5112ba51def03d80c4a14b6674cf30aad1383b2eaa2e2c19ea2b"
+        }
+      },
+      {
+        "language": "javascript-typescript",
+        "outcome": "NOT_PASSED",
+        "analysis": "PASS",
+        "findingsGate": "BLOCKED",
+        "coverage": {
+          "databaseFiles": 206,
+          "expectedFiles": 181,
+          "extractedExpectedFiles": 181,
+          "extractedPathsDigest": "fd4fc181a6003620c20c21d77893b9d3ecebb40bfe3602d6e891367099063455"
+        },
+        "expectedPathsVerifiedAgainstImmutableSource": 181,
+        "resolvedQueryCount": 105,
+        "sarifRules": 103,
+        "results": 7,
+        "toolVersion": "2.27.4",
+        "queryPack": "codeql/javascript-queries",
+        "queryVersion": "2.5.0",
+        "libraryVersion": "3.0.0",
+        "extractorRuntime": "v24.22.3",
+        "analysisId": 2173663368,
+        "category": "governance-commons/javascript-typescript",
+        "startedAt": "2026-11-16T04:09:49.521218+00:00",
+        "finishedAt": "2026-11-16T04:12:01.746179+00:00",
+        "scanDurationSeconds": 132.225,
+        "published_sarif": {
+          "path": "docs/security/sast-evidence/business-domains-attempt-1/javascript-typescript/javascript-typescript.sarif",
+          "sha256": "5c8f1e71c0ae64436bbb8c6a6bfb74a101351b7141e0ac97a55ac0a71eaf5d06"
+        },
+        "stored_analysis": {
+          "id": 2173663368,
+          "commit_sha": "23c610201015a8c9bc013fd41b0febf7f5047215",
+          "ref": "refs/pull/17/merge",
+          "results_count": 7,
+          "rules_count": 103,
+          "sarif_id": "e0cae72e-e173-11f1-98a2-64f400e1d37d",
+          "error": "",
+          "warning": "",
+          "created_at": "2026-11-16T04:12:04Z",
+          "url": "https://api.github.com/repos/dlamaro96/governance-commons/code-scanning/analyses/2173663368"
+        },
+        "archive_observation": {
+          "name": "sast-javascript-typescript-43802306031-1",
+          "sha256": "c76fd2684a5d34153611478288efddb3e16f417e07f0fcd7f38293dbd417c899"
+        }
+      }
+    ],
+    "findings": [
+      {
+        "blocking": true,
+        "codeFlowsPresent": false,
+        "disposition": "untriaged",
+        "endColumn": 97,
+        "fingerprint": "c381e3ebdc3358b68db0e3c8518e68c1ba1624db8c4f2bb73e58fd4a63a545be",
+        "line": 347,
+        "message": "This replaces only the first occurrence of '{{'.",
+        "path": "tests/integration/business-domains-api.test.ts",
+        "ruleId": "js/incomplete-sanitization",
+        "severity": "high",
+        "sourceSuppressed": false,
+        "startColumn": 82
+      },
+      {
+        "blocking": true,
+        "codeFlowsPresent": false,
+        "disposition": "untriaged",
+        "endColumn": 20,
+        "fingerprint": "a38cb8c3b551444e0b2a4fcb77e8869eb15e2825e78b385da4fadaf55952e667",
+        "line": 348,
+        "message": "This replaces only the first occurrence of '{{'.",
+        "path": "tests/integration/business-domains-api.test.ts",
+        "ruleId": "js/incomplete-sanitization",
+        "severity": "high",
+        "sourceSuppressed": false,
+        "startColumn": 5
+      },
+      {
+        "blocking": true,
+        "codeFlowsPresent": false,
+        "disposition": "untriaged",
+        "endColumn": 64,
+        "fingerprint": "a38cb8c3b551444e0b2a4fcb77e8869eb15e2825e78b385da4fadaf55952e667",
+        "line": 348,
+        "message": "This replaces only the first occurrence of '{{'.",
+        "path": "tests/integration/business-domains-api.test.ts",
+        "ruleId": "js/incomplete-sanitization",
+        "severity": "high",
+        "sourceSuppressed": false,
+        "startColumn": 49
+      },
+      {
+        "blocking": true,
+        "codeFlowsPresent": false,
+        "disposition": "untriaged",
+        "endColumn": 264,
+        "fingerprint": "b84f2f320e4a3f8acc4a8dff5d3b0e6f8ff679d324fcc496c7ed4a03953b2856",
+        "line": 28,
+        "message": "Cross-site scripting vulnerability due to a [user-provided value](1).",
+        "path": "tests/unit/business-domain-http-validation.test.ts",
+        "ruleId": "js/reflected-xss",
+        "severity": "high",
+        "sourceSuppressed": false,
+        "startColumn": 256
+      },
+      {
+        "blocking": true,
+        "codeFlowsPresent": false,
+        "disposition": "untriaged",
+        "endColumn": 102,
+        "fingerprint": "67400d46c3bad166679ee95a9290436f13adbf57a3f8a27890d6941c53a9da3c",
+        "line": 30,
+        "message": "Cross-site scripting vulnerability due to a [user-provided value](1).",
+        "path": "tests/unit/business-domain-http-validation.test.ts",
+        "ruleId": "js/reflected-xss",
+        "severity": "high",
+        "sourceSuppressed": false,
+        "startColumn": 94
+      },
+      {
+        "blocking": true,
+        "codeFlowsPresent": false,
+        "disposition": "untriaged",
+        "endColumn": 109,
+        "fingerprint": "d22e645a31af1a1acb8c1ea23e3b9bdeac783ed2d1dfa3f47e863e23327eaa19",
+        "line": 88,
+        "message": "Cross-site scripting vulnerability due to a [user-provided value](1).",
+        "path": "tests/unit/business-domain-http-validation.test.ts",
+        "ruleId": "js/reflected-xss",
+        "severity": "high",
+        "sourceSuppressed": false,
+        "startColumn": 101
+      },
+      {
+        "blocking": true,
+        "codeFlowsPresent": false,
+        "disposition": "untriaged",
+        "endColumn": 117,
+        "fingerprint": "9d361558173a4e8d3d8fe6eab9658bf2d25c5d23312a41b81071a67b115575b1",
+        "line": 91,
+        "message": "Cross-site scripting vulnerability due to a [user-provided value](1).",
+        "path": "tests/unit/business-domain-http-validation.test.ts",
+        "ruleId": "js/reflected-xss",
+        "severity": "high",
+        "sourceSuppressed": false,
+        "startColumn": 109
+      }
+    ],
+    "stored_alerts": [
+      {
+        "commit": "23c610201015a8c9bc013fd41b0febf7f5047215",
+        "location": {
+          "end_column": 117,
+          "end_line": 91,
+          "path": "tests/unit/business-domain-http-validation.test.ts",
+          "start_column": 109,
+          "start_line": 91
+        },
+        "number": 11,
+        "ref": "refs/pull/17/merge",
+        "ruleId": "js/reflected-xss",
+        "securitySeverity": "high",
+        "state": "open"
+      },
+      {
+        "commit": "23c610201015a8c9bc013fd41b0febf7f5047215",
+        "location": {
+          "end_column": 109,
+          "end_line": 88,
+          "path": "tests/unit/business-domain-http-validation.test.ts",
+          "start_column": 101,
+          "start_line": 88
+        },
+        "number": 10,
+        "ref": "refs/pull/17/merge",
+        "ruleId": "js/reflected-xss",
+        "securitySeverity": "high",
+        "state": "open"
+      },
+      {
+        "commit": "23c610201015a8c9bc013fd41b0febf7f5047215",
+        "location": {
+          "end_column": 102,
+          "end_line": 30,
+          "path": "tests/unit/business-domain-http-validation.test.ts",
+          "start_column": 94,
+          "start_line": 30
+        },
+        "number": 9,
+        "ref": "refs/pull/17/merge",
+        "ruleId": "js/reflected-xss",
+        "securitySeverity": "high",
+        "state": "open"
+      },
+      {
+        "commit": "23c610201015a8c9bc013fd41b0febf7f5047215",
+        "location": {
+          "end_column": 264,
+          "end_line": 28,
+          "path": "tests/unit/business-domain-http-validation.test.ts",
+          "start_column": 256,
+          "start_line": 28
+        },
+        "number": 8,
+        "ref": "refs/pull/17/merge",
+        "ruleId": "js/reflected-xss",
+        "securitySeverity": "high",
+        "state": "open"
+      },
+      {
+        "commit": "23c610201015a8c9bc013fd41b0febf7f5047215",
+        "location": {
+          "end_column": 64,
+          "end_line": 348,
+          "path": "tests/integration/business-domains-api.test.ts",
+          "start_column": 49,
+          "start_line": 348
+        },
+        "number": 7,
+        "ref": "refs/pull/17/merge",
+        "ruleId": "js/incomplete-sanitization",
+        "securitySeverity": "high",
+        "state": "open"
+      },
+      {
+        "commit": "23c610201015a8c9bc013fd41b0febf7f5047215",
+        "location": {
+          "end_column": 20,
+          "end_line": 348,
+          "path": "tests/integration/business-domains-api.test.ts",
+          "start_column": 5,
+          "start_line": 348
+        },
+        "number": 6,
+        "ref": "refs/pull/17/merge",
+        "ruleId": "js/incomplete-sanitization",
+        "securitySeverity": "high",
+        "state": "open"
+      },
+      {
+        "commit": "23c610201015a8c9bc013fd41b0febf7f5047215",
+        "location": {
+          "end_column": 97,
+          "end_line": 347,
+          "path": "tests/integration/business-domains-api.test.ts",
+          "start_column": 82,
+          "start_line": 347
+        },
+        "number": 5,
+        "ref": "refs/pull/17/merge",
+        "ruleId": "js/incomplete-sanitization",
+        "securitySeverity": "high",
+        "state": "open"
+      }
+    ],
+    "all_state_ref_scoped_alert_inventory_complete": true,
+    "analysis_inventory_complete": true,
+    "classification": "All seven high findings are in test files: three incomplete-sanitization fixture insertions and four reflected-XSS echo handlers. The scanner classifications/open-alert state are preserved; they are not a demonstrated production vulnerability or a reviewed waiver.",
+    "distinct_results": "The two findings on integration line348 have distinct columns and alert numbers despite sharing one policy fingerprint. All seven are retained, never deduplicated.",
+    "qualification_observed_at": "2026-11-16T04:18:14.786470+00:00"
+  },
+  "development": {
+    "outcome": "NOT_PASSED",
+    "profile": "core / GitHub-hosted Ubuntu 24.04 / synthetic PostgreSQL",
+    "timestamp": "2026-11-16T04:16:55.823859+00:00",
+    "steps": {
+      "asset_type_upgrade": "skipped",
+      "bootstrap": "success",
+      "browser": "skipped",
+      "business_domain_seed": "skipped",
+      "business_domains_upgrade": "skipped",
+      "connectors": "success",
+      "model_upgrade": "skipped",
+      "object_store": "success",
+      "relation_participation_upgrade": "skipped",
+      "relations_upgrade": "skipped",
+      "security": "failure",
+      "seed": "success",
+      "services": "success",
+      "type_migration_upgrade": "skipped"
+    },
+    "step_counts": {
+      "success": 5,
+      "failure": 1,
+      "skipped": 8
+    },
+    "api": {
+      "outcome": "NOT_PASSED",
+      "command": "./dev test --suite security",
+      "profile": "real core API/PostgreSQL; Node TAP; synthetic fixtures",
+      "exit_code": 1,
+      "counts": {
+        "cancelled": 0,
+        "fail": 2,
+        "pass": 152,
+        "skipped": 0,
+        "suites": 0,
+        "tests": 154,
+        "todo": 0
+      },
+      "flags": [
+        "RUNNER_FAILED"
+      ],
+      "expected_tests": 154,
+      "observed_results": 154,
+      "failures": [
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 99,
+          "status": "failed"
+        },
+        {
+          "failure_locations": [
+            {
+              "column": 5,
+              "file": "tests/integration/relation-participation-storage.test.ts",
+              "line": 193
+            }
+          ],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 186,
+          "status": "failed"
+        }
+      ],
+      "runtime_test_sources_match": true,
+      "test_source_files": [
+        {
+          "path": "tests/integration/asset-type-api-limits.test.ts",
+          "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4",
+          "bytes": 7413
+        },
+        {
+          "path": "tests/integration/asset-type-migration-storage.test.ts",
+          "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93",
+          "bytes": 18757
+        },
+        {
+          "path": "tests/integration/asset-type-migrations.test.ts",
+          "sha256": "c5ad40c323b3405243e95c9b33b62d81e86ab596bca361779219c489fb7aa407",
+          "bytes": 16520
+        },
+        {
+          "path": "tests/integration/asset-type-storage.test.ts",
+          "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123",
+          "bytes": 12504
+        },
+        {
+          "path": "tests/integration/asset-types.test.ts",
+          "sha256": "08c5b7fd9aebea55d498b97b4c524e6e83eefb4c7e604b519996ec1932a2145e",
+          "bytes": 27847
+        },
+        {
+          "path": "tests/integration/audit-integrity.test.ts",
+          "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad",
+          "bytes": 7798
+        },
+        {
+          "path": "tests/integration/business-domain-asset-scope.test.ts",
+          "sha256": "d93449ab4014ee5feb45ab1fc30ce28c061675868139bf7595f79b815f5939a1",
+          "bytes": 6000
+        },
+        {
+          "path": "tests/integration/business-domains-api.test.ts",
+          "sha256": "0f7d24e277245488d5f183aca24c2be968851f81be90bcf498a6f476e2a7831d",
+          "bytes": 43697
+        },
+        {
+          "path": "tests/integration/business-domains-storage.test.ts",
+          "sha256": "1e1b0712c63bf957e33328285a42baad55adc07f1047cc53e7cdc608e8aff8f0",
+          "bytes": 23330
+        },
+        {
+          "path": "tests/integration/foundation.test.ts",
+          "sha256": "eb1159e5c2f3004c3d90a82b2361c2665efff90d20b3eb18f8e58a7929ebd579",
+          "bytes": 8505
+        },
+        {
+          "path": "tests/integration/model-api.test.ts",
+          "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7",
+          "bytes": 7853
+        },
+        {
+          "path": "tests/integration/model-migration-api.test.ts",
+          "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb",
+          "bytes": 9390
+        },
+        {
+          "path": "tests/integration/model-migration-storage.test.ts",
+          "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c",
+          "bytes": 12873
+        },
+        {
+          "path": "tests/integration/model-migrations.test.ts",
+          "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064",
+          "bytes": 22229
+        },
+        {
+          "path": "tests/integration/model-pagination.test.ts",
+          "sha256": "0809f4e7711f3fea796edc1f87a82fc6ece9684c0c6483e4d506a233c4d0d0d2",
+          "bytes": 8372
+        },
+        {
+          "path": "tests/integration/models.test.ts",
+          "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1",
+          "bytes": 12559
+        },
+        {
+          "path": "tests/integration/relation-migration-api.test.ts",
+          "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db",
+          "bytes": 29866
+        },
+        {
+          "path": "tests/integration/relation-participation-storage.test.ts",
+          "sha256": "17fcf6a093e501e0743d9ec5a6b50046b00b3cb59e7be86f802003699d27830e",
+          "bytes": 36969
+        },
+        {
+          "path": "tests/integration/relation-storage.test.ts",
+          "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619",
+          "bytes": 29130
+        },
+        {
+          "path": "tests/integration/relations.test.ts",
+          "sha256": "eef1490ff12eae279018027edfdbbbd9dee2bae739cf925e82f16fd81ecba760",
+          "bytes": 55982
+        }
+      ],
+      "static_declarations_and_source_coordinates_verified": 154,
+      "original_safe_report_retained_privately": {
+        "path": ".local/evidence/business-domains-hosted-attempt-1/development/behavior/api-summary.json",
+        "sha256": "e9b29c188d71fb91f7b5aead497624654096e87821ff48866a17463cf0292ff6",
+        "bytes": 26871
+      },
+      "publication_format": "The original safe API report remains unchanged/private because its digest-map representation has triggered secret-scanner false positives in prior publication. The canonical path/hash array above preserves all20 source bindings without republishing that serialization. No scanner suppression or rewritten original is used.",
+      "raw_hosted_error_availability": "NOT_EXPORTED: raw TAP/error text, actual/expected values and per-loop table/iteration are unavailable. The artifact records only safe bounded source coordinates; no precise hosted SQL error or root cause is established."
+    },
+    "browser": {
+      "status": "SKIPPED_AFTER_SECURITY_FAILURE",
+      "executed_journeys": 0,
+      "screenshots": 0
+    },
+    "skipped_later_stages": [
+      "asset_type_upgrade",
+      "browser",
+      "business_domain_seed",
+      "business_domains_upgrade",
+      "model_upgrade",
+      "relation_participation_upgrade",
+      "relations_upgrade",
+      "type_migration_upgrade"
+    ],
+    "dependency_inventory": {
+      "decisionCounts": {
+        "ALLOW": 311,
+        "REVIEWED_EXCEPTION": 5
+      },
+      "limitations": [
+        "Installed pnpm development host profile only; platform-specific uninstalled optional packages are outside this inventory.",
+        "Not a finished-artifact SBOM. Image OS layers, Python distributions, external drivers and model weights require separate qualification.",
+        "ALLOW identifies a policy-compatible declared license; required notices must still be preserved in each distribution."
+      ],
+      "lockSha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829",
+      "outcome": "PASS",
+      "packages": 316,
+      "unresolved": 0
+    },
+    "secret_scan": {
+      "command": "python3 policies/scan_secrets.py --install",
+      "commit": "23c610201015a8c9bc013fd41b0febf7f5047215",
+      "limitations": [
+        "Detection by pinned gitleaks rules is not proof that every possible secret is absent.",
+        "Scans publishable files, excluding ignored runtime secrets/dependencies and this newly generated safe summary; history covers every reachable revision.",
+        "The source snapshot hash identifies uncommitted files tested; a supported release must rerun at its exact final commit.",
+        "Tool checksum verification is against pinned official release metadata; no independent signing/provenance claim."
+      ],
+      "outcome": "PASS",
+      "platform": {
+        "architecture": "x86_64",
+        "system": "Linux"
+      },
+      "publishable_files_scanned": 787,
+      "results": [
+        {
+          "exit_code": 0,
+          "finding_count": 0,
+          "findings": [],
+          "outcome": "PASS",
+          "scope": "publishable_worktree"
+        },
+        {
+          "exit_code": 0,
+          "finding_count": 0,
+          "findings": [],
+          "outcome": "PASS",
+          "scope": "reachable_git_history"
+        }
+      ],
+      "schema_version": 1,
+      "timestamp": "2026-11-16T04:09:29.487105+00:00",
+      "tool": "gitleaks",
+      "tool_pin": "policies/security-tools.json",
+      "tool_version": "8.30.1",
+      "working_tree_manifest_sha256": "f24f600182a17dbefdbdfd683f2cd80f877261e178e94dd48315783fcc2530e3",
+      "worktree_dirty": false
+    },
+    "archive_observations": [
+      {
+        "name": "behavior-23c610201015a8c9bc013fd41b0febf7f5047215",
+        "uiObservedSha256": "5c35ebb2d603bc2210c9db928996591a606c6eda903708cd4ae87b34a7decb48"
+      },
+      {
+        "name": "dependency-inventory-23c610201015a8c9bc013fd41b0febf7f5047215",
+        "uiObservedSha256": "2232d615c87ca6a8f48695ae26e406b9c5d8c9d216bd753b851560e6ee72f3ae"
+      },
+      {
+        "name": "secret-scan-23c610201015a8c9bc013fd41b0febf7f5047215",
+        "uiObservedSha256": "43f8f13b381fd0abb7943ce9e8c5c929ae0442338332c4ecca3fce4b88206250"
+      }
+    ],
+    "qualification_observed_at": "2026-11-16T04:21:37.843418+00:00"
+  },
+  "diagnostic_separation": {
+    "status": "LOCAL_MECHANISMS_OBSERVED_HOSTED_CAUSE_NOT_PROVEN",
+    "private_handoff": {
+      "path": ".local/evidence/business-domains-hosted-attempt-1/development/storage-diagnostic-handoff.json",
+      "sha256": "50b948bc186d891d17ba503a4e3a26b5df0922683336c7e6c7559fbf5a1eaf04"
+    },
+    "observations": [
+      "Later local rollback-only diagnostics show legitimate projector delivery can change outbox processed_at/attempts while immutable event payloads stay equal; the hosted business-domain storage test compared all columns.",
+      "Later local keyed diagnostics observe domain reserved success deletion rejecting23514 and graph success deletion rejecting42501. Both records remain immutable. The hosted graph test attempted a tenant-wide delete, so its expected first error depended on which protected family PostgreSQL encountered.",
+      "These local observations demonstrate fragile test assumptions. They do not recover the missing hosted raw errors or prove which mechanism caused each recorded hosted failure."
+    ],
+    "repair_qualification": "NOT_CLAIMED: subsequent test-only changes and affected runtime qualifications belong to separate records. No new test, scanner, Docker or application execution occurred in this consolidation."
+  },
+  "static_validation": {
+    "source_validator": {
+      "bytes": 13411,
+      "path": ".local/evidence/business-domains-hosted-attempt-1/source/verify-private-evidence.py",
+      "sha256": "4dc900dd5cf8e7686a3172782364ac7ee84fd423682d777ab8872a2dc61f1cde"
+    },
+    "development_validator": {
+      "bytes": 9653,
+      "path": ".local/evidence/business-domains-hosted-attempt-1/development/verify-private-evidence.py",
+      "sha256": "b09f2a22e913dddc76c77916ddfc2e882bfa33019a2766019cd93c50624e1aef"
+    },
+    "method": "Executed the provided original static assertions with write hooks replaced in memory by equality checks against existing reports; only generated verifiedAt was normalized for comparison. Original scripts and reports stayed byte-identical. No network calls were added.",
+    "source_result": "PASS",
+    "development_result": "PASS",
+    "source_blobs_verified": 787,
+    "api_test_files_verified": 20,
+    "api_source_coordinates_verified": 154,
+    "initial_wrapper_attempt": {
+      "status": "FAILED_METADATA_PATH_SETUP",
+      "cause": "The in-memory wrapper initially supplied relative __file__, causing Path.relative_to to reject validator self-recording. The correction used the original absolute script path; no report/source mutation or product failure occurred. The subsequent complete static revalidation passed."
+    }
+  },
+  "private_provenance": [
+    {
+      "path": ".local/evidence/business-domains-hosted-attempt-1/source/source-qualification-handoff.json",
+      "sha256": "00bfe253a85971254c5280e7712a02c405b40e13582e5caf0f9c460638e123a4"
+    },
+    {
+      "path": ".local/evidence/business-domains-hosted-attempt-1/development/development-qualification-handoff.json",
+      "sha256": "af1b1d3798fc022175b0c38f153d23f18cf1be5ed0fd4724ddc03edd45d5173d"
+    }
+  ],
+  "public_originals": [
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/actions/actions-summary.json",
+      "sha256": "3a8620f0dbf9e246ff9c95c0b5130b6212d41f47fa35b9bc38086a5e4d7b7341",
+      "bytes": 4152,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/actions/actions-summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/actions/actions.sarif",
+      "sha256": "b32348f29f1a7447485752e91ef41ed75bc0e346981fba644d539c23eb1ffc52",
+      "bytes": 231167,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/actions/actions.sarif",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/actions/source-manifest.json",
+      "sha256": "92afcca44d78a591a1733e4d13e462e726b773a27d92c7eaabefe4cee91baf29",
+      "bytes": 169506,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/actions/source-manifest.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/actions/summary.json",
+      "sha256": "80fef09ea0ca8cd47f37344132ea4b93f298430a689877d736952ff81fb9a178",
+      "bytes": 6255,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/actions/summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/actions/upload-status.json",
+      "sha256": "bc72eb2f0ea1819a57c2a88a050dd6ce8b528ecae984cfc8555df973505533b8",
+      "bytes": 290,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/actions/upload-status.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/python/python-summary.json",
+      "sha256": "7bc4f8a489ef77f930c73c220d80860da8d21215d4822f1aad04a64d0e1830d2",
+      "bytes": 4623,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/python/python-summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/python/python.sarif",
+      "sha256": "a2452657f5ab757feb8cbc2f166487b1d139d8564d1065cbe9ac29e3b63931f6",
+      "bytes": 305854,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/python/python.sarif",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/python/source-manifest.json",
+      "sha256": "92afcca44d78a591a1733e4d13e462e726b773a27d92c7eaabefe4cee91baf29",
+      "bytes": 169506,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/python/source-manifest.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/python/summary.json",
+      "sha256": "96aa56042886bcecb80f604c15f673259fb1ed6e5721f007cb797e22ff0022b0",
+      "bytes": 6788,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/python/summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/python/upload-status.json",
+      "sha256": "0fa2927e5b86d4859c3e71c3cd3db14f22b1bd147a11b41a9c58e834b2245dee",
+      "bytes": 289,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/python/upload-status.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/javascript-typescript/javascript-typescript-summary.json",
+      "sha256": "acbe96235d35efff95e27949f05332b327db90e88fc66217c9bcba3ccbdc7b89",
+      "bytes": 7049,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/javascript-typescript/javascript-typescript-summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/javascript-typescript/javascript-typescript.sarif",
+      "sha256": "5c8f1e71c0ae64436bbb8c6a6bfb74a101351b7141e0ac97a55ac0a71eaf5d06",
+      "bytes": 498226,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/javascript-typescript/javascript-typescript.sarif",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/javascript-typescript/source-manifest.json",
+      "sha256": "92afcca44d78a591a1733e4d13e462e726b773a27d92c7eaabefe4cee91baf29",
+      "bytes": 169506,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/javascript-typescript/source-manifest.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/javascript-typescript/summary.json",
+      "sha256": "364d051f502d71e1ae0b8debe151c8131a6b2026fdd463b5242f1868fdbb1074",
+      "bytes": 9538,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/javascript-typescript/summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/security/sast-evidence/business-domains-attempt-1/javascript-typescript/upload-status.json",
+      "sha256": "692ac45674f321eac755fe01d4b557d13fd36a8b31bf4be430814ae1255d4441",
+      "bytes": 304,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/source/javascript-typescript/upload-status.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/business-domains-hosted-attempt-1/behavior/behavior-summary.json",
+      "sha256": "e46da26a7fb2563e97bd165912d0ed1321917927b7c3285b04dbdf09757f2654",
+      "bytes": 1144,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/development/behavior/behavior-summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/business-domains-hosted-attempt-1/dependency-inventory/dependency-inventory.json",
+      "sha256": "f69a7881dac6f18a70ab9054c51b1ff11361ec251011eae042fd0225d925d14d",
+      "bytes": 196104,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/development/dependency-inventory/dependency-inventory.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/business-domains-hosted-attempt-1/secret-scan/secret-scan.json",
+      "sha256": "a4bc8e675d71eb6301692ea3801071cee55395bd382ed177cd684d8b3dfe4421",
+      "bytes": 1381,
+      "original_private_path": ".local/evidence/business-domains-hosted-attempt-1/development/secret-scan/secret-scan.json",
+      "byte_identical": true
+    }
+  ],
+  "limitations": [
+    "Source remains blocked by seven high open findings and Development remains failed at152/154. Extraction success, evidence integrity, local diagnostics and previous local154-API/19-browser passes do not convert this invocation to PASS.",
+    "All six upgrade gates, business-domain seed verification and browser were skipped after the failed security stage. No browser journey, capture, visual review, upgrade or seed-recovery pass is claimed for this attempt.",
+    "Only the reported test-source runtime comparison is available; there is no full application-image source/digest proof in the safe API artifact.",
+    "Raw hosted errors and private TAP were not exported. No application vulnerability, SQL correction need or exact hosted failure mechanism is inferred from safe source coordinates alone.",
+    "The supplied artifact ZIP digests were observed by root in public UI. Extracted files are retained and rehashed; ZIP bytes were not retained or independently rehashed.",
+    "Stored CodeQL metadata and ref-scoped alerts are point-in-time readbacks. Their published artifact SARIF is copied byte-identically; stored SARIF bytes were not independently downloaded.",
+    "Expected extraction path sets and coverage-query/source hashes were verified, but raw BQRS/decoded path tables and resolved query lists were not exported, so those digests were not recomputed.",
+    "Dependency inventory covers316 installed development-host packages only, with311 ALLOW and5 REVIEWED_EXCEPTION decisions and zero unresolved entries; it is not a distribution SBOM or complete image/Python/driver license qualification.",
+    "The original pinned Gitleaks report passes worktree and reachable-history scans with zero findings; that is not proof every secret is absent. A new publication-candidate scan remains pending root integration.",
+    "No new hosted metadata request, source mutation, runtime/scanner/test execution or human security sign-off occurred during this consolidation. Full specification, later repairs, scoped authority and release remain open."
+  ]
+}

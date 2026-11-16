@@ -183,6 +183,11 @@ export async function fixture(options:{principal?:Principal;definition?:Partial<
 }
 export async function snapshot(p=principal){return scope(p.tenantId,p.id,async tx=>{
  const result:Row={};for(const table of ['domain_types','domain_type_versions','domain_type_dependencies','domains','domain_revisions','asset_domain_placements','asset_domain_placement_revisions','domain_type_migrations','domain_type_migration_domains','audit','outbox','idempotency']){
-  const rows=await tx.selectFrom(table).selectAll().execute();result[table]=rows.sort((a,b)=>typeHash(a).localeCompare(typeHash(b)));}
+  // Delivery bookkeeping changes independently in the live outbox worker. Compare
+  // every immutable event field so rollback checks still detect inserts or edits.
+  const rows=table==='outbox'
+   ?await tx.selectFrom(table).select(['tenant_id','id','event_type','resource_id','resource_version','payload','created_at']).execute()
+   :await tx.selectFrom(table).selectAll().execute();
+  result[table]=rows.sort((a,b)=>typeHash(a).localeCompare(typeHash(b)));}
  result.epoch=(await sql<{value:string}>`SELECT gc_domain_scope_epoch() value`.execute(tx)).rows[0]!.value;return result;
 });}

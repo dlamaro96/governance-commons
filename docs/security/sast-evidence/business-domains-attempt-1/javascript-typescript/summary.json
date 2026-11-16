@@ -1,0 +1,264 @@
+{
+  "analysis": "PASS",
+  "bundleSha256": "89ed56c8ec6bfccef6a0d2e7fe86da0469ca24b4db08b88016ec134b942c17a4",
+  "configurationSha256": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+  "containerImages": null,
+  "dirty": false,
+  "durationSeconds": 132.225,
+  "findingsGate": "BLOCKED",
+  "finishedAt": "2026-11-16T04:12:01.746179+00:00",
+  "freeDiskBytesAtFinish": 89248079872,
+  "head": "23c610201015a8c9bc013fd41b0febf7f5047215",
+  "invocation": {
+    "entrypoint": "policies/sast.py",
+    "language": "javascript-typescript",
+    "platform": "linux-x64"
+  },
+  "languages": {
+    "javascript-typescript": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": null,
+      "coverage": {
+        "databaseFiles": 206,
+        "expectedFiles": 181,
+        "extractedExpectedFiles": 181,
+        "extractedPathsDigest": "fd4fc181a6003620c20c21d77893b9d3ecebb40bfe3602d6e891367099063455"
+      },
+      "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+      "dirty": false,
+      "extractorRuntime": "v24.22.3",
+      "findings": [
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "c381e3ebdc3358b68db0e3c8518e68c1ba1624db8c4f2bb73e58fd4a63a545be",
+          "line": 347,
+          "path": "tests/integration/business-domains-api.test.ts",
+          "ruleId": "js/incomplete-sanitization",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "a38cb8c3b551444e0b2a4fcb77e8869eb15e2825e78b385da4fadaf55952e667",
+          "line": 348,
+          "path": "tests/integration/business-domains-api.test.ts",
+          "ruleId": "js/incomplete-sanitization",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "a38cb8c3b551444e0b2a4fcb77e8869eb15e2825e78b385da4fadaf55952e667",
+          "line": 348,
+          "path": "tests/integration/business-domains-api.test.ts",
+          "ruleId": "js/incomplete-sanitization",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "b84f2f320e4a3f8acc4a8dff5d3b0e6f8ff679d324fcc496c7ed4a03953b2856",
+          "line": 28,
+          "path": "tests/unit/business-domain-http-validation.test.ts",
+          "ruleId": "js/reflected-xss",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "67400d46c3bad166679ee95a9290436f13adbf57a3f8a27890d6941c53a9da3c",
+          "line": 30,
+          "path": "tests/unit/business-domain-http-validation.test.ts",
+          "ruleId": "js/reflected-xss",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "d22e645a31af1a1acb8c1ea23e3b9bdeac783ed2d1dfa3f47e863e23327eaa19",
+          "line": 88,
+          "path": "tests/unit/business-domain-http-validation.test.ts",
+          "ruleId": "js/reflected-xss",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "9d361558173a4e8d3d8fe6eab9658bf2d25c5d23312a41b81071a67b115575b1",
+          "line": 91,
+          "path": "tests/unit/business-domain-http-validation.test.ts",
+          "ruleId": "js/reflected-xss",
+          "severity": "high",
+          "sourceSuppressed": false
+        }
+      ],
+      "findingsGate": "BLOCKED",
+      "head": "23c610201015a8c9bc013fd41b0febf7f5047215",
+      "language": "javascript-typescript",
+      "lastMemoryAdmission": {
+        "availableBytes": 15564337152,
+        "finiteCgroupLimits": [],
+        "hostAvailableBytes": 15564337152,
+        "inheritedSoftLimitBytes": {},
+        "physicalBytes": 16760344576,
+        "requiredAvailableBytes": 6442450944,
+        "status": "ADMITTED",
+        "system": "Linux"
+      },
+      "library": "codeql/javascript-all",
+      "libraryVersion": "3.0.0",
+      "publishedSarifSha256": "5c8f1e71c0ae64436bbb8c6a6bfb74a101351b7141e0ac97a55ac0a71eaf5d06",
+      "queryCount": 105,
+      "queryPack": "codeql/javascript-queries",
+      "querySetDigest": "213bda4e81b066a5b255ff54cd70bbac5caaafe63742af25eeb890308d3c28dd",
+      "queryVersion": "2.5.0",
+      "rawSarifSha256": "88a3c699f6807eaae1ed57010c3545f9727e033ec7cf50f2406c99bc2b19b14d",
+      "resources": {
+        "hardMemoryLimitBytes": null,
+        "mode": "NATIVE",
+        "ramSemantics": "CodeQL evaluator/extractor request, not a hard process cap",
+        "requestedRamMiB": 4096,
+        "reserveMiB": 2048,
+        "threads": 2
+      },
+      "schemaVersion": 1,
+      "sourceDigest": "15345b20c4dcbf7a7001be69f4714c251d4a2abbd87bcbb1cbc04e3bf07ca803",
+      "steps": [
+        {
+          "durationSeconds": 0.251,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15623585792,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15623585792,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "extractor-runtime"
+        },
+        {
+          "durationSeconds": 0.752,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15623622656,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15623622656,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "version"
+        },
+        {
+          "durationSeconds": 1.752,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15620288512,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15620288512,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 27.8,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15629312000,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15629312000,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 68.074,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15222673408,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15222673408,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 25.787,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15619543040,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15619543040,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.752,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15564337152,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15564337152,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16760344576,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    }
+  },
+  "limitations": [
+    "No hosted ingestion or analysis read-back in this command.",
+    "SQL/RLS, dependencies, images and general IaC are outside this source scan.",
+    "Automated findings do not replace independent security review."
+  ],
+  "nativePackageScope": {
+    "mode": "EXPLICIT_COMMONJS",
+    "packageSha256": "7d38de102f9d211b8a221ab5943610473c4b23aeee36e9a9cf0e22848e04b9d4"
+  },
+  "outcome": "NOT_PASSED",
+  "platform": "linux-x64",
+  "policySha256": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+  "purpose": "REPOSITORY_SOURCE",
+  "runnerSha256": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7",
+  "schemaVersion": 1,
+  "scope": "SINGLE_LANGUAGE",
+  "sourceDigest": "15345b20c4dcbf7a7001be69f4714c251d4a2abbd87bcbb1cbc04e3bf07ca803",
+  "startedAt": "2026-11-16T04:09:49.521218+00:00",
+  "triageSha256": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+  "upload": "NOT_ATTEMPTED"
+}

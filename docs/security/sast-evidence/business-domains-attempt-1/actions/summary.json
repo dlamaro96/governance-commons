@@ -1,0 +1,177 @@
+{
+  "analysis": "PASS",
+  "bundleSha256": "89ed56c8ec6bfccef6a0d2e7fe86da0469ca24b4db08b88016ec134b942c17a4",
+  "configurationSha256": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+  "containerImages": null,
+  "dirty": false,
+  "durationSeconds": 28.173,
+  "findingsGate": "PASS",
+  "finishedAt": "2026-11-16T04:10:11.880868+00:00",
+  "freeDiskBytesAtFinish": 93417431040,
+  "head": "23c610201015a8c9bc013fd41b0febf7f5047215",
+  "invocation": {
+    "entrypoint": "policies/sast.py",
+    "language": "actions",
+    "platform": "linux-x64"
+  },
+  "languages": {
+    "actions": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": null,
+      "coverage": {
+        "databaseFiles": 2,
+        "expectedFiles": 2,
+        "extractedExpectedFiles": 2,
+        "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+      },
+      "coverageQuerySha256": "aad6da298334a842bea221711b0e7c8b1c4864ce2c66632e4d93c846742a4505",
+      "dirty": false,
+      "findings": [],
+      "findingsGate": "PASS",
+      "head": "23c610201015a8c9bc013fd41b0febf7f5047215",
+      "language": "actions",
+      "lastMemoryAdmission": {
+        "availableBytes": 15126560768,
+        "finiteCgroupLimits": [],
+        "hostAvailableBytes": 15126560768,
+        "inheritedSoftLimitBytes": {},
+        "physicalBytes": 16464302080,
+        "requiredAvailableBytes": 6442450944,
+        "status": "ADMITTED",
+        "system": "Linux"
+      },
+      "library": "codeql/actions-all",
+      "libraryVersion": "0.7.1",
+      "publishedSarifSha256": "b32348f29f1a7447485752e91ef41ed75bc0e346981fba644d539c23eb1ffc52",
+      "queryCount": 24,
+      "queryPack": "codeql/actions-queries",
+      "querySetDigest": "109c0f4a3b614aa9f782d403ecc45e5830ed72620e8fc1eeff93ae613bfb9f6e",
+      "queryVersion": "0.6.39",
+      "rawSarifSha256": "e50f3313d6a8aee9f6a486141110c9382d5116663e5ad57b9ec6be067a210688",
+      "resources": {
+        "hardMemoryLimitBytes": null,
+        "mode": "NATIVE",
+        "ramSemantics": "CodeQL evaluator/extractor request, not a hard process cap",
+        "requestedRamMiB": 4096,
+        "reserveMiB": 2048,
+        "threads": 2
+      },
+      "schemaVersion": 1,
+      "sourceDigest": "15345b20c4dcbf7a7001be69f4714c251d4a2abbd87bcbb1cbc04e3bf07ca803",
+      "steps": [
+        {
+          "durationSeconds": 0.501,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15322157056,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15322157056,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16464302080,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "version"
+        },
+        {
+          "durationSeconds": 1.001,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15317839872,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15317839872,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16464302080,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 3.505,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15335473152,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15335473152,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16464302080,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 8.011,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15216398336,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15216398336,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16464302080,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 10.518,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15274708992,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15274708992,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16464302080,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.501,
+          "exitCode": 0,
+          "memoryAdmission": {
+            "availableBytes": 15126560768,
+            "finiteCgroupLimits": [],
+            "hostAvailableBytes": 15126560768,
+            "inheritedSoftLimitBytes": {},
+            "physicalBytes": 16464302080,
+            "requiredAvailableBytes": 6442450944,
+            "status": "ADMITTED",
+            "system": "Linux"
+          },
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    }
+  },
+  "limitations": [
+    "No hosted ingestion or analysis read-back in this command.",
+    "SQL/RLS, dependencies, images and general IaC are outside this source scan.",
+    "Automated findings do not replace independent security review."
+  ],
+  "nativePackageScope": {
+    "mode": "EXPLICIT_COMMONJS",
+    "packageSha256": "7d38de102f9d211b8a221ab5943610473c4b23aeee36e9a9cf0e22848e04b9d4"
+  },
+  "outcome": "PASS",
+  "platform": "linux-x64",
+  "policySha256": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+  "purpose": "REPOSITORY_SOURCE",
+  "runnerSha256": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7",
+  "schemaVersion": 1,
+  "scope": "SINGLE_LANGUAGE",
+  "sourceDigest": "15345b20c4dcbf7a7001be69f4714c251d4a2abbd87bcbb1cbc04e3bf07ca803",
+  "startedAt": "2026-11-16T04:09:43.707892+00:00",
+  "triageSha256": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+  "upload": "NOT_ATTEMPTED"
+}
