@@ -105,8 +105,14 @@ def execute(h):
     measured = [row for row in frozen if row['path'].endswith('.ts')]
     probe = "const fs=require('node:fs'),crypto=require('node:crypto');console.log(JSON.stringify(" + json.dumps([row['path'] for row in measured]) + ".map(path=>({path,sha256:crypto.createHash('sha256').update(fs.readFileSync(path)).digest('hex')}))));"
     observed = json.loads(h.helper(['node', '-e', probe]).stdout)
-    require(observed == measured, 'Actual native helper source bytes differ')
-    h.report['nativeSourceReadback'] = {'result': 'PASS', 'files': len(measured), 'manifestSha256': sha(json.dumps(observed, sort_keys=True).encode())}
+    # A later isolated upgrader may mount an explicitly pinned predecessor.
+    # The actual filesystem readback is unchanged; only its declared expected
+    # source bytes are phase-aware. Standalone lineage remains identity-bound.
+    expected_sources = h.native_source_expectations(measured) if hasattr(h, 'native_source_expectations') else measured
+    require(observed == expected_sources, 'Actual native helper source bytes differ')
+    h.report['nativeSourceReadback'] = {'result': 'PASS', 'files': len(measured),
+                                      'checkoutManifestSha256': sha(json.dumps(measured, sort_keys=True).encode()),
+                                      'manifestSha256': sha(json.dumps(observed, sort_keys=True).encode())}
     expected = sum(len(re.findall(r'^test\(', (ROOT / name).read_text(), re.MULTILINE)) for name in TESTS)
     require(expected == 13, 'Expected thirteen native lineage cases')
     tested = h.helper(['node', '--import', 'tsx', '--test', '--test-reporter=tap', '--test-concurrency=1', *TESTS], timeout=180, allow_failure=True)

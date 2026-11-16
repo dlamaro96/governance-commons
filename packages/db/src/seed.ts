@@ -33,12 +33,13 @@ try {
   await client.query('BEGIN');
   await client.query("SELECT set_config('gc.tenant_id',$1,true),set_config('gc.actor_id',$2,true)",[tenant,id]);
   await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',[tenant]);
-  await client.query('SELECT gc_lock_type_migration_principals($1::uuid[])',[[id]]);
   const prior=await client.query('SELECT request_hash,response FROM idempotency WHERE tenant_id=$1 AND actor_id=$2 AND operation=$3 AND key=$4',[tenant,id,operation,key]);
   if(prior.rows.length) {
    const row=prior.rows[0];
    if(row.request_hash!==hash||Object.keys(row.response??{}).sort().join(',')!=='applied,dataset,version'||row.response?.dataset!==key||row.response?.version!==1||typeof row.response?.applied!=='boolean')throw Error('Synthetic permission marker conflicts with the declared seed.');
   } else {
+   // Existing receipts are immutable; a deleted persona must remain deleted on replay.
+   await client.query('SELECT gc_lock_type_migration_principals($1::uuid[])',[[id]]);
    const changed=await client.query(`UPDATE memberships m SET permissions=(SELECT jsonb_agg(DISTINCT value ORDER BY value)
     FROM jsonb_array_elements_text(m.permissions || $4::jsonb))
     WHERE m.tenant_id=$1 AND m.identity_id=$2 AND m.role=$3 AND m.active AND m.permissions @> $5::jsonb
@@ -63,6 +64,38 @@ try {
   if(prior.rows.length) {
    const row=prior.rows[0];
    if(row.request_hash!==hash||Object.keys(row.response??{}).sort().join(',')!=='applied,dataset,version'||row.response?.dataset!==key||row.response?.version!==1||typeof row.response?.applied!=='boolean')throw Error('Synthetic quality permission marker conflicts with the declared seed.');
+  } else {
+   // This owner-only seed path also records an ineligible/missing membership.
+   // The runtime principal-lock helper requires an existing actor membership;
+   // do not use it to recreate or implicitly reactivate a deleted persona.
+   await client.query('SELECT id FROM public.identities WHERE id=$1::uuid FOR UPDATE',[id]);
+   await client.query('SELECT identity_id FROM public.memberships WHERE tenant_id=$1::uuid AND identity_id=$2::uuid FOR UPDATE',[tenant,id]);
+   const changed=await client.query(`UPDATE public.memberships m SET permissions=(SELECT jsonb_agg(DISTINCT value ORDER BY value)
+    FROM jsonb_array_elements_text(m.permissions || $4::jsonb))
+    WHERE m.tenant_id=$1::uuid AND m.identity_id=$2::uuid AND m.role=$3 AND m.active AND m.permissions @> $5::jsonb
+    AND EXISTS(SELECT 1 FROM public.identities i WHERE i.id=m.identity_id AND i.active AND i.issuer=$6 AND i.subject=$2::text)
+    RETURNING m.identity_id`,[tenant,id,role,JSON.stringify(grants),JSON.stringify(baseline),process.env.OIDC_ISSUER??'http://localhost:4311/realms/governance']);
+   await client.query('INSERT INTO idempotency(tenant_id,actor_id,operation,key,request_hash,response) VALUES($1,$2,$3,$4,$5,$6)',
+    [tenant,id,operation,key,hash,JSON.stringify({dataset:key,version:1,applied:changed.rowCount===1})]);
+  }
+  await client.query('COMMIT');
+ }
+ // Keep the legacy persona arrays and domain-marker inputs unchanged. Classification
+ // permissions have their own one-time receipt; a later seed cannot restore a
+ // revoked classification permission or a deleted membership.
+ for(let i=0;i<personas.length;i++) {
+  const [role,,tenant,baseline]=personas[i],id='10000000-0000-4000-8000-'+String(i+1).padStart(12,'0');
+  if(role==='consumer')continue;
+  const grants=role==='auditor'?['classification:read']:['classification:read','classification:write','classification:approve'];
+  const operation='bootstrap.classification-permissions.v1',key='harbor-demo';
+  const hash=typeHash({dataset:key,identityId:id,role,permissions:grants});
+  await client.query('BEGIN');
+  await client.query("SELECT set_config('gc.tenant_id',$1,true),set_config('gc.actor_id',$2,true)",[tenant,id]);
+  await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',[tenant]);
+  const prior=await client.query('SELECT request_hash,response FROM idempotency WHERE tenant_id=$1 AND actor_id=$2 AND operation=$3 AND key=$4',[tenant,id,operation,key]);
+  if(prior.rows.length) {
+   const row=prior.rows[0];
+   if(row.request_hash!==hash||Object.keys(row.response??{}).sort().join(',')!=='applied,dataset,version'||row.response?.dataset!==key||row.response?.version!==1||typeof row.response?.applied!=='boolean')throw Error('Synthetic classification permission marker conflicts with the declared seed.');
   } else {
    // This owner-only seed path also records an ineligible/missing membership.
    // The runtime principal-lock helper requires an existing actor membership;

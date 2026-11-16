@@ -4,6 +4,7 @@ import {EmptyState,LoadingState,Notice} from '../../../../packages/ui/src';
 import type {ApprovalDefinition,ApprovalStageDefinition} from '../../../../packages/domain/src/approval-contracts';
 import type {ApprovalDefinitionView,ApprovalRequestSummary,ApprovalRequestView,ApprovalStatus,ApprovalTaskView} from '../../../../packages/domain/src/approval-service';
 import type {GlossaryTranslation} from '../../../../packages/domain/src/glossary-contracts';
+import type {ClassificationApprovalPayload} from '../../../../packages/domain/src/classification-contracts';
 import {parseApprovalDefinition} from '../../../../packages/domain/src/approval';
 import {api,ApiError,useResource} from '../api';
 import {PermissionDenied,RequestError} from '../components';
@@ -11,13 +12,16 @@ import {useLocale} from '../i18n';
 import {Link,useNavigation} from '../navigation';
 import {usePermission,useSession} from '../session';
 import {approvalsCopy} from './approvals-copy';
+import {classificationCopy} from '../classification/messages';
+import {Evidence,LabelPin} from '../classification/shared';
 import './approvals.css';
+import '../classification/classification.css';
 
 const useCopy=()=>{const {locale}=useLocale();return approvalsCopy[locale];};
 const statuses:ApprovalStatus[]=['pending','ready','rejected','cancelled','expired','succeeded','failed'];
 type Page<T>={items:T[];nextCursor:string|null};
 function Heading({title,description,actions}:{title:string;description?:string;actions?:ReactNode}){return <header className="page-header"><div><h1 id="main-heading" tabIndex={-1}>{title}</h1>{description&&<p className="page-description">{description}</p>}</div>{actions&&<div className="approval-actions">{actions}</div>}</header>;}
-function Badge({status}:{status:ApprovalStatus|'open'|'waiting'|'decided'}){const c=useCopy();return <span className="status-badge">{c[status]}</span>;}
+function Badge({status,binding}:{status:ApprovalStatus|'open'|'waiting'|'decided';binding?:ApprovalRequestSummary['binding']}){const c=useCopy();return <span className="status-badge">{status==='ready'&&binding==='classification.review'?c.classificationReady:c[status]}</span>;}
 function Panel({title,children}:{title:string;children:ReactNode}){return <section className="panel"><div className="panel-heading"><h2>{title}</h2></div><div className="panel-body">{children}</div></section>;}
 function Pager({first,next,workflow=false}:{first:string;next:string|null;workflow?:boolean}){const c=useCopy();return <nav className="approval-pagination" aria-label={workflow?c.workflows:c.approvals}><Link className="button secondary" href={first}>{c.first}</Link>{next&&<Link className="button secondary" href={next}>{c.next}</Link>}</nav>;}
 function Issues({error}:{error:Error|null}){const c=useCopy();return error instanceof ApiError&&error.issues.length?<Notice tone="error"><strong>{c.validation}</strong><ul className="approval-issues">{error.issues.map((issue,index)=><li key={index}><code>{issue.path||'/'}</code> — {issue.message}</li>)}</ul></Notice>:null;}
@@ -40,18 +44,18 @@ function useCommand<T>(success:(value:T)=>void){
 function CommandFeedback({command,reload}:{command:ReturnType<typeof useCommand<unknown>>;reload?:()=>void}){const c=useCopy();return <>{command.error&&<RequestError error={command.error} compact retry={command.retry}/>}<Issues error={command.error}/>{command.locked&&!command.busy&&<Notice>{c.retryNote}</Notice>}{command.error instanceof ApiError&&command.error.status===409&&reload&&<button className="button secondary" type="button" onClick={reload}>{c.reload}</button>}</>;}
 
 export function ApprovalsPage(){
- const c=useCopy(),{date}=useLocale(),{search,go}=useNavigation(),canRead=usePermission('catalog:read'),canWrite=usePermission('catalog:write'),permitted=canRead&&canWrite;
+ const c=useCopy(),{date}=useLocale(),{search,go}=useNavigation(),canRead=usePermission('catalog:read'),canWrite=usePermission('catalog:write'),canClassification=usePermission('classification:read'),permitted=canRead&&(canWrite||canClassification);
  const params=new URLSearchParams(search),status=params.get('status')??'pending',assigned=params.get('assignedToMe')!=='false',cursor=params.get('cursor');
  const selectors=new URLSearchParams({limit:'25',assignedToMe:String(assigned)});if(status&&status!=='all')selectors.set('status',status);if(cursor)selectors.set('cursor',cursor);
  const resource=useResource<Page<ApprovalRequestSummary>>(permitted?`/approval-requests?${selectors}`:null,15000);
  const location=(changes:Record<string,string|null>)=>{const next=new URLSearchParams(search);for(const[k,v]of Object.entries(changes)){if(v===null||v==='')next.delete(k);else next.set(k,v);}return '/approvals'+(next.size?'?'+next:'');};
  if(!permitted)return <PermissionDenied/>;
  return <><Heading title={c.inbox} description={c.inboxBody} actions={<button className="button secondary" onClick={resource.reload} disabled={resource.loading}>{c.refresh}</button>}/>
-  <div className="approvals-toolbar"><label className="form-field"><span>{c.status}</span><select value={status} onChange={e=>go(location({status:e.target.value||'all',cursor:null}))}><option value="all">{c.allStatuses}</option>{statuses.map(value=><option key={value} value={value}>{c[value]}</option>)}</select></label>
+  <div className="approvals-toolbar"><label className="form-field"><span>{c.status}</span><select value={status} onChange={e=>go(location({status:e.target.value||'all',cursor:null}))}><option value="all">{c.allStatuses}</option>{statuses.map(value=><option key={value} value={value}>{value==='ready'?c.readyAny:c[value]}</option>)}</select></label>
    <label className="checkbox-label"><input type="checkbox" checked={assigned} onChange={e=>go(location({assignedToMe:String(e.target.checked),cursor:null}))}/>{c.assigned}</label><span className="supporting-text">{c.allParticipants}</span></div>
   {resource.error?<RequestError error={resource.error} retry={resource.reload}/>:resource.loading&&!resource.data?<LoadingState label={c.loading}/>:resource.data?.items.length?<>
-   <ul className="approval-list">{resource.data.items.map(item=><li key={item.id}><div className="approval-list-heading"><h2><Link href={`/approvals/${item.id}`}>{c.request} <bdi className="mono">{item.id}</bdi></Link></h2><Badge status={item.status}/></div>
-    <dl className="approval-metadata"><div><dt>{c.pinned}</dt><dd>{item.workflowId} · {c.version} {item.workflowVersion}</dd></div><div><dt>{c.requester}</dt><dd><bdi className="mono">{item.requesterId}</bdi></dd></div><div><dt>{c.expires}</dt><dd>{date(item.expiresAt)}</dd></div></dl>
+   <ul className="approval-list">{resource.data.items.map(item=><li key={item.id}><div className="approval-list-heading"><h2><Link href={`/approvals/${item.id}`}>{c.request} <bdi className="mono">{item.id}</bdi></Link></h2><Badge status={item.status} binding={item.binding}/></div>
+    <dl className="approval-metadata"><div><dt>{c.reviewType}</dt><dd>{item.binding==='classification.review'?c.classificationProposal:c.proposal}</dd></div><div><dt>{c.pinned}</dt><dd>{item.workflowId} · {c.version} {item.workflowVersion}</dd></div><div><dt>{c.requester}</dt><dd><bdi className="mono">{item.requesterId}</bdi></dd></div><div><dt>{c.expires}</dt><dd>{date(item.expiresAt)}</dd></div></dl>
     {!item.preconditionsCurrent&&<p className="supporting-text">{c.stale}</p>}</li>)}</ul>
    <Pager first={location({cursor:null})} next={resource.data.nextCursor?location({cursor:resource.data.nextCursor}):null}/>
   </>:<EmptyState title={c.empty} description={c.emptyBody}/>}</>;
@@ -60,7 +64,7 @@ export function ApprovalsPage(){
 function WorkflowStages({definition}:{definition:ApprovalDefinition}){const c=useCopy(),{number}=useLocale();return <ol className="approval-stage-list">{definition.stages.map((stage,index)=><li className="approval-stage" key={stage.id}>
  <h3>{number(index+1)}. {stage.name}</h3><p className="supporting-text">{c.quorum}: {number(stage.quorum)} {c.of} {number(stage.assignments.length)} · {c.deadline}: {number(stage.deadlineSeconds)}</p><p className="supporting-text">{c.anyReject}</p>
  <p>{c.assignments}: {stage.assignments.map((assignment,i)=><span key={assignment}>{i>0?', ':''}<code>{assignment}</code></span>)}</p></li>)}</ol>;}
-function Proposal({request}:{request:ApprovalRequestView}){const c=useCopy(),{payload}=request;
+function GlossaryProposal({request}:{request:Extract<ApprovalRequestView,{binding:'glossary.publish'}>}){const c=useCopy(),{payload}=request;
  const translations=payload.attributes.translations as unknown as GlossaryTranslation[];
  const additional=Object.fromEntries(Object.entries(payload.attributes).filter(([key])=>key!=='translations'));
  return <div className="approval-proposal"><dl className="detail-list"><div><dt>{c.primaryLocale}</dt><dd><bdi>{payload.primaryLocale}</bdi></dd></div><div><dt>{c.owner}</dt><dd className="mono break-all">{payload.ownerId}</dd></div>
@@ -74,6 +78,20 @@ function Proposal({request}:{request:ApprovalRequestView}){const c=useCopy(),{pa
   <details><summary>{c.pins}</summary><dl className="detail-list"><div><dt>{c.type}</dt><dd className="mono break-all">{payload.typePin.typeId}</dd></div><div><dt>{c.model}</dt><dd>{payload.typePin.modelId} · {c.version} {payload.typePin.version}</dd></div><div><dt>{c.hash}</dt><dd className="mono break-all">{payload.typePin.definitionHash}</dd></div><div><dt>{c.resolutionHash}</dt><dd className="mono break-all">{payload.typePin.resolutionHash}</dd></div><div><dt>{c.proposalDigest}</dt><dd className="mono break-all">{request.proposalDigest}</dd></div></dl></details>
  </div>;
 }
+function ClassificationProposal({payload,digest}:{payload:ClassificationApprovalPayload;digest:string}){
+ const c=useCopy(),{locale,number}=useLocale(),labels=classificationCopy[locale];
+ return <div className="approval-proposal"><Notice>{labels.metadataOnly}</Notice>
+  <dl className="detail-list"><div><dt>{c.reviewType}</dt><dd>{payload.change==='apply'?c.classificationApply:c.classificationWithdraw}</dd></div>
+   <div><dt>{c.classificationAsset}</dt><dd><Link href={`/catalog/${payload.assetId}?tab=classification`}><bdi className="mono">{payload.assetId}</bdi></Link></dd></div>
+   <div><dt>{c.classificationSlot}</dt><dd className="mono break-all">{payload.assignmentId}</dd></div>
+   <div><dt>{labels.expectedVersion}</dt><dd>{number(payload.expectedAssignmentVersion)}</dd></div>
+   <div><dt>{c.classificationSuggestion}</dt><dd className="mono break-all">{payload.suggestionId}</dd></div>
+  </dl><h3>{labels.label}</h3><LabelPin label={payload.label}/>
+  {payload.change==='withdraw'&&<><h3>{labels.withdrawReason}</h3><p className="approval-reason">{payload.reason}</p></>}
+  <h3>{labels.evidence}</h3><Evidence value={payload.evidence} hash={payload.evidenceHash}/>
+  <dl className="detail-list"><div><dt>{c.proposalDigest}</dt><dd className="mono break-all">{digest}</dd></div></dl>
+ </div>;
+}
 function DecisionForm({task,request,locked,submit}:{task:ApprovalTaskView;request:ApprovalRequestView;locked:boolean;submit:(body:unknown)=>void}){
  const c=useCopy(),[reason,setReason]=useState(''),[choice,setChoice]=useState<'approve'|'reject'>('approve');
  const valid=!!reason.trim()&&reason.length<=4096;
@@ -82,18 +100,28 @@ function DecisionForm({task,request,locked,submit}:{task:ApprovalTaskView;reques
   <label className="form-field"><span>{c.decisions}</span><select value={choice} onChange={e=>setChoice(e.target.value as 'approve'|'reject')}><option value="approve">{c.approve}</option><option value="reject">{c.reject}</option></select></label><button className="button primary" type="submit" disabled={!valid}>{c[choice]}</button></fieldset></form>;
 }
 export function ApprovalPage({id}:{id:string}){
- const c=useCopy(),{date,number}=useLocale(),session=useSession(),catalogRead=usePermission('catalog:read'),catalogWrite=usePermission('catalog:write'),canRead=catalogRead&&catalogWrite,canModels=usePermission('models:read');
+ const c=useCopy(),{date,number,locale}=useLocale(),labels=classificationCopy[locale],session=useSession();
+ const catalogRead=usePermission('catalog:read'),catalogWrite=usePermission('catalog:write'),classificationRead=usePermission('classification:read');
+ const classificationApprove=usePermission('classification:approve'),classificationWrite=usePermission('classification:write'),canModels=usePermission('models:read');
+ const canRead=catalogRead&&(catalogWrite||classificationRead);
  const resource=useResource<{request:ApprovalRequestView}>(canRead?`/approval-requests/${id}`:null,15000);
  const [saved,setSaved]=useState(false),[cancelReason,setCancelReason]=useState('');
  const command=useCommand<{request:ApprovalRequestView}>(()=>{setSaved(true);setCancelReason('');resource.reload();});
  if(!canRead)return <PermissionDenied/>;if(resource.error)return <RequestError error={resource.error} retry={resource.reload}/>;if(!resource.data)return <LoadingState label={c.loading}/>;
- const request=resource.data.request,own=request.tasks.filter(task=>task.stageIndex===request.stageIndex&&task.status==='open'&&task.assignedIdentityId===session.user.id);
- return <><Link className="back-link" href="/approvals">{c.backInbox}</Link><Heading title={c.request} actions={<><Badge status={request.status}/><button className="button secondary" disabled={command.busy||resource.loading} onClick={resource.reload}>{c.refresh}</button></>}/>
-  {saved&&<Notice tone="success">{c.recorded}</Notice>}<CommandFeedback command={command} reload={resource.reload}/>{request.status==='pending'&&!request.preconditionsCurrent&&<Notice>{c.stale}</Notice>}{request.status==='ready'&&<Notice>{c.readyNote}</Notice>}{request.status==='succeeded'&&<Notice tone="success"><Link href={`/glossary/${request.resourceId}`}>{c.openResource}</Link></Notice>}{request.status==='failed'&&<Notice tone="error">{c.failedPublication}</Notice>}
-  <div className="approval-detail-grid"><div><Panel title={c.proposal}><Proposal request={request}/></Panel><Panel title={c.decisions}>{request.decisions.length?<ol className="approval-task-list">{request.decisions.map(decision=><li key={decision.id}><strong>{c[decision.decision]}</strong><p className="mono">{decision.actorId}</p><p className="approval-reason">{decision.reason}</p><small>{date(decision.decidedAt)} · {c.taskVersion} {number(decision.taskVersion)}</small></li>)}</ol>:<p>{c.noDecisions}</p>}</Panel></div>
+ const request=resource.data.request,isClassification=request.binding==='classification.review';
+ if(isClassification?!classificationRead:!catalogWrite)return <PermissionDenied/>;
+ const canDecide=isClassification?classificationApprove:catalogWrite,canCancel=isClassification?classificationWrite:catalogWrite;
+ const own=request.tasks.filter(task=>task.stageIndex===request.stageIndex&&task.status==='open'&&task.assignedIdentityId===session.user.id);
+ return <><Link className="back-link" href="/approvals">{c.backInbox}</Link><Heading title={c.request} actions={<><Badge status={request.status} binding={request.binding}/><button className="button secondary" disabled={command.busy||resource.loading} onClick={resource.reload}>{c.refresh}</button></>}/>
+  {saved&&<Notice tone="success">{c.recorded}</Notice>}<CommandFeedback command={command} reload={resource.reload}/>
+  {request.status==='pending'&&!request.preconditionsCurrent&&<Notice>{c.stale}</Notice>}
+  {request.status==='ready'&&<Notice>{isClassification?c.classificationReadyNote:c.readyNote}</Notice>}
+  {request.status==='succeeded'&&(request.binding==='classification.review'?(request.result?<Notice tone="success"><p>{request.result.status==='active'?c.classificationApplied:c.classificationWithdrawn} · {labels.assignmentVersion} {number(request.result.assignmentVersion)}</p><Link href={`/catalog/${request.result.assetId}?tab=classification`}>{c.openResource}</Link></Notice>:<Notice tone="error">{c.classificationResultUnavailable}</Notice>):<Notice tone="success"><Link href={`/glossary/${request.resourceId}`}>{c.openResource}</Link></Notice>)}
+  {request.status==='failed'&&<Notice tone="error">{isClassification?c.classificationFailed:c.failedPublication}</Notice>}
+  <div className="approval-detail-grid"><div><Panel title={isClassification?c.classificationProposal:c.proposal}>{request.binding==='classification.review'?<ClassificationProposal payload={request.payload} digest={request.proposalDigest}/>:<GlossaryProposal request={request}/>}</Panel><Panel title={c.decisions}>{request.decisions.length?<ol className="approval-task-list">{request.decisions.map(decision=><li key={decision.id}><strong>{c[decision.decision]}</strong><p className="mono">{decision.actorId}</p><p className="approval-reason">{decision.reason}</p><small>{date(decision.decidedAt)} · {c.taskVersion} {number(decision.taskVersion)}</small></li>)}</ol>:<p>{c.noDecisions}</p>}</Panel></div>
    <div><Panel title={c.requestDetails}><dl className="detail-list"><div><dt>{c.request}</dt><dd className="mono break-all">{request.id}</dd></div><div><dt>{c.requester}</dt><dd className="mono break-all">{request.requesterId}</dd></div><div><dt>{c.stage}</dt><dd>{number(request.stageIndex+1)} {c.of} {number(request.workflow.definition.stages.length)}</dd></div><div><dt>{c.expires}</dt><dd>{date(request.expiresAt)}</dd></div><div><dt>{c.version}</dt><dd>{number(request.version)}</dd></div></dl>
-    {request.status==='pending'&&<><ul className="approval-task-list">{request.tasks.filter(task=>task.stageIndex===request.stageIndex).map(task=><li key={task.id}><strong>{task.assignment}</strong> <Badge status={task.status}/><p className="mono">{task.assignedIdentityId}</p><small>{c.expires}: {date(task.expiresAt)}</small>{own.some(item=>item.id===task.id)&&<DecisionForm task={task} request={request} locked={command.locked} submit={body=>{setSaved(false);command.submit(`/approval-requests/${id}/decisions`,body);}}/>}</li>)}</ul>{!own.length&&<p className="supporting-text">{c.noAssignedTask}</p>}</>}
-    {request.status==='pending'&&request.requesterId===session.user.id&&<details className="approval-cancel"><summary>{c.cancel}</summary><p>{c.cancelHint}</p><form onSubmit={e=>{e.preventDefault();if(cancelReason.trim()&&!command.locked){setSaved(false);command.submit(`/approval-requests/${id}/cancel`,{proposalDigest:request.proposalDigest,reason:cancelReason});}}}><label className="form-field"><span>{c.cancelReason}</span><textarea value={cancelReason} required maxLength={4096} disabled={command.locked} onChange={e=>setCancelReason(e.target.value)}/></label><button className="button secondary" disabled={command.locked||!cancelReason.trim()}>{command.busy?c.sending:c.cancel}</button></form></details>}
+    {request.status==='pending'&&<><ul className="approval-task-list">{request.tasks.filter(task=>task.stageIndex===request.stageIndex).map(task=><li key={task.id}><strong>{task.assignment}</strong> <Badge status={task.status}/><p className="mono">{task.assignedIdentityId}</p><small>{c.expires}: {date(task.expiresAt)}</small>{canDecide&&own.some(item=>item.id===task.id)&&<DecisionForm key={`${request.proposalDigest}:${task.id}:${task.version}`} task={task} request={request} locked={command.locked} submit={body=>{setSaved(false);command.submit(`/approval-requests/${id}/decisions`,body);}}/>}</li>)}</ul>{!own.length&&<p className="supporting-text">{c.noAssignedTask}</p>}{own.length>0&&!canDecide&&<Notice>{c.classificationDecisionPermission}</Notice>}</>}
+    {request.status==='pending'&&canCancel&&request.requesterId===session.user.id&&<details className="approval-cancel"><summary>{c.cancel}</summary><p>{c.cancelHint}</p><form onSubmit={e=>{e.preventDefault();if(cancelReason.trim()&&!command.locked){setSaved(false);command.submit(`/approval-requests/${id}/cancel`,{proposalDigest:request.proposalDigest,reason:cancelReason});}}}><label className="form-field"><span>{c.cancelReason}</span><textarea value={cancelReason} required maxLength={4096} disabled={command.locked} onChange={e=>setCancelReason(e.target.value)}/></label><button className="button secondary" disabled={command.locked||!cancelReason.trim()}>{command.busy?c.sending:c.cancel}</button></form></details>}
    </Panel><Panel title={c.pinned}><h3>{request.workflow.definition.name}</h3><p>{canModels?<Link href={`/workflows/${encodeURIComponent(request.workflowId)}?version=${request.workflowVersion}`}>{request.workflowId} · {c.version} {number(request.workflowVersion)}</Link>:<>{request.workflowId} · {c.version} {number(request.workflowVersion)}</>}</p><WorkflowStages definition={request.workflow.definition}/>{request.workflow.definition.separationOfDuties&&<p className="supporting-text">{c.sodHint}</p>}</Panel></div></div>
  </>;
 }
