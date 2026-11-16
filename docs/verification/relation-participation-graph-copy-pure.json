@@ -1,0 +1,826 @@
+{
+  "schema_version": 1,
+  "result": "PASS",
+  "scope": "Graph asset preparation copier correction: before/after inherited-setter reproductions, complete pure suite and root/web typechecks. This is scoped development verification, not a scanner, runtime or release outcome.",
+  "recorded_at": "2026-11-16T00:07:48.113369+00:00",
+  "checks": [
+    {
+      "name": "root-unit",
+      "command": [
+        "pnpm",
+        "test"
+      ],
+      "started_at": "2026-11-16T00:07:42.468062+00:00",
+      "finished_at": "2026-11-16T00:07:46.809058+00:00",
+      "exit_code": 0,
+      "log": ".local/evidence/graph-copier-review/root-unit.log",
+      "log_sha256": "8c99aad7470567144c6d8f81591e3b0f0ee6d274801e246ff703e4b28717304d",
+      "counts": {
+        "tests": 204,
+        "suites": 0,
+        "pass": 204,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 3745.154542
+      }
+    },
+    {
+      "name": "root-web-typecheck",
+      "command": [
+        "pnpm",
+        "typecheck"
+      ],
+      "started_at": "2026-11-16T00:07:46.809192+00:00",
+      "finished_at": "2026-11-16T00:07:48.041099+00:00",
+      "exit_code": 0,
+      "log": ".local/evidence/graph-copier-review/root-web-typecheck.log",
+      "log_sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "started_at": "2026-11-16T00:07:48.041411+00:00",
+      "finished_at": "2026-11-16T00:07:48.113369+00:00",
+      "exit_code": 0,
+      "log": ".local/evidence/graph-copier-review/diff-check.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source_snapshot": {
+    "files": [
+      {
+        "path": "apps/api/src/asset-type-migrations.ts",
+        "sha256": "02f530c3715801c222f4f98d65807f06d0b58d0193b05c6c4e9f3f0b78a00c92"
+      },
+      {
+        "path": "apps/api/src/asset-types.ts",
+        "sha256": "847e1a9492b79d45de5143aa80ff6e9f3e04fd898d934a2b15b8a46637902ac3"
+      },
+      {
+        "path": "apps/api/src/audit.ts",
+        "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+      },
+      {
+        "path": "apps/api/src/index.ts",
+        "sha256": "aa593b2e7f34bf4f94e5e0b3d312673f84992a7d09f96bd475f8a74431792c7e"
+      },
+      {
+        "path": "apps/api/src/model-http.ts",
+        "sha256": "78d176145b8713c5aca2797fad741653698c6f2439817fbf069d4842afcc5938"
+      },
+      {
+        "path": "apps/api/src/model-migrations.ts",
+        "sha256": "3d116bf6bc64ac3723f5aadef63d414f7920c584824a114e8bb6c2708d7129ad"
+      },
+      {
+        "path": "apps/api/src/models.ts",
+        "sha256": "d6212e6723236030f672cd67ce2f2de43b1e8f67216309f1a16c18dd257a0387"
+      },
+      {
+        "path": "apps/api/src/relation-migrations.ts",
+        "sha256": "f30df94c238f409afd303ea9e9dbd55a863e19702dc244798861dfc2b9aaa224"
+      },
+      {
+        "path": "apps/api/src/relations.ts",
+        "sha256": "0124c9190396dbcddf14ebb3fae67128ebaa97865aba97dc6b46000654f2b974"
+      },
+      {
+        "path": "apps/api/src/repository.ts",
+        "sha256": "0bbb03ae711f9bcac7c04b15e85871c27016b575c50514f2076ec7793dae6cdb"
+      },
+      {
+        "path": "apps/api/src/search.ts",
+        "sha256": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d"
+      },
+      {
+        "path": "apps/api/src/security.ts",
+        "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+      },
+      {
+        "path": "apps/site-runner/src/index.ts",
+        "sha256": "d865e76e317ec784bd7c90cff4f11555022e73948f2a8a571a761a0b9a2df6d7"
+      },
+      {
+        "path": "apps/web/src/App.tsx",
+        "sha256": "62709418804355c5c5ab14c5e2ebbce7c7ce22f2a9a69f5e33b8e30ed93b9cdf"
+      },
+      {
+        "path": "apps/web/src/api.ts",
+        "sha256": "62ca221c1b8ba76a0d20f89699735129768890419a13f8f3a0338b213197bac9"
+      },
+      {
+        "path": "apps/web/src/assetTypes/DefinitionEditor.tsx",
+        "sha256": "9cc48f54c315abe5886704086e40323464432c0296bf0d38ed9ff0ffbbb32f0a"
+      },
+      {
+        "path": "apps/web/src/assetTypes/LifecyclePanel.tsx",
+        "sha256": "cc72e38f95de507c8def9f069deacc3bcfb607dc3a7f4e21b8d616be1a1bea07"
+      },
+      {
+        "path": "apps/web/src/assetTypes/TypeMigrationPolicyEditor.tsx",
+        "sha256": "a42f5da323a3a2587c39d1fb53939e359057aff4e48d5ecf8bf8b112e49d267a"
+      },
+      {
+        "path": "apps/web/src/assetTypes/contracts.ts",
+        "sha256": "30219291a4a91b6bc62bb460c839d274b14926d88e6bd1c8cbe7713a1bc7ed20"
+      },
+      {
+        "path": "apps/web/src/assetTypes/messages.ts",
+        "sha256": "2217173a00d9f9ac2548ba1dd3a983d032f0495fb03f7457cccd9b35c57a7516"
+      },
+      {
+        "path": "apps/web/src/assetTypes/migrationMessages.ts",
+        "sha256": "d876d2eeaa69153e4c44a7e5e56a74136e16cd5c4b131407a8cb472667e992d8"
+      },
+      {
+        "path": "apps/web/src/components.tsx",
+        "sha256": "217df6f66523f65accc3269304660c6ac90db9b84e4ce46937e3d546864f4187"
+      },
+      {
+        "path": "apps/web/src/i18n.tsx",
+        "sha256": "939d1ece45df055a510061ebfaa7c6c4c82e820ad62159bb1d2910fd1f815036"
+      },
+      {
+        "path": "apps/web/src/main.tsx",
+        "sha256": "666b70ce5765a222777738d2b1f9120c1d2c2914daa96de87574853fb65e475c"
+      },
+      {
+        "path": "apps/web/src/models/AssetAttributes.tsx",
+        "sha256": "553c2ef43d1463fd60a511b2570049e9eae8437e9f37e72b10802392fa50fbb5"
+      },
+      {
+        "path": "apps/web/src/models/MigrationPlanEditor.tsx",
+        "sha256": "3e4cb6d421007ec6be00ec64f3ed3574dadcb1072450fa642bd5eeaf278469df"
+      },
+      {
+        "path": "apps/web/src/models/ModelBrowser.tsx",
+        "sha256": "c1452c9b036daec1e0ff8d49f58a276a3dcd6917098fd300c2bf834657017830"
+      },
+      {
+        "path": "apps/web/src/models/ModelFeedback.tsx",
+        "sha256": "6aceb40423dda70a7b9337431e4840adc030da01f50a6a3f296207f26170affb"
+      },
+      {
+        "path": "apps/web/src/models/SchemaEditor.tsx",
+        "sha256": "c028b4d34d4ee84bc9250b718f2ed1aff5b7f881be29a0fe1cde7ff0da82ca06"
+      },
+      {
+        "path": "apps/web/src/models/ValueFields.tsx",
+        "sha256": "fd0980ca3945be050410da3040a5e7f5cabf55edf372eef4ee9ef1532741335d"
+      },
+      {
+        "path": "apps/web/src/models/VersionPicker.tsx",
+        "sha256": "95781b042c066ebe9e8cd1af841eeb80e6166146e588ac94280038b514756660"
+      },
+      {
+        "path": "apps/web/src/models/contracts.ts",
+        "sha256": "a0204509d5e69bf1974288399098b334564c7d4cc9b001a004d2aa804630f18e"
+      },
+      {
+        "path": "apps/web/src/models/messages.ts",
+        "sha256": "667433010425fa8a457de9edc47a797e828e819b748ef0566736a040cc0bcb5f"
+      },
+      {
+        "path": "apps/web/src/models/migrationMessages.ts",
+        "sha256": "808cb94cbeccb5617a8fddb59dce1f14d214f32b01e787ad0d7ca5b00eb072dc"
+      },
+      {
+        "path": "apps/web/src/models/planMessages.ts",
+        "sha256": "244916806562a9046bce7f4bb364990842f02975c5e17df14d4c57a8f207039f"
+      },
+      {
+        "path": "apps/web/src/navigation.tsx",
+        "sha256": "d15a75f39edb92ee626bd0682353466b433f5be7cb5104bc1b0a256a7d61913c"
+      },
+      {
+        "path": "apps/web/src/pages/Asset.tsx",
+        "sha256": "cce8f52bf64921efbd2234e762af305177d92385e61d8e2e8deb40b94784186d"
+      },
+      {
+        "path": "apps/web/src/pages/AssetTypeMigrations.tsx",
+        "sha256": "bb23a2ee373fcfceb30f47bb29878302552a0505390ed520b13c1ae98e7d4929"
+      },
+      {
+        "path": "apps/web/src/pages/AssetTypes.tsx",
+        "sha256": "bb034cd0d6532378553976e1e7fafbd1c5dc844fae69f9a38454d477d9c5046f"
+      },
+      {
+        "path": "apps/web/src/pages/Audit.tsx",
+        "sha256": "01484216a2ee1a0b7b96e8d9480e85f962165da4ebde4a461ac821af6dccee88"
+      },
+      {
+        "path": "apps/web/src/pages/Catalog.tsx",
+        "sha256": "259126c8daccae7b8eb692cf15a2cef8cd359ee12318c0940a2c39fea3f763ed"
+      },
+      {
+        "path": "apps/web/src/pages/Home.tsx",
+        "sha256": "bb08cf9f5b6d107de73ee3dee400ccd0392f4a826811ab6000a224669d1f0f05"
+      },
+      {
+        "path": "apps/web/src/pages/ModelMigrations.tsx",
+        "sha256": "cc23198090ba7896bb9d5c684dca255df57d4b75dad9fe8752810be95ac804aa"
+      },
+      {
+        "path": "apps/web/src/pages/Models.tsx",
+        "sha256": "1860307f05c7c5b31d309ba42996a555486030eacce3f5bc110cba88ba8a2f48"
+      },
+      {
+        "path": "apps/web/src/pages/Relation.tsx",
+        "sha256": "bac63985a62d0680cd25eab940dd09bb0fb8c0673d5ab9cca2d1b04561787c59"
+      },
+      {
+        "path": "apps/web/src/pages/RelationMigrations.tsx",
+        "sha256": "147e05ca2fcc0476cfee4f02dbf5a79f2d103642386fb1c7d8dc39d8adbdebb6"
+      },
+      {
+        "path": "apps/web/src/pages/RelationTypes.tsx",
+        "sha256": "972c4734ffcf09058c082558b257b202336b2a3aadaf03f58812463f59759288"
+      },
+      {
+        "path": "apps/web/src/pages/Sources.tsx",
+        "sha256": "5df5464c6baea87b932433b9fe4dbf9d52cdc0073369598cdc4feb4c40a82f42"
+      },
+      {
+        "path": "apps/web/src/relations/AssetRelations.tsx",
+        "sha256": "7b678d89693c30c9a5107da05233e55d93962151238ba174270954462982cfe3"
+      },
+      {
+        "path": "apps/web/src/relations/MigrationPlanEditor.tsx",
+        "sha256": "46b938bcf4ae8ed8f392cb30662262a5313ff7cf7f8ee3bcc2128614520e5bd9"
+      },
+      {
+        "path": "apps/web/src/relations/Participation.tsx",
+        "sha256": "0636d2bf61a4b0110b2c0849400be5f51ee3b3fccd8df86e20a34fa3f98a28df"
+      },
+      {
+        "path": "apps/web/src/relations/RelationForm.tsx",
+        "sha256": "c23c6534f1d3be1fe327dcbf0cadf79659e6d76a4df5051f79a0c097f0e5e25f"
+      },
+      {
+        "path": "apps/web/src/relations/RelationGraph.tsx",
+        "sha256": "2f6c1bba61718d08c9df7eaa2f3022de847fdecdcc8c87c9e0052a01517ecd13"
+      },
+      {
+        "path": "apps/web/src/relations/TypeEditor.tsx",
+        "sha256": "b993657b02a54c4b057238a8ea6f361acded6c46c7f8b11a1f65ca97a7f9ccdf"
+      },
+      {
+        "path": "apps/web/src/relations/messages.ts",
+        "sha256": "0bc37f4eef26c574d531dcad5fafd9fd65f8802e60c1ad7dc56329eb2c5305dc"
+      },
+      {
+        "path": "apps/web/src/relations/shared.tsx",
+        "sha256": "d94f857ea6b2eb44ea370e4348696a914d7a9099541524b0d9a5867391cba55f"
+      },
+      {
+        "path": "apps/web/src/session.tsx",
+        "sha256": "8194132b7f7b979ea515bf8eab8eb9b00c1f4b7699f16740352cbf84a1165cea"
+      },
+      {
+        "path": "apps/web/src/types.ts",
+        "sha256": "2c121eba06c772d494ae715a03ea8a473ed4f23ffea6748b3fd361b4804e14c7"
+      },
+      {
+        "path": "apps/web/src/vite-env.d.ts",
+        "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+      },
+      {
+        "path": "apps/web/vite.config.ts",
+        "sha256": "be49a3fcab78673178e11c775172a65ab07bb80cf95c50f093189929b08b1044"
+      },
+      {
+        "path": "apps/workflow-worker/src/index.ts",
+        "sha256": "2da4bad00e77a37caa9d24fc140b1d88dabe96300ccc78f9c957299484220d15"
+      },
+      {
+        "path": "apps/workflow-worker/src/workflows.ts",
+        "sha256": "627720148248703a529fbdc2ddf819aff348f8e09f89e0496852761ac0f737a4"
+      },
+      {
+        "path": "package.json",
+        "sha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7"
+      },
+      {
+        "path": "packages/authz/src/index.ts",
+        "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "sha256": "8d23a38cad9af4c69471b6369d1106382e34518f1b13a00be6590ee6e28bb453"
+      },
+      {
+        "path": "packages/db/src/index.ts",
+        "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+      },
+      {
+        "path": "packages/db/src/migrate.ts",
+        "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+      },
+      {
+        "path": "packages/db/src/seed.ts",
+        "sha256": "f871502f2215b538199df0a4aef501954a7f558b249311d6cb3b1129c763c151"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-contracts.ts",
+        "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-service.ts",
+        "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration.ts",
+        "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+      },
+      {
+        "path": "packages/domain/src/asset-type-policy.ts",
+        "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+      },
+      {
+        "path": "packages/domain/src/asset-type-service.ts",
+        "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/cursor.ts",
+        "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-persistence.ts",
+        "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-preparation.ts",
+        "sha256": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49"
+      },
+      {
+        "path": "packages/domain/src/model-migration-service.ts",
+        "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+      },
+      {
+        "path": "packages/domain/src/model-service.ts",
+        "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "57fde5df7d27d3b63e645ead707cd131290378ebe924dbb328d1db5b45bb254a"
+      },
+      {
+        "path": "packages/domain/src/relation-contracts.ts",
+        "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+      },
+      {
+        "path": "packages/domain/src/relation-endpoint-guard.ts",
+        "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+      },
+      {
+        "path": "packages/domain/src/relation-graph.ts",
+        "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-contracts.ts",
+        "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-read.ts",
+        "sha256": "0e4658b243540a3871afb458e592f78d510885cafa5453ab128f4ec86131d7d5"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-service.ts",
+        "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-store.ts",
+        "sha256": "88a4a077f99eb22c3a8a7b6eeaeb97a5b5909ea2e864e9570f2d18200768fb41"
+      },
+      {
+        "path": "packages/domain/src/relation-migration.ts",
+        "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+      },
+      {
+        "path": "packages/domain/src/relation-participation-read.ts",
+        "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+      },
+      {
+        "path": "packages/domain/src/relation-participation.ts",
+        "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+      },
+      {
+        "path": "packages/domain/src/relation-service.ts",
+        "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+      },
+      {
+        "path": "packages/domain/src/relation-store.ts",
+        "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+      },
+      {
+        "path": "packages/domain/src/relation.ts",
+        "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+      },
+      {
+        "path": "tests/unit/asset-type-migration.test.ts",
+        "sha256": "1757639171aaea4eee56a020009cca3d20df193af4be026a4b52f58afef7c99d"
+      },
+      {
+        "path": "tests/unit/asset-type-policy.test.ts",
+        "sha256": "3a16e214f96bd105f73e26610244355aa9973f4a5f1d9c931606953a659685ee"
+      },
+      {
+        "path": "tests/unit/asset-type.test.ts",
+        "sha256": "bf88f0e64f5b038957837a4e8031efd2ef09a6149af37068fcdf21f71e479aff"
+      },
+      {
+        "path": "tests/unit/audit.test.ts",
+        "sha256": "5aa3b0ac05a755e7eebfee74d5ed9d0aa776e133315d5f235823b9c7a6349501"
+      },
+      {
+        "path": "tests/unit/authz.test.ts",
+        "sha256": "9f6bad0b18e4025df11f9f4dc61f13f6db47ac42aa6f0cf23d0cea359c8c6b7d"
+      },
+      {
+        "path": "tests/unit/cursor.test.ts",
+        "sha256": "a4afac623ce94760dc7d9d654d61fb82e017655ec7dbf9ed9eb7fece19f9ca6b"
+      },
+      {
+        "path": "tests/unit/graph-asset-preparation.test.ts",
+        "sha256": "8ac01346fe84c66c3ab27bd5a4de2dc9d07a1c3614be3fe158a4d0605d7bae29"
+      },
+      {
+        "path": "tests/unit/json-envelope.test.ts",
+        "sha256": "fe6eae3e6ba41a3922f70f6b480428ce6f08e428dc543d746fb02df2b7a8ab21"
+      },
+      {
+        "path": "tests/unit/model-migration-file.test.ts",
+        "sha256": "130db7830dfc09286dce285721747bfbe1ebf61c411630c92b77ee05e8ad0929"
+      },
+      {
+        "path": "tests/unit/model-migration.test.ts",
+        "sha256": "dc6c42b66be1d6ff5215e9ae096682376be0e41d999f73c86f3fc2250ba658b0"
+      },
+      {
+        "path": "tests/unit/model.test.ts",
+        "sha256": "bbdfc4842bd1c0496344f306ed7aea1dd9a371fe59e570d08c3d45eaa834118c"
+      },
+      {
+        "path": "tests/unit/relation-failure.test.ts",
+        "sha256": "52f7ca924c81e89ea748974a9be2091465f9a1ec49e8a4ea12d67fd4e33a194c"
+      },
+      {
+        "path": "tests/unit/relation-migration-preconditions.test.ts",
+        "sha256": "09be8172caf4e301fc398a373dbbe993b5f1a9d16b1f753baed8a346de3925c0"
+      },
+      {
+        "path": "tests/unit/relation-migration-ui.test.ts",
+        "sha256": "5e5ce0c298ca4b181198b0abe76bd126922d39871320b75c031b11ed8adf1fb3"
+      },
+      {
+        "path": "tests/unit/relation-migration.test.ts",
+        "sha256": "31aab099bb90d9795854bb264b8ee01cd2a4670ccd14fcb5d4a5be7882a5dc02"
+      },
+      {
+        "path": "tests/unit/relation-participation-read.test.ts",
+        "sha256": "b9d15989a5ad281772703282a9d71d2eb18e746ad41bffa7e1adfebc4bce08ed"
+      },
+      {
+        "path": "tests/unit/relation-participation.test.ts",
+        "sha256": "f8a36fffff339d7051f828cdd924738cade588833a941e829712b51d21b2bb3d"
+      },
+      {
+        "path": "tests/unit/relation-preparation-read.test.ts",
+        "sha256": "c2b6d11062618d1a8688bf66dac5eb91b11c7489682319a9bde372a21e1f0591"
+      },
+      {
+        "path": "tests/unit/relation.test.ts",
+        "sha256": "737b1f133fdd950ba0dd5a379ae257acd5046e3af35cb7a8672354e44d05f4af"
+      },
+      {
+        "path": "tsconfig.json",
+        "sha256": "a123b4fe43b17517d14b6b839781d3e3f1745ea6c368f24d9f8aaccb602382b3"
+      }
+    ],
+    "before_after_matched": true,
+    "current_checkout_readback": {
+      "recorded_at": "2026-11-16T00:13:02.823660+00:00",
+      "matched": 115,
+      "mismatched": 0
+    },
+    "implementation_commit_binding": "PENDING",
+    "changed_source_hashes": {
+      "packages/domain/src/graph-asset-preparation.ts": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49",
+      "tests/unit/graph-asset-preparation.test.ts": "8ac01346fe84c66c3ab27bd5a4de2dc9d07a1c3614be3fe158a4d0605d7bae29"
+    }
+  },
+  "inherited_setter_reproductions": [
+    {
+      "implementation": "old",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "tests/unit/graph-asset-preparation.test.ts"
+      ],
+      "isolated_directory": ".local/evidence/graph-copier-review/old",
+      "started_at": "2026-11-16T00:07:12.376597+00:00",
+      "finished_at": "2026-11-16T00:07:12.773075+00:00",
+      "exit_code": 1,
+      "counts": {
+        "tests": 15,
+        "suites": 0,
+        "pass": 13,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 223.830375
+      },
+      "private_log": {
+        "path": ".local/evidence/graph-copier-review/old-focused-final.log",
+        "sha256": "ad9d338879b1a5effe355663b695ea5e1746f758bd1f70db79c7e5bf1821126b"
+      },
+      "sources": [
+        {
+          "path": "packages/domain/src/asset-type-migration-contracts.ts",
+          "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+        },
+        {
+          "path": "packages/domain/src/asset-type-migration-service.ts",
+          "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+        },
+        {
+          "path": "packages/domain/src/asset-type-migration.ts",
+          "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+        },
+        {
+          "path": "packages/domain/src/asset-type-policy.ts",
+          "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+        },
+        {
+          "path": "packages/domain/src/asset-type-service.ts",
+          "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+        },
+        {
+          "path": "packages/domain/src/asset-type.ts",
+          "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+        },
+        {
+          "path": "packages/domain/src/cursor.ts",
+          "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+        },
+        {
+          "path": "packages/domain/src/graph-asset-persistence.ts",
+          "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+        },
+        {
+          "path": "packages/domain/src/graph-asset-preparation.ts",
+          "sha256": "02ff22563d5433a1847025ebb9a5551f102375035bc4471f8a0f61f515c287dd"
+        },
+        {
+          "path": "packages/domain/src/model-migration-service.ts",
+          "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+        },
+        {
+          "path": "packages/domain/src/model-migration.ts",
+          "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+        },
+        {
+          "path": "packages/domain/src/model-service.ts",
+          "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+        },
+        {
+          "path": "packages/domain/src/model.ts",
+          "sha256": "57fde5df7d27d3b63e645ead707cd131290378ebe924dbb328d1db5b45bb254a"
+        },
+        {
+          "path": "packages/domain/src/relation-contracts.ts",
+          "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+        },
+        {
+          "path": "packages/domain/src/relation-endpoint-guard.ts",
+          "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+        },
+        {
+          "path": "packages/domain/src/relation-graph.ts",
+          "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-contracts.ts",
+          "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-read.ts",
+          "sha256": "0e4658b243540a3871afb458e592f78d510885cafa5453ab128f4ec86131d7d5"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-service.ts",
+          "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-store.ts",
+          "sha256": "88a4a077f99eb22c3a8a7b6eeaeb97a5b5909ea2e864e9570f2d18200768fb41"
+        },
+        {
+          "path": "packages/domain/src/relation-migration.ts",
+          "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+        },
+        {
+          "path": "packages/domain/src/relation-participation-read.ts",
+          "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+        },
+        {
+          "path": "packages/domain/src/relation-participation.ts",
+          "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+        },
+        {
+          "path": "packages/domain/src/relation-service.ts",
+          "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+        },
+        {
+          "path": "packages/domain/src/relation-store.ts",
+          "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+        },
+        {
+          "path": "packages/domain/src/relation.ts",
+          "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+        },
+        {
+          "path": "tests/unit/graph-asset-preparation.test.ts",
+          "sha256": "8ac01346fe84c66c3ab27bd5a4de2dc9d07a1c3614be3fe158a4d0605d7bae29"
+        }
+      ]
+    },
+    {
+      "implementation": "new",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "tests/unit/graph-asset-preparation.test.ts"
+      ],
+      "isolated_directory": ".local/evidence/graph-copier-review/new",
+      "started_at": "2026-11-16T00:07:12.773119+00:00",
+      "finished_at": "2026-11-16T00:07:12.945252+00:00",
+      "exit_code": 0,
+      "counts": {
+        "tests": 15,
+        "suites": 0,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 133.110041
+      },
+      "private_log": {
+        "path": ".local/evidence/graph-copier-review/new-focused-final.log",
+        "sha256": "f8ef13780e27385ad39048000a2ed320a7184463df43ff1a0dad9dcf83326fee"
+      },
+      "sources": [
+        {
+          "path": "packages/domain/src/asset-type-migration-contracts.ts",
+          "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+        },
+        {
+          "path": "packages/domain/src/asset-type-migration-service.ts",
+          "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+        },
+        {
+          "path": "packages/domain/src/asset-type-migration.ts",
+          "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+        },
+        {
+          "path": "packages/domain/src/asset-type-policy.ts",
+          "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+        },
+        {
+          "path": "packages/domain/src/asset-type-service.ts",
+          "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+        },
+        {
+          "path": "packages/domain/src/asset-type.ts",
+          "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+        },
+        {
+          "path": "packages/domain/src/cursor.ts",
+          "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+        },
+        {
+          "path": "packages/domain/src/graph-asset-persistence.ts",
+          "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+        },
+        {
+          "path": "packages/domain/src/graph-asset-preparation.ts",
+          "sha256": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49"
+        },
+        {
+          "path": "packages/domain/src/model-migration-service.ts",
+          "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+        },
+        {
+          "path": "packages/domain/src/model-migration.ts",
+          "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+        },
+        {
+          "path": "packages/domain/src/model-service.ts",
+          "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+        },
+        {
+          "path": "packages/domain/src/model.ts",
+          "sha256": "57fde5df7d27d3b63e645ead707cd131290378ebe924dbb328d1db5b45bb254a"
+        },
+        {
+          "path": "packages/domain/src/relation-contracts.ts",
+          "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+        },
+        {
+          "path": "packages/domain/src/relation-endpoint-guard.ts",
+          "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+        },
+        {
+          "path": "packages/domain/src/relation-graph.ts",
+          "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-contracts.ts",
+          "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-read.ts",
+          "sha256": "0e4658b243540a3871afb458e592f78d510885cafa5453ab128f4ec86131d7d5"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-service.ts",
+          "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-store.ts",
+          "sha256": "88a4a077f99eb22c3a8a7b6eeaeb97a5b5909ea2e864e9570f2d18200768fb41"
+        },
+        {
+          "path": "packages/domain/src/relation-migration.ts",
+          "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+        },
+        {
+          "path": "packages/domain/src/relation-participation-read.ts",
+          "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+        },
+        {
+          "path": "packages/domain/src/relation-participation.ts",
+          "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+        },
+        {
+          "path": "packages/domain/src/relation-service.ts",
+          "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+        },
+        {
+          "path": "packages/domain/src/relation-store.ts",
+          "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+        },
+        {
+          "path": "packages/domain/src/relation.ts",
+          "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+        },
+        {
+          "path": "tests/unit/graph-asset-preparation.test.ts",
+          "sha256": "8ac01346fe84c66c3ab27bd5a4de2dc9d07a1c3614be3fe158a4d0605d7bae29"
+        }
+      ]
+    }
+  ],
+  "private_execution_records": [
+    {
+      "path": ".local/evidence/graph-copier-review/root-execution.json",
+      "sha256": "873e8b457a30b47dccd572e5a1faaf662947cc0bbb586aee2c91e55ef35139f4"
+    },
+    {
+      "path": ".local/evidence/graph-copier-review/isolated-final-execution.json",
+      "sha256": "282920f3e8df5d15e0cfc90f33f72cfd82113461f70179e9adef16d9b7bb36d9"
+    }
+  ],
+  "patch_sha256": "db2ead3fbc265f818769a6ad51cadd2fd354c7e05b600061cd1933078a4e1ef0",
+  "limitations": [
+    "Pure tests and TypeScript only; no new SQL, API, browser or hosted qualification is inferred.",
+    "Initial isolated typecheck invocations were invalid (TypeScript 7 CLI requires --ignoreConfig; partial domain mirror lacks database/authz dependencies and explicit Node types). Those diagnostics are retained; this report records the real root/web typecheck separately.",
+    "The focused old-source failures remain failures: thirteen passing and two failing cases establish the demonstrated defect; the corrected isolated source passes all fifteen cases.",
+    "The earlier202-test report and its119-file source snapshot remain unchanged; this execution records204 tests with its own115-file source snapshot. Different snapshots must not be substituted for each other.",
+    "Current SQL/API/browser gates have separate executed-source and runtime records. Later binding to a commit does not imply a test rerun."
+  ]
+}

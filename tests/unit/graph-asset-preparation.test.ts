@@ -142,3 +142,44 @@ test('aggregate byte, revision and principal limits reject without partial succe
   const exhausted = input(); exhausted.before[0]!.assetVersion = 2_147_483_647; bad(exhausted, 'limit');
   const owners = input(); owners.activeOwnerIds = new Set(Array.from({ length: 2002 }, (_, i) => `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`)); bad(owners, 'limit');
 });
+
+test('data-only envelope preserves own fields without inherited setter or read-only interception', () => {
+  const request = input(); let calls = 0;
+  assert.equal(Object.getOwnPropertyDescriptor(Object.prototype, 'assetChanges'), undefined);
+  assert.equal(Object.getOwnPropertyDescriptor(Object.prototype, 'modelHeads'), undefined);
+  let result: ReturnType<typeof projectGraphAssetChanges>;
+  Object.defineProperty(Object.prototype, 'assetChanges', { configurable: true, set() { calls++; } });
+  Object.defineProperty(Object.prototype, 'modelHeads', { configurable: true, value: 'inherited read-only field', writable: false });
+  try { result = projectGraphAssetChanges(request); }
+  finally { Reflect.deleteProperty(Object.prototype, 'assetChanges'); Reflect.deleteProperty(Object.prototype, 'modelHeads'); }
+  assert.equal(calls, 0);
+  const projected = ok(result!);
+  assert.equal(projected.changes.length, 1);
+  assert.equal(projected.changes[0]!.after.modelVersion, 1);
+  assert.equal(Object.getPrototypeOf(projected.changes[0]!.after), Object.prototype);
+});
+
+test('preserved nested JSON keeps own literals and dense arrays despite inherited setters and read-only fields', () => {
+  const request = transition(); let calls = 0;
+  const attributes = { observations: [7, { graphPreparationLiteral: 'own literal', graphPreparationFixed: 'own fixed literal' }, 11] };
+  request.before[0]!.tuple.attributes = attributes;
+  assert.equal(Object.getOwnPropertyDescriptor(Object.prototype, 'graphPreparationLiteral'), undefined);
+  assert.equal(Object.getOwnPropertyDescriptor(Object.prototype, 'graphPreparationFixed'), undefined);
+  let result: ReturnType<typeof projectGraphAssetChanges>;
+  Object.defineProperty(Object.prototype, 'graphPreparationLiteral', { configurable: true, set() { calls++; } });
+  Object.defineProperty(Object.prototype, 'graphPreparationFixed', { configurable: true, value: 'inherited read-only literal', writable: false });
+  try { result = projectGraphAssetChanges(request); }
+  finally { Reflect.deleteProperty(Object.prototype, 'graphPreparationLiteral'); Reflect.deleteProperty(Object.prototype, 'graphPreparationFixed'); }
+  assert.equal(calls, 0);
+  const projected = ok(result!), after = projected.changes[0]!.after.attributes;
+  assert.deepEqual(after, attributes);
+  assert.notEqual(after, attributes);
+  const observations = after.observations as unknown[];
+  assert.equal(Object.getPrototypeOf(after), Object.prototype);
+  assert.equal(Object.getPrototypeOf(observations), Array.prototype);
+  assert.deepEqual(Object.keys(observations), ['0', '1', '2']);
+  assert.equal(Object.getPrototypeOf(observations[1]), Object.prototype);
+  assert.ok(Object.hasOwn(observations[1]!, 'graphPreparationLiteral'));
+  assert.ok(Object.hasOwn(observations[1]!, 'graphPreparationFixed'));
+  assert.ok(Object.isFrozen(observations));
+});

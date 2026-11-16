@@ -132,7 +132,7 @@ p { margin-bottom: 12px; }
 .results-meta { display: flex; gap: 16px; align-items: center; justify-content: space-between; color: var(--text-muted); padding: 11px 20px; font-size: 11px; min-height: 40px; }
 .results-meta strong { color: var(--text); }
 .results-meta > span:last-child:not(:first-child) { font-size: 10px; }
-.table-scroll { overflow-x: auto; outline-offset: -3px; max-width: 100%; }
+.table-scroll { position: relative; overflow-x: auto; outline-offset: -3px; max-width: 100%; }
 .data-grid { border-collapse: collapse; width: 100%; text-align: start; font-size: 12px; white-space: nowrap; }
 .data-grid th { background: var(--surface-subtle); color: var(--text-secondary); font-size: 10px; font-weight: 650; letter-spacing: .15px; padding: 10px 16px; text-align: start; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 .data-grid td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; height: var(--row-height); }

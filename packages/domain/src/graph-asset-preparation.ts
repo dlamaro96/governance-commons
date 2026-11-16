@@ -15,7 +15,6 @@ const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const identifier = /^[A-Za-z_][A-Za-z0-9_.-]{0,63}$/;
 const malformed = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/;
 const encoder = new TextEncoder();
-type Row = Record<string, any>;
 class Invalid extends Error {
   constructor(readonly issues: readonly ValidationIssue[]) { super('Invalid graph asset preparation'); }
 }
@@ -67,21 +66,21 @@ function freeze<T>(value: T): T {
 function copyInput(input: unknown): { data: Omit<GraphAssetPreparationInput, 'activeOwnerIds'>; active: ReadonlySet<string> } {
   need(input && typeof input === 'object' && [Object.prototype, null].includes(Object.getPrototypeOf(input)), 'invalid_json', '', 'Expected plain input data.');
   const names = ['assetChanges', 'typeMigrations', 'before', 'policies', 'modelHeads', 'activeOwnerIds'];
-  const outer: Row = {};
+  const outer = new Map<string, unknown>();
   for (const name of Reflect.ownKeys(input)) {
     need(typeof name === 'string' && names.includes(name), 'unknown_field', '', 'Unknown input field.');
     const descriptor = Object.getOwnPropertyDescriptor(input, name);
     need(descriptor?.enumerable && Object.hasOwn(descriptor, 'value'), 'invalid_json', '/' + name, 'Expected enumerable data properties.');
-    outer[name] = descriptor.value;
+    outer.set(name, descriptor.value);
   }
-  for (const name of names) need(Object.hasOwn(outer, name), 'required', '/' + name, 'Required input is missing.');
+  for (const name of names) need(outer.has(name), 'required', '/' + name, 'Required input is missing.');
   let size: number;
-  try { size = Object.getOwnPropertyDescriptor(Set.prototype, 'size')!.get!.call(outer.activeOwnerIds); }
+  try { size = Object.getOwnPropertyDescriptor(Set.prototype, 'size')!.get!.call(outer.get('activeOwnerIds')); }
   catch { return fail('invalid_json', '/activeOwnerIds', 'Expected a native owner-activity set.'); }
   need(size <= LIMIT.principals, 'limit', '/activeOwnerIds', 'The principal union exceeds its bound.');
   const active = new Set<string>();
-  Set.prototype.forEach.call(outer.activeOwnerIds, (value: unknown) => { id(value, '/activeOwnerIds'); active.add(value); });
-  delete outer.activeOwnerIds;
+  Set.prototype.forEach.call(outer.get('activeOwnerIds'), (value: unknown) => { id(value, '/activeOwnerIds'); active.add(value); });
+  outer.delete('activeOwnerIds');
   let bytes = 0, nodes = 0; const visiting = new Set<object>();
   const charge = (n: number, path: string) => { bytes += n; need(bytes <= LIMIT.bytes, 'limit', path, 'The aggregate preparation byte budget was exceeded.'); };
   const copy = (value: unknown, path: string, depth: number): any => {
@@ -102,7 +101,7 @@ function copyInput(input: unknown): { data: Omit<GraphAssetPreparationInput, 'ac
     const keys = Reflect.ownKeys(value);
     need(keys.length <= LIMIT.nodes, 'limit', path, 'The property budget was exceeded.');
     if (isArray) need(keys.length === value.length + 1, 'invalid_json', path, 'Sparse arrays and extra properties are not permitted.');
-    const output: any = isArray ? [] : {}; visiting.add(value); charge(2 + Math.max(0, keys.length - (isArray ? 2 : 1)), path);
+    const output = new Map<string, unknown>(); visiting.add(value); charge(2 + Math.max(0, keys.length - (isArray ? 2 : 1)), path);
     for (const name of keys) {
       if (isArray && name === 'length') continue;
       need(typeof name === 'string' && !['__proto__', 'constructor', 'prototype'].includes(name), 'invalid_json', path, 'Unsafe JSON key.');
@@ -111,11 +110,11 @@ function copyInput(input: unknown): { data: Omit<GraphAssetPreparationInput, 'ac
       const descriptor = Object.getOwnPropertyDescriptor(value, name);
       need(descriptor?.enumerable && Object.hasOwn(descriptor, 'value'), 'invalid_json', path + '/' + name, 'Expected enumerable data properties.');
       if (!isArray) charge(encoder.encode(JSON.stringify(name)).length + 1, path);
-      output[name] = copy(descriptor.value, path + '/' + name, depth + 1);
+      output.set(name, copy(descriptor.value, path + '/' + name, depth + 1));
     }
-    visiting.delete(value); return output;
+    visiting.delete(value); return isArray ? Array.from(output.values()) : Object.fromEntries(output);
   };
-  return { data: copy(outer, '', 0), active };
+  return { data: copy(Object.fromEntries(outer), '', 0), active };
 }
 
 function policyModel(policy: GraphAssetPolicyEvidence) { return policy.kind === 'authored' ? policy.resolution.model : policy.model; }

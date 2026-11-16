@@ -103,6 +103,53 @@ test('definition parser never calls accessors, array getters, toJSON or prototyp
   const nullPrototype = Object.assign(Object.create(null), definition()); ok(parseRelationTypeDefinition(nullPrototype));
 });
 
+test('relation copying creates own data fields without invoking inherited setters or read-only properties', () => {
+  const name = 'relation_inherited_copy_probe';
+  const previous = Object.getOwnPropertyDescriptor(Object.prototype, name);
+  let calls = 0;
+  const hostile: PropertyDescriptor[] = [
+    { configurable: true, set() { calls++; throw new Error('inherited setter must not execute'); } },
+    { configurable: true, value: 'inherited read-only sentinel', writable: false },
+  ];
+  for (const descriptor of hostile) {
+    const input = definition({ attributes: { [name]: { type: 'object', properties: {
+      [name]: { type: 'text' as const }, toString: { type: 'text' as const }, hasOwnProperty: { type: 'text' as const },
+    } } } });
+    Object.defineProperty(Object.prototype, name, descriptor);
+    try {
+      const result = parseRelationTypeDefinition(input);
+      assert.equal(calls, 0);
+      const parsed = ok(result);
+      assert.deepEqual(parsed.attributes, input.attributes);
+      assert.equal(Object.getPrototypeOf(parsed.attributes), Object.prototype);
+      assert.equal(Object.hasOwn(parsed.attributes, name), true);
+      const schema = parsed.attributes[name]; assert.equal(schema.type, 'object');
+      if (schema.type !== 'object') assert.fail('expected object schema');
+      for (const key of [name, 'toString', 'hasOwnProperty']) {
+        assert.equal(Object.hasOwn(schema.properties, key), true);
+        assert.equal(Object.getOwnPropertyDescriptor(schema.properties, key)?.enumerable, true);
+      }
+      assert.equal(Object.isFrozen(parsed.attributes), true);
+      assert.equal(Object.isFrozen(input.attributes), false);
+      assert.equal(Object.getPrototypeOf(parsed.sourceTypes), Array.prototype);
+      assert.equal(parsed.sourceTypes.length, 1);
+    } finally {
+      if (previous) Object.defineProperty(Object.prototype, name, previous);
+      else Reflect.deleteProperty(Object.prototype, name);
+    }
+  }
+  assert.equal(Object.getOwnPropertyDescriptor(Object.prototype, name), previous);
+});
+
+test('relation copying still rejects reserved prototype keys without changing shared prototypes', () => {
+  const before = Object.getOwnPropertyDescriptors(Object.prototype);
+  for (const name of ['__proto__', 'constructor', 'prototype']) {
+    const input = definition({ attributes: JSON.parse(`{"${name}":{"type":"text"}}`) });
+    fails(parseRelationTypeDefinition(input), 'invalid_json');
+  }
+  assert.deepEqual(Object.getOwnPropertyDescriptors(Object.prototype), before);
+});
+
 test('endpoint and state declaration sets are bounded and exact; undirected policies require symmetry', () => {
   fails(parseRelationTypeDefinition(definition({ sourceTypes: [] })), 'required', '/sourceTypes');
   fails(parseRelationTypeDefinition(definition({ sourceTypes: [...definition().sourceTypes, ...definition().sourceTypes] })), 'duplicate');

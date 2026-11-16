@@ -141,6 +141,7 @@ test('MOD: complete graph draft repairs positive participation, jointly assigns 
     const group = creations.getByRole('group', { name: `New assertions ${index + 1}`, exact: true });
     await group.getByRole('textbox', { name: 'Creation key', exact: true }).fill(`required_${index}`);
     await group.getByRole('combobox', { name: 'Source asset', exact: true }).selectOption(source.id);
+    await expect(group.getByRole('combobox', { name: 'Source asset', exact: true })).toHaveAccessibleDescription(`Asset revision: ${source.version}`);
     await group.getByRole('combobox', { name: 'Target asset', exact: true }).selectOption(f.endpoints[1 - index].id);
     await group.getByRole('textbox', { name: 'amount', exact: true }).fill(exactAmount);
   }
@@ -161,6 +162,8 @@ test('MOD: complete graph draft repairs positive participation, jointly assigns 
   await capture(page, 'joint-preview-en', '.graph-preview');
   await page.getByRole('button', { name: 'Colour theme: Dark', exact: true }).click(); await page.locator('#language').selectOption('ar');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl'); await expect(page.locator('.graph-preview').getByRole('heading', { name: 'معاينة الرسم الكامل', exact: true })).toBeVisible();
+  await expect(page.locator('.graph-preview').getByRole('cell', { name: 'أصل المصدر', exact: true })).toHaveCount(2);
+  await expect(page.locator('.graph-preview').getByRole('cell', { name: 'أصل الهدف', exact: true })).toHaveCount(2);
   await capture(page, 'joint-preview-ar-dark', '.graph-preview');
   await page.locator('#language').selectOption('en'); await page.getByRole('button', { name: 'Colour theme: Light', exact: true }).click();
   const receipt = await execute(page); expect(receipt.creations).toHaveLength(2); expect(receipt.enrollments).toHaveLength(4);

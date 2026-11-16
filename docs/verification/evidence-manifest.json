@@ -393,12 +393,64 @@
     },
     {
       "path": "docs/verification/m2-relation-participation-api.json",
-      "scope": "Bounded required participation and complete graph-operation core API/service execution;123 passing cases with76 actual-image source hashes; original failures and isolated-snapshot drift retained."
+      "scope": "Bounded required participation and complete graph-operation core API/service execution;123 passing cases with76 actual-image source hashes; original failures and isolated-snapshot drift retained.",
+      "source_binding": {
+        "implementation_commit": "46d5b57ca8ba102ee4939f98fce85f0d41ce9998",
+        "method": "All recorded source SHA256 digests matched committed Git blobs. Original execution time, image and dirty-worktree provenance preserved; no test rerun inferred.",
+        "verified_files": 76,
+        "evidence_sha256": "ca12d1992fd8b1b6e41e17f4dbb1eef00865fdd095d6e44f3e3813ef975422d0"
+      }
+    },
+    {
+      "path": "docs/verification/m2-relation-participation-expiry.json",
+      "scope": "Real fifteen-minute preparation expiry and completed-operation replay; one passing core HTTP/runtime case with82 recorded running-image source hashes.",
+      "source_binding": {
+        "implementation_commit": "46d5b57ca8ba102ee4939f98fce85f0d41ce9998",
+        "method": "All82 recorded source SHA256 digests matched committed Git blobs after execution. Original execution time and unchanged image preserved; later parser hardening is outside this snapshot.",
+        "verified_files": 82,
+        "evidence_sha256": "97a693c45694dc3ca0e91ca5fe54340f62fb85b2ba8009a33c6aca0588ce1773"
+      }
+    },
+    {
+      "path": "docs/verification/relation-participation-upgrade-final.json",
+      "scope": "Fresh post-parser-hardening SQL008-to009 preservation and SQL010 runtime regression: eight upgrade checks,20 storage and13 concurrency cases,51 exact mounted source hashes. Earlier public execution reports remain unchanged."
+    },
+    {
+      "path": "docs/verification/relation-participation-pure.json",
+      "scope": "Post-parser-hardening200 passing pure cases and root/web typecheck command, with119 source hashes matched before and after execution; no runtime or later-source qualification inferred."
+    },
+    {
+      "path": "docs/verification/relation-participation-pure-final.json",
+      "scope": "Fresh Map-copier correction snapshot:202 passing pure tests and root/web typechecks;119 source hashes matched before/after; runtime and hosted scanner qualification remain separate."
+    },
+    {
+      "path": "docs/verification/relation-participation-upgrade-security-regression.json",
+      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001\u2013010 unchanged; prior executions retained."
+    },
+    {
+      "path": "docs/verification/m2-relation-participation-api-final.json",
+      "scope": "Fresh Map-copier correction core API/storage execution:123 passing cases,76 actual-image source hashes; exact fifth attempt archived and earlier failures/passes retained. Targeted browser failure remains separate."
+    },
+    {
+      "path": "docs/verification/relation-participation-graph-copy-pure.json",
+      "scope": "Graph asset preparation copier correction:204 passing pure cases and root/web typechecks with115 stable source hashes; isolated old-source reproduction13 pass/2 fail and corrected source15 pass retained separately."
+    },
+    {
+      "path": "docs/verification/relation-participation-graph-copy-upgrade.json",
+      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001\u2013010 preserved and disposable database removed. Earlier reports retain their own exact snapshots."
+    },
+    {
+      "path": "docs/verification/m2-relation-participation-api-graph-copy.json",
+      "scope": "Fresh graph asset copier correction core API/storage execution:123 passing cases with76 actual-image source hashes; exact sixth attempt archived and earlier failures/passes retained. Browser and hosted outcomes remain separate."
+    },
+    {
+      "path": "docs/verification/m2-relation-participation-ui.json",
+      "scope": "Required participation UI: full16/16 browser journeys pass once with139 stable source hashes,22 served assets and76 API-source equivalents;16 new screenshots inspected, five separately spot-checked by root,95 historical PNGs preserved. All four targeted attempts retain their original outcomes and diagnostics."
     }
   ],
   "limitations": [
     "Passing scoped development gates does not complete compound baseline requirements.",
-    "M1 core local journey passes; full M0 repository/release and M2–M10 programme remain open.",
+    "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
   "bound_at": "2026-11-15T22:23:28.996008+00:00"

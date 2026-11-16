@@ -108,6 +108,8 @@ Domain-type files contain exactly `DomainTypeDefinition`; export then validate/i
 
 ## Canonical schema and storage obligations
 
+The adopted [SQL011 storage/service contract](BUSINESS_DOMAIN_STORAGE.md) fixes exact migration and ordinary-write preparation/seal envelopes, private claims, journal/deferred success proof and the original PostgreSQL `transaction_timestamp()` deadline. Ordinary preparation establishes the complete authorized lock union before canonical DML; idempotency/ledger waits cannot restart the deadline. These are implementation refinements, not executed storage evidence. SQL011 source work follows the current required-participation targeted/full browser gates; all qualification and broader programme limitations below remain open.
+
 Proposed tables, all with explicit `tenant_id`, forced RLS and composite references:
 
 | Table | Identity/current data | Immutable evidence and constraints |
