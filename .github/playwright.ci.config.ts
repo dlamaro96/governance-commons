@@ -26,5 +26,6 @@ export default defineConfig({
     { name: 'postgres-configuration', testMatch: /postgres-configuration\.spec\.ts/, dependencies: ['source-connectors'] },
     { name: 'approvals', testMatch: /approvals\.spec\.ts/, dependencies: ['postgres-configuration'] },
     { name: 'glossary', testMatch: /glossary\.spec\.ts/, dependencies: ['approvals'] },
+    { name: 'quality', testMatch: /quality\.spec\.ts/, dependencies: ['glossary'] },
   ],
 });

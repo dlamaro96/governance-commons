@@ -31,7 +31,10 @@ export function graphRequest(changeSet: GraphChangeSet): RelationMigrationContex
 
 /** One SQL closure, reused for authorization, scalar bounds and capture. Scope
  * projection resolves only nominal pins/lifecycles; attribute transformation is
- * deliberately later, so an invalid repair cannot conceal zero-degree assets. */
+ * deliberately later, so an invalid repair cannot conceal zero-degree assets.
+ * Materialized nominal candidates only avoid unrelated eligibility calls. Exact
+ * eligibility still uses pinned ancestry/state; explicit and incident assets
+ * enter independently, including untyped or currently ineligible endpoints. */
 function scopeCTE(p: Principal, request: RelationMigrationContextRequest, changeSet?: GraphChangeSet, sourceProof?: GlossaryGraphSourceProof) {
   const targets = request.relationTargets, direct = request.assetChanges.map(row => row.assetId), models = request.assetTypeMigrations.map(row => row.definition.id);
   const body = JSON.stringify({ changeSet: { ...request, relationTargets: [] } });
@@ -59,12 +62,26 @@ function scopeCTE(p: Principal, request: RelationMigrationContextRequest, change
     SELECT r.id,r.source_asset_id,r.target_asset_id FROM relations r WHERE r.tenant_id=${p.tenantId}::uuid AND r.status='active' AND r.relation_type_id IN(SELECT type_id FROM all_types)
   ), all_bindings AS MATERIALIZED (
     SELECT b.id,b.asset_id FROM relation_participations b WHERE b.tenant_id=${p.tenantId}::uuid AND b.status='active' AND b.relation_type_id IN(SELECT type_id FROM all_types)
+  ), eligibility_rules AS MATERIALIZED (
+    SELECT DISTINCT (rule->>'typeId')::uuid AS type_id, rule->>'includeDescendants'='true' AS descendants
+    FROM all_types t CROSS JOIN LATERAL jsonb_array_elements(
+      coalesce(t.before_definition->'sourceTypes','[]'::jsonb) || coalesce(t.before_definition->'targetTypes','[]'::jsonb)
+      || coalesce(t.after_definition->'sourceTypes','[]'::jsonb) || coalesce(t.after_definition->'targetTypes','[]'::jsonb)) rules(rule)
+  ), nominal_assets AS MATERIALIZED (
+    SELECT a.id FROM eligibility_rules r JOIN governance_models m ON m.tenant_id=${p.tenantId}::uuid AND m.type_id=r.type_id
+      JOIN assets a ON a.tenant_id=m.tenant_id AND a.model_id=m.id
+    UNION
+    SELECT a.id FROM eligibility_rules r JOIN governance_models ancestor ON ancestor.tenant_id=${p.tenantId}::uuid AND ancestor.type_id=r.type_id
+      JOIN asset_type_dependencies d ON d.tenant_id=ancestor.tenant_id AND d.dependency_model_id=ancestor.id
+      JOIN assets a ON a.tenant_id=d.tenant_id AND a.model_id=d.model_id AND a.model_version=d.version WHERE r.descendants
+  ), eligible_assets AS MATERIALIZED (
+    SELECT n.id FROM nominal_assets n WHERE EXISTS(SELECT 1 FROM all_types t WHERE
+      public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,n.id,t.before_definition,'source') OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,n.id,t.before_definition,'target')
+      OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,n.id,t.after_definition,'source') OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,n.id,t.after_definition,'target'))
   ), all_assets AS MATERIALIZED (
     SELECT a.id FROM assets a WHERE a.tenant_id=${p.tenantId}::uuid AND (a.id IN(SELECT id FROM changed_assets)
       OR a.id=ANY(${extra}::uuid[]) OR a.id IN(SELECT source_asset_id FROM all_edges UNION SELECT target_asset_id FROM all_edges UNION SELECT asset_id FROM all_bindings)
-      OR EXISTS(SELECT 1 FROM all_types t WHERE
-        public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,a.id,t.before_definition,'source') OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,a.id,t.before_definition,'target')
-        OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,a.id,t.after_definition,'source') OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,a.id,t.after_definition,'target')))
+      OR a.id IN(SELECT id FROM eligible_assets))
   )`;
 }
 

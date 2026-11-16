@@ -57,13 +57,13 @@
       "skipped": 0,
       "retries": 0,
       "command": [
-        "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/.local/toolchain/node-v24.22.3-darwin-arm64/bin/node",
-        "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/.local/pnpm/node_modules/pnpm/bin/pnpm.cjs",
+        "node",
+        ".local/pnpm/node_modules/pnpm/bin/pnpm.cjs",
         "exec",
         "playwright",
         "test",
         "--config",
-        "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/.local/evidence/product-full-browser-attempt-4/playwright.config.ts",
+        ".local/evidence/product-full-browser-attempt-4/playwright.config.ts",
         "--workers=1",
         "--retries=0",
         "--max-failures=0",
@@ -128,5 +128,6 @@
     "Twenty representative original captures were reviewed separately, plus two model/migration captures; this is not an all149 visual or linguistic review.",
     "The earlier failing browser and hosted source/development attempts remain failures. Fresh hosted qualification is still required.",
     "Unity Catalog external credentials and production Microsoft Entra qualification remain separate prerequisites. Approval/glossary implementation is in a separate worktree and is not included in this product runtime pass."
-  ]
+  ],
+  "command_path_redaction": "Personal host path prefixes removed from the public command; original private execution is unchanged."
 }

@@ -138,6 +138,10 @@ def main():
   ./dev test --suite postgres-targets Verify isolated configurable PostgreSQL TLS and metadata boundaries
   ./dev test --suite approvals-upgrade Verify approval storage, upgrade and concurrent decisions
   ./dev test --suite glossary-upgrade Verify approved term publication and graph transaction integrity
+  ./dev test --suite relation-scope-upgrade Verify complete graph scope on populated catalogs
+  ./dev test --suite glossary-population-upgrade Verify multi-policy publication on populated catalogs
+  ./dev test --suite quality-upgrade  Verify completeness storage, upgrade and current authorization
+  ./dev test --suite quality-worker   Verify completeness execution against the local synthetic source
   ./dev authn-install --input FILE    Apply one private, typed inactive installation manifest
   ./dev test --suite relation-preparation-expiry Verify the original fifteen-minute lease and committed retries
   ./dev test --suite connectors       Run Python contract/source tests
@@ -174,7 +178,17 @@ Never use docker compose config output in public logs: it expands secrets.""")
         require_local()
         run([sys.executable, "scripts/runtime-test-source-connectors-upgrade.py"], timeout=900); return
     if args.command == "test" and args.suite == "glossary-upgrade":
+        require_local()
         run([sys.executable, "scripts/runtime-test-glossary-upgrade.py"], timeout=900); return
+    if args.command == "test" and args.suite == "glossary-population-upgrade":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-glossary-population-upgrade.py"], timeout=1500); return
+    if args.command == "test" and args.suite == "quality-upgrade":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-quality-upgrade.py"], timeout=1800); return
+    if args.command == "test" and args.suite == "relation-scope-upgrade":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-relation-scope-upgrade.py"], timeout=1200); return
     if args.command == "test" and args.suite == "approvals-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-approvals-upgrade.py"], timeout=900); return
@@ -222,6 +236,7 @@ Never use docker compose config output in public logs: it expands secrets.""")
     elif args.command == "seed":
         if args.dataset != "harbor-demo":
             raise SystemExit("Only the independently authored harbor-demo dataset is implemented.")
+        run([sys.executable, "scripts/runtime-install-quality-fixture.py", "--run-core"], timeout=60)
         run(COMPOSE + ["run", "--rm", "seed"], timeout=120)
     elif args.command == "status":
         output = capture(COMPOSE + ["ps", "--all", "--format", "json"], timeout=30)
@@ -233,9 +248,11 @@ Never use docker compose config output in public logs: it expands secrets.""")
     elif args.command == "test":
         script = ROOT / "scripts" / f"test-{args.suite}.sh"
         if script.exists():
-            run(["sh", str(script)], timeout=900)
+            run(["sh", str(script)], timeout=2100 if args.suite == "security" else 900)
         elif args.suite == "connectors":
             run([sys.executable, "scripts/runtime-test-connectors.py"], timeout=300)
+        elif args.suite == "quality-worker":
+            run([sys.executable, "scripts/runtime-test-quality-worker.py", "--run-local"], timeout=360)
         elif args.suite == "recovery":
             run([sys.executable, "scripts/runtime-test-recovery.py"], timeout=600)
         elif args.suite == "object-store":

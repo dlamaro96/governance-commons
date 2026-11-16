@@ -12,6 +12,7 @@ from api_evidence import safe_report
 from authentication_evidence import load_report as load_authentication_report
 from protected_authn_evidence import load_report as load_protected_report, copy_captures as copy_protected_captures
 from authentication_evidence import read_file as bounded_read, strict_json as private_json
+from authority_diagnostics import load_report as load_authority_diagnostic
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / ".local/ci-artifacts"
@@ -20,7 +21,7 @@ if any(DEST.iterdir()):
     raise SystemExit("Artifact staging must be empty; refusing to publish a mixed or stale directory")
 allowed_outcomes = {"success", "failure", "cancelled", "skipped"}
 outcomes = {}
-for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "browser", "protected_authn"):
+for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "browser", "protected_authn"):
     value = os.environ.get(f"GC_{step.upper()}_RESULT", "skipped")
     outcomes[step] = value if value in allowed_outcomes else "unknown"
 report = {
@@ -35,7 +36,7 @@ report = {
     "screenshots": [],
     "limitations": ["No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
                     "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification.",
-                    "Canonical authority, source-connector upgrade and configurable PostgreSQL TLS entries are required CI step outcomes only; their private native reports/logs are not exported or independently revalidated by this collector."],
+                    "Canonical authority success, source-connector upgrade, configurable PostgreSQL TLS, glossary upgrade and completeness storage/worker gates remain CI step outcomes only; authority failures may include a separately source-bound, failure-only diagnostic. Raw native reports/logs and unreviewed completeness captures remain private."],
 }
 # The API runner retains raw TAP privately. Only an independently revalidated,
 # exact-source report enters this staging directory; absence cannot turn a
@@ -67,8 +68,18 @@ if authn_report:
     (DEST / "authentication-summary.json").write_text(json.dumps(authn_report, indent=2) + "\n")
 if outcomes["authority_authn_foundation"] == "success" and not authn_report:
     report["outcome"] = "NOT_PASSED"
+# Diagnostics never qualify a successful gate. Preserve only an independently
+# source/log-bound failure projection and keep the required step failed.
+authority_diagnostic = load_authority_diagnostic(ROOT, os.environ.get("GITHUB_SHA"))
+if authority_diagnostic and outcomes["authority_foundation"] in {"failure", "cancelled"}:
+    (DEST / "authority-foundation-diagnostic.json").write_text(json.dumps(authority_diagnostic, indent=2) + "\n")
+    report["authority_foundation_diagnostic"] = "FAILURE_DIAGNOSTIC_ONLY"
+else:
+    report["authority_foundation_diagnostic"] = "STEP_RESULT_MISMATCH" if authority_diagnostic else "UNAVAILABLE_OR_INVALID"
+if authority_diagnostic and outcomes["authority_foundation"] == "success":
+    report["outcome"] = "NOT_PASSED"
 # Protected transport is a separate required gate, never a replacement for
-# native foundation or the twenty-one core browser journeys. Hosted collection
+# native foundation or the twenty-five core browser journeys. Hosted collection
 # requires the independently bound, baked image mode; local overlays refuse.
 protected_report = load_protected_report(ROOT, os.environ.get("GITHUB_SHA"))
 protected_mismatch = bool(protected_report and outcomes["protected_authn"] != "success")
@@ -118,6 +129,7 @@ def failure_locations(results, filename):
             for line, column in sorted(locations)[:8]]
 
 source = ROOT / ".local/evidence/playwright-results.json"
+QUALITY_TITLE = "DQ: real column completeness, immutable thresholds, aggregate outcomes and current read boundaries"
 if source.is_file():
     data = json.loads(source.read_text())
     def collect(suites):
@@ -130,8 +142,12 @@ if source.is_file():
                     results = test.get("results", [])
                     status = test.get("status", "unknown")
                     filename = Path(str(spec.get("file", ""))).name
-                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts", "relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts"}:
+                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts", "relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts"}:
                         continue
+                    # Bind the new journey to its reviewed declaration, without
+                    # exporting arbitrary titles or accepting a same-file substitute.
+                    if filename == "quality.spec.ts" and spec.get("title") != QUALITY_TITLE:
+                        status = "unknown"
                     line = spec.get("line")
                     report["tests"].append({"file": "tests/e2e/" + filename, "line": line if isinstance(line, int) else None,
                         "status": status if status in {"expected", "unexpected", "flaky", "skipped"} and results and all(r.get("status") == "passed" for r in results) else "unknown",
@@ -145,6 +161,9 @@ if outcomes["browser"] == "success":
     expected["tests/e2e/business-domains.spec.ts"] = 3
     expected["tests/e2e/source-connectors.spec.ts"] = 1
     expected["tests/e2e/postgres-configuration.spec.ts"] = 1
+    expected["tests/e2e/approvals.spec.ts"] = 1
+    expected["tests/e2e/glossary.spec.ts"] = 2
+    expected["tests/e2e/quality.spec.ts"] = 1
     observed = {name: sum(test["file"] == name for test in report["tests"]) for name in expected}
     locations = {(test["file"], test["line"]) for test in report["tests"]}
     if observed != expected or len(locations) != sum(expected.values()) or any(test["status"] != "expected" or test["attempts"] != 1 for test in report["tests"]):

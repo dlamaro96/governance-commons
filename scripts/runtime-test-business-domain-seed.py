@@ -37,6 +37,17 @@ STEWARD = '10000000-0000-4000-8000-000000000001'
 CONSUMER = '10000000-0000-4000-8000-000000000003'
 ENGINEER = '10000000-0000-4000-8000-000000000006'
 REVOKED = 'domains:write'
+QUALITY_REVOKED = 'quality:execute'
+QUALITY_TABLES = ('quality_rules', 'quality_rule_versions', 'quality_runs')
+# Independent historical marker inputs: do not derive these from the new seed
+# implementation, which could otherwise change both the writer and its oracle.
+PERSONA_GRANTS = (
+    ('steward', HARBOR, ('domains:read', 'domains:write', 'domains:assign')),
+    ('owner', HARBOR, ('domains:read', 'domains:write', 'domains:assign')),
+    ('consumer', HARBOR, ()), ('auditor', HARBOR, ('domains:read',)),
+    ('summit', SUMMIT, ('domains:read', 'domains:write', 'domains:assign')),
+    ('engineer', HARBOR, ('domains:read', 'domains:write', 'domains:assign')),
+)
 TABLES = (
     'domain_types', 'domain_type_versions', 'domain_type_dependencies', 'domains',
     'domain_revisions', 'asset_domain_placements', 'asset_domain_placement_revisions',
@@ -64,6 +75,27 @@ def require(value, message):
 
 def digest(data):
     return hashlib.sha256(data).hexdigest()
+
+
+def expected_permission_markers():
+    result = {}
+    for index, (role, tenant, domain_grants) in enumerate(PERSONA_GRANTS, 1):
+        identity = '10000000-0000-4000-8000-' + str(index).zfill(12)
+        quality_grants = ['quality:read'] if role in ('consumer', 'auditor') else ['quality:read', 'quality:write', 'quality:execute']
+        for operation, grants in (('bootstrap.domain-permissions.v1', list(domain_grants)),
+                                  ('bootstrap.quality-permissions.v1', quality_grants)):
+            if grants:
+                body = {'dataset': 'harbor-demo', 'identityId': identity, 'role': role, 'permissions': grants}
+                result[(tenant, identity, operation)] = digest(json.dumps(body, sort_keys=True, separators=(',', ':')).encode())
+    return result
+
+
+def revoked_engineer(engineer):
+    require(isinstance(engineer.get('permissions'), list)
+            and all(permission in engineer['permissions'] for permission in (REVOKED, QUALITY_REVOKED)),
+            'Engineer must initially hold both exact permissions being tested')
+    return {**engineer, 'permissions': [permission for permission in engineer['permissions']
+                                      if permission not in (REVOKED, QUALITY_REVOKED)]}
 
 
 def migration_inventory(directory):
@@ -118,7 +150,7 @@ def source_hashes():
 
 def host_hashes():
     return [{'path': str(p.relative_to(ROOT)), 'sha256': digest(p.read_bytes())} for p in (
-        Path(__file__).resolve(), ROOT / 'dev', ROOT / 'scripts/runtime.py',
+        Path(__file__).resolve(), ROOT / 'scripts/test_business_domain_seed.py', ROOT / 'dev', ROOT / 'scripts/runtime.py',
         ROOT / 'deploy/compose/compose.yaml', ROOT / 'Dockerfile')]
 
 
@@ -308,6 +340,78 @@ class Harness:
         return json.loads(self.query("BEGIN READ ONLY; SELECT coalesce(jsonb_agg(to_jsonb(m) ORDER BY identity_id),'[]') FROM memberships m WHERE tenant_id="
                                      + literal(HARBOR) + ' AND identity_id IN (' + literal(CONSUMER) + ',' + literal(ENGINEER) + '); COMMIT;', 'synthetic-membership-readback'))
 
+    def permission_markers(self):
+        expected = expected_permission_markers()
+        # LIMIT detects an extra receipt without materializing an unbounded set.
+        # Retain the entire row, including creation time, for replay equality.
+        result = json.loads(self.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY; SELECT coalesce(jsonb_agg(to_jsonb(r) ORDER BY tenant_id,actor_id,operation),'[]') FROM ("
+            "SELECT * FROM public.idempotency WHERE tenant_id IN (" + literal(HARBOR) + ',' + literal(SUMMIT)
+            + ") AND operation IN ('bootstrap.domain-permissions.v1','bootstrap.quality-permissions.v1')"
+            " AND key='harbor-demo' ORDER BY tenant_id,actor_id,operation LIMIT 12) r; COMMIT;", 'permission-marker-readback'))
+        require(isinstance(result, list) and len(result) == len(expected), 'Initial domain and quality permission markers are incomplete or unexpected')
+        seen = set()
+        for row in result:
+            require(isinstance(row, dict) and set(row) == {'tenant_id', 'actor_id', 'operation', 'key', 'request_hash', 'response', 'created_at'},
+                    'Permission marker row shape is invalid')
+            require(all(isinstance(row[key], str) for key in ('tenant_id', 'actor_id', 'operation', 'key', 'request_hash', 'created_at')),
+                    'Permission marker scalar shape is invalid')
+            key = (row['tenant_id'], row['actor_id'], row['operation'])
+            response = row['response']
+            require(key in expected and key not in seen and row['key'] == 'harbor-demo' and row['request_hash'] == expected[key]
+                    and isinstance(response, dict) and set(response) == {'dataset', 'version', 'applied'}
+                    and response['dataset'] == 'harbor-demo' and type(response['version']) is int and response['version'] == 1
+                    and type(response['applied']) is bool and bool(row['created_at']),
+                    'Permission marker differs from the independent declared domain/quality upgrade')
+            seen.add(key)
+        return result
+
+    def quality_permissions(self):
+        # A baseline prerequisite only. Qualification never repairs missing or
+        # revoked authority to make its own fixture pass.
+        scope = ' OR '.join('(tenant_id=' + literal(tenant) + ' AND identity_id='
+                            + literal('10000000-0000-4000-8000-' + str(index).zfill(12)) + ')'
+                            for index, (_, tenant, _) in enumerate(PERSONA_GRANTS, 1))
+        rows = json.loads(self.query("BEGIN READ ONLY; SELECT coalesce(jsonb_agg(jsonb_build_object('identity_id',identity_id,'tenant_id',tenant_id,"
+            "'role',role,'active',active,'permissions',permissions) ORDER BY identity_id),'[]') FROM public.memberships WHERE "
+            + scope + '; COMMIT;', 'initial-quality-permissions'))
+        require(isinstance(rows, list) and len(rows) == len(PERSONA_GRANTS), 'All six seeded quality memberships are required')
+        for index, ((role, tenant, _), row) in enumerate(zip(PERSONA_GRANTS, rows), 1):
+            grants = {'quality:read'} if role in ('consumer', 'auditor') else {'quality:read', 'quality:write', 'quality:execute'}
+            require(isinstance(row, dict) and set(row) == {'identity_id', 'tenant_id', 'role', 'active', 'permissions'}
+                    and row['identity_id'] == '10000000-0000-4000-8000-' + str(index).zfill(12)
+                    and row['tenant_id'] == tenant and row['role'] == role and row['active'] is True
+                    and isinstance(row['permissions'], list) and all(isinstance(value, str) for value in row['permissions'])
+                    and len([value for value in row['permissions'] if value.startswith('quality:')]) == len(grants)
+                    and {value for value in row['permissions'] if value.startswith('quality:')} == grants,
+                    'Seeded quality authority is missing, revoked or wider than the declared persona baseline')
+        return rows
+
+    def quality_snapshot(self):
+        # Separate from the immutable historical domain/glossary snapshot shapes.
+        # Empty quality data is valid: seed creates no rules, runs or fake results.
+        tenant = "tenant_id IN ('" + HARBOR + "','" + SUMMIT + "')"
+        tables = [(name, tenant) for name in QUALITY_TABLES]
+        tables += [('audit', tenant + " AND action LIKE 'quality.%'"),
+                   ('outbox', tenant + " AND event_type LIKE 'quality.%'"),
+                   ('idempotency', tenant + " AND operation LIKE 'quality.%'")]
+        values = []
+        for table, predicate in tables:
+            values.append(literal(table) + ", (SELECT jsonb_build_object('rows',count(*),'serialized_bytes',coalesce(sum(octet_length(payload)),0),"
+                          "'sha256',CASE WHEN count(*)<=20000 AND coalesce(sum(octet_length(payload)),0)<=67108864 THEN "
+                          "encode(sha256(convert_to(coalesce(string_agg(encode(sha256(convert_to(payload,'UTF8')),'hex'),'' ORDER BY "
+                          "encode(sha256(convert_to(payload,'UTF8')),'hex')),''),'UTF8')),'hex') ELSE NULL END) "
+                          'FROM (SELECT to_jsonb(r)::text payload FROM public.' + table + ' r WHERE ' + predicate + ') s)')
+        result = json.loads(self.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY; SELECT jsonb_build_object('
+                                     + ','.join(values) + '); COMMIT;', 'quality-row-digests'))
+        require(isinstance(result, dict) and set(result) == {table for table, _ in tables}
+                and all(isinstance(row, dict) and set(row) == {'rows', 'serialized_bytes', 'sha256'}
+                        and type(row['rows']) is int and 0 <= row['rows'] <= 20000
+                        and type(row['serialized_bytes']) is int and 0 <= row['serialized_bytes'] <= 67108864
+                        and isinstance(row['sha256'], str) and re.fullmatch('[a-f0-9]{64}', row['sha256'])
+                        for row in result.values()),
+                'Quality digest profile exceeded its bounded snapshot size or shape')
+        return result
+
     def all_personas_digest(self):
         # Only synthetic six; no session, source secret or unrelated fixture scan.
         return self.query("SELECT encode(sha256(convert_to(coalesce(jsonb_agg(to_jsonb(m) ORDER BY tenant_id,identity_id),'[]')::text,'UTF8')),'hex') "
@@ -380,6 +484,8 @@ def main():
                               'No concurrent mutating API/browser/seed tests; local lock excludes only this harness.',
                               'All columns of domain rows/journals are hashed; unrelated non-domain fixtures and legacy transaction bindings are excluded.',
                               'Glossary definition equality covers only business_term and glossary_review in the two synthetic tenants; glossary journals and resource effects are excluded.',
+                              'Quality equality covers all rule/version/run rows and quality journals/idempotency in the two synthetic tenants; no queued/running quality run is allowed.',
+                              'Both permission-marker families are checked against independent declared hashes; quality permissions are a baseline prerequisite, never repaired by this gate.',
                               'Outbox delivery must drain before baseline; no projector or service is stopped.',
                               'Privileged local PostgreSQL inspection/restoration is separate from the real seed runtime gc_owner/gc_app paths.',
                               'SIGINT/SIGTERM trigger finally restoration; SIGKILL or host failure requires the private recovery SQL before other tests.']}
@@ -413,6 +519,8 @@ def main():
         report['docker_versions'] = {'engine': harness.command(['docker', 'version', '--format', '{{.Server.Version}}'], 'docker-engine-version'),
                                      'compose': harness.command(['docker', 'compose', 'version', '--short'], 'docker-compose-version')}
         require(harness.query("SELECT count(*) FROM jobs WHERE status IN ('queued','running')", 'active-job-precondition') == '0', 'Wait for existing queued/running jobs before this gate')
+        require(harness.query("SELECT count(*) FROM public.quality_runs WHERE status IN ('queued','running')", 'active-quality-run-precondition') == '0',
+                'Wait for existing queued/running quality runs before this gate')
         roles = json.loads(harness.query("SELECT jsonb_object_agg(rolname,jsonb_build_object('superuser',rolsuper,'bypassrls',rolbypassrls)) FROM pg_roles WHERE rolname IN ('gc_owner','gc_app')", 'seed-role-readback'))
         require(set(roles) == {'gc_owner', 'gc_app'} and all(not value['superuser'] and not value['bypassrls'] for value in roles.values()), 'Seed roles must remain nonsuperuser and nonbypass')
         report['roles'] = roles
@@ -427,12 +535,15 @@ def main():
             + " AND operation='bootstrap.domain-permissions.v1' AND key='harbor-demo' AND response->>'version'='1'))", 'seed-baseline-markers'))
         require(markers == {'trees': 8, 'engineer_upgrade': 1}, 'Initial typed-tree seed and engineer permission-upgrade marker are required')
         report['baseline_markers'] = markers
+        permission_markers = harness.permission_markers()
+        report['permissionMarkerSnapshot'] = {'before': permission_markers}
+        harness.quality_permissions()
         original = harness.memberships()
         require(len(original) == 2, 'Both original engineer/consumer synthetic memberships are required')
         engineer = next(v for v in original if v['identity_id'] == ENGINEER)
         consumer = next(v for v in original if v['identity_id'] == CONSUMER)
         require(engineer['role'] == 'engineer' and consumer['role'] == 'consumer' and engineer['active'] and consumer['active'], 'Unexpected synthetic membership identity/role/activity')
-        require(isinstance(engineer['permissions'], list) and REVOKED in engineer['permissions'], 'Engineer must initially hold the exact permission being tested')
+        revoked = revoked_engineer(engineer)
         identity_rows = json.loads(harness.query('SELECT jsonb_agg(jsonb_build_object(\'id\',id,\'subject\',subject,\'name\',name,\'active\',active) ORDER BY id) FROM identities WHERE id IN (' + literal(ENGINEER) + ',' + literal(CONSUMER) + ')', 'synthetic-identity-precondition'))
         require(identity_rows == [{'id': CONSUMER, 'subject': CONSUMER, 'name': 'Harbor Analyst', 'active': True},
                                   {'id': ENGINEER, 'subject': ENGINEER, 'name': 'Harbor Engineer', 'active': True}], 'Only the exact declared synthetic identities may be qualified')
@@ -443,11 +554,18 @@ def main():
         while harness.query('SELECT count(*) FROM outbox WHERE tenant_id IN (' + literal(HARBOR) + ',' + literal(SUMMIT) + ') AND processed_at IS NULL AND ' + action_predicate('event_type'), 'wait-domain-outbox-drain') != '0':
             require(time.monotonic() < deadline, 'Domain outbox did not drain before exact-byte baseline')
             time.sleep(0.25)
+        deadline = time.monotonic() + 20
+        while harness.query('SELECT count(*) FROM public.outbox WHERE tenant_id IN (' + literal(HARBOR) + ',' + literal(SUMMIT)
+                            + ") AND processed_at IS NULL AND event_type LIKE 'quality.%'", 'wait-quality-outbox-drain') != '0':
+            require(time.monotonic() < deadline, 'Quality outbox did not drain before exact-byte baseline')
+            time.sleep(0.25)
         before = harness.snapshot()
         require(before['domain_types']['rows'] >= 2 and before['domains']['rows'] >= 6 and before['domain_revisions']['rows'] >= 6 and before['audit']['rows'] >= 8 and before['outbox']['rows'] >= 8, 'Actual typed domain/revision/journal baseline is incomplete')
         report['before'] = before
         glossary_definitions = harness.glossary_definition_snapshot()
         report['glossaryDefinitionSnapshot'] = {'before': glossary_definitions}
+        quality = harness.quality_snapshot()
+        report['qualitySnapshot'] = {'before': quality}
         def run_seed(phase):
             entry = {'phase': phase, 'started_at': now(), 'result': 'RUNNING'}
             report['seed_invocations'].append(entry)
@@ -468,9 +586,11 @@ def main():
             require(after == before, 'Repeated real seed changed domain canonical/history/journal/idempotency bytes')
             require(harness.all_personas_digest() == persona_digest, 'Repeated real seed changed existing persona memberships')
             require(harness.glossary_definition_snapshot() == glossary_definitions, 'Repeated real seed changed existing glossary definition rows')
-            entry.update({'domain_snapshot_equal': True, 'persona_memberships_equal': True, 'glossary_definitions_equal': True})
+            require(harness.quality_snapshot() == quality, 'Repeated real seed changed quality canonical/history/journal/idempotency bytes')
+            require(harness.permission_markers() == permission_markers, 'Repeated real seed changed domain or quality permission marker rows')
+            entry.update({'domain_snapshot_equal': True, 'persona_memberships_equal': True, 'glossary_definitions_equal': True,
+                          'quality_snapshot_equal': True, 'permission_markers_equal': True})
         report['checks'].append('two real seed replays preserve exact domain and persona membership row digests')
-        revoked = {**engineer, 'permissions': [v for v in engineer['permissions'] if v != REVOKED]}
         mutation_attempted = True  # Even uncertain command outcome requires restore.
         report['fixture_restore'] = {'required': True, 'result': 'PENDING'}
         private_write(attempt / 'execution.json', json_bytes(report))
@@ -480,9 +600,15 @@ def main():
         require(harness.memberships() == [revoked], 'Real seed restored revoked permission or recreated deleted consumer membership')
         require(harness.snapshot() == before, 'Seed after revocation/deletion changed domain data or journals')
         require(harness.glossary_definition_snapshot() == glossary_definitions, 'Seed after revocation/deletion changed glossary definition rows')
-        entry.update({'domain_snapshot_equal': True, 'permission_still_revoked': True, 'consumer_membership_still_absent': True, 'glossary_definitions_equal': True})
+        require(harness.quality_snapshot() == quality, 'Seed after revocation/deletion changed quality data or journals')
+        require(harness.permission_markers() == permission_markers, 'Seed after revocation/deletion changed permission marker rows')
+        entry.update({'domain_snapshot_equal': True, 'permission_still_revoked': True, 'consumer_membership_still_absent': True, 'glossary_definitions_equal': True,
+                      'quality_execute_still_revoked': True, 'quality_snapshot_equal': True, 'permission_markers_equal': True})
         report['checks'] += ['later engineer domains:write revocation survives real seed', 'deleted synthetic consumer membership is not recreated',
-                             'three real seed replays preserve exact existing business_term and glossary_review definition rows']
+                             'three real seed replays preserve exact existing business_term and glossary_review definition rows',
+                             'later engineer quality:execute revocation survives real seed',
+                             'three real seed replays preserve exact quality canonical/history/journal/idempotency bytes',
+                             'three real seed replays retain exact independently checked old domain and new quality permission markers']
         report['result'] = 'PASS'
     except BaseException as error:
         report['result'] = 'FAIL'
@@ -541,6 +667,14 @@ def main():
                 report['glossaryDefinitionSnapshot']['after_restoration'] = harness.glossary_definition_snapshot()
                 require(report['glossaryDefinitionSnapshot']['after_restoration'] == report['glossaryDefinitionSnapshot']['before'],
                         'Glossary definition rows changed before final readback')
+            if 'qualitySnapshot' in report:
+                report['qualitySnapshot']['after_restoration'] = harness.quality_snapshot()
+                require(report['qualitySnapshot']['after_restoration'] == report['qualitySnapshot']['before'],
+                        'Quality rows changed before final readback')
+            if 'permissionMarkerSnapshot' in report:
+                report['permissionMarkerSnapshot']['after_restoration'] = harness.permission_markers()
+                require(report['permissionMarkerSnapshot']['after_restoration'] == report['permissionMarkerSnapshot']['before'],
+                        'Domain or quality permission markers changed before final readback')
         except Exception as error:
             report['result'] = 'FAIL'
             report['final_readback_failure'] = str(error) if isinstance(error, RuntimeError) else type(error).__name__

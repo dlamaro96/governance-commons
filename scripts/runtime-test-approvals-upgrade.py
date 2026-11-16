@@ -11,6 +11,8 @@ import shutil
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('approval_upgrade_base',ROOT/'scripts/runtime-test-source-connectors-upgrade.py')
 base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
+repository_spec=importlib.util.spec_from_file_location('qualification_repository',ROOT/'scripts/qualification_repository.py')
+repository=importlib.util.module_from_spec(repository_spec);repository_spec.loader.exec_module(repository)
 REPORT=ROOT/'.local/evidence/approvals-upgrade.json'
 MIGRATION='015_approval_workflows.sql'
 TESTS=['tests/qualification/approvals-storage.test.ts','tests/qualification/glossary-submission.test.ts']
@@ -18,6 +20,7 @@ require,sha=base.require,base.sha
 
 def sources():
  paths={row['path'] for row in base.sources()}
+ paths.update(['scripts/qualification_repository.py',repository.FIXTURE])
  paths.update(['scripts/runtime-test-approvals-upgrade.py',*TESTS,'packages/domain/src/glossary-service.ts','packages/db/migrations/'+MIGRATION,'apps/api/src/repository.ts','packages/domain/src/approval-service.ts','packages/domain/src/approval.ts','packages/domain/src/approval-contracts.ts','packages/domain/src/glossary.ts','packages/domain/src/glossary-contracts.ts','packages/domain/src/model-service.ts','packages/domain/src/cursor.ts'])
  pending=[ROOT/name for name in paths if name.endswith(('.ts','.tsx'))]
  while pending:
@@ -36,6 +39,9 @@ class Harness(base.Harness):
   base.REPORT=REPORT
   super().__init__()
   self.report.update(command='./dev test --suite approvals-upgrade',profile='isolated-approval-storage')
+
+ def helper(self,args,*,mounts=(),**kwargs):
+  return repository.run(self,super().helper,args,root=ROOT,mounts=mounts,**kwargs)
 
 def execute(h):
  frozen=sources()

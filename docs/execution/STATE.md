@@ -1,5 +1,11 @@
 # Current state — 2026-11-16
 
+## Product checkpoint — 2026-11-16T19:48Z
+
+Product implementation remains the priority. Core SQL001–019 is applied and immutable; bounded PostgreSQL completeness now works through real OIDC, source scans, Temporal and the browser. The current image passes the no-retry rule/version/history/authorization journey; all four original English/Arabic desktop/mobile frames were inspected after repairing a cramped action label. Native upgrade15, host units675, rebuilt Python179 plus real metadata conformance, aggregate worker checks and seed replay pass in their recorded scopes. See `../verification/product-quality-local.json`. Full integrated API/browser and fresh hosted security qualification are still pending. All earlier failed attempts remain retained; this is not a whole-profile or release claim.
+
+Native PostgreSQL view-dependency lineage is under parallel implementation in an isolated checkout. Root remains the sole shared-runtime launcher. The next migration candidate is SQL020 and is not applied. Finish its generation fencing, immutable evidence, authorized graph UI and real upgrade/source/browser gates; continue all remaining programme requirements. Private reports, Azure estimates and presentation polish remain deferred.
+
 ## Product checkpoint — 2026-11-16T16:00Z
 
 The current core now passes all21 browser journeys without retries or skips, including configurable PostgreSQL and Unity registration;10 real search/authorization cases and552 public-tree units pass. Empty catalog cursors now behave like omitted cursors. The isolated inactive-authority gate passes native storage18, loader21 and concurrency14 cases with exact cleanup. See `../verification/product-cursor-core-local.json`; prior failures remain retained and new hosted qualification is required.

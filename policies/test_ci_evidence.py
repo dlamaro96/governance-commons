@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Exercise the publication collector in an isolated synthetic artifact tree."""
 import json
+import importlib.util
 import os
 from pathlib import Path
 import shutil
@@ -9,17 +10,21 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from api_evidence import collect as collect_api
 import test_api_evidence
 import test_authentication_evidence
 import test_protected_authn_evidence
+import test_authority_diagnostics
+import authority_diagnostics
 import authentication_evidence
 import protected_authn_evidence
 from test_authentication_evidence import fixture as authentication_fixture
 
 COLLECTOR = Path(__file__).with_name("ci_evidence.py")
-FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations", "business-domains", "source-connectors", "postgres-configuration")
-STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "browser", "protected_authn")
+FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations", "business-domains", "source-connectors", "postgres-configuration", "approvals", "glossary", "quality")
+STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "browser", "protected_authn")
+QUALITY_TITLE = "DQ: real column completeness, immutable thresholds, aggregate outcomes and current read boundaries"
 
 
 CONNECTOR_CAPTURES = tuple(f"m8-source-connectors-{state}-{language}-{width}.png"
@@ -34,10 +39,10 @@ PNG = bytes.fromhex("89504e470d0a1a0a0000000d49484452000000010000000108060000001
 
 
 class EvidenceGateTests(unittest.TestCase):
-    def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False, omitted_step=None, authn_mutation=None, omit_authn=False, protected_mutation=None, omit_protected=False, omitted_capture=None, symlink_capture=None, empty_capture=None):
-        specs = [{"file": f"{name}.spec.ts", "line": line, "title": "PRIVATE_SYNTHETIC_TITLE",
+    def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False, omitted_step=None, authn_mutation=None, omit_authn=False, protected_mutation=None, omit_protected=False, omitted_capture=None, symlink_capture=None, empty_capture=None, authority=False, authority_mutation=None, failed_outcome="failure"):
+        specs = [{"file": f"{name}.spec.ts", "line": line, "title": QUALITY_TITLE if name == "quality" else "PRIVATE_SYNTHETIC_TITLE",
                   "tests": [{"status": "expected", "results": [{"status": "passed", "duration": 1, "stdout": ["PRIVATE_SYNTHETIC_OUTPUT"]}]}]}
-                 for name in FILES for line in ((10, 20, 30) if name == "business-domains" else (10,) if name in ("source-connectors", "postgres-configuration") else (10, 20))]
+                 for name in FILES for line in ((10, 20, 30) if name == "business-domains" else (10,) if name in ("source-connectors", "postgres-configuration", "approvals", "quality") else (10, 20))]
         if mutation:
             mutation(specs)
         with tempfile.TemporaryDirectory(prefix="gc-ci-evidence-") as temporary:
@@ -47,6 +52,7 @@ class EvidenceGateTests(unittest.TestCase):
             shutil.copyfile(COLLECTOR.with_name("api_evidence.py"), root / "policies/api_evidence.py")
             shutil.copyfile(COLLECTOR.with_name("authentication_evidence.py"), root / "policies/authentication_evidence.py")
             shutil.copyfile(COLLECTOR.with_name("protected_authn_evidence.py"), root / "policies/protected_authn_evidence.py")
+            shutil.copyfile(COLLECTOR.with_name("authority_diagnostics.py"), root / "policies/authority_diagnostics.py")
             api_file = root / "tests/integration/example.test.ts"
             api_file.parent.mkdir(parents=True)
             api_file.write_text("test('synthetic API test', async () => {});\n")
@@ -59,6 +65,7 @@ class EvidenceGateTests(unittest.TestCase):
             if not omit_api:
                 (source / "api-summary.json").write_text(json.dumps(api))
             authn = authentication_fixture(root)
+            authority_report = test_authority_diagnostics.fixture(root) if authority else None
             protected = test_protected_authn_evidence.fixture(root)
             # Both source inventories overlap intentionally. Finish all synthetic
             # source preparation before recording either execution's hashes.
@@ -66,6 +73,10 @@ class EvidenceGateTests(unittest.TestCase):
             hashes = {row["path"]: row["sha256"] for row in authn["sources"]}
             authn["runtime"]["packageSha256"] = hashes["package.json"]
             authn["runtime"]["lockSha256"] = hashes["pnpm-lock.yaml"]
+            if authority_report:
+                authority_report['diagnostic_sources'] = authority_diagnostics.source_inventory(root)
+                if authority_mutation:
+                    authority_mutation(authority_report)
             if protected_mutation:
                 protected_mutation(protected)
             if not omit_protected:
@@ -76,11 +87,13 @@ class EvidenceGateTests(unittest.TestCase):
                 (source / "authority-authn-foundation.json").write_text(json.dumps(authn))
             # These native gates remain step claims only.
             # Their arbitrary private originals must never enter public artifacts.
-            for private_name in ("authority-foundation.json", "source-connectors-upgrade.json", "postgres-targets.json"):
-                (source / private_name).write_text(json.dumps({"PRIVATE_SYNTHETIC_NATIVE_REPORT": True}))
+            for private_name in ("authority-foundation.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-upgrade.json", "quality-worker.json"):
+                value = authority_report if private_name == 'authority-foundation.json' and authority_report else {"PRIVATE_SYNTHETIC_NATIVE_REPORT": True}
+                (source / private_name).write_text(json.dumps(value))
             captures = root / "docs/verification/screenshots"
             captures.mkdir(parents=True, exist_ok=True)
             (captures / "unreviewed-private.png").write_bytes(b"PRIVATE_SYNTHETIC_IMAGE")
+            (captures / "quality-unreviewed.png").write_bytes(b"PRIVATE_SYNTHETIC_IMAGE")
             for name in CONNECTOR_CAPTURES + POSTGRES_CAPTURES:
                 if name == omitted_capture:
                     continue
@@ -92,14 +105,15 @@ class EvidenceGateTests(unittest.TestCase):
             env = {**os.environ, **{f"GC_{step.upper()}_RESULT": "success" for step in STEPS},
                    "GITHUB_SHA": "a" * 40, "GITHUB_REPOSITORY": "example/fixture", "GITHUB_RUN_ID": "1"}
             if failed_step:
-                env[f"GC_{failed_step.upper()}_RESULT"] = "failure"
+                env[f"GC_{failed_step.upper()}_RESULT"] = failed_outcome
             if omitted_step:
                 env.pop(f"GC_{omitted_step.upper()}_RESULT", None)
             result = subprocess.run([sys.executable, str(root / "policies/ci_evidence.py")],
                                     env=env, capture_output=True, text=True, timeout=10)
             report = json.loads((root / ".local/ci-artifacts/behavior-summary.json").read_text())
             self.assertFalse((root / ".local/ci-artifacts/unreviewed-private.png").exists())
-            for private_name in ("authority-foundation.json", "source-connectors-upgrade.json", "postgres-targets.json"):
+            self.assertFalse((root / ".local/ci-artifacts/quality-unreviewed.png").exists())
+            for private_name in ("authority-foundation.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-upgrade.json", "quality-worker.json"):
                 self.assertFalse((root / ".local/ci-artifacts" / private_name).exists())
             for name in report["screenshots"]:
                 if name in CONNECTOR_CAPTURES + POSTGRES_CAPTURES:
@@ -108,19 +122,77 @@ class EvidenceGateTests(unittest.TestCase):
             self.assertNotIn("PRIVATE_SYNTHETIC", serialized)
             for artifact in (root / ".local/ci-artifacts").glob("*.json"):
                 self.assertNotIn("PRIVATE_SYNTHETIC", artifact.read_text())
+            diagnostic_path = root / '.local/ci-artifacts/authority-foundation-diagnostic.json'
+            self.assertEqual(diagnostic_path.exists(), report['authority_foundation_diagnostic'] == 'FAILURE_DIAGNOSTIC_ONLY')
+            if diagnostic_path.exists():
+                diagnostic = json.loads(diagnostic_path.read_text())
+                self.assertEqual(diagnostic['purpose'], 'FAILURE_DIAGNOSTIC_ONLY')
+                self.assertEqual(diagnostic['outcome'], 'NOT_PASSED')
+                self.assertEqual(diagnostic['failed_phase'], 'authority_loader')
             return result.returncode, report
 
-    def test_all_twenty_one_required_journeys_are_accepted_and_private_payloads_omitted(self):
+    def test_all_twenty_five_required_journeys_are_accepted_and_private_payloads_omitted(self):
         code, report = self.collect()
         self.assertEqual(code, 0)
         self.assertEqual(report["outcome"], "PASS")
-        self.assertEqual(len(report["tests"]), 21)
+        self.assertEqual(len(report["tests"]), 25)
         self.assertEqual(set(report["screenshots"]), set(CONNECTOR_CAPTURES + POSTGRES_CAPTURES))
-        self.assertEqual(len(report["steps"]), 19)
+        self.assertEqual(len(report["steps"]), 24)
+
+    def test_quality_journey_is_required_exactly_once_with_reviewed_title(self):
+        mutations = (
+            lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "quality.spec.ts"]),
+            lambda specs: specs.append(dict(next(s for s in specs if s["file"] == "quality.spec.ts"))),
+            lambda specs: next(s for s in specs if s["file"] == "quality.spec.ts").update(title="PRIVATE_SYNTHETIC_SUBSTITUTE"),
+            lambda specs: next(s for s in specs if s["file"] == "quality.spec.ts").pop("title"),
+        )
+        for number, mutation in enumerate(mutations):
+            with self.subTest(mutation=number):
+                code, report = self.collect(mutation)
+                self.assertEqual(code, 1)
+                self.assertEqual(report["outcome"], "NOT_PASSED")
+
+    def test_quality_cancelled_skipped_or_unknown_stage_cannot_qualify(self):
+        for step in ("quality_upgrade", "quality_worker"):
+            for outcome in ("cancelled", "skipped", "PRIVATE_SYNTHETIC_INVALID"):
+                with self.subTest(step=step, outcome=outcome):
+                    code, report = self.collect(failed_step=step, failed_outcome=outcome)
+                    self.assertEqual(code, 1)
+                    self.assertEqual(report["steps"][step], outcome if outcome != "PRIVATE_SYNTHETIC_INVALID" else "unknown")
+                    self.assertEqual(report["outcome"], "NOT_PASSED")
+
+    def test_approval_and_glossary_journeys_are_required_once(self):
+        for filename in ("approvals.spec.ts", "glossary.spec.ts"):
+            with self.subTest(filename=filename):
+                code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != filename]))
+                self.assertEqual(code, 1)
+                self.assertEqual(report["outcome"], "NOT_PASSED")
+                code, _ = self.collect(lambda specs: specs.append(dict(next(s for s in specs if s["file"] == filename))))
+                self.assertEqual(code, 1)
+
+    def test_failed_authority_step_exports_bound_diagnostic_without_qualifying_pass(self):
+        code, report = self.collect(authority=True, failed_step='authority_foundation')
+        self.assertEqual(code, 1)
+        self.assertEqual(report['authority_foundation_diagnostic'], 'FAILURE_DIAGNOSTIC_ONLY')
+        self.assertEqual(report['outcome'], 'NOT_PASSED')
+
+    def test_failed_authority_report_cannot_be_attached_to_success_or_skipped_step(self):
+        for options in ({}, {'omitted_step':'authority_foundation'}):
+            code, report = self.collect(authority=True, **options)
+            self.assertEqual(code, 1)
+            self.assertEqual(report['authority_foundation_diagnostic'], 'STEP_RESULT_MISMATCH')
+
+    def test_authority_diagnostic_stale_or_raw_fields_fail_closed(self):
+        for mutate in (lambda r:r.update(commit='b'*40),lambda r:r.update(diagnostic_sources=[]),
+                       lambda r:r['failure_diagnostic'].update(error='PRIVATE_SYNTHETIC_SECRET'),
+                       lambda r:r['failure_diagnostic']['commandLog'].update(sha256='0'*64)):
+            code, report = self.collect(authority=True, authority_mutation=mutate, failed_step='authority_foundation')
+            self.assertEqual(code, 1)
+            self.assertEqual(report['authority_foundation_diagnostic'], 'UNAVAILABLE_OR_INVALID')
 
     def test_missing_source_connector_journey_cannot_qualify_complete_gate(self):
         code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "source-connectors.spec.ts"]))
-        self.assertEqual(len(report["tests"]), 20)
+        self.assertEqual(len(report["tests"]), 24)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
@@ -129,9 +201,9 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
-    def test_previous_twenty_journey_gate_cannot_omit_postgres_configuration(self):
+    def test_missing_postgres_configuration_cannot_qualify_complete_gate(self):
         code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "postgres-configuration.spec.ts"]))
-        self.assertEqual(len(report["tests"]), 20)
+        self.assertEqual(len(report["tests"]), 24)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
@@ -164,19 +236,19 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_older_sixteen_test_gate_cannot_hide_missing_business_domain_journeys(self):
-        code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] not in ("business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts")]))
+        code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] not in ("business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts")]))
         self.assertEqual(len(report["tests"]), 16)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_each_business_domain_journey_must_execute(self):
         code, report = self.collect(lambda specs: specs.remove(next(s for s in specs if s["file"] == "business-domains.spec.ts" and s["line"] == 30)))
-        self.assertEqual(len(report["tests"]), 20)
+        self.assertEqual(len(report["tests"]), 24)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_missing_business_domain_qualification_steps_fail_closed(self):
-        for step in ("business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets"):
+        for step in ("business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker"):
             with self.subTest(step=step):
                 code, report = self.collect(omitted_step=step)
                 self.assertEqual(code, 1)
@@ -194,14 +266,14 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
 
     def test_real_service_failure_cannot_be_overridden_by_successful_browser_results(self):
-        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets"):
+        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker"):
             with self.subTest(step=step):
                 code, report = self.collect(failed_step=step)
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_failed_assertion_coordinates_are_allowlisted_without_private_payloads(self):
-        for filename in ("relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts"):
+        for filename in ("relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "quality.spec.ts"):
             with self.subTest(filename=filename):
                 failure = {"status": "failed", "duration": 3, "error": {
                     "message": "PRIVATE_SYNTHETIC_MESSAGE", "stack": (
@@ -248,7 +320,7 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(report["api_evidence"], "STEP_RESULT_MISMATCH")
 
     def test_authentication_native_gate_and_evidence_are_required(self):
-        self.assertEqual(len(STEPS), 19)
+        self.assertEqual(len(STEPS), 24)
         code, report = self.collect(omit_authn=True)
         self.assertEqual(code, 1)
         self.assertEqual(report["authentication_evidence"], "UNAVAILABLE_OR_INVALID")
@@ -281,7 +353,7 @@ class EvidenceGateTests(unittest.TestCase):
             self.assertEqual(code, 1)
             self.assertEqual(report["protected_authentication_evidence"], "STEP_RESULT_MISMATCH")
 
-    def test_workflow_executes_and_collects_all_nineteen_steps(self):
+    def test_workflow_executes_and_collects_all_twenty_four_steps(self):
         workflow = (COLLECTOR.parent.parent / ".github/workflows/ci.yml").read_text()
         self.assertIn("id: authority_authn_foundation\n        run: ./dev test --suite authority-authn-foundation", workflow)
         self.assertLess(workflow.index("id: authority_authn_foundation"), workflow.index("id: browser"))
@@ -294,15 +366,94 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertLess(workflow.index("id: postgres_targets"), workflow.index("id: browser"))
         self.assertIn("tests/e2e/source-connectors.spec.ts", workflow)
         self.assertIn("tests/e2e/postgres-configuration.spec.ts", workflow)
+        self.assertIn("id: glossary_upgrade\n        run: ./dev test --suite glossary-upgrade", workflow)
+        self.assertIn("id: relation_scope_upgrade\n        run: ./dev test --suite relation-scope-upgrade", workflow)
+        self.assertIn("id: glossary_population_upgrade\n        run: ./dev test --suite glossary-population-upgrade", workflow)
+        self.assertIn("id: quality_upgrade\n        run: ./dev test --suite quality-upgrade", workflow)
+        self.assertIn("id: quality_worker\n        run: ./dev test --suite quality-worker", workflow)
+        self.assertLess(workflow.index("id: glossary_population_upgrade"), workflow.index("id: quality_upgrade"))
+        self.assertLess(workflow.index("id: quality_upgrade"), workflow.index("id: quality_worker"))
+        self.assertLess(workflow.index("id: quality_worker"), workflow.index("id: browser"))
+        self.assertIn("tests/e2e/approvals.spec.ts tests/e2e/glossary.spec.ts tests/e2e/quality.spec.ts", workflow)
         self.assertIn("name: Source credential persistence\n        run: python3 scripts/test_runtime_bootstrap.py", workflow)
         config = (COLLECTOR.parent.parent / ".github/playwright.ci.config.ts").read_text()
         self.assertIn("{ name: 'source-connectors', testMatch: /source-connectors\\.spec\\.ts/, dependencies: ['business-domains'] }", config)
         self.assertIn("{ name: 'postgres-configuration', testMatch: /postgres-configuration\\.spec\\.ts/, dependencies: ['source-connectors'] }", config)
+        self.assertIn("{ name: 'quality', testMatch: /quality\\.spec\\.ts/, dependencies: ['glossary'] }", config)
         self.assertIn("id: protected_authn", workflow)
         self.assertLess(workflow.index("id: browser"), workflow.index("id: protected_authn"))
         for step in STEPS:
             self.assertEqual(workflow.count("id: " + step + "\n"), 1)
             self.assertIn("GC_" + step.upper() + "_RESULT: ${{ steps." + step + ".outcome }}", workflow)
+
+
+class QualityCommandRoutingTests(unittest.TestCase):
+    """Exercise launcher guards and order with all execution replaced, never Docker."""
+    @classmethod
+    def setUpClass(cls):
+        spec = importlib.util.spec_from_file_location('quality_ci_runtime', COLLECTOR.parent.parent / 'scripts/runtime.py')
+        cls.runtime = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.runtime)
+
+    def test_isolated_upgrade_does_not_require_core_bootstrap(self):
+        calls = []
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'quality-upgrade']), \
+                patch.object(self.runtime, 'require_local', side_effect=lambda: calls.append('local')), \
+                patch.object(self.runtime, 'require_bootstrap', side_effect=AssertionError('core bootstrap reached')), \
+                patch.object(self.runtime, 'run', side_effect=lambda args, **kw: calls.append((args, kw))):
+            self.runtime.main()
+        self.assertEqual(calls, ['local', ([sys.executable, 'scripts/runtime-test-quality-upgrade.py'], {'timeout': 1800})])
+
+    def test_worker_requires_existing_local_bootstrap_and_explicit_local_opt_in(self):
+        calls = []
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'quality-worker']), \
+                patch.object(self.runtime, 'require_bootstrap', side_effect=lambda: calls.append('bootstrap')), \
+                patch.object(self.runtime, 'require_local', side_effect=lambda: calls.append('local')), \
+                patch.object(self.runtime, 'run', side_effect=lambda args, **kw: calls.append((args, kw))):
+            self.runtime.main()
+        self.assertEqual(calls, ['bootstrap', 'local', ([sys.executable, 'scripts/runtime-test-quality-worker.py', '--run-local'], {'timeout': 360})])
+
+    def test_quality_gate_refusal_does_not_fall_through_or_launch(self):
+        for suite in ('quality-upgrade', 'quality-worker'):
+            with self.subTest(suite=suite), \
+                    patch.object(sys, 'argv', ['dev', 'test', '--suite', suite]), \
+                    patch.object(self.runtime, 'require_bootstrap'), \
+                    patch.object(self.runtime, 'require_local', side_effect=SystemExit('local refusal')), \
+                    patch.object(self.runtime, 'run') as run:
+                with self.assertRaisesRegex(SystemExit, '^local refusal$'):
+                    self.runtime.main()
+                run.assert_not_called()
+            with self.subTest(suite=suite, failure=True), \
+                    patch.object(sys, 'argv', ['dev', 'test', '--suite', suite]), \
+                    patch.object(self.runtime, 'require_bootstrap'), patch.object(self.runtime, 'require_local'), \
+                    patch.object(self.runtime, 'run', side_effect=subprocess.CalledProcessError(1, 'synthetic')) as run:
+                with self.assertRaises(subprocess.CalledProcessError):
+                    self.runtime.main()
+                self.assertEqual(run.call_count, 1)
+
+    def test_seed_installs_or_validates_source_before_existing_persona_seed(self):
+        with patch.object(sys, 'argv', ['dev', 'seed', '--dataset', 'harbor-demo']), \
+                patch.object(self.runtime, 'require_bootstrap'), patch.object(self.runtime, 'require_local'), \
+                patch.object(self.runtime, 'run') as run:
+            self.runtime.main()
+        self.assertEqual([(call.args, call.kwargs) for call in run.call_args_list], [
+            (([sys.executable, 'scripts/runtime-install-quality-fixture.py', '--run-core'],), {'timeout': 60}),
+            ((self.runtime.COMPOSE + ['run', '--rm', 'seed'],), {'timeout': 120}),
+        ])
+
+    def test_fixture_refusal_or_unknown_dataset_cannot_run_seed(self):
+        with patch.object(sys, 'argv', ['dev', 'seed', '--dataset', 'harbor-demo']), \
+                patch.object(self.runtime, 'require_bootstrap'), patch.object(self.runtime, 'require_local'), \
+                patch.object(self.runtime, 'run', side_effect=subprocess.CalledProcessError(1, 'synthetic')) as run:
+            with self.assertRaises(subprocess.CalledProcessError):
+                self.runtime.main()
+            run.assert_called_once_with([sys.executable, 'scripts/runtime-install-quality-fixture.py', '--run-core'], timeout=60)
+        with patch.object(sys, 'argv', ['dev', 'seed', '--dataset', 'unsupported']), \
+                patch.object(self.runtime, 'require_bootstrap'), patch.object(self.runtime, 'require_local'), \
+                patch.object(self.runtime, 'run') as run:
+            with self.assertRaises(SystemExit):
+                self.runtime.main()
+            run.assert_not_called()
 
 
 def load_tests(loader, tests, pattern):
@@ -311,6 +462,7 @@ def load_tests(loader, tests, pattern):
     tests.addTests(loader.loadTestsFromModule(test_api_evidence))
     tests.addTests(loader.loadTestsFromModule(test_authentication_evidence))
     tests.addTests(loader.loadTestsFromModule(test_protected_authn_evidence))
+    tests.addTests(loader.loadTestsFromModule(test_authority_diagnostics))
     return tests
 
 

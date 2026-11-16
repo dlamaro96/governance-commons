@@ -4,6 +4,7 @@ import { Client, Connection, WorkflowExecutionAlreadyStartedError } from '@tempo
 import { NativeConnection, Worker } from '@temporalio/worker';
 import { fileURLToPath } from 'node:url';
 import {createApprovalActivities,dispatchApprovalEvent} from './approval-activities.ts';
+import {createQualityDispatcher} from './quality-activities.ts';
 const address = process.env.TEMPORAL_ADDRESS ?? 'temporal:7233';
 const namespace = process.env.TEMPORAL_NAMESPACE ?? 'default';
 const api = process.env.API_URL ?? 'http://api:4310';
@@ -11,6 +12,7 @@ const token = process.env.SITE_TOKEN;
 const tenants = (process.env.SITE_TENANTS ?? '').split(',').filter(Boolean);
 if (!token || tenants.length === 0) throw new Error('SITE_TOKEN and SITE_TENANTS are required');
 const approvals=createApprovalActivities({apiUrl:api,token});
+const quality=createQualityDispatcher({apiUrl:api,token});
 const connection = await Connection.connect({ address });
 const client = new Client({ connection, namespace });
 const workerConnection = await NativeConnection.connect({ address });
@@ -65,6 +67,14 @@ async function dispatch() {
           }
         }
       }catch{console.error(JSON.stringify({event:'approval_dispatch_retry',code:'APPROVAL_DISPATCH_FAILED'}));}
+      if(stopping)break;
+      try{for(const input of await quality.pendingQuality(tenantId)){
+        if(stopping)break;
+        try{await connection.withDeadline(Date.now()+10000,()=>client.workflow.start('qualityWorkflow',{
+          taskQueue:'gc-workflow',workflowId:`quality:${input.tenantId}:${input.runId}`,args:[input],workflowIdReusePolicy:'ALLOW_DUPLICATE_FAILED_ONLY',
+        }));}catch(error){if(!(error instanceof WorkflowExecutionAlreadyStartedError))throw error;}
+      }}catch{console.error(JSON.stringify({event:'quality_dispatch_retry',code:'QUALITY_DISPATCH_FAILED'}));}
+
     }
     await new Promise(resolve => setTimeout(resolve, 1500));
   }

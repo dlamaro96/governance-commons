@@ -222,12 +222,13 @@ async function definesPolicy(page:Page,token:string,termType:PublishedAssetType,
  return (await domainBody<{type:RelationTypeView}>(await page.request.post('/api/v1/relation-types',{headers:await domainHeaders(page),data:{definition}}),201)).type;
 }
 async function pickContextLink(page:Page,target:Awaited<ReturnType<typeof physicalGlossaryTarget>>,bad:RelationTypeView,good:RelationTypeView){
+ const linkForm=page.getByRole('group',{name:'Add link',exact:true});
  const targetPicker=page.getByRole('region',{name:'Target resource',exact:true});
  await targetPicker.getByLabel('Search: Target resource',{exact:true}).fill(target.token);
  const result=page.waitForResponse(response=>{const url=new URL(response.url());return url.pathname==='/api/v1/assets'&&url.searchParams.get('q')===target.token&&response.request().method()==='GET';});
  await targetPicker.getByRole('button',{name:'Search',exact:true}).click();expect((await result).status()).toBe(200);
  await targetPicker.getByRole('combobox',{name:'Target resource',exact:true}).selectOption(target.asset.id);
- await expect(page.getByText(`${target.asset.name} · Target version ${target.asset.version}`,{exact:true})).toBeVisible();
+ await expect(linkForm.locator('p').and(linkForm.getByText(`${target.asset.name} · Target version ${target.asset.version}`,{exact:true}))).toBeVisible();
  const relationPicker=page.getByRole('region',{name:'Relation definition',exact:true});
  async function select(policy:RelationTypeView){
   await relationPicker.getByLabel('Search: Relation definition',{exact:true}).fill(policy.id);
@@ -235,7 +236,7 @@ async function pickContextLink(page:Page,target:Awaited<ReturnType<typeof physic
   await relationPicker.getByRole('button',{name:'Search',exact:true}).click();expect((await searched).status()).toBe(200);
   const loaded=responseFor(page,`/api/v1/relation-types/${policy.id}`,'GET');
   await relationPicker.getByRole('combobox',{name:'Relation definition',exact:true}).selectOption(policy.id);expect((await loaded).status()).toBe(200);
-  await expect(page.getByText(`${policy.label} · Version ${policy.version}`,{exact:true})).toBeVisible();
+  await expect(linkForm.locator('p').and(linkForm.getByText(`${policy.label} · Version ${policy.version}`,{exact:true}))).toBeVisible();
  }
  await select(bad);await expect(page.getByRole('button',{name:'Add link',exact:true})).toBeDisabled();
  await expect(page.getByText('This relation requires attributes that the glossary link form cannot supply. Choose a relation with no required attributes.',{exact:true})).toBeVisible();
@@ -271,7 +272,7 @@ test('GLS: approved definitions reach the linked asset and respect amendments, r
   const consumer=await consumerContext.newPage();await domainLogin(consumer,'consumer');
   expect((await domainBody<{asset:Asset}>(await consumer.request.get(`/api/v1/assets/${target.asset.id}`))).asset.id).toBe(target.asset.id);
   expect(await readContext(page,target.asset.id)).toEqual({assetId:target.asset.id,items:[],nextCursor:null});
-  await contextBudget(page);await page.goto('/glossary/new');await expect(page.getByLabel('Term type',{exact:true})).toHaveValue('business_term');
+  await contextBudget(page);await page.goto('/glossary/new');await expect(page.getByRole('combobox',{name:'Term type',exact:true})).toHaveValue('business_term');
   await page.getByLabel('Owner',{exact:true}).selectOption(reviewerId);await page.getByLabel('Visibility',{exact:true}).selectOption('restricted');
   const audience=page.getByRole('group',{name:'Allowed members',exact:true});await audience.getByRole('checkbox',{name:'Harbor Steward',exact:true}).check();await audience.getByRole('checkbox',{name:'Harbor Owner',exact:true}).check();
   const english:GlossaryTranslation={locale:'en',name:`Accepted order ${token}`,definition:'An order approved for synthetic fulfilment.',synonyms:[],abbreviations:[],examples:[]};
