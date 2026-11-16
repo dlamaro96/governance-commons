@@ -6,9 +6,9 @@ import { modelPersistence, type ModelHooks } from './model-service.ts';
 import { typeHash } from './asset-type-policy.ts';
 import { persistPreparedTypeMigration } from './asset-type-migration-service.ts';
 import { persistPreparedGraphAssetChange } from './graph-asset-persistence.ts';
-import { parseGraphChangeSet, parseRelationMigrationContext, constructRelationGraphProposal, validateRelationGraphChange } from './relation-migration.ts';
+import { parseGraphChangeSet, parseRelationMigrationContext, constructRelationGraphProposal, validateRelationGraphChange, constructGlossaryRelationGraphProposal, validateGlossaryRelationGraphChange } from './relation-migration.ts';
 import { bindingKey, edgeKey, deriveRequiredParticipation, degreeFor } from './relation-participation.ts';
-import { GRAPH_WRITE, captureRelationMigration, graphRequest, graphPhysicalBudget, graphStale, graphStorage } from './relation-migration-store.ts';
+import { GRAPH_WRITE, captureRelationMigration, captureGlossaryRelationMigration, graphRequest, graphPhysicalBudget, graphStale, graphStorage } from './relation-migration-store.ts';
 import { relationDefinition, endpointTypeIdentities, lockRelationScope, relationQuery, relationView, iso, profileLimit, type Row } from './relation-store.ts';
 import type { GraphChangeSet, GraphOperationBeginResult, RelationMigrationPreview, RelationMigrationProjection,
   RelationMigrationReceipt, RelationPreparationView, ParticipationBindingView, CompleteGraphSnapshot } from './relation-migration-contracts.ts';
@@ -36,28 +36,33 @@ function projection(changeSet: GraphChangeSet, before: CompleteGraphSnapshot, pr
       afterVersion: row.version, action: row.key.kind === 'enrollment' ? 'enroll' : row.status === 'released' ? 'release' : 'repin' })),
     replacements: changeSet.relationTargets.flatMap(target => target.plan.edges.flatMap(row => row.action === 'replace' ? [{ predecessorId: row.relationId, relationTypeId: target.plan.relationTypeId, creationKey: row.creationKey }] : [])) };
 }
-async function prepare(tx: Tx, p: Principal, input: unknown) {
+async function prepare(tx: Tx, p: Principal, input: unknown, publicationId?: string) {
   const parsed = parseGraphChangeSet(input); if (!parsed.ok) throw graphInvalid(parsed.issues);
-  const changeSet = parsed.value, captured = await captureRelationMigration(tx, p, graphRequest(changeSet), changeSet), { context, activity } = captured;
+  const changeSet = parsed.value, captured = publicationId === undefined
+    ? { ...await captureRelationMigration(tx, p, graphRequest(changeSet), changeSet), sourceProof: undefined }
+    : await captureGlossaryRelationMigration(tx, p, publicationId, graphRequest(changeSet), changeSet);
+  const { context, activity, sourceProof } = captured;
   const base = { context, changeSetHash: typeHash(changeSet) };
   let preview: RelationMigrationPreview;
   if (!context.assetPreparation || !context.proposedEndpoints) preview = { ...base, ready: false, previewDigest: null, targetIssues: context.targetIssues, projection: null };
   else {
-    const constructed = constructRelationGraphProposal({ changeSet, before: context.before, policies: context.policies,
-      preparedAssets: context.assetPreparation, proposedEndpoints: context.proposedEndpoints });
+    const proposalInput = { changeSet, before: context.before, policies: context.policies,
+      preparedAssets: context.assetPreparation, proposedEndpoints: context.proposedEndpoints };
+    const constructed = sourceProof ? constructGlossaryRelationGraphProposal(proposalInput, sourceProof) : constructRelationGraphProposal(proposalInput);
     if (!constructed.ok) preview = { ...base, ready: false, previewDigest: null, targetIssues: constructed.issues, projection: null };
     else {
-      const checked = validateRelationGraphChange({ changeSet, completeRelationTypeIds: context.completeRelationTypeIds, policies: context.policies,
+      const validationInput = { changeSet, completeRelationTypeIds: context.completeRelationTypeIds, policies: context.policies,
         preparedAssets: context.assetPreparation, before: context.before, proposed: constructed.value, activeOwnerIds: activity.active,
-        tenantMemberIds: activity.members, actorId: p.id });
+        tenantMemberIds: activity.members, actorId: p.id };
+      const checked = sourceProof ? validateGlossaryRelationGraphChange(validationInput, sourceProof) : validateRelationGraphChange(validationInput);
       const proposed = projection(changeSet, context.before, constructed.value, context.policies);
       preview = checked.ok ? { ...base, ready: true, targetIssues: [], projection: { ...proposed, changedEdges: checked.value.changedEdges, changedBindings: checked.value.changedBindings, replacements: checked.value.replacements },
         previewDigest: typeHash({ purpose: 'complete-relation-graph-migration', tenantId: p.tenantId, actorId: p.id, changeSet, context, proposed: constructed.value,
-          activity: [...activity.active].sort(), members: [...activity.members].sort() }) }
+          activity: [...activity.active].sort(), members: [...activity.members].sort(), ...(sourceProof ? { sourceProof } : {}) }) }
         : { ...base, ready: false, previewDigest: null, targetIssues: checked.issues, projection: proposed };
     }
   }
-  await graphPhysicalBudget(tx, preview);
+  await graphPhysicalBudget(tx, sourceProof ? { preview, sourceProof } : preview);
   return { ...captured, changeSet, preview };
 }
 export async function previewRelationMigration(tx: Tx, p: Principal, input: unknown) {
@@ -163,9 +168,9 @@ async function persist(tx: Tx, p: Principal, correlationId: string, started: Gra
 }
 /** The ingress owns once() and its success write. This method never finalizes
  * constraints before that write; protected SQL independently proves every claim. */
-export async function executeRelationMigration(tx: Tx, p: Principal, correlationId: string, key: string,
-  body: { changeSet: unknown; previewDigest: string }, hooks: ModelHooks) {
-  const prepared = await prepare(tx, p, body.changeSet);
+async function execute(tx: Tx, p: Principal, correlationId: string, key: string,
+  body: { changeSet: unknown; previewDigest: string }, hooks: ModelHooks, publicationId?: string) {
+  const prepared = await prepare(tx, p, body.changeSet, publicationId);
   if (!graphExpectedRevisionsMatch(prepared.changeSet, prepared.context.before)) throw graphStale();
   if (!prepared.preview.ready) throw graphInvalid(prepared.preview.targetIssues);
   if (body.previewDigest !== prepared.preview.previewDigest) throw graphStale();
@@ -180,4 +185,19 @@ export async function executeRelationMigration(tx: Tx, p: Principal, correlation
   if (receipt.id !== id || receipt.changeSetHash !== prepared.preview.changeSetHash || receipt.previewDigest !== body.previewDigest) throw graphStorage();
   await modelPersistence.authorize(tx, p, GRAPH_WRITE);
   return { receipt };
+}
+
+/** Public execution retains ordinary strict source validation. */
+export async function executeRelationMigration(tx: Tx, p: Principal, correlationId: string, key: string,
+  body: { changeSet: unknown; previewDigest: string }, hooks: ModelHooks) {
+  return execute(tx, p, correlationId, key, body, hooks);
+}
+/** Internal SQL016 publication composition. Proof is loaded afresh from the
+ * protected same-transaction SQL helper, never from the caller or HTTP body. */
+export async function previewGlossaryRelationMigration(tx: Tx, p: Principal, publicationId: string, input: unknown) {
+  return { preview: (await prepare(tx, p, input, publicationId)).preview };
+}
+export async function executeGlossaryRelationMigration(tx: Tx, p: Principal, publicationId: string, correlationId: string, key: string,
+  body: { changeSet: unknown; previewDigest: string }, hooks: ModelHooks) {
+  return execute(tx, p, correlationId, key, body, hooks, publicationId);
 }

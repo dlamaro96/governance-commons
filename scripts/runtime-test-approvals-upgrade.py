@@ -13,12 +13,22 @@ spec=importlib.util.spec_from_file_location('approval_upgrade_base',ROOT/'script
 base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
 REPORT=ROOT/'.local/evidence/approvals-upgrade.json'
 MIGRATION='015_approval_workflows.sql'
-TEST='tests/qualification/approvals-storage.test.ts'
+TESTS=['tests/qualification/approvals-storage.test.ts','tests/qualification/glossary-submission.test.ts']
 require,sha=base.require,base.sha
 
 def sources():
  paths={row['path'] for row in base.sources()}
- paths.update(['scripts/runtime-test-approvals-upgrade.py',TEST,'packages/db/migrations/'+MIGRATION,'apps/api/src/repository.ts','packages/domain/src/approval-service.ts','packages/domain/src/approval.ts','packages/domain/src/approval-contracts.ts','packages/domain/src/glossary.ts','packages/domain/src/glossary-contracts.ts','packages/domain/src/model-service.ts','packages/domain/src/cursor.ts'])
+ paths.update(['scripts/runtime-test-approvals-upgrade.py',*TESTS,'packages/domain/src/glossary-service.ts','packages/db/migrations/'+MIGRATION,'apps/api/src/repository.ts','packages/domain/src/approval-service.ts','packages/domain/src/approval.ts','packages/domain/src/approval-contracts.ts','packages/domain/src/glossary.ts','packages/domain/src/glossary-contracts.ts','packages/domain/src/model-service.ts','packages/domain/src/cursor.ts'])
+ pending=[ROOT/name for name in paths if name.endswith(('.ts','.tsx'))]
+ while pending:
+  current=pending.pop()
+  for relative in re.findall(r'''(?:from\s*|import\s*)['"](\.[^'"]+)['"]''',current.read_text()):
+   candidate=(current.parent/relative).resolve()
+   if not candidate.suffix:
+    candidate=candidate.with_suffix('.ts') if candidate.with_suffix('.ts').is_file() else candidate/'index.ts'
+   require(candidate.is_relative_to(ROOT) and candidate.is_file(),'Unresolved local qualification source')
+   name=str(candidate.relative_to(ROOT))
+   if name not in paths:paths.add(name);pending.append(candidate)
  return [{'path':name,'sha256':sha((ROOT/name).read_bytes())} for name in sorted(paths)]
 
 class Harness(base.Harness):
@@ -47,8 +57,8 @@ def execute(h):
  require('Applied' not in h.migrate(target).stdout and h.snapshot(tables)==before,'Approval replay changed predecessor rows')
  h.report['checks'].append('Exact SQL014→015 application and inert replay preserve all predecessor canonical, protected, audit and receipt rows and original migration ledger')
  h.phase='approval-native-tests'
- expected=len(re.findall(r'^test\(', (ROOT/TEST).read_text(),re.MULTILINE))
- tested=h.helper(['node','--import','tsx','--test','--test-reporter=tap','--test-concurrency=1',TEST],timeout=180,allow_failure=True)
+ expected=sum(len(re.findall(r'^test\(', (ROOT/name).read_text(),re.MULTILINE)) for name in TESTS)
+ tested=h.helper(['node','--import','tsx','--test','--test-reporter=tap','--test-concurrency=1',*TESTS],timeout=180,allow_failure=True)
  require(tested.returncode==0,'Native approval suite failed; retained bounded TAP identifies failing case')
  h.report['tests']=base.base.tap_summary(tested.stdout,expected)
  require(sources()==frozen,'Approval source changed during native qualification')

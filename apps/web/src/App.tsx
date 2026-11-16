@@ -13,6 +13,10 @@ import { AssetPage } from './pages/Asset';
 import { SourcesPage } from './pages/Sources';
 import { AuditPage } from './pages/Audit';
 import { approvalsCopy } from './pages/approvals-copy';
+import { glossaryCopy } from './pages/glossary-copy';
+const GlossaryPage = lazy(() => import('./pages/Glossary').then(module => ({ default: module.GlossaryPage })));
+const GlossaryTermPage = lazy(() => import('./pages/Glossary').then(module => ({ default: module.GlossaryTermPage })));
+const GlossaryProposalPage = lazy(() => import('./pages/Glossary').then(module => ({ default: module.GlossaryProposalPage })));
 const ApprovalsPage = lazy(() => import('./pages/Approvals').then(module => ({ default: module.ApprovalsPage })));
 const ApprovalPage = lazy(() => import('./pages/Approvals').then(module => ({ default: module.ApprovalPage })));
 const WorkflowsPage = lazy(() => import('./pages/Approvals').then(module => ({ default: module.WorkflowsPage })));
@@ -72,6 +76,7 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   const [error, setError] = useState<Error | null>(null);
   const can = (permission: string) => session.permissions.includes(permission);
   const approvalLabels = approvalsCopy[locale];
+  const glossaryLabels = glossaryCopy[locale];
   useEffect(() => {
     const focusSearch = (event: KeyboardEvent) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); document.querySelector<HTMLInputElement>('.global-search input')?.focus(); } };
     window.addEventListener('keydown', focusSearch);
@@ -85,7 +90,7 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
     { href: '/models', key: 'models' as const, icon: GitBranch, visible: can('models:read') },
     { href: '/audit', key: 'audit' as const, icon: ClockCounterClockwise, visible: can('audit:read') },
   ];
-  const navigation = <><Link href="/" className="brand" onClick={() => setMenuOpen(false)}><BrandMark size={30}/><span>Governance<br/>Commons</span></Link><nav aria-label={t('workspace')}><div className="nav-section-label">{t('workspace')}</div>{navItems.filter(item => item.visible).map(({ href, key, icon: Icon }) => <Link key={href} href={href} className={`nav-link ${path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/domain-types') || path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'selected' : ''}`} aria-current={path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/domain-types') || path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><Icon size={20}/>{t(key)}</Link>)}{can('catalog:read') && can('catalog:write') && <Link href="/approvals" className={`nav-link ${path.startsWith('/approvals') ? 'selected' : ''}`} aria-current={path.startsWith('/approvals') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><ClockCounterClockwise size={20}/>{approvalLabels.approvals}</Link>}{can('models:read') && <Link href="/workflows" className={`nav-link ${path.startsWith('/workflows') ? 'selected' : ''}`} aria-current={path.startsWith('/workflows') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><GitBranch size={20}/>{approvalLabels.workflows}</Link>}</nav><div className="sidebar-bottom"><button className="sidebar-help" onClick={() => { setMenuOpen(false); setHelpOpen(true); }}><Question size={20}/>{t('help')}</button><div className="sidebar-tagline">{t('tagline')}</div></div></>;
+  const navigation = <><Link href="/" className="brand" onClick={() => setMenuOpen(false)}><BrandMark size={30}/><span>Governance<br/>Commons</span></Link><nav aria-label={t('workspace')}><div className="nav-section-label">{t('workspace')}</div>{navItems.filter(item => item.visible).map(({ href, key, icon: Icon }) => <Link key={href} href={href} className={`nav-link ${path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/domain-types') || path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'selected' : ''}`} aria-current={path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/domain-types') || path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><Icon size={20}/>{t(key)}</Link>)}{can('catalog:read') && <Link href="/glossary" className={`nav-link ${path.startsWith('/glossary') ? 'selected' : ''}`} aria-current={path.startsWith('/glossary') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><BookOpen size={20}/>{glossaryLabels.glossary}</Link>}{can('catalog:read') && can('catalog:write') && <Link href="/approvals" className={`nav-link ${path.startsWith('/approvals') ? 'selected' : ''}`} aria-current={path.startsWith('/approvals') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><ClockCounterClockwise size={20}/>{approvalLabels.approvals}</Link>}{can('models:read') && <Link href="/workflows" className={`nav-link ${path.startsWith('/workflows') ? 'selected' : ''}`} aria-current={path.startsWith('/workflows') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><GitBranch size={20}/>{approvalLabels.workflows}</Link>}</nav><div className="sidebar-bottom"><button className="sidebar-help" onClick={() => { setMenuOpen(false); setHelpOpen(true); }}><Question size={20}/>{t('help')}</button><div className="sidebar-tagline">{t('tagline')}</div></div></>;
   async function switchTenant(tenantId: string) {
     setSwitching(true); setError(null);
     try { await api('/session/tenant', { method: 'POST', body: JSON.stringify({ tenantId }) }); window.location.assign('/'); }
@@ -120,8 +125,13 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   const domainMatch = path.match(/^\/domains\/([a-f0-9-]+)(\/edit)?$/i);
   const domainTypeMatch = path.match(/^\/domain-types\/([a-f0-9-]+)(\/edit)?$/i);
   const domainMigrationMatch = path.match(/^\/domain-types\/([a-f0-9-]+)\/(migrate|migrations\/([a-f0-9-]+))$/i);
+  const glossaryMatch = path.match(/^\/glossary\/([a-f0-9-]+)(\/edit)?$/i);
+  const canProposeGlossary = ['catalog:read','catalog:write','models:read','models:write'].every(can);
   let content;
   if (path === '/') content = <HomePage/>;
+  else if (path === '/glossary') content = can('catalog:read') ? <GlossaryPage/> : <PermissionDenied/>;
+  else if (path === '/glossary/new') content = canProposeGlossary ? <GlossaryProposalPage/> : <PermissionDenied/>;
+  else if (glossaryMatch) content = glossaryMatch[2] ? (canProposeGlossary ? <GlossaryProposalPage key={glossaryMatch[1]} id={glossaryMatch[1]}/> : <PermissionDenied/>) : (can('catalog:read') && can('models:read') ? <GlossaryTermPage key={glossaryMatch[1]} id={glossaryMatch[1]}/> : <PermissionDenied/>);
   else if (path === '/catalog') content = can('catalog:read') ? <CatalogPage/> : <PermissionDenied/>;
   else if (assetId) content = can('catalog:read') ? <AssetPage id={assetId}/> : <PermissionDenied/>;
   else if (path === '/relation-migrations/new') content = can('models:read') && can('models:write') && can('catalog:read') && can('catalog:write') ? <RelationMigrationPage key={routeSearch}/> : <PermissionDenied/>;

@@ -52,6 +52,7 @@ test('current snapshot authorization precedes PIT; canonical SQL scopes batches 
   assert.match(batch.text,/a\.tenant_id=\$1::uuid/);assert.match(batch.text,/a\.status='active'/);assert.match(batch.text,/a\.allowed_identities @>/);
   assert.deepEqual(batch.values,[auth.principal.tenantId,[id(10),id(11),id(12)],JSON.stringify([auth.principal.id]),'']);
   const search=f.requests.find(r=>r.path==='/_search')!.body;
+  assert.deepEqual(search.query.bool.must[0].multi_match.fields,['name^3','qualifiedName^2','description','glossaryText']);
   assert.equal(search._source,false);assert.equal(search.track_total_hits,false);assert.equal('aggs' in search,false);assert.equal('from' in search,false);
   assert.deepEqual(search.query.bool.filter,[{term:{tenantId:auth.principal.tenantId}}]);assert.deepEqual(f.releases,[false]);
   assert.deepEqual(f.requests.at(-1)?.body,{pit_id:['owned-pit']});

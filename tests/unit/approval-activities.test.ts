@@ -35,10 +35,11 @@ test('actual HTTP protocol carries only tenant/request/event IDs, strict headers
 });
 
 test('documented terminal states retain their exact meaning and only pending carries a timer',async()=>{
-  for(const status of ['ready','rejected','cancelled','expired','succeeded','failed'] as const){
+  for(const status of ['rejected','cancelled','expired','succeeded','failed'] as const){
     const value={...ready,status};assert.deepEqual(await api(value).tickApproval(input),value);assert.deepEqual(await api(value).approvalStatus(input),value);
   }
-  assert.equal((await api(ready).tickApproval(input)).status,'ready');
+  assert.equal((await api(ready).approvalStatus(input)).status,'ready');
+  await reject(api(ready).tickApproval(input));
   assert.deepEqual(await api({...pending,version:2_147_483_647}).tickApproval(input),{...pending,version:2_147_483_647});
 });
 
@@ -142,7 +143,7 @@ test('configuration and ID admission refuse before network activity',async()=>{
 });
 
 function dispatchFixture(status:ApprovalStatus='ready'){
-  const calls:string[]=[];const protocol:ApprovalProtocol={pendingApprovals:async()=>({items:[]}),tickApproval:async()=>{throw new Error('Dispatcher must not mutate tick');},
+  const calls:string[]=[];const protocol:ApprovalProtocol={pendingApprovals:async()=>({items:[]}),tickApproval:async value=>{assert.deepEqual(value,input);calls.push('tick-publish');return {...ready,status:'succeeded',version:3};},
     approvalStatus:async value=>{assert.deepEqual(value,input);calls.push('status');return {...ready,status,nextWakeAt:status==='pending'?pending.nextWakeAt:null};},
     ackApproval:async value=>{assert.deepEqual(value,delivery);calls.push('ack');}};
   return {calls,protocol};
@@ -156,7 +157,7 @@ test('accepted signal-with-start is acknowledged only after acceptance without a
 test('closed executions acknowledge only canonical non-pending states and never implicitly restart',async()=>{
   for(const status of ['ready','rejected','cancelled','expired','succeeded','failed'] as const){
     const {calls,protocol}=dispatchFixture(status);await dispatchApprovalEvent(delivery,protocol,async()=>{calls.push('signal');return 'closed';});
-    assert.deepEqual(calls,['signal','status','ack']);
+    assert.deepEqual(calls,status==='ready'?['signal','status','tick-publish','ack']:['signal','status','ack']);
   }
   const {calls,protocol}=dispatchFixture('pending');await reject(dispatchApprovalEvent(delivery,protocol,async()=>{calls.push('signal');return 'closed';}),'APPROVAL_CLOSED_PENDING');
   assert.deepEqual(calls,['signal','status']);
@@ -167,4 +168,52 @@ test('transient signal/status failures and unknown acceptance never acknowledge;
   await reject(dispatchApprovalEvent(delivery,f.protocol,async()=>'unknown' as any));assert.deepEqual(f.calls,[]);
   f.protocol.approvalStatus=async()=>{throw new Error('readback unavailable');};await assert.rejects(dispatchApprovalEvent(delivery,f.protocol,async()=>'closed'));assert.deepEqual(f.calls,[]);
   f.protocol.ackApproval=async()=>{throw new Error('ack unavailable');};await assert.rejects(dispatchApprovalEvent(delivery,f.protocol,async()=>'accepted'));
+});
+
+
+test('actual HTTP ready tick commits before a separate ID-only publication and returns only canonical terminal status',async t=>{
+ const seen:{path:string|undefined;body:string}[]=[];
+ const succeeded={...ready,status:'succeeded',version:3};
+ const url=await server(t,(req,res)=>{let body='';req.on('data',chunk=>body+=chunk);req.on('end',()=>{
+  seen.push({path:req.url,body});res.setHeader('Content-Type','application/json');
+  res.end(JSON.stringify(req.url?.endsWith('/publish')?succeeded:ready));
+ });});
+ const protocol=createApprovalActivities({apiUrl:url,token:'synthetic'});
+ assert.deepEqual(await protocol.tickApproval(input),succeeded);
+ assert.deepEqual(seen,[{path:`/internal/approvals/${request}/tick`,body:'{}'},{path:`/internal/approvals/${request}/publish`,body:'{}'}]);
+});
+
+test('publication refusal and nonterminal or stale output never become completed approval',async()=>{
+ for(const value of [ready,pending,{...ready,status:'succeeded',version:1},{...ready,status:'failed',id:other}]){
+  const paths:string[]=[];const protocol=createApprovalActivities({apiUrl:'http://127.0.0.1',token:'synthetic',fetch:async url=>{paths.push(String(url));return json(paths.length===1?ready:value);}});
+  await reject(protocol.tickApproval(input));assert.equal(paths.length,2);assert.ok(paths[1].endsWith('/publish'));
+ }
+ for(const status of [409,500,503]){
+  let count=0;const protocol=createApprovalActivities({apiUrl:'http://127.0.0.1',token:'synthetic',fetch:async()=>++count===1?json(ready):new Response('private failure',{status})});
+  await reject(protocol.tickApproval(input),'APPROVAL_HTTP_REFUSED');assert.equal(count,2);
+ }
+});
+
+test('publication has a separate bounded HTTP deadline and aborts the stalled request',async()=>{
+ let count=0,signal:AbortSignal|undefined;
+ const protocol=createApprovalActivities({apiUrl:'http://127.0.0.1',token:'synthetic',timeoutMs:100,publicationTimeoutMs:30,fetch:async(_url,init)=>{
+  if(++count===1)return json(ready);signal=init?.signal as AbortSignal;return new Promise(()=>{});
+ }});
+ const started=Date.now();await reject(protocol.tickApproval(input),'APPROVAL_HTTP_TIMEOUT');assert.ok(Date.now()-started<1000);assert.equal(signal?.aborted,true);
+ for(const publicationTimeoutMs of [0,35001,0.5])assert.throws(()=>createApprovalActivities({apiUrl:'http://api',token:'synthetic',publicationTimeoutMs}),/APPROVAL_CONFIG_INVALID/);
+});
+
+test('closed ready recovery uses actual status tick and publication requests before acknowledgement',async t=>{
+ const paths:string[]=[];const url=await server(t,(req,res)=>{req.resume();req.on('end',()=>{
+  paths.push(req.url!);res.setHeader('Content-Type','application/json');res.end(JSON.stringify(req.url?.endsWith('/ack')?{id:event,acknowledged:true}:req.url?.endsWith('/publish')?{...ready,status:'succeeded',version:3}:ready));
+ });});
+ const protocol=createApprovalActivities({apiUrl:url,token:'synthetic'});await dispatchApprovalEvent(delivery,protocol,async()=> 'closed');
+ assert.deepEqual(paths,[`/internal/approvals/${request}/status`,`/internal/approvals/${request}/tick`,`/internal/approvals/${request}/publish`,`/internal/approvals/dispatch/${event}/ack`]);
+});
+
+test('closed ready recovery never acknowledges transient publication errors or ready/pending readback',async()=>{
+ for(const status of ['ready','pending'] as const){const f=dispatchFixture();f.protocol.tickApproval=async()=>({...ready,status,nextWakeAt:status==='pending'?pending.nextWakeAt:null});
+  await reject(dispatchApprovalEvent(delivery,f.protocol,async()=> 'closed'),'APPROVAL_CLOSED_READY');assert.deepEqual(f.calls,['status']);}
+ const f=dispatchFixture();f.protocol.tickApproval=async()=>{throw new Error('APPROVAL_HTTP_UNAVAILABLE');};
+ await reject(dispatchApprovalEvent(delivery,f.protocol,async()=> 'closed'),'APPROVAL_HTTP_UNAVAILABLE');assert.deepEqual(f.calls,['status']);
 });

@@ -157,7 +157,6 @@ export async function submitGlossaryProposal(tx:Tx,p:Principal,correlationId:str
      typeId:target.typeId,policy:target.policy,ancestorTypes:target.ancestorTypes}});
    if(!checked.ok)throw new Problem(422,'GLOSSARY_LINK_INVALID','The proposed relationship endpoints do not satisfy their pinned rules.',checked.issues);
   }
-  await query(()=>sql`select id from public.workflow_definitions where tenant_id=${p.tenantId}::uuid and id=${value.workflowPin.id} for share`.execute(tx));
   const workflow=await getApprovalDefinition(tx,p,value.workflowPin.id,value.workflowPin.version);
   if(workflow.currentVersion!==value.workflowPin.version||workflow.definitionHash!==value.workflowPin.definitionHash)throw conflict('WORKFLOW_PIN_STALE');
   const required=[...new Set(workflow.definition.stages.flatMap(stage=>stage.assignments))].sort();

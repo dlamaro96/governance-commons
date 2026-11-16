@@ -33,20 +33,20 @@ function instant(value:unknown):value is string{
 }
 /** Only canonical ID/status/version/timer envelopes may enter Temporal history.
  * Private API errors, task descriptions, decision reasons and tokens never do. */
-export function createApprovalActivities(config:{apiUrl:string;token:string;fetch?:typeof fetch;timeoutMs?:number}):ApprovalProtocol{
+export function createApprovalActivities(config:{apiUrl:string;token:string;fetch?:typeof fetch;timeoutMs?:number;publicationTimeoutMs?:number}):ApprovalProtocol{
   let url:URL;try{url=new URL(config.apiUrl);}catch{throw new Error('APPROVAL_CONFIG_INVALID');}
-  const timeoutMs=config.timeoutMs??10_000;
+  const timeoutMs=config.timeoutMs??10_000,publicationTimeoutMs=config.publicationTimeoutMs??35_000;
   if(!['http:','https:'].includes(url.protocol)||url.username||url.password||url.search||url.hash||url.pathname!=='/'||
     typeof config.token!=='string'||!config.token||config.token.length>4096||/[\s\u0000-\u001f\u007f]/.test(config.token)||
-    !Number.isInteger(timeoutMs)||timeoutMs<1||timeoutMs>10_000)throw new Error('APPROVAL_CONFIG_INVALID');
+    !Number.isInteger(timeoutMs)||timeoutMs<1||timeoutMs>10_000||!Number.isInteger(publicationTimeoutMs)||publicationTimeoutMs<1||publicationTimeoutMs>35_000)throw new Error('APPROVAL_CONFIG_INVALID');
   const base=url.origin,transport=config.fetch??fetch;
-  async function request(tenantId:string,path:string,method:'GET'|'POST',maximum:number):Promise<unknown>{
+  async function request(tenantId:string,path:string,method:'GET'|'POST',maximum:number,deadlineMs=timeoutMs):Promise<unknown>{
     const controller=new AbortController();let reader:ReadableStreamDefaultReader<Uint8Array>|undefined;
     let expired=false,failure='APPROVAL_HTTP_UNAVAILABLE';
     const refuse=(code:string):never=>{failure=code;throw new Error(code);};
     let rejectTimeout!:(reason:Error)=>void;
     const timeout=new Promise<never>((_,reject)=>{rejectTimeout=reject;});
-    const timer=setTimeout(()=>{expired=true;controller.abort();rejectTimeout(new Error('APPROVAL_HTTP_TIMEOUT'));},timeoutMs);
+    const timer=setTimeout(()=>{expired=true;controller.abort();rejectTimeout(new Error('APPROVAL_HTTP_TIMEOUT'));},deadlineMs);
     const bounded=<T>(work:Promise<T>)=>Promise.race([work,timeout]);
     try{
       const response=await bounded(transport(`${base}${path}`,{method,redirect:'error',signal:controller.signal,
@@ -76,8 +76,13 @@ export function createApprovalActivities(config:{apiUrl:string;token:string;fetc
   }
   return {
     async tickApproval(input){
-      ids(input);const value=await request(input.tenantId,`/internal/approvals/${input.requestId}/tick`,'POST',2048);
-      return tick(value,input.requestId);
+      ids(input);const value=tick(await request(input.tenantId,`/internal/approvals/${input.requestId}/tick`,'POST',2048),input.requestId);
+      if(value.status!=='ready')return value;
+      // The tick response means its transaction committed. Publication uses a
+      // separate request/transaction and never receives private proposal data.
+      const published=tick(await request(input.tenantId,`/internal/approvals/${input.requestId}/publish`,'POST',2048,publicationTimeoutMs),input.requestId);
+      if(published.status==='pending'||published.status==='ready'||published.version<value.version)throw invalid();
+      return published;
     },
     async approvalStatus(input){
       ids(input);return tick(await request(input.tenantId,`/internal/approvals/${input.requestId}/status`,'GET',2048),input.requestId);
@@ -104,6 +109,10 @@ export async function dispatchApprovalEvent(event:ApprovalDelivery,protocol:Appr
   if(result==='closed'){
     const canonical=await protocol.approvalStatus(input);
     if(canonical.status==='pending')throw new Error('APPROVAL_CLOSED_PENDING');
+    if(canonical.status==='ready'){
+      const published=await protocol.tickApproval(input);
+      if(published.status==='pending'||published.status==='ready')throw new Error('APPROVAL_CLOSED_READY');
+    }
   }else if(result!=='accepted')throw invalid();
   await protocol.ackApproval(event);
 }

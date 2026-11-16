@@ -173,7 +173,7 @@ export function createAssetSearch(deps:AssetSearchDependencies){
         const response=await request('/_search?allow_partial_search_results=false','POST',{
           size,_source:false,stored_fields:[],track_total_hits:false,pit:{id:currentPit,keep_alive:'30s'},
           timeout:Math.max(1,budget.remaining())+'ms',query:{bool:{filter:[{term:{tenantId:tenant}}],
-            must:q.q?[{multi_match:{query:q.q,fields:['name^3','qualifiedName^2','description'],fuzziness:'AUTO'}}]:[{match_all:{}}]}},
+            must:q.q?[{multi_match:{query:q.q,fields:['name^3','qualifiedName^2','description','glossaryText'],fuzziness:'AUTO'}}]:[{match_all:{}}]}},
           sort:[{'name.exact':'asc'},{id:'asc'}],...(after?{search_after:after}:{})},budget);
         if(!object(response))throw unavailable();if(response.pit_id!==undefined)currentPit=pit(response.pit_id);
         shards(response._shards);

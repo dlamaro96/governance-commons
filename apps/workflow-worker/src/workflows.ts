@@ -14,7 +14,7 @@ export async function scanSourceWorkflow(input: ScanInput): Promise<{ status: st
 const approvalIds=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 export const approvalChanged=defineSignal<[eventId:string]>('approvalChanged');
 const {tickApproval}=proxyActivities<{tickApproval(input:ApprovalInput):Promise<ApprovalTick>}>({
-  startToCloseTimeout:'15 seconds',scheduleToCloseTimeout:'60 seconds',
+  startToCloseTimeout:'50 seconds',scheduleToCloseTimeout:'3 minutes',
   retry:{initialInterval:'1 second',maximumInterval:'10 seconds',maximumAttempts:4},
 });
 /** Initial approval family only. The canonical transaction owns all decisions

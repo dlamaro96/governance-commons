@@ -246,3 +246,16 @@ test('real cursor continuation reauthenticates deleted expired and missing-membe
   for(const auth of [removed.auth,expired.auth,noMember.auth]) await assert.rejects(searchAssets(auth,{q:narrow,limit:1}),
     error=>error instanceof Problem&&error.status===401&&error.code==='SESSION_EXPIRED');
 });
+
+test('real glossary-text search retains canonical visibility before counts and facets', {timeout:40_000},async t=>{
+ // These deliberately projected ordinary fixture rows isolate query/ACL behavior;
+ // actual approved-term publication/projector execution has its own native gate.
+ const alias='approvedalias'+token(),abbreviation='abbreviation'+token(),translation='ترجمة'+token();
+ const visible=asset('Visible glossary search fixture'),hidden=asset('Restricted glossary search fixture','view',{visibility:'restricted',allowed:[steward]}),other=asset('Foreign glossary search fixture','view',{tenantId:foreign});
+ await insert([visible,hidden,other]);
+ await project([visible,hidden,other].map(a=>({id:a.id,value:document(a,{glossaryText:[alias,abbreviation,translation].join('\n')})})));
+ const current=await session(t);
+ for(const q of [alias,abbreviation,translation]){
+  const result=await http({q,limit:100},current.headers,200,t.signal);checkPage(result,[visible],[visible]);assert.equal(result.nextCursor,null);
+ }
+});

@@ -53,3 +53,6 @@ try {
 
 const {seedBusinessDomains}=await import('./seed-business-domains.ts');
 await seedBusinessDomains();
+
+const {seedGlossary}=await import('./seed-glossary.ts');
+await seedGlossary();

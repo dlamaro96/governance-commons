@@ -137,6 +137,7 @@ def main():
   ./dev test --suite source-connectors-upgrade Verify source storage upgrade and native tenant isolation
   ./dev test --suite postgres-targets Verify isolated configurable PostgreSQL TLS and metadata boundaries
   ./dev test --suite approvals-upgrade Verify approval storage, upgrade and concurrent decisions
+  ./dev test --suite glossary-upgrade Verify approved term publication and graph transaction integrity
   ./dev authn-install --input FILE    Apply one private, typed inactive installation manifest
   ./dev test --suite relation-preparation-expiry Verify the original fifteen-minute lease and committed retries
   ./dev test --suite connectors       Run Python contract/source tests
@@ -172,6 +173,8 @@ Never use docker compose config output in public logs: it expands secrets.""")
     if args.command == "test" and args.suite == "source-connectors-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-source-connectors-upgrade.py"], timeout=900); return
+    if args.command == "test" and args.suite == "glossary-upgrade":
+        run([sys.executable, "scripts/runtime-test-glossary-upgrade.py"], timeout=900); return
     if args.command == "test" and args.suite == "approvals-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-approvals-upgrade.py"], timeout=900); return

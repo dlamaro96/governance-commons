@@ -24,5 +24,7 @@ export default defineConfig({
     { name: 'business-domains', testMatch: /business-domains\.spec\.ts/, dependencies: ['relation-migrations'] },
     { name: 'source-connectors', testMatch: /source-connectors\.spec\.ts/, dependencies: ['business-domains'] },
     { name: 'postgres-configuration', testMatch: /postgres-configuration\.spec\.ts/, dependencies: ['source-connectors'] },
+    { name: 'approvals', testMatch: /approvals\.spec\.ts/, dependencies: ['postgres-configuration'] },
+    { name: 'glossary', testMatch: /glossary\.spec\.ts/, dependencies: ['approvals'] },
   ],
 });
