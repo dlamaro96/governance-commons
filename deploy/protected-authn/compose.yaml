@@ -1,0 +1,180 @@
+# SPDX-License-Identifier: Apache-2.0
+# Explicit isolated qualification profile. Never uses the shared core's files or volumes.
+x-app: &app
+  image: ${AUTHN_APP_IMAGE:?exact cached application image required}
+  pull_policy: never
+  init: true
+  user: '${LOCAL_UID:?}:${LOCAL_GID:?}'
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  tmpfs: ['/tmp:rw,nosuid,nodev,size=32m,mode=1777']
+  working_dir: /app
+  volumes:
+    - ../../apps/login-broker:/app/apps/login-broker:ro
+    - ../../apps/session-api:/app/apps/session-api:ro
+    - ../../apps/authn-edge:/app/apps/authn-edge:ro
+    - ../../packages/authn:/app/packages/authn:ro
+    - ../../scripts/authentication-install-demo.ts:/app/scripts/authentication-install-demo.ts:ro
+    - ../../package.json:/app/package.json:ro
+    - ../../tsconfig.json:/app/tsconfig.json:ro
+services:
+  postgres:
+    image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
+    pull_policy: never
+    user: postgres
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 384m
+    memswap_limit: 384m
+    tmpfs:
+      - /var/lib/postgresql/data:rw,nosuid,nodev,size=256m,mode=1777
+      - /var/run/postgresql:rw,nosuid,nodev,size=4m,mode=1777
+      - /tmp:rw,nosuid,nodev,size=16m,mode=1777
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - >-
+        initdb --auth-local=trust --auth-host=scram-sha-256 -D /var/lib/postgresql/data/pgdata >/tmp/init.log 2>&1;
+        printf '\nhost all all 0.0.0.0/0 scram-sha-256\n' >> /var/lib/postgresql/data/pgdata/pg_hba.conf;
+        exec postgres -D /var/lib/postgresql/data/pgdata -c listen_addresses='*'
+        -c shared_buffers=32MB -c work_mem=2MB -c maintenance_work_mem=16MB -c max_connections=40
+        -c min_wal_size=32MB -c max_wal_size=64MB -c max_prepared_transactions=0
+        -c log_statement=none -c log_min_error_statement=panic -c log_error_verbosity=terse
+        -c log_parameter_max_length=0 -c log_parameter_max_length_on_error=0
+    healthcheck:
+      test: [CMD, pg_isready, -h, 127.0.0.1, -U, postgres]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+  qualification-private-bootstrap:
+    image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
+    pull_policy: never
+    profiles: [tools]
+    user: '0:0'
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 16
+    mem_limit: 64m
+    memswap_limit: 64m
+    logging: {driver: none}
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - >-
+        umask 077;
+        test -f /input/config.json && test ! -L /input/config.json;
+        test "$$(wc -c < /input/config.json)" -le 65536;
+        test ! -e /output/config.json && test ! -e /output/batch;
+        cp /input/config.json /output/config.json;
+        mkdir /output/batch;
+        chmod 0600 /output/config.json;
+        chmod 0700 /output /output/batch;
+        chown ${LOCAL_UID:?}:${LOCAL_GID:?} /output/config.json /output/batch /output
+    volumes:
+      - ${AUTHN_RUN_DIR:?}/private-config.json:/input/config.json:ro
+      - qualification-private:/output
+  identity-bootstrap:
+    image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
+    pull_policy: never
+    user: '0:0'
+    network_mode: none
+    mem_limit: 64m
+    memswap_limit: 64m
+    tmpfs: [/var/lib/postgresql/data]
+    entrypoint: [/bin/sh, -ec]
+    command: ['cp /input/realm.json /output/governance-realm.json; chown 1000:0 /output/governance-realm.json; chmod 0400 /output/governance-realm.json']
+    volumes:
+      - ${AUTHN_RUN_DIR:?}/realm.json:/input/realm.json:ro
+      - identity-bootstrap:/output
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.1@sha256:3f3c5f8e03c614774b4bd9173b88391fefa4153bfc010d8012d59ad825377332
+    pull_policy: never
+    command: [start-dev, --import-realm]
+    env_file: ['${AUTHN_RUN_DIR:?}/keycloak.env']
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_HOSTNAME: http://localhost:4315
+      KC_HTTP_ENABLED: 'true'
+      KC_HEALTH_ENABLED: 'true'
+      JAVA_OPTS_APPEND: -Xms64m -Xmx384m
+    ports: [127.0.0.1:4315:8080]
+    volumes: [identity-bootstrap:/opt/keycloak/data/import:ro]
+    tmpfs: [/tmp]
+    mem_limit: 640m
+    memswap_limit: 640m
+    depends_on:
+      postgres: {condition: service_healthy}
+      identity-bootstrap: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD-SHELL, 'bash -c "exec 3<>/dev/tcp/127.0.0.1/9000; printf ''GET /health/ready HTTP/1.0\r\n\r\n'' >&3; cat <&3" | grep -q ''200 OK''']
+      interval: 3s
+      timeout: 3s
+      retries: 80
+  login-broker:
+    <<: *app
+    command: [node, --import, tsx, apps/login-broker/src/index.ts]
+    env_file: ['${AUTHN_RUN_DIR:?}/login.env']
+    mem_limit: 256m
+    memswap_limit: 256m
+    depends_on:
+      keycloak: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "const r=require('node:http').get({hostname:'127.0.0.1',port:4312,path:'/health/ready',headers:{Host:'localhost:4314'}},s=>{s.resume();process.exit(s.statusCode===200?0:1)});r.setTimeout(2000,()=>r.destroy());r.on('error',()=>process.exit(1))"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+  session-api:
+    <<: *app
+    command: [node, --import, tsx, apps/session-api/src/index.ts]
+    env_file: ['${AUTHN_RUN_DIR:?}/session.env']
+    mem_limit: 192m
+    memswap_limit: 192m
+    depends_on:
+      postgres: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "const r=require('node:http').get({hostname:'127.0.0.1',port:4313,path:'/health/ready',headers:{Host:'localhost:4314'}},s=>{s.resume();process.exit(s.statusCode===200?0:1)});r.setTimeout(2000,()=>r.destroy());r.on('error',()=>process.exit(1))"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+  authn-edge:
+    <<: *app
+    command: [node, --import, tsx, apps/authn-edge/src/index.ts]
+    environment:
+      AUTHN_ENVIRONMENT: isolated-test
+      PUBLIC_AUTHN_ORIGIN: http://localhost:4314
+      AUTHN_LOGIN_UPSTREAM: http://login-broker:4312
+      AUTHN_SESSION_UPSTREAM: http://session-api:4313
+      HOST: 0.0.0.0
+      PORT: 4310
+    ports: [127.0.0.1:4314:4310]
+    mem_limit: 128m
+    memswap_limit: 128m
+    depends_on:
+      login-broker: {condition: service_healthy}
+      session-api: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "const r=require('node:http').get({hostname:'127.0.0.1',port:4310,path:'/authn/',headers:{Host:'localhost:4314'}},s=>{s.resume();process.exit(s.statusCode===200?0:1)});r.setTimeout(2000,()=>r.destroy());r.on('error',()=>process.exit(1))"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+  owner-tool:
+    <<: *app
+    profiles: [tools]
+    env_file: ['${AUTHN_RUN_DIR:?}/owner.env']
+    command: [node, --import, tsx, scripts/authentication-install-demo.ts, --batch, /run/authn-private/batch]
+    mem_limit: 384m
+    memswap_limit: 384m
+    volumes:
+      - ../../scripts/authentication-install-demo.ts:/app/scripts/authentication-install-demo.ts:ro
+      - ../../packages/authn:/app/packages/authn:ro
+      - qualification-private:/run/authn-private
+volumes:
+  identity-bootstrap:
+  qualification-private:

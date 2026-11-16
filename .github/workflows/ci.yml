@@ -53,6 +53,8 @@ jobs:
         run: pnpm test
       - name: Fail-closed evidence collection
         run: python3 policies/test_ci_evidence.py
+      - name: Immutable application-image admission
+        run: python3 scripts/test_protected_authn_image.py
       - name: build
         run: pnpm build
       - name: Repository publication policy
@@ -101,7 +103,7 @@ jobs:
   behavior:
     name: behavior
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -166,6 +168,9 @@ jobs:
       - name: Verify browser acceptance and accessibility
         id: browser
         run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts
+      - name: Verify protected OIDC and session lifecycle on the exact built image
+        id: protected_authn
+        run: python3 scripts/runtime-protected-ci.py
       - name: Collect bounded redacted evidence
         if: always()
         env:
@@ -184,6 +189,7 @@ jobs:
           GC_BUSINESS_DOMAIN_SEED_RESULT: ${{ steps.business_domain_seed.outcome }}
           GC_AUTHORITY_AUTHN_FOUNDATION_RESULT: ${{ steps.authority_authn_foundation.outcome }}
           GC_BROWSER_RESULT: ${{ steps.browser.outcome }}
+          GC_PROTECTED_AUTHN_RESULT: ${{ steps.protected_authn.outcome }}
         run: python3 policies/ci_evidence.py
       - name: Preserve only safe behavior summary and catalog screenshots
         if: always()

@@ -53462,9 +53462,16 @@
       "implementation_paths": [
         "apps/api/src/security.ts",
         "packages/authz/src/index.ts",
-        "tests/unit/authz.test.ts"
+        "tests/unit/authz.test.ts",
+        "apps/login-broker/src/app.ts",
+        "apps/session-api/src/server.ts",
+        "apps/authn-edge/src/server.ts",
+        "packages/authn/src/transport.ts"
       ],
-      "test_ids": [],
+      "test_ids": [
+        "tests/qualification/protected-authn-http.test.ts",
+        "tests/e2e-protected/protected-authn.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -53493,10 +53500,17 @@
         "evidence": []
       },
       "limitations": [
-        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
+        "Dedicated protected OIDC/session/edge increment only:484 host units/types,15 native HTTP/SQL cases and2 real Keycloak browser journeys pass;8 original frames reviewed. Source-mounted isolated loopback execution does not qualify immutable images, production TLS, integrated content authority, group mapping, break-glass, SCIM, all ingress/content rendering controls or full profile/release obligations. All failed attempts and source scopes are retained."
       ],
       "owner": "governance-commons maintainers",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/protected-authentication-host.json",
+        "docs/verification/protected-authentication-local.json",
+        "docs/verification/protected-authentication-visual-review.json",
+        "docs/verification/protected-authentication-attempt-history.json"
+      ]
     },
     {
       "id": "SYS-SEC-001.01",
@@ -53522,9 +53536,17 @@
         "Use OIDC authorization code plus PKCE; implement a server-side/BFF session with secure HttpOnly SameSite cookies for the web UI. No long-lived bearer tokens in browser localStorage. Validate issuer, audience, signature, expiry, nonce/state and redirect URIs. Support configurable IdP discovery, group mapping and login boundaries. Do not implement your own password database when an external IdP is configured. Provide a tested local reverse-proxy/hostname topology in which browser and containers agree on the OIDC issuer, callback URLs and trusted forwarded headers. Do not solve container/localhost reachability by disabling issuer/audience validation or accepting arbitrary redirects. Local break-glass access must be explicitly enabled, limited, audited and documented."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/login-broker/src/app.ts",
+        "apps/session-api/src/server.ts",
+        "apps/authn-edge/src/server.ts",
+        "packages/authn/src/transport.ts"
+      ],
+      "test_ids": [
+        "tests/qualification/protected-authn-http.test.ts",
+        "tests/e2e-protected/protected-authn.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -53552,9 +53574,17 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Dedicated protected OIDC/session/edge increment only:484 host units/types,15 native HTTP/SQL cases and2 real Keycloak browser journeys pass;8 original frames reviewed. Source-mounted isolated loopback execution does not qualify immutable images, production TLS, integrated content authority, group mapping, break-glass, SCIM, all ingress/content rendering controls or full profile/release obligations. All failed attempts and source scopes are retained."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/protected-authentication-host.json",
+        "docs/verification/protected-authentication-local.json",
+        "docs/verification/protected-authentication-visual-review.json",
+        "docs/verification/protected-authentication-attempt-history.json"
+      ]
     },
     {
       "id": "SYS-SEC-001.02",
@@ -53957,7 +53987,11 @@
         "packages/authority/src/authentication-installation.ts",
         "scripts/authentication-install.ts",
         "scripts/authentication_roles.py",
-        "scripts/runtime-authentication-roles.py"
+        "scripts/runtime-authentication-roles.py",
+        "apps/login-broker/src/app.ts",
+        "apps/session-api/src/server.ts",
+        "apps/authn-edge/src/server.ts",
+        "packages/authn/src/transport.ts"
       ],
       "test_ids": [
         "tests/unit/authority-policy.test.ts",
@@ -53974,7 +54008,9 @@
         "tests/unit/authority-authentication-installation.test.ts",
         "tests/qualification/authority-authn-foundation-storage.test.ts",
         "tests/qualification/authority-authn-foundation-concurrency.test.ts",
-        "scripts/runtime-test-authority-authn-foundation.py"
+        "scripts/runtime-test-authority-authn-foundation.py",
+        "tests/qualification/protected-authn-http.test.ts",
+        "tests/e2e-protected/protected-authn.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -54013,7 +54049,8 @@
         "PR19 fresh Source43814105793 and Development43814105764 qualify admission headcc916580/testedmergec3fff2cb:885 immutable files,154API,19 one-attempt browser journeys,14 mandatory stages and three zero-finding stored analyses. Exact head merged as2c525712 on2026-11-16T06:32:14Z. Hosted raw unit count is not exported. This is premerge regression qualification of admission only; engine, protected storage, runtime cutover, postmerge execution and full profile/release qualification remain separate.",
         "PR20 fresh Source43817616108 and Development43817616265 qualify reference-engine headcdec876/testedmerge5e0234d:935 immutable files,154API,19 one-attempt browsers,14 mandatory stages and three zero-finding analyses. Exact head merged as94efe7f8 on2026-11-16T07:11:43Z. Hosted unit TAP/count is not exported;91 literal decision declarations are not an executed-result count. Protected authentication/storage, content authority, postmerge execution and complete profile/release qualification remain separate.",
         "Inactive protected authentication foundation only: SQL012, thirteen private tables, nine owner-only installation operations, six finite native-role functions, typed transactional client and private installation CLI are implemented. The exact isolated native gate passes21 storage and14 concurrency cases with115 stable sources, preserved SQL001–011 data and owned cleanup.435 host units/root-web types/40 publication tests pass with269 stable inputs; historical type-upgrade9+9 is separate. Full protected OIDC broker, cookies/CSRF, canonical content authority, policy storage/loaders, SQL/OpenSearch equivalence, administration, service leases and atomic all-ingress cutover remain required. No complete profile or release outcome is promoted.",
-        "SQL012 existing-core compatibility now passes154 API cases,19 browser journeys with zero retries and137 scoped original-frame reviews. The first hosted Development attempt failed its outdated11-migration seed guard and skipped later gates; a local12-migration repair passes three real seed invocations and exact22-table/persona restoration. These records preserve failures and do not qualify protected OIDC transport, content authority, any complete profile or release. See the separate current-core API, browser and seed evidence."
+        "SQL012 existing-core compatibility now passes154 API cases,19 browser journeys with zero retries and137 scoped original-frame reviews. The first hosted Development attempt failed its outdated11-migration seed guard and skipped later gates; a local12-migration repair passes three real seed invocations and exact22-table/persona restoration. These records preserve failures and do not qualify protected OIDC transport, content authority, any complete profile or release. See the separate current-core API, browser and seed evidence.",
+        "Dedicated protected OIDC/session/edge increment only:484 host units/types,15 native HTTP/SQL cases and2 real Keycloak browser journeys pass;8 original frames reviewed. Source-mounted isolated loopback execution does not qualify immutable images, production TLS, integrated content authority, group mapping, break-glass, SCIM, all ingress/content rendering controls or full profile/release obligations. All failed attempts and source scopes are retained."
       ],
       "owner": "unassigned",
       "milestone": "M0",
@@ -54032,7 +54069,11 @@
         "docs/verification/authentication-foundation-core-api.json",
         "docs/verification/authentication-foundation-core-browser.json",
         "docs/verification/authentication-foundation-domain-seed.json",
-        "docs/verification/authentication-foundation-hosted-attempt-1.json"
+        "docs/verification/authentication-foundation-hosted-attempt-1.json",
+        "docs/verification/protected-authentication-host.json",
+        "docs/verification/protected-authentication-local.json",
+        "docs/verification/protected-authentication-visual-review.json",
+        "docs/verification/protected-authentication-attempt-history.json"
       ]
     },
     {
@@ -54860,9 +54901,17 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/login-broker/src/app.ts",
+        "apps/session-api/src/server.ts",
+        "apps/authn-edge/src/server.ts",
+        "packages/authn/src/transport.ts"
+      ],
+      "test_ids": [
+        "tests/qualification/protected-authn-http.test.ts",
+        "tests/e2e-protected/protected-authn.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -54890,9 +54939,17 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Dedicated protected OIDC/session/edge increment only:484 host units/types,15 native HTTP/SQL cases and2 real Keycloak browser journeys pass;8 original frames reviewed. Source-mounted isolated loopback execution does not qualify immutable images, production TLS, integrated content authority, group mapping, break-glass, SCIM, all ingress/content rendering controls or full profile/release obligations. All failed attempts and source scopes are retained."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/protected-authentication-host.json",
+        "docs/verification/protected-authentication-local.json",
+        "docs/verification/protected-authentication-visual-review.json",
+        "docs/verification/protected-authentication-attempt-history.json"
+      ]
     },
     {
       "id": "SYS-SEC-006.01",
@@ -54918,9 +54975,17 @@
         "Protect state-changing browser requests with an explicit CSRF design plus Origin/Referer checks where appropriate; SameSite cookies alone are not the entire design. Use an exact CORS allowlist and validated proxy/host settings. Sanitize rich text, Markdown, diagrams, imported labels and rendered document previews. Use a restrictive, tested CSP, self-hosted required assets, secure response headers, HTTPS in production and a configured trusted-proxy chain. Bound request size, pagination, nesting, parsing cost, uploads and concurrent streams. Parameterize SQL and reject unsafe deserialization. Separate public health summaries from privileged diagnostics. Test reflected/stored XSS, CSRF, malicious forwarding headers, open redirects, session fixation, logout/session revocation and unsafe content in notifications/exports. Do not weaken these controls to make a development proxy work."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/login-broker/src/app.ts",
+        "apps/session-api/src/server.ts",
+        "apps/authn-edge/src/server.ts",
+        "packages/authn/src/transport.ts"
+      ],
+      "test_ids": [
+        "tests/qualification/protected-authn-http.test.ts",
+        "tests/e2e-protected/protected-authn.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -54948,9 +55013,17 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Dedicated protected OIDC/session/edge increment only:484 host units/types,15 native HTTP/SQL cases and2 real Keycloak browser journeys pass;8 original frames reviewed. Source-mounted isolated loopback execution does not qualify immutable images, production TLS, integrated content authority, group mapping, break-glass, SCIM, all ingress/content rendering controls or full profile/release obligations. All failed attempts and source scopes are retained."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/protected-authentication-host.json",
+        "docs/verification/protected-authentication-local.json",
+        "docs/verification/protected-authentication-visual-review.json",
+        "docs/verification/protected-authentication-attempt-history.json"
+      ]
     },
     {
       "id": "SYS-EDGE-001",

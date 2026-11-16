@@ -19,7 +19,10 @@
     "test": "node --import tsx --test tests/unit/*.test.ts",
     "test:integration": "node --import tsx --test --test-concurrency=1 tests/integration/*.test.ts",
     "test:e2e": "playwright test",
-    "requirements": "python3 scripts/requirements.py"
+    "requirements": "python3 scripts/requirements.py",
+    "authn-edge/start": "tsx apps/authn-edge/src/index.ts",
+    "login-broker/start": "tsx apps/login-broker/src/index.ts",
+    "session-api/start": "tsx apps/session-api/src/index.ts"
   },
   "dependencies": {
     "@fastify/cookie": "11.1.5",

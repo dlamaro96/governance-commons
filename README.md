@@ -18,6 +18,8 @@ Local application: http://localhost:4310. Bootstrap generates local credentials 
 
 The [inactive authentication foundation](docs/development/authentication-foundation.md) documents role prerequisites, typed installation receipts and its separate real PostgreSQL gate. Its implementation does not imply authority activation or release qualification.
 
+The [protected login and session lifecycle](docs/development/protected-authentication.md) describes its isolated real-service gate and explicit local installation batch. Content authority remains inactive until the later qualified cutover.
+
 See [execution plan](docs/execution/PLAN.md), [release readiness](docs/release/READINESS.md), [capability traceability](docs/product/parity-matrix.md), [contributing](CONTRIBUTING.md), and [security](SECURITY.md). See the [executed evidence](docs/verification/evidence-manifest.json) and [inspected screenshots](docs/verification/screenshots/README.md). There is no external LLM or paid-service requirement for the core product.
 
 ![Actual synthetic asset ownership and audit UI](docs/verification/screenshots/asset-en-light-1440.png)

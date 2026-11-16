@@ -10,6 +10,8 @@ import shutil
 import sys
 from api_evidence import safe_report
 from authentication_evidence import load_report as load_authentication_report
+from protected_authn_evidence import load_report as load_protected_report, copy_captures as copy_protected_captures
+from authentication_evidence import read_file as bounded_read, strict_json as private_json
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / ".local/ci-artifacts"
@@ -18,7 +20,7 @@ if any(DEST.iterdir()):
     raise SystemExit("Artifact staging must be empty; refusing to publish a mixed or stale directory")
 allowed_outcomes = {"success", "failure", "cancelled", "skipped"}
 outcomes = {}
-for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "browser"):
+for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "browser", "protected_authn"):
     value = os.environ.get(f"GC_{step.upper()}_RESULT", "skipped")
     outcomes[step] = value if value in allowed_outcomes else "unknown"
 report = {
@@ -64,6 +66,30 @@ if authn_report:
     (DEST / "authentication-summary.json").write_text(json.dumps(authn_report, indent=2) + "\n")
 if outcomes["authority_authn_foundation"] == "success" and not authn_report:
     report["outcome"] = "NOT_PASSED"
+# Protected transport is a separate sixteenth gate, never a replacement for
+# native foundation or the nineteen core browser journeys. Hosted collection
+# requires the independently bound, baked image mode; local overlays refuse.
+protected_report = load_protected_report(ROOT, os.environ.get("GITHUB_SHA"))
+protected_mismatch = bool(protected_report and outcomes["protected_authn"] != "success")
+if protected_mismatch:
+    protected_report = None
+report["protected_authentication_evidence"] = "STEP_RESULT_MISMATCH" if protected_mismatch else "VERIFIED_PASS" if protected_report else "UNAVAILABLE_OR_INVALID"
+if protected_report:
+    try:
+        original = private_json(bounded_read(ROOT, ".local/evidence/protected-authn.json", 4*1024*1024))
+        copy_protected_captures(ROOT, original, DEST, protected_report)
+        (DEST / "protected-authentication-summary.json").write_text(json.dumps(protected_report, indent=2) + "\n")
+    except (OSError, ValueError, TypeError, KeyError):
+        # A race or incomplete second read cannot leave a success-qualified
+        # partial capture set in the public staging directory.
+        from protected_authn_evidence import CAPTURES
+        for name in CAPTURES:
+            (DEST / name).unlink(missing_ok=True)
+        protected_report = None
+        report["protected_authentication_evidence"] = "UNAVAILABLE_OR_INVALID"
+if outcomes["protected_authn"] == "success" and not protected_report:
+    report["outcome"] = "NOT_PASSED"
+
 def failure_locations(results, filename):
     """Only reviewed repository coordinates; never copy exception text/paths."""
     locations = set()

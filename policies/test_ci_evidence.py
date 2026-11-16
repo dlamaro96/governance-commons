@@ -12,15 +12,18 @@ import unittest
 from api_evidence import collect as collect_api
 import test_api_evidence
 import test_authentication_evidence
+import test_protected_authn_evidence
+import authentication_evidence
+import protected_authn_evidence
 from test_authentication_evidence import fixture as authentication_fixture
 
 COLLECTOR = Path(__file__).with_name("ci_evidence.py")
 FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations", "business-domains")
-STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "browser")
+STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "browser", "protected_authn")
 
 
 class EvidenceGateTests(unittest.TestCase):
-    def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False, omitted_step=None, authn_mutation=None, omit_authn=False):
+    def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False, omitted_step=None, authn_mutation=None, omit_authn=False, protected_mutation=None, omit_protected=False):
         specs = [{"file": f"{name}.spec.ts", "line": line, "title": "PRIVATE_SYNTHETIC_TITLE",
                   "tests": [{"status": "expected", "results": [{"status": "passed", "duration": 1, "stdout": ["PRIVATE_SYNTHETIC_OUTPUT"]}]}]}
                  for name in FILES for line in ((10, 20, 30) if name == "business-domains" else (10, 20))]
@@ -32,6 +35,7 @@ class EvidenceGateTests(unittest.TestCase):
             shutil.copyfile(COLLECTOR, root / "policies/ci_evidence.py")
             shutil.copyfile(COLLECTOR.with_name("api_evidence.py"), root / "policies/api_evidence.py")
             shutil.copyfile(COLLECTOR.with_name("authentication_evidence.py"), root / "policies/authentication_evidence.py")
+            shutil.copyfile(COLLECTOR.with_name("protected_authn_evidence.py"), root / "policies/protected_authn_evidence.py")
             api_file = root / "tests/integration/example.test.ts"
             api_file.parent.mkdir(parents=True)
             api_file.write_text("test('synthetic API test', async () => {});\n")
@@ -44,6 +48,17 @@ class EvidenceGateTests(unittest.TestCase):
             if not omit_api:
                 (source / "api-summary.json").write_text(json.dumps(api))
             authn = authentication_fixture(root)
+            protected = test_protected_authn_evidence.fixture(root)
+            # Both source inventories overlap intentionally. Finish all synthetic
+            # source preparation before recording either execution's hashes.
+            authn["sources"] = authentication_evidence.source_inventory(root)
+            hashes = {row["path"]: row["sha256"] for row in authn["sources"]}
+            authn["runtime"]["packageSha256"] = hashes["package.json"]
+            authn["runtime"]["lockSha256"] = hashes["pnpm-lock.yaml"]
+            if protected_mutation:
+                protected_mutation(protected)
+            if not omit_protected:
+                (source / "protected-authn.json").write_text(json.dumps(protected))
             if authn_mutation:
                 authn_mutation(authn)
             if not omit_authn:
@@ -159,7 +174,7 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(report["api_evidence"], "STEP_RESULT_MISMATCH")
 
     def test_authentication_native_gate_and_evidence_are_required(self):
-        self.assertEqual(len(STEPS), 15)
+        self.assertEqual(len(STEPS), 16)
         code, report = self.collect(omit_authn=True)
         self.assertEqual(code, 1)
         self.assertEqual(report["authentication_evidence"], "UNAVAILABLE_OR_INVALID")
@@ -175,10 +190,29 @@ class EvidenceGateTests(unittest.TestCase):
             self.assertEqual(code, 1)
             self.assertEqual(report["authentication_evidence"], "STEP_RESULT_MISMATCH")
 
-    def test_workflow_executes_and_collects_all_fifteen_steps_before_browser(self):
+    def test_protected_transport_gate_and_baked_evidence_are_required(self):
+        code, report = self.collect(omit_protected=True)
+        self.assertEqual(code, 1)
+        self.assertEqual(report["protected_authentication_evidence"], "UNAVAILABLE_OR_INVALID")
+        for mutation in (lambda r: r.update(commit="b"*40),
+                         lambda r: r.update(evidenceMode="mounted-source", imageAttestation=None),
+                         lambda r: r["cleanup"].update(resourceInventoryPreserved=False),
+                         lambda r: r["captures"].pop(),
+                         lambda r: r["imageAttestation"].update(sourceMode="mounted")):
+            code, report = self.collect(protected_mutation=mutation)
+            self.assertEqual(code, 1)
+            self.assertEqual(report["protected_authentication_evidence"], "UNAVAILABLE_OR_INVALID")
+        for option in ("failed_step", "omitted_step"):
+            code, report = self.collect(**{option: "protected_authn"})
+            self.assertEqual(code, 1)
+            self.assertEqual(report["protected_authentication_evidence"], "STEP_RESULT_MISMATCH")
+
+    def test_workflow_executes_and_collects_all_sixteen_steps(self):
         workflow = (COLLECTOR.parent.parent / ".github/workflows/ci.yml").read_text()
         self.assertIn("id: authority_authn_foundation\n        run: ./dev test --suite authority-authn-foundation", workflow)
         self.assertLess(workflow.index("id: authority_authn_foundation"), workflow.index("id: browser"))
+        self.assertIn("id: protected_authn", workflow)
+        self.assertLess(workflow.index("id: browser"), workflow.index("id: protected_authn"))
         for step in STEPS:
             self.assertEqual(workflow.count("id: " + step + "\n"), 1)
             self.assertIn("GC_" + step.upper() + "_RESULT: ${{ steps." + step + ".outcome }}", workflow)
@@ -189,6 +223,7 @@ def load_tests(loader, tests, pattern):
     # boundary; no new workflow privilege or artifact path is required.
     tests.addTests(loader.loadTestsFromModule(test_api_evidence))
     tests.addTests(loader.loadTestsFromModule(test_authentication_evidence))
+    tests.addTests(loader.loadTestsFromModule(test_protected_authn_evidence))
     return tests
 
 

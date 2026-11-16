@@ -1276,6 +1276,70 @@
       },
       "runtime_authority_activated": false,
       "release_qualified": false
+    },
+    {
+      "path": "docs/verification/authentication-foundation-hosted-attempt-2.json",
+      "scope": "Exact PR21 head and tested merge qualify hosted source/dependency/secret checks,154API,19browser,21storage,14concurrency and15 stages. Attempt1 is preserved; merged revision execution is separate.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EXACT_SOURCE_HOSTED_FOUNDATION",
+      "source_binding": {
+        "base_revision": "4ec8e148a3b02fbf8b30d4388b6539cf55878e9e",
+        "tested_merge": "0e9dafdd66638e227e57fdffe14e40e0cf78abf7",
+        "merged_revision": "086f16c412c889bf5af3a6c898c2f9b14f9297ba",
+        "verified_source_files": 991,
+        "evidence_sha256": "88f116bc31272439847cc47add1a6dae7136be783fdda33aa235ed833d660215"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-host.json",
+      "scope": "484 host units and root/web types on protected authentication implementation. Real services and runtime activation remain separate.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_HOST_UNITS_AND_TYPES",
+      "source_binding": {
+        "base_revision": "086f16c412c889bf5af3a6c898c2f9b14f9297ba",
+        "observed_source_files": 189,
+        "evidence_sha256": "037a0a8fef61f64ee81d227c0fcf5c6a4d2b0e7486e46e0b89f85d7fb7769fb5"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-local.json",
+      "scope": "15 native HTTP/SQL cases and2 real Keycloak browser journeys with129 source bindings, exact13-manifest replay,served assets and cleanup.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_ISOLATED_MOUNTED_SOURCE_AUTHENTICATION",
+      "source_binding": {
+        "base_revision": "086f16c412c889bf5af3a6c898c2f9b14f9297ba",
+        "evidence_sha256": "232fae73df58ebacbfcddda830397ee7139b883a6615e912a47b5318b6469670"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-visual-review.json",
+      "scope": "Actual English/Arabic desktop/mobile captures from the passing isolated run; linguistic/human accessibility and full product qualifications remain open.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EIGHT_SCOPED_ORIGINAL_FRAME_REVIEWS",
+      "source_binding": {
+        "base_revision": "086f16c412c889bf5af3a6c898c2f9b14f9297ba",
+        "evidence_sha256": "855d553d32c30478d2d98e6b875eab55f00c980b6c84e602a18f550f8778142e"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-attempt-history.json",
+      "scope": "All8 launches retained; corrections, failed cleanup and evidence limits remain explicit.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PRESERVED_FAILED_AND_PASSING_ATTEMPTS",
+      "source_binding": {
+        "base_revision": "086f16c412c889bf5af3a6c898c2f9b14f9297ba",
+        "evidence_sha256": "fd1e62505a1b858e03d638c706d0697cafb3ef5113a50d2efed64a714f0b8b9d"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
     }
   ],
   "limitations": [

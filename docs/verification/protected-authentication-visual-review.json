@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "result": "PASS_SCOPED_STATIC_VISUAL_REVIEW",
+  "execution_report": "docs/verification/protected-authentication-local.json",
+  "execution_report_sha256": "232fae73df58ebacbfcddda830397ee7139b883a6615e912a47b5318b6469670",
+  "captures": [
+    {
+      "path": "docs/verification/protected-authentication-captures/protected-revoked-ar-mobile.png",
+      "sha256": "e069fc43894ada9575e19ff47c9cb7ea84d28af3e0c6467f2b30c8ed10cbd85d",
+      "width": 390,
+      "height": 1385,
+      "reviewer": "qualification-agent",
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": [
+        "Arabic logout confirmation is visible. Session descriptor values are cleared; sign-in is available and tenant/select logout controls are visibly disabled.",
+        "Cards, body text and footer remain readable with no visible overlap."
+      ]
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures/protected-selected-ar-desktop.png",
+      "sha256": "a2b734ab71a82318880b05ee8aac75c443e0c0d969b3d15eaf1d59c0b891d2b9",
+      "width": 1440,
+      "height": 1161,
+      "reviewer": "root-agent",
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Actual English/Arabic desktop state is legible, controls and session values are aligned, and signed-out/unbound state exposes no session values. No overlap or horizontal page overflow observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures/protected-selected-ar-mobile.png",
+      "sha256": "a1f469da57e17ce7eafd5b21eeb83c2ac3e2206c1076d6780d4ca1c5cb155e61",
+      "width": 390,
+      "height": 1407,
+      "reviewer": "qualification-agent",
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": [
+        "Arabic RTL headings, status, cards and controls remain within the390px viewport. Session version2 and selected tenant are visible; content remains inactive.",
+        "Long tenant identifier wraps in the descriptor and is horizontally clipped within the single-line editable input; no page-level overflow or overlapping controls is visible."
+      ]
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures/protected-selected-en-desktop.png",
+      "sha256": "4f0c766068a59f87524a4ce90e8bbb078927a721bd8cf969314e6fa01d8e47e8",
+      "width": 1440,
+      "height": 1140,
+      "reviewer": "root-agent",
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Actual English/Arabic desktop state is legible, controls and session values are aligned, and signed-out/unbound state exposes no session values. No overlap or horizontal page overflow observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures/protected-session-en-desktop.png",
+      "sha256": "482ed1d18dc6100955f9b41f74b94e6ad448a598289a5b870260c1866b393a27",
+      "width": 1440,
+      "height": 1140,
+      "reviewer": "root-agent",
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Actual English/Arabic desktop state is legible, controls and session values are aligned, and signed-out/unbound state exposes no session values. No overlap or horizontal page overflow observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures/protected-steward-en-mobile.png",
+      "sha256": "d7e2262e34b89a43c9a3926c64055a8ac75575243fbaeebe8b4ae6aad1d72760",
+      "width": 390,
+      "height": 1340,
+      "reviewer": "qualification-agent",
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": [
+        "English signed-in state shows version1, the current tenant, expiry and inactive content access. Tenant entry and sign-out controls are visible and separated.",
+        "Long title and text fit the390px viewport; no clipped controls or card overlap is visible."
+      ]
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures/protected-tenant-denied-en-mobile.png",
+      "sha256": "70aa412378f587b69e0c967a376fdb42cdee9fd927fb6e3bffec62f851b8fe62",
+      "width": 390,
+      "height": 1383,
+      "reviewer": "qualification-agent",
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": [
+        "English rejection and sign-in-again status is visible; descriptor values are cleared, sign-in remains available, and selection/logout controls are disabled.",
+        "The long entered tenant identifier remains inside its single-line input. Cards and footer remain within the viewport without visible overlap."
+      ]
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures/protected-unbound-denied-en-desktop.png",
+      "sha256": "c1c3fb5c835b939e9d0509aa36641d337693f90409141fd13ed730dbed427ddc",
+      "width": 1440,
+      "height": 1158,
+      "reviewer": "root-agent",
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Actual English/Arabic desktop state is legible, controls and session values are aligned, and signed-out/unbound state exposes no session values. No overlap or horizontal page overflow observed."
+    }
+  ],
+  "limitations": [
+    "Eight actual captures inspected, four desktop and four mobile, from the passing isolated real-browser execution.",
+    "This is static model-assisted inspection plus separately reported automated axe checks, not human accessibility or Arabic linguistic certification.",
+    "Mobile tenant UUID inputs require internal horizontal text scrolling to read all characters; no page-level overflow observed.",
+    "Protected session qualification page only; this does not qualify integrated content authority, the full product UI or a release."
+  ]
+}
