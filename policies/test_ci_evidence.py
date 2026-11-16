@@ -11,8 +11,8 @@ import tempfile
 import unittest
 
 COLLECTOR = Path(__file__).with_name("ci_evidence.py")
-FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations")
-STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "browser")
+FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations")
+STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "browser")
 
 
 class EvidenceGateTests(unittest.TestCase):
@@ -40,14 +40,14 @@ class EvidenceGateTests(unittest.TestCase):
             self.assertNotIn("PRIVATE_SYNTHETIC", serialized)
             return result.returncode, report
 
-    def test_all_fourteen_required_journeys_are_accepted_and_private_payloads_omitted(self):
+    def test_all_sixteen_required_journeys_are_accepted_and_private_payloads_omitted(self):
         code, report = self.collect()
         self.assertEqual(code, 0)
         self.assertEqual(report["outcome"], "PASS")
-        self.assertEqual(len(report["tests"]), 14)
+        self.assertEqual(len(report["tests"]), 16)
 
-    def test_older_twelve_test_gate_cannot_hide_missing_relation_journeys(self):
-        code, report = self.collect(lambda specs: specs.__delitem__(slice(12, None)))
+    def test_older_fourteen_test_gate_cannot_hide_missing_participation_journeys(self):
+        code, report = self.collect(lambda specs: specs.__delitem__(slice(14, None)))
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
@@ -62,7 +62,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
 
     def test_real_service_failure_cannot_be_overridden_by_successful_browser_results(self):
-        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade"):
+        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade"):
             with self.subTest(step=step):
                 code, report = self.collect(failed_step=step)
                 self.assertEqual(code, 1)
@@ -72,17 +72,17 @@ class EvidenceGateTests(unittest.TestCase):
         failure = {"status": "failed", "duration": 3, "error": {
             "message": "PRIVATE_SYNTHETIC_MESSAGE", "stack": (
                 "PRIVATE_SYNTHETIC_ERROR\n"
-                "    at capture (/PRIVATE_SYNTHETIC_PATH/tests/e2e/relations.spec.ts:65:9)\n"
-                "    at /PRIVATE_SYNTHETIC_PATH/tests/e2e/relations.spec.ts:173:3\n"
+                "    at capture (/PRIVATE_SYNTHETIC_PATH/tests/e2e/relation-migrations.spec.ts:65:9)\n"
+                "    at /PRIVATE_SYNTHETIC_PATH/tests/e2e/relation-migrations.spec.ts:173:3\n"
                 "    at /PRIVATE_SYNTHETIC_PATH/tests/e2e/private.spec.ts:4:5\n")}}
         code, report = self.collect(lambda specs: specs[-1]["tests"][0].update(results=[failure]), failed_step="browser")
         self.assertEqual(code, 1)
         self.assertEqual(report["tests"][-1]["failure_locations"], [
-            {"file": "tests/e2e/relations.spec.ts", "line": 65, "column": 9},
-            {"file": "tests/e2e/relations.spec.ts", "line": 173, "column": 3}])
+            {"file": "tests/e2e/relation-migrations.spec.ts", "line": 65, "column": 9},
+            {"file": "tests/e2e/relation-migrations.spec.ts", "line": 173, "column": 3}])
 
     def test_untrusted_or_successful_error_fields_cannot_publish_payloads(self):
-        for stack in (None, {"PRIVATE_SYNTHETIC": True}, "tests/e2e/relations.spec.ts:0:2", "tests/e2e/relations.spec.ts:1:1000000"):
+        for stack in (None, {"PRIVATE_SYNTHETIC": True}, "tests/e2e/relation-migrations.spec.ts:0:2", "tests/e2e/relation-migrations.spec.ts:1:1000000"):
             with self.subTest(stack=stack):
                 code, report = self.collect(lambda specs: specs[-1]["tests"][0]["results"][0].update(error={"stack": stack}))
                 self.assertEqual(code, 0)

@@ -112,6 +112,8 @@ def main():
   ./dev test --suite asset-type-upgrade Verify inherited-type upgrade in isolated PostgreSQL
   ./dev test --suite type-migration-upgrade Verify complete typed receipts and principal locking
   ./dev test --suite relations-upgrade Verify asserted relation storage and concurrency
+  ./dev test --suite relation-participation-upgrade Verify complete graph operations and required participation
+  ./dev test --suite relation-preparation-expiry Verify the original fifteen-minute lease and committed retries
   ./dev test --suite connectors       Run Python contract/source tests
   ./dev test --suite recovery         Verify repeated seed and persistent restart
   ./dev test --suite histories        Inspect a completed scan's Temporal payloads
@@ -177,6 +179,14 @@ Never use docker compose config output in public logs: it expands secrets.""")
             run([sys.executable, "scripts/runtime-test-asset-type-upgrade.py"], timeout=300)
         elif args.suite == "relations-upgrade":
             run([sys.executable, "scripts/runtime-test-relations-upgrade.py"], timeout=900)
+        elif args.suite == "relation-participation-upgrade":
+            run([sys.executable, "scripts/runtime-test-relation-participation-upgrade.py"], timeout=900)
+        elif args.suite == "relation-preparation-expiry":
+            # The test observes the original database deadline; it never shortens
+            # the lease. Its own 22-minute bound expires before this outer bound.
+            run(COMPOSE + ["exec", "-T", "api", "node", "--import", "tsx", "--test",
+                "--test-concurrency=1", "--test-reporter=tap",
+                "tests/qualification/relation-preparation-expiry.test.ts"], timeout=1380)
         elif args.suite == "type-migration-upgrade":
             run([sys.executable, "scripts/runtime-test-type-migration-upgrade.py"], timeout=300)
         elif args.suite == "histories":

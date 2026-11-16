@@ -1,6 +1,6 @@
-# Required relation participation and explicit migration — draft contract
+# Required relation participation and explicit migration — implementation contract
 
-Status: **REVIEWED ENGINEERING CONTRACT DRAFT — NO_SOURCE — NOT IMPLEMENTED OR VERIFIED.** Root has selected the engineering decisions below after storage review. They describe the next increment; executable work must wait until the current constrained-relations PR is complete and root opens that increment. This document does not modify SQL008, current executable formats or the current contract. Implementation, execution evidence and release readiness remain separate. Engineering review is internal coordination; no new user permission is required.
+Status: **IMPLEMENTATION OPEN — NOT VERIFIED.** Root opened codex/relation-participation from checked commit639d4c23954745a9acf83926432c55d35a462284 while PR14 completes hosted qualification. This isolates new source work from the frozen PR head and running image; publication of this increment waits for PR14 and its own gates. The scheduling decision permits independent progress without advancing any capability or milestone verification status. SQL001–008 remain immutable. Implementation, execution evidence and release readiness remain separate.
 
 The governing sources are `docs/product/BUILD_SPEC.md` (MOD-001–004, CORE-002/006/007/009, SYS-DATA-001–005, SYS-SEC-002/003, AT-MOD-01 and E2E-06), `docs/product/requirements.yaml`, `docs/execution/PLAN.md`, and `docs/execution/CONSTRAINED_RELATIONS.md`. MOD/AT-MOD and related system requirements remain IN_PROGRESS; E2E-06 remains NOT_STARTED in the current register. This draft changes none of those statuses. Read the current STATE and actual evidence before describing SQL008 as applied or qualified.
 
@@ -28,7 +28,7 @@ Example: publishing a type requiring every eligible dataset to have one owner-as
 
 ## Proposed shared data contracts
 
-The following names/shapes are the draft shared contract for implementation after NO_SOURCE is lifted. They are not current exports or implemented endpoints. All JSON fields shown are mandatory; nullable fields are explicit. UUIDs, versions, safe identifiers, UTC timestamps, typed values, duplicate-safe JSON and canonical collection ordering reuse current parsers. Creation keys use the safe64 logical-key grammar; reasons contain1–500 Unicode characters with the existing malformed-Unicode/control rejection. Unknown fields, getters/prototypes, duplicate escaped keys, malformed Unicode and numeric/string coercion fail closed.
+The following names/shapes are the shared implementation contract. Exported types alone are not implemented endpoints or qualified behavior. All JSON fields shown are mandatory; nullable fields are explicit. UUIDs, versions, safe identifiers, UTC timestamps, typed values, duplicate-safe JSON and canonical collection ordering reuse current parsers. Creation keys use the safe64 logical-key grammar; reasons contain1–500 Unicode characters with the existing malformed-Unicode/control rejection. Unknown fields, getters/prototypes, duplicate escaped keys, malformed Unicode and numeric/string coercion fail closed.
 
 ```ts
 // Existing RelationTypeDefinition is the unchanged format1 definition.
@@ -115,7 +115,7 @@ The mode matrix is exact. `create` has empty `sourceVersions`, `edges` and `bind
 
 `preserve` keeps all canonical edge fields and version unchanged. A preserved old pin must still coexist legally with the final policy/binding set; it cannot bypass destructive publication checks. `tombstone` preserves the prior tuple and adds a tombstone revision. `replace` tombstones the old identity and links it to exactly one creation key in the same logical relation-type UUID. Creation keys are scoped by `(targetRelationTypeUUID,key)`; no such pair is shared by two predecessors. Cross-type replacements/migrations are unsupported in this profile and fail explicitly; changing logical type is never an in-place repin. Distinct explicit creations may supply additional required edges. No default dropping, endpoint guessing, merging or deduplication is allowed. Conflicting final live pairs are a validation error before writes.
 
-New assertion UUIDs are assigned by the server on execution and bound to creation keys in the receipt. Preview digests bind keys and proposed values, not invented persisted UUIDs. A retry returns the originally committed mapping. New assertions normally use initial lifecycle state; a migrated replacement may preserve/map another target-valid state only when its explicit migration receipt proves the predecessor and policy mapping. Provenance remains server-assigned asserted/manual provenance. A successor records its actual new assertion actor/time; the predecessor link preserves the earlier assertion history without falsifying it.
+New assertion UUIDs are assigned by the server on execution and bound to creation keys in the receipt. Preview digests bind keys and proposed values, not invented persisted UUIDs. A retry returns the originally committed mapping. New assertions normally use initial lifecycle state; a migrated replacement may preserve/map another target-valid state only when its explicit migration receipt proves the predecessor and policy mapping. For a replacement, the creation proposal’s explicit full `values.state` is the mapping intent: any target-valid state is allowed once the protected receipt proves the exact predecessor/source policy/state and successor/target policy/state. It does not require a `transform.lifecycle` entry, because that transform and its source-version set cover only `migrate` dispositions. An unrelated creation still requires the initial state. Provenance remains server-assigned asserted/manual provenance. A successor records its actual new assertion actor/time; the predecessor link preserves the earlier assertion history without falsifying it.
 
 `GraphAssetChange.assign` reuses assignment validation and initial/preserved-state rules; it is not an arbitrary asset patch. Assignment **preserves the actual current owner**: its mandatory proposed `ownerId` must equal the captured current owner, including null. It cannot repair an owner through a supplied replacement value. The target is the explicitly requested existing immutable model version, attributes must validate against that exact target, and state is derived by the existing assignment rules. Existing assignment permits an older valid model version; do not introduce a head-only restriction. This is distinct from new participation enrollment, which uses the final relation-policy head. `transition` preserves model pin, attributes and owner and requires an ordinary allowed pinned transition. Explicit non-transition state mapping, owner repair and inherited/attribute schema change use the existing complete `AssetTypeMigrationPlan` path. One asset cannot occur in two asset changes or also in an asset-type migration cohort. All proposals use pre-operation expected revisions. New/live edge snapshots reference actual final endpoint revisions. A tombstone/release accompanying endpoint untyping or loss of eligibility retains the captured exact **before** endpoint/asset revision in that historical outcome; the operation receipt separately references actual before and after asset revisions. Attribute-only migration/assignment adapters must invoke the same final guard, even when the resulting endpoint is ineligible for every authored relation.
 
@@ -293,6 +293,7 @@ interface GraphOperationBinding {
 interface GraphOperationHandle { readonly id: string } // Internal constructor; SQL verifies every claim.
 interface GraphOperationBeginResult {
   operation: GraphOperationHandle;
+  typeMigrations: readonly { modelId: string; migrationId: string }[];
   creations: readonly { relationTypeId: string; key: string; relationId: string }[];
   enrollments: readonly { relationTypeId: string; assetId: string;
     side: ParticipationSide; bindingId: string }[];
@@ -300,7 +301,7 @@ interface GraphOperationBeginResult {
 discoverTypeMigration(tx: Tx, principal: Principal, modelId: string,
   expectedHeadVersion: number, input: TypeMigrationRequest): Promise<TypeMigrationDiscoveryResult>;
 persistPreparedTypeMigration(tx: Tx, principal: Principal, correlationId: string,
-  operation: GraphOperationHandle, modelId: string,
+  operation: GraphOperationHandle, modelId: string, migrationId: string,
   prepared: PreparedAssetChanges, hooks: ModelHooks): Promise<TypeMigrationReceipt>;
 beginRelationGraphOperation(tx: Tx, principal: Principal, operationId: string,
   binding: GraphOperationBinding): Promise<GraphOperationBeginResult>;
@@ -391,7 +392,7 @@ Existing authenticated role denials retain the common authorization code. Existi
 
 Preview covers `complete-authorized-affected-graph`, including zero-edge participants and related validation-only cohorts. A complete, fully authorized but target-invalid preview may return `ready:false`, explicit target issues and `previewDigest:null`; it remains useful for draft repair and is never executable consent. Hidden, incomplete or oversized scope returns the corresponding generic error before any partial context, count, issue path or projection. Only a valid complete preview returns `ready:true` and a digest. Hash bindings include authenticated tenant/actor, all exact heads and pins, full canonical change set, expected resource revisions, derived enrollment set, current permissions/owner eligibility and proposed final tuples. A late eligible asset, zero-edge binding, ACL change or different operation order invalidates consent. The client supplies intent; the service recomputes scope and all invariants under locks at execution.
 
-The following HTTP DTOs are engineering contracts for root review before source work. Context, preview and receipt are complete bounded documents, **not paginated**; the entire response and all retained projections fit the shared512 KiB profile. They cannot produce a consent digest from one page of a larger cohort.
+The following HTTP DTOs are the frozen engineering contracts for source work. Context, preview and receipt are complete bounded documents, **not paginated**; the entire response and all retained projections fit the shared512 KiB profile. They cannot produce a consent digest from one page of a larger cohort.
 
 ```ts
 type RelationMigrationIntent =
@@ -419,6 +420,8 @@ type GraphSourceIssue =
 interface RelationMigrationContext {
   coverage: 'complete-authorized-affected-graph';
   request: RelationMigrationContextRequest;
+  assetIdentities: readonly { assetId: string; name: string }[];
+  preparations: readonly RelationPreparationView[];
   completeRelationTypeIds: readonly string[];
   policies: readonly RelationPolicySnapshot[];
   before: CompleteGraphSnapshot;
@@ -453,6 +456,7 @@ interface RelationMigrationReceipt {
   requestHash: string; changeSetHash: string; previewDigest: string;
   policies: readonly RelationPolicySnapshot[]; targets: readonly RelationTargetEvidence[];
   before: CompleteGraphSnapshot; after: CompleteGraphSnapshot;
+  assetIdentities: readonly { assetId: string; name: string }[];
   assetChanges: PreparedAssetChanges; sourceIssues: readonly GraphSourceIssue[];
   edgeOutcomes: readonly { key: GraphEdgeKey; role: 'changed' | 'validation-only';
     action: 'preserve' | 'create' | 'repair' | 'repin' | 'tombstone';
@@ -540,7 +544,7 @@ The implementation map below is for parallel delegation **after** root opens the
 
 Root's audit integration must classify new binding and graph-operation actions explicitly in `visibleAudit`; they must not fall through the current generic non-asset/non-relation branch. Binding actions authorize the current asset and required recorded scope; operation actions authorize the entire original edge/endpoint/binding cohort, including tombstones. Same-UUID subjects of different kinds remain distinct. Type-level public events contain policy/operation hashes rather than private affected-resource lists. The internal source scan path in `apps/api/src/index.ts` retains curator-owned asserted edges, bindings and values through rename, zero/partial/failed/reduced-permission scans; scan status cannot trigger release or invented edge creation.
 
-Parallel work begins only after the shared types, SQL entry signatures and the parent transaction sequence are frozen. Pure/storage/web may then implement independently against those contracts while root integrates the service stages. Integrate pure and SQL results before real API execution, then rebuild once for API/browser qualification. Source fixes during a qualification gate invalidate that gate's affected evidence and require the appropriate rerun. No executable changes begin under this preparatory assignment.
+Parallel work begins once root has transferred the shared types into executable modules; the SQL entry signatures and parent transaction sequence above are frozen. Pure/storage/web may then implement independently against those contracts while root integrates the service stages. Integrate pure and SQL results before real API execution, then rebuild once for API/browser qualification. Source fixes during a qualification gate invalidate that gate's affected evidence and require the appropriate rerun. Implementation on the isolated branch does not alter the previously qualified runtime or PR head.
 
 Required acceptance gates before claiming this bounded increment verified:
 
@@ -563,8 +567,21 @@ The six storage review findings are resolved at the engineering-contract level: 
 
 The asset/graph composition gap is resolved at the contract level by independently validated `PreparedAssetChanges`, exact endpoint projection equality, and discover→project→persist-prepared stages under the parent lock/deadline/finalization boundary. Assignment preserves the current owner and allows the explicitly selected valid immutable model pin. Context, preview/receipt DTOs, invalid authorized preview behavior, mode rules and participation paging are specified above for root's read-only review. No unresolved semantic contradiction is identified; none of these decisions is source implementation or execution evidence.
 
-Before source work, root must open the increment after the current PR and transfer these types/invariants into owned modules. The material engineering risk is proving the bounded SQL claim verifier equivalent to pure deterministic transformations without trusting hashes or prepared caller tuples, while preserving SQL007 historical receipts and SQL008 exact-pin behavior. The other qualification risks are complete zero-edge discovery under concurrent writes/revocations and the aggregate byte/deadline profile. These require direct adversarial/concurrency/upgrade execution, not another user approval or an unverified claim of completion. The bounded asset ingress subset is existing-asset assignment/transition plus complete authored-type migrations. Source-side/direct asset insertion still receives database admission enforcement. A later new typed-asset UI/import route must participate atomically before every-ingress acceptance. A many-to-one relation merge and cross-type migration need separately designed receipts, provenance and conflict rules and are not disguised as same-type replacement.
+Root is transferring these types/invariants into owned modules on the isolated branch. Publication remains ordered after PR14 and this increment’s own gates. The material engineering risk is proving the bounded SQL claim verifier equivalent to pure deterministic transformations without trusting hashes or prepared caller tuples, while preserving SQL007 historical receipts and SQL008 exact-pin behavior. The other qualification risks are complete zero-edge discovery under concurrent writes/revocations and the aggregate byte/deadline profile. These require direct adversarial/concurrency/upgrade execution, not another user approval or an unverified claim of completion. The bounded asset ingress subset is existing-asset assignment/transition plus complete authored-type migrations. Source-side/direct asset insertion still receives database admission enforcement. A later new typed-asset UI/import route must participate atomically before every-ingress acceptance. A many-to-one relation merge and cross-type migration need separately designed receipts, provenance and conflict rules and are not disguised as same-type replacement.
 
 Durable execution above the bounded transaction still needs real persisted staging, Temporal orchestration, cancellation/retry/checkpoints and an atomic canonical activation strategy under concurrent writes. A multi-transaction batch that temporarily violates minima is unacceptable. Capacity/large-profile design and measured evidence remain open; these are required programme follow-ons, not requests for user permission.
 
 Still required beyond this bounded increment: relation/type inheritance and scoped overrides; domain/attribute/responsibility types and full responsibility rules; imported/derived claims and bounded rules with authority/precedence/conflict history; simultaneous-validity cardinality and transaction-time/as-of graphs; relation authorization grants and field sensitivity; complete form/import/export/workflow/MCP parity; semantic models, glossary and reference flows; technical/custom/OpenLineage ingestion and evidence; large-profile graph/migration execution; explicit cross-type migration/merge where required by model evolution; retention/legal-hold deletion and full backup/restore qualification; and all remaining M3–M10 and repository/release gates. This draft must not be used to mark MOD-001/002/004, AT-MOD-01, E2E-06 or M2 complete.
+
+## UI metadata and composition decisions
+
+Context and receipt `assetIdentities` cover exactly their complete authorized asset union; names are display metadata charged to the shared512KiB budget, not per-asset browser fetches. Context `preparations` matches exactly its create intents, retains the original fixed expiry and never renews a lease. `RelationRevisionView.operationId: string|null` is additive metadata outside the immutable snapshot, derived from protected receipt outcomes matching the exact relation/version; ordinary and historical pre-operation revisions return null.
+
+Nested typed receipt digests retain the existing principal-activity/source-issue inputs. Prepared persistence constructs that private evidence from the parent’s stabilized principal snapshot (or reads already locked identities without another lock phase); it never substitutes the outer graph digest for the typed digest. Standalone response and receipt schemas remain unchanged.
+
+
+Receipt hash clarification: edge/binding outcome `beforeTupleHash` and `afterTupleHash` hash the exact actual immutable revision snapshot (`RelationView` / `ParticipationBindingView`), not the graph projection. A preserved revision may contain older observed endpoint references while the operation graph resolves current captured endpoints. The exact revision foreign keys and verified snapshot hashes remain authoritative.
+
+Compatibility clarification: preserve and source-pin repair under publication must validate own attributes, required ownership and lifecycle state against both the retained exact source policy and the target policy. Explicit full-value repair/repin intent needs no fictitious nested attribute plan; nested attribute acknowledgements are enforced only when a transform exists. Exact head-to-target policy acknowledgements remain mandatory.
+
+Nested type migration IDs are allocated by SQL begin, returned in its exact `typeMigrations` mapping and bound to protected model claims. Prepared persistence uses the selected ID; it never generates an independent nested receipt identity. SQL004/007 companion receipt writes must match that exact claim, plan and cohort.

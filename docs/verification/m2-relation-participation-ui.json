@@ -1,0 +1,1745 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-16T00:24:47.128117+00:00",
+  "result": "PASS",
+  "scope": "Bounded required-participation and complete graph-operation UI increment plus regression of the fourteen existing browser journeys. Full compound MOD/M2, all-ingress and release qualification remain open.",
+  "implementation_status": "IN_PROGRESS",
+  "verification_status": "PASS_FOR_RECORDED_SCOPE",
+  "release_qualification": "NOT_RUN",
+  "profile": "core / real Docker Linux arm64 services / real local OIDC / synthetic tenants and principals",
+  "target": "http://localhost:4310",
+  "command": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "--config",
+    ".github/playwright.ci.config.ts"
+  ],
+  "execution": {
+    "started_at": "2026-11-16T00:13:25.093353+00:00",
+    "recorded_at": "2026-11-16T00:24:47.128117+00:00",
+    "exit_status": 0,
+    "stats": {
+      "startTime": "2026-11-16T00:13:25.721Z",
+      "duration": 680760.8080000001,
+      "expected": 16,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "expected_cases": 16,
+    "actual_cases": 16,
+    "each_case_attempts": 1,
+    "private_wrapper_report": {
+      "path": ".local/evidence/participation-browser-full-20261116T001324-archive/participation-browser-full-20261116T001324.json",
+      "sha256": "1b4eb03faddd40c915b705f37c0c590a67d6d477feed3a3d4b9aa6c058e77921"
+    },
+    "private_raw_report": {
+      "path": ".local/evidence/participation-browser-full-20261116T001324-archive/participation-browser-full-20261116T001324-results.json",
+      "sha256": "90115e5453356739e2c8f27aa0686e70d551ca96ac2cc08cf3350a0867932261"
+    },
+    "private_log": {
+      "path": ".local/evidence/participation-browser-full-20261116T001324-archive/participation-browser-full-20261116T001324.log",
+      "sha256": "501378d0212c6c7c3c92e27852ceb221aae13f8e76d7be4667a6e52e5b60a825"
+    },
+    "private_execution_wrapper": {
+      "path": ".local/evidence/participation-browser-full-20261116T001324-archive/qualify-participation-browser.py",
+      "sha256": "a99f551edc1cfa7d4c2779344559e4023b47af13a3c6cfa7ca1a424e54dd5104"
+    },
+    "private_archive_manifest": {
+      "path": ".local/evidence/participation-browser-full-20261116T001324-archive/manifest.json",
+      "sha256": "361edbcf7801c4979ecfc999700d2b52ca65cc2ff227a310c309a212c7a22b86"
+    }
+  },
+  "cases": [
+    {
+      "file": "vertical-slice.spec.ts",
+      "title": "E2E-02/03: real OIDC, UI source registration, scan, discovery, ownership and audit",
+      "project": "vertical-slice",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 6600
+    },
+    {
+      "file": "vertical-slice.spec.ts",
+      "title": "E2E-03: consumer restrictions and cross-tenant catalog isolation use real identity",
+      "project": "vertical-slice",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 1098
+    },
+    {
+      "file": "ui-accessibility.spec.ts",
+      "title": "UX-04/AT-UX-01: real catalog layouts, light/dark, RTL and automated accessibility",
+      "project": "accessibility",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 9056
+    },
+    {
+      "file": "ui-accessibility.spec.ts",
+      "title": "UX-30: connection form keyboard focus, dismissal and accessible labels",
+      "project": "accessibility",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 2006
+    },
+    {
+      "file": "models.spec.ts",
+      "title": "MOD: visual model, import/export, real typed assets, immutable versions and migration protection",
+      "project": "models",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 19563
+    },
+    {
+      "file": "models.spec.ts",
+      "title": "MOD: consumer cannot publish models and tenant definitions remain isolated",
+      "project": "models",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 3892
+    },
+    {
+      "file": "model-migrations.spec.ts",
+      "title": "MOD: explicit visual migration rejects invalid and stale plans, commits exact values and an immutable receipt",
+      "project": "model-migrations",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 15448
+    },
+    {
+      "file": "model-migrations.spec.ts",
+      "title": "MOD: migration execution is permission-scoped and receipts remain tenant-scoped",
+      "project": "model-migrations",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 2925
+    },
+    {
+      "file": "asset-types.spec.ts",
+      "title": "MOD: authored inheritance pins, required ownership, lifecycle and stale preview survive parent upgrades",
+      "project": "asset-types",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 21951
+    },
+    {
+      "file": "asset-types.spec.ts",
+      "title": "MOD: type authoring and transitions enforce permissions and tenant isolation, and legacy editors stay closed",
+      "project": "asset-types",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 52391
+    },
+    {
+      "file": "asset-type-migrations.spec.ts",
+      "title": "MOD: complete typed migration handles mixed pins, explicit owners and states, stale consent and immutable tuples",
+      "project": "asset-type-migrations",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 18863
+    },
+    {
+      "file": "asset-type-migrations.spec.ts",
+      "title": "MOD: typed migration ingress and immutable receipts enforce permissions and tenant scope",
+      "project": "asset-type-migrations",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 47290
+    },
+    {
+      "file": "relations.spec.ts",
+      "title": "MOD: authored relations preserve exact values and pins, enforce constraints, and recover stale edits and graph pages",
+      "project": "relations",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 72668
+    },
+    {
+      "file": "relations.spec.ts",
+      "title": "MOD: restricted relation bridges, current permissions and independent tenants bound graph and history access",
+      "project": "relations",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 10651
+    },
+    {
+      "file": "relation-migrations.spec.ts",
+      "title": "MOD: complete graph draft repairs positive participation, jointly assigns first endpoints, round-trips exact intent and follows receipt/history into same-pair repair",
+      "project": "relation-migrations",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 35072
+    },
+    {
+      "file": "relation-migrations.spec.ts",
+      "title": "MOD: edits clear consent, concurrent reviews recover from stale execution, participation cursors and private receipt/history scope remain enforced",
+      "project": "relation-migrations",
+      "status": "passed",
+      "attempts": 1,
+      "duration_ms": 57466
+    }
+  ],
+  "tools": {
+    "playwright": "1.65.1",
+    "browser_executable": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "browser_version": "Not captured by this wrapper; no cross-browser matrix is claimed.",
+    "project_count": 8,
+    "retries_by_project": {
+      "vertical-slice": 0,
+      "accessibility": 0,
+      "models": 0,
+      "model-migrations": 0,
+      "asset-types": 0,
+      "asset-type-migrations": 0,
+      "relations": 0,
+      "relation-migrations": 0
+    }
+  },
+  "source_binding": {
+    "base_commit": "46d5b57ca8ba102ee4939f98fce85f0d41ce9998",
+    "working_tree_dirty": true,
+    "method": "The execution wrapper read139 files from the actual running API image and checked each against the checkout before and after the full test run. API/workflow/site image IDs and all served JS/CSS bytes were checked in both snapshots. Identical before/after snapshots are retained in the private wrapper report. Later commit binding does not change this execution time or imply a rerun.",
+    "files": [
+      {
+        "path": ".github/playwright.ci.config.ts",
+        "sha256": "38932411991404136e924a4567f9ea21974a4b3521b35733fdb63961a41c7b04"
+      },
+      {
+        "path": "Dockerfile",
+        "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+      },
+      {
+        "path": "apps/api/src/asset-type-migrations.ts",
+        "sha256": "02f530c3715801c222f4f98d65807f06d0b58d0193b05c6c4e9f3f0b78a00c92"
+      },
+      {
+        "path": "apps/api/src/asset-types.ts",
+        "sha256": "847e1a9492b79d45de5143aa80ff6e9f3e04fd898d934a2b15b8a46637902ac3"
+      },
+      {
+        "path": "apps/api/src/audit.ts",
+        "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+      },
+      {
+        "path": "apps/api/src/index.ts",
+        "sha256": "aa593b2e7f34bf4f94e5e0b3d312673f84992a7d09f96bd475f8a74431792c7e"
+      },
+      {
+        "path": "apps/api/src/model-http.ts",
+        "sha256": "78d176145b8713c5aca2797fad741653698c6f2439817fbf069d4842afcc5938"
+      },
+      {
+        "path": "apps/api/src/model-migrations.ts",
+        "sha256": "3d116bf6bc64ac3723f5aadef63d414f7920c584824a114e8bb6c2708d7129ad"
+      },
+      {
+        "path": "apps/api/src/models.ts",
+        "sha256": "d6212e6723236030f672cd67ce2f2de43b1e8f67216309f1a16c18dd257a0387"
+      },
+      {
+        "path": "apps/api/src/relation-migrations.ts",
+        "sha256": "f30df94c238f409afd303ea9e9dbd55a863e19702dc244798861dfc2b9aaa224"
+      },
+      {
+        "path": "apps/api/src/relations.ts",
+        "sha256": "0124c9190396dbcddf14ebb3fae67128ebaa97865aba97dc6b46000654f2b974"
+      },
+      {
+        "path": "apps/api/src/repository.ts",
+        "sha256": "0bbb03ae711f9bcac7c04b15e85871c27016b575c50514f2076ec7793dae6cdb"
+      },
+      {
+        "path": "apps/api/src/search.ts",
+        "sha256": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d"
+      },
+      {
+        "path": "apps/api/src/security.ts",
+        "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+      },
+      {
+        "path": "apps/web/package.json",
+        "sha256": "cf72e592f6444959c257e304abb0c455fd28d4e297a4e2601339ea38fd427b3c"
+      },
+      {
+        "path": "apps/web/src/App.tsx",
+        "sha256": "62709418804355c5c5ab14c5e2ebbce7c7ce22f2a9a69f5e33b8e30ed93b9cdf"
+      },
+      {
+        "path": "apps/web/src/api.ts",
+        "sha256": "62ca221c1b8ba76a0d20f89699735129768890419a13f8f3a0338b213197bac9"
+      },
+      {
+        "path": "apps/web/src/assetTypes/DefinitionEditor.tsx",
+        "sha256": "9cc48f54c315abe5886704086e40323464432c0296bf0d38ed9ff0ffbbb32f0a"
+      },
+      {
+        "path": "apps/web/src/assetTypes/LifecyclePanel.tsx",
+        "sha256": "cc72e38f95de507c8def9f069deacc3bcfb607dc3a7f4e21b8d616be1a1bea07"
+      },
+      {
+        "path": "apps/web/src/assetTypes/TypeMigrationPolicyEditor.tsx",
+        "sha256": "a42f5da323a3a2587c39d1fb53939e359057aff4e48d5ecf8bf8b112e49d267a"
+      },
+      {
+        "path": "apps/web/src/assetTypes/contracts.ts",
+        "sha256": "30219291a4a91b6bc62bb460c839d274b14926d88e6bd1c8cbe7713a1bc7ed20"
+      },
+      {
+        "path": "apps/web/src/assetTypes/messages.ts",
+        "sha256": "2217173a00d9f9ac2548ba1dd3a983d032f0495fb03f7457cccd9b35c57a7516"
+      },
+      {
+        "path": "apps/web/src/assetTypes/migrationMessages.ts",
+        "sha256": "d876d2eeaa69153e4c44a7e5e56a74136e16cd5c4b131407a8cb472667e992d8"
+      },
+      {
+        "path": "apps/web/src/components.tsx",
+        "sha256": "217df6f66523f65accc3269304660c6ac90db9b84e4ce46937e3d546864f4187"
+      },
+      {
+        "path": "apps/web/src/i18n.tsx",
+        "sha256": "939d1ece45df055a510061ebfaa7c6c4c82e820ad62159bb1d2910fd1f815036"
+      },
+      {
+        "path": "apps/web/src/main.tsx",
+        "sha256": "666b70ce5765a222777738d2b1f9120c1d2c2914daa96de87574853fb65e475c"
+      },
+      {
+        "path": "apps/web/src/models/AssetAttributes.tsx",
+        "sha256": "553c2ef43d1463fd60a511b2570049e9eae8437e9f37e72b10802392fa50fbb5"
+      },
+      {
+        "path": "apps/web/src/models/MigrationPlanEditor.tsx",
+        "sha256": "3e4cb6d421007ec6be00ec64f3ed3574dadcb1072450fa642bd5eeaf278469df"
+      },
+      {
+        "path": "apps/web/src/models/ModelBrowser.tsx",
+        "sha256": "c1452c9b036daec1e0ff8d49f58a276a3dcd6917098fd300c2bf834657017830"
+      },
+      {
+        "path": "apps/web/src/models/ModelFeedback.tsx",
+        "sha256": "6aceb40423dda70a7b9337431e4840adc030da01f50a6a3f296207f26170affb"
+      },
+      {
+        "path": "apps/web/src/models/SchemaEditor.tsx",
+        "sha256": "c028b4d34d4ee84bc9250b718f2ed1aff5b7f881be29a0fe1cde7ff0da82ca06"
+      },
+      {
+        "path": "apps/web/src/models/ValueFields.tsx",
+        "sha256": "fd0980ca3945be050410da3040a5e7f5cabf55edf372eef4ee9ef1532741335d"
+      },
+      {
+        "path": "apps/web/src/models/VersionPicker.tsx",
+        "sha256": "95781b042c066ebe9e8cd1af841eeb80e6166146e588ac94280038b514756660"
+      },
+      {
+        "path": "apps/web/src/models/contracts.ts",
+        "sha256": "a0204509d5e69bf1974288399098b334564c7d4cc9b001a004d2aa804630f18e"
+      },
+      {
+        "path": "apps/web/src/models/messages.ts",
+        "sha256": "667433010425fa8a457de9edc47a797e828e819b748ef0566736a040cc0bcb5f"
+      },
+      {
+        "path": "apps/web/src/models/migrationMessages.ts",
+        "sha256": "808cb94cbeccb5617a8fddb59dce1f14d214f32b01e787ad0d7ca5b00eb072dc"
+      },
+      {
+        "path": "apps/web/src/models/planMessages.ts",
+        "sha256": "244916806562a9046bce7f4bb364990842f02975c5e17df14d4c57a8f207039f"
+      },
+      {
+        "path": "apps/web/src/navigation.tsx",
+        "sha256": "d15a75f39edb92ee626bd0682353466b433f5be7cb5104bc1b0a256a7d61913c"
+      },
+      {
+        "path": "apps/web/src/pages/Asset.tsx",
+        "sha256": "cce8f52bf64921efbd2234e762af305177d92385e61d8e2e8deb40b94784186d"
+      },
+      {
+        "path": "apps/web/src/pages/AssetTypeMigrations.tsx",
+        "sha256": "bb23a2ee373fcfceb30f47bb29878302552a0505390ed520b13c1ae98e7d4929"
+      },
+      {
+        "path": "apps/web/src/pages/AssetTypes.tsx",
+        "sha256": "bb034cd0d6532378553976e1e7fafbd1c5dc844fae69f9a38454d477d9c5046f"
+      },
+      {
+        "path": "apps/web/src/pages/Audit.tsx",
+        "sha256": "01484216a2ee1a0b7b96e8d9480e85f962165da4ebde4a461ac821af6dccee88"
+      },
+      {
+        "path": "apps/web/src/pages/Catalog.tsx",
+        "sha256": "259126c8daccae7b8eb692cf15a2cef8cd359ee12318c0940a2c39fea3f763ed"
+      },
+      {
+        "path": "apps/web/src/pages/Home.tsx",
+        "sha256": "bb08cf9f5b6d107de73ee3dee400ccd0392f4a826811ab6000a224669d1f0f05"
+      },
+      {
+        "path": "apps/web/src/pages/ModelMigrations.tsx",
+        "sha256": "cc23198090ba7896bb9d5c684dca255df57d4b75dad9fe8752810be95ac804aa"
+      },
+      {
+        "path": "apps/web/src/pages/Models.tsx",
+        "sha256": "1860307f05c7c5b31d309ba42996a555486030eacce3f5bc110cba88ba8a2f48"
+      },
+      {
+        "path": "apps/web/src/pages/Relation.tsx",
+        "sha256": "bac63985a62d0680cd25eab940dd09bb0fb8c0673d5ab9cca2d1b04561787c59"
+      },
+      {
+        "path": "apps/web/src/pages/RelationMigrations.tsx",
+        "sha256": "147e05ca2fcc0476cfee4f02dbf5a79f2d103642386fb1c7d8dc39d8adbdebb6"
+      },
+      {
+        "path": "apps/web/src/pages/RelationTypes.tsx",
+        "sha256": "972c4734ffcf09058c082558b257b202336b2a3aadaf03f58812463f59759288"
+      },
+      {
+        "path": "apps/web/src/pages/Sources.tsx",
+        "sha256": "5df5464c6baea87b932433b9fe4dbf9d52cdc0073369598cdc4feb4c40a82f42"
+      },
+      {
+        "path": "apps/web/src/relations/AssetRelations.tsx",
+        "sha256": "7b678d89693c30c9a5107da05233e55d93962151238ba174270954462982cfe3"
+      },
+      {
+        "path": "apps/web/src/relations/MigrationPlanEditor.tsx",
+        "sha256": "46b938bcf4ae8ed8f392cb30662262a5313ff7cf7f8ee3bcc2128614520e5bd9"
+      },
+      {
+        "path": "apps/web/src/relations/Participation.tsx",
+        "sha256": "0636d2bf61a4b0110b2c0849400be5f51ee3b3fccd8df86e20a34fa3f98a28df"
+      },
+      {
+        "path": "apps/web/src/relations/RelationForm.tsx",
+        "sha256": "c23c6534f1d3be1fe327dcbf0cadf79659e6d76a4df5051f79a0c097f0e5e25f"
+      },
+      {
+        "path": "apps/web/src/relations/RelationGraph.tsx",
+        "sha256": "2f6c1bba61718d08c9df7eaa2f3022de847fdecdcc8c87c9e0052a01517ecd13"
+      },
+      {
+        "path": "apps/web/src/relations/TypeEditor.tsx",
+        "sha256": "b993657b02a54c4b057238a8ea6f361acded6c46c7f8b11a1f65ca97a7f9ccdf"
+      },
+      {
+        "path": "apps/web/src/relations/messages.ts",
+        "sha256": "0bc37f4eef26c574d531dcad5fafd9fd65f8802e60c1ad7dc56329eb2c5305dc"
+      },
+      {
+        "path": "apps/web/src/relations/shared.tsx",
+        "sha256": "d94f857ea6b2eb44ea370e4348696a914d7a9099541524b0d9a5867391cba55f"
+      },
+      {
+        "path": "apps/web/src/session.tsx",
+        "sha256": "8194132b7f7b979ea515bf8eab8eb9b00c1f4b7699f16740352cbf84a1165cea"
+      },
+      {
+        "path": "apps/web/src/styles.css",
+        "sha256": "6284993864480ed7d2a54d0303885bdcf886e591f34a6ff29ca93164b6489c27"
+      },
+      {
+        "path": "apps/web/src/types.ts",
+        "sha256": "2c121eba06c772d494ae715a03ea8a473ed4f23ffea6748b3fd361b4804e14c7"
+      },
+      {
+        "path": "apps/web/src/vite-env.d.ts",
+        "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+      },
+      {
+        "path": "apps/web/tsconfig.json",
+        "sha256": "76b2915cb9623d54b4ce6366ac36ce8302a388e67955382075f3b3cfe8baee49"
+      },
+      {
+        "path": "apps/web/vite.config.ts",
+        "sha256": "be49a3fcab78673178e11c775172a65ab07bb80cf95c50f093189929b08b1044"
+      },
+      {
+        "path": "deploy/compose/compose.yaml",
+        "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+      },
+      {
+        "path": "package.json",
+        "sha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7"
+      },
+      {
+        "path": "packages/authz/src/index.ts",
+        "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "sha256": "8d23a38cad9af4c69471b6369d1106382e34518f1b13a00be6590ee6e28bb453"
+      },
+      {
+        "path": "packages/db/migrations/001_foundation.sql",
+        "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "path": "packages/db/migrations/002_audit_envelopes.sql",
+        "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "path": "packages/db/migrations/003_governance_models.sql",
+        "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "path": "packages/db/migrations/004_model_migrations.sql",
+        "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "path": "packages/db/migrations/005_model_migration_integrity.sql",
+        "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "path": "packages/db/migrations/006_inherited_asset_types.sql",
+        "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "path": "packages/db/migrations/007_asset_type_migrations.sql",
+        "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "path": "packages/db/migrations/008_constrained_relations.sql",
+        "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "path": "packages/db/migrations/009_relation_participation.sql",
+        "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+        "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "path": "packages/db/src/index.ts",
+        "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+      },
+      {
+        "path": "packages/db/src/migrate.ts",
+        "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+      },
+      {
+        "path": "packages/db/src/seed.ts",
+        "sha256": "f871502f2215b538199df0a4aef501954a7f558b249311d6cb3b1129c763c151"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-contracts.ts",
+        "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-service.ts",
+        "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration.ts",
+        "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+      },
+      {
+        "path": "packages/domain/src/asset-type-policy.ts",
+        "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+      },
+      {
+        "path": "packages/domain/src/asset-type-service.ts",
+        "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/cursor.ts",
+        "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-persistence.ts",
+        "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-preparation.ts",
+        "sha256": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49"
+      },
+      {
+        "path": "packages/domain/src/model-migration-service.ts",
+        "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+      },
+      {
+        "path": "packages/domain/src/model-service.ts",
+        "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "57fde5df7d27d3b63e645ead707cd131290378ebe924dbb328d1db5b45bb254a"
+      },
+      {
+        "path": "packages/domain/src/relation-contracts.ts",
+        "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+      },
+      {
+        "path": "packages/domain/src/relation-endpoint-guard.ts",
+        "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+      },
+      {
+        "path": "packages/domain/src/relation-graph.ts",
+        "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-contracts.ts",
+        "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-read.ts",
+        "sha256": "0e4658b243540a3871afb458e592f78d510885cafa5453ab128f4ec86131d7d5"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-service.ts",
+        "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-store.ts",
+        "sha256": "88a4a077f99eb22c3a8a7b6eeaeb97a5b5909ea2e864e9570f2d18200768fb41"
+      },
+      {
+        "path": "packages/domain/src/relation-migration.ts",
+        "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+      },
+      {
+        "path": "packages/domain/src/relation-participation-read.ts",
+        "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+      },
+      {
+        "path": "packages/domain/src/relation-participation.ts",
+        "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+      },
+      {
+        "path": "packages/domain/src/relation-service.ts",
+        "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+      },
+      {
+        "path": "packages/domain/src/relation-store.ts",
+        "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+      },
+      {
+        "path": "packages/domain/src/relation.ts",
+        "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+      },
+      {
+        "path": "packages/ui/src/index.tsx",
+        "sha256": "9fdb615913bb9d6055b02bf38e7c670fd91ce190b51436dfc9a2d5df8cb584b3"
+      },
+      {
+        "path": "packages/ui/src/tokens.css",
+        "sha256": "b21dd67cae74c186f6d4b1a6bd150ec626b1a3f183d5b5c050c443029aa1d236"
+      },
+      {
+        "path": "playwright.config.ts",
+        "sha256": "f671166e0edf378678ffdde7a643c2cfb4e3e8a5092517e94c38620acf3ffe45"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+      },
+      {
+        "path": "scripts/test-security.sh",
+        "sha256": "817a93e601dc5fde10240c4a769e802078c92bdd80a9bb79cc622cdc60f93e7f"
+      },
+      {
+        "path": "tests/e2e/asset-type-migrations.spec.ts",
+        "sha256": "b6b0fa5dd017c13595db91ee785a9d44f6c59958d79d48e582cd8cbaaf4b4329"
+      },
+      {
+        "path": "tests/e2e/asset-types.spec.ts",
+        "sha256": "8d6e7f8ccedb3774557f71470e52ec7bea8ee60e2b86d1ee414bc17b5ec5ac04"
+      },
+      {
+        "path": "tests/e2e/model-migrations.spec.ts",
+        "sha256": "6da5e76511b535bdef770fdad27d72861cf299a1c4a91c3e6f64d218572b33e8"
+      },
+      {
+        "path": "tests/e2e/models.spec.ts",
+        "sha256": "d25dc12de6cbff6642169b15ca8797d2275a5eab165242b0c88a09b959d73f3f"
+      },
+      {
+        "path": "tests/e2e/relation-migrations.spec.ts",
+        "sha256": "1c74ef81ca8f686341f112c5452c0cab3720235d54fcc66df574b6fda8c07f9b"
+      },
+      {
+        "path": "tests/e2e/relations.spec.ts",
+        "sha256": "70cd56fe9ad19943ed35bf6735bb992a7b06a47a92d72a1c926a1f91d155a9f5"
+      },
+      {
+        "path": "tests/e2e/ui-accessibility.spec.ts",
+        "sha256": "a55a5c6fdc2506d70c2840e75486d235a8c7440964376a2fa25ee88a7c65e504"
+      },
+      {
+        "path": "tests/e2e/vertical-slice.spec.ts",
+        "sha256": "0833a6f40fb6859aa0c4e43b6ad05627e0762fe1b928a6fc22b42f1b7310298b"
+      },
+      {
+        "path": "tests/fixtures/relation-migration-api.ts",
+        "sha256": "e68e89aff887339a035364f124f1ae8888d740b92cf55ff8466c687324a2e65f"
+      },
+      {
+        "path": "tests/fixtures/relation-participation.ts",
+        "sha256": "209132979d10001c59e464c5b9a43e63ea82135962a46bfe0b6329a1b243f6e8"
+      },
+      {
+        "path": "tests/integration/asset-type-api-limits.test.ts",
+        "sha256": "330a70646ef74dff3465b53c32a525f0b6cbeb46778fc68c745f6a84238754ee"
+      },
+      {
+        "path": "tests/integration/asset-type-migration-storage.test.ts",
+        "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+      },
+      {
+        "path": "tests/integration/asset-type-migrations.test.ts",
+        "sha256": "e0d8e0f7f7009bb76e04031d9b9785959ebc95c22f8470aa72b5a00275165f39"
+      },
+      {
+        "path": "tests/integration/asset-type-storage.test.ts",
+        "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+      },
+      {
+        "path": "tests/integration/asset-types.test.ts",
+        "sha256": "10d35157a009617f9f3c8578b1e7664ea2f80d0e9896fc1314d4ff4ace48428b"
+      },
+      {
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "1fd5ad4179a75936cfeb3a18df18f2951360fb7b24c6b523ef3a9201b746b86e"
+      },
+      {
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "9369bd959e6d9633788d34cd4a6c87dcecbf500f5d04e95b74c360ad89f8d29d"
+      },
+      {
+        "path": "tests/integration/model-migration-api.test.ts",
+        "sha256": "1fcae0865b43eb53c30474f88a93ce62a1fb019e2b39e68c0840589a3aec80b5"
+      },
+      {
+        "path": "tests/integration/model-migration-storage.test.ts",
+        "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+      },
+      {
+        "path": "tests/integration/model-migrations.test.ts",
+        "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+      },
+      {
+        "path": "tests/integration/model-pagination.test.ts",
+        "sha256": "63140a4748799df85403abd88c27478993fc33900b1b172627764880c58564e6"
+      },
+      {
+        "path": "tests/integration/models.test.ts",
+        "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1"
+      },
+      {
+        "path": "tests/integration/relation-migration-api.test.ts",
+        "sha256": "2aa09041afcda3e57ac32005c24a395a6b5c26ee19d278b03978fd88b2fc4165"
+      },
+      {
+        "path": "tests/integration/relation-participation-storage.test.ts",
+        "sha256": "17fcf6a093e501e0743d9ec5a6b50046b00b3cb59e7be86f802003699d27830e"
+      },
+      {
+        "path": "tests/integration/relation-storage.test.ts",
+        "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619"
+      },
+      {
+        "path": "tests/integration/relations.test.ts",
+        "sha256": "e94a5088de6d9d33c6a76eef06153434d78447d2876488f31c69ecc2b40fc388"
+      },
+      {
+        "path": "tsconfig.json",
+        "sha256": "a123b4fe43b17517d14b6b839781d3e3f1745ea6c368f24d9f8aaccb602382b3"
+      }
+    ],
+    "before_after_matched": true,
+    "post_execution_readback": {
+      "recorded_at": "2026-11-16T00:27:50.779448+00:00",
+      "matched": 139,
+      "mismatched": 0
+    },
+    "implementation_commit_binding": "PENDING"
+  },
+  "runtime": {
+    "images": {
+      "api": "sha256:2522b4c06fb2c1725f717d59134907bd74b020cbc15d56d8340daf14dbc7eae5",
+      "workflow-worker": "sha256:2522b4c06fb2c1725f717d59134907bd74b020cbc15d56d8340daf14dbc7eae5",
+      "site-runner": "sha256:2522b4c06fb2c1725f717d59134907bd74b020cbc15d56d8340daf14dbc7eae5"
+    },
+    "before_after_matched": true,
+    "served_assets": [
+      {
+        "url": "/assets/AssetRelations-DC4KhkIa.js",
+        "sha256": "cfd394ed4ecc2826ab2066d66c2649a2bbd2571270dbb9005eb4779bfe2b9983",
+        "bytes": 10225
+      },
+      {
+        "url": "/assets/AssetTypeMigrations-lFdaJ8Hl.js",
+        "sha256": "e3dd1424f96958fb1940bfb7c1b1024e2bb59739dac4a5ea66ec0a96d4b93f6b",
+        "bytes": 21006
+      },
+      {
+        "url": "/assets/AssetTypes-B9xaCiWN.js",
+        "sha256": "159ffdb23c22597a9cd6d63e125def82df2dea5d1fce0ee4a5a2a8a0fddb5983",
+        "bytes": 16284
+      },
+      {
+        "url": "/assets/DefinitionEditor-DZgXtXd1.js",
+        "sha256": "b6064aa80965a5e11a403d6b5110bf83721f34b4813030803b12d3b050fc7aff",
+        "bytes": 8811
+      },
+      {
+        "url": "/assets/DownloadSimple.es-BCOGy4kG.js",
+        "sha256": "05fdf0e3db59d32fe0f945c8a85dd3a29490c9f8c0c8ee5b14cac9093e7c34ad",
+        "bytes": 2080
+      },
+      {
+        "url": "/assets/LifecyclePanel-BR3S99ME.js",
+        "sha256": "e728c9a8789c79b062c5da67f6ad3763ae1a46bcd1845bec89842dba0264753a",
+        "bytes": 3932
+      },
+      {
+        "url": "/assets/MigrationPlanEditor-bUyixa4J.js",
+        "sha256": "91ac423c84e8f18a4f204bf71496d432577a17a2bf6adaa64273b8188aa4c137",
+        "bytes": 14612
+      },
+      {
+        "url": "/assets/ModelFeedback-BO3c5Gd7.js",
+        "sha256": "71f8e5f20ea0102e80b9e686c28159ba63fdc715944c60e42497e2910445066e",
+        "bytes": 241148
+      },
+      {
+        "url": "/assets/ModelMigrations-BY3jmQnE.js",
+        "sha256": "1f73c8c2c2982ab09ee5f4ef72f9d7cd8a563bc729a09fefe7318ad850a1e2ef",
+        "bytes": 18750
+      },
+      {
+        "url": "/assets/Models-Djp1PoHO.js",
+        "sha256": "470e7a7ac9703b509aec021b5e8be7ecf70ec756f29347bf359986d3244077bb",
+        "bytes": 14031
+      },
+      {
+        "url": "/assets/Relation-DHy7vHj1.js",
+        "sha256": "c92298aec3f0f4692e61adfa1e66885d110b9e416fe9dfe75d334a2e408d1933",
+        "bytes": 9680
+      },
+      {
+        "url": "/assets/RelationForm-yoioW_45.js",
+        "sha256": "f5a6b40185652d99f083c1791cd0dd28e0d9d08e7c1917a18ec8b355afb76a24",
+        "bytes": 9660
+      },
+      {
+        "url": "/assets/RelationGraph-CW0PyIuX.js",
+        "sha256": "8304b86764c6015c7acf7e1ce82fad78e9f1f5cc2795a43a8030a2578205151e",
+        "bytes": 189407
+      },
+      {
+        "url": "/assets/RelationGraph-DLioOiRN.css",
+        "sha256": "b0cb7bd6fec5951c9c8f5808821438206604b1629a912c96009ac427f38e7d69",
+        "bytes": 15413
+      },
+      {
+        "url": "/assets/RelationMigrations-DMxfAVhB.js",
+        "sha256": "54e2df857b2bba303163170891497f0a18a8a22c2e82d39741f82b4ad889666b",
+        "bytes": 53103
+      },
+      {
+        "url": "/assets/RelationTypes-eFCh9tAv.js",
+        "sha256": "637efd5f541cbfa1b3dcb8d86836fec4702c496770eeda9cd5a95deeccac23fb",
+        "bytes": 14558
+      },
+      {
+        "url": "/assets/SchemaEditor-I-uaPbu7.js",
+        "sha256": "b81ceadec8a5f9ece545318b436d647e1a79b7551fd3c25a9fc7196f10ebc11a",
+        "bytes": 5403
+      },
+      {
+        "url": "/assets/TypeEditor-CHSCuv7S.js",
+        "sha256": "c8005143bea520149c4a884caf648d9bd844dd0114be92c9376283b86158605e",
+        "bytes": 9115
+      },
+      {
+        "url": "/assets/TypeMigrationPolicyEditor-2iGpkl8A.js",
+        "sha256": "0bd5598c5c6fc4f621a00f38d692c674556993d99531e3b1b25936f6a070238c",
+        "bytes": 7385
+      },
+      {
+        "url": "/assets/index-CV2ZM4H8.js",
+        "sha256": "71d150706f2077de04ee3b9b225226cc57fb296af549dd5c7c9ce782a2e5d03e",
+        "bytes": 314159
+      },
+      {
+        "url": "/assets/index-Dko_ms_T.css",
+        "sha256": "35d167e8ee264caae41c93b6948a8219e3e1233824c7df2e90435ac9ba37e05f",
+        "bytes": 50040
+      },
+      {
+        "url": "/assets/shared-BOyi7r4Z.js",
+        "sha256": "830cd04ff10cd71333edd54cff2d727354d783d6661f04004ab82f9c7e897e69",
+        "bytes": 6028
+      }
+    ],
+    "served_asset_count": 22,
+    "served_asset_method": "HTTP bytes fromlocalhost4310 matched the fresh production build assets before and after execution."
+  },
+  "api_source_equivalence": {
+    "report": {
+      "path": "docs/verification/m2-relation-participation-api-graph-copy.json",
+      "sha256": "9cbe8030e1a194e8833aeb38ad3eaff8186520e0820df4f5456c07c102557ef6"
+    },
+    "source_count": 76,
+    "matched": 76,
+    "images_match": true,
+    "meaning": "This is exact executed-image source equivalence to the separately recorded123-case API attempt6, not an API rerun performed by the browser wrapper."
+  },
+  "targeted_attempts": [
+    {
+      "attempt": 1,
+      "result": "FAIL",
+      "started_at": "2026-11-15T23:20:13.644752+00:00",
+      "recorded_at": "2026-11-15T23:21:31.425425+00:00",
+      "stats": {
+        "startTime": "2026-11-15T23:20:14.354Z",
+        "duration": 76409.605,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      },
+      "images": {
+        "api": "sha256:a46ee55375ce71f7f0c15d6da0504a835247fe2370077ea54b764e8a778066c4",
+        "workflow-worker": "sha256:a46ee55375ce71f7f0c15d6da0504a835247fe2370077ea54b764e8a778066c4",
+        "site-runner": "sha256:a46ee55375ce71f7f0c15d6da0504a835247fe2370077ea54b764e8a778066c4"
+      },
+      "source_files": 139,
+      "served_assets": 22,
+      "source_and_runtime_unchanged": true,
+      "screenshots_captured": 0,
+      "private_report": {
+        "path": ".local/evidence/participation-browser-targeted-20261115T232013.json",
+        "sha256": "1ee9b55415490cd6e1e8faae3d22a7fe76042820f2fbc626dfc3363f4726043a"
+      },
+      "private_raw_report": {
+        "path": ".local/evidence/participation-browser-targeted-20261115T232013-results.json",
+        "sha256": "cfe9fb7c43b5be78138aaea4331228960ed83874a621046afa1d11b42706c2c2"
+      },
+      "private_log": {
+        "path": ".local/evidence/participation-browser-targeted-20261115T232013.log",
+        "sha256": "bdfda6c5fe1ddd78adf6a09353c9f1ab81864338da1569a464f5c44313f21e84"
+      },
+      "diagnosis": "Both journeys failed scoped axe target-size checks for21px nested evidence summaries before screenshot capture. The control sizing was corrected; original failures remain retained."
+    },
+    {
+      "attempt": 2,
+      "result": "FAIL",
+      "started_at": "2026-11-15T23:43:33.968898+00:00",
+      "recorded_at": "2026-11-15T23:45:39.313826+00:00",
+      "stats": {
+        "startTime": "2026-11-15T23:43:34.649Z",
+        "duration": 124035.807,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "images": {
+        "api": "sha256:6594d66cf5bcf29fce05cade7fc1924d26994c9ca604cde76e8a777ff4ac0c24",
+        "workflow-worker": "sha256:6594d66cf5bcf29fce05cade7fc1924d26994c9ca604cde76e8a777ff4ac0c24",
+        "site-runner": "sha256:6594d66cf5bcf29fce05cade7fc1924d26994c9ca604cde76e8a777ff4ac0c24"
+      },
+      "source_files": 139,
+      "served_assets": 22,
+      "source_and_runtime_unchanged": true,
+      "screenshots_captured": 6,
+      "private_report": {
+        "path": ".local/evidence/participation-browser-targeted-20261115T234333.json",
+        "sha256": "f45b37ecadfe2d152ea651b66eea581bfff67d7f3aca4175cd8ce721adfcdd98"
+      },
+      "private_raw_report": {
+        "path": ".local/evidence/participation-browser-targeted-20261115T234333-results.json",
+        "sha256": "8ee52b2a92fcdcadc8bc6c7b459520eb3f6d1e568ac1504b7d809bb1eabff7e5"
+      },
+      "private_log": {
+        "path": ".local/evidence/participation-browser-targeted-20261115T234333.log",
+        "sha256": "b37c9ebc4209880a0c90e96bf507c227cc563c6bc1e88c0c68259bf626878960"
+      },
+      "diagnosis": "One journey passed; the authoring journey failed at an accessible-name selector containing help text. The test selector was corrected without weakening product assertions.",
+      "private_screenshot_archive_manifest": {
+        "path": ".local/evidence/participation-browser-targeted-20261115T234333-screenshots/manifest.json",
+        "sha256": "32bc30d286608cf5b016b15359e44c38b8d3e3544ca9e459cda390ed9279f2e9"
+      }
+    },
+    {
+      "attempt": 3,
+      "result": "FAIL",
+      "started_at": "2026-11-15T23:52:42.134975+00:00",
+      "recorded_at": "2026-11-15T23:54:47.004865+00:00",
+      "stats": {
+        "startTime": "2026-11-15T23:52:43.124Z",
+        "duration": 123161.88100000001,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "images": {
+        "api": "sha256:5d5d32c6f59f291492c1d93f2adf33304d441112855163afebf4732619826a36",
+        "workflow-worker": "sha256:5d5d32c6f59f291492c1d93f2adf33304d441112855163afebf4732619826a36",
+        "site-runner": "sha256:5d5d32c6f59f291492c1d93f2adf33304d441112855163afebf4732619826a36"
+      },
+      "source_files": 139,
+      "served_assets": 22,
+      "source_and_runtime_unchanged": true,
+      "screenshots_captured": 15,
+      "private_report": {
+        "path": ".local/evidence/participation-browser-targeted-20261115T235241.json",
+        "sha256": "effe0fe85b052ae2aae09661ec02880daa9259e0294618f3308c58a329a16232"
+      },
+      "private_raw_report": {
+        "path": ".local/evidence/participation-browser-targeted-20261115T235241-results.json",
+        "sha256": "4d67116f9c5d4cbbcb439ae2b0740831c38d68a945228f78dffaf412a07c9ab6"
+      },
+      "private_log": {
+        "path": ".local/evidence/participation-browser-targeted-20261115T235241.log",
+        "sha256": "36579c688290fe4983546b4fdec48977409360ebddafc0c658460dd2cbb6e61a"
+      },
+      "diagnosis": "One journey passed; authoring/repair failed the phone participation-history document-width assertion. Absolute screen-reader UUID labels escaped static table scroll containers. Adding position:relative to the table scroll container fixed the observed overflow without hiding content or weakening assertions.",
+      "private_screenshot_archive_manifest": {
+        "path": ".local/evidence/participation-overflow-before-20261115T235926/manifest.json",
+        "sha256": "9844462553edd24bb784ab5673f79da456a1e75ad00f03a0e287d8f2153f6d8e"
+      }
+    },
+    {
+      "attempt": 4,
+      "result": "PASS",
+      "started_at": "2026-11-16T00:04:33.128339+00:00",
+      "recorded_at": "2026-11-16T00:06:37.296946+00:00",
+      "stats": {
+        "startTime": "2026-11-16T00:04:33.755Z",
+        "duration": 122858.661,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "images": {
+        "api": "sha256:08b6905da0d98737527880ff7c55921ae480d811afd316d9f39b95442a398e9e",
+        "workflow-worker": "sha256:08b6905da0d98737527880ff7c55921ae480d811afd316d9f39b95442a398e9e",
+        "site-runner": "sha256:08b6905da0d98737527880ff7c55921ae480d811afd316d9f39b95442a398e9e"
+      },
+      "source_files": 139,
+      "served_assets": 22,
+      "source_and_runtime_unchanged": true,
+      "screenshots_captured": 16,
+      "private_report": {
+        "path": ".local/evidence/participation-browser-targeted-20261116T000432.json",
+        "sha256": "00b2679dc8a4c1ecc050354cd595e5c287ed45eed99b72b2b2568c2c90b8ae7e"
+      },
+      "private_raw_report": {
+        "path": ".local/evidence/participation-browser-targeted-20261116T000432-results.json",
+        "sha256": "f301ba3b5cdeee77f75ea7152643bc90f20e724dc1833a9d1a6510fb5453b84e"
+      },
+      "private_log": {
+        "path": ".local/evidence/participation-browser-targeted-20261116T000432.log",
+        "sha256": "d1e259d872a99267d89abd4d7552e4891bb6113af38bf5296ef0ae20b5c5138e"
+      },
+      "diagnosis": "Both targeted journeys passed after the CSS correction. This earlier pass used the source before the separate graph asset copier correction; the final full run below qualifies the later rebuilt source.",
+      "private_screenshot_archive_manifest": {
+        "path": ".local/evidence/participation-targeted4-screenshots-20261116T000432/manifest.json",
+        "sha256": "a171e96693130678a1cc873069554001cfb2665575b3aa01e262dcf66577190d"
+      },
+      "private_visual_review": {
+        "path": ".local/evidence/participation-targeted4-visual-review.json",
+        "sha256": "1f8eba194e6c5085a8303357053b8645a90638a8435a582322d50ed8fca0614c"
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-forward-repair-receipt-en-1440.png",
+      "sha256": "829b8f66e959fdfebead1acbc126ce78d52fefc87d7492097dff1a9dc965c091"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-forward-repair-receipt-en-390.png",
+      "sha256": "c9a0ff10149917d2970cdb453cdfa34d924ffdf900328bc474170ef09ed666a1"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-invalid-minimum-en-1440.png",
+      "sha256": "e46863b228e6ced324ff5141ae4015db507a6c28827c0188e61ca28b18ae0a27"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-invalid-minimum-en-390.png",
+      "sha256": "bc5fb7e1d1174280b5f8f5a7b933364d9ee125c410e324c67e6b56447bce4d5a"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-joint-preview-ar-dark-1440.png",
+      "sha256": "33aa243458a311c314a48f52f02f2cb2aedada4003e929e37c252c4fbd525a32"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-joint-preview-ar-dark-390.png",
+      "sha256": "c86345ca42de5c5c3b8d1f4f9af866f8eca986f69f00a02cbbdffa57075df5f9"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-joint-preview-en-1440.png",
+      "sha256": "423e651ef46b47ebcc626cc2f538dc4400d1cb4d0bdeca7fa0ccb93bda18380a"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-joint-preview-en-390.png",
+      "sha256": "8b209c9b6364bd4483db376aba9da0312741528fe62bdc45b0e39802e3ef4f46"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-joint-receipt-en-1440.png",
+      "sha256": "837af66f170111bda57ad120ec03c63ebb1198c4572fbb345cd1780fe22bf733"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-joint-receipt-en-390.png",
+      "sha256": "d1c8043c5dd8796b878127485011886b5067fac488801e78cc4a91012528eb55"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-participation-history-en-1440.png",
+      "sha256": "5395436aeaec0060eea6968529f5f2ca387190ea61e9db2f0c42ea4f68993bc1"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-participation-history-en-390.png",
+      "sha256": "b4403f153e2fea49f5db21f167c0aa481f442667bd510c3cf54270bdf4ebbe4d"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-private-participation-en-1440.png",
+      "sha256": "56830f351805c109726b6c062e79b8a8f8cb65302be68b893e702cf117e82d00"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-private-participation-en-390.png",
+      "sha256": "9f3f38ce19538579d6da42e5558018f9b01e3bcb3fbcee880cdc0711c521a887"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-stale-review-en-1440.png",
+      "sha256": "e2c27276dfef00117ffae8467925eb175a38855139d5390294c71413d5081f18"
+    },
+    {
+      "path": "docs/verification/screenshots/m2-relation-migration-stale-review-en-390.png",
+      "sha256": "0eaece949adcbc146835ce939d02f94a2849bc90f048aa3e8e1ad390e7fea8f1"
+    }
+  ],
+  "visual_inspection": {
+    "implementation_agent": {
+      "status": "PASS_SCOPED",
+      "recorded_at": "2026-11-16T00:27:50.726488+00:00",
+      "reviewed": 16,
+      "private_artifact": {
+        "path": ".local/evidence/participation-full-visual-review.json",
+        "sha256": "0f3b4134e1f62434c38381c464f2b6d614535e55a63ea87e10fb277ec50aa356"
+      },
+      "method": "Viewed every final full-run original PNG through view_image at original detail; no crop, compositing, retouching, regeneration or other image edit. Checked visible layout, legibility, RTL presentation and control states. Each archived/source PNG hash was verified.",
+      "files": [
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-forward-repair-receipt-en-1440.png",
+          "sha256": "829b8f66e959fdfebead1acbc126ce78d52fefc87d7492097dff1a9dc965c091",
+          "width": 1440,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Receipt heading, export and forward-repair actions, attribution and hashes fit the desktop content column. The prior-receipt link is visible; pagination disabled state is distinct."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-forward-repair-receipt-en-390.png",
+          "sha256": "c9a0ff10149917d2970cdb453cdfa34d924ffdf900328bc474170ef09ed666a1",
+          "width": 390,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Receipt actions fit side by side; long hashes and predecessor link wrap within the phone card. Receipt metadata remains legible; outcome details continue below this captured viewport."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-invalid-minimum-en-1440.png",
+          "sha256": "e46863b228e6ced324ff5141ae4015db507a6c28827c0188e61ca28b18ae0a27",
+          "width": 1440,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Red non-executable alert and per-participation minimum failures are legible; structural before/proposed counts are visible in the desktop table. No overlapping controls."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-invalid-minimum-en-390.png",
+          "sha256": "bc5fb7e1d1174280b5f8f5a7b933364d9ee125c410e324c67e6b56447bce4d5a",
+          "width": 390,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Error text and diagnostic paths wrap cleanly; minimum failure list and structural explanation remain readable. Pagination wraps and the table clips only at its own horizontal scroll boundary."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-joint-preview-ar-dark-1440.png",
+          "sha256": "33aa243458a311c314a48f52f02f2cb2aedada4003e929e37c252c4fbd525a32",
+          "width": 1440,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Arabic headings, validation message, participation explanation, pagination and disclosure labels are visible in dark mode with right-to-left alignment and sidebar placement. Synthetic names and machine identifiers remain literal technical values."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-joint-preview-ar-dark-390.png",
+          "sha256": "c86345ca42de5c5c3b8d1f4f9af866f8eca986f69f00a02cbbdffa57075df5f9",
+          "width": 390,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Arabic success message and explanation wrap inside the phone panel; RTL pagination and disclosure order are maintained. Wide table content is confined to the table viewport; technical identifiers extend into that local horizontal scroll area."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-joint-preview-en-1440.png",
+          "sha256": "423e651ef46b47ebcc626cc2f538dc4400d1cb4d0bdeca7fa0ccb93bda18380a",
+          "width": 1440,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Success banner, required degrees, endpoint revision/model values and graph counts are readable. Proposed graph disclosure is open; edge/binding disclosures appear separately."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-joint-preview-en-390.png",
+          "sha256": "8b209c9b6364bd4483db376aba9da0312741528fe62bdc45b0e39802e3ef4f46",
+          "width": 390,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Success banner and explanation wrap without overlap. Pagination and proposed-graph summary adapt to phone width; wide cells remain inside the table scroll boundary."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-joint-receipt-en-1440.png",
+          "sha256": "837af66f170111bda57ad120ec03c63ebb1198c4572fbb345cd1780fe22bf733",
+          "width": 1440,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Receipt attribution, request/change-set/preview hashes, created outcomes and export/repair actions are legible with distinct pagination control states."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-joint-receipt-en-390.png",
+          "sha256": "d1c8043c5dd8796b878127485011886b5067fac488801e78cc4a91012528eb55",
+          "width": 390,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Receipt title/actions fit; hashes wrap within the card; outcome heading and pagination are visible without page-width clipping. More outcome content lies below the captured viewport."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-participation-history-en-1440.png",
+          "sha256": "5395436aeaec0060eea6968529f5f2ca387190ea61e9db2f0c42ea4f68993bc1",
+          "width": 1440,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Centered modal, close control, explanatory text, expanded revision, actor and asset revision references, originating-operation link and bounded JSON panel are visible and non-overlapping."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-participation-history-en-390.png",
+          "sha256": "b4403f153e2fea49f5db21f167c0aa481f442667bd510c3cf54270bdf4ebbe4d",
+          "width": 390,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Previously failing modal now fits within the 390px viewport. Long actor/asset UUIDs wrap; close control, originating-operation link and JSON panel remain visible; JSON is confined to its own scrolling panel."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-private-participation-en-1440.png",
+          "sha256": "56830f351805c109726b6c062e79b8a8f8cb65302be68b893e702cf117e82d00",
+          "width": 1440,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Required-participation panel shows a clear access-scope error and reference rather than a participation table/count. Restart action is visible. The separate authorized relation row remains shown above."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-private-participation-en-390.png",
+          "sha256": "9f3f38ce19538579d6da42e5558018f9b01e3bcb3fbcee880cdc0711c521a887",
+          "width": 390,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Access-scope error and reference wrap within the phone panel. No restricted participation table/count is rendered; ordinary authorized relation table stays within its horizontal scrolling boundary. Restart action is below the captured viewport."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-stale-review-en-1440.png",
+          "sha256": "e2c27276dfef00117ffae8467925eb175a38855139d5390294c71413d5081f18",
+          "width": 1440,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Captured scroll position shows preserved relation-target/asset editor controls, clear labels and disabled Add existing relation target until selection. The stale-error banner is above this captured viewport and is not visually evidenced by this desktop PNG."
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-stale-review-en-390.png",
+          "sha256": "0eaece949adcbc146835ce939d02f94a2849bc90f048aa3e8e1ad390e7fea8f1",
+          "width": 390,
+          "height": 960,
+          "inspection": "ACTUALLY_VIEWED_ORIGINAL_PNG",
+          "result": "NO_LAYOUT_BLOCKER_OBSERVED",
+          "observations": "Stale-graph alert explicitly states the draft is preserved and instructs context refresh/review. Reference wraps; draft tabs/import/export controls and preserved repair link remain visible without clipping."
+        }
+      ],
+      "layout_blockers": [],
+      "limitations": [
+        "Screenshots capture finite viewports, not every off-screen state. Horizontal tables and JSON panels intentionally scroll within local containers; pixels outside the captured scroll position were not visually inspected.",
+        "The stale-review desktop PNG begins at the preserved editor and does not include its error banner; the paired phone PNG visibly shows the stale error and preservation guidance. Automated stale-response behavior is recorded separately in the targeted test report.",
+        "Arabic screenshots evidence visible translated labels and right-to-left layout only. This review does not constitute independent native-speaker linguistic approval.",
+        "No broader accessibility, security, release or full-browser-suite qualification is inferred from visual inspection. No source files or public manifest changed in this task."
+      ]
+    },
+    "root_agent_spotcheck": {
+      "status": "NO_VISIBLE_BLOCKER_REPORTED",
+      "private_artifact": {
+        "path": ".local/evidence/participation-full-root-visual-review.json",
+        "sha256": "1189e744f86fc1a3816c7dd78c14914b90cd93c607c4681ed95c6c75ef01d4c1"
+      },
+      "recordedAt": "2026-11-16T00:26:15.680923+00:00",
+      "reviewer": "root agent",
+      "method": "Actual PNGs opened with view_image after their full-suite authoring journey completed; no human review claim.",
+      "files": [
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-joint-preview-ar-dark-1440.png",
+          "sha256": "33aa243458a311c314a48f52f02f2cb2aedada4003e929e37c252c4fbd525a32"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-joint-preview-ar-dark-390.png",
+          "sha256": "c86345ca42de5c5c3b8d1f4f9af866f8eca986f69f00a02cbbdffa57075df5f9"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-participation-history-en-390.png",
+          "sha256": "b4403f153e2fea49f5db21f167c0aa481f442667bd510c3cf54270bdf4ebbe4d"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-invalid-minimum-en-390.png",
+          "sha256": "bc5fb7e1d1174280b5f8f5a7b933364d9ee125c410e324c67e6b56447bce4d5a"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-relation-migration-stale-review-en-390.png",
+          "sha256": "0eaece949adcbc146835ce939d02f94a2849bc90f048aa3e8e1ad390e7fea8f1"
+        }
+      ],
+      "observations": [
+        "Arabic desktop preview displays translated participation labels and both complete tables within the viewport.",
+        "Arabic phone preview retains localized controls and wraps explanations; wide tables scroll horizontally within their containers.",
+        "Phone participation history dialog remains inside the viewport, with readable immutable revision metadata and locally scrollable JSON.",
+        "Phone invalid-minimum view displays the blocked execution status and each minimum issue, with no page overflow.",
+        "The phone stale-review screen shows an actionable graph-changed error and preserved visual/JSON editor with the original forward-repair reference."
+      ],
+      "limitations": [
+        "Only visible pixels were reviewed; offscreen data is covered separately by executable checks.",
+        "This is agent visual inspection, not independent human Arabic or full accessibility qualification."
+      ]
+    }
+  },
+  "historical_evidence": {
+    "count": 95,
+    "restored_byte_identical": true,
+    "files": [
+      {
+        "path": "docs/verification/screenshots/asset-en-light-1440.png",
+        "sha256": "9b495a82d5e0b573c6e2dfbc9145a5ad69ee073bcf4d19ad130b2ed046d138e2"
+      },
+      {
+        "path": "docs/verification/screenshots/asset-en-light-390.png",
+        "sha256": "a2a5235ad78141002ce97cba7cd1132723942adbb413b0ff95251019756b146e"
+      },
+      {
+        "path": "docs/verification/screenshots/audit-en-light-1440.png",
+        "sha256": "880ca7769db8a669cb1a748ec90f74829f2cf3cbeb0b374143590d1de7974172"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-ar-dark-1440.png",
+        "sha256": "9e118b83bd8d786e240183751340702fd7e3bcdb53f2b676a66cb87349e747d0"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-ar-dark-390.png",
+        "sha256": "0020afa07937035dcee1186e66b3cc183eeb6c8d75efd5ace8051d7e7946ff94"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-ar-dark-768.png",
+        "sha256": "118898141ad94cb5ee445ef8b585c0f074d1c41a8d7da2ef896f42bd1bab4945"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-dark-1440.png",
+        "sha256": "e7686c0e2b06c3f1b49ffc4c8e5f3e0095b91036c1eb138d4c81a1930a263023"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-1024.png",
+        "sha256": "49f67ea46ef95c6e76897c08aad96fa26a56f79af5dfb022dbe0b8c76e7fcd39"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-1280.png",
+        "sha256": "87dfff7d741e8aa68a0269fa19f77049794e74d0ff641a4518865721b5f37edc"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-1440.png",
+        "sha256": "67920e53017c28f2665bdbe931bb8eefc85e97186d62f483c20ef53f589c9767"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-390.png",
+        "sha256": "02d905c4c80c38e9b9075cd60c1e3f6dd33a830e597e8c79ac2fe3ed7be4350e"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-en-light-768.png",
+        "sha256": "e8fa1bababc049412a3f8e794706b0cd99a976bec90c21571dcf2379d91abda8"
+      },
+      {
+        "path": "docs/verification/screenshots/catalog-history.png",
+        "sha256": "f56ada27dd2e44b22dd20e24ec9607017ecb8bdee59554e6b6efb3eefb9abf63"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-ar-dark-390.png",
+        "sha256": "44f7154cfa9d04bdd51dc9aa94ec8d5e16abfe33a19fba79fa8df6b893f15162"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-en-1024.png",
+        "sha256": "5699a4f8876d69bafd84810351251173f023170575bd6a1edcae568a14938513"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-en-1440.png",
+        "sha256": "99e3f8e50de7944a7f5d7b45c46bb853cc83823b956f132c5ffd220fd10c5bb0"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-en-390.png",
+        "sha256": "ed93ce074f4dfa35073944a59d89b00adc46475cd4671cc7400f52cc0423085c"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-editor-en-768.png",
+        "sha256": "7a2830e5f927dd64fed1c45507453684767042fbd7a29682800c5abd14a66bbf"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-inheritance-en-1440.png",
+        "sha256": "1b3cf83a5306c0aaa33538208af4616a8ae3745fce2faac4f4fcf9e0f9f465c7"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-inheritance-en-390.png",
+        "sha256": "e4b160946ffb35d2a0d300eb37dbb92b97dfc562a4343727ec96b3fbbd1d9cc5"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-ar-dark-390.png",
+        "sha256": "97177a368b88c055c4edd7f232d63d371557c665404f36d9bf9edfa440bcb24a"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-editor-en-1440.png",
+        "sha256": "d03d99af756fd6405037a7a7045d2fbb6545c3879915ecd440aa0d1fc9cdec9e"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-editor-en-390.png",
+        "sha256": "e14d653844c8ee4bba6587092868ba3ed329b9a6ed203b03d5d8a091af8ecdbb"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-en-1440.png",
+        "sha256": "14ee21c85e1c5fe7c06090d932bb2161c1dc658d7b6a689f327371a34f3c27ea"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-lifecycle-en-390.png",
+        "sha256": "c52867c5a37a2c496aff950864d9d67e2e4634e79ff68cf515980e88a4cb5dce"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-preview-en-1440.png",
+        "sha256": "f599eed9ca99cdf9207ed76fb3904cbeff24370b8aa44f020758bb0298f4af0b"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-preview-en-390.png",
+        "sha256": "6db06036e208989a76a0cfa2c06e4e4b9e9d1791179e014dbb517d37e5f55b61"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-readonly-en-390.png",
+        "sha256": "5676d037cbb78dd054c06936439b0d99a340edf8e368e6d85daa902b904f0226"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-resolved-en-1440.png",
+        "sha256": "612a3a34a384ebcd98cf5cf2bc7a0e58934a6a98f529a1bb422c9f1b607b0279"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-asset-type-resolved-en-390.png",
+        "sha256": "a7d37d9ce5290a83b9d059aea977fa26ba4665a5038beb78cee68b66d7185807"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-confirmation-en-1440.png",
+        "sha256": "3e348bcf18749a4d4d2ce1fb57bf010b7e16b4498bc938a647868d7e5a8d22d4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-confirmation-en-390.png",
+        "sha256": "826e4070c8543d8a47ad94fed814169e146a614b0c80fd5cf600e57cc4fdc887"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-model-chooser-en-1440.png",
+        "sha256": "ee3cd03220f7adf4495dd4bc95aba20f729777da633bc2d7aad5bf7d5e2ed509"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-model-chooser-en-390.png",
+        "sha256": "13d1ae755ae75a4b36978af768c3f1c00a2eb45180511a1a1fa7b99d51b98bb1"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-model-list-en-1440.png",
+        "sha256": "e91ebdb03d84b99edd614ca2890fe2a15ee46418db822fae0fe62d518579a616"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-model-list-en-390.png",
+        "sha256": "a6f188e9a73940d33bc89ed0bad3ce2525780b0272dda9722b3158aa73731a9e"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-plan-en-1440.png",
+        "sha256": "1a6c469ec2794b9c4ea567f09ec47474e8a72b0aeb6e4140cec17de061ed8599"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-plan-en-390.png",
+        "sha256": "fa28c60be911cf7a11cd0d93174dfeeb193629fbe0f7d6517acf38fdd12ac1e6"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-preview-dark-390.png",
+        "sha256": "3ec49553adb3c7d371f0ffe14d4ba41fde404d82d0c83b4d24efaed4bc6db4b5"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-preview-en-1440.png",
+        "sha256": "eb87ec3b114072eba03ff0612b629aa45cc72dd539b32be71ccee5a4ada2a3b4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-preview-en-390.png",
+        "sha256": "ce73e5e7aac36f44b6a3d3ac732938b38866b87745d1ca5b4bf420e52904e8a0"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-receipt-ar-390.png",
+        "sha256": "4a68a7972cbe2c0182ef83afacccf6b811d46d407b5bbfe7e04d24d161a936a4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-receipt-en-1440.png",
+        "sha256": "450cea4cdded5fbc2fed7b556bd171eabddd80daa3b439556c5a73b0d67f9531"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-receipt-en-390.png",
+        "sha256": "5d1e5d617347745d106e7c25820fc713635d683fa1fb67fc641e26daa56cab5d"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-migration-values-en-390.png",
+        "sha256": "565da93d4aff5fd3e56f9dbf20295cad1a461410ddaea2db05bbf809b4d96b71"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-editor-ar-390.png",
+        "sha256": "4bbb8b732e6777a0a97758f73cade5a716a667d943d6b15610a2e977da3939b4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-editor-en-1440.png",
+        "sha256": "bf0ace849e6888fe9c0992838ca6315403c814df713bafc6abf0d3966882f068"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-editor-en-390.png",
+        "sha256": "c7be11ca2cd43ad22645afd89b1e671d4c7549832efd6015423b041cfbaa3c09"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-preview-en-1440.png",
+        "sha256": "22551575526066e779ca6785ced75e6bcb7e16cb5c4f5e9b988a812f29c863e9"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-preview-en-390.png",
+        "sha256": "d27d248a79811d1960f98530c8d0dd5346fad424e7b4fbc1f0edeffd91a1c50c"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-typed-asset-en-1440.png",
+        "sha256": "2ab48d3d51ff1cda5a03aa737629940aad0ef46223d67dee1c488cdfe6d5d792"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-typed-asset-en-390.png",
+        "sha256": "6bc6ce7c72c122c49f9303a7c882e319aff00d99289e67e2a3db379cacda22df"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-typed-form-en-1440.png",
+        "sha256": "55616f8b4fe828936e19df8ad7e0dacd51f53d7cc1e65a7162e63d911c4a699b"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-typed-form-en-390.png",
+        "sha256": "ac69fefd2c5819156ac1ee2001e9b68501e5bce2feedfc2803e81a66bf29e69d"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-version-en-1440.png",
+        "sha256": "5ae326bcc28b795080f3d709f4d06b5b688d5a2d8cc0939d813ac41fb07dd0ad"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-model-version-en-390.png",
+        "sha256": "ae39469ce9753bd32e4d3528df05e8b949f3bf7184e00211c2e53c438adf6bd5"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-detail-en-1440.png",
+        "sha256": "f073ef938d59e62c44021a4db014f287ae2b7ad776ec2b09b1b70872b79ad640"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-detail-en-390.png",
+        "sha256": "bfef592ce5e5704ee6eb042d07b276758a7e71c40b12709d2f473946f3d68ab1"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-form-en-1440.png",
+        "sha256": "1650f1bea23476d13e3cf33d5feab7aa398bbb91eef808843700919fdf913ca1"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-form-en-390.png",
+        "sha256": "53d515f95f224b3d1a8b404e6c43cfaca880a3e7af80a2f9787129a427fa1712"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-graph-ar-dark-1440.png",
+        "sha256": "2a7680292cf6fb552acbe1a4ef31ed6d0bb85f2b5a93845a003a688a7fa900c0"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-graph-ar-dark-390.png",
+        "sha256": "b9ea5a2d1a82a555918a6cfd817e0d7f79ad1ce3a16b36c46caacc9dfd47a568"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-graph-en-1440.png",
+        "sha256": "b7babeab214a0be7c313a6485d71f392e0222fc4fb64000be55f21300bb6154d"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-graph-en-390.png",
+        "sha256": "0addf197ebd00ab770b0f71647c14ffb5af25224c29e96126b2a796b9bb63bee"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-history-en-1440.png",
+        "sha256": "750fe3f15fae8cb0d65b6f528965a83d576e2a7226bb84ce67ab381d34868627"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-history-en-390.png",
+        "sha256": "f3b9d3612e5975c0cba3f07d38820fd428f56e85014a10b5b4f70bb2947db566"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-removal-en-1440.png",
+        "sha256": "dbbf6b6ff1e99630735d1f12a5dd3924a2d7ba2fedd8e66bc0e6095eff0b653f"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-removal-en-390.png",
+        "sha256": "d4a031c5c7d201be541c77caa0f1487b04ab51ed78c91d41b0785d3aafd0fd55"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-table-en-1440.png",
+        "sha256": "e336c8781599dfe711fd7754661ddb9d795319d41e4f3f17193f06e47fec8337"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-table-en-390.png",
+        "sha256": "2abcf3da91dcf343510e8c4195f6ee1b63b0f37d90392031bac3b61f172f0b6e"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-type-detail-en-1440.png",
+        "sha256": "4311204d6bcd8185d453b3a957a2c3df5d2a8e34308b6fb4f24980c5d442d5f7"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-type-detail-en-390.png",
+        "sha256": "c436ad3b8310a13977f61be3371ba5a0e197fdc44d3875df5495884104f5550f"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-type-editor-en-1024.png",
+        "sha256": "1f7a2fd704844e348b24ff2b0513b5ed31998d9b988a504c7ae2b67448a33533"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-type-editor-en-1440.png",
+        "sha256": "47a70a6e61c5449e4dd73f353b7907e0d815e6d27e15751e8b09bcfa3d6fdcf0"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-type-editor-en-390.png",
+        "sha256": "37cd97bd72597f6fe04ac395b5c42e5d58b0eb3a7d070a0f9258cac657fc1aa6"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-relation-type-editor-en-768.png",
+        "sha256": "6fd8f1383ee466f92503c899dd670f5b10b09c08a76e7e2212ef995b2ce0c0b1"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-confirmation-en-1440.png",
+        "sha256": "ae926702e553b7cbb7358feab91e20a3e217b1c9dd90c6698591a8f623f32d41"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-confirmation-en-390.png",
+        "sha256": "54e339c69ca3523c5da25a9a75255c22cae569e9efefe6cd94f150cf5917e9e4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-definition-en-1024.png",
+        "sha256": "aa804307ba4ce5b1a2fc88c296400e70bfefa1b490f71db5f2f232b30b98f560"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-definition-en-1440.png",
+        "sha256": "bc8b65d8a9881cb8aee0184cb0d049cdf3e721a235950072da94a86bc6a71617"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-definition-en-390.png",
+        "sha256": "3a16a24f9efdbb40d8b7726a631f26f913905fe8eabad6497e470cf55b0954c4"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-definition-en-768.png",
+        "sha256": "947b9055465270205ab88a07255c44dbb8d7a7fd7c255db12da1b65ed73e315b"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-editor-ar-dark-390.png",
+        "sha256": "5b2f02574a2ae4ed5204c4308c2a5353e87ec47266b9d38e6d6efc471c7a7251"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-policy-en-1440.png",
+        "sha256": "b2025e0ec10c929cedaf1305a65188df99d1ea846d1d7c9899bdc7bee830e2a9"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-policy-en-390.png",
+        "sha256": "9e3d8a57d7394fbf9a9f78983153a5dcb2117ea1718cc7b6d46282f9b15d4f6a"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-preview-en-1440.png",
+        "sha256": "03445b824089e932cd90e67d70843637851cf1b7a0c8f98679bd62c8de6bc407"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-preview-en-390.png",
+        "sha256": "0d790df93fe11788dbd0c8f140a0d84f70cc73d9b56de2f8d5b4912cbacc058f"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-readonly-en-390.png",
+        "sha256": "0296aa1b73f04190ad14cca1e05e78d757218aa0751c9fa310da093f3f6ce390"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-receipt-ar-dark-390.png",
+        "sha256": "c24ac2c16b209c652c9d8c8e21b9ac77ae7138f58d05c2feb60b476d6d8aa3b2"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-receipt-en-1440.png",
+        "sha256": "91b763d91971fb6ad47e7128957326665d9a6a809cc418a5167fe5da338d56ce"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-receipt-en-390.png",
+        "sha256": "577949980e2bfdb00a9ff92d302763a2f7f3c4954d01cb796f3f59ce8da8c776"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-values-en-1440.png",
+        "sha256": "7ef5b370801584c85ac175dc3549367d00df27b8c908b09c073ad90f92b024d5"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-type-migration-values-en-390.png",
+        "sha256": "364e77cfbc151863c8e243f9bbd129f909312664d496bc8b4049cfa8191b1b0b"
+      },
+      {
+        "path": "docs/verification/screenshots/overview-en-light-1440.png",
+        "sha256": "5d5302325c57bd79005c8696bc116bdb79e18a890699a05154e638d9b5bfa7d9"
+      },
+      {
+        "path": "docs/verification/screenshots/sources-en-light-1440.png",
+        "sha256": "873c8fc0cfce9dd92d16b777a9192c9d9131440c8ea28b3fe3c22c766955678b"
+      }
+    ],
+    "fresh_regression_manifest": {
+      "path": ".local/evidence/participation-browser-full-20261116T001324-archive/fresh-historical-manifest.json",
+      "sha256": "c9663af5990a2ae9a0bbada86af958e62e7e06141637f2557f96e63d71ac386c"
+    },
+    "method": "The wrapper archived any newly generated historical screenshots privately, then restored all95 original PNGs and checked their original hashes. These historical files retain their earlier execution bindings."
+  },
+  "verified": [
+    "Sixteen distinct browser journeys passed once each, with no failures, skips, retries or flaky outcomes.",
+    "New graph-operation journeys exercise positive minimum failure, joint endpoint assignment and edge creation, exact draft round-trip, explicit consent, immutable receipt/history, same-pair forward repair, stale-preview recovery, competing execution and current-scope/tenant denial.",
+    "The executed capture helper checks viewport overflow and scoped axe tags wcag2a, wcag2aa, wcag21aa and wcag22aa on captured preview/receipt/history/error states. These automated checks are separate from visual inspection.",
+    "All16 final migration screenshots were actually inspected by the implementation agent, and five were separately inspected by the root agent."
+  ],
+  "limitations": [
+    "This is local synthetic development qualification. Hosted CI, repository release gates, complete capability profiles and production/vendor-live qualification remain separate.",
+    "The original real15-minute preparation expiry result remains scoped to its earlier82-file snapshot and image; it was not repeated by this browser run.",
+    "The three earlier targeted failures and the prior targeted pass retain their original source/image/timing and diagnostics. They are not relabeled by the full pass.",
+    "Finite screenshots do not evidence every off-screen value. Wide tables and JSON panels intentionally scroll locally. The desktop stale-review screenshot captures preserved editor controls below the banner; the paired phone capture visibly shows the stale error and preservation guidance.",
+    "Agent visual review is not independent human Arabic-language review, assistive-technology testing or complete accessibility certification.",
+    "Source-to-commit binding is pending publication; an exact later binding is not a test rerun.",
+    "Private logs, raw Playwright reports and screenshot archives are referenced by path and hash only; their raw contents are not included in this public payload."
+  ]
+}

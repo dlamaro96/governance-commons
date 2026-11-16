@@ -5,7 +5,7 @@ import { parseAssetTypeDefinition } from './asset-type.ts';
 import type { AuthorizedRelationTraversalInput, RelationConstraintEdge, RelationEndpointChangesInput,
   RelationEndpointPolicyState, RelationEndpointRule, RelationEndpointValidationInput, RelationEndpointView,
   RelationNeighborhood, RelationPolicyPin, RelationStructureInput, RelationTypeDefinition, RelationUpgradeInput,
-  RelationUpgradeResult, RelationView, ResolvedRelationType } from './relation-contracts.ts';
+  RelationUpgradeResult, RelationView, ResolvedRelationType, RelationDefinition, ResolvedRelationDefinition } from './relation-contracts.ts';
 export type { RelationTypeDefinition } from './relation-contracts.ts';
 
 /** Pure bounded checks only. Services establish current authority, locks and complete database scope. */
@@ -63,7 +63,7 @@ function copyJSON(input: unknown, issues: Issues, maximumBytes: number = RELATIO
     }
     if (typeof value === 'boolean') { charge(value ? 4 : 5, path); return value; }
     if (!value || typeof value !== 'object') { issues.add('invalid_json', path, 'Only JSON data properties are supported.'); return; }
-    if (ownerSet && path === '/activeOwnerIds') {
+    if (ownerSet && (path === '/activeOwnerIds' || path === '/tenantMemberIds')) {
       // Native methods avoid overridden iterators, has(), size or own getters.
       const size = Object.getOwnPropertyDescriptor(Set.prototype, 'size')!.get!.call(value) as number;
       if (size > RELATION_LIMITS.endpointAssets + 1) { issues.add('limit', path, 'The owner activity input exceeds its bound.'); return; }
@@ -81,18 +81,18 @@ function copyJSON(input: unknown, issues: Issues, maximumBytes: number = RELATIO
     if (!isArray && keys.length > MODEL_LIMITS.properties) { issues.add('limit', path, 'Object property count exceeds its bound.'); return; }
     const selected = isArray ? Array.from({ length: value.length }, (_, i) => String(i)) : keys;
     if (!charge(2 + Math.max(0, selected.length - 1), path)) return;
-    const output: Fields | unknown[] = isArray ? [] : {}; active.add(value);
+    const output = new Map<string, unknown>(); active.add(value);
     try {
       for (const key of selected) {
         if (typeof key !== 'string' || !isArray && (!identifier.test(key) || reserved.has(key))) { issues.add('invalid_json', path, 'Object keys must be safe named fields.'); continue; }
         if (!isArray && !charge(encoder.encode(JSON.stringify(key)).length + 1, path)) break;
         const descriptor = Object.getOwnPropertyDescriptor(value, key);
         if (!descriptor?.enumerable || !Object.hasOwn(descriptor, 'value')) issues.add('invalid_json', at(path, key), 'Only enumerable data properties are supported.');
-        else (output as Fields)[key] = copy(descriptor.value, at(path, key), depth + 1);
+        else output.set(key, copy(descriptor.value, at(path, key), depth + 1));
         if (exhausted || issues.overflow) break;
       }
+      return isArray ? Array.from(output.values()) : Object.fromEntries(output);
     } finally { active.delete(value); }
-    return output;
   };
   try { return copy(input, '', 0); } catch { issues.add('invalid_json', '', 'Data properties could not be inspected safely.'); return; }
 }
@@ -203,15 +203,15 @@ export function parseRelationValidity(input: { validFrom: unknown; validTo: unkn
   if (from && to && value.validFrom !== null && value.validTo !== null && (value.validFrom as string) >= (value.validTo as string)) issues.add('range', '/validTo', 'Validity uses a nonempty half-open interval: validFrom must precede validTo.');
   return issues.result(freeze({ validFrom: value.validFrom as string | null, validTo: value.validTo as string | null }));
 }
-function resolved(input: unknown, path: string, issues: Issues): ResolvedRelationType | undefined {
+function resolved(input: unknown, path: string, issues: Issues): ResolvedRelationDefinition | undefined {
   const raw = fields(input, path, ['definition', 'model'], issues); if (!raw) return;
-  const result = resolveRelationType(raw.definition); if (!result.ok) { issues.append(`${path}/definition`, result.issues); return; }
+  const result = resolveRelationDefinition(raw.definition); if (!result.ok) { issues.append(`${path}/definition`, result.issues); return; }
   if (canonical(raw.model) !== canonical(result.value.model)) issues.add('invalid_definition', `${path}/model`, 'Resolved attributes must match the exact relation definition.');
   return result.value;
 }
 const policyKey = (typeId: string, version: number) => `${typeId}:${version}`;
-function policyMap(input: unknown, issues: Issues): Map<string, ResolvedRelationType> {
-  const result = new Map<string, ResolvedRelationType>(), logical = new Map<string, string>();
+function policyMap(input: unknown, issues: Issues): Map<string, ResolvedRelationDefinition> {
+  const result = new Map<string, ResolvedRelationDefinition>(), logical = new Map<string, string>();
   for (const [index, item] of list(input, '/policies', RELATION_LIMITS.mutationEdges + 1, issues).entries()) {
     const path = `/policies/${index}`, pin = fields(item, path, ['relationTypeId', 'policy'], issues); if (!pin) continue;
     const policy = resolved(pin.policy, `${path}/policy`, issues); if (!id(pin.relationTypeId, `${path}/relationTypeId`, issues) || !policy) continue;
@@ -277,7 +277,7 @@ function endpoint(input: unknown, path: string, issues: Issues): RelationEndpoin
   if (canonical([...pins].sort()) !== canonical([...identities].sort()) || authored.value.parents.some(pin => pins.get(pin.id) !== pin.version)) issues.add('invalid_definition', `${path}/ancestorTypes`, 'Ancestor UUID mappings must cover the exact pinned dependency closure.');
   return value as unknown as RelationEndpointPolicyState;
 }
-function checkEndpoints(item: RelationConstraintEdge, policy: ResolvedRelationType, source: RelationEndpointPolicyState, target: RelationEndpointPolicyState, issues: Issues, path: string): void {
+function checkEndpoints(item: RelationConstraintEdge, policy: ResolvedRelationDefinition, source: RelationEndpointPolicyState, target: RelationEndpointPolicyState, issues: Issues, path: string): void {
   if (source.assetId !== item.sourceAssetId || target.assetId !== item.targetAssetId) { issues.add('model_identity', path, 'Endpoint identities do not match the relation.'); return; }
   if (!policy.definition.allowSelf && source.assetId === target.assetId) issues.add('invalid_definition', `${path}/targetAssetId`, 'This relation type prohibits self-relations.');
   for (const [name, asset, allowed, states] of [
@@ -287,7 +287,7 @@ function checkEndpoints(item: RelationConstraintEdge, policy: ResolvedRelationTy
     if (!asset.policy || asset.state === null || !asset.policy.lifecycle.states.includes(asset.state) || states !== null && !states.includes(asset.state)) issues.add('enum', `${path}/${name}/state`, 'Endpoint state is not valid for its pin and the relation state restriction.');
   }
 }
-function selectedPolicy(item: RelationConstraintEdge, policies: Map<string, ResolvedRelationType>, issues: Issues, path: string): ResolvedRelationType | undefined {
+function selectedPolicy(item: RelationConstraintEdge, policies: Map<string, ResolvedRelationDefinition>, issues: Issues, path: string): ResolvedRelationDefinition | undefined {
   const result = policies.get(policyKey(item.relationTypeId, item.relationTypeVersion));
   if (!result) issues.add('invalid_definition', path, 'The exact pinned relation policy is missing.'); return result;
 }
@@ -327,8 +327,8 @@ export function validateRelationEndpointChanges(input: RelationEndpointChangesIn
   }
   return issues.result(null);
 }
-function structure(typeId: string, relations: readonly RelationConstraintEdge[], policies: Map<string, ResolvedRelationType>, issues: Issues, path: string): void {
-  const selected: { item: RelationConstraintEdge; definition: RelationTypeDefinition; path: string }[] = [], pairs = new Set<string>(), ids = new Set<string>(), nodeIds = new Set<string>();
+function structure(typeId: string, relations: readonly RelationConstraintEdge[], policies: Map<string, ResolvedRelationDefinition>, issues: Issues, path: string): void {
+  const selected: { item: RelationConstraintEdge; definition: RelationDefinition; path: string }[] = [], pairs = new Set<string>(), ids = new Set<string>(), nodeIds = new Set<string>();
   let direction: 'directed' | 'undirected' | undefined;
   for (const [index, item] of relations.entries()) {
     const location = at(path, index), policy = selectedPolicy(item, policies, issues, location); if (!policy) continue;
@@ -394,7 +394,7 @@ export function previewRelationTypeUpgrade(input: RelationUpgradeInput): Validat
     if (!relation || !source || !destination) continue;
     if (relation.relationTypeId !== value.relationTypeId || seen.has(relation.id)) issues.add(seen.has(relation.id) ? 'duplicate' : 'model_identity', `${path}/edge`, 'The complete cohort must contain unique relations of this logical type.'); seen.add(relation.id);
     const current = selectedPolicy(relation, policies, issues, `${path}/edge`); if (!current) continue;
-    const validate = (policy: ResolvedRelationType): readonly ValidationIssue[] => {
+    const validate = (policy: ResolvedRelationDefinition): readonly ValidationIssue[] => {
       const checks = new Issues(), attributes = validateAttributes(policy.model, binding.attributes);
       if (!attributes.ok) checks.append('/attributes', attributes.issues);
       checkEndpoints(relation, policy, source, destination, checks, '');
@@ -509,3 +509,46 @@ export function traverseAuthorizedRelations(input: AuthorizedRelationTraversalIn
   const used = new Set([root]); for (const edge of selected.values()) { used.add(edge.source.assetId); used.add(edge.target.assetId); }
   return issues.result(freeze({ nodes: [...used].sort(compare).map(id => nodes.get(id)!), edges: [...selected.values()].sort((a, b) => compare(a.id, b.id)) }));
 }
+
+/** V2 is opt-in; the existing format-one exports deliberately retain their old contract. */
+export function parseRelationDefinition(input: unknown): ValidationResult<RelationDefinition> {
+  const issues = new Issues(), copied = copyJSON(input, issues, RELATION_LIMITS.definitionBytes);
+  if (issues.values.length) return issues.result(undefined as never);
+  const source = fields(copied, '', definitionKeys, issues);
+  if (!source) return issues.result(undefined as never);
+  if (source.formatVersion !== 2) return parseRelationTypeDefinition(copied);
+  const cardinality = fields(source.cardinality, '/cardinality', ['outgoing', 'incoming'], issues);
+  const parseDegree = (raw: unknown, path: string): { min: number; max: number | null } => {
+    const value = fields(raw, path, ['min', 'max'], issues);
+    if (!value) return { min: 0, max: null };
+    if (typeof value.min !== 'number' || !Number.isInteger(value.min) || value.min < 0 || value.min > 1000)
+      issues.add('range', `${path}/min`, 'Minimum must be an integer from 0 through 1000.');
+    if (value.max !== null && (typeof value.max !== 'number' || !Number.isInteger(value.max) || value.max < 0 || value.max > 1000))
+      issues.add('range', `${path}/max`, 'Maximum must be null or an integer from 0 through 1000.');
+    if (typeof value.min === 'number' && typeof value.max === 'number' && value.min > value.max)
+      issues.add('range', `${path}/max`, 'Maximum must be at least the minimum.');
+    return { min: value.min as number, max: value.max as number | null };
+  };
+  const outgoing = parseDegree(cardinality?.outgoing, '/cardinality/outgoing');
+  const incoming = parseDegree(cardinality?.incoming, '/cardinality/incoming');
+  if (source.direction === 'undirected' && canonical(outgoing) !== canonical(incoming))
+    issues.add('invalid_definition', '/cardinality/incoming', 'Undirected degree constraints must be symmetric.');
+  if (issues.values.length) return issues.result(undefined as never);
+  // Validate the common grammar without weakening or reinterpreting the V1 entry point.
+  const common = parseRelationTypeDefinition({ ...source, formatVersion: 1,
+    cardinality: { outgoing: { min: 0, max: outgoing.max === 0 ? 1 : outgoing.max }, incoming: { min: 0, max: incoming.max === 0 ? 1 : incoming.max } } });
+  if (!common.ok) return common;
+  return issues.result(freeze({ ...common.value, formatVersion: 2, cardinality: { outgoing, incoming } }));
+}
+export function parseRelationDefinitionFile(text: string): ValidationResult<RelationDefinition> {
+  if (typeof text !== 'string' || encoder.encode(text).length > RELATION_LIMITS.definitionBytes)
+    return { ok: false, issues: [{ code: 'limit', path: '', message: 'The definition exceeds its UTF-8 byte budget.' }] };
+  const parsed = parseBoundedJSONFile(text); return parsed.ok ? parseRelationDefinition(parsed.value) : parsed;
+}
+export function resolveRelationDefinition(input: unknown): ValidationResult<ResolvedRelationDefinition> {
+  const definition = parseRelationDefinition(input); if (!definition.ok) return definition;
+  const model = parseModelDefinition({ formatVersion: 1, id: definition.value.id, version: definition.value.version, attributes: definition.value.attributes });
+  return model.ok ? { ok: true, value: freeze({ definition: definition.value, model: model.value }) } : model;
+}
+/** Internal primitives for the equally bounded graph validator; callers must copy before field access. */
+export const relationValidationInternals = { Issues, freeze, canonical, copyJSON, fields, list, id, key, version, compare, endpoint };

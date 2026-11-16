@@ -5,7 +5,7 @@ import { scope, type Tx } from '../../../packages/db/src/index.ts';
 import { Problem, type Principal } from '../../../packages/authz/src/index.ts';
 import { Id } from '../../../packages/contracts/src/index.ts';
 import { modelPersistence } from '../../../packages/domain/src/model-service.ts';
-import { parseRelationTypeFile } from '../../../packages/domain/src/relation.ts';
+import { parseRelationDefinitionFile } from '../../../packages/domain/src/relation.ts';
 import { parseBoundedJSONEnvelope } from '../../../packages/domain/src/model.ts';
 import { relationQuery } from '../../../packages/domain/src/relation-store.ts';
 import { configureRelationTransaction, relationFailure, relationValidationFailure,
@@ -81,7 +81,7 @@ async function relationRoutes(app: FastifyInstance): Promise<void> {
   });
   app.post('/api/v1/relation-types/validate', { bodyLimit: 1048576, schema: { body: object({ text: Type.String({ maxLength: 262144 }) }) } }, req => request(req, async (tx, p) => {
     await modelPersistence.authorize(tx, p, typeWrite);
-    const parsed = parseRelationTypeFile((req.body as any).text); if (!parsed.ok) throw relationValidationFailure(parsed.issues);
+    const parsed = parseRelationDefinitionFile((req.body as any).text); if (!parsed.ok) throw relationValidationFailure(parsed.issues);
     return { definition: parsed.value };
   }));
   app.get('/api/v1/relation-types', { schema: { querystring: object({ ...page, q: Type.Optional(Type.String({ maxLength: 64 })) }) } }, req => request(req, (tx, p) => listRelationTypes(tx, p, query(req, ['q', 'limit', 'cursor']))));

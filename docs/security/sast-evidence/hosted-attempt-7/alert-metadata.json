@@ -1,0 +1,43 @@
+{
+  "alerts": [
+    {
+      "category": "governance-commons/javascript-typescript",
+      "htmlUrl": "https://github.com/dlamaro96/governance-commons/security/code-scanning/2",
+      "location": {
+        "end_line": 91,
+        "path": "packages/domain/src/relation.ts",
+        "start_line": 91
+      },
+      "mostRecentInstanceCommit": "a8443c4af88c9c77a37e9d4c7f9411262f6845fb",
+      "number": 2,
+      "ref": "refs/pull/15/merge",
+      "ruleId": "js/remote-property-injection",
+      "severity": "high",
+      "state": "fixed"
+    },
+    {
+      "category": "governance-commons/javascript-typescript",
+      "htmlUrl": "https://github.com/dlamaro96/governance-commons/security/code-scanning/1",
+      "location": {
+        "end_line": 91,
+        "path": "packages/domain/src/relation.ts",
+        "start_line": 91
+      },
+      "mostRecentInstanceCommit": "45fa82d11f11ec23d28bdd7cafea080432c46c40",
+      "number": 1,
+      "ref": "refs/pull/15/merge",
+      "ruleId": "js/remote-property-injection",
+      "severity": "high",
+      "state": "fixed"
+    }
+  ],
+  "completeAllStateRefInventory": true,
+  "limitations": [
+    "Fixed alerts retain historical most-recent finding commits; exact current analysis records independently contain zero results.",
+    "This is the pull-request ref, not default-branch alert qualification."
+  ],
+  "observedAt": "2026-11-16T00:01:47.691512+00:00",
+  "openCount": 0,
+  "purpose": "BOUNDED_INDEPENDENT_ALERT_METADATA_NO_RAW_PAYLOAD",
+  "schemaVersion": 1
+}

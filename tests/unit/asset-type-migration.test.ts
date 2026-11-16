@@ -40,6 +40,40 @@ function apply(overrides: Partial<Parameters<typeof applyAssetTypeMigrationPolic
     asset: { assetId: assetA, modelVersion: 1, ownerId: ownerA, state: 'draft' }, activeOwnerIds: new Set([ownerA, ownerB]), ...overrides });
 }
 
+
+test('asset-type migration copies preserve own data under hostile inherited properties', () => {
+  const name = 'asset_type_copy_probe';
+  const previous = Object.getOwnPropertyDescriptor(Object.prototype, name);
+  let calls = 0;
+  const hostile: PropertyDescriptor[] = [
+    { configurable: true, set() { calls++; throw new Error('inherited setter must not execute'); } },
+    { configurable: true, value: 'inherited read-only sentinel', writable: false },
+  ];
+  for (const descriptor of hostile) {
+    const value = { [name]: 'first', toString: 'allowed', nested: { [name]: ['second', 'third'] } };
+    const input = plan({ attributes: { ...plan().attributes, operations: [{ op: 'set', path: ['configuration'], value, mode: 'replace' }] } });
+    Object.defineProperty(Object.prototype, name, descriptor);
+    try {
+      const result = parseAssetTypeMigrationPlan(input);
+      assert.equal(calls, 0);
+      const parsed = ok(result);
+      const operation = parsed.attributes.operations[0]; assert.equal(operation.op, 'set');
+      if (operation.op !== 'set') assert.fail('expected set operation');
+      assert.deepEqual(operation.value, value);
+      assert.equal(Object.getPrototypeOf(operation.value), Object.prototype);
+      assert.equal(Object.hasOwn(operation.value as object, name), true);
+      assert.equal(Object.getOwnPropertyDescriptor(operation.value as object, name)?.enumerable, true);
+      assert.equal(Object.isFrozen(operation.value), true);
+      assert.equal(Object.isFrozen(value), false);
+      assert.deepEqual(JSON.parse(JSON.stringify(operation.value)), value);
+    } finally {
+      if (previous) Object.defineProperty(Object.prototype, name, previous);
+      else Reflect.deleteProperty(Object.prototype, name);
+    }
+  }
+  assert.equal(Object.getOwnPropertyDescriptor(Object.prototype, name), previous);
+});
+
 test('nullable owner plans round-trip, sort explicit collections and deeply freeze defensive copies', () => {
   const input = plan({ owner: { default: 'preserve', overrides: [{ assetId: assetB, ownerId: null }, { assetId: assetA, ownerId: ownerA }] },
     lifecycle: { onUnmapped: 'error', mappings: [{ sourceVersion: 2, from: 'active', to: 'retired' }, { sourceVersion: 1, from: 'draft', to: 'active' }] },

@@ -1,0 +1,597 @@
+{
+  "coveredExecutableFilesMatchingCurrentSource": 145,
+  "development": {
+    "artifactArchiveSha256Observed": "2f651d65bfaca929d15ea7bce16dd72c7d0da7fe28e1b4e60d9fb66b492dbdd1",
+    "behaviorSummarySha256": "f5b7ab5e2659edf87ab710b085df34aa34ee69f96d97ae3c03bcf5770179ca4b",
+    "browserTests": 14,
+    "checks": {
+      "behavior": "PASS",
+      "quality": "PASS",
+      "required": "PASS",
+      "secrets": "PASS"
+    },
+    "durationSeconds": 743,
+    "fullWorkflowOutcome": "PASS",
+    "limitations": [
+      "This exact-merge synthetic core behavior gate does not qualify the separate newer root participation source or complete enterprise/release scope."
+    ],
+    "publicUiConfirmationRecordedAt": "2026-11-16T00:09:00Z",
+    "runUrl": "https://github.com/dlamaro96/governance-commons/actions/runs/43777260929",
+    "safeBehaviorArtifactOutcome": "PASS",
+    "steps": 11,
+    "testedMergeCommit": "ece773e27c3f3a25822984578dee4a1dedddb970"
+  },
+  "limitations": [
+    "This scoped hosted source-security pass applies only to the exact merge/source digest.",
+    "Prior blocked scans remain unchanged and historical negative-control results retain their original tested source.",
+    "No scan of newer root participation/SQL source, runtime API/browser pass, complete security review or release readiness is inferred.",
+    "No suppression, triage disposition, query/coverage relaxation, human sign-off or required repository setting change was added."
+  ],
+  "preservedCopiesSha256": {
+    "actions/actions-summary.json": "6e8fa83f52fb312aab734520081cfdbff7c71d1fea77c274e8304f5678a5cfeb",
+    "actions/source-manifest.json": "bc056a93082fca231e8187a6db52c88c27cb965e93353a6b0f131f01166e162f",
+    "actions/summary.json": "a66793a6d76dcb3b0238ae2c12d819d657fee9de2966b0cc6f0e9acf47bc4773",
+    "actions/upload-status.json": "376e964987a13416470bdb2106351c941cd213eb1f4864764c944f59df3d57f1",
+    "behavior-summary.json": "f5b7ab5e2659edf87ab710b085df34aa34ee69f96d97ae3c03bcf5770179ca4b",
+    "javascript-typescript/javascript-typescript-summary.json": "c53f5ec793ce680579700b4b22132bd8944c604b076de05fbecea8a1e329ebe6",
+    "javascript-typescript/source-manifest.json": "bc056a93082fca231e8187a6db52c88c27cb965e93353a6b0f131f01166e162f",
+    "javascript-typescript/summary.json": "fc3cc4ac92d647b666a5c5cf350784ac0313fb5e25d246e0d907960c347beb1c",
+    "javascript-typescript/upload-status.json": "610c2601ed477ca861dc8c2d47f3740e2d318bdf42ec1d026504da496bf4ae03",
+    "python/python-summary.json": "ccec8e224e1ebc940dde86ed816d075ec08a7d5ec6020b04e66884b26b02d503",
+    "python/source-manifest.json": "bc056a93082fca231e8187a6db52c88c27cb965e93353a6b0f131f01166e162f",
+    "python/summary.json": "1291a0d178cc4a4680174339d4ed16be0e4ee1ec30437a4972501c8897a7d167",
+    "python/upload-status.json": "da26b8e852cce5d51af9fd394e9d27cd2fffc007a31b39d676c9e64f2b662e9f"
+  },
+  "profile": "Same-repository pull request; GitHub-hosted native linux-x64; synthetic repository source",
+  "pullRequest": "https://github.com/dlamaro96/governance-commons/pull/15",
+  "purpose": "SEVENTH_HOSTED_ATTEMPT_EXACT_SOURCE_GATE_AND_INGESTION_PASS",
+  "recordedAt": "2026-11-16T00:01:47.652755+00:00",
+  "releaseQualified": false,
+  "remainingQualifications": [
+    "Post-merge default-branch source analysis, exact stored-analysis read-back and branch alert inventory.",
+    "Untrusted fork and Dependabot pull-request permissions, safe analysis behavior and intended upload behavior.",
+    "Required-check activation only after its documented prerequisites are qualified; existing required checks remain authoritative.",
+    "Private/internal operator licensing or independently qualified portable fallback, plus the wider security and programme release gates."
+  ],
+  "repairedSourceSha256": {
+    "packages/domain/src/asset-type-migration.ts": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450",
+    "packages/domain/src/model-migration.ts": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072",
+    "packages/domain/src/relation.ts": "4b7ef422f88e32375efafb8c55ba3ed9b54ee0640e308bae27357c97e1a039eb",
+    "tests/unit/asset-type-migration.test.ts": "1757639171aaea4eee56a020009cca3d20df193af4be026a4b52f58afef7c99d",
+    "tests/unit/model-migration.test.ts": "dc6c42b66be1d6ff5215e9ae096682376be0e41d999f73c86f3fc2250ba658b0",
+    "tests/unit/relation.test.ts": "357a001ffd7754326c08ef5a8cab43f2095e729cbc12dc8dec320f4d7c1d427b"
+  },
+  "repositoryMerge": {
+    "defaultBranchQualification": "PENDING_SEPARATE_EXECUTION_AND_READBACK",
+    "evidence": "Root agent verified exact head and read back merged PR metadata; origin/main fetched.",
+    "mergeCommit": "77b73e75016435d6f12e67cda76ea84b91cd1086",
+    "mergedAt": "2026-11-16T00:09:17Z",
+    "qualifiedHead": "fe2dc1897e1b07ffd41dc27d64e1eacf700e7391",
+    "state": "MERGED"
+  },
+  "requiredStatusEnabled": false,
+  "schemaVersion": 1,
+  "sourceDigest": "e7f9d5a143fa18ab4d6281f25536538d7e3bb05d19fe0fb6864ed24f92863c31",
+  "sourceHead": "fe2dc1897e1b07ffd41dc27d64e1eacf700e7391",
+  "sourceSecurity": {
+    "aggregate": "PASS",
+    "analysisReadBack": "ALL_THREE_STORED_ANALYSES_VERIFIED_EXACT_COMMIT_ZERO_FINDINGS",
+    "durationSeconds": 124,
+    "jobStatusEvidence": "Root agent observed public workflow UI; original language artifacts independently establish analysis/findings/coverage, and security APIs independently verify stored analyses.",
+    "languages": {
+      "actions": {
+        "analysis": "PASS",
+        "bundleSha256": "89ed56c8ec6bfccef6a0d2e7fe86da0469ca24b4db08b88016ec134b942c17a4",
+        "coverage": {
+          "databaseFiles": 2,
+          "expectedFiles": 2,
+          "extractedExpectedFiles": 2,
+          "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+        },
+        "durationSeconds": 40.889,
+        "findings": [],
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-15T23:55:17.097365+00:00",
+        "lastMemoryAdmission": {
+          "availableBytes": 15624138752,
+          "finiteCgroupLimits": [],
+          "hostAvailableBytes": 15624138752,
+          "inheritedSoftLimitBytes": {},
+          "physicalBytes": 16760344576,
+          "requiredAvailableBytes": 6442450944,
+          "status": "ADMITTED",
+          "system": "Linux"
+        },
+        "platform": "linux-x64",
+        "policySha256": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+        "queryCount": 24,
+        "resources": {
+          "hardMemoryLimitBytes": null,
+          "mode": "NATIVE",
+          "ramSemantics": "CodeQL evaluator/extractor request, not a hard process cap",
+          "requestedRamMiB": 4096,
+          "reserveMiB": 2048,
+          "threads": 2
+        },
+        "runnerSha256": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7",
+        "steps": [
+          {
+            "durationSeconds": 0.751,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15527378944,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15527378944,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16760344576,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.502,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15522095104,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15522095104,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16760344576,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 5.007,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15573606400,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15573606400,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16760344576,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 11.767,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15516176384,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15516176384,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16760344576,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "analyze"
+          },
+          {
+            "durationSeconds": 14.271,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15619047424,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15619047424,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16760344576,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "coverage-query"
+          },
+          {
+            "durationSeconds": 0.751,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15624138752,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15624138752,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16760344576,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "coverage-decode"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "success",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "ece773e27c3f3a25822984578dee4a1dedddb970",
+          "language": "actions",
+          "sarifId": "02c2defa-e150-11f1-8e95-3e34fa361988",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "success"
+        }
+      },
+      "javascript-typescript": {
+        "analysis": "PASS",
+        "bundleSha256": "89ed56c8ec6bfccef6a0d2e7fe86da0469ca24b4db08b88016ec134b942c17a4",
+        "coverage": {
+          "databaseFiles": 143,
+          "expectedFiles": 118,
+          "extractedExpectedFiles": 118,
+          "extractedPathsDigest": "3e7d33a3a11abe114f9706fc6df5b1cc764751e90d1ff38b29599eae7cc3a86c"
+        },
+        "durationSeconds": 71.685,
+        "findings": [],
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-15T23:55:40.306819+00:00",
+        "lastMemoryAdmission": {
+          "availableBytes": 15523106816,
+          "finiteCgroupLimits": [],
+          "hostAvailableBytes": 15523106816,
+          "inheritedSoftLimitBytes": {},
+          "physicalBytes": 16759308288,
+          "requiredAvailableBytes": 6442450944,
+          "status": "ADMITTED",
+          "system": "Linux"
+        },
+        "platform": "linux-x64",
+        "policySha256": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+        "queryCount": 105,
+        "resources": {
+          "hardMemoryLimitBytes": null,
+          "mode": "NATIVE",
+          "ramSemantics": "CodeQL evaluator/extractor request, not a hard process cap",
+          "requestedRamMiB": 4096,
+          "reserveMiB": 2048,
+          "threads": 2
+        },
+        "runnerSha256": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7",
+        "steps": [
+          {
+            "durationSeconds": 0.251,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15547383808,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15547383808,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "extractor-runtime"
+          },
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15547445248,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15547445248,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.001,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15494299648,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15494299648,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 14.519,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15496835072,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15496835072,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 33.288,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15368765440,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15368765440,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "analyze"
+          },
+          {
+            "durationSeconds": 17.527,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15458013184,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15458013184,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "coverage-query"
+          },
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15523106816,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15523106816,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "coverage-decode"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "success",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "ece773e27c3f3a25822984578dee4a1dedddb970",
+          "language": "javascript-typescript",
+          "sarifId": "10ad4fb4-e150-11f1-843c-3b42746a48bf",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "success"
+        }
+      },
+      "python": {
+        "analysis": "PASS",
+        "bundleSha256": "89ed56c8ec6bfccef6a0d2e7fe86da0469ca24b4db08b88016ec134b942c17a4",
+        "coverage": {
+          "databaseFiles": 44,
+          "expectedFiles": 25,
+          "extractedExpectedFiles": 25,
+          "extractedPathsDigest": "e688c8917445c800d41ad89449f4ac7c3d48fb5c7444a26e90554c70a3eebaf7"
+        },
+        "durationSeconds": 59.231,
+        "findings": [],
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-15T23:55:36.060965+00:00",
+        "lastMemoryAdmission": {
+          "availableBytes": 15630987264,
+          "finiteCgroupLimits": [],
+          "hostAvailableBytes": 15630987264,
+          "inheritedSoftLimitBytes": {},
+          "physicalBytes": 16759308288,
+          "requiredAvailableBytes": 6442450944,
+          "status": "ADMITTED",
+          "system": "Linux"
+        },
+        "platform": "linux-x64",
+        "policySha256": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+        "queryCount": 52,
+        "resources": {
+          "hardMemoryLimitBytes": null,
+          "mode": "NATIVE",
+          "ramSemantics": "CodeQL evaluator/extractor request, not a hard process cap",
+          "requestedRamMiB": 4096,
+          "reserveMiB": 2048,
+          "threads": 2
+        },
+        "runnerSha256": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7",
+        "steps": [
+          {
+            "durationSeconds": 0.251,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15482892288,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15482892288,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "extractor-runtime"
+          },
+          {
+            "durationSeconds": 0.751,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15482703872,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15482703872,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.502,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15541747712,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15541747712,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 13.519,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15640412160,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15640412160,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 19.524,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15344873472,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15344873472,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "analyze"
+          },
+          {
+            "durationSeconds": 18.526,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15527682048,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15527682048,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "coverage-query"
+          },
+          {
+            "durationSeconds": 0.751,
+            "exitCode": 0,
+            "memoryAdmission": {
+              "availableBytes": 15630987264,
+              "finiteCgroupLimits": [],
+              "hostAvailableBytes": 15630987264,
+              "inheritedSoftLimitBytes": {},
+              "physicalBytes": 16759308288,
+              "requiredAvailableBytes": 6442450944,
+              "status": "ADMITTED",
+              "system": "Linux"
+            },
+            "step": "coverage-decode"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "success",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "ece773e27c3f3a25822984578dee4a1dedddb970",
+          "language": "python",
+          "sarifId": "0e4ed454-e150-11f1-8046-0adf7045fccd",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "success"
+        }
+      }
+    },
+    "originalArtifactFiles": {
+      "actions": {
+        "actions-summary.json": {
+          "bytes": 4153,
+          "sha256": "6e8fa83f52fb312aab734520081cfdbff7c71d1fea77c274e8304f5678a5cfeb"
+        },
+        "actions.sarif": {
+          "bytes": 171397,
+          "sha256": "7ffd6819cfff48b5e8aeca9dda2607d9a26b60b0e266e49be421dd5bc760c77c"
+        },
+        "source-manifest.json": {
+          "bytes": 112091,
+          "sha256": "bc056a93082fca231e8187a6db52c88c27cb965e93353a6b0f131f01166e162f"
+        },
+        "summary.json": {
+          "bytes": 6256,
+          "sha256": "a66793a6d76dcb3b0238ae2c12d819d657fee9de2966b0cc6f0e9acf47bc4773"
+        },
+        "upload-status.json": {
+          "bytes": 290,
+          "sha256": "376e964987a13416470bdb2106351c941cd213eb1f4864764c944f59df3d57f1"
+        }
+      },
+      "javascript-typescript": {
+        "javascript-typescript-summary.json": {
+          "bytes": 4645,
+          "sha256": "c53f5ec793ce680579700b4b22132bd8944c604b076de05fbecea8a1e329ebe6"
+        },
+        "javascript-typescript.sarif": {
+          "bytes": 379955,
+          "sha256": "92f55f4abf75996de60fab20105eafb19c6868d2174540d4ef81ce4ac115f7d0"
+        },
+        "source-manifest.json": {
+          "bytes": 112091,
+          "sha256": "bc056a93082fca231e8187a6db52c88c27cb965e93353a6b0f131f01166e162f"
+        },
+        "summary.json": {
+          "bytes": 6840,
+          "sha256": "fc3cc4ac92d647b666a5c5cf350784ac0313fb5e25d246e0d907960c347beb1c"
+        },
+        "upload-status.json": {
+          "bytes": 304,
+          "sha256": "610c2601ed477ca861dc8c2d47f3740e2d318bdf42ec1d026504da496bf4ae03"
+        }
+      },
+      "python": {
+        "python-summary.json": {
+          "bytes": 4623,
+          "sha256": "ccec8e224e1ebc940dde86ed816d075ec08a7d5ec6020b04e66884b26b02d503"
+        },
+        "python.sarif": {
+          "bytes": 242252,
+          "sha256": "af375531ad00b15f81547655add0aed40f77bd49e8c5fb093f88f40295efafc4"
+        },
+        "source-manifest.json": {
+          "bytes": 112091,
+          "sha256": "bc056a93082fca231e8187a6db52c88c27cb965e93353a6b0f131f01166e162f"
+        },
+        "summary.json": {
+          "bytes": 6788,
+          "sha256": "1291a0d178cc4a4680174339d4ed16be0e4ee1ec30437a4972501c8897a7d167"
+        },
+        "upload-status.json": {
+          "bytes": 289,
+          "sha256": "da26b8e852cce5d51af9fd394e9d27cd2fffc007a31b39d676c9e64f2b662e9f"
+        }
+      }
+    },
+    "policyJob": "PASS",
+    "runAttempt": 1,
+    "runUrl": "https://github.com/dlamaro96/governance-commons/actions/runs/43777260932"
+  },
+  "testedMergeCommit": "ece773e27c3f3a25822984578dee4a1dedddb970"
+}

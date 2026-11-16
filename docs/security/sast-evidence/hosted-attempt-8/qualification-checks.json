@@ -1,0 +1,106 @@
+{
+  "checks": [
+    {
+      "check": "requirements",
+      "command": [
+        "python3",
+        "scripts/requirements.py",
+        "validate"
+      ],
+      "exitCode": 0,
+      "logSha256": "20b5661cffd29d5850117ecf93d7e608b9770219ee9d038fbf917c4114b58c44",
+      "startedAt": "2026-11-16T00:15:17.698675+00:00"
+    },
+    {
+      "check": "publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "123bcea2bb1066bd37106cefc1cff2182e4eb92371f3508887ebdcd2cbbcb562",
+      "startedAt": "2026-11-16T00:15:17.785116+00:00"
+    },
+    {
+      "check": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-16T00:15:32.699881+00:00"
+    },
+    {
+      "check": "secret-scan",
+      "command": [
+        "python3",
+        "policies/scan_secrets.py",
+        "--install",
+        "--output",
+        "docs/security/sast-evidence/hosted-attempt-8/secret-scan.json"
+      ],
+      "exitCode": 0,
+      "logSha256": "789eb765f9b72d9b4c1f73eb92930e8529b536e639fbabbe41a53cba64abbd47",
+      "startedAt": "2026-11-16T00:15:32.711016+00:00"
+    },
+    {
+      "check": "final-requirements",
+      "command": [
+        "python3",
+        "scripts/requirements.py",
+        "validate"
+      ],
+      "exitCode": 0,
+      "logSha256": "20b5661cffd29d5850117ecf93d7e608b9770219ee9d038fbf917c4114b58c44",
+      "startedAt": "2026-11-16T00:26:38.462492+00:00"
+    },
+    {
+      "check": "final-publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "1794a8f22ca0902003e7097e79b4d17f327c17f9a7451c936590bf478ed672e2",
+      "startedAt": "2026-11-16T00:26:38.555393+00:00"
+    },
+    {
+      "check": "final-secret-scan",
+      "command": [
+        "python3",
+        "policies/scan_secrets.py",
+        "--install",
+        "--output",
+        "docs/security/sast-evidence/hosted-attempt-8/secret-scan.json"
+      ],
+      "exitCode": 0,
+      "logSha256": "7b10f7313e3805779b149c911d51553a7febaf47f6050739d7d0da73f5798c5f",
+      "startedAt": "2026-11-16T00:26:52.671461+00:00"
+    },
+    {
+      "check": "final-whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-16T00:26:54.662701+00:00"
+    }
+  ],
+  "coveredExecutableHashCount": 145,
+  "dirty": true,
+  "hostedTestedCommit": "77b73e75016435d6f12e67cda76ea84b91cd1086",
+  "limitations": [
+    "Evidence documents the exact default-branch tested commit, not this later dirty documentation snapshot.",
+    "No isolated commit/push or required-check setting change."
+  ],
+  "localHead": "fe2dc1897e1b07ffd41dc27d64e1eacf700e7391",
+  "purpose": "DEFAULT_BRANCH_QUALIFICATION_DOCUMENTATION_CHECKS_NOT_NEW_SOURCE_SCAN",
+  "schemaVersion": 1
+}

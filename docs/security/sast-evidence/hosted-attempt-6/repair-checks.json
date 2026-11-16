@@ -1,0 +1,159 @@
+{
+  "checks": [
+    {
+      "check": "unit",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "tests/unit/asset-type-migration.test.ts",
+        "tests/unit/asset-type-policy.test.ts",
+        "tests/unit/asset-type.test.ts",
+        "tests/unit/audit.test.ts",
+        "tests/unit/authz.test.ts",
+        "tests/unit/cursor.test.ts",
+        "tests/unit/json-envelope.test.ts",
+        "tests/unit/model-migration-file.test.ts",
+        "tests/unit/model-migration.test.ts",
+        "tests/unit/model.test.ts",
+        "tests/unit/relation.test.ts"
+      ],
+      "exitCode": 0,
+      "logSha256": "f61a5d9f036b89b268cb5f52a6abab2cfd2bd25c0e700b2e8695100f4d3a6263",
+      "startedAt": "2026-11-15T23:45:02.302023+00:00"
+    },
+    {
+      "check": "typecheck",
+      "command": [
+        "pnpm",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "logSha256": "146aa7bcf7f02a73c49b26725655dfcaafb0536b511721a3b52e1c6b04cd7f58",
+      "startedAt": "2026-11-15T23:45:02.638356+00:00"
+    },
+    {
+      "check": "sast-policy",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "policies",
+        "-p",
+        "test_sast.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "logSha256": "3b278c1dfd66da829829b4399c7f4f0d4ad026d69bacc710ea88100879be7e6c",
+      "startedAt": "2026-11-15T23:46:53.824017+00:00"
+    },
+    {
+      "check": "requirements",
+      "command": [
+        "python3",
+        "scripts/requirements.py",
+        "validate"
+      ],
+      "exitCode": 0,
+      "logSha256": "20b5661cffd29d5850117ecf93d7e608b9770219ee9d038fbf917c4114b58c44",
+      "startedAt": "2026-11-15T23:46:54.795195+00:00"
+    },
+    {
+      "check": "publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "a7091f6fc1844741403ff2cb27c1179e2acaefab13a6c53fa7a06f4b4857be59",
+      "startedAt": "2026-11-15T23:46:54.887532+00:00"
+    },
+    {
+      "check": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-15T23:47:09.730422+00:00"
+    },
+    {
+      "check": "secret-scan",
+      "command": [
+        "python3",
+        "policies/scan_secrets.py",
+        "--install",
+        "--output",
+        "docs/security/sast-evidence/hosted-attempt-6/secret-scan.json"
+      ],
+      "exitCode": 0,
+      "logSha256": "7c31ebe33936dd639bb25aa78dc35a78587dbf307bf114326043bfc16064a876",
+      "startedAt": "2026-11-15T23:47:09.738750+00:00"
+    },
+    {
+      "check": "final-publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "822b4357354ee54d17f7f02a59638dd6c4a9c816d5281398ebf4e947b16db1fb",
+      "startedAt": "2026-11-15T23:53:30.529872+00:00"
+    },
+    {
+      "check": "final-secret-scan",
+      "command": [
+        "python3",
+        "policies/scan_secrets.py",
+        "--install",
+        "--output",
+        "docs/security/sast-evidence/hosted-attempt-6/secret-scan.json"
+      ],
+      "exitCode": 0,
+      "logSha256": "4957ab0a8243ed87c91e81f7693941d497cd64417f352b37e28c720a54ccf6b9",
+      "startedAt": "2026-11-15T23:53:44.649279+00:00"
+    },
+    {
+      "check": "final-whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-15T23:53:46.605547+00:00"
+    }
+  ],
+  "dirty": true,
+  "head": "b6328a3962607d4e808750cc0afb8cd2b7e487bd",
+  "limitations": [
+    "Pure/type/policy and publication gates are distinct from hosted source-scanning and runtime API/browser qualification."
+  ],
+  "policyTests": 42,
+  "schemaVersion": 1,
+  "sourceScan": "NOT_RUN",
+  "sourceSha256": {
+    "packages/domain/src/asset-type-migration.ts": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450",
+    "packages/domain/src/model-migration.ts": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072",
+    "packages/domain/src/relation.ts": "4b7ef422f88e32375efafb8c55ba3ed9b54ee0640e308bae27357c97e1a039eb",
+    "tests/unit/asset-type-migration.test.ts": "1757639171aaea4eee56a020009cca3d20df193af4be026a4b52f58afef7c99d",
+    "tests/unit/model-migration.test.ts": "dc6c42b66be1d6ff5215e9ae096682376be0e41d999f73c86f3fc2250ba658b0",
+    "tests/unit/relation.test.ts": "357a001ffd7754326c08ef5a8cab43f2095e729cbc12dc8dec320f4d7c1d427b"
+  },
+  "unchangedScannerPolicySha256": {
+    ".github/codeql/codeql-config.yml": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+    ".github/workflows/security.yml": "87704b640679588d83b0c4d76a4fe35e07e74ee60f821da2f926f3ed10fa89ed",
+    "policies/sast-policy.json": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+    "policies/sast-triage.json": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+    "policies/sast.py": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7"
+  },
+  "unitTests": 111
+}

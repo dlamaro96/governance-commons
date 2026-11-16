@@ -7,8 +7,9 @@ import { typeHash } from './asset-type-policy.ts';
 import { validateAttributes } from './model.ts';
 import { parseRelationValidity, previewRelationTypeUpgrade, validateRelationEndpoints, validateRelationStructure } from './relation.ts';
 import { signedCursor } from './cursor.ts';
+import { visibleRelationOperation } from './relation-migration-read.ts';
 import type { RelationCreate, RelationEdit, RelationTransition, RelationTypeListQuery, RelationPageQuery,
-  RelationTypePreview, RelationView, RelationUpgradeBinding, RelationEndpointPolicyState, ResolvedRelationType } from './relation-contracts.ts';
+  RelationTypePreview, RelationView, RelationUpgradeBinding, RelationEndpointPolicyState, ResolvedRelationDefinition } from './relation-contracts.ts';
 import { type Row, type RelationHooks, RELATION_READ, RELATION_WRITE, TYPE_WRITE, iso, uuid, unavailable, profileLimit,
   configureRelationTransaction, relationFailure, relationValidationFailure, lockRelationScope, relationDefinition, storedRelationType,
   relationTypeHead, relationTypeVersion, endpointTypeIdentities, relationTypeView, relationRow, assetRows, endpointState,
@@ -67,13 +68,14 @@ async function physicalBudget(tx: Tx, value: unknown, limit = 524288): Promise<v
   const result = await relationQuery(tx, () => sql<{ bytes: number }>`select octet_length(${JSON.stringify(value)}::jsonb::text) as bytes`.execute(tx));
   if (result.rows[0].bytes > limit) throw profileLimit();
 }
-async function insertTypeVersion(tx: Tx, p: Principal, typeId: string, policy: ResolvedRelationType) {
+async function insertTypeVersion(tx: Tx, p: Principal, typeId: string, policy: ResolvedRelationDefinition) {
   await physicalBudget(tx, policy.definition, 262144);
   return relationQuery(tx, () => tx.insertInto('relation_type_versions').values({ tenant_id: p.tenantId, relation_type_id: typeId, version: policy.definition.version,
     definition: JSON.stringify(policy.definition), definition_hash: typeHash(policy.definition), created_by: p.id }).returningAll().executeTakeFirstOrThrow());
 }
 export async function createRelationType(tx: Tx, p: Principal, correlationId: string, input: unknown, hooks: RelationHooks) {
   await lockRelationScope(tx, p, TYPE_WRITE); const policy = relationDefinition(input);
+  if (policy.definition.formatVersion === 2) throw new Problem(422, 'RELATION_MIGRATION_REQUIRED', 'Use a complete graph operation to create a participation-aware relationship type.');
   if (policy.definition.version !== 1) throw new Problem(422, 'RELATION_INVALID', 'A new relationship type starts at version one.');
   await endpointTypeIdentities(tx, p, policy); await lockRelationPrincipals(tx, p, [], TYPE_WRITE);
   const head = await relationQuery(tx, () => tx.insertInto('relation_types').values({ tenant_id: p.tenantId, id: policy.definition.id, type_id: randomUUID(), current_version: 1, created_by: p.id }).returningAll().executeTakeFirstOrThrow());
@@ -86,6 +88,7 @@ async function prepareType(tx: Tx, p: Principal, id: string, expected: number, i
   const head = await relationTypeHead(tx, p, id, false, true); persistence.checkVersion(expected);
   if (head.current_version !== expected) throw stale();
   const target = relationDefinition(input), current = storedRelationType(await relationTypeVersion(tx, p, head.type_id, expected));
+  if (target.definition.formatVersion === 2 || current.definition.formatVersion === 2) throw new Problem(422, 'RELATION_MIGRATION_REQUIRED', 'Use a complete graph operation to publish a participation-aware relationship type.');
   if (target.definition.id !== id || target.definition.version !== expected + 1) throw new Problem(422, 'RELATION_INVALID', 'Publication must retain the logical identity and advance by exactly one version.');
   await endpointTypeIdentities(tx, p, target); await physicalBudget(tx, target.definition, 262144);
   let rows = await completeRelationRows(tx, p, head.type_id);
@@ -136,13 +139,22 @@ export async function authorizeRelationReplay(tx: Tx, p: Principal, recorded: Re
 }
 export async function listRelationRevisions(tx: Tx, p: Principal, id: string, query: RelationPageQuery = {}) {
   await relationQuery(tx, () => persistence.authorize(tx, p, [...RELATION_READ, 'audit:read'])); await relationRow(tx, p, id);
+  // A migration link is itself scoped information. Refuse the complete history
+  // before pagination when any changed revision belongs to an unreadable scope.
+  const hiddenOperation = await relationQuery(tx, () => tx.selectFrom('relation_graph_receipt_edges as outcome')
+    .select('outcome.operation_id').where('outcome.tenant_id', '=', p.tenantId).where('outcome.relation_id', '=', id)
+    .where('outcome.role', '=', 'changed').where(sql<boolean>`NOT (${visibleRelationOperation(p, sql`outcome.operation_id`)})`).limit(1).executeTakeFirst());
+  if (hiddenOperation) throw unavailable();
   const limit = pageSize(query), cursor = pageCursor(p, 'relation-revisions', { id, limit, sort: 'version:asc' }, query.cursor);
   if (cursor.last !== null && (!Number.isInteger(cursor.last) || cursor.last < 1 || cursor.last > 2147483647)) throw invalidPage();
-  let select = tx.selectFrom('relation_revisions').selectAll().where('tenant_id', '=', p.tenantId).where('relation_id', '=', id);
+  let select = tx.selectFrom('relation_revisions').selectAll().select(sql<string | null>`(SELECT outcome.operation_id FROM relation_graph_receipt_edges outcome
+    WHERE outcome.tenant_id=relation_revisions.tenant_id AND outcome.relation_id=relation_revisions.relation_id
+    AND outcome.after_version=relation_revisions.version AND outcome.role='changed')`.as('operation_id'))
+    .where('tenant_id', '=', p.tenantId).where('relation_id', '=', id);
   if (cursor.last !== null) select = select.where('version', '>', cursor.last);
   const rows = await relationQuery(tx, () => select.orderBy('version').limit(limit + 1).execute()), selected = rows.slice(0, limit);
   for (const row of selected) await authorizeRelationReplay(tx, p, row.snapshot, [...RELATION_READ, 'audit:read']);
-  return { items: selected.map(row => ({ relationId: row.relation_id, version: row.version, snapshot: row.snapshot, recordedAt: iso(row.recorded_at), recordedBy: row.recorded_by })),
+  return { items: selected.map(row => ({ relationId: row.relation_id, version: row.version, snapshot: row.snapshot, recordedAt: iso(row.recorded_at), recordedBy: row.recorded_by, operationId: row.operation_id ?? null })),
     nextCursor: rows.length > limit ? cursor.encode(selected.at(-1)!.version) : null };
 }
 function editable(input: RelationEdit) {
@@ -168,7 +180,7 @@ function checkEndpointVersions(assets: readonly Row[], sourceId: string, targetI
   return { source, target };
 }
 async function persistMutation(tx: Tx, p: Principal, correlationId: string, candidate: Row, context: Awaited<ReturnType<typeof mutationContext>>,
-  policy: ResolvedRelationType, action: 'created' | 'updated' | 'transitioned' | 'tombstoned', explicitOwner: boolean, hooks: RelationHooks) {
+  policy: ResolvedRelationDefinition, action: 'created' | 'updated' | 'transitioned' | 'tombstoned', explicitOwner: boolean, hooks: RelationHooks) {
   const finalRows = [...context.rows.filter(row => row.id !== candidate.id), ...(candidate.status === 'active' ? [candidate] : [])];
   const principalIds = [candidate.owner_id, context.old?.owner_id ?? null, ...candidate.allowed_identities];
   const activity = await lockRelationPrincipals(tx, p, principalIds, RELATION_WRITE);

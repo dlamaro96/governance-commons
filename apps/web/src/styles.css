@@ -132,7 +132,7 @@ p { margin-bottom: 12px; }
 .results-meta { display: flex; gap: 16px; align-items: center; justify-content: space-between; color: var(--text-muted); padding: 11px 20px; font-size: 11px; min-height: 40px; }
 .results-meta strong { color: var(--text); }
 .results-meta > span:last-child:not(:first-child) { font-size: 10px; }
-.table-scroll { overflow-x: auto; outline-offset: -3px; max-width: 100%; }
+.table-scroll { position: relative; overflow-x: auto; outline-offset: -3px; max-width: 100%; }
 .data-grid { border-collapse: collapse; width: 100%; text-align: start; font-size: 12px; white-space: nowrap; }
 .data-grid th { background: var(--surface-subtle); color: var(--text-secondary); font-size: 10px; font-weight: 650; letter-spacing: .15px; padding: 10px 16px; text-align: start; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 .data-grid td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; height: var(--row-height); }
@@ -680,3 +680,25 @@ p { margin-bottom: 12px; }
 }
 
 .relation-form-fields { display: grid; gap: 20px; min-width: 0; border: 0; padding: 0; margin: 0; }
+
+/* Complete graph-operation authoring: logical properties keep RTL and compact views usable. */
+.graph-operation-fields { border: 0; padding: 0; margin: 0; min-inline-size: 0; display: grid; gap: var(--space-5, 1.5rem); }
+.graph-operation-fields:disabled { opacity: .75; }
+.graph-plan-editor, .graph-evidence, .graph-preview { min-inline-size: 0; }
+.graph-plan-row { border-block-end: 1px solid var(--border); padding-block: 1rem; }
+.graph-plan-row > summary, .graph-evidence > summary { cursor: pointer; overflow-wrap: anywhere; padding-block: .5rem; font-weight: 600; }
+.graph-operation-fields summary, .graph-evidence summary, .graph-json-evidence > summary { min-block-size: 44px; padding-block: 12px; cursor: pointer; overflow-wrap: anywhere; }
+.graph-plan-row > .stacked-form { padding-block: 1rem; }
+.graph-inline-row { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; margin-block: 1rem; }
+.graph-inline-row > .form-field { flex: 1 1 12rem; min-inline-size: 0; }
+.graph-plan-editor fieldset, .graph-operation-fields fieldset { min-inline-size: 0; }
+.graph-plan-editor legend { overflow-wrap: anywhere; max-inline-size: 100%; }
+.graph-evidence .code-block { max-block-size: 32rem; overflow: auto; }
+.graph-preview > .panel-body > .button { justify-self: start; }
+@media (max-width: 640px) {
+  .graph-inline-row { flex-direction: column; align-items: stretch; }
+  .graph-inline-row > .form-field { flex-basis: auto; }
+  .graph-operation-fields .form-actions { align-items: stretch; }
+  .graph-operation-fields .form-actions > .button { inline-size: 100%; }
+  .graph-plan-editor .connection-fields { padding-inline: .75rem; }
+}

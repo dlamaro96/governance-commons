@@ -1,0 +1,400 @@
+{
+  "schema_version": 1,
+  "result": "PASS",
+  "started_at": "2026-11-15T23:48:14.255981+00:00",
+  "recorded_at": "2026-11-15T23:50:04.497625+00:00",
+  "command": "./dev test --suite relation-participation-upgrade",
+  "scope": "Exact SQL008-to009 preservation/rollback upgrade, followed by SQL010 scope discovery correction and current runtime storage/concurrency regression",
+  "checks": [
+    "Actual checksum migrator applies001\u2013008; legacy model migration receipt and normalized references plus an authored type/asset are recorded through real runtime source",
+    "Both newly reserved idempotency namespaces reject existing foreign-tenant pre009 success records under forced RLS; each transactional upgrade rolls back to008 without altering the exact success row",
+    "SQL009 preserves every legacy/typed model, asset, revision, dependency, receipt and normalized reference field and active/tombstoned mixed-pin relation histories without inventing historical participation obligations",
+    "Actual checksum migrator replays all nine migrations without reapplication and recorded checksums match source bytes",
+    "Forward SQL010 replaces discovery functions only; exact001\u2013010 checksum replay and canonical/history preservation pass before current storage/concurrency regression",
+    "Migration and runtime roles are non-superusers without BYPASSRLS; gc_app owns no tables and has neither TEMP nor schema CREATE; all eighteen new participation/operation tables force RLS",
+    "All20 mounted-source PostgreSQL storage cases pass through the actual gc_app login with no failures, cancellations, skips or todos",
+    "All13 mounted-source relation fence and concurrency cases pass with actual isolated owner/runtime logins and no failures, cancellations, skips or todos"
+  ],
+  "storage_tests": {
+    "tests": 20,
+    "pass": 20,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 3867.873711
+  },
+  "expected_top_level_tests": 20,
+  "concurrency_tests": {
+    "tests": 13,
+    "pass": 13,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 100421.739962
+  },
+  "expected_concurrency_tests": 13,
+  "runtime": {
+    "node": "v24.22.3",
+    "platform": "linux",
+    "arch": "arm64",
+    "pg": "8.23.1",
+    "tsx": "4.23.15",
+    "kysely": "0.29.9",
+    "packageSha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7",
+    "lockSha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829",
+    "postgresql": "17.11 (Debian 17.11-1.pgdg12+2)",
+    "python": "3.14.5",
+    "dockerClient": "27.3.1",
+    "dockerEngine": "27.3.1"
+  },
+  "roles": {
+    "ownerSuperuser": false,
+    "ownerBypassRls": false,
+    "runtimeSuperuser": false,
+    "runtimeBypassRls": false,
+    "runtimeLogin": true,
+    "runtimeOwnsTables": false,
+    "runtimeTemporary": false,
+    "runtimeCreateSchema": false,
+    "forcedRlsCount": 18
+  },
+  "postgres_image_reference": "postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+  "postgres_image": "sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+  "app_image": "sha256:6594d66cf5bcf29fce05cade7fc1924d26994c9ca604cde76e8a777ff4ac0c24",
+  "isolation": {
+    "network": "none; helpers share only disposable database network namespace",
+    "published_ports": [],
+    "database_storage": "disposable256MiB tmpfs",
+    "production_volumes_used": false,
+    "runtime_connection": "gc_app login to disposable loopback PostgreSQL; trust authentication only within its isolated namespace"
+  },
+  "baseline": {
+    "tenant_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    "asset_ids": [
+      "30000000-0000-4000-8000-000000000001",
+      "30000000-0000-4000-8000-000000000002"
+    ],
+    "model_ids": [
+      "synthetic_pre009_model",
+      "synthetic_pre009_type"
+    ],
+    "legacy_receipt_id": "40000000-0000-4000-8000-000000000001",
+    "mixed_pin_relation_fixture": {
+      "typeId": "e59dc3bf-35e1-4dab-a3fc-10578633bfb1",
+      "modelId": "participation_endpoint_6988efbc6b2a4f879058ee1c92b80acc",
+      "assetIds": [
+        "153518df-78b7-40d5-8e23-71b0b5e7d9d1",
+        "20fe966b-8d81-4db8-81ba-ddc69a5ff0ae",
+        "41a3fc8f-84a2-484e-b565-ec973590cd6b",
+        "d4fde89c-c025-4793-96a2-a4488bf289f0"
+      ]
+    },
+    "before_hash": "c139b3bccfdd49b5f665f0883fc23933e807c4ee6020e4f10ca18b345ece9bef",
+    "after_hash": "c139b3bccfdd49b5f665f0883fc23933e807c4ee6020e4f10ca18b345ece9bef"
+  },
+  "applied_migrations": [
+    {
+      "name": "001_foundation.sql",
+      "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+    },
+    {
+      "name": "002_audit_envelopes.sql",
+      "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+    },
+    {
+      "name": "003_governance_models.sql",
+      "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+    },
+    {
+      "name": "004_model_migrations.sql",
+      "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+    },
+    {
+      "name": "005_model_migration_integrity.sql",
+      "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+    },
+    {
+      "name": "006_inherited_asset_types.sql",
+      "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+    },
+    {
+      "name": "007_asset_type_migrations.sql",
+      "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+    },
+    {
+      "name": "008_constrained_relations.sql",
+      "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+    },
+    {
+      "name": "009_relation_participation.sql",
+      "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+    }
+  ],
+  "runtime_schema": [
+    {
+      "name": "001_foundation.sql",
+      "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+    },
+    {
+      "name": "002_audit_envelopes.sql",
+      "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+    },
+    {
+      "name": "003_governance_models.sql",
+      "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+    },
+    {
+      "name": "004_model_migrations.sql",
+      "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+    },
+    {
+      "name": "005_model_migration_integrity.sql",
+      "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+    },
+    {
+      "name": "006_inherited_asset_types.sql",
+      "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+    },
+    {
+      "name": "007_asset_type_migrations.sql",
+      "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+    },
+    {
+      "name": "008_constrained_relations.sql",
+      "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+    },
+    {
+      "name": "009_relation_participation.sql",
+      "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+    },
+    {
+      "name": "010_relation_scope_discovery.sql",
+      "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+    }
+  ],
+  "sources": [
+    {
+      "path": "Dockerfile",
+      "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+    },
+    {
+      "path": "apps/api/src/repository.ts",
+      "sha256": "0bbb03ae711f9bcac7c04b15e85871c27016b575c50514f2076ec7793dae6cdb"
+    },
+    {
+      "path": "deploy/compose/compose.yaml",
+      "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+    },
+    {
+      "path": "dev",
+      "sha256": "3933fa6fdbbca26f1af4f1ad9b299cc651b6c7a51448c1cfcfa3468c933a26a5"
+    },
+    {
+      "path": "package.json",
+      "sha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7"
+    },
+    {
+      "path": "packages/authz/src/index.ts",
+      "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+    },
+    {
+      "path": "packages/db/migrations/001_foundation.sql",
+      "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+    },
+    {
+      "path": "packages/db/migrations/002_audit_envelopes.sql",
+      "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+    },
+    {
+      "path": "packages/db/migrations/003_governance_models.sql",
+      "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+    },
+    {
+      "path": "packages/db/migrations/004_model_migrations.sql",
+      "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+    },
+    {
+      "path": "packages/db/migrations/005_model_migration_integrity.sql",
+      "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+    },
+    {
+      "path": "packages/db/migrations/006_inherited_asset_types.sql",
+      "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+    },
+    {
+      "path": "packages/db/migrations/007_asset_type_migrations.sql",
+      "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+    },
+    {
+      "path": "packages/db/migrations/008_constrained_relations.sql",
+      "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+    },
+    {
+      "path": "packages/db/migrations/009_relation_participation.sql",
+      "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+    },
+    {
+      "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+      "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+    },
+    {
+      "path": "packages/db/src/index.ts",
+      "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+    },
+    {
+      "path": "packages/db/src/migrate.ts",
+      "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+    },
+    {
+      "path": "packages/db/src/seed.ts",
+      "sha256": "f871502f2215b538199df0a4aef501954a7f558b249311d6cb3b1129c763c151"
+    },
+    {
+      "path": "packages/domain/src/asset-type-migration-contracts.ts",
+      "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+    },
+    {
+      "path": "packages/domain/src/asset-type-migration-service.ts",
+      "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+    },
+    {
+      "path": "packages/domain/src/asset-type-migration.ts",
+      "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+    },
+    {
+      "path": "packages/domain/src/asset-type-policy.ts",
+      "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+    },
+    {
+      "path": "packages/domain/src/asset-type-service.ts",
+      "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+    },
+    {
+      "path": "packages/domain/src/asset-type.ts",
+      "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+    },
+    {
+      "path": "packages/domain/src/cursor.ts",
+      "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+    },
+    {
+      "path": "packages/domain/src/graph-asset-persistence.ts",
+      "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+    },
+    {
+      "path": "packages/domain/src/graph-asset-preparation.ts",
+      "sha256": "02ff22563d5433a1847025ebb9a5551f102375035bc4471f8a0f61f515c287dd"
+    },
+    {
+      "path": "packages/domain/src/model-migration-service.ts",
+      "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+    },
+    {
+      "path": "packages/domain/src/model-migration.ts",
+      "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+    },
+    {
+      "path": "packages/domain/src/model-service.ts",
+      "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+    },
+    {
+      "path": "packages/domain/src/model.ts",
+      "sha256": "57fde5df7d27d3b63e645ead707cd131290378ebe924dbb328d1db5b45bb254a"
+    },
+    {
+      "path": "packages/domain/src/relation-contracts.ts",
+      "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+    },
+    {
+      "path": "packages/domain/src/relation-endpoint-guard.ts",
+      "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+    },
+    {
+      "path": "packages/domain/src/relation-graph.ts",
+      "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+    },
+    {
+      "path": "packages/domain/src/relation-migration-contracts.ts",
+      "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+    },
+    {
+      "path": "packages/domain/src/relation-migration-read.ts",
+      "sha256": "0e4658b243540a3871afb458e592f78d510885cafa5453ab128f4ec86131d7d5"
+    },
+    {
+      "path": "packages/domain/src/relation-migration-service.ts",
+      "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+    },
+    {
+      "path": "packages/domain/src/relation-migration-store.ts",
+      "sha256": "88a4a077f99eb22c3a8a7b6eeaeb97a5b5909ea2e864e9570f2d18200768fb41"
+    },
+    {
+      "path": "packages/domain/src/relation-migration.ts",
+      "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+    },
+    {
+      "path": "packages/domain/src/relation-participation-read.ts",
+      "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+    },
+    {
+      "path": "packages/domain/src/relation-participation.ts",
+      "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+    },
+    {
+      "path": "packages/domain/src/relation-service.ts",
+      "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+    },
+    {
+      "path": "packages/domain/src/relation-store.ts",
+      "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+    },
+    {
+      "path": "packages/domain/src/relation.ts",
+      "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+    },
+    {
+      "path": "scripts/runtime-test-relation-participation-upgrade.py",
+      "sha256": "fd3c5ffd5fd24365fd96affad43a25eae47c4ad0a44717519c046fad7ac483d4"
+    },
+    {
+      "path": "scripts/runtime.py",
+      "sha256": "c2d6eb6dfe75166c02aa3d0d44045ff9ef55a8b61eacbec495ddf411c0083fa8"
+    },
+    {
+      "path": "tests/fixtures/relation-participation.ts",
+      "sha256": "209132979d10001c59e464c5b9a43e63ea82135962a46bfe0b6329a1b243f6e8"
+    },
+    {
+      "path": "tests/integration/relation-participation-storage.test.ts",
+      "sha256": "17fcf6a093e501e0743d9ec5a6b50046b00b3cb59e7be86f802003699d27830e"
+    },
+    {
+      "path": "tests/qualification/relation-participation-concurrency.test.ts",
+      "sha256": "2c4a405833ad5dcf7c9708b2ad804d2c8d72e316417bad6304497ea463962330"
+    }
+  ],
+  "diagnostic_history": {
+    "archived_prior_attempts": 11,
+    "result_counts": {
+      "FAIL": 8,
+      "PASS": 3
+    },
+    "private_reports_and_database_logs_retained": true,
+    "qualification_test_retries": 0
+  },
+  "limitations": [
+    "Synthetic development schema upgrade, not a released predecessor, backup restore or complete SYS-OPS-003 qualification.",
+    "Storage and concurrency tests deliberately exercise direct SQL and production repository transaction helpers; HTTP, OIDC and browser workflows are separate qualifications.",
+    "This gate exercises protected SQL graph operations and exact immutable receipt references, independently from the domain transformation implementation. Full HTTP/browser ingress, nested typed service composition, and broader programme requirements require their separate gates.",
+    "Application dependencies come from the recorded cached image; current source is mounted read-only and dependency manifests are checked for equality.",
+    "Earlier diagnostic attempts, including failed SQL development iterations, remain private and are counted separately; this result binds only the final executed source hashes and does not relabel earlier failures."
+  ],
+  "disposable_container_removed": true
+}

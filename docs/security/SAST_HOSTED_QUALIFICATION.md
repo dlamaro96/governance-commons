@@ -1,9 +1,11 @@
 # Hosted source scanning attempts
 
-Latest checkpoint: attempt 4 fixes hosted JavaScript extraction but fails its
-analysis with CodeQL out of memory. Python and Actions have independent stored
-analysis read-back; full source-security qualification remains open. Earlier
-attempts below retain their original outcomes and limitations.
+Latest checkpoint: attempt 8 passes default-branch source scanning and independent
+stored-analysis read-back on `77b73e75016435d6f12e67cda76ea84b91cd1086`, with
+complete extraction coverage, zero findings and an empty main-ref alert inventory.
+Both attempt7 PR Development and attempt8 main Development also pass their
+exact-revision gates. Fork/Dependabot and release qualifications remain open;
+original failures and earlier evidence are preserved.
 
 Status: source-security run [43768124973](https://github.com/dlamaro96/governance-commons/actions/runs/43768124973)
 **failed** on PR15 merge commit `1bb4637def199c12226d1d337dcd2eece61ee57e`.
@@ -218,3 +220,174 @@ passed all four required checks on tested merge `b3596f3525e26b8e01ce6bd8d538cf9
 Its original safe `behavior-summary.json` is retained with this attempt. That
 behavior pass does not override the source-security failure or qualify the later
 native-memory policy correction.
+
+
+## Fifth hosted attempt: complete analyses, blocked high finding
+
+[Source-security run 43774391740](https://github.com/dlamaro96/governance-commons/actions/runs/43774391740)
+tests source `d3bf25ba86d31d84534bb78249c3e5168ec43fdf`, merge
+`45fa82d11f11ec23d28bdd7cafea080432c46c40`, source digest
+`ea37d5aa145b25230a0fff49861067b1b0827d6b56b0349900e5cfe8eb0137a1`.
+All three language analyses and exact extraction-coverage gates pass. JavaScript
+extracts in 20.275 seconds, analyzes all 105 resolved queries in 45.304 seconds
+and accounts for all 118 expected executable files. Native admission records
+about 15.2 billion available bytes before analysis and the requested 4,096 MiB
+budget plus 2 GiB reserve. No memory failure is reported. The successful analysis
+finds one untriaged high `js/remote-property-injection` result at
+`packages/domain/src/relation.ts:91`, so JavaScript and the aggregate correctly
+fail their findings gate. Python, Actions and policy pass. Original safe artifacts
+are preserved byte-identically under `sast-evidence/hosted-attempt-5/`.
+
+Independent security API reads verify stored JavaScript analysis `2172674760`,
+Python `2172672023` and Actions `2172670477` for this exact merge, categories,
+SARIF IDs, tool version and published SARIF hashes. Stored result counts are
+1/0/0 and rule-definition counts 103/50/23, matching the artifacts. The independent
+complete ref-scoped alert inventory contains one open high finding. Analysis and
+ingestion success do not override that finding; no suppression, severity change,
+risk acceptance or clean-source claim has been made.
+
+The relation copier filters reserved names and source accessors, but assigned
+other input-derived keys onto normal objects. Such an assignment invokes an
+already-existing inherited setter. A targeted regression deliberately installed
+a hostile inherited setter for a valid attribute field: the old source invoked
+it once and rejected the parse afterward. Replacing only the destination
+assignment with `Object.defineProperty`, using an own data value and ordinary
+enumerable/writable/configurable flags, makes the same test pass without calling
+the setter. The test also covers an inherited read-only property and legitimate
+`toString`/`hasOwnProperty` fields. A separate regression retains rejection of
+`__proto__`, `constructor` and `prototype` keys and verifies shared prototypes are
+unchanged. Normal output prototypes, input immutability and dense-array behavior
+are preserved. This demonstrates a concrete construction hazard under a hostile
+shared prototype; it does not assert that this input alone lets a remote caller
+install that prototype property.
+
+The exact pre-fix failure, post-fix pass and final source hashes are in
+`relation-copy-remediation.json`. All 109 unit tests and root/web type checks pass.
+An initial missing local loader did not execute tests; the existing dependency
+cache was reused only after manifests matched. A later fixture-only type error
+for shadowing-field literals was corrected before final checks. Original private
+logs remain retained. Root's separate current product runtime stayed frozen, and
+no API/browser execution or source rescan of this repair is inferred. Hosted
+qualification must pass again on the corrected source; fork/Dependabot,
+default-branch and complete release/security requirements remain open.
+
+The original safe behavior artifact from separate Development run43774391731
+passes14 browser journeys and11 service steps on tested merge45fa82d. It is
+preserved byte-identically as `hosted-attempt-5/behavior-summary.json`; full
+workflow and all four required checks independently pass in the root public UI
+(observed2026-11-15T23:37Z; total12m10s). This
+historical behavior result does not qualify the later relation-copy repair.
+
+
+## Sixth hosted attempt: own-property sink remains blocked
+
+[Source-security run43775987154](https://github.com/dlamaro96/governance-commons/actions/runs/43775987154)
+tests source `b6328a3962607d4e808750cc0afb8cd2b7e487bd`, merge
+`a8443c4af88c9c77a37e9d4c7f9411262f6845fb`, source digest
+`65f9ff043bd134025c79ee204fd4a3c2ce7de7446c6e2eefda49b53d3c02ed98`.
+All three analyses and exact coverage pass; JavaScript again has one untriaged
+high `js/remote-property-injection`, now at the `Object.defineProperty` key.
+The pinned property-write model and four recorded taint paths explain why the
+first semantic repair did not close the scanner finding. Its inherited-setter
+regression remains valid; no clean scan was claimed. Original safe reports are
+preserved under `sast-evidence/hosted-attempt-6/`.
+
+Independent security API reads bind stored analyses2172726215(JavaScript),
+2172725793(Python) and2172724251(Actions) to the exact merge, categories, SARIF IDs,
+hashes and1/0/0 result counts. The complete ref-scoped alert inventory has two
+alerts: the previous assignment alert is fixed and the own-property result is
+open. Ingestion success and an alert identity change do not override the failure.
+
+The copier now collects validated children in a private Map and materializes
+ordinary objects with `Object.fromEntries` and dense arrays with `Array.from`
+over the ordered values. This removes input-derived destination-property writes
+while preserving ordinary prototypes and own enumerable data. The equivalent
+asset-type and model-migration copiers use the same construction; their hostile
+inherited-setter regressions both fail on the original source and pass after
+repair. Existing relation inheritance/reserved-key regressions also pass. All111
+pure tests and root/web types pass with validation order, key restrictions,
+cycle checks, limits and output immutability preserved. No query/coverage change,
+suppression or risk acceptance was added. Exact source hashes and paired test
+evidence are in `copy-materialization.json`.
+
+This source repair still needs a new hosted scan. Separate Development
+run43775987149 passes all four required checks in13m7s (root public UI observed
+2026-11-15T23:52:50Z). Its original safe summary passes14 browser journeys and11
+steps on mergea8443c4 and is retained byte-identically beside attempt6; that
+historical behavior pass does not execute the subsequent Map repair.
+Fork/Dependabot, default-branch, independent review and full release qualification
+remain open.
+
+
+## Seventh hosted attempt: exact source and ingestion pass
+
+[Source-security run43777260932](https://github.com/dlamaro96/governance-commons/actions/runs/43777260932)
+passes all five jobs in2m4s on source `fe2dc1897e1b07ffd41dc27d64e1eacf700e7391`,
+tested merge `ece773e27c3f3a25822984578dee4a1dedddb970`, source digest
+`e7f9d5a143fa18ab4d6281f25536538d7e3bb05d19fe0fb6864ed24f92863c31`.
+Original safe artifacts are preserved byte-identically under
+`sast-evidence/hosted-attempt-7/`; all145 covered executable file hashes match
+the corrected source, including the three Map-based copiers.
+
+| Language | Extracted/expected | Resolved queries | Findings | Stored analysis |
+| --- | --- | --- | --- | --- |
+| JavaScript/TypeScript |118/118|105|0|2172770044|
+| Python |25/25|52|0|2172769871|
+| Actions |2/2|24|0|2172769007|
+
+Independent per-analysis security API reads match exact commit/ref/category,
+SARIF IDs, published report hashes, tool version and stored result/rule counts.
+No analysis error or warning is present. This read-back is separate from the
+Action's successful upload/processing step; the portable scanner itself still
+accurately records that it did not upload. The independent complete all-state
+pull-request alert inventory contains the two historical alerts, both fixed,
+and zero open alerts. No finding disposition or suppression was supplied.
+
+This qualifies the exact same-repository pull-request source gate and ingestion.
+Separate Development43777260929 passes all four required checks in12m23s
+(root public UI confirmation recorded at 2026-11-16T00:09:00Z). Its original safe summary passes14 browser
+journeys and11 service steps on the same exact merge and is preserved
+byte-identically as `hosted-attempt-7/behavior-summary.json`.
+Default-branch execution/read-back and untrusted
+fork/Dependabot permission/upload behavior must still be qualified before the
+new required status is enabled. Private-operator licensing/fallback, dependency,
+image, SQL/RLS, independent review and the complete programme/release gates remain
+separate. This report does not qualify newer participation source or relabel any
+prior failed scan.
+
+PR15 merged the exact qualified head at2026-11-16T00:09:17Z as
+`77b73e75016435d6f12e67cda76ea84b91cd1086`. This merge fact was read back by
+the root agent. Post-merge default-branch execution/read-back remains pending;
+the PR test merge above retains its own exact qualification. The separate newer
+root graph copier is outside this scan and is not qualified by this report.
+
+
+## Eighth hosted attempt: default-branch source and ingestion pass
+
+[Source-security run43778676116](https://github.com/dlamaro96/governance-commons/actions/runs/43778676116)
+passes all five jobs in2m12s on main commit
+`77b73e75016435d6f12e67cda76ea84b91cd1086`. Its source digest is
+`e7f9d5a143fa18ab4d6281f25536538d7e3bb05d19fe0fb6864ed24f92863c31`,
+identical to the qualified PR source. All145 covered executable hashes match.
+The original13 safe reports are preserved under `sast-evidence/hosted-attempt-8/`;
+attempt7 artifacts and its historical status record are unchanged.
+
+JavaScript118/118 files and105 queries, Python25/25 and52, and Actions2/2 and24
+all pass analysis, exact coverage and zero-findings gates. Independent security
+API reads verify stored JavaScript analysis2172825594, Python2172823623 and
+Actions2172823537 against the exact main commit/ref/categories, SARIF IDs, report
+hashes and zero result counts, with no error/warning. A separate complete
+all-state `refs/heads/main` alert inventory is empty. This is distinct from the
+PR's two fixed historical alerts and does not infer branch state from a PR scan.
+
+The post-merge default-branch source/ingestion prerequisite is now qualified for
+this commit. [Development43778676120](https://github.com/dlamaro96/governance-commons/actions/runs/43778676120)
+also passes all four checks in12m15s (root public UI observation around
+2026-11-16T00:23Z). Its byte-identical original safe summary verifies14 distinct
+browser journeys, one attempt each, and11 successful service steps on the exact
+main commit. The summary is preserved as `hosted-attempt-8/behavior-summary.json`.
+Untrusted fork and Dependabot permissions/analysis/upload behavior still require
+qualification before
+the new required status is enabled. Private-operator fallback/licensing and the
+wider security/release programme remain open. Newer root participation and graph
+copier changes are outside this scan's source.

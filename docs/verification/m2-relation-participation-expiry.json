@@ -1,0 +1,462 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T23:35:10.770597+00:00",
+  "result": "PASS",
+  "scope": "Real database-clock preparation lifetime, creator isolation and completed-operation replay after the original fifteen-minute expiry, through the actual core HTTP service and nonbypass runtime role.",
+  "implementation_status": "IN_PROGRESS",
+  "verification_status": "PASS_FOR_RECORDED_SCOPE",
+  "release_qualification": "NOT_RUN",
+  "profile": "core / real Docker Linux arm64 / synthetic tenant and principals",
+  "runtime": {
+    "images": {
+      "api": "sha256:a46ee55375ce71f7f0c15d6da0504a835247fe2370077ea54b764e8a778066c4",
+      "workflow-worker": "sha256:a46ee55375ce71f7f0c15d6da0504a835247fe2370077ea54b764e8a778066c4",
+      "site-runner": "sha256:a46ee55375ce71f7f0c15d6da0504a835247fe2370077ea54b764e8a778066c4"
+    },
+    "three_images_unchanged_during_execution": true,
+    "source_files_matched_during_execution": 82
+  },
+  "execution": {
+    "command": "./dev test --suite relation-preparation-expiry",
+    "test_file": "tests/qualification/relation-preparation-expiry.test.ts",
+    "exit_status": 0,
+    "started_at": "2026-11-15T23:20:09.987832+00:00",
+    "recorded_at": "2026-11-15T23:35:10.770597+00:00",
+    "counts": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 900531.036454
+    },
+    "expected_tests": 1,
+    "complete_counts": true,
+    "wrapper_sha256": "11b5fd77a35cd463aa6215f7fe80bf98bd442fe7075656842aec171dab140c33",
+    "test_timeout_ms": 1320000,
+    "developer_command_timeout_ms": 1380000
+  },
+  "observed_behavior": {
+    "original_preparation_lifetime_ms": 900000,
+    "database_clock_poll_count": 30,
+    "database_completion_observed_at": "2026-11-15T23:35:10.661Z",
+    "expired_unused_original_preparation_retry": {
+      "http_status": 410,
+      "code": "RELATION_PREPARATION_EXPIRED",
+      "repeated_checks": 2
+    },
+    "expired_unused_creator_context": {
+      "http_status": 410,
+      "code": "RELATION_PREPARATION_EXPIRED"
+    },
+    "noncreator_context": {
+      "http_status": 404,
+      "code": "RELATION_PREPARATION_NOT_FOUND",
+      "expiry_metadata_disclosed": false
+    },
+    "completed_execution_original_request_retry": {
+      "http_status": 201,
+      "receipt_identical": true
+    },
+    "consumed_preparation_original_request_retry": {
+      "http_status": 201,
+      "preparation_identical": true
+    },
+    "consumed_preparation_new_execution_request": {
+      "http_status": 409,
+      "code": "RELATION_PREPARATION_CONFLICT"
+    },
+    "original_database_timestamps_and_consumption_preserved": true,
+    "clock_or_protected_row_overrides": false,
+    "qualification_test_retries": 0
+  },
+  "source_snapshot": {
+    "files": [
+      {
+        "path": "Dockerfile",
+        "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+      },
+      {
+        "path": "apps/api/src/asset-type-migrations.ts",
+        "sha256": "02f530c3715801c222f4f98d65807f06d0b58d0193b05c6c4e9f3f0b78a00c92"
+      },
+      {
+        "path": "apps/api/src/asset-types.ts",
+        "sha256": "847e1a9492b79d45de5143aa80ff6e9f3e04fd898d934a2b15b8a46637902ac3"
+      },
+      {
+        "path": "apps/api/src/audit.ts",
+        "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+      },
+      {
+        "path": "apps/api/src/index.ts",
+        "sha256": "aa593b2e7f34bf4f94e5e0b3d312673f84992a7d09f96bd475f8a74431792c7e"
+      },
+      {
+        "path": "apps/api/src/model-http.ts",
+        "sha256": "78d176145b8713c5aca2797fad741653698c6f2439817fbf069d4842afcc5938"
+      },
+      {
+        "path": "apps/api/src/model-migrations.ts",
+        "sha256": "3d116bf6bc64ac3723f5aadef63d414f7920c584824a114e8bb6c2708d7129ad"
+      },
+      {
+        "path": "apps/api/src/models.ts",
+        "sha256": "d6212e6723236030f672cd67ce2f2de43b1e8f67216309f1a16c18dd257a0387"
+      },
+      {
+        "path": "apps/api/src/relation-migrations.ts",
+        "sha256": "f30df94c238f409afd303ea9e9dbd55a863e19702dc244798861dfc2b9aaa224"
+      },
+      {
+        "path": "apps/api/src/relations.ts",
+        "sha256": "0124c9190396dbcddf14ebb3fae67128ebaa97865aba97dc6b46000654f2b974"
+      },
+      {
+        "path": "apps/api/src/repository.ts",
+        "sha256": "0bbb03ae711f9bcac7c04b15e85871c27016b575c50514f2076ec7793dae6cdb"
+      },
+      {
+        "path": "apps/api/src/search.ts",
+        "sha256": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d"
+      },
+      {
+        "path": "apps/api/src/security.ts",
+        "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+      },
+      {
+        "path": "deploy/compose/compose.yaml",
+        "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+      },
+      {
+        "path": "dev",
+        "sha256": "3933fa6fdbbca26f1af4f1ad9b299cc651b6c7a51448c1cfcfa3468c933a26a5"
+      },
+      {
+        "path": "package.json",
+        "sha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7"
+      },
+      {
+        "path": "packages/authz/src/index.ts",
+        "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "sha256": "8d23a38cad9af4c69471b6369d1106382e34518f1b13a00be6590ee6e28bb453"
+      },
+      {
+        "path": "packages/db/migrations/001_foundation.sql",
+        "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "path": "packages/db/migrations/002_audit_envelopes.sql",
+        "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "path": "packages/db/migrations/003_governance_models.sql",
+        "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "path": "packages/db/migrations/004_model_migrations.sql",
+        "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "path": "packages/db/migrations/005_model_migration_integrity.sql",
+        "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "path": "packages/db/migrations/006_inherited_asset_types.sql",
+        "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "path": "packages/db/migrations/007_asset_type_migrations.sql",
+        "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "path": "packages/db/migrations/008_constrained_relations.sql",
+        "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "path": "packages/db/migrations/009_relation_participation.sql",
+        "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+        "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "path": "packages/db/src/index.ts",
+        "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+      },
+      {
+        "path": "packages/db/src/migrate.ts",
+        "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+      },
+      {
+        "path": "packages/db/src/seed.ts",
+        "sha256": "f871502f2215b538199df0a4aef501954a7f558b249311d6cb3b1129c763c151"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-contracts.ts",
+        "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-service.ts",
+        "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration.ts",
+        "sha256": "ab1aef383c8cbaca99df276f168e9e9bda3fb9d04fc863f641ae6fd8a2e05319"
+      },
+      {
+        "path": "packages/domain/src/asset-type-policy.ts",
+        "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+      },
+      {
+        "path": "packages/domain/src/asset-type-service.ts",
+        "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/cursor.ts",
+        "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-persistence.ts",
+        "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-preparation.ts",
+        "sha256": "02ff22563d5433a1847025ebb9a5551f102375035bc4471f8a0f61f515c287dd"
+      },
+      {
+        "path": "packages/domain/src/model-migration-service.ts",
+        "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "19f375ebf8f424b74e1643255ba776d09234c986e45298c7a0fb5ecd72559ed0"
+      },
+      {
+        "path": "packages/domain/src/model-service.ts",
+        "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "57fde5df7d27d3b63e645ead707cd131290378ebe924dbb328d1db5b45bb254a"
+      },
+      {
+        "path": "packages/domain/src/relation-contracts.ts",
+        "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+      },
+      {
+        "path": "packages/domain/src/relation-endpoint-guard.ts",
+        "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+      },
+      {
+        "path": "packages/domain/src/relation-graph.ts",
+        "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-contracts.ts",
+        "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-read.ts",
+        "sha256": "0e4658b243540a3871afb458e592f78d510885cafa5453ab128f4ec86131d7d5"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-service.ts",
+        "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-store.ts",
+        "sha256": "88a4a077f99eb22c3a8a7b6eeaeb97a5b5909ea2e864e9570f2d18200768fb41"
+      },
+      {
+        "path": "packages/domain/src/relation-migration.ts",
+        "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+      },
+      {
+        "path": "packages/domain/src/relation-participation-read.ts",
+        "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+      },
+      {
+        "path": "packages/domain/src/relation-participation.ts",
+        "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+      },
+      {
+        "path": "packages/domain/src/relation-service.ts",
+        "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+      },
+      {
+        "path": "packages/domain/src/relation-store.ts",
+        "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+      },
+      {
+        "path": "packages/domain/src/relation.ts",
+        "sha256": "0f102224b528a97b363e2ee9d48d23dbe272c9349a72a26e241c5ae67231ffc2"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+      },
+      {
+        "path": "scripts/runtime.py",
+        "sha256": "c2d6eb6dfe75166c02aa3d0d44045ff9ef55a8b61eacbec495ddf411c0083fa8"
+      },
+      {
+        "path": "scripts/test-security.sh",
+        "sha256": "817a93e601dc5fde10240c4a769e802078c92bdd80a9bb79cc622cdc60f93e7f"
+      },
+      {
+        "path": "tests/fixtures/relation-migration-api.ts",
+        "sha256": "e68e89aff887339a035364f124f1ae8888d740b92cf55ff8466c687324a2e65f"
+      },
+      {
+        "path": "tests/fixtures/relation-participation.ts",
+        "sha256": "209132979d10001c59e464c5b9a43e63ea82135962a46bfe0b6329a1b243f6e8"
+      },
+      {
+        "path": "tests/integration/asset-type-api-limits.test.ts",
+        "sha256": "330a70646ef74dff3465b53c32a525f0b6cbeb46778fc68c745f6a84238754ee"
+      },
+      {
+        "path": "tests/integration/asset-type-migration-storage.test.ts",
+        "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+      },
+      {
+        "path": "tests/integration/asset-type-migrations.test.ts",
+        "sha256": "e0d8e0f7f7009bb76e04031d9b9785959ebc95c22f8470aa72b5a00275165f39"
+      },
+      {
+        "path": "tests/integration/asset-type-storage.test.ts",
+        "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+      },
+      {
+        "path": "tests/integration/asset-types.test.ts",
+        "sha256": "10d35157a009617f9f3c8578b1e7664ea2f80d0e9896fc1314d4ff4ace48428b"
+      },
+      {
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "1fd5ad4179a75936cfeb3a18df18f2951360fb7b24c6b523ef3a9201b746b86e"
+      },
+      {
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "9369bd959e6d9633788d34cd4a6c87dcecbf500f5d04e95b74c360ad89f8d29d"
+      },
+      {
+        "path": "tests/integration/model-migration-api.test.ts",
+        "sha256": "1fcae0865b43eb53c30474f88a93ce62a1fb019e2b39e68c0840589a3aec80b5"
+      },
+      {
+        "path": "tests/integration/model-migration-storage.test.ts",
+        "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+      },
+      {
+        "path": "tests/integration/model-migrations.test.ts",
+        "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+      },
+      {
+        "path": "tests/integration/model-pagination.test.ts",
+        "sha256": "63140a4748799df85403abd88c27478993fc33900b1b172627764880c58564e6"
+      },
+      {
+        "path": "tests/integration/models.test.ts",
+        "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1"
+      },
+      {
+        "path": "tests/integration/relation-migration-api.test.ts",
+        "sha256": "2aa09041afcda3e57ac32005c24a395a6b5c26ee19d278b03978fd88b2fc4165"
+      },
+      {
+        "path": "tests/integration/relation-participation-storage.test.ts",
+        "sha256": "17fcf6a093e501e0743d9ec5a6b50046b00b3cb59e7be86f802003699d27830e"
+      },
+      {
+        "path": "tests/integration/relation-storage.test.ts",
+        "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619"
+      },
+      {
+        "path": "tests/integration/relations.test.ts",
+        "sha256": "e94a5088de6d9d33c6a76eef06153434d78447d2876488f31c69ecc2b40fc388"
+      },
+      {
+        "path": "tests/qualification/asset-type-migration-concurrency.test.ts",
+        "sha256": "e7a5af01808fbe14b0c6bbc5c2a314661af7f2f3197157bf12740ee9cdb46df6"
+      },
+      {
+        "path": "tests/qualification/relation-concurrency.test.ts",
+        "sha256": "a4cffd57dd1eb68650b454a44763570d69842516849ccbf68258ab2a31383bf1"
+      },
+      {
+        "path": "tests/qualification/relation-participation-concurrency.test.ts",
+        "sha256": "2c4a405833ad5dcf7c9708b2ad804d2c8d72e316417bad6304497ea463962330"
+      },
+      {
+        "path": "tests/qualification/relation-preparation-expiry.test.ts",
+        "sha256": "8525cac9e701b847b1ac1631ff7ff55d1ea7bd7ed8f7881593f359a9374f2897"
+      }
+    ],
+    "commit_binding": {
+      "implementation_commit": "46d5b57ca8ba102ee4939f98fce85f0d41ce9998",
+      "recorded_at": "2026-11-15T23:39:05.345401+00:00",
+      "matched_files": 82,
+      "mismatched_files": 0,
+      "method": "Post-execution SHA256 comparison of the 82 recorded running-image source files with exact committed Git blobs. Original execution times, image and source hashes are preserved; this binding is not another test run."
+    },
+    "later_checkout_readback": {
+      "recorded_at": "2026-11-15T23:39:05.345401+00:00",
+      "matched_files": 81,
+      "changed_files": [
+        {
+          "path": "packages/domain/src/relation.ts",
+          "executed_sha256": "0f102224b528a97b363e2ee9d48d23dbe272c9349a72a26e241c5ae67231ffc2",
+          "later_checkout_sha256": "bfd8c4d22cd897b6b92636ad23ba0dda096719d13cc5e079eb9f0baff8f44261"
+        }
+      ],
+      "qualification": "The later parser hardening is outside this executed snapshot and requires fresh affected gates. No outcome for changed source is inferred."
+    }
+  },
+  "diagnostic_preservation": {
+    "original_report_sha256": "135a79e94d3484a1394d1fcdbd585d2336ad2df96e20dbb7bcf8d3f1ef902a4a",
+    "original_log_sha256": "1cb2e02116361f836e9812fc9601cdca7b00f4dd180bdfb45af99678fb459a23",
+    "archive_manifest": {
+      "path": ".local/evidence/participation-expiry-attempt-1/sha256-manifest.json",
+      "sha256": "e653c08d9ec887be127aedcfcbb1252f3017cc2ff963be17ece0a61a7b8cb094"
+    },
+    "files": [
+      {
+        "path": ".local/evidence/participation-expiry-attempt-1/participation-expiry-execution.json",
+        "sha256": "135a79e94d3484a1394d1fcdbd585d2336ad2df96e20dbb7bcf8d3f1ef902a4a",
+        "bytes": 13382,
+        "original_path": ".local/evidence/participation-expiry-execution.json",
+        "byte_identical": true
+      },
+      {
+        "path": ".local/evidence/participation-expiry-attempt-1/participation-expiry.log",
+        "sha256": "1cb2e02116361f836e9812fc9601cdca7b00f4dd180bdfb45af99678fb459a23",
+        "bytes": 3204,
+        "original_path": ".local/evidence/participation-expiry.log",
+        "byte_identical": true
+      }
+    ],
+    "raw_diagnostics_published": false
+  },
+  "related_evidence": {
+    "api_report": "docs/verification/m2-relation-participation-api.json",
+    "isolated_upgrade_report": "docs/verification/relation-participation-upgrade.json",
+    "discovery_review": "docs/verification/relation-scope-discovery-review.json"
+  },
+  "limitations": [
+    "This is one actual real-time qualification against the recorded source and image. It does not qualify later parser hardening, a new image, or another source snapshot.",
+    "The test uses a unique synthetic authored type with no eligible assets. Joint positive-degree creation and graph migration behavior have separate API/storage/browser gates.",
+    "Ordinary test sessions are created using the runtime role; this is not a new OIDC login/browser authentication qualification. Canonical types, preparations and operation receipts are created through HTTP.",
+    "The earlier targeted browser attempt failed; corrected targeted/full browser execution and rendered inspection remain pending. This expiry pass does not qualify those workflows.",
+    "Full compound capability, all ingresses, hosted participation qualification, independent human review, enterprise operation and release gates remain open."
+  ]
+}
