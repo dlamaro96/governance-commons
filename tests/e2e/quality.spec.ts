@@ -15,7 +15,29 @@ async function language(page:Page,locale:'en'|'ar'){
  await page.locator('#language').selectOption(locale);
  await expect(page.locator('html')).toHaveAttribute('lang',locale);await expect(page.locator('html')).toHaveAttribute('dir',locale==='ar'?'rtl':'ltr');
 }
-async function capture(page:Page,info:TestInfo,name:string,width:number){
+async function historyMatches(page:Page,run:QualityRunView){
+ const arabic=await page.locator('html').getAttribute('lang')==='ar';
+ const table=page.getByRole('table',{name:arabic?'سجل التنفيذ':'Run history',exact:true});
+ const row=table.getByRole('row').filter({has:page.getByRole('button',{name:(arabic?'عرض التنفيذ':'View run')+' '+run.id,exact:true})});
+ await expect(row).toHaveCount(1);
+ const version=await page.evaluate(value=>new Intl.NumberFormat(document.documentElement.lang).format(value),run.ruleVersion);
+ await expect(row.getByRole('cell').nth(1)).toHaveText(version);
+ expect(run.status).toBe('succeeded');expect(['PASS','FAIL']).toContain(run.verdict);
+ await expect(row.getByText(arabic?'مكتمل':'Completed',{exact:true})).toBeVisible();
+ await expect(row.getByText(run.verdict==='PASS'?(arabic?'ناجح':'Pass'):(arabic?'غير ناجح':'Fail'),{exact:true})).toBeVisible();
+ await expect(row.getByText(arabic?'في الانتظار':'Queued',{exact:true})).toHaveCount(0);
+ await expect(row.getByText(arabic?'لم يُقيّم':'Not evaluated',{exact:true})).toHaveCount(0);
+}
+async function capture(page:Page,info:TestInfo,name:string,width:number,run:QualityRunView){
+ // Bind the displayed terminal outcome to this exact persisted run, including
+ // its immutable rule version, before recording either locale's screenshot.
+ await historyMatches(page,run);
+ const arabic=await page.locator('html').getAttribute('lang')==='ar';
+ const evidence=page.getByRole('region',{name:arabic?'أدلة التنفيذ':'Run evidence',exact:true});
+ await expect(evidence.getByText(run.id,{exact:true})).toHaveCount(1);
+ await expect(evidence.getByText(arabic?'مكتمل':'Completed',{exact:true})).toBeVisible();
+ await expect(evidence.getByText(run.verdict==='PASS'?(arabic?'ناجح':'Pass'):(arabic?'غير ناجح':'Fail'),{exact:true})).toBeVisible();
+ await expect(evidence.getByTestId('quality-pinned-threshold')).toBeVisible();
  await page.setViewportSize({width,height:960});await page.locator('.quality-run-inspector').evaluate(element=>element.scrollIntoView({block:'start'}));
  await expect.poll(()=>page.evaluate(()=>document.getAnimations().filter(animation=>animation.playState==='running'&&animation.playbackRate!==0&&Number.isFinite(animation.effect?.getComputedTiming().endTime)).length)).toBe(0);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
@@ -91,6 +113,7 @@ async function run(page:Page,rule:QualityRuleView,verdict:'PASS'|'FAIL'){
  await expect(evidence.getByTestId('quality-row-count')).toHaveText('20');await expect(evidence.getByTestId('quality-null-count')).toHaveText('5');
  await expect(evidence.getByTestId('quality-pinned-threshold')).toHaveText(rule.definition.maximumNullBasisPoints===0?'0%':'30%');
  await expect(evidence.getByText('25%',{exact:true})).toBeVisible();
+ await historyMatches(page,complete);
  return complete;
 }
 test('DQ: real column completeness, immutable thresholds, aggregate outcomes and current read boundaries',async({page,browser},info)=>{
@@ -118,9 +141,9 @@ test('DQ: real column completeness, immutable thresholds, aggregate outcomes and
  await dialog.getByRole('textbox',{name:'Maximum null percentage',exact:true}).fill('0');
  const definition:QualityRuleView['definition']={formatVersion:1,kind:'completeness',target,name,purpose,ownerId:stewardIdentity,severity:'critical',maximumNullBasisPoints:0};
  const first=await publish(page,{id:'',expectedVersion:0,definition},1),failed=await run(page,first,'FAIL');
- await capture(page,info,'fail-en',1440);await language(page,'ar');
+ await capture(page,info,'fail-en',1440,failed);await language(page,'ar');
  await expect(page.getByRole('region',{name:'أدلة التنفيذ',exact:true}).getByText('غير ناجح',{exact:true})).toBeVisible();
- await capture(page,info,'fail-ar',390);await language(page,'en');await page.setViewportSize({width:1440,height:960});
+ await capture(page,info,'fail-ar',390,failed);await language(page,'en');await page.setViewportSize({width:1440,height:960});
  const panel=page.getByRole('region',{name:'Immutable rule version',exact:true});
  await panel.getByRole('button',{name:'Publish new version',exact:true}).click();
  dialog=page.getByRole('dialog',{name:'Publish new version',exact:true});
@@ -134,12 +157,14 @@ test('DQ: real column completeness, immutable thresholds, aggregate outcomes and
  await expect(panel.getByRole('button',{name:'Run check',exact:true})).toBeDisabled();
  await expect(panel.getByRole('button',{name:'Publish new version',exact:true})).toHaveCount(0);
  await panel.getByRole('button',{name:'Latest version',exact:true}).click();await expect(panel.getByRole('button',{name:'Run check',exact:true})).toBeEnabled();
- await capture(page,info,'pass-en',1440);await language(page,'ar');
+ await historyMatches(page,failed);
+ await capture(page,info,'pass-en',1440,passed);await language(page,'ar');
  await expect(page.getByRole('region',{name:'أدلة التنفيذ',exact:true}).getByText('ناجح',{exact:true})).toBeVisible();
- await capture(page,info,'pass-ar',390);await language(page,'en');
+ await capture(page,info,'pass-ar',390,passed);await language(page,'en');
  await panel.getByRole('button',{name:'View run '+failed.id,exact:true}).click();
  const oldEvidence=page.getByRole('region',{name:'Run evidence',exact:true});
  await expect(oldEvidence.getByText('Fail',{exact:true})).toBeVisible();await expect(oldEvidence.getByTestId('quality-pinned-threshold')).toHaveText('0%');
+ await historyMatches(page,failed);await historyMatches(page,passed);
  const readerContext=await browser.newContext(),foreignContext=await browser.newContext();
  try{
   const reader=await readerContext.newPage();await domainLogin(reader,'consumer');await language(reader,'en');

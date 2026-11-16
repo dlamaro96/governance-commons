@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import {useEffect,useId,useState,type FormEvent,type ReactNode} from 'react';
+import {useCallback,useEffect,useId,useState,type FormEvent,type ReactNode} from 'react';
 import {DataGrid,DetailDrawer,EmptyState,LoadingState,Notice,StatusBadge} from '../../../../packages/ui/src';
 import type {CompletenessRuleDefinition,QualityAssetView,QualityPage,QualityRuleView,QualityRunView} from '../../../../packages/domain/src/quality-contracts';
 import {useResource,ApiError} from '../api';
@@ -29,9 +29,10 @@ function Outcome({run}:{run:QualityRunView}){
  const c=useCopy();return <div className="quality-outcomes"><span>{c.execution}: <StatusBadge status={run.status==='succeeded'?'complete':run.status} label={c[run.status]}/></span><span>{c.result}: <StatusBadge status={run.verdict==='PASS'?'verified':run.verdict==='FAIL'?'failed':'unknown'} label={run.verdict?c[run.verdict]:c.notEvaluated}/></span></div>;
 }
 export function AssetQuality({assetId,assetVersion,assetType}:{assetId:string;assetVersion:number;assetType:string}){
- const read=usePermission('catalog:read'),qualityRead=usePermission('quality:read');
+ const session=useSession(),read=usePermission('catalog:read'),qualityRead=usePermission('quality:read');
  if(!read||!qualityRead)return <PermissionDenied/>;
- return <QualityWorkspace key={assetId+':'+assetVersion} assetId={assetId} assetType={assetType}/>;
+ const context=JSON.stringify([session.tenant.id,session.user.id,[...session.permissions].sort(),assetId,assetVersion]);
+ return <QualityWorkspace key={context} assetId={assetId} assetType={assetType}/>;
 }
 function QualityWorkspace({assetId,assetType}:{assetId:string;assetType:string}){
  const c=useCopy(),canWrite=usePermission('quality:write'),canExecute=usePermission('quality:execute');
@@ -87,8 +88,14 @@ function RuleEditor({initial,target,onClose,onSaved}:{initial:QualityRuleView|nu
 }
 function RulePanel({id,canWrite,canExecute,edit}:{id:string;canWrite:boolean;canExecute:boolean;edit:(rule:QualityRuleView)=>void}){
  const c=useCopy(),{locale,number}=useLocale(),[version,setVersion]=useState<number|null>(null),[runId,setRunId]=useState<string|null>(null);
+ const [observedRun,setObservedRun]=useState<{id:string;version:number}|null>(null);
+ const selectRun=useCallback((next:string|null)=>{setObservedRun(null);setRunId(next);},[]);
+ const observeRun=useCallback((run:QualityRunView|null)=>{
+  if(!run||run.id!==runId||run.ruleId!==id){setObservedRun(null);return;}
+  setObservedRun(previous=>previous?.id===run.id&&previous.version>=run.version?previous:{id:run.id,version:run.version});
+ },[id,runId]);
  const resource=useResource<{rule:QualityRuleView}>('/quality/rules/'+id+(version?'?version='+version:''));
- const command=useQualityCommand<{run:QualityRunView}>(value=>setRunId(value.run.id)),rule=resource.data?.rule;
+ const command=useQualityCommand<{run:QualityRunView}>(value=>selectRun(value.run.id)),rule=resource.data?.rule;
  return <section className="panel quality-rule-detail" aria-label={c.pinned}><div className="panel-heading"><h3>{c.pinned}</h3><button className="button secondary" disabled={command.locked||resource.loading} onClick={resource.reload}>{c.refresh}</button></div><div className="panel-body"><Feedback command={command}/>
   {resource.error?<RequestError error={resource.error} retry={resource.reload}/>:resource.loading||!rule?<LoadingState label={c.loading}/>:<>
    <h4>{rule.definition.name}</h4><p className="quality-text">{rule.definition.purpose}</p><p>{c.version} <strong>{number(rule.version)}</strong> · {c.currentVersion} {number(rule.currentVersion)}</p>
@@ -96,16 +103,18 @@ function RulePanel({id,canWrite,canExecute,edit}:{id:string;canWrite:boolean;can
    <div className="quality-actions"><button className="button secondary" disabled={command.locked||rule.version<=1} onClick={()=>setVersion(rule.version-1)}>{c.previousVersion}</button><button className="button secondary" disabled={command.locked||rule.version>=rule.currentVersion} onClick={()=>setVersion(rule.version+1)}>{c.nextVersion}</button><button className="button secondary" disabled={command.locked||version===null} onClick={()=>setVersion(null)}>{c.latestVersion}</button></div>
    <div className="quality-actions">{canWrite&&rule.version===rule.currentVersion&&<button className="button secondary" disabled={command.locked} onClick={()=>edit(rule)}>{c.editRule}</button>}{canExecute&&<button className="button primary" disabled={command.locked||rule.version!==rule.currentVersion} onClick={()=>command.submit('/quality/rules/'+id+'/runs',{id:crypto.randomUUID(),ruleVersion:rule.version,ruleHash:rule.definitionHash})}>{command.busy?c.sending:c.run}</button>}</div>
    <details><summary>{c.evidence}</summary><dl className="detail-list"><div><dt>{c.ruleId}</dt><dd className="mono break-all">{rule.id}</dd></div><div><dt>{c.hash}</dt><dd className="mono break-all">{rule.definitionHash}</dd></div><div><dt>{c.table}</dt><dd><Link href={'/catalog/'+rule.definition.target.tableAssetId}>{rule.definition.target.tableAssetId}</Link></dd></div><div><dt>{c.column}</dt><dd><Link href={'/catalog/'+rule.definition.target.columnAssetId}>{rule.definition.target.columnAssetId}</Link></dd></div></dl></details>
+   <RunHistory ruleId={id} open={selectRun} selectedRunId={runId} observedVersion={observedRun?.id===runId?observedRun.version:null}/>
+   {runId&&<RunInspector key={runId} id={runId} canExecute={canExecute} close={()=>selectRun(null)} observed={observeRun}/>}
   </>}
-  <RunHistory ruleId={id} open={setRunId} selectedRunId={runId}/>
-  {runId&&<RunInspector key={runId} id={runId} canExecute={canExecute} close={()=>setRunId(null)}/>}
  </div></section>;
 }
-function RunHistory({ruleId,open,selectedRunId}:{ruleId:string;open:(id:string)=>void;selectedRunId:string|null}){
+function RunHistory({ruleId,open,selectedRunId,observedVersion}:{ruleId:string;open:(id:string)=>void;selectedRunId:string|null;observedVersion:number|null}){
  const c=useCopy(),{date,number}=useLocale(),[cursor,setCursor]=useState<string|null>(null);
  const path='/quality/rules/'+ruleId+'/runs?limit=25'+(cursor?'&cursor='+encodeURIComponent(cursor):'');
  const resource=useResource<QualityPage<QualityRunView>>(path,5000);
- useEffect(()=>resource.reload(),[selectedRunId]);
+ // Inspector polling can observe completion before the history timer. Refetch
+ // through the history endpoint so current access and pagination stay authoritative.
+ useEffect(()=>resource.reload(),[selectedRunId,observedVersion,resource.reload]);
  return <section className="quality-runs"><h3>{c.runHistory}</h3>{resource.error?<RequestError error={resource.error} retry={resource.reload} compact/>:resource.loading&&!resource.data||!resource.data?<LoadingState label={c.loading}/>:<>
   <DataGrid caption={c.runHistory} data={resource.data.items} columns={[
    {id:'open',header:c.viewRun,cell:({row})=><button className="text-button" aria-label={c.viewRun+' '+row.original.id} onClick={()=>open(row.original.id)}>{date(row.original.createdAt)}</button>},
@@ -115,7 +124,7 @@ function RunHistory({ruleId,open,selectedRunId}:{ruleId:string;open:(id:string)=
   <Paging cursor={cursor} next={resource.data.nextCursor} label={c.runPages} change={setCursor} disabled={resource.loading}/>
  </>}</section>;
 }
-function RunInspector({id,canExecute,close}:{id:string;canExecute:boolean;close:()=>void}){
+function RunInspector({id,canExecute,close,observed}:{id:string;canExecute:boolean;close:()=>void;observed:(run:QualityRunView|null)=>void}){
  const c=useCopy(),{locale,date,number}=useLocale(),resource=useResource<{run:QualityRunView}>('/quality/runs/'+id),run=resource.data?.run;
  const pinned=useResource<{rule:QualityRuleView}>(run?'/quality/rules/'+run.ruleId+'?version='+run.ruleVersion:null);
  const [reason,setReason]=useState(''),command=useQualityCommand<{run:QualityRunView}>(()=>{setReason('');resource.reload();});
@@ -123,6 +132,11 @@ function RunInspector({id,canExecute,close}:{id:string;canExecute:boolean;close:
  useEffect(()=>{if(!pending)return;const timer=window.setInterval(resource.reload,3000);return()=>window.clearInterval(timer);},[pending,resource.reload]);
  function cancel(event:FormEvent){event.preventDefault();if(run&&pending&&reason.trim()&&!command.locked)command.submit('/quality/runs/'+id+'/cancel',{expectedVersion:run.version,reason:reason.normalize('NFC').trim()});}
  const measurement=run?.measurement,rule=pinned.data?.rule,evidenceReady=!!run&&!!rule&&rule.id===run.ruleId&&rule.version===run.ruleVersion&&rule.definitionHash===run.ruleHash;
+ useEffect(()=>{
+  if(resource.error||pinned.error||!evidenceReady){observed(null);return;}
+  if(!resource.loading&&!pinned.loading&&run?.id===id)observed(run);
+ },[id,run,evidenceReady,resource.error,resource.loading,pinned.error,pinned.loading,observed]);
+ useEffect(()=>()=>observed(null),[observed]);
  return <section className="quality-run-inspector" aria-label={c.evidence}><div className="quality-header"><h3>{c.evidence}</h3><div className="quality-actions"><button className="button secondary" disabled={command.locked||resource.loading} onClick={resource.reload}>{c.refresh}</button><button className="button secondary" disabled={command.locked} onClick={close}>{c.close}</button></div></div><Feedback command={command}/>
   {resource.error?<RequestError error={resource.error} retry={resource.reload}/>:resource.loading&&!run||!run?<LoadingState label={c.loading}/>:<>
    <Outcome run={run}/><p className="supporting-text">{c.resultHint}</p>{run.errorCode&&<Notice tone="error">{c[run.errorCode]}</Notice>}
