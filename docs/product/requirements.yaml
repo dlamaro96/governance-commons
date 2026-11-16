@@ -5137,7 +5137,9 @@
         "docs/verification/relation-participation-graph-copy-upgrade.json",
         "docs/verification/m2-relation-participation-api-graph-copy.json",
         "docs/verification/m2-relation-participation-ui.json",
-        "docs/verification/participation-audit-fixture-correction.json"
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {
@@ -6133,7 +6135,9 @@
         "docs/verification/m2-relation-participation-ui.json",
         "docs/verification/participation-repair-reference.json",
         "docs/verification/participation-hosted-attempt-2.json",
-        "docs/verification/participation-audit-fixture-correction.json"
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {
@@ -42816,7 +42820,9 @@
         "docs/verification/m2-relation-participation-ui.json",
         "docs/verification/participation-repair-reference.json",
         "docs/verification/participation-hosted-attempt-2.json",
-        "docs/verification/participation-audit-fixture-correction.json"
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {
@@ -52758,7 +52764,9 @@
         "docs/verification/m2-relations-api.json",
         "docs/verification/m2-relations-ui.json",
         "docs/verification/hosted-relations.json",
-        "docs/verification/participation-audit-fixture-correction.json"
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {
@@ -57323,7 +57331,9 @@
       "owner": "governance-commons maintainers",
       "milestone": "M0",
       "partial_evidence": [
-        "docs/verification/participation-audit-fixture-correction.json"
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {
@@ -66667,7 +66677,9 @@
       "partial_evidence": [
         "docs/verification/participation-repair-reference.json",
         "docs/verification/participation-hosted-attempt-2.json",
-        "docs/verification/participation-audit-fixture-correction.json"
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {
@@ -67495,7 +67507,9 @@
         "docs/verification/dependency-security-updates.json",
         "docs/verification/participation-repair-reference.json",
         "docs/verification/participation-hosted-attempt-2.json",
-        "docs/verification/participation-audit-fixture-correction.json"
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {
