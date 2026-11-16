@@ -1,0 +1,731 @@
+{
+  "schemaVersion": 1,
+  "title": "Business-domain asset identity and visibility predicate correction",
+  "recordedAt": "2026-11-16T02:49:44.143817+00:00",
+  "executionCheckpoint": "2026-11-16T02:45:14.800860+00:00",
+  "profile": "local Docker Compose core; synthetic harbor-demo data; runtime PostgreSQL role gc_app",
+  "result": "TARGETED_PASS",
+  "implementation": "IMPLEMENTED",
+  "verification": "One real database regression and all nine domain HTTP cases passed; broader qualification is separate.",
+  "gitBaseCommit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+  "revisionQualification": "The runtime binds the complete source manifest below, including the uncommitted correction; the base commit alone does not identify these tested bytes.",
+  "commandPathNormalization": "Only the absolute checkout prefix is removed from recorded command arguments. The private original reports retain the exact commands byte-for-byte.",
+  "originalTargetedFailure": {
+    "result": "FAIL",
+    "startedAt": "2026-11-16T02:30:56.810079+00:00",
+    "finishedAt": "2026-11-16T02:32:24.196995+00:00",
+    "command": [
+      "docker",
+      "compose",
+      "--project-name",
+      "governance-commons",
+      "--env-file",
+      ".local/runtime.env",
+      "-f",
+      "deploy/compose/compose.yaml",
+      "exec",
+      "-T",
+      "api",
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "tests/integration/business-domains-api.test.ts"
+    ],
+    "counts": {
+      "tests": 9,
+      "pass": 7,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 86746.916747
+    },
+    "images": {
+      "api": "sha256:c0aa7b50f9c4843f465ef85c236ae280192225686a10eb64731599b760483c8a",
+      "workflow-worker": "sha256:c0aa7b50f9c4843f465ef85c236ae280192225686a10eb64731599b760483c8a",
+      "site-runner": "sha256:c0aa7b50f9c4843f465ef85c236ae280192225686a10eb64731599b760483c8a"
+    },
+    "originalReport": {
+      "path": ".local/evidence/business-domains-http-targeted-20261116T023056/report.json",
+      "sha256": "4365815265d23d344eca51bdeaa86d0f739ba613c26f59f460b318ac522a2077",
+      "bytes": 16342,
+      "access": "private; original bytes retained"
+    },
+    "originalTap": {
+      "path": ".local/evidence/business-domains-http-targeted-20261116T023056/output.tap",
+      "sha256": "bc7bb11700f19abb892e1a8213b0209fd51de67c9e3beb7c5f518c1e6b1fabb8",
+      "bytes": 4561,
+      "access": "private; original bytes retained"
+    },
+    "wrapperSha256": "c56c92fb5421ce2ab85d6ca934b2f186b66e8cf1d45d30e41858d0bc7bf8faa6",
+    "invocations": 1,
+    "retries": 0,
+    "runtimeSourceCount": 98
+  },
+  "originalFailures": [
+    {
+      "test": "domain HTTP real PostgreSQL rescan preserves placement history and service journals while stale unassignment cannot write",
+      "source": "tests/integration/business-domains-api.test.ts",
+      "line": 229,
+      "expectedStatus": 200,
+      "actualStatus": 409,
+      "actualCode": "VERSION_CONFLICT",
+      "trigger": "Current-version unassignment after the actual PostgreSQL rescan; the production asset lookup returned a different explicitly shared asset at version one."
+    },
+    {
+      "test": "domain HTTP authorization scopes direct resources owners impacted assets historical placement and successful replay",
+      "source": "tests/integration/business-domains-api.test.ts",
+      "line": 383,
+      "expectedStatus": 404,
+      "expectedCode": "ASSET_NOT_FOUND",
+      "expectedContentType": "application/problem+json",
+      "actualContentType": "application/json; charset=utf-8",
+      "actualStatus": "NOT_CAPTURED",
+      "limitation": "The helper asserted content type first. The original failure does not establish an actual HTTP status or whether the second history request executed."
+    }
+  ],
+  "diagnosis": {
+    "mechanism": "The raw visibility OR was not parenthesized within the tenant-and-requested-ID WHERE expression. Its explicit-ACL arm could select a different asset in the current RLS tenant. Placement reads then used the originally requested ID, and mutation version checks used the unrelated returned version.",
+    "boundary": "Forced tenant RLS remained active; this finding concerns per-asset visibility and requested identity inside the selected tenant.",
+    "originalCompiledSQL": "select \"id\", \"version\" from \"assets\" where \"tenant_id\" = $1 and \"id\" = $2 and visibility='tenant' OR allowed_identities @> $3::jsonb",
+    "correctedCompiledSQL": "select \"id\", \"version\" from \"assets\" where \"tenant_id\" = $1 and \"id\" = $2 and (visibility='tenant' OR allowed_identities @> $3::jsonb)",
+    "actualDatabaseComparison": {
+      "recordedAt": "2026-11-16T02:37:18.029130+00:00",
+      "mode": "read-only comparison; no source edits or writes",
+      "originalReturnedRequestedId": false,
+      "originalReturnedVersion": 1,
+      "groupedReturnedRequestedId": true,
+      "groupedReturnedVersion": 2,
+      "originalEvidence": {
+        "path": ".local/evidence/business-domain-asset-predicate-readback.json",
+        "sha256": "531c139e386d2ac88002a7fe684790d030c1a6cb5895d19c559daa1d52316057",
+        "bytes": 748,
+        "access": "private; original bytes retained"
+      },
+      "publication": "Synthetic asset identifiers and source payloads are omitted; equality results and actual returned versions are retained."
+    },
+    "actualRescanReadback": {
+      "recordedAt": "2026-11-16T02:36:10.516931+00:00",
+      "mode": "read-only; 5-second statement timeout; synthetic domain-rescan fixtures only",
+      "originalEvidence": {
+        "path": ".local/evidence/business-domain-rescan-readback-20261116T023610.json",
+        "sha256": "92ea685da3714c5083963fec6783af885bec8274ce9df9bfc804321fda445fc8",
+        "bytes": 6232,
+        "access": "private; original bytes retained"
+      },
+      "findings": "The failed targeted run had two succeeded PostgreSQL scan jobs, one stable asset ID with revisions one and two, unchanged placement version one referencing asset revision one, and both observation journals.",
+      "priorProbe": "rolled back on undefined sources.created_at before any fixture rows were read"
+    }
+  },
+  "correction": {
+    "file": "packages/domain/src/business-domain-store.ts",
+    "line": 192,
+    "change": "Parenthesize the visibility OR so both alternatives remain inside the tenant and exact requested asset ID predicates.",
+    "beforeSha256": "febaca7387ec57af6fbc807c3f0bb023c012cf1596ee726233f11cc4f8b78754",
+    "afterSha256": "ddfd6cd5c9846818c81093062132c27800717e10efd110a76a7cb54a1300d974",
+    "addedRegression": {
+      "file": "tests/integration/business-domain-asset-scope.test.ts",
+      "sha256": "d93449ab4014ee5feb45ab1fc30ce28c061675868139bf7595f79b815f5939a1",
+      "cases": 1,
+      "checks": [
+        "Require real gc_app with neither superuser nor RLS bypass.",
+        "Use a fresh current principal and a tenant ledger lock.",
+        "Insert only unique synthetic assets: explicit-ACL decoy version one, requested visible asset with actual revision one-to-two history, and hidden asset.",
+        "Unknown and hidden requested IDs reject with ASSET_NOT_FOUND despite the permitted decoy, through actual domainAsset and domainPlacement helpers.",
+        "Visible requested and decoy lookups return their own exact identities and versions.",
+        "Authorized and rejected reads leave exact fixture asset, revision, placement and journal rows unchanged.",
+        "Rollback the entire fixture transaction and verify no fixture assets, histories, placements or journal rows persist."
+      ],
+      "rollbackLimit": "PostgreSQL identity sequence allocation is nontransactional; the test asserts no persistent fixture rows, not byte-identical sequence state."
+    },
+    "changeComparison": {
+      "priorRuntimeFiles": 98,
+      "newRuntimeFiles": 99,
+      "changedExistingFiles": [
+        "packages/domain/src/business-domain-store.ts"
+      ],
+      "addedFiles": [
+        "tests/integration/business-domain-asset-scope.test.ts"
+      ],
+      "otherPriorRuntimeFilesByteIdentical": 97
+    },
+    "immutableMigrations": "SQL001\u2013011 remain unchanged; this correction is in the application query."
+  },
+  "targetedQualification": {
+    "result": "PASS",
+    "startedAt": "2026-11-16T02:43:43.932520+00:00",
+    "finishedAt": "2026-11-16T02:45:14.800860+00:00",
+    "command": [
+      "docker",
+      "compose",
+      "--project-name",
+      "governance-commons",
+      "--env-file",
+      ".local/runtime.env",
+      "-f",
+      "deploy/compose/compose.yaml",
+      "exec",
+      "-T",
+      "api",
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "tests/integration/business-domain-asset-scope.test.ts",
+      "tests/integration/business-domains-api.test.ts"
+    ],
+    "counts": {
+      "tests": 10,
+      "pass": 10,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 90360.419792
+    },
+    "images": {
+      "api": "sha256:71cc850d970f02173392f7029a6a7834cad14e0e9daae97d2c97bf1ff288a3a7",
+      "workflow-worker": "sha256:71cc850d970f02173392f7029a6a7834cad14e0e9daae97d2c97bf1ff288a3a7",
+      "site-runner": "sha256:71cc850d970f02173392f7029a6a7834cad14e0e9daae97d2c97bf1ff288a3a7"
+    },
+    "originalReport": {
+      "path": ".local/evidence/business-domains-asset-scope-targeted-20261116T024343/report.json",
+      "sha256": "b7abcb0672a7f04c5d866737b6eef0c0d346c02552032513786665fc3a973460",
+      "bytes": 16579,
+      "access": "private; original bytes retained"
+    },
+    "originalTap": {
+      "path": ".local/evidence/business-domains-asset-scope-targeted-20261116T024343/output.tap",
+      "sha256": "ec4980b913d2988a74a85307343a9727b219f71842d8b938ee5eb15731db8dcb",
+      "bytes": 3191,
+      "access": "private; original bytes retained"
+    },
+    "wrapperSha256": "caa95a5dc255d136a5ebd19caa80804102675bc07526d85b42dd4260207d400a",
+    "invocations": 1,
+    "retries": 0,
+    "runtimeSourceCount": 99
+  },
+  "runtimeBinding": {
+    "method": "The wrapper hashes all selected source files inside the actual API container, compares every hash with the checkout before execution, repeats after execution, and verifies API/workflow/site image identities before and after.",
+    "sourceCount": 99,
+    "beforeAfterStable": true,
+    "currentCheckoutRechecked": true,
+    "sources": [
+      {
+        "path": "Dockerfile",
+        "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+      },
+      {
+        "path": "apps/api/src/asset-type-migrations.ts",
+        "sha256": "02f530c3715801c222f4f98d65807f06d0b58d0193b05c6c4e9f3f0b78a00c92"
+      },
+      {
+        "path": "apps/api/src/asset-types.ts",
+        "sha256": "847e1a9492b79d45de5143aa80ff6e9f3e04fd898d934a2b15b8a46637902ac3"
+      },
+      {
+        "path": "apps/api/src/audit-reader.ts",
+        "sha256": "27f13130b1902bc7c9aa9656a1eebc9e680c906b977ac9e002f74c57355aea8e"
+      },
+      {
+        "path": "apps/api/src/audit.ts",
+        "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+      },
+      {
+        "path": "apps/api/src/business-domain-http.ts",
+        "sha256": "4d2f80dc0028363b2a295904d01d696eed2f66c23c71383113b9a15fdfad60b8"
+      },
+      {
+        "path": "apps/api/src/business-domains.ts",
+        "sha256": "cc4342f40e277611a337039415c3a8f2968123c563785e6ac596dc13b5cd678d"
+      },
+      {
+        "path": "apps/api/src/index.ts",
+        "sha256": "b8704fcf2be3ba757d1e0a51c85c1de1fa1fe7dafbac346be577a49e8a5171e7"
+      },
+      {
+        "path": "apps/api/src/model-http.ts",
+        "sha256": "78d176145b8713c5aca2797fad741653698c6f2439817fbf069d4842afcc5938"
+      },
+      {
+        "path": "apps/api/src/model-migrations.ts",
+        "sha256": "3d116bf6bc64ac3723f5aadef63d414f7920c584824a114e8bb6c2708d7129ad"
+      },
+      {
+        "path": "apps/api/src/models.ts",
+        "sha256": "d6212e6723236030f672cd67ce2f2de43b1e8f67216309f1a16c18dd257a0387"
+      },
+      {
+        "path": "apps/api/src/relation-migrations.ts",
+        "sha256": "f30df94c238f409afd303ea9e9dbd55a863e19702dc244798861dfc2b9aaa224"
+      },
+      {
+        "path": "apps/api/src/relations.ts",
+        "sha256": "0124c9190396dbcddf14ebb3fae67128ebaa97865aba97dc6b46000654f2b974"
+      },
+      {
+        "path": "apps/api/src/repository.ts",
+        "sha256": "78b98548857cc519e174813e4a3501d0f70462c4d9a31bae4eec421b342445a5"
+      },
+      {
+        "path": "apps/api/src/search.ts",
+        "sha256": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d"
+      },
+      {
+        "path": "apps/api/src/security.ts",
+        "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+      },
+      {
+        "path": "deploy/compose/compose.yaml",
+        "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+      },
+      {
+        "path": "package.json",
+        "sha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7"
+      },
+      {
+        "path": "packages/authz/src/index.ts",
+        "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "sha256": "8d23a38cad9af4c69471b6369d1106382e34518f1b13a00be6590ee6e28bb453"
+      },
+      {
+        "path": "packages/db/migrations/001_foundation.sql",
+        "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "path": "packages/db/migrations/002_audit_envelopes.sql",
+        "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "path": "packages/db/migrations/003_governance_models.sql",
+        "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "path": "packages/db/migrations/004_model_migrations.sql",
+        "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "path": "packages/db/migrations/005_model_migration_integrity.sql",
+        "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "path": "packages/db/migrations/006_inherited_asset_types.sql",
+        "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "path": "packages/db/migrations/007_asset_type_migrations.sql",
+        "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "path": "packages/db/migrations/008_constrained_relations.sql",
+        "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "path": "packages/db/migrations/009_relation_participation.sql",
+        "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+        "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "path": "packages/db/migrations/011_business_domains.sql",
+        "sha256": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+      },
+      {
+        "path": "packages/db/src/index.ts",
+        "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+      },
+      {
+        "path": "packages/db/src/migrate.ts",
+        "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+      },
+      {
+        "path": "packages/db/src/seed-business-domains.ts",
+        "sha256": "382a9968582d3dfc54b6f60c1a3c1eefaac564d2c6db62469bc301ab753ffe7b"
+      },
+      {
+        "path": "packages/db/src/seed.ts",
+        "sha256": "6e0e2d71e64f60a825231587bca88ca03f59398c2f77ab2173d68229433c9a9a"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-contracts.ts",
+        "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-service.ts",
+        "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration.ts",
+        "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+      },
+      {
+        "path": "packages/domain/src/asset-type-policy.ts",
+        "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+      },
+      {
+        "path": "packages/domain/src/asset-type-service.ts",
+        "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/business-domain-contracts.ts",
+        "sha256": "b43ecced92ec6dd20392afc06a4f8e466819d98148e2b4bbce39ed91ec56edf1"
+      },
+      {
+        "path": "packages/domain/src/business-domain-migration.ts",
+        "sha256": "ca5396dc13234e6aa5be9f4087c3cad5bcbea2f05bcd88bb8873f70881972d99"
+      },
+      {
+        "path": "packages/domain/src/business-domain-preview.ts",
+        "sha256": "cc05d1567dd9d84b67245b9fa1b1d6bbd451c2ae8aa2f9cf38b54e44a2147478"
+      },
+      {
+        "path": "packages/domain/src/business-domain-read.ts",
+        "sha256": "29ef7892ca3c2e581679b269558af238246a77044d0153c61e47d8456e279b14"
+      },
+      {
+        "path": "packages/domain/src/business-domain-service-contracts.ts",
+        "sha256": "ba82f0ca537c67c96614dc97c7b3f3f6c1a201304713c2bae2c40a57e83832b6"
+      },
+      {
+        "path": "packages/domain/src/business-domain-service.ts",
+        "sha256": "5215ce759fbcf1f85327893476f213d009a0caa5f82acc4aa1df9723769a5cb4"
+      },
+      {
+        "path": "packages/domain/src/business-domain-store.ts",
+        "sha256": "ddfd6cd5c9846818c81093062132c27800717e10efd110a76a7cb54a1300d974"
+      },
+      {
+        "path": "packages/domain/src/business-domain-type.ts",
+        "sha256": "19c4a82916ba81f5d236c3e46e1edad94e7b747f68643556a6f98af53677885e"
+      },
+      {
+        "path": "packages/domain/src/business-domain-write.ts",
+        "sha256": "e6225dd90ca9ccadaa01d54c709ec4b32a182d52841e7208c4b7430b7671b067"
+      },
+      {
+        "path": "packages/domain/src/cursor.ts",
+        "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-persistence.ts",
+        "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-preparation.ts",
+        "sha256": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49"
+      },
+      {
+        "path": "packages/domain/src/model-migration-service.ts",
+        "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+      },
+      {
+        "path": "packages/domain/src/model-service.ts",
+        "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "ebf90e8d24a0cf969d0ebe3c915d5b5113574d354a6e5963d5bc9cd285bc79ad"
+      },
+      {
+        "path": "packages/domain/src/relation-contracts.ts",
+        "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+      },
+      {
+        "path": "packages/domain/src/relation-endpoint-guard.ts",
+        "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+      },
+      {
+        "path": "packages/domain/src/relation-graph.ts",
+        "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-contracts.ts",
+        "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-read.ts",
+        "sha256": "bf5dc16ff794343dbc68d2992644e840e07846f791f6c119a8a168bc53142ff7"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-service.ts",
+        "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-store.ts",
+        "sha256": "7fc1ffadfc3465f6c329f334d1910fb60093fafa3d1dc770341cb75d77988287"
+      },
+      {
+        "path": "packages/domain/src/relation-migration.ts",
+        "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+      },
+      {
+        "path": "packages/domain/src/relation-participation-read.ts",
+        "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+      },
+      {
+        "path": "packages/domain/src/relation-participation.ts",
+        "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+      },
+      {
+        "path": "packages/domain/src/relation-service.ts",
+        "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+      },
+      {
+        "path": "packages/domain/src/relation-store.ts",
+        "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+      },
+      {
+        "path": "packages/domain/src/relation.ts",
+        "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+      },
+      {
+        "path": "policies/api_evidence.py",
+        "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2"
+      },
+      {
+        "path": "scripts/test-security.sh",
+        "sha256": "7fdb26f6aa1f66d9cc202a6e1551d77c9f88294d11f0fb99293bd6cd9fa8d421"
+      },
+      {
+        "path": "tests/fixtures/business-domains-browser.ts",
+        "sha256": "4faeaf6475467139d8fa085a76a21e15c21c7614edbf1426ab9e10a1793c001f"
+      },
+      {
+        "path": "tests/fixtures/business-domains.ts",
+        "sha256": "aea478f961266392d87eabdd4a3bd6b3b466ef998e860478779cb9bfbeacfa10"
+      },
+      {
+        "path": "tests/fixtures/http-budget.ts",
+        "sha256": "d0d772ca40196ef90b7f570bcf19123c8f53543ed664e716139e30a4f4682e95"
+      },
+      {
+        "path": "tests/fixtures/manual-scan.ts",
+        "sha256": "23b28b2cbf33bcc6c779ed16e940287d3918d9e2153deace925021edfb726979"
+      },
+      {
+        "path": "tests/fixtures/relation-migration-api.ts",
+        "sha256": "e68e89aff887339a035364f124f1ae8888d740b92cf55ff8466c687324a2e65f"
+      },
+      {
+        "path": "tests/fixtures/relation-participation.ts",
+        "sha256": "209132979d10001c59e464c5b9a43e63ea82135962a46bfe0b6329a1b243f6e8"
+      },
+      {
+        "path": "tests/integration/asset-type-api-limits.test.ts",
+        "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4"
+      },
+      {
+        "path": "tests/integration/asset-type-migration-storage.test.ts",
+        "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+      },
+      {
+        "path": "tests/integration/asset-type-migrations.test.ts",
+        "sha256": "c5ad40c323b3405243e95c9b33b62d81e86ab596bca361779219c489fb7aa407"
+      },
+      {
+        "path": "tests/integration/asset-type-storage.test.ts",
+        "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+      },
+      {
+        "path": "tests/integration/asset-types.test.ts",
+        "sha256": "08c5b7fd9aebea55d498b97b4c524e6e83eefb4c7e604b519996ec1932a2145e"
+      },
+      {
+        "path": "tests/integration/audit-integrity.test.ts",
+        "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad"
+      },
+      {
+        "path": "tests/integration/business-domain-asset-scope.test.ts",
+        "sha256": "d93449ab4014ee5feb45ab1fc30ce28c061675868139bf7595f79b815f5939a1"
+      },
+      {
+        "path": "tests/integration/business-domains-api.test.ts",
+        "sha256": "0f7d24e277245488d5f183aca24c2be968851f81be90bcf498a6f476e2a7831d"
+      },
+      {
+        "path": "tests/integration/business-domains-storage.test.ts",
+        "sha256": "1e1b0712c63bf957e33328285a42baad55adc07f1047cc53e7cdc608e8aff8f0"
+      },
+      {
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "eb1159e5c2f3004c3d90a82b2361c2665efff90d20b3eb18f8e58a7929ebd579"
+      },
+      {
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7"
+      },
+      {
+        "path": "tests/integration/model-migration-api.test.ts",
+        "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb"
+      },
+      {
+        "path": "tests/integration/model-migration-storage.test.ts",
+        "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+      },
+      {
+        "path": "tests/integration/model-migrations.test.ts",
+        "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+      },
+      {
+        "path": "tests/integration/model-pagination.test.ts",
+        "sha256": "0809f4e7711f3fea796edc1f87a82fc6ece9684c0c6483e4d506a233c4d0d0d2"
+      },
+      {
+        "path": "tests/integration/models.test.ts",
+        "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1"
+      },
+      {
+        "path": "tests/integration/relation-migration-api.test.ts",
+        "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db"
+      },
+      {
+        "path": "tests/integration/relation-participation-storage.test.ts",
+        "sha256": "17fcf6a093e501e0743d9ec5a6b50046b00b3cb59e7be86f802003699d27830e"
+      },
+      {
+        "path": "tests/integration/relation-storage.test.ts",
+        "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619"
+      },
+      {
+        "path": "tests/integration/relations.test.ts",
+        "sha256": "eef1490ff12eae279018027edfdbbbd9dee2bae739cf925e82f16fd81ecba760"
+      }
+    ],
+    "pinnedContainerToolchain": {
+      "basis": "Bound Dockerfile and package manifests; no additional runtime version probe is claimed.",
+      "node": "24.22.3",
+      "pnpm": "10.32.1"
+    }
+  },
+  "precedingPipeline": {
+    "originalReport": {
+      "path": ".local/evidence/business-domains-runtime-20261116T024309/pipeline.json",
+      "sha256": "c054acd650bd194d75ef5530d206a3a412ec76ea99b1f1d8c559877c8fb7d797",
+      "bytes": 1917,
+      "access": "private; original bytes retained"
+    },
+    "startedAt": "2026-11-16T02:43:09.379714+00:00",
+    "checks": [
+      {
+        "stage": "unit",
+        "command": [
+          "pnpm",
+          "test"
+        ],
+        "exitStatus": 0,
+        "log": ".local/evidence/business-domains-runtime-20261116T024309/unit.log",
+        "logSha256": "2a57c595d7ade7ff6db59e5c01f61f3b128e5edd9da2f2a268d6d1e70362b8c6",
+        "recordedAt": "2026-11-16T02:43:11.791354+00:00"
+      },
+      {
+        "stage": "types",
+        "command": [
+          "pnpm",
+          "typecheck"
+        ],
+        "exitStatus": 0,
+        "log": ".local/evidence/business-domains-runtime-20261116T024309/types.log",
+        "logSha256": "655cff77f5b0e3e3cc2e9bca83aeb41f0475418560497097b428c1f669048d0c",
+        "recordedAt": "2026-11-16T02:43:13.007692+00:00"
+      },
+      {
+        "stage": "web-build",
+        "command": [
+          "pnpm",
+          "build"
+        ],
+        "exitStatus": 0,
+        "log": ".local/evidence/business-domains-runtime-20261116T024309/web-build.log",
+        "logSha256": "10a7ee7f006ca731f980f3492f83c048201056436e0504602d08fca045ba5e2f",
+        "recordedAt": "2026-11-16T02:43:14.137581+00:00"
+      },
+      {
+        "stage": "core",
+        "command": [
+          "./dev",
+          "up",
+          "--profile",
+          "core"
+        ],
+        "exitStatus": 0,
+        "log": ".local/evidence/business-domains-runtime-20261116T024309/core.log",
+        "logSha256": "aceeae7f92a54b327d7d7f8eadd4d6fadd2169089042520e9c9a06ec97adb641",
+        "recordedAt": "2026-11-16T02:43:43.537127+00:00"
+      },
+      {
+        "stage": "targeted-http",
+        "command": [
+          "python3",
+          ".local/evidence/qualify-business-domains-asset-scope-targeted.py"
+        ],
+        "exitStatus": 0,
+        "log": ".local/evidence/business-domains-runtime-20261116T024309/targeted-http.log",
+        "logSha256": "f157d1a4b7dfc631d64b329c1b102c2a73dd85c43feb34c131640b151cd356e6",
+        "recordedAt": "2026-11-16T02:45:14.860479+00:00"
+      }
+    ],
+    "unitCounts": {
+      "tests": 257,
+      "pass": 257,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 2051.440459
+    },
+    "typeScope": "Root and web TypeScript checks",
+    "buildScope": "Production web build and actual core startup",
+    "originalSourceManifest": {
+      "path": ".local/evidence/business-domains-runtime-20261116T024309/sources.json",
+      "sha256": "e02751b7e5b0df89cb90a168895af39b24352a06690f48341c1d248876190562",
+      "bytes": 20184,
+      "sourceCount": 143,
+      "currentCheckoutRechecked": true,
+      "access": "private; original bytes retained"
+    }
+  },
+  "independentReview": {
+    "kind": "Read-only review by a separate implementation agent; no external sign-off implied.",
+    "scope": "Grouped production predicate and real gc_app rollback fixture/test",
+    "finding": "No concrete blocker reported. Runtime claims derive from the executed reports, not review."
+  },
+  "relatedHistoricalEvidence": {
+    "path": "docs/verification/business-domains-http-validation-correction.json",
+    "sha256": "a923fa67d642ae52ef45d7b70a5584026140ab0b63da0387c6a00abda8be82c0",
+    "scope": "Preserved initial153-test145/8 creation failure and the separately corrected Fastify validation mutation. This new report does not overwrite or relabel it."
+  },
+  "laterGates": {
+    "full154TestAPI": "NOT_CLAIMED; a separate invocation was still running when this checkpoint was prepared.",
+    "browser19Journeys": "NOT_RUN",
+    "hostedCI": "NOT_RUN_FOR_THIS_CORRECTION",
+    "release": "NOT_QUALIFIED"
+  },
+  "limits": [
+    "Local synthetic qualification only; no production deployment or external integration qualification.",
+    "The new database case uses real production helpers and forced RLS with rollback-only fixtures; it does not prove every possible asset authorization scenario.",
+    "The nine actual HTTP cases include real source-create/Temporal/site/Python PostgreSQL scan and rescan, placement history/version safety and hidden-resource access; this targeted run does not substitute for the full API/browser programme.",
+    "Original failed runs, private raw TAP and actual readback reports are retained unchanged. No private runtime environment, credentials, persona payloads or recovery SQL are published."
+  ]
+}

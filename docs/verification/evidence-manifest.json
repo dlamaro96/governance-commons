@@ -700,6 +700,120 @@
         "method": "Exact75 unchanged source hashes; original report copied byte-identically; original first PASS retained separately.",
         "evidence_sha256": "26953bab85365da66896f8c6db7ed3ff1e89d5eab60c0b6675df26648fbf5400"
       }
+    },
+    {
+      "path": "docs/verification/business-domains-upgrade-final-source.json",
+      "scope": "Final merged-source SQL010-to011 isolated upgrade: 8 upgrade checks, 18 storage cases and 9 concurrency cases. Core seed, API and browser qualification remain NOT_RUN at this checkpoint.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_SCOPE",
+      "source_binding": {
+        "implementation_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+        "method": "All 76 recorded source hashes independently match committed blobs and the worktree. Final original report copied byte-identically; both earlier PASS reports preserved unchanged.",
+        "verified_files": 76,
+        "evidence_sha256": "cb2d6b978d3e13ecd2de9c68d22a21d7da6d34369e7f03fa531a1195af6e14c8"
+      }
+    },
+    {
+      "path": "docs/verification/business-domains-http-validation-correction.json",
+      "scope": "Historical145/153 API failure and local nonmutating domain HTTP validation correction:3 real-Fastify injection regressions,257 units and types. Corrected PostgreSQL/HTTP execution is deliberately excluded from this historical report.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_LOCAL_INJECTION_AND_STATIC_CORRECTION_SCOPE",
+      "source_binding": {
+        "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+        "working_tree_dirty": true,
+        "correction_source_files": 3,
+        "historical_image_source_files": 98,
+        "method": "The exact three-file correction hashes and original failed-image98-file binding remain in the report. No corrected runtime, browser or later-source SQL qualification is inferred.",
+        "evidence_sha256": "a923fa67d642ae52ef45d7b70a5584026140ab0b63da0387c6a00abda8be82c0"
+      }
+    },
+    {
+      "path": "docs/verification/business-domains-asset-scope-correction.json",
+      "scope": "Exact asset identity/visibility predicate correction:one rollback-only runtime PostgreSQL regression plus9 actual domain HTTP cases pass10/10, after preserving the separate7/9 failure. No full-suite/browser claim comes from this targeted run.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_TARGETED_SCOPE",
+      "source_binding": {
+        "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+        "working_tree_dirty": true,
+        "actual_image_source_files": 99,
+        "method": "Report binds99 actual API-image source files and stable API/workflow/site image IDs before and after the targeted invocation. Uncommitted correction bytes are identified by report hashes rather than the base commit.",
+        "evidence_sha256": "754267aaa66420e8afa30b5299c2cd134a7151870c7aeb2ee091bca09308dd07"
+      }
+    },
+    {
+      "path": "docs/verification/business-domains-api.json",
+      "scope": "Full local synthetic core API/runtime-role PostgreSQL suite:154/154 pass, including9 domain HTTP journeys,18 domain storage cases and1 exact-asset lookup regression. Separate browser/hosted gates and complete programme/release remain open.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_LOCAL_API_SCOPE",
+      "source_binding": {
+        "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+        "working_tree_dirty": true,
+        "actual_image_source_files": 99,
+        "method": "All99 listed API-image sources and the API/workflow/site image IDs were checked before and after the actual154-test invocation. This does not rerun the earlier isolated upgrade/concurrency or seed gates.",
+        "evidence_sha256": "7df8a9817aacd08d629319d23626a4f2e9d97a18f5d33e1c61eb73c327864de3"
+      }
+    },
+    {
+      "path": "docs/verification/business-domains-seed-runtime.json",
+      "scope": "Initialized synthetic core startup retry and actual harbor-demo seed:two unchanged replays, later domain-permission revocation/deleted-membership preservation and exact fixture restoration. No placements, source scan, clean install, abrupt-loss recovery, API or browser qualification is inferred.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_LOCAL_SCOPE",
+      "source_binding": {
+        "implementation_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+        "runtime_image_source_files": 69,
+        "host_source_files": 5,
+        "verified_files": 74,
+        "method": "Report preserves74 exact committed source matches (69 running-image and5 host files), stable service/image readback and the original seed/recovery report. Later HTTP/query fixes are outside this historical execution.",
+        "evidence_sha256": "abba729f0ac2eb1b96d99ea3fe5323b80327af070aeb5175ceb54ae435fca20a"
+      }
+    },
+    {
+      "path": "docs/verification/business-domains-ui-targeted.json",
+      "scope": "Actual synthetic local browser gate: 3 targeted domain journeys and five preserved failed attempts; exact running-source/served-asset bindings and restored historical screenshots. Hosted and release remain separate.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_LOCAL_BROWSER_SCOPE",
+      "source_binding": {
+        "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+        "working_tree_dirty": true,
+        "method": "Original execution and review report hashes retained;169 actual-image source hashes and27 served assets bind the final passing source. This document does not imply a test rerun or whole-requirement completion.",
+        "evidence_sha256": "9872e843d8b2be7d3c61f879fab6cb0159bb46e96780e134f32572f7a0c98d98"
+      }
+    },
+    {
+      "path": "docs/verification/business-domains-ui-visual-review.json",
+      "scope": "Visual review of26 exact archived domain captures; static viewport limitations and original failures remain explicit. No independent human accessibility/translation or release approval.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_VISUAL_SCOPE",
+      "source_binding": {
+        "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+        "working_tree_dirty": true,
+        "method": "Original execution and review report hashes retained;169 actual-image source hashes and27 served assets bind the final passing source. This document does not imply a test rerun or whole-requirement completion.",
+        "evidence_sha256": "f56ec20ed95311396af058b4f4ddc67f005df0dabcbcb06e33f1b00fd17adfe1"
+      }
+    },
+    {
+      "path": "docs/verification/business-domains-ui-full.json",
+      "scope": "Actual synthetic local browser gate: 19 full regression journeys; exact running-source/served-asset bindings and restored historical screenshots. Hosted and release remain separate.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_LOCAL_BROWSER_SCOPE",
+      "source_binding": {
+        "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+        "working_tree_dirty": true,
+        "method": "Original execution and review report hashes retained;169 actual-image source hashes and27 served assets bind the final passing source. This document does not imply a test rerun or whole-requirement completion.",
+        "evidence_sha256": "3fb3637309fb50dd3b667d0ca99b8c0bfe5b897bbaf23113fa900e188bdfdef9"
+      }
+    },
+    {
+      "path": "docs/verification/business-domains-ui-full-visual-review.json",
+      "scope": "Visual review of26 exact archived domain captures; static viewport limitations and original failures remain explicit. No independent human accessibility/translation or release approval.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_VISUAL_SCOPE",
+      "source_binding": {
+        "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+        "working_tree_dirty": true,
+        "method": "Original execution and review report hashes retained;169 actual-image source hashes and27 served assets bind the final passing source. This document does not imply a test rerun or whole-requirement completion.",
+        "evidence_sha256": "9514ab544d1bacbb27f99aa9d38b3c568d6c5ac4260f3b57801115e596a1a076"
+      }
     }
   ],
   "limitations": [

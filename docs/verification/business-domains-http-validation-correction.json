@@ -1,0 +1,793 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-16T02:33:15.423155+00:00",
+  "implementation_status": "IN_PROGRESS",
+  "verification_status": "PASS_FOR_LOCAL_INJECTION_AND_STATIC_CORRECTION_SCOPE",
+  "release_qualified": false,
+  "scope": "Historical first real domain API failure and subsequent child-validator correction proof. Corrected real HTTP/API execution is excluded and requires a separate report.",
+  "historical_api": {
+    "result": "FAIL",
+    "command": "./dev test --suite security",
+    "profile": "real core API/PostgreSQL; Node TAP; synthetic fixtures",
+    "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+    "started_at": "2026-11-16T02:15:57.712681+00:00",
+    "recorded_at": "2026-11-16T02:24:14.911892+00:00",
+    "counts": {
+      "tests": 153,
+      "suites": 0,
+      "pass": 145,
+      "fail": 8,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 496639.311393
+    },
+    "expected_tests": 153,
+    "image_ids": {
+      "api": "sha256:58638f53927c9fbea84e84bb2091285ae1d918a75b56a6435acb932ab0e0b48e",
+      "workflow-worker": "sha256:58638f53927c9fbea84e84bb2091285ae1d918a75b56a6435acb932ab0e0b48e",
+      "site-runner": "sha256:58638f53927c9fbea84e84bb2091285ae1d918a75b56a6435acb932ab0e0b48e"
+    },
+    "source_binding": {
+      "files": 98,
+      "committed_blob_matches": 98,
+      "method": "Original runtime wrapper bound 98 sources to the tested image. Every recorded hash was independently matched to the historical committed blob; this is not a test rerun.",
+      "sources": [
+        {
+          "path": "Dockerfile",
+          "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+        },
+        {
+          "path": "apps/api/src/asset-type-migrations.ts",
+          "sha256": "02f530c3715801c222f4f98d65807f06d0b58d0193b05c6c4e9f3f0b78a00c92"
+        },
+        {
+          "path": "apps/api/src/asset-types.ts",
+          "sha256": "847e1a9492b79d45de5143aa80ff6e9f3e04fd898d934a2b15b8a46637902ac3"
+        },
+        {
+          "path": "apps/api/src/audit-reader.ts",
+          "sha256": "27f13130b1902bc7c9aa9656a1eebc9e680c906b977ac9e002f74c57355aea8e"
+        },
+        {
+          "path": "apps/api/src/audit.ts",
+          "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+        },
+        {
+          "path": "apps/api/src/business-domain-http.ts",
+          "sha256": "2030248fd017421c1b911608d908f746fa8778d57f81dfa1ef60fce8fa285d16"
+        },
+        {
+          "path": "apps/api/src/business-domains.ts",
+          "sha256": "d2adf25d0383921009016194481d376943e52d892b5faf49983178ca59be8ab0"
+        },
+        {
+          "path": "apps/api/src/index.ts",
+          "sha256": "b8704fcf2be3ba757d1e0a51c85c1de1fa1fe7dafbac346be577a49e8a5171e7"
+        },
+        {
+          "path": "apps/api/src/model-http.ts",
+          "sha256": "78d176145b8713c5aca2797fad741653698c6f2439817fbf069d4842afcc5938"
+        },
+        {
+          "path": "apps/api/src/model-migrations.ts",
+          "sha256": "3d116bf6bc64ac3723f5aadef63d414f7920c584824a114e8bb6c2708d7129ad"
+        },
+        {
+          "path": "apps/api/src/models.ts",
+          "sha256": "d6212e6723236030f672cd67ce2f2de43b1e8f67216309f1a16c18dd257a0387"
+        },
+        {
+          "path": "apps/api/src/relation-migrations.ts",
+          "sha256": "f30df94c238f409afd303ea9e9dbd55a863e19702dc244798861dfc2b9aaa224"
+        },
+        {
+          "path": "apps/api/src/relations.ts",
+          "sha256": "0124c9190396dbcddf14ebb3fae67128ebaa97865aba97dc6b46000654f2b974"
+        },
+        {
+          "path": "apps/api/src/repository.ts",
+          "sha256": "78b98548857cc519e174813e4a3501d0f70462c4d9a31bae4eec421b342445a5"
+        },
+        {
+          "path": "apps/api/src/search.ts",
+          "sha256": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d"
+        },
+        {
+          "path": "apps/api/src/security.ts",
+          "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+        },
+        {
+          "path": "deploy/compose/compose.yaml",
+          "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+        },
+        {
+          "path": "package.json",
+          "sha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7"
+        },
+        {
+          "path": "packages/authz/src/index.ts",
+          "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+        },
+        {
+          "path": "packages/contracts/src/index.ts",
+          "sha256": "8d23a38cad9af4c69471b6369d1106382e34518f1b13a00be6590ee6e28bb453"
+        },
+        {
+          "path": "packages/db/migrations/001_foundation.sql",
+          "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+        },
+        {
+          "path": "packages/db/migrations/002_audit_envelopes.sql",
+          "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+        },
+        {
+          "path": "packages/db/migrations/003_governance_models.sql",
+          "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+        },
+        {
+          "path": "packages/db/migrations/004_model_migrations.sql",
+          "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+        },
+        {
+          "path": "packages/db/migrations/005_model_migration_integrity.sql",
+          "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+        },
+        {
+          "path": "packages/db/migrations/006_inherited_asset_types.sql",
+          "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+        },
+        {
+          "path": "packages/db/migrations/007_asset_type_migrations.sql",
+          "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+        },
+        {
+          "path": "packages/db/migrations/008_constrained_relations.sql",
+          "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+        },
+        {
+          "path": "packages/db/migrations/009_relation_participation.sql",
+          "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+        },
+        {
+          "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+          "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+        },
+        {
+          "path": "packages/db/migrations/011_business_domains.sql",
+          "sha256": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+        },
+        {
+          "path": "packages/db/src/migrate.ts",
+          "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+        },
+        {
+          "path": "packages/db/src/seed-business-domains.ts",
+          "sha256": "382a9968582d3dfc54b6f60c1a3c1eefaac564d2c6db62469bc301ab753ffe7b"
+        },
+        {
+          "path": "packages/db/src/seed.ts",
+          "sha256": "6e0e2d71e64f60a825231587bca88ca03f59398c2f77ab2173d68229433c9a9a"
+        },
+        {
+          "path": "packages/domain/src/asset-type-migration-contracts.ts",
+          "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+        },
+        {
+          "path": "packages/domain/src/asset-type-migration-service.ts",
+          "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+        },
+        {
+          "path": "packages/domain/src/asset-type-migration.ts",
+          "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+        },
+        {
+          "path": "packages/domain/src/asset-type-policy.ts",
+          "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+        },
+        {
+          "path": "packages/domain/src/asset-type-service.ts",
+          "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+        },
+        {
+          "path": "packages/domain/src/asset-type.ts",
+          "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+        },
+        {
+          "path": "packages/domain/src/business-domain-contracts.ts",
+          "sha256": "b43ecced92ec6dd20392afc06a4f8e466819d98148e2b4bbce39ed91ec56edf1"
+        },
+        {
+          "path": "packages/domain/src/business-domain-migration.ts",
+          "sha256": "ca5396dc13234e6aa5be9f4087c3cad5bcbea2f05bcd88bb8873f70881972d99"
+        },
+        {
+          "path": "packages/domain/src/business-domain-preview.ts",
+          "sha256": "cc05d1567dd9d84b67245b9fa1b1d6bbd451c2ae8aa2f9cf38b54e44a2147478"
+        },
+        {
+          "path": "packages/domain/src/business-domain-read.ts",
+          "sha256": "29ef7892ca3c2e581679b269558af238246a77044d0153c61e47d8456e279b14"
+        },
+        {
+          "path": "packages/domain/src/business-domain-service-contracts.ts",
+          "sha256": "ba82f0ca537c67c96614dc97c7b3f3f6c1a201304713c2bae2c40a57e83832b6"
+        },
+        {
+          "path": "packages/domain/src/business-domain-service.ts",
+          "sha256": "5215ce759fbcf1f85327893476f213d009a0caa5f82acc4aa1df9723769a5cb4"
+        },
+        {
+          "path": "packages/domain/src/business-domain-store.ts",
+          "sha256": "febaca7387ec57af6fbc807c3f0bb023c012cf1596ee726233f11cc4f8b78754"
+        },
+        {
+          "path": "packages/domain/src/business-domain-type.ts",
+          "sha256": "19c4a82916ba81f5d236c3e46e1edad94e7b747f68643556a6f98af53677885e"
+        },
+        {
+          "path": "packages/domain/src/business-domain-write.ts",
+          "sha256": "e6225dd90ca9ccadaa01d54c709ec4b32a182d52841e7208c4b7430b7671b067"
+        },
+        {
+          "path": "packages/domain/src/cursor.ts",
+          "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+        },
+        {
+          "path": "packages/domain/src/graph-asset-persistence.ts",
+          "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+        },
+        {
+          "path": "packages/domain/src/graph-asset-preparation.ts",
+          "sha256": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49"
+        },
+        {
+          "path": "packages/domain/src/model-migration-service.ts",
+          "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+        },
+        {
+          "path": "packages/domain/src/model-migration.ts",
+          "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+        },
+        {
+          "path": "packages/domain/src/model-service.ts",
+          "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+        },
+        {
+          "path": "packages/domain/src/model.ts",
+          "sha256": "ebf90e8d24a0cf969d0ebe3c915d5b5113574d354a6e5963d5bc9cd285bc79ad"
+        },
+        {
+          "path": "packages/domain/src/relation-contracts.ts",
+          "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+        },
+        {
+          "path": "packages/domain/src/relation-endpoint-guard.ts",
+          "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+        },
+        {
+          "path": "packages/domain/src/relation-graph.ts",
+          "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-contracts.ts",
+          "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-read.ts",
+          "sha256": "bf5dc16ff794343dbc68d2992644e840e07846f791f6c119a8a168bc53142ff7"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-service.ts",
+          "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-store.ts",
+          "sha256": "7fc1ffadfc3465f6c329f334d1910fb60093fafa3d1dc770341cb75d77988287"
+        },
+        {
+          "path": "packages/domain/src/relation-migration.ts",
+          "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+        },
+        {
+          "path": "packages/domain/src/relation-participation-read.ts",
+          "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+        },
+        {
+          "path": "packages/domain/src/relation-participation.ts",
+          "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+        },
+        {
+          "path": "packages/domain/src/relation-service.ts",
+          "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+        },
+        {
+          "path": "packages/domain/src/relation-store.ts",
+          "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+        },
+        {
+          "path": "packages/domain/src/relation.ts",
+          "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+        },
+        {
+          "path": "policies/api_evidence.py",
+          "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2"
+        },
+        {
+          "path": "scripts/test-security.sh",
+          "sha256": "7fdb26f6aa1f66d9cc202a6e1551d77c9f88294d11f0fb99293bd6cd9fa8d421"
+        },
+        {
+          "path": "tests/fixtures/business-domains-browser.ts",
+          "sha256": "4faeaf6475467139d8fa085a76a21e15c21c7614edbf1426ab9e10a1793c001f"
+        },
+        {
+          "path": "tests/fixtures/business-domains.ts",
+          "sha256": "aea478f961266392d87eabdd4a3bd6b3b466ef998e860478779cb9bfbeacfa10"
+        },
+        {
+          "path": "tests/fixtures/http-budget.ts",
+          "sha256": "d0d772ca40196ef90b7f570bcf19123c8f53543ed664e716139e30a4f4682e95"
+        },
+        {
+          "path": "tests/fixtures/manual-scan.ts",
+          "sha256": "23b28b2cbf33bcc6c779ed16e940287d3918d9e2153deace925021edfb726979"
+        },
+        {
+          "path": "tests/fixtures/relation-migration-api.ts",
+          "sha256": "e68e89aff887339a035364f124f1ae8888d740b92cf55ff8466c687324a2e65f"
+        },
+        {
+          "path": "tests/fixtures/relation-participation.ts",
+          "sha256": "209132979d10001c59e464c5b9a43e63ea82135962a46bfe0b6329a1b243f6e8"
+        },
+        {
+          "path": "tests/integration/asset-type-api-limits.test.ts",
+          "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4"
+        },
+        {
+          "path": "tests/integration/asset-type-migration-storage.test.ts",
+          "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+        },
+        {
+          "path": "tests/integration/asset-type-migrations.test.ts",
+          "sha256": "c5ad40c323b3405243e95c9b33b62d81e86ab596bca361779219c489fb7aa407"
+        },
+        {
+          "path": "tests/integration/asset-type-storage.test.ts",
+          "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+        },
+        {
+          "path": "tests/integration/asset-types.test.ts",
+          "sha256": "08c5b7fd9aebea55d498b97b4c524e6e83eefb4c7e604b519996ec1932a2145e"
+        },
+        {
+          "path": "tests/integration/audit-integrity.test.ts",
+          "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad"
+        },
+        {
+          "path": "tests/integration/business-domains-api.test.ts",
+          "sha256": "0f7d24e277245488d5f183aca24c2be968851f81be90bcf498a6f476e2a7831d"
+        },
+        {
+          "path": "tests/integration/business-domains-storage.test.ts",
+          "sha256": "1e1b0712c63bf957e33328285a42baad55adc07f1047cc53e7cdc608e8aff8f0"
+        },
+        {
+          "path": "tests/integration/foundation.test.ts",
+          "sha256": "eb1159e5c2f3004c3d90a82b2361c2665efff90d20b3eb18f8e58a7929ebd579"
+        },
+        {
+          "path": "tests/integration/model-api.test.ts",
+          "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7"
+        },
+        {
+          "path": "tests/integration/model-migration-api.test.ts",
+          "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb"
+        },
+        {
+          "path": "tests/integration/model-migration-storage.test.ts",
+          "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+        },
+        {
+          "path": "tests/integration/model-migrations.test.ts",
+          "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+        },
+        {
+          "path": "tests/integration/model-pagination.test.ts",
+          "sha256": "0809f4e7711f3fea796edc1f87a82fc6ece9684c0c6483e4d506a233c4d0d0d2"
+        },
+        {
+          "path": "tests/integration/models.test.ts",
+          "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1"
+        },
+        {
+          "path": "tests/integration/relation-migration-api.test.ts",
+          "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db"
+        },
+        {
+          "path": "tests/integration/relation-participation-storage.test.ts",
+          "sha256": "17fcf6a093e501e0743d9ec5a6b50046b00b3cb59e7be86f802003699d27830e"
+        },
+        {
+          "path": "tests/integration/relation-storage.test.ts",
+          "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619"
+        },
+        {
+          "path": "tests/integration/relations.test.ts",
+          "sha256": "eef1490ff12eae279018027edfdbbbd9dee2bae739cf925e82f16fd81ecba760"
+        }
+      ]
+    },
+    "archive": {
+      "manifest": ".local/evidence/business-domains-api-attempt-1/manifest.json",
+      "manifest_sha256": "8463745756816ab58ac08cc586abeb542ee87d19bae1388761edbf636dcec9f2",
+      "artifacts": [
+        {
+          "source": ".local/evidence/business-domains-api-execution.json",
+          "archive": ".local/evidence/business-domains-api-attempt-1/business-domains-api-execution.json",
+          "sha256": "775f02fdd9bbf4d133233ca0558c09ca07a7d5dce078a392e1787a211a415a44"
+        },
+        {
+          "source": ".local/evidence/business-domains-security.log",
+          "archive": ".local/evidence/business-domains-api-attempt-1/business-domains-security.log",
+          "sha256": "fa440317f78897bf4af151c56439921c9c17cccc23f737bb7e1ba8843e42df5d"
+        },
+        {
+          "source": ".local/evidence/api-summary.json",
+          "archive": ".local/evidence/business-domains-api-attempt-1/api-summary.json",
+          "sha256": "9a1284b95123af0aebef76568436128fa23d4207ad61c2938f058eead48a581e"
+        },
+        {
+          "source": ".local/evidence/api-runs/20261116T021557Z-a260e883b6eb4877b0d7004d74c45452/output.tap",
+          "archive": ".local/evidence/business-domains-api-attempt-1/output.tap",
+          "sha256": "629fdbbeb2dfa1cf35e98a6d516e885c07a95ebd456bb0e42cac8337729e6c07"
+        },
+        {
+          "source": ".local/evidence/qualify-business-domains-api.py",
+          "archive": ".local/evidence/business-domains-api-attempt-1/qualify-business-domains-api.py",
+          "sha256": "4c19f40db470966de1c9ed885c8a21f746a3a554de52797f2c299d3f3b6e7335"
+        }
+      ],
+      "all_archived_digests_verified": true
+    },
+    "failed_static_test_coordinates": [
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 137,
+        "status": "failed",
+        "failure_locations": [
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 39,
+            "column": 44
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 60,
+            "column": 11
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 138,
+            "column": 79
+          }
+        ]
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 161,
+        "status": "failed",
+        "failure_locations": [
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 39,
+            "column": 44
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 60,
+            "column": 11
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 175,
+            "column": 52
+          }
+        ]
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 245,
+        "status": "failed",
+        "failure_locations": [
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 39,
+            "column": 44
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 60,
+            "column": 11
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 246,
+            "column": 80
+          }
+        ]
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 266,
+        "status": "failed",
+        "failure_locations": [
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 39,
+            "column": 44
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 60,
+            "column": 11
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 267,
+            "column": 74
+          }
+        ]
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 295,
+        "status": "failed",
+        "failure_locations": [
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 39,
+            "column": 44
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 60,
+            "column": 11
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 296,
+            "column": 77
+          }
+        ]
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 315,
+        "status": "failed",
+        "failure_locations": [
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 39,
+            "column": 44
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 60,
+            "column": 11
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 317,
+            "column": 20
+          }
+        ]
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 342,
+        "status": "failed",
+        "failure_locations": [
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 39,
+            "column": 44
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 60,
+            "column": 11
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 343,
+            "column": 76
+          }
+        ]
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 367,
+        "status": "failed",
+        "failure_locations": [
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 39,
+            "column": 44
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 60,
+            "column": 11
+          },
+          {
+            "file": "tests/integration/business-domains-api.test.ts",
+            "line": 368,
+            "column": 76
+          }
+        ]
+      }
+    ],
+    "failure_classification": {
+      "cases": 8,
+      "location": {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 60
+      },
+      "stage": "createDomain helper response assertion",
+      "expected_http_status": 201,
+      "actual_http_status": 422,
+      "public_problem_code": "DOMAIN_INVALID",
+      "scope": "All eight failures stop at domain creation. The aggregate run fails despite 145 passing tests; no retry success is inferred."
+    }
+  },
+  "diagnosis": {
+    "cause": "Fastify default AJV validation ran after strict preValidation, coerced valid numeric/boolean domain attribute values to strings because the generic attribute union tries its string branch first, and removed number/decimal definition constraints while trying other union branches.",
+    "seed_alignment": "The real seed called domainMutate without the mutating HTTP schema phase. Its success does not establish HTTP equivalence. The original test fixture conforms and was not changed.",
+    "storage_result": "SQL011 correctly rejects string data under a numeric field policy. Applied SQL001\u2013011 remain unchanged.",
+    "original_probe": {
+      "result": "FAIL",
+      "expected_failure": true,
+      "node": "v24.22.3",
+      "fastify": "5.12.8",
+      "strict_prevalidation_accepted": true,
+      "assertions_failed": [
+        "create",
+        "definition"
+      ],
+      "observed_mutations": [
+        "numeric 7 became string \"7\"",
+        "boolean true became string \"true\"",
+        "number integer/minimum constraints disappeared",
+        "decimal precision/scale constraints disappeared"
+      ],
+      "output": ".local/evidence/business-domain-http-validation/original-probe.json",
+      "sha256": "5a4b78bb9598702512e36b7c87d7a25f88d4e41d39787c52ba249d44b8cf4066"
+    },
+    "fixed_probe": {
+      "result": "PASS",
+      "node": "v24.22.3",
+      "fastify": "5.12.8",
+      "original_values_and_constraints_preserved": true,
+      "output": ".local/evidence/business-domain-http-validation/fixed-probe.json",
+      "sha256": "04ed9f879ee443d657348428b0911a58c3730090eaa730a14b9a4dcd2b94320b"
+    },
+    "probe_source": {
+      "path": ".local/evidence/business-domain-http-validation/production-schema-probe.mjs",
+      "sha256": "d6172626a26a3195a8d3ecf8920346e06fc9798a60a16cd8b7d6f9c3c627a4af"
+    },
+    "probe_limit": "Actual in-memory Fastify injection uses the production schemas. Original mode reproduces the original parser/strict-preValidation/default-compiler pipeline; fixed mode invokes the actual new child configuration. Neither mode executes authentication or PostgreSQL."
+  },
+  "correction": {
+    "description": "Install the existing TypeBox Value.Check validator as Fastify validator compiler only in the encapsulated domain child; share the unchanged strict content parser and registered schemas through installDomainHttpValidation.",
+    "unchanged_boundaries": [
+      "Public request/response schemas",
+      "Authentication and CSRF",
+      "Raw query, duplicate header and expected-version preValidation",
+      "Current service authorization and replay checks",
+      "Database policy and immutable migrations",
+      "Other Fastify route compilers",
+      "Synthetic integration fixture values"
+    ],
+    "sources": [
+      {
+        "path": "apps/api/src/business-domains.ts",
+        "sha256": "cc4342f40e277611a337039415c3a8f2968123c563785e6ac596dc13b5cd678d"
+      },
+      {
+        "path": "apps/api/src/business-domain-http.ts",
+        "sha256": "4d2f80dc0028363b2a295904d01d696eed2f66c23c71383113b9a15fdfad60b8"
+      },
+      {
+        "path": "tests/unit/business-domain-http-validation.test.ts",
+        "sha256": "85e450f74942ba0d7fcaab22d1619a1db9ba024181d227f2fb4d244993d675dd"
+      }
+    ],
+    "historical_production_sources": [
+      {
+        "path": "apps/api/src/business-domains.ts",
+        "sha256": "d2adf25d0383921009016194481d376943e52d892b5faf49983178ca59be8ab0"
+      },
+      {
+        "path": "apps/api/src/business-domain-http.ts",
+        "sha256": "2030248fd017421c1b911608d908f746fa8778d57f81dfa1ef60fce8fa285d16"
+      }
+    ],
+    "implementation_patch": {
+      "path": ".local/evidence/business-domain-http-validation/implementation.diff",
+      "sha256": "d1e380ad6edded4f3c11717628141c53d324f2160f198d7476d407024bfede56",
+      "scope": "Two production API files plus one new unit regression file; no dependency changes."
+    },
+    "review": {
+      "kind": "Independent agent source review",
+      "result": "No concrete blocker found",
+      "scope": "Child isolation, transport object compatibility, existing validation/error/auth paths and meaningful injection regressions; no runtime rerun."
+    }
+  },
+  "focused_verification": {
+    "evidence_manifest": {
+      "path": ".local/evidence/business-domain-http-validation/manifest.json",
+      "sha256": "ae83fbdad31e24efb1f8e44b38d1b00a386cf921cdc73048fd1ada8f1e172c38"
+    },
+    "started_at": "2026-11-16T02:30:30.189734+00:00",
+    "finished_at": "2026-11-16T02:30:32.781970+00:00",
+    "injection_regressions": {
+      "file": "tests/unit/business-domain-http-validation.test.ts",
+      "tests": 3,
+      "pass": 3,
+      "fail": 0,
+      "skipped": 0,
+      "command": "node --import tsx --test tests/unit/business-domain-http-validation.test.ts",
+      "coverage": [
+        "Nested numeric, boolean, exact decimal and numeric-text preservation through actual schema/serialization phases",
+        "All numeric/decimal definition constraints retained",
+        "200 astral Unicode name characters accepted and 201 rejected",
+        "Already-normalized params, query and header acceptance",
+        "Malformed/duplicate JSON, unknown fields, invalid params/query/headers and forbidden coercions rejected before handlers",
+        "Existing parent compiler behavior unchanged by child configuration"
+      ]
+    },
+    "full_units": {
+      "command": "node --import tsx --test tests/unit/*.test.ts",
+      "tests": 257,
+      "pass": 257,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 1951.09,
+      "log": ".local/evidence/business-domain-http-validation/full-unit.log",
+      "log_sha256": "defc51a612e32d2567dc93fd6e1e3d782a11252249752ee2a56d8afdca07c877"
+    },
+    "typecheck": {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "node": "v24.22.3",
+      "exit_status": 0,
+      "recorded_at": "2026-11-16T02:32:13.015680+00:00",
+      "log": ".local/evidence/business-domain-http-validation/typecheck.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "whitespace_check": {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  },
+  "corrected_runtime_qualification": {
+    "result": "NOT_CLAIMED",
+    "reason": "Root coordinates the rebuild, focused authenticated HTTP run and complete API rerun. This report remains historical failure plus local correction proof, even when later reports qualify execution."
+  },
+  "limitations": [
+    "Raw API TAP, cookies, session data, fixture payloads and stack messages remain private; public failure coordinates and fixed codes only.",
+    "The correction changes two files after the historical 6ff4afd API image. Neither earlier seed/upgrade passes nor injection tests qualify this corrected running service.",
+    "No browser, hosted CI, clean installation, production restore, complete capability or release pass is inferred."
+  ]
+}

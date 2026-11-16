@@ -189,7 +189,7 @@ export async function domainAsset(tx: Tx,p: Principal,id: string): Promise<Domai
   // SQL, so arbitrary legacy metadata, descriptions and ACL arrays stay there.
   const row = await domainQuery(tx, () => tx.selectFrom('assets').select(['id','version'])
     .where('tenant_id','=',p.tenantId).where('id','=',id)
-    .where(sql<boolean>`visibility='tenant' OR allowed_identities @> ${JSON.stringify([p.id])}::jsonb`).executeTakeFirst());
+    .where(sql<boolean>`(visibility='tenant' OR allowed_identities @> ${JSON.stringify([p.id])}::jsonb)`).executeTakeFirst());
   if (!row) throw new Problem(404,'ASSET_NOT_FOUND','The asset is unavailable.');
   return row;
 }

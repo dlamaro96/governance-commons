@@ -1,0 +1,1700 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-16T03:47:58.232185+00:00",
+  "scope": "Local synthetic business-domain UI: targeted attempt-6 execution plus AI-assisted inspection of all 26 exact archived rendered screenshots. This is a supplemental visual review, not a whole-programme, release or human accessibility approval.",
+  "result": "NO_OBSERVED_VISUAL_BLOCKER_IN_REVIEWED_TARGETED_VIEWPORTS",
+  "baseCommit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+  "workingTreeDirty": true,
+  "profile": "core",
+  "reviewer": "Codex /root/graph_copier_review (AI-assisted static screenshot and source review)",
+  "targetedExecution": {
+    "result": "PASS",
+    "command": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config",
+      ".github/playwright.ci.config.ts",
+      "--project",
+      "business-domains",
+      "--no-deps"
+    ],
+    "startedAt": "2026-11-16T03:38:10.032460+00:00",
+    "recordedAt": "2026-11-16T03:40:20.990612+00:00",
+    "exitCode": 0,
+    "stats": {
+      "startTime": "2026-11-16T03:38:10.733Z",
+      "duration": 129558.56999999999,
+      "expected": 3,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "unchanged": true
+  },
+  "executionConfiguration": {
+    "playwrightVersion": "1.65.1",
+    "nodeExecutableVersionFromRecordedPath": "24.22.3",
+    "project": "business-domains",
+    "workers": 1,
+    "repeatEach": 1,
+    "retries": 0,
+    "dependenciesRun": false
+  },
+  "actualJourneys": [
+    {
+      "title": "DOM: visual type authoring, placement survives a real rescan, rename, lifecycle, move and retirement preserve asset identity",
+      "project": "business-domains",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "DOM: compatible publication preserves mixed pins, complete migration handles retired domains and stale consent",
+      "project": "business-domains",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "title": "DOM: independent tenants and domain-read denial do not leak placements or trigger unauthorized convenience fetches",
+      "project": "business-domains",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0
+        }
+      ]
+    }
+  ],
+  "originalEvidence": {
+    "manifest": {
+      "path": ".local/evidence/business-domains-browser-attempt-6/manifest.json",
+      "sha256": "e1ca8f6d1b3aaf7cbf51c56c18ae12fb994effb85a937f2665564e94e46374fd"
+    },
+    "archiveEntriesVerified": 29,
+    "archiveHashMismatches": 0,
+    "runReport": {
+      "path": ".local/evidence/business-domains-browser-targeted-20261116T033809.json",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/000-business-domains-browser-targeted-20261116T033809.json",
+      "sha256": "e3ee9653cdfe84f709573cdc4598910b160759e46fe1ecb6049b3161b4da76d2"
+    },
+    "rawPlaywrightReport": {
+      "path": ".local/evidence/business-domains-browser-targeted-20261116T033809-results.json",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/001-business-domains-browser-targeted-20261116T033809-results.json",
+      "sha256": "8224e65f27c0eef9a7128ccdc9c7db421ac3902dabf0ccc49951563753cbc1ea"
+    },
+    "log": {
+      "path": ".local/evidence/business-domains-browser-targeted-20261116T033809.log",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/002-business-domains-browser-targeted-20261116T033809.log",
+      "sha256": "81ae87370060a2ac752fbc549a4a3701ba65fd2601c0f648bc5317bb845aa8e2"
+    },
+    "originalVisualReviewValue": "NOT_RUN",
+    "supplementPolicy": "The original execution report and archived PNGs remain unchanged. This separate report supplements its original NOT_RUN visualReview field."
+  },
+  "sourceBinding": {
+    "beforeEqualsAfter": true,
+    "currentWorktreeHashMatches": 169,
+    "currentWorktreeHashMismatches": 0,
+    "sourceCount": 169,
+    "servedAssetCount": 27,
+    "snapshot": {
+      "images": {
+        "api": "sha256:b56f057bc8adf068b8541ff2cdef2dfda014c41ee8f63a8f98415d045f4d04ef",
+        "workflow-worker": "sha256:b56f057bc8adf068b8541ff2cdef2dfda014c41ee8f63a8f98415d045f4d04ef",
+        "site-runner": "sha256:b56f057bc8adf068b8541ff2cdef2dfda014c41ee8f63a8f98415d045f4d04ef"
+      },
+      "sources": [
+        {
+          "path": ".github/playwright.ci.config.ts",
+          "sha256": "dd3fe590901b052434d7c213fb13a2cd79d010a8d5ee28e227bd9fc6d2adb6f0"
+        },
+        {
+          "path": "Dockerfile",
+          "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+        },
+        {
+          "path": "apps/api/src/asset-type-migrations.ts",
+          "sha256": "02f530c3715801c222f4f98d65807f06d0b58d0193b05c6c4e9f3f0b78a00c92"
+        },
+        {
+          "path": "apps/api/src/asset-types.ts",
+          "sha256": "847e1a9492b79d45de5143aa80ff6e9f3e04fd898d934a2b15b8a46637902ac3"
+        },
+        {
+          "path": "apps/api/src/audit-reader.ts",
+          "sha256": "27f13130b1902bc7c9aa9656a1eebc9e680c906b977ac9e002f74c57355aea8e"
+        },
+        {
+          "path": "apps/api/src/audit.ts",
+          "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+        },
+        {
+          "path": "apps/api/src/business-domain-http.ts",
+          "sha256": "4d2f80dc0028363b2a295904d01d696eed2f66c23c71383113b9a15fdfad60b8"
+        },
+        {
+          "path": "apps/api/src/business-domains.ts",
+          "sha256": "cc4342f40e277611a337039415c3a8f2968123c563785e6ac596dc13b5cd678d"
+        },
+        {
+          "path": "apps/api/src/index.ts",
+          "sha256": "b8704fcf2be3ba757d1e0a51c85c1de1fa1fe7dafbac346be577a49e8a5171e7"
+        },
+        {
+          "path": "apps/api/src/model-http.ts",
+          "sha256": "78d176145b8713c5aca2797fad741653698c6f2439817fbf069d4842afcc5938"
+        },
+        {
+          "path": "apps/api/src/model-migrations.ts",
+          "sha256": "3d116bf6bc64ac3723f5aadef63d414f7920c584824a114e8bb6c2708d7129ad"
+        },
+        {
+          "path": "apps/api/src/models.ts",
+          "sha256": "d6212e6723236030f672cd67ce2f2de43b1e8f67216309f1a16c18dd257a0387"
+        },
+        {
+          "path": "apps/api/src/relation-migrations.ts",
+          "sha256": "f30df94c238f409afd303ea9e9dbd55a863e19702dc244798861dfc2b9aaa224"
+        },
+        {
+          "path": "apps/api/src/relations.ts",
+          "sha256": "0124c9190396dbcddf14ebb3fae67128ebaa97865aba97dc6b46000654f2b974"
+        },
+        {
+          "path": "apps/api/src/repository.ts",
+          "sha256": "78b98548857cc519e174813e4a3501d0f70462c4d9a31bae4eec421b342445a5"
+        },
+        {
+          "path": "apps/api/src/search.ts",
+          "sha256": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d"
+        },
+        {
+          "path": "apps/api/src/security.ts",
+          "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "cf72e592f6444959c257e304abb0c455fd28d4e297a4e2601339ea38fd427b3c"
+        },
+        {
+          "path": "apps/web/src/App.tsx",
+          "sha256": "87bd014a78c0a830535c22ef5fa8e28792d99e71a5077f545001d0f9e21f7935"
+        },
+        {
+          "path": "apps/web/src/api.ts",
+          "sha256": "62ca221c1b8ba76a0d20f89699735129768890419a13f8f3a0338b213197bac9"
+        },
+        {
+          "path": "apps/web/src/assetTypes/DefinitionEditor.tsx",
+          "sha256": "9cc48f54c315abe5886704086e40323464432c0296bf0d38ed9ff0ffbbb32f0a"
+        },
+        {
+          "path": "apps/web/src/assetTypes/LifecyclePanel.tsx",
+          "sha256": "cc72e38f95de507c8def9f069deacc3bcfb607dc3a7f4e21b8d616be1a1bea07"
+        },
+        {
+          "path": "apps/web/src/assetTypes/TypeMigrationPolicyEditor.tsx",
+          "sha256": "a42f5da323a3a2587c39d1fb53939e359057aff4e48d5ecf8bf8b112e49d267a"
+        },
+        {
+          "path": "apps/web/src/assetTypes/contracts.ts",
+          "sha256": "30219291a4a91b6bc62bb460c839d274b14926d88e6bd1c8cbe7713a1bc7ed20"
+        },
+        {
+          "path": "apps/web/src/assetTypes/messages.ts",
+          "sha256": "2217173a00d9f9ac2548ba1dd3a983d032f0495fb03f7457cccd9b35c57a7516"
+        },
+        {
+          "path": "apps/web/src/assetTypes/migrationMessages.ts",
+          "sha256": "d876d2eeaa69153e4c44a7e5e56a74136e16cd5c4b131407a8cb472667e992d8"
+        },
+        {
+          "path": "apps/web/src/components.tsx",
+          "sha256": "217df6f66523f65accc3269304660c6ac90db9b84e4ce46937e3d546864f4187"
+        },
+        {
+          "path": "apps/web/src/domains/DefinitionEditor.tsx",
+          "sha256": "7a533c86a8fdd2cd37439db7c8feb35e268c4129bf45857edb17b20972933c08"
+        },
+        {
+          "path": "apps/web/src/domains/Placement.tsx",
+          "sha256": "19a666f394c26eaf2e1185fbbe0fda36165ad1cb8a55f75f7cae088443ac3545"
+        },
+        {
+          "path": "apps/web/src/domains/shared.tsx",
+          "sha256": "f7ea868973d6cd4b30a13067c4a7ecd3a2371501d030cfb8a6d9b0330e37a67f"
+        },
+        {
+          "path": "apps/web/src/i18n.tsx",
+          "sha256": "8c8fe7d2308ea40da703cac33bdaaed0905621e92ff5d6ff0a22722000d603ae"
+        },
+        {
+          "path": "apps/web/src/main.tsx",
+          "sha256": "666b70ce5765a222777738d2b1f9120c1d2c2914daa96de87574853fb65e475c"
+        },
+        {
+          "path": "apps/web/src/models/AssetAttributes.tsx",
+          "sha256": "553c2ef43d1463fd60a511b2570049e9eae8437e9f37e72b10802392fa50fbb5"
+        },
+        {
+          "path": "apps/web/src/models/MigrationPlanEditor.tsx",
+          "sha256": "3e4cb6d421007ec6be00ec64f3ed3574dadcb1072450fa642bd5eeaf278469df"
+        },
+        {
+          "path": "apps/web/src/models/ModelBrowser.tsx",
+          "sha256": "c1452c9b036daec1e0ff8d49f58a276a3dcd6917098fd300c2bf834657017830"
+        },
+        {
+          "path": "apps/web/src/models/ModelFeedback.tsx",
+          "sha256": "6aceb40423dda70a7b9337431e4840adc030da01f50a6a3f296207f26170affb"
+        },
+        {
+          "path": "apps/web/src/models/SchemaEditor.tsx",
+          "sha256": "c028b4d34d4ee84bc9250b718f2ed1aff5b7f881be29a0fe1cde7ff0da82ca06"
+        },
+        {
+          "path": "apps/web/src/models/ValueFields.tsx",
+          "sha256": "fd0980ca3945be050410da3040a5e7f5cabf55edf372eef4ee9ef1532741335d"
+        },
+        {
+          "path": "apps/web/src/models/VersionPicker.tsx",
+          "sha256": "95781b042c066ebe9e8cd1af841eeb80e6166146e588ac94280038b514756660"
+        },
+        {
+          "path": "apps/web/src/models/contracts.ts",
+          "sha256": "a0204509d5e69bf1974288399098b334564c7d4cc9b001a004d2aa804630f18e"
+        },
+        {
+          "path": "apps/web/src/models/messages.ts",
+          "sha256": "667433010425fa8a457de9edc47a797e828e819b748ef0566736a040cc0bcb5f"
+        },
+        {
+          "path": "apps/web/src/models/migrationMessages.ts",
+          "sha256": "808cb94cbeccb5617a8fddb59dce1f14d214f32b01e787ad0d7ca5b00eb072dc"
+        },
+        {
+          "path": "apps/web/src/models/planMessages.ts",
+          "sha256": "244916806562a9046bce7f4bb364990842f02975c5e17df14d4c57a8f207039f"
+        },
+        {
+          "path": "apps/web/src/navigation.tsx",
+          "sha256": "d15a75f39edb92ee626bd0682353466b433f5be7cb5104bc1b0a256a7d61913c"
+        },
+        {
+          "path": "apps/web/src/pages/Asset.tsx",
+          "sha256": "f98dfa3303ee169d5644d84443b564c453abf4aa8064015b6ad90701ed72b31e"
+        },
+        {
+          "path": "apps/web/src/pages/AssetTypeMigrations.tsx",
+          "sha256": "bb23a2ee373fcfceb30f47bb29878302552a0505390ed520b13c1ae98e7d4929"
+        },
+        {
+          "path": "apps/web/src/pages/AssetTypes.tsx",
+          "sha256": "bb034cd0d6532378553976e1e7fafbd1c5dc844fae69f9a38454d477d9c5046f"
+        },
+        {
+          "path": "apps/web/src/pages/Audit.tsx",
+          "sha256": "01484216a2ee1a0b7b96e8d9480e85f962165da4ebde4a461ac821af6dccee88"
+        },
+        {
+          "path": "apps/web/src/pages/BusinessDomains.tsx",
+          "sha256": "ad4d5fe990cd8c79f54a97c0ab79ba23508b5ddc249aec68d783fb0090db8da7"
+        },
+        {
+          "path": "apps/web/src/pages/Catalog.tsx",
+          "sha256": "259126c8daccae7b8eb692cf15a2cef8cd359ee12318c0940a2c39fea3f763ed"
+        },
+        {
+          "path": "apps/web/src/pages/DomainTypeMigrations.tsx",
+          "sha256": "d58254c82f7d5d1aeb11028ae57dbef7549dbcb196c9c9f1da43c6d21cd36339"
+        },
+        {
+          "path": "apps/web/src/pages/DomainTypes.tsx",
+          "sha256": "2fd131c66fe09d866f3a0d257696d136a6b5c27e71fc69ec21a8414fd7d25744"
+        },
+        {
+          "path": "apps/web/src/pages/Home.tsx",
+          "sha256": "bb08cf9f5b6d107de73ee3dee400ccd0392f4a826811ab6000a224669d1f0f05"
+        },
+        {
+          "path": "apps/web/src/pages/ModelMigrations.tsx",
+          "sha256": "cc23198090ba7896bb9d5c684dca255df57d4b75dad9fe8752810be95ac804aa"
+        },
+        {
+          "path": "apps/web/src/pages/Models.tsx",
+          "sha256": "03566d320f110cde8a87186ad373478b6773f9c13e5e30697352cb36f4e603c7"
+        },
+        {
+          "path": "apps/web/src/pages/Relation.tsx",
+          "sha256": "bac63985a62d0680cd25eab940dd09bb0fb8c0673d5ab9cca2d1b04561787c59"
+        },
+        {
+          "path": "apps/web/src/pages/RelationMigrations.tsx",
+          "sha256": "147e05ca2fcc0476cfee4f02dbf5a79f2d103642386fb1c7d8dc39d8adbdebb6"
+        },
+        {
+          "path": "apps/web/src/pages/RelationTypes.tsx",
+          "sha256": "972c4734ffcf09058c082558b257b202336b2a3aadaf03f58812463f59759288"
+        },
+        {
+          "path": "apps/web/src/pages/Sources.tsx",
+          "sha256": "5df5464c6baea87b932433b9fe4dbf9d52cdc0073369598cdc4feb4c40a82f42"
+        },
+        {
+          "path": "apps/web/src/relations/AssetRelations.tsx",
+          "sha256": "7b678d89693c30c9a5107da05233e55d93962151238ba174270954462982cfe3"
+        },
+        {
+          "path": "apps/web/src/relations/MigrationPlanEditor.tsx",
+          "sha256": "46b938bcf4ae8ed8f392cb30662262a5313ff7cf7f8ee3bcc2128614520e5bd9"
+        },
+        {
+          "path": "apps/web/src/relations/Participation.tsx",
+          "sha256": "0636d2bf61a4b0110b2c0849400be5f51ee3b3fccd8df86e20a34fa3f98a28df"
+        },
+        {
+          "path": "apps/web/src/relations/RelationForm.tsx",
+          "sha256": "c23c6534f1d3be1fe327dcbf0cadf79659e6d76a4df5051f79a0c097f0e5e25f"
+        },
+        {
+          "path": "apps/web/src/relations/RelationGraph.tsx",
+          "sha256": "2f6c1bba61718d08c9df7eaa2f3022de847fdecdcc8c87c9e0052a01517ecd13"
+        },
+        {
+          "path": "apps/web/src/relations/TypeEditor.tsx",
+          "sha256": "b993657b02a54c4b057238a8ea6f361acded6c46c7f8b11a1f65ca97a7f9ccdf"
+        },
+        {
+          "path": "apps/web/src/relations/messages.ts",
+          "sha256": "0bc37f4eef26c574d531dcad5fafd9fd65f8802e60c1ad7dc56329eb2c5305dc"
+        },
+        {
+          "path": "apps/web/src/relations/shared.tsx",
+          "sha256": "d94f857ea6b2eb44ea370e4348696a914d7a9099541524b0d9a5867391cba55f"
+        },
+        {
+          "path": "apps/web/src/session.tsx",
+          "sha256": "8194132b7f7b979ea515bf8eab8eb9b00c1f4b7699f16740352cbf84a1165cea"
+        },
+        {
+          "path": "apps/web/src/styles.css",
+          "sha256": "21f5044d2946cb2a0982c16de019625fd8aff0d895a2033bc013b46409d94c53"
+        },
+        {
+          "path": "apps/web/src/types.ts",
+          "sha256": "2c121eba06c772d494ae715a03ea8a473ed4f23ffea6748b3fd361b4804e14c7"
+        },
+        {
+          "path": "apps/web/src/vite-env.d.ts",
+          "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+        },
+        {
+          "path": "apps/web/tsconfig.json",
+          "sha256": "76b2915cb9623d54b4ce6366ac36ce8302a388e67955382075f3b3cfe8baee49"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "be49a3fcab78673178e11c775172a65ab07bb80cf95c50f093189929b08b1044"
+        },
+        {
+          "path": "deploy/compose/compose.yaml",
+          "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+        },
+        {
+          "path": "package.json",
+          "sha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7"
+        },
+        {
+          "path": "packages/authz/src/index.ts",
+          "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+        },
+        {
+          "path": "packages/contracts/src/index.ts",
+          "sha256": "8d23a38cad9af4c69471b6369d1106382e34518f1b13a00be6590ee6e28bb453"
+        },
+        {
+          "path": "packages/db/migrations/001_foundation.sql",
+          "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+        },
+        {
+          "path": "packages/db/migrations/002_audit_envelopes.sql",
+          "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+        },
+        {
+          "path": "packages/db/migrations/003_governance_models.sql",
+          "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+        },
+        {
+          "path": "packages/db/migrations/004_model_migrations.sql",
+          "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+        },
+        {
+          "path": "packages/db/migrations/005_model_migration_integrity.sql",
+          "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+        },
+        {
+          "path": "packages/db/migrations/006_inherited_asset_types.sql",
+          "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+        },
+        {
+          "path": "packages/db/migrations/007_asset_type_migrations.sql",
+          "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+        },
+        {
+          "path": "packages/db/migrations/008_constrained_relations.sql",
+          "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+        },
+        {
+          "path": "packages/db/migrations/009_relation_participation.sql",
+          "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+        },
+        {
+          "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+          "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+        },
+        {
+          "path": "packages/db/migrations/011_business_domains.sql",
+          "sha256": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+        },
+        {
+          "path": "packages/db/src/migrate.ts",
+          "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+        },
+        {
+          "path": "packages/db/src/seed-business-domains.ts",
+          "sha256": "382a9968582d3dfc54b6f60c1a3c1eefaac564d2c6db62469bc301ab753ffe7b"
+        },
+        {
+          "path": "packages/db/src/seed.ts",
+          "sha256": "6e0e2d71e64f60a825231587bca88ca03f59398c2f77ab2173d68229433c9a9a"
+        },
+        {
+          "path": "packages/domain/src/asset-type-migration-contracts.ts",
+          "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+        },
+        {
+          "path": "packages/domain/src/asset-type-migration-service.ts",
+          "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+        },
+        {
+          "path": "packages/domain/src/asset-type-migration.ts",
+          "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+        },
+        {
+          "path": "packages/domain/src/asset-type-policy.ts",
+          "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+        },
+        {
+          "path": "packages/domain/src/asset-type-service.ts",
+          "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+        },
+        {
+          "path": "packages/domain/src/asset-type.ts",
+          "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+        },
+        {
+          "path": "packages/domain/src/business-domain-contracts.ts",
+          "sha256": "b43ecced92ec6dd20392afc06a4f8e466819d98148e2b4bbce39ed91ec56edf1"
+        },
+        {
+          "path": "packages/domain/src/business-domain-migration.ts",
+          "sha256": "ca5396dc13234e6aa5be9f4087c3cad5bcbea2f05bcd88bb8873f70881972d99"
+        },
+        {
+          "path": "packages/domain/src/business-domain-preview.ts",
+          "sha256": "cc05d1567dd9d84b67245b9fa1b1d6bbd451c2ae8aa2f9cf38b54e44a2147478"
+        },
+        {
+          "path": "packages/domain/src/business-domain-read.ts",
+          "sha256": "29ef7892ca3c2e581679b269558af238246a77044d0153c61e47d8456e279b14"
+        },
+        {
+          "path": "packages/domain/src/business-domain-service-contracts.ts",
+          "sha256": "ba82f0ca537c67c96614dc97c7b3f3f6c1a201304713c2bae2c40a57e83832b6"
+        },
+        {
+          "path": "packages/domain/src/business-domain-service.ts",
+          "sha256": "5215ce759fbcf1f85327893476f213d009a0caa5f82acc4aa1df9723769a5cb4"
+        },
+        {
+          "path": "packages/domain/src/business-domain-store.ts",
+          "sha256": "ddfd6cd5c9846818c81093062132c27800717e10efd110a76a7cb54a1300d974"
+        },
+        {
+          "path": "packages/domain/src/business-domain-type.ts",
+          "sha256": "19c4a82916ba81f5d236c3e46e1edad94e7b747f68643556a6f98af53677885e"
+        },
+        {
+          "path": "packages/domain/src/business-domain-write.ts",
+          "sha256": "e6225dd90ca9ccadaa01d54c709ec4b32a182d52841e7208c4b7430b7671b067"
+        },
+        {
+          "path": "packages/domain/src/cursor.ts",
+          "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+        },
+        {
+          "path": "packages/domain/src/graph-asset-persistence.ts",
+          "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+        },
+        {
+          "path": "packages/domain/src/graph-asset-preparation.ts",
+          "sha256": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49"
+        },
+        {
+          "path": "packages/domain/src/model-migration-service.ts",
+          "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+        },
+        {
+          "path": "packages/domain/src/model-migration.ts",
+          "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+        },
+        {
+          "path": "packages/domain/src/model-service.ts",
+          "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+        },
+        {
+          "path": "packages/domain/src/model.ts",
+          "sha256": "ebf90e8d24a0cf969d0ebe3c915d5b5113574d354a6e5963d5bc9cd285bc79ad"
+        },
+        {
+          "path": "packages/domain/src/relation-contracts.ts",
+          "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+        },
+        {
+          "path": "packages/domain/src/relation-endpoint-guard.ts",
+          "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+        },
+        {
+          "path": "packages/domain/src/relation-graph.ts",
+          "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-contracts.ts",
+          "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-read.ts",
+          "sha256": "bf5dc16ff794343dbc68d2992644e840e07846f791f6c119a8a168bc53142ff7"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-service.ts",
+          "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+        },
+        {
+          "path": "packages/domain/src/relation-migration-store.ts",
+          "sha256": "7fc1ffadfc3465f6c329f334d1910fb60093fafa3d1dc770341cb75d77988287"
+        },
+        {
+          "path": "packages/domain/src/relation-migration.ts",
+          "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+        },
+        {
+          "path": "packages/domain/src/relation-participation-read.ts",
+          "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+        },
+        {
+          "path": "packages/domain/src/relation-participation.ts",
+          "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+        },
+        {
+          "path": "packages/domain/src/relation-service.ts",
+          "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+        },
+        {
+          "path": "packages/domain/src/relation-store.ts",
+          "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+        },
+        {
+          "path": "packages/domain/src/relation.ts",
+          "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+        },
+        {
+          "path": "packages/ui/src/index.tsx",
+          "sha256": "9fdb615913bb9d6055b02bf38e7c670fd91ce190b51436dfc9a2d5df8cb584b3"
+        },
+        {
+          "path": "packages/ui/src/tokens.css",
+          "sha256": "b21dd67cae74c186f6d4b1a6bd150ec626b1a3f183d5b5c050c443029aa1d236"
+        },
+        {
+          "path": "playwright.config.ts",
+          "sha256": "f671166e0edf378678ffdde7a643c2cfb4e3e8a5092517e94c38620acf3ffe45"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+        },
+        {
+          "path": "policies/api_evidence.py",
+          "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2"
+        },
+        {
+          "path": "scripts/test-security.sh",
+          "sha256": "7fdb26f6aa1f66d9cc202a6e1551d77c9f88294d11f0fb99293bd6cd9fa8d421"
+        },
+        {
+          "path": "tests/e2e/asset-type-migrations.spec.ts",
+          "sha256": "b6b0fa5dd017c13595db91ee785a9d44f6c59958d79d48e582cd8cbaaf4b4329"
+        },
+        {
+          "path": "tests/e2e/asset-types.spec.ts",
+          "sha256": "8d6e7f8ccedb3774557f71470e52ec7bea8ee60e2b86d1ee414bc17b5ec5ac04"
+        },
+        {
+          "path": "tests/e2e/business-domains.spec.ts",
+          "sha256": "8d6556f30510ba42eb2d7a537004060fbbf0b9f2714f3f09b8c26d31d25005f6"
+        },
+        {
+          "path": "tests/e2e/model-migrations.spec.ts",
+          "sha256": "6da5e76511b535bdef770fdad27d72861cf299a1c4a91c3e6f64d218572b33e8"
+        },
+        {
+          "path": "tests/e2e/models.spec.ts",
+          "sha256": "d25dc12de6cbff6642169b15ca8797d2275a5eab165242b0c88a09b959d73f3f"
+        },
+        {
+          "path": "tests/e2e/relation-migrations.spec.ts",
+          "sha256": "1c74ef81ca8f686341f112c5452c0cab3720235d54fcc66df574b6fda8c07f9b"
+        },
+        {
+          "path": "tests/e2e/relations.spec.ts",
+          "sha256": "70cd56fe9ad19943ed35bf6735bb992a7b06a47a92d72a1c926a1f91d155a9f5"
+        },
+        {
+          "path": "tests/e2e/ui-accessibility.spec.ts",
+          "sha256": "a55a5c6fdc2506d70c2840e75486d235a8c7440964376a2fa25ee88a7c65e504"
+        },
+        {
+          "path": "tests/e2e/vertical-slice.spec.ts",
+          "sha256": "67a01a7a4951c991231b59ce20bf3f9cacd6c11a1d4ee5ec86b88048ac931b18"
+        },
+        {
+          "path": "tests/fixtures/business-domains-browser.ts",
+          "sha256": "4faeaf6475467139d8fa085a76a21e15c21c7614edbf1426ab9e10a1793c001f"
+        },
+        {
+          "path": "tests/fixtures/business-domains.ts",
+          "sha256": "aea478f961266392d87eabdd4a3bd6b3b466ef998e860478779cb9bfbeacfa10"
+        },
+        {
+          "path": "tests/fixtures/http-budget.ts",
+          "sha256": "d0d772ca40196ef90b7f570bcf19123c8f53543ed664e716139e30a4f4682e95"
+        },
+        {
+          "path": "tests/fixtures/manual-scan.ts",
+          "sha256": "23b28b2cbf33bcc6c779ed16e940287d3918d9e2153deace925021edfb726979"
+        },
+        {
+          "path": "tests/fixtures/relation-migration-api.ts",
+          "sha256": "e68e89aff887339a035364f124f1ae8888d740b92cf55ff8466c687324a2e65f"
+        },
+        {
+          "path": "tests/fixtures/relation-participation.ts",
+          "sha256": "209132979d10001c59e464c5b9a43e63ea82135962a46bfe0b6329a1b243f6e8"
+        },
+        {
+          "path": "tests/integration/asset-type-api-limits.test.ts",
+          "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4"
+        },
+        {
+          "path": "tests/integration/asset-type-migration-storage.test.ts",
+          "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+        },
+        {
+          "path": "tests/integration/asset-type-migrations.test.ts",
+          "sha256": "c5ad40c323b3405243e95c9b33b62d81e86ab596bca361779219c489fb7aa407"
+        },
+        {
+          "path": "tests/integration/asset-type-storage.test.ts",
+          "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+        },
+        {
+          "path": "tests/integration/asset-types.test.ts",
+          "sha256": "08c5b7fd9aebea55d498b97b4c524e6e83eefb4c7e604b519996ec1932a2145e"
+        },
+        {
+          "path": "tests/integration/audit-integrity.test.ts",
+          "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad"
+        },
+        {
+          "path": "tests/integration/business-domain-asset-scope.test.ts",
+          "sha256": "d93449ab4014ee5feb45ab1fc30ce28c061675868139bf7595f79b815f5939a1"
+        },
+        {
+          "path": "tests/integration/business-domains-api.test.ts",
+          "sha256": "0f7d24e277245488d5f183aca24c2be968851f81be90bcf498a6f476e2a7831d"
+        },
+        {
+          "path": "tests/integration/business-domains-storage.test.ts",
+          "sha256": "1e1b0712c63bf957e33328285a42baad55adc07f1047cc53e7cdc608e8aff8f0"
+        },
+        {
+          "path": "tests/integration/foundation.test.ts",
+          "sha256": "eb1159e5c2f3004c3d90a82b2361c2665efff90d20b3eb18f8e58a7929ebd579"
+        },
+        {
+          "path": "tests/integration/model-api.test.ts",
+          "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7"
+        },
+        {
+          "path": "tests/integration/model-migration-api.test.ts",
+          "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb"
+        },
+        {
+          "path": "tests/integration/model-migration-storage.test.ts",
+          "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+        },
+        {
+          "path": "tests/integration/model-migrations.test.ts",
+          "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+        },
+        {
+          "path": "tests/integration/model-pagination.test.ts",
+          "sha256": "0809f4e7711f3fea796edc1f87a82fc6ece9684c0c6483e4d506a233c4d0d0d2"
+        },
+        {
+          "path": "tests/integration/models.test.ts",
+          "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1"
+        },
+        {
+          "path": "tests/integration/relation-migration-api.test.ts",
+          "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db"
+        },
+        {
+          "path": "tests/integration/relation-participation-storage.test.ts",
+          "sha256": "17fcf6a093e501e0743d9ec5a6b50046b00b3cb59e7be86f802003699d27830e"
+        },
+        {
+          "path": "tests/integration/relation-storage.test.ts",
+          "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619"
+        },
+        {
+          "path": "tests/integration/relations.test.ts",
+          "sha256": "eef1490ff12eae279018027edfdbbbd9dee2bae739cf925e82f16fd81ecba760"
+        },
+        {
+          "path": "tsconfig.json",
+          "sha256": "a123b4fe43b17517d14b6b839781d3e3f1745ea6c368f24d9f8aaccb602382b3"
+        }
+      ],
+      "servedAssets": [
+        {
+          "url": "/assets/AssetRelations-Ct5t0QzW.js",
+          "sha256": "228592a745c61a0f90cb6d09dac0c54bbd67e7bc0b3720598bc4d7990a2c9244",
+          "bytes": 10225
+        },
+        {
+          "url": "/assets/AssetTypeMigrations-DLD6B4z7.js",
+          "sha256": "31d3aaf50f866235f8abf35fda000a8cff209bfdaba96add897a3e884aec60cd",
+          "bytes": 21006
+        },
+        {
+          "url": "/assets/AssetTypes-CHlQnU9p.js",
+          "sha256": "a394acc33d038f50e9579e21b1af53ea0880379b7587932f6a7c816266280e26",
+          "bytes": 16284
+        },
+        {
+          "url": "/assets/BusinessDomains-DgPFnldf.js",
+          "sha256": "dec3760b10cb39ad250ae2e63c5d92de1d7b2afc1c04ee6f64b79aca25d56c3b",
+          "bytes": 21377
+        },
+        {
+          "url": "/assets/DefinitionEditor-qvniM-SV.js",
+          "sha256": "e5c4a536a1da5ea706f78a82053af7d3a2a0a1be95d69be4879d2da6bc18ad2e",
+          "bytes": 8811
+        },
+        {
+          "url": "/assets/DomainTypeMigrations-Dv9sjK4J.js",
+          "sha256": "f9a7dd1ec4c1360fc54113658f9ea77f2fec376a5f1d413426b3020c1034f1bd",
+          "bytes": 14420
+        },
+        {
+          "url": "/assets/DomainTypes-NSOUKGU7.js",
+          "sha256": "5375854a3e677fcf57a21204a2cf23126cbf9ca134f5d8596f5be129a3390f61",
+          "bytes": 31339
+        },
+        {
+          "url": "/assets/DownloadSimple.es-dqo8kz0y.js",
+          "sha256": "5a53a3cb26113caaaf4d31b5724aa3086874ab569ec0498d7efa3ee0c48c4c23",
+          "bytes": 2080
+        },
+        {
+          "url": "/assets/LifecyclePanel-tHGjGNJ4.js",
+          "sha256": "16cfc9268f68b46a34e4eaba41e09e88cf9a3bbcf02aa24a7cc4624b2d50b885",
+          "bytes": 3937
+        },
+        {
+          "url": "/assets/MigrationPlanEditor-CCbvdezm.js",
+          "sha256": "7b40c45c9d7e093a4e7fc4d2d91ad4cb0cd3c0bccf8c9169ba9a474034e109a7",
+          "bytes": 14617
+        },
+        {
+          "url": "/assets/ModelFeedback-Bn82x-zW.js",
+          "sha256": "c2ed27d24c4cd1828a07d4fad06b5d26895d20e1482afb692c82113ac974627f",
+          "bytes": 241229
+        },
+        {
+          "url": "/assets/ModelMigrations-cymyjHet.js",
+          "sha256": "11a5dfa1291bdf9ced3437fab13fba37594d0e562b12598fccd49db5f9b7da11",
+          "bytes": 18750
+        },
+        {
+          "url": "/assets/Models-DT3s8Fu1.js",
+          "sha256": "6e0d6d675f566ace1913b26c5cd3d3aa0622f75fc7199e78370d72208ceb5d5c",
+          "bytes": 14168
+        },
+        {
+          "url": "/assets/Placement-DoBdJYM0.js",
+          "sha256": "73648b3a5a3b9a2a9ba53110b40a8c6c231ce58783080386e715fe350d6d9a8f",
+          "bytes": 5834
+        },
+        {
+          "url": "/assets/Relation-BK84WE_f.js",
+          "sha256": "a3b5e567280f57af620260e14520924d41f227dde6618df1b2406769081abafe",
+          "bytes": 9685
+        },
+        {
+          "url": "/assets/RelationForm-CdH2btaF.js",
+          "sha256": "94775504b81891f24301bef84002d52ee396777d2c683e5927949d4134c16d24",
+          "bytes": 9660
+        },
+        {
+          "url": "/assets/RelationGraph-BCwtsKop.js",
+          "sha256": "32d67293230f6c5a6a665eaecdcdd9dc58c43ea10b6c10b0e6bfb7056f590011",
+          "bytes": 189407
+        },
+        {
+          "url": "/assets/RelationGraph-DLioOiRN.css",
+          "sha256": "b0cb7bd6fec5951c9c8f5808821438206604b1629a912c96009ac427f38e7d69",
+          "bytes": 15413
+        },
+        {
+          "url": "/assets/RelationMigrations-DdInLMyE.js",
+          "sha256": "63fb7675a70ac974ce1d0efee33bdb1dd6a5f7ad258fe0cef5a03998ce63ef82",
+          "bytes": 53102
+        },
+        {
+          "url": "/assets/RelationTypes-G1CFCw3Z.js",
+          "sha256": "341f1a29faa62b262012aa696697962afe484f08b2aed161b37b22cafba80ded",
+          "bytes": 14558
+        },
+        {
+          "url": "/assets/SchemaEditor-Dis8WHES.js",
+          "sha256": "dce7a767f0481244ea39ad7bf493669de6e2ba0f2e93e794e74010a5f7fea1f6",
+          "bytes": 5403
+        },
+        {
+          "url": "/assets/TypeEditor-BUARsaZj.js",
+          "sha256": "bb2eccc639e825630596deb153b0b2f86e0f496fba26030fb3311651a0f197ec",
+          "bytes": 9115
+        },
+        {
+          "url": "/assets/TypeMigrationPolicyEditor-DEc0H7PT.js",
+          "sha256": "0f64eecd26f807954b7aa51a0d8dca5260568250eca40698ccd3a44a702bc7e9",
+          "bytes": 7385
+        },
+        {
+          "url": "/assets/index--PrVpNUB.css",
+          "sha256": "c692b68feb4498394eb216a9a898908e9ab6ff7cb974c421291062c6a25be591",
+          "bytes": 52539
+        },
+        {
+          "url": "/assets/index-p9OSyMNC.js",
+          "sha256": "40833937cf5aab0b985d17c91e7de029ae9e380c2619180fd46c3f201ec03318",
+          "bytes": 323876
+        },
+        {
+          "url": "/assets/shared-BGw_DLuj.js",
+          "sha256": "7406a877858372af89af7ca3a047d7487ea3d19d8051fa358e03c30541cfbb73",
+          "bytes": 6028
+        },
+        {
+          "url": "/assets/shared-C7DHAsw6.js",
+          "sha256": "864d91dc7f602e60f5a8f74eb1694098d4e42b7a45c54d3e90df5a4a03a2fdf2",
+          "bytes": 10737
+        }
+      ]
+    },
+    "boundaryLimit": "The executed dirty worktree is identified by exact recorded image/source/served-asset hashes; the base commit alone does not identify these corrections. Served-asset hashes are taken from the original before/after runtime report; this static review did not issue new HTTP requests."
+  },
+  "captureMethod": {
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 960
+      },
+      {
+        "width": 390,
+        "height": 960
+      }
+    ],
+    "fullPage": false,
+    "testSource": {
+      "path": "tests/e2e/business-domains.spec.ts",
+      "sha256": "8d6556f30510ba42eb2d7a537004060fbbf0b9f2714f3f09b8c26d31d25005f6"
+    },
+    "unchangedAcrossTargetedAttempts": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "checksBeforeEachCapture": [
+      "No finite-duration running page animations",
+      "document.documentElement.scrollWidth <= innerWidth + 1",
+      "axe WCAG 2 A/AA, 2.1 AA and 2.2 AA tagged checks return no violations"
+    ],
+    "basis": "Read the actual capture helper and verified its unchanged source hash against all five recorded attempts. The three actual passed journeys reached all 26 captures; no retry was used.",
+    "screenshotsReviewed": 26
+  },
+  "screenshots": [
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-hierarchy-preview-en-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/003-m2-business-domain-hierarchy-preview-en-1440.png",
+      "sha256": "6bf0b1f4fbd2c1debb4ba3c6eb49850baf62a8a9ecc2e01e9542e3d99adeb70c",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-hierarchy-preview-en-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/004-m2-business-domain-hierarchy-preview-en-390.png",
+      "sha256": "cb1aaa4e3ecbddbc2f0ba590a7e55ade3a23d39c9d801363353ed8020aef3d4a",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-history-ar-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/005-m2-business-domain-history-ar-1440.png",
+      "sha256": "0e223b58e0497594b4f9fc0b4aa7ed7cfa62abaac78c79b28beb08dcdad3ec3f",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-history-ar-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/006-m2-business-domain-history-ar-390.png",
+      "sha256": "c4a81a5db5147007eafb4ad12b65b7e62b4c4d4bb4aadc0f233d4d6b2dd9cacd",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-history-ar-dark-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/007-m2-business-domain-history-ar-dark-1440.png",
+      "sha256": "82a2916dd745bbce0687e25b5810985a4325ca1766e4c32f606c76b61c787ce6",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-history-ar-dark-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/008-m2-business-domain-history-ar-dark-390.png",
+      "sha256": "3659bf7f0ed198a57266f839c6699c61b17f9491f0241bb8a496982bc5609a69",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-preview-ar-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/009-m2-business-domain-migration-preview-ar-1440.png",
+      "sha256": "3c92c5fb1795ee4f1b5ff1716424c9c068c65737e147e8daea1a061f2e0322a0",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-preview-ar-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/010-m2-business-domain-migration-preview-ar-390.png",
+      "sha256": "3616d5e48e638b1d57b5c311415cff71ea25f6a9d4164016ba2edc6c43f1c697",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-preview-en-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/011-m2-business-domain-migration-preview-en-1440.png",
+      "sha256": "05b1fb31dfb01b59d3cdd3c067489d67bde72d007e09b49ded7a5a6d54b4759f",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-preview-en-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/012-m2-business-domain-migration-preview-en-390.png",
+      "sha256": "ca59bc9a6fc72fdda2a7ab3f3f088073edcf44d43ff83e26c1e24d5c080430d3",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-ar-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/013-m2-business-domain-migration-receipt-ar-1440.png",
+      "sha256": "00bd5a0f6f5e127d62817508a21e067d3b6f8fa136020278a3f7a8662dc526b0",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-ar-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/014-m2-business-domain-migration-receipt-ar-390.png",
+      "sha256": "a96bc153610558797fbf58e1bf263103a47a35657ca7332fa42809af3cec15eb",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-en-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/015-m2-business-domain-migration-receipt-en-1440.png",
+      "sha256": "20aa54e37ca339b192771f80fb73c505fa77480eed5bf397971a9d9936f6a1ed",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-en-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/016-m2-business-domain-migration-receipt-en-390.png",
+      "sha256": "3f6c19edfaf28402a33c5a3c71399b0707b9e55644134586788278a415304168",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-permission-denial-en-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/017-m2-business-domain-permission-denial-en-1440.png",
+      "sha256": "fc6563e674bb54183ef53d791636d19dbd0bff771dd7056cffd12d8a4cee3504",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-permission-denial-en-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/018-m2-business-domain-permission-denial-en-390.png",
+      "sha256": "790d575b4862b18f01c0363ae5c5df9ec83449c6495cf26339f00edf4eb75b96",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-placement-history-en-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/019-m2-business-domain-placement-history-en-1440.png",
+      "sha256": "6d989dc8d6c1c4565efb31f6602938e7e1fd509c7365b076304f45dc9ecda36f",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-placement-history-en-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/020-m2-business-domain-placement-history-en-390.png",
+      "sha256": "16ac8e708baff141d22da08995d7379eee6239a21a204876e5ea3ba8d94e4cbe",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-retirement-blocked-en-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/021-m2-business-domain-retirement-blocked-en-1440.png",
+      "sha256": "a29a68ba773989275a0efe27deb7c4dc6ca2c9be807b860465c4905bbac988a7",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-retirement-blocked-en-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/022-m2-business-domain-retirement-blocked-en-390.png",
+      "sha256": "d033e821bdf15455e9e34621533857dd8818d1dd8b25dc0fdfc6e4ebb9510c96",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-stale-migration-en-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/023-m2-business-domain-stale-migration-en-1440.png",
+      "sha256": "bd07d28bb4759d981827ef0152eaaacbb320b92b2b1985ee90451261e38201ed",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-stale-migration-en-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/024-m2-business-domain-stale-migration-en-390.png",
+      "sha256": "1f4e937ec25496ab0eb96c44eae6ed323c6a894d6ab47aebea0dbe8724e968cf",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-tenant-denial-en-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/025-m2-business-domain-tenant-denial-en-1440.png",
+      "sha256": "011908eb3dd7124b06446e442d10f600cbf20a0f3069c05d02fc3d0850c3700f",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-tenant-denial-en-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/026-m2-business-domain-tenant-denial-en-390.png",
+      "sha256": "29403b3d412369832c4ad97705aba1254f8a423c80dd57fefd28fcd258fd55aa",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-type-editor-en-1440.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/027-m2-business-domain-type-editor-en-1440.png",
+      "sha256": "bc0748b9f8019d2870017caab93fcab6f981069af8d6d8a06629310e28bd99f5",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-type-editor-en-390.png",
+      "archive": ".local/evidence/business-domains-browser-attempt-6/028-m2-business-domain-type-editor-en-390.png",
+      "sha256": "00b1874424539a2843b45e430a9ca841f2fe627dfcc5d42bddf6649ad5ac0be9",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of the archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    }
+  ],
+  "observations": [
+    {
+      "screens": "hierarchy-preview-en, 1440 and 390",
+      "observation": "The complete affected-subtree notice, separate domain and asset tables, consent checkbox, inactive confirmation action and wrapped digest remain readable. The narrow viewport shows the initial portion of bounded tables; later columns require horizontal scrolling."
+    },
+    {
+      "screens": "history-ar and history-ar-dark, 1440 and 390",
+      "observation": "The RTL shell, hierarchy links, title, status, history tabs and restored revision are legible in both themes. Long synthetic names wrap on the phone viewport. The selected tab has a visible underline; dark-mode buttons use the surrounding theme rather than a contrasting native fill."
+    },
+    {
+      "screens": "migration-preview-en and migration-preview-ar, 1440 and 390",
+      "observation": "The complete two-domain cohort, ready-for-review notice, current/projected tuple disclosures, consent and execute controls have a clear visual hierarchy. RTL reverses the layout and table start edge; hashes wrap within the phone card. Some table columns are outside the static narrow viewport."
+    },
+    {
+      "screens": "migration-receipt-en and migration-receipt-ar, 1440 and 390",
+      "observation": "The committed-evidence notice, export control, actor, timestamp, digest and outcome table are readable. Receipt metadata wraps within the phone viewport. Desktop shows both outcome versions; phone images show only the initial table segment and top rows."
+    },
+    {
+      "screens": "permission-denial-en and tenant-denial-en, 1440 and 390",
+      "observation": "Permission denial uses a generic message without domain contents. Tenant denial shows the generic unavailable-resource message, error code, wrapped correlation reference and refresh action without exposing the requested resource."
+    },
+    {
+      "screens": "placement-history-en, 1440 and 390",
+      "observation": "The unassigned current placement and independent placement version are clear, with immutable placement history, reason and disclosure controls below. The phone capture includes the current revision and start of the prior revision; further history remains below the viewport."
+    },
+    {
+      "screens": "retirement-blocked-en, 1440 and 390",
+      "observation": "The blocked-operation notice explains that placements and active children must be removed. Preview tables remain contained, and consent/confirmation are inactive. Phone content fits the page width."
+    },
+    {
+      "screens": "stale-migration-en, 1440 and 390",
+      "observation": "The retained draft/reason, stale-scope problem notice, wrapped reference and refresh/preview controls remain visible and readable. JSON action buttons wrap their text within the phone viewport."
+    },
+    {
+      "screens": "type-editor-en, 1440 and 390",
+      "observation": "The visual/JSON editor tabs, type key/label, exact parent pin and nested parent picker fit the viewport. The phone search input displays the visible portion of a longer editable value within its own control; no page-wide overflow is visible."
+    }
+  ],
+  "sourceReview": [
+    {
+      "path": "apps/web/src/domains/DefinitionEditor.tsx",
+      "sha256": "7a533c86a8fdd2cd37439db7c8feb35e268c4129bf45857edb17b20972933c08",
+      "review": "Read-only source review; no concrete blocker found in the described correction.",
+      "scope": "Unconditional useId binds the JSON textarea accessible name to its visible label span, preserving controlled editing, strict validation, imports and exports."
+    },
+    {
+      "path": "apps/web/src/domains/shared.tsx",
+      "sha256": "f7ea868973d6cd4b30a13067c4a7ecd3a2371501d030cfb8a6d9b0330e37a67f",
+      "review": "Read-only source review; no concrete blocker found in the described correction.",
+      "scope": "Unconditional useId binds the reason textarea to the visible label without incorporating textarea contents into its accessible name."
+    },
+    {
+      "path": "apps/web/src/pages/BusinessDomains.tsx",
+      "sha256": "ad4d5fe990cd8c79f54a97c0ab79ba23508b5ddc249aec68d783fb0090db8da7",
+      "review": "Read-only source review; no concrete blocker found in the described correction.",
+      "scope": "Visible-label spans and separate help descriptions give stable names to domain form fields and lifecycle controls. Successful lifecycle/hierarchy mutations publish the typed domain response into parent state; shared pending state disables both editors during mutation and avoids a late background refetch remount discarding a newly entered draft."
+    },
+    {
+      "path": "apps/web/src/styles.css",
+      "sha256": "21f5044d2946cb2a0982c16de019625fd8aff0d895a2033bc013b46409d94c53",
+      "review": "Read-only source review; no concrete blocker found in the described correction.",
+      "scope": "Domain nested fieldsets have min-inline-size:0 and max-inline-size:100%, with wrapping legends. Entity-tab buttons share existing anchor text/active styles and a transparent borderless reset; the existing link styles, horizontal overflow behavior and global focus-visible outline are preserved."
+    },
+    {
+      "path": "apps/web/src/App.tsx",
+      "sha256": "87bd014a78c0a830535c22ef5fa8e28792d99e71a5077f545001d0f9e21f7935",
+      "review": "Read-only source review; no concrete blocker found in the described correction.",
+      "scope": "The domain page is keyed by the selected domain ID, so retained saved-domain state does not cross a domain route change."
+    }
+  ],
+  "historicalReviews": [
+    {
+      "attempt": 2,
+      "executionResult": "FAIL",
+      "stats": {
+        "startTime": "2026-11-16T03:05:00.582Z",
+        "duration": 123156.701,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "startedAt": "2026-11-16T03:04:59.892801+00:00",
+      "recordedAt": "2026-11-16T03:07:04.448916+00:00",
+      "manifest": {
+        "path": ".local/evidence/business-domains-browser-attempt-2/manifest.json",
+        "sha256": "fde0e8fcbb669dcd810473cc67a3c03e70071d6693a709cdc0bf1435d4eab69d"
+      },
+      "archiveEntriesVerified": 20,
+      "archiveHashMismatches": 0,
+      "report": {
+        "path": ".local/evidence/business-domains-browser-targeted-20261116T030459.json",
+        "archive": ".local/evidence/business-domains-browser-attempt-2/000-business-domains-browser-targeted-20261116T030459.json",
+        "sha256": "205bdde7e2df112ed5d09dadd8357628d981b8f133097d72b914b32e3392586a"
+      },
+      "rawReport": {
+        "path": ".local/evidence/business-domains-browser-targeted-20261116T030459-results.json",
+        "archive": ".local/evidence/business-domains-browser-attempt-2/001-business-domains-browser-targeted-20261116T030459-results.json",
+        "sha256": "5f4ebec0e495e58d891adaec5d67ceffc04f021e890fe47fdfa9e4e20fb8c799"
+      },
+      "log": {
+        "path": ".local/evidence/business-domains-browser-targeted-20261116T030459.log",
+        "archive": ".local/evidence/business-domains-browser-attempt-2/002-business-domains-browser-targeted-20261116T030459.log",
+        "sha256": "8c3fbf08631a13b1a0629e7f4d3cc203724c95a31b192970c62676700c1f71a5"
+      },
+      "screenshots": [
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-preview-ar-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/003-m2-business-domain-migration-preview-ar-1440.png",
+          "sha256": "20b57f943522313a16045073f659f8fc22786862f4d3fd15ab872448db427ace"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-preview-ar-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/004-m2-business-domain-migration-preview-ar-390.png",
+          "sha256": "faa042ea190aac7994b29cad68f46b68773fbc01dfb6c2ec6e67305caeb415fc"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-preview-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/005-m2-business-domain-migration-preview-en-1440.png",
+          "sha256": "a13a186d41db3f89a9e5c654cd7f845816f16202b1608864204ba9742795eade"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-preview-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/006-m2-business-domain-migration-preview-en-390.png",
+          "sha256": "12b7370a0a521c8cdaecde84f8090aabf1487c8ff91f1c4d180af8bc3d0b0495"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-ar-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/007-m2-business-domain-migration-receipt-ar-1440.png",
+          "sha256": "5fa7e7856640d462977fa9d0661cf8ad6763fbebc8583d8e9bf9618da5ec5308"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-ar-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/008-m2-business-domain-migration-receipt-ar-390.png",
+          "sha256": "5a781a13eeb28d7b31fad561b9e41f61166e869e5b14806270d4e2046638ff45"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/009-m2-business-domain-migration-receipt-en-1440.png",
+          "sha256": "332023374b5907b99130e0a317bed7478564a664af1ba3c1ff74ae06a3a64d07"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/010-m2-business-domain-migration-receipt-en-390.png",
+          "sha256": "81ae1de100051178fa5247bb4de526814be616c8eb40c14d2e03f9c1b5fdfd23"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-permission-denial-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/011-m2-business-domain-permission-denial-en-1440.png",
+          "sha256": "fc6563e674bb54183ef53d791636d19dbd0bff771dd7056cffd12d8a4cee3504"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-permission-denial-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/012-m2-business-domain-permission-denial-en-390.png",
+          "sha256": "790d575b4862b18f01c0363ae5c5df9ec83449c6495cf26339f00edf4eb75b96"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-stale-migration-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/013-m2-business-domain-stale-migration-en-1440.png",
+          "sha256": "8d24b4c86a511ec9cde69954acc7964253a633b43469d6ddeb899aa7ad319961"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-stale-migration-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/014-m2-business-domain-stale-migration-en-390.png",
+          "sha256": "32ccde7f47b3194dd9d3d2e2a8b15a2874dc555c0aeb44fa39855ecf241a1ac9"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-tenant-denial-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/015-m2-business-domain-tenant-denial-en-1440.png",
+          "sha256": "a784a1397fda921bdd8e0085f082c5aa944ce7bf7963cbf55e406a89e6428ba7"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-tenant-denial-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/016-m2-business-domain-tenant-denial-en-390.png",
+          "sha256": "64f09708a9e0dfb250fb550be2cab1f4ccb18a7e2f7adfae6de4961fa9b7d342"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-type-editor-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/017-m2-business-domain-type-editor-en-1440.png",
+          "sha256": "23ef6939c2e94d60235e5adb93a6fe9cf8399e2d366a6fa80f44d26831602116"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-type-editor-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-2/018-m2-business-domain-type-editor-en-390.png",
+          "sha256": "b8e34bde35ae066a4881e0f203c5fceca6662260c03df2fbb34e86ab237e813c"
+        }
+      ],
+      "visualReview": "All 16 captures accounted for by direct archived-image inspection; the two permission-denial images are byte-identical across attempts 2 and 3 and were not counted as distinct visual states. Across the two attempts 30 distinct PNGs were inspected.",
+      "finding": "No additional visual blocker observed in the captured light-theme type-editor, migration preview/receipt, stale-consent and denial viewports. The overall browser execution remains FAIL (2 passed, 1 failed).",
+      "limits": [
+        "These incomplete executions did not qualify the first complete functional journey.",
+        "No dark history captures are present in these attempts.",
+        "Static viewport inspection does not establish scrolling, offscreen content, assistive-technology behavior or human translation review."
+      ]
+    },
+    {
+      "attempt": 3,
+      "executionResult": "FAIL",
+      "stats": {
+        "startTime": "2026-11-16T03:19:48.157Z",
+        "duration": 123455.71399999999,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "startedAt": "2026-11-16T03:19:47.464628+00:00",
+      "recordedAt": "2026-11-16T03:21:52.306169+00:00",
+      "manifest": {
+        "path": ".local/evidence/business-domains-browser-attempt-3/manifest.json",
+        "sha256": "df4a188bffcc6ed9482408ee4d485fb4a92cf9cd0d4025d399c1af62909186cd"
+      },
+      "archiveEntriesVerified": 20,
+      "archiveHashMismatches": 0,
+      "report": {
+        "path": ".local/evidence/business-domains-browser-targeted-20261116T031946.json",
+        "archive": ".local/evidence/business-domains-browser-attempt-3/000-business-domains-browser-targeted-20261116T031946.json",
+        "sha256": "bf19b1cb42753283e09abf2e301c6434d649de4445c98518e5759b1281c7dd87"
+      },
+      "rawReport": {
+        "path": ".local/evidence/business-domains-browser-targeted-20261116T031946-results.json",
+        "archive": ".local/evidence/business-domains-browser-attempt-3/001-business-domains-browser-targeted-20261116T031946-results.json",
+        "sha256": "3cf128b0b8a26bfe064a8907b13260c77f822d8bda41d80b5026a8765d334657"
+      },
+      "log": {
+        "path": ".local/evidence/business-domains-browser-targeted-20261116T031946.log",
+        "archive": ".local/evidence/business-domains-browser-attempt-3/002-business-domains-browser-targeted-20261116T031946.log",
+        "sha256": "72e9b87dd3c86f5d0c51cd8e6929c101f8a720dcb62efd563260ea96ef6af59b"
+      },
+      "screenshots": [
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-preview-ar-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/003-m2-business-domain-migration-preview-ar-1440.png",
+          "sha256": "382ef2ededdde4d22a8f00151986d2a66df63bc3ecd103bd1c7cedca82215bf3"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-preview-ar-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/004-m2-business-domain-migration-preview-ar-390.png",
+          "sha256": "457f2aa37c6ddd18ee09c1c1872a1a73cbd9612031d0ebabbfb616bc502f5c9d"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-preview-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/005-m2-business-domain-migration-preview-en-1440.png",
+          "sha256": "1ad2ec8a76f79c8cfe2dcc50c5b2e0b5cbdf6328435260ab7e62ff94615b998c"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-preview-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/006-m2-business-domain-migration-preview-en-390.png",
+          "sha256": "930572e055e5d9d463dfa05ea1598d5967025dc47899a543e7603d75a443c8eb"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-ar-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/007-m2-business-domain-migration-receipt-ar-1440.png",
+          "sha256": "f27062222c93a7e1780a8c40161c609241172c918398ef09cb69d685e7524877"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-ar-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/008-m2-business-domain-migration-receipt-ar-390.png",
+          "sha256": "34eb85ad58920cd72e6b1e72de0a8c96cb295651eb411f6db8196de5355327b5"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/009-m2-business-domain-migration-receipt-en-1440.png",
+          "sha256": "b06205b6e9b207e37c4f27175bccc620e69aafc6026448ae7359c3ada6e37b2a"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/010-m2-business-domain-migration-receipt-en-390.png",
+          "sha256": "b289c06c4d8534b851a50a7d2c27754c08d09231417072a648394d1a5835600b"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-permission-denial-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/011-m2-business-domain-permission-denial-en-1440.png",
+          "sha256": "fc6563e674bb54183ef53d791636d19dbd0bff771dd7056cffd12d8a4cee3504"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-permission-denial-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/012-m2-business-domain-permission-denial-en-390.png",
+          "sha256": "790d575b4862b18f01c0363ae5c5df9ec83449c6495cf26339f00edf4eb75b96"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-stale-migration-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/013-m2-business-domain-stale-migration-en-1440.png",
+          "sha256": "60fcb5e157e0e97b9071ac5b5e1530ddcd38c5dd2e154ec22a899b89d19a9ea5"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-stale-migration-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/014-m2-business-domain-stale-migration-en-390.png",
+          "sha256": "753017de760a88fa2c04d1bdc0e0968a9758b2d3c266b377f67eab4eab3a3357"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-tenant-denial-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/015-m2-business-domain-tenant-denial-en-1440.png",
+          "sha256": "b0d20448ee631d6b139457eb249b90e60fa954d61bb9659c2611a5730f97069b"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-tenant-denial-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/016-m2-business-domain-tenant-denial-en-390.png",
+          "sha256": "887a917325a01542c4ab1e75b07ec329c3f53e3c4d43a4621f30b128f414f476"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-type-editor-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/017-m2-business-domain-type-editor-en-1440.png",
+          "sha256": "6086d286f6eb1a10d23552f529573e708223cec10946110d36e31625e6102185"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-type-editor-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-3/018-m2-business-domain-type-editor-en-390.png",
+          "sha256": "0b9860f4be537c23275216a7c6d1814bcaed4af93852363eef8972a7ae8b46ab"
+        }
+      ],
+      "visualReview": "All 16 captures accounted for by direct archived-image inspection; the two permission-denial images are byte-identical across attempts 2 and 3 and were not counted as distinct visual states. Across the two attempts 30 distinct PNGs were inspected.",
+      "finding": "No additional visual blocker observed in the captured light-theme type-editor, migration preview/receipt, stale-consent and denial viewports. The overall browser execution remains FAIL (2 passed, 1 failed).",
+      "limits": [
+        "These incomplete executions did not qualify the first complete functional journey.",
+        "No dark history captures are present in these attempts.",
+        "Static viewport inspection does not establish scrolling, offscreen content, assistive-technology behavior or human translation review."
+      ]
+    }
+  ],
+  "additionalHistoricalContext": [
+    {
+      "attempt": 4,
+      "executionResult": "FAIL",
+      "stats": {
+        "startTime": "2026-11-16T03:24:48.606Z",
+        "duration": 122550.36,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "manifest": {
+        "path": ".local/evidence/business-domains-browser-attempt-4/manifest.json",
+        "sha256": "3b504b79a9254a831387c8c5748ecd63f049beec5243efa6ebf80ce48f4c705d"
+      },
+      "report": {
+        "path": ".local/evidence/business-domains-browser-targeted-20261116T032447.json",
+        "archive": ".local/evidence/business-domains-browser-attempt-4/000-business-domains-browser-targeted-20261116T032447.json",
+        "sha256": "5a46ac01d9b66e9576752fa0a51e7ab4a2802f2c156cd33f8ef4d75d3170c1dc"
+      },
+      "reviewedScreenshots": [
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-hierarchy-preview-en-1440.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-4/003-m2-business-domain-hierarchy-preview-en-1440.png",
+          "sha256": "e6ad394f9f0b9f4027bc058f8a969473380298dff6d802a711d077186c8d230e"
+        },
+        {
+          "path": "docs/verification/screenshots/m2-business-domain-hierarchy-preview-en-390.png",
+          "archive": ".local/evidence/business-domains-browser-attempt-4/004-m2-business-domain-hierarchy-preview-en-390.png",
+          "sha256": "337863d801bf8edf7cbac6738f2764f3e160af4676cc796620a5ad0874fd116e"
+        }
+      ],
+      "reviewScope": "Only the two new hierarchy-preview captures were visually inspected. No claim of reviewing all 18 attempt-4 screenshots. The actual asynchronous refresh/editor-remount race remained a failing behavioral gate."
+    },
+    {
+      "attempt": 5,
+      "executionResult": "FAIL",
+      "stats": {
+        "startTime": "2026-11-16T03:29:18.034Z",
+        "duration": 132252.335,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "manifest": {
+        "path": ".local/evidence/business-domains-browser-attempt-5/manifest.json",
+        "sha256": "7be00a21d2bea3c342a5e76c0bf4cb652a7b2d59c693eebd6488e543135b2114"
+      },
+      "report": {
+        "path": ".local/evidence/business-domains-browser-targeted-20261116T032916.json",
+        "archive": ".local/evidence/business-domains-browser-attempt-5/000-business-domains-browser-targeted-20261116T032916.json",
+        "sha256": "b976c4a9fa51bc3631c1035a8e3b10d4e9aa55dcda1ca45e394dd6553dd7a938"
+      },
+      "reviewScope": "Report and archive hashes checked; no screenshot visual review claimed for this attempt. The reported final Arabic dark history axe contrast failure remained FAIL and was corrected before attempt 6."
+    }
+  ],
+  "separateRootSpotCheck": {
+    "evidence": {
+      "path": ".local/evidence/business-domains-browser-attempt-6/root-visual-review.json",
+      "sha256": "2674535a1f54263f0c3a8d2097741d3d2f191d443bd16e042f0aced8853268b0"
+    },
+    "reportedReviewer": "Codex /root (AI-assisted static review)",
+    "result": "PASS_FOR_INSPECTED_VIEWPORTS",
+    "screenshots": [
+      {
+        "path": "docs/verification/screenshots/m2-business-domain-hierarchy-preview-en-390.png",
+        "archive": ".local/evidence/business-domains-browser-attempt-6/004-m2-business-domain-hierarchy-preview-en-390.png",
+        "sha256": "cb1aaa4e3ecbddbc2f0ba590a7e55ade3a23d39c9d801363353ed8020aef3d4a"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-business-domain-history-ar-dark-390.png",
+        "archive": ".local/evidence/business-domains-browser-attempt-6/008-m2-business-domain-history-ar-dark-390.png",
+        "sha256": "3659bf7f0ed198a57266f839c6699c61b17f9491f0241bb8a496982bc5609a69"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-business-domain-migration-preview-ar-390.png",
+        "archive": ".local/evidence/business-domains-browser-attempt-6/010-m2-business-domain-migration-preview-ar-390.png",
+        "sha256": "3616d5e48e638b1d57b5c311415cff71ea25f6a9d4164016ba2edc6c43f1c697"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-en-1440.png",
+        "archive": ".local/evidence/business-domains-browser-attempt-6/015-m2-business-domain-migration-receipt-en-1440.png",
+        "sha256": "20aa54e37ca339b192771f80fb73c505fa77480eed5bf397971a9d9936f6a1ed"
+      },
+      {
+        "path": "docs/verification/screenshots/m2-business-domain-type-editor-en-390.png",
+        "archive": ".local/evidence/business-domains-browser-attempt-6/028-m2-business-domain-type-editor-en-390.png",
+        "sha256": "00b1874424539a2843b45e430a9ca841f2fe627dfcc5d42bddf6649ad5ac0be9"
+      }
+    ],
+    "observations": [
+      "390px nested type pickers fit viewport; field labels and editor controls remain readable.",
+      "Hierarchy preview and Arabic migration preview display bounded horizontally scrollable table regions, visible consent controls and wrapped identifiers/digests.",
+      "Arabic dark history tabs have theme-aware contrast and active underline; mirrored shell and visible history remain legible.",
+      "Desktop migration receipt renders the committed synthetic before/after outcome table and immutable-evidence notice."
+    ],
+    "limitations": [
+      "Static PNG inspection does not prove horizontal scrolling, all below-fold content, native assistive-technology behavior or professional Arabic translation review.",
+      "Runtime accessibility evidence comes from actual Playwright/axe assertions in the separate passing targeted execution.",
+      "Full19 browser gate is running and is not qualified by this visual check."
+    ]
+  },
+  "preservation": {
+    "originalArchiveEntriesUnmodified": true,
+    "reportedHistoricalScreenshotRestorationCount": 116,
+    "restorationEvidence": ".local/evidence/business-domains-browser-targeted-20261116T033809-regression/manifest.json",
+    "qualification": "The original targeted report records restored historical screenshots separately. This review does not claim their visual reinspection or read current public screenshot paths while the full suite is running."
+  },
+  "otherGates": {
+    "full19Browser": "RUNNING_AT_THIS_CHECKPOINT; no result claimed here",
+    "hostedCI": "NOT_QUALIFIED_BY_THIS_REVIEW",
+    "humanKeyboardAndScreenReaderReview": "NOT_RUN",
+    "professionalArabicTranslationReview": "NOT_RUN",
+    "releaseReadiness": "OPEN; this targeted review does not close the complete governing specification"
+  },
+  "limitations": [
+    "All image observations are limited to the captured 1440×960 and 390×960 viewports; there is no new inspection at 1280, 1024 or 768 pixels, 200% zoom, increased system font size or physical mobile hardware.",
+    "Bounded wide tables show only part of their contents in narrow captures. Static PNGs do not prove horizontal scrolling, access to every offscreen column, complete expanded disclosures or all below-fold content.",
+    "Automated axe checks and executed workflow assertions support accessibility evidence but do not replace an actual manual keyboard, screen-reader or assistive-technology review. No human sign-off is asserted.",
+    "Arabic RTL geometry and visible rendering were inspected; the product translation-review-pending notice remains accurate. No professional linguistic or cultural review is asserted.",
+    "No Docker, API, browser, scanner, build or mutation was executed by this visual reviewer. Functional execution claims derive from the exact preserved root-run report and unchanged test source.",
+    "Historical attempts 2–5 retain their original failures. Screenshot review does not turn a failed execution into a pass.",
+    "This report qualifies only the described targeted business-domain slice. The full 19-journey browser result and broader capability/release gates require their own evidence."
+  ]
+}

@@ -14,9 +14,9 @@ import type { DomainCreateRequest, DomainEditRequest, DomainStateRequest, Domain
 import type { DomainPageQuery, DomainHistoryQuery, DomainInventoryQuery } from '../../../packages/domain/src/business-domain-service-contracts.ts';
 import { authenticate } from './security.ts';
 import { record, once } from './repository.ts';
-import { domainHttp, domainSharedSchemas, domainProblemSchema, domainParams, domainQuerySchema,
+import { domainHttp, installDomainHttpValidation, domainProblemSchema, domainParams, domainQuerySchema,
   domainSchemaCheck, domainJSONInvalid, domainRawQuery, domainExpectedVersion, domainIdempotencyKey,
-  parseDomainRequestJSON, checkDomainData } from './business-domain-http.ts';
+  checkDomainData } from './business-domain-http.ts';
 
 type Route = {
   readonly params?: readonly string[]; readonly query?: readonly string[]; readonly body?: TSchema;
@@ -38,12 +38,7 @@ const previewRequired = () => new Problem(428, 'DOMAIN_PREVIEW_REQUIRED', 'Revie
 export async function installBusinessDomains(app: FastifyInstance): Promise<void> {
   await app.register(async child => {
     const parsed = new WeakMap<FastifyRequest, ParsedRequest>();
-    for (const schema of domainSharedSchemas) child.addSchema(schema);
-    child.removeContentTypeParser('application/json');
-    child.addContentTypeParser('application/json', { parseAs: 'string', bodyLimit: 1048576 }, (_req, raw, done) => {
-      try { done(null, parseDomainRequestJSON(String(raw))); }
-      catch { done(domainJSONInvalid()); }
-    });
+    installDomainHttpValidation(child);
     child.addHook('onRequest', async req => {
       const { principal } = await authenticate(req);
       parsed.set(req, { principal, page: {} });

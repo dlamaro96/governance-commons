@@ -1,6 +1,6 @@
 # ADR0009: Business domains and versioned asset placement
 
-Status: accepted implementation design, 2026-11-15. Implementation NOT_STARTED; verification NOT_RUN. This decision does not advance M2 or any release gate.
+Status: accepted implementation design, 2026-11-15; implementation checkpoint updated 2026-11-16. The bounded domain service/API/UI and SQL011 are implemented. Isolated upgrade/storage/concurrency, real seed,154 API cases and three targeted browser journeys pass in their exact recorded scopes; full19-browser qualification also passes on its separately recorded source. See `../execution/STATE.md` and `../verification/business-domains-api.json` for execution evidence. This decision alone closes neither M2 nor any release gate.
 
 The specification requires immutable business-domain identities, domain types, domain context and scoped responsibilities. Existing asset and graph receipts reference exact immutable asset snapshots. Adding convenience fields to those snapshots would invalidate their historical and storage contracts.
 
@@ -17,7 +17,7 @@ The adopted implementation refinement in [BUSINESS_DOMAIN_STORAGE.md](../executi
 
 The additive placement approach avoids rewriting historical formats but requires future authorization to use composite asset/placement/ancestry state and a private scope fence. An asset version alone is insufficient. Multiple domain memberships, a polymorphic type-store rewrite and an expanded shared directory were considered; each would require a separate explicit compatibility and authority design.
 
-The next source work starts after the preceding relation correction is qualified. It must implement the full adopted domain contract, real SQL/API/browser tests, original synthetic fixtures and precise evidence. Domains alone do not satisfy multilingual glossary approval, responsibility enforcement, reference publication, collections, reusable attribute identities or the full operating model.
+The implementation followed the qualified preceding relation correction. Its real SQL/API/browser gates, original synthetic fixtures and exact evidence are maintained separately from this design decision. Domains alone do not satisfy multilingual glossary approval, responsibility enforcement, reference publication, collections, reusable attribute identities or the full operating model.
 
 
 The storage integration additionally adopts a narrow read-only original-scope replay authorization helper. Ordinary hierarchy responses do not expose their complete original scope, while private claims cannot be granted to the runtime. The helper returns only a current authorization decision for the exact authenticated actor's finalized operation/key/success; it does not mutate, disclose claims or grant authority from a digest. This preserves reauthorization after descendants or placements later move. See BUSINESS_DOMAIN_STORAGE.md for the exact sixth entry point and qualification obligations.

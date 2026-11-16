@@ -3,7 +3,7 @@
  * authorization, complete-scope projection, or database integrity checks. */
 import { Type, Kind, TypeRegistry, type TProperties, type TSchema } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
-import type { FastifyRequest } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { Problem } from '../../../packages/authz/src/index.ts';
 
 const object = <T extends TProperties>(properties: T) => Type.Object(properties, { additionalProperties: false });
@@ -147,6 +147,21 @@ export const domainQuerySchema = (fields: readonly string[]) => object(Object.fr
 
 export const domainJSONInvalid = () => new Problem(400, 'DOMAIN_JSON_INVALID', 'Provide exactly the declared JSON fields and values without coercion.');
 export const domainPageInvalid = () => new Problem(400, 'DOMAIN_PAGE_INVALID', 'The domain query or page cursor is invalid.');
+/** Keep Fastify's schema phase nonmutating as well as preValidation. Its
+ * default AJV union validation coerces numeric/boolean attribute values into
+ * strings and removes constraints while trying other definition branches.
+ * Install only on the encapsulated domain child; unrelated routes retain their
+ * existing compiler. The same strict schemas still validate every HTTP part. */
+export function installDomainHttpValidation(app: FastifyInstance): void {
+  for (const schema of domainSharedSchemas) app.addSchema(schema);
+  app.setValidatorCompiler(({ schema }) => value =>
+    domainSchemaCheck(schema as TSchema, value) ? { value } : { error: domainJSONInvalid() });
+  app.removeContentTypeParser('application/json');
+  app.addContentTypeParser('application/json', { parseAs: 'string', bodyLimit: 1048576 }, (_req, raw, done) => {
+    try { done(null, parseDomainRequestJSON(String(raw))); }
+    catch { done(domainJSONInvalid()); }
+  });
+}
 /** No schema coercion/removal is used for the authoritative ingress check. */
 export function domainSchemaCheck(schema: TSchema, input: unknown): boolean { return Value.Check(schema, [...domainSharedSchemas], input); }
 export function domainExpectedVersion(req: FastifyRequest, placement = false): number {
