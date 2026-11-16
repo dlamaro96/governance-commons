@@ -1075,6 +1075,20 @@
         "method": "Exact original report and source hashes retained; historical failures are not relabeled and no hosted repair pass is inferred.",
         "evidence_sha256": "25751c98f005838ecf62f44d7bc29b578e6caf87e3f200f6307e6015957d37c7"
       }
+    },
+    {
+      "path": "docs/verification/authority-expressions.json",
+      "scope": "Pure three-way predicate interpreter only;16 focused and295 combined host unit cases plus root/web types. No full authorization decision, loader, compiler, SQL, UI or runtime activation.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOCUSED_AND_COMBINED_HOST_UNIT_AND_TYPECHECK_SCOPE",
+      "source_binding": {
+        "base_commit": "363b4346d607aa108b2eef1bd194b36bb0837e2b",
+        "verified_source_files": 206,
+        "method": "Exact before/after hashes identify203 tracked files at base plus3 untracked expression additions. Includes42 TSX source bindings without claiming browser execution; historical evidence remains unchanged.",
+        "evidence_sha256": "830db437b8282dfa9ac2169530efdd12061ff590b9e2a9816c89eeb197301ccf"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
     }
   ],
   "limitations": [

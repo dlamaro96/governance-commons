@@ -1,5 +1,11 @@
 # Current state — 2026-11-16
 
+## Pure predicate interpreter qualified — 2026-11-16T04:43Z
+
+The root `codex/scoped-authority` branch integrates domain test repair `4c4479a` at merge `363b434`. The new three-way predicate interpreter passes16 focused cases, then295 full unit cases and root/web typechecks. All206 source/config/contract hashes are stable, including42 TSX sources;203 match the base revision and exactly three expression files were untracked at execution. See [authority-expressions.json](../verification/authority-expressions.json). Previous reports retain their original bytes and source/time provenance. This module evaluates predicates only: canonical fact provenance, full policy decisions, grants, SQL/OpenSearch compilation, administration and runtime ingress remain separate unfinished work.
+
+Only SYS-SEC-002 and its AST clause .03 gain scoped partial evidence. All5530 profile verification and1106 release outcomes remain unchanged. Fresh PR17 Source security run43805263367 passes; Development43805263346 is still running, so PR17 remains draft pending full hosted behavior qualification. The shared core remains owned by the isolated business-domains checkout; SQL001–011 are immutable. Next: complete hosted domain qualification/merge, publish this checked pure increment, then freeze aggregate authority admission and implement the full reference decision/loader/storage protocol before any all-ingress activation. Continue the complete M0–M10 programme.
+
 ## PR17 test repairs locally qualified — 2026-11-16T04:33Z
 
 Hosted attempt1 remains failed: Source reports seven high JavaScript findings in test fixtures; Development passes152/154 API cases and skips later upgrade/browser stages. Original safe artifacts are preserved in business-domains-hosted-attempt-1.json. Local diagnostics prove two fragile storage-test assumptions: mixed-family idempotency deletion observes different protected error codes, and normal outbox delivery changes bookkeeping independently of immutable event contents. Hosted raw errors were unavailable, so these observations are not claimed as an exact reconstruction.
