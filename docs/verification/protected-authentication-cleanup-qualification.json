@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "result": "PASS_SCOPED_CLEANUP_QUALIFICATION",
+  "implementation_commit": "d5c7d8aa9f3cd592fd13117c2c267ced6767270b",
+  "prior_exact_source_commit": "a643873e81568d3a73e8a6ef19bff3682d4cdf85",
+  "prior_attempts": {
+    "path": "docs/verification/protected-authentication-attempt-history.json",
+    "sha256": "fd1e62505a1b858e03d638c706d0697cafb3ef5113a50d2efed64a714f0b8b9d",
+    "preserved_without_relabeling": true
+  },
+  "launch9": {
+    "path": "docs/verification/protected-authentication-local-attempt-9.json",
+    "sha256": "20db58d0b1427fd28f103e1829426865189d876ee6bf4d876f85c56b9fe600c0",
+    "private_report_sha256": "43c343c00d787bc23cbbda18f4a99c5cbea6b42574df9b33d234033776635269",
+    "sources_match_committed_blobs": 131
+  },
+  "owned_process_regressions": {
+    "result": "PASS",
+    "sourceStable": true,
+    "sources": [
+      {
+        "path": "scripts/protected_browser_process.py",
+        "sha256": "ccfc4a02d71b20329881a1feafe8e9ca674fcae750304f8713913b521efff188"
+      },
+      {
+        "path": "scripts/runtime-test-protected-authn.py",
+        "sha256": "e5880e872dd6dc1e0b258c7a4e6d0f7e4e205c9e4fa50c0bd8838891e97b3718"
+      },
+      {
+        "path": "scripts/test_protected_browser_process.py",
+        "sha256": "9ed8ae98a5472e5dd502bf835518ff7f405f0fbb5693d0834394a3d9153a8474"
+      }
+    ],
+    "command": "python3 -m unittest discover -s scripts -p test_protected_browser_process.py -v",
+    "tests": 14,
+    "exitCode": 0,
+    "durationSeconds": 4.501,
+    "python": "3.14.5",
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "7565a77f2b5be90cad1fbb70eb3bd75cee352cdb0080dad744393f9094294d8c",
+    "syntax": "Three owned Python files compile",
+    "scope": "Actual newly spawned host subprocesses only; separate from real-service launch9.",
+    "private_execution_sha256": "f206f8fc7c364141e065bb23f0d66b53bd8472ad45425c11aea5656852601c71"
+  },
+  "publisher_regressions": {
+    "command": "python3 policies/test_ci_evidence.py",
+    "outcome": "PASS",
+    "started_at": "2026-11-16T10:17:45.634837+00:00",
+    "finished_at": "2026-11-16T10:17:52.251527+00:00",
+    "tests": 65,
+    "duration_seconds": 6.509,
+    "sources_unchanged": true,
+    "sources": [
+      {
+        "path": ".github/workflows/ci.yml",
+        "sha256": "61339944d22165fb3a31fa526ac5f27d713759dce68bcb94ea1eabd74a139efa"
+      },
+      {
+        "path": "policies/api_evidence.py",
+        "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2"
+      },
+      {
+        "path": "policies/authentication_evidence.py",
+        "sha256": "aff4165182b6a89eb16e7d54f435c78a4ba33573295a99294f80f658addc23eb"
+      },
+      {
+        "path": "policies/ci_evidence.py",
+        "sha256": "db42034c975070916e501ce700c8bd74095089e3f0e3ea4a0312b78ff6b3643d"
+      },
+      {
+        "path": "policies/protected_authn_evidence.py",
+        "sha256": "0a47785e650572e6a5256d2ab616ca93e0fd54ee22a68ed3a927139edbb6f438"
+      },
+      {
+        "path": "policies/test_api_evidence.py",
+        "sha256": "bf6621eb60ae71bc2e9055af7c01b08d9fb732925263bf1b98ca93af7eb66280"
+      },
+      {
+        "path": "policies/test_authentication_evidence.py",
+        "sha256": "a71d1e5a5a228754c514c9178d52279b03283d032c627fea2f2c958087e6c737"
+      },
+      {
+        "path": "policies/test_ci_evidence.py",
+        "sha256": "b3af75a90a53e5d63ec799adb6233c01d5eed4f37d2d6bdf6c92691c98600d02"
+      },
+      {
+        "path": "policies/test_protected_authn_evidence.py",
+        "sha256": "6bd946583cf7a22959735a31c7b8bc7dc4f8a4d2c6c610550a675556d47bfe24"
+      },
+      {
+        "path": "scripts/protected_browser_process.py",
+        "sha256": "ccfc4a02d71b20329881a1feafe8e9ca674fcae750304f8713913b521efff188"
+      },
+      {
+        "path": "scripts/runtime-test-protected-authn.py",
+        "sha256": "e5880e872dd6dc1e0b258c7a4e6d0f7e4e205c9e4fa50c0bd8838891e97b3718"
+      },
+      {
+        "path": "scripts/test_protected_browser_process.py",
+        "sha256": "9ed8ae98a5472e5dd502bf835518ff7f405f0fbb5693d0834394a3d9153a8474"
+      },
+      {
+        "path": "tests/e2e-protected/playwright.config.ts",
+        "sha256": "ba6a2c11f75ac2acae8cd4254b5f8cb10f5fb2c66dc1dbc765e2597e6f3977ae"
+      }
+    ],
+    "log_sha256": "13562e15648f854b21dff730bf1b41b35698006ffd714eb09ce835a2717cad3b",
+    "private_execution_sha256": "a701a9e1dfe686f1bd2913b2dc0963e2c535108dc8a8dddeaca3cafa31ec528d",
+    "prior_failure": "Three impossible-count counterexamples failed on the old publisher; original private failure is preserved."
+  },
+  "independent_review": {
+    "method": "Independent read-only helper/harness/test review plus independently executed narrow publisher correction regression and combined publication suite.",
+    "outcome": "PASS_NO_CONCRETE_BLOCKER",
+    "record_sha256": "50da95b110f5c6c22ece3310cf8bfff7760b53ba6dbe3172b70c0d6de4334ebf",
+    "findings_closed": [
+      "Original protected host-browser timeout gap is addressed by dedicated command session plus pre-exec command gate and separately registered browser process groups.",
+      "Private launcher acknowledgement precedes browser exec; kernel PID birth/group/UID identity is checked before owned signaling. Unknown, conflicted or incompletely observed ownership refuses successful proof.",
+      "Selector construction precedes child creation; initial identity/setup failure cannot execute the CLI and kills/reaps only the unreaped direct gated child.",
+      "Detached observed descendants and registered browser groups receive bounded TERM then KILL; unrelated groups and PID identity reuse are refused.",
+      "Normal/nonzero/timeout/exception are distinct; generic no-browser cleanup cannot qualify harness or publisher.",
+      "Publisher now enforces registeredBrowserGroups, termSignals and killSignals each <= trackedProcesses. All three impossible-count cases failed on old publisher and pass after correction."
+    ],
+    "limitations": [
+      "No real Chrome, Docker, API, database or protected application gate executed by this reviewer.",
+      "Cleanup scope is registered POSIX groups and observed descendants, not arbitrary unobserved adversarial double-fork escapes.",
+      "PID/start observation plus signaling is not an atomic kernel capability against a hostile process-reuse race; untrusted/changed observed identities fail closed.",
+      "Kernel identity metadata is platform-specific; owner14-case execution is current macOS host evidence, not claimed Linux hosted qualification.",
+      "Only the explicitly assigned three publisher comparisons and one negative regression were changed by this reviewer; helper/harness/other source files remain unchanged."
+    ]
+  },
+  "limitations": [
+    "The 14 process regressions ran on macOS with synthetic owned subprocesses; Linux execution remains for hosted CI.",
+    "Launch9 uses the actual local Chrome, PostgreSQL and Keycloak with read-only source mounts. No baked-image or hosted qualification is inferred.",
+    "Shared core and Hive Citadel were preserved. All full capability/profile/release obligations remain open."
+  ]
+}

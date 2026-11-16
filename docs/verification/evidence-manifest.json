@@ -1340,6 +1340,42 @@
       },
       "runtime_authority_activated": false,
       "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-local-attempt-9.json",
+      "scope": "15 native HTTP/SQL cases and2 real Keycloak journeys on committed131source snapshot with actual owned-process cleanup.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_ISOLATED_MOUNTED_SOURCE_AUTHENTICATION",
+      "source_binding": {
+        "implementation_commit": "d5c7d8aa9f3cd592fd13117c2c267ced6767270b",
+        "evidence_sha256": "20db58d0b1427fd28f103e1829426865189d876ee6bf4d876f85c56b9fe600c0"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-visual-review-attempt-9.json",
+      "scope": "Eight fresh English/Arabic desktop/mobile original captures inspected; no linguistic or human accessibility certification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EIGHT_SCOPED_ORIGINAL_FRAME_REVIEWS",
+      "source_binding": {
+        "implementation_commit": "d5c7d8aa9f3cd592fd13117c2c267ced6767270b",
+        "evidence_sha256": "bfa8e71109f5640df44f34533021ae2d8c680d19737ec77856abc91660791002"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-cleanup-qualification.json",
+      "scope": "14 actual host subprocess regressions,65 publisher tests, independent review and fresh real-service launch9.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_SCOPED_OWNED_PROCESS_CLEANUP",
+      "source_binding": {
+        "implementation_commit": "d5c7d8aa9f3cd592fd13117c2c267ced6767270b",
+        "evidence_sha256": "ac3f41617053e65973adda8dabaf5eab1d7cdb229a53491b63a49cf0a4255d23"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
     }
   ],
   "limitations": [

@@ -53509,7 +53509,10 @@
         "docs/verification/protected-authentication-host.json",
         "docs/verification/protected-authentication-local.json",
         "docs/verification/protected-authentication-visual-review.json",
-        "docs/verification/protected-authentication-attempt-history.json"
+        "docs/verification/protected-authentication-attempt-history.json",
+        "docs/verification/protected-authentication-local-attempt-9.json",
+        "docs/verification/protected-authentication-visual-review-attempt-9.json",
+        "docs/verification/protected-authentication-cleanup-qualification.json"
       ]
     },
     {
@@ -53583,7 +53586,10 @@
         "docs/verification/protected-authentication-host.json",
         "docs/verification/protected-authentication-local.json",
         "docs/verification/protected-authentication-visual-review.json",
-        "docs/verification/protected-authentication-attempt-history.json"
+        "docs/verification/protected-authentication-attempt-history.json",
+        "docs/verification/protected-authentication-local-attempt-9.json",
+        "docs/verification/protected-authentication-visual-review-attempt-9.json",
+        "docs/verification/protected-authentication-cleanup-qualification.json"
       ]
     },
     {
@@ -54073,7 +54079,10 @@
         "docs/verification/protected-authentication-host.json",
         "docs/verification/protected-authentication-local.json",
         "docs/verification/protected-authentication-visual-review.json",
-        "docs/verification/protected-authentication-attempt-history.json"
+        "docs/verification/protected-authentication-attempt-history.json",
+        "docs/verification/protected-authentication-local-attempt-9.json",
+        "docs/verification/protected-authentication-visual-review-attempt-9.json",
+        "docs/verification/protected-authentication-cleanup-qualification.json"
       ]
     },
     {
@@ -54948,7 +54957,10 @@
         "docs/verification/protected-authentication-host.json",
         "docs/verification/protected-authentication-local.json",
         "docs/verification/protected-authentication-visual-review.json",
-        "docs/verification/protected-authentication-attempt-history.json"
+        "docs/verification/protected-authentication-attempt-history.json",
+        "docs/verification/protected-authentication-local-attempt-9.json",
+        "docs/verification/protected-authentication-visual-review-attempt-9.json",
+        "docs/verification/protected-authentication-cleanup-qualification.json"
       ]
     },
     {
@@ -55022,7 +55034,10 @@
         "docs/verification/protected-authentication-host.json",
         "docs/verification/protected-authentication-local.json",
         "docs/verification/protected-authentication-visual-review.json",
-        "docs/verification/protected-authentication-attempt-history.json"
+        "docs/verification/protected-authentication-attempt-history.json",
+        "docs/verification/protected-authentication-local-attempt-9.json",
+        "docs/verification/protected-authentication-visual-review-attempt-9.json",
+        "docs/verification/protected-authentication-cleanup-qualification.json"
       ]
     },
     {
