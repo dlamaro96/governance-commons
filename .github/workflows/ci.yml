@@ -63,6 +63,10 @@ jobs:
         run: python3 scripts/test_runtime_bootstrap.py
       - name: Isolated developer command routing
         run: python3 scripts/test_runtime_routing.py
+      - name: Application build admission and image integrity controls
+        run: |
+          python3 scripts/test_runtime_build_admission.py
+          python3 scripts/test_runtime_image_integrity.py
       - name: Current-schema seed admission
         run: python3 scripts/test_business_domain_seed.py
       - name: Immutable predecessor qualification binding
