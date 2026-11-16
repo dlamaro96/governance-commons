@@ -8,7 +8,7 @@ import {listSources} from '../../packages/connectors/src/source-list.ts';
 import {pacedFetch as fetch} from '../fixtures/http-budget.ts';
 
 const tenant='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',foreign='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
-const steward='10000000-0000-4000-8000-000000000001',engineer='10000000-0000-4000-8000-000000000002',consumer='10000000-0000-4000-8000-000000000003',summit='10000000-0000-4000-8000-000000000005';
+const steward='10000000-0000-4000-8000-000000000001',engineer='10000000-0000-4000-8000-000000000006',consumer='10000000-0000-4000-8000-000000000003',summit='10000000-0000-4000-8000-000000000005';
 const principal={tenantId:tenant,id:steward};
 const row=(id:string,name:string,tenantId=tenant)=>({tenant_id:tenantId,id,name,connector_id:'postgresql',host:'source-postgres',port:5432,database_name:'harbor',schema_name:'public',secret_ref:'demo-postgres'});
 const invalid=(error:unknown)=>error instanceof Problem&&error.status===400&&error.code==='SOURCE_PAGE_INVALID';
