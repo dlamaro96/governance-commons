@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+import { pacedFetch as fetch } from '../fixtures/http-budget.ts';
 /** Real HTTP, authenticated sessions and SQL011. These authored cases are not
  * qualification until executed against the matching runtime API/database. */
 import assert from 'node:assert/strict';
