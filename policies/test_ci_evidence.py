@@ -22,8 +22,8 @@ import protected_authn_evidence
 from test_authentication_evidence import fixture as authentication_fixture
 
 COLLECTOR = Path(__file__).with_name("ci_evidence.py")
-FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations", "business-domains", "source-connectors", "postgres-configuration", "approvals", "glossary", "quality", "lineage", "classification")
-STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "browser", "protected_authn")
+FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations", "business-domains", "source-connectors", "postgres-configuration", "approvals", "glossary", "quality", "lineage", "classification", "reference-data")
+STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade", "browser", "protected_authn")
 QUALITY_TITLE = "DQ: real column completeness, immutable thresholds, aggregate outcomes and current read boundaries"
 LINEAGE_TITLE = "LIN-001/004/006: real PostgreSQL view dependencies, evidence, paged exploration and tenant isolation"
 
@@ -39,13 +39,14 @@ POSTGRES_CAPTURES = tuple(f"m8-postgres-configuration-{state}-{language}-{width}
 PNG = bytes.fromhex("89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000b49444154789c6360000200000500017a5eab3f0000000049454e44ae426082")
 
 
+REFERENCE_TITLE = 'REF: independent publication, complete bilingual downloads, scheduled successor and current access boundaries'
 CLASSIFICATION_TITLE = 'CLS: real metadata suggestion, independent application, immutable pins, reviewed withdrawal and access boundaries'
 
 class EvidenceGateTests(unittest.TestCase):
     def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False, omitted_step=None, authn_mutation=None, omit_authn=False, protected_mutation=None, omit_protected=False, omitted_capture=None, symlink_capture=None, empty_capture=None, authority=False, authority_mutation=None, failed_outcome="failure"):
-        specs = [{"file": f"{name}.spec.ts", "line": line, "title": QUALITY_TITLE if name == "quality" else LINEAGE_TITLE if name == "lineage" else CLASSIFICATION_TITLE if name == "classification" else "PRIVATE_SYNTHETIC_TITLE",
+        specs = [{"file": f"{name}.spec.ts", "line": line, "title": QUALITY_TITLE if name == "quality" else LINEAGE_TITLE if name == "lineage" else CLASSIFICATION_TITLE if name == "classification" else REFERENCE_TITLE if name == "reference-data" else "PRIVATE_SYNTHETIC_TITLE",
                   "tests": [{"status": "expected", "results": [{"status": "passed", "duration": 1, "stdout": ["PRIVATE_SYNTHETIC_OUTPUT"]}]}]}
-                 for name in FILES for line in ((10, 20, 30) if name == "business-domains" else (10,) if name in ("source-connectors", "postgres-configuration", "approvals", "quality", "lineage", "classification") else (10, 20))]
+                 for name in FILES for line in ((10, 20, 30) if name == "business-domains" else (10,) if name in ("source-connectors", "postgres-configuration", "approvals", "quality", "lineage", "classification", "reference-data") else (10, 20))]
         if mutation:
             mutation(specs)
         with tempfile.TemporaryDirectory(prefix="gc-ci-evidence-") as temporary:
@@ -90,7 +91,7 @@ class EvidenceGateTests(unittest.TestCase):
                 (source / "authority-authn-foundation.json").write_text(json.dumps(authn))
             # These native gates remain step claims only.
             # Their arbitrary private originals must never enter public artifacts.
-            for private_name in ("authority-foundation.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-upgrade.json", "quality-worker.json", "lineage-upgrade.json", "lineage-worker.json", "classification-upgrade.json"):
+            for private_name in ("authority-foundation.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-upgrade.json", "quality-worker.json", "lineage-upgrade.json", "lineage-worker.json", "classification-upgrade.json", "reference-upgrade.json"):
                 value = authority_report if private_name == 'authority-foundation.json' and authority_report else {"PRIVATE_SYNTHETIC_NATIVE_REPORT": True}
                 (source / private_name).write_text(json.dumps(value))
             captures = root / "docs/verification/screenshots"
@@ -99,6 +100,7 @@ class EvidenceGateTests(unittest.TestCase):
             (captures / "quality-unreviewed.png").write_bytes(b"PRIVATE_SYNTHETIC_IMAGE")
             (captures / "lineage-unreviewed.png").write_bytes(b"PRIVATE_SYNTHETIC_IMAGE")
             (captures / "classification-unreviewed.png").write_bytes(b"PRIVATE_SYNTHETIC_IMAGE")
+            (captures / "reference-data-unreviewed.png").write_bytes(b"PRIVATE_SYNTHETIC_IMAGE")
             for name in CONNECTOR_CAPTURES + POSTGRES_CAPTURES:
                 if name == omitted_capture:
                     continue
@@ -120,7 +122,8 @@ class EvidenceGateTests(unittest.TestCase):
             self.assertFalse((root / ".local/ci-artifacts/quality-unreviewed.png").exists())
             self.assertFalse((root / ".local/ci-artifacts/lineage-unreviewed.png").exists())
             self.assertFalse((root / ".local/ci-artifacts/classification-unreviewed.png").exists())
-            for private_name in ("authority-foundation.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-upgrade.json", "quality-worker.json", "lineage-upgrade.json", "lineage-worker.json", "classification-upgrade.json"):
+            self.assertFalse((root / ".local/ci-artifacts/reference-data-unreviewed.png").exists())
+            for private_name in ("authority-foundation.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-upgrade.json", "quality-worker.json", "lineage-upgrade.json", "lineage-worker.json", "classification-upgrade.json", "reference-upgrade.json"):
                 self.assertFalse((root / ".local/ci-artifacts" / private_name).exists())
             for name in report["screenshots"]:
                 if name in CONNECTOR_CAPTURES + POSTGRES_CAPTURES:
@@ -138,13 +141,29 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(diagnostic['failed_phase'], 'authority_loader')
             return result.returncode, report
 
-    def test_all_twenty_seven_required_journeys_are_accepted_and_private_payloads_omitted(self):
+    def test_all_twenty_eight_required_journeys_are_accepted_and_private_payloads_omitted(self):
         code, report = self.collect()
         self.assertEqual(code, 0)
         self.assertEqual(report["outcome"], "PASS")
-        self.assertEqual(len(report["tests"]), 27)
+        self.assertEqual(len(report["tests"]), 28)
         self.assertEqual(set(report["screenshots"]), set(CONNECTOR_CAPTURES + POSTGRES_CAPTURES))
-        self.assertEqual(len(report["steps"]), 27)
+        self.assertEqual(len(report["steps"]), 28)
+
+    def test_reference_journey_requires_exactly_one_reviewed_success(self):
+        mutations = (
+            lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "reference-data.spec.ts"]),
+            lambda specs: specs.append(dict(next(s for s in specs if s["file"] == "reference-data.spec.ts"))),
+            lambda specs: next(s for s in specs if s["file"] == "reference-data.spec.ts").update(title="PRIVATE_SYNTHETIC_SUBSTITUTE"),
+            lambda specs: next(s for s in specs if s["file"] == "reference-data.spec.ts").pop("title"),
+            lambda specs: next(s for s in specs if s["file"] == "reference-data.spec.ts")["tests"][0].update(status="skipped"),
+            lambda specs: next(s for s in specs if s["file"] == "reference-data.spec.ts")["tests"][0].update(results=[]),
+            lambda specs: next(s for s in specs if s["file"] == "reference-data.spec.ts")["tests"][0].update(results=[{"status":"passed"},{"status":"passed"}]),
+        )
+        for number, mutation in enumerate(mutations):
+            with self.subTest(mutation=number):
+                code, report = self.collect(mutation)
+                self.assertEqual(code, 1)
+                self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_lineage_journey_is_required_exactly_once_with_reviewed_title(self):
         mutations = (
@@ -173,7 +192,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_lineage_cancelled_skipped_or_unknown_stage_cannot_qualify(self):
-        for step in ("lineage_upgrade", "lineage_worker", "classification_upgrade"):
+        for step in ("lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade"):
             for outcome in ("cancelled", "skipped", "PRIVATE_SYNTHETIC_INVALID"):
                 with self.subTest(step=step, outcome=outcome):
                     code, report = self.collect(failed_step=step, failed_outcome=outcome)
@@ -234,7 +253,7 @@ class EvidenceGateTests(unittest.TestCase):
 
     def test_missing_source_connector_journey_cannot_qualify_complete_gate(self):
         code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "source-connectors.spec.ts"]))
-        self.assertEqual(len(report["tests"]), 26)
+        self.assertEqual(len(report["tests"]), 27)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
@@ -245,7 +264,7 @@ class EvidenceGateTests(unittest.TestCase):
 
     def test_missing_postgres_configuration_cannot_qualify_complete_gate(self):
         code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "postgres-configuration.spec.ts"]))
-        self.assertEqual(len(report["tests"]), 26)
+        self.assertEqual(len(report["tests"]), 27)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
@@ -278,19 +297,19 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_older_sixteen_test_gate_cannot_hide_missing_business_domain_journeys(self):
-        code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] not in ("business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts", "lineage.spec.ts", "classification.spec.ts")]))
+        code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] not in ("business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts", "lineage.spec.ts", "classification.spec.ts", "reference-data.spec.ts")]))
         self.assertEqual(len(report["tests"]), 16)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_each_business_domain_journey_must_execute(self):
         code, report = self.collect(lambda specs: specs.remove(next(s for s in specs if s["file"] == "business-domains.spec.ts" and s["line"] == 30)))
-        self.assertEqual(len(report["tests"]), 26)
+        self.assertEqual(len(report["tests"]), 27)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_missing_business_domain_qualification_steps_fail_closed(self):
-        for step in ("business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade"):
+        for step in ("business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade"):
             with self.subTest(step=step):
                 code, report = self.collect(omitted_step=step)
                 self.assertEqual(code, 1)
@@ -308,7 +327,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
 
     def test_real_service_failure_cannot_be_overridden_by_successful_browser_results(self):
-        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade"):
+        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade"):
             with self.subTest(step=step):
                 code, report = self.collect(failed_step=step)
                 self.assertEqual(code, 1)
@@ -362,7 +381,7 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(report["api_evidence"], "STEP_RESULT_MISMATCH")
 
     def test_authentication_native_gate_and_evidence_are_required(self):
-        self.assertEqual(len(STEPS), 27)
+        self.assertEqual(len(STEPS), 28)
         code, report = self.collect(omit_authn=True)
         self.assertEqual(code, 1)
         self.assertEqual(report["authentication_evidence"], "UNAVAILABLE_OR_INVALID")
@@ -419,7 +438,9 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertIn("id: lineage_worker\n        run: ./dev test --suite lineage-worker", workflow)
         self.assertIn("id: classification_upgrade\n        run: ./dev test --suite classification-upgrade", workflow)
         self.assertLess(workflow.index("id: lineage_worker"), workflow.index("id: classification_upgrade"))
-        self.assertLess(workflow.index("id: classification_upgrade"), workflow.index("id: browser"))
+        self.assertIn("id: reference_upgrade\n        run: ./dev test --suite reference-upgrade", workflow)
+        self.assertLess(workflow.index("id: classification_upgrade"), workflow.index("id: reference_upgrade"))
+        self.assertLess(workflow.index("id: reference_upgrade"), workflow.index("id: browser"))
         self.assertLess(workflow.index("id: quality_worker"), workflow.index("id: lineage_upgrade"))
         self.assertLess(workflow.index("id: lineage_upgrade"), workflow.index("id: lineage_worker"))
         self.assertLess(workflow.index("id: lineage_worker"), workflow.index("id: browser"))
@@ -430,6 +451,8 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertIn("{ name: 'postgres-configuration', testMatch: /postgres-configuration\\.spec\\.ts/, dependencies: ['source-connectors'] }", config)
         self.assertIn("{ name: 'quality', testMatch: /quality\\.spec\\.ts/, dependencies: ['glossary'] }", config)
         self.assertIn("{ name: 'lineage', testMatch: /lineage\\.spec\\.ts/, dependencies: ['quality'] }", config)
+        self.assertIn("tests/e2e/reference-data.spec.ts", workflow)
+        self.assertIn("{ name: 'reference-data', testMatch: /reference-data\\.spec\\.ts/, dependencies: ['classification'] }", config)
         self.assertIn("id: protected_authn", workflow)
         self.assertLess(workflow.index("id: browser"), workflow.index("id: protected_authn"))
         for step in STEPS:

@@ -34,7 +34,7 @@ class CurrentSchemaAdmissionTests(unittest.TestCase):
     def test_exact_minimum_and_later_schema_bind_every_file(self):
         expected = self.migrations(12)
         self.assertEqual(seed.migration_inventory(self.directory), expected)
-        for index in (13, 14, 15, 16, 17, 18):
+        for index in (13, 14, 15, 16, 17, 18, 19, 20, 21, 22):
             name, body = f'{index:03d}_synthetic.sql', f'-- Later {index}\n'.encode()
             (self.directory / name).write_bytes(body)
             expected.append({'name': name, 'checksum': hashlib.sha256(body).hexdigest()})
@@ -171,7 +171,9 @@ class QualitySeedPreservationTests(unittest.TestCase):
                  'permissions': ['catalog:read', 'operator:preserved'] +
                     (['quality:read'] if role in ('consumer', 'auditor') else ['quality:read', 'quality:write', 'quality:execute']) +
                     ([] if role == 'consumer' else ['classification:read'] if role == 'auditor'
-                     else ['classification:read', 'classification:write', 'classification:approve'])}
+                     else ['classification:read', 'classification:write', 'classification:approve']) +
+                    (['reference:read'] if role in ('consumer', 'auditor')
+                     else ['reference:read', 'reference:write', 'reference:approve'])}
                 for index, (role, tenant, _) in enumerate(seed.PERSONA_GRANTS, 1)]
 
     def snapshot(self):
@@ -182,7 +184,7 @@ class QualitySeedPreservationTests(unittest.TestCase):
         # Fixed vectors cross-checked with the real TypeScript typeHash codec;
         # changing writer+oracle together cannot silently change these old pins.
         expected = seed.expected_permission_markers()
-        self.assertEqual(len(expected), 16)
+        self.assertEqual(len(expected), 22)
         self.assertEqual(expected[(seed.HARBOR, seed.ENGINEER, 'bootstrap.domain-permissions.v1')],
                          '7d75f8ff5bdc1f51e4020e4b3323a8dfbdd73c3e8e6cbe270407ba98086e5bdb')
         self.assertEqual(expected[(seed.HARBOR, '10000000-0000-4000-8000-000000000004', 'bootstrap.domain-permissions.v1')],
@@ -200,7 +202,7 @@ class QualitySeedPreservationTests(unittest.TestCase):
         actual, (statement, label) = self.read('permission_markers', markers)
         self.assertEqual(actual, markers)
         self.assertEqual(label, 'permission-marker-readback')
-        self.assertIn('LIMIT 17', statement)
+        self.assertIn('LIMIT 23', statement)
         self.assertIn("'bootstrap.classification-permissions.v1'", statement)
         self.assertIn('to_jsonb(r)', statement)  # Creation time and every receipt column stay in equality.
         self.assertTrue(statement.startswith('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY;'))
@@ -276,12 +278,12 @@ class QualitySeedPreservationTests(unittest.TestCase):
             with self.subTest(case=index):
                 with self.assertRaises(RuntimeError): self.read('quality_snapshot', value)
 
-    def test_revocation_removes_three_actions_only_and_restoration_keeps_original_fields(self):
-        engineer = self.permissions()[-1] | {'permissions': ['catalog:read', 'domains:write', 'quality:read', 'quality:execute', 'classification:read', 'classification:write', 'classification:approve', 'custom:retained']}
+    def test_revocation_removes_four_actions_only_and_restoration_keeps_original_fields(self):
+        engineer = self.permissions()[-1] | {'permissions': ['catalog:read', 'domains:write', 'quality:read', 'quality:execute', 'classification:read', 'classification:write', 'classification:approve', 'reference:read', 'reference:write', 'reference:approve', 'custom:retained']}
         original = copy.deepcopy(engineer)
         revoked = seed.revoked_engineer(engineer)
         self.assertEqual(engineer, original)
-        self.assertEqual(revoked['permissions'], ['catalog:read', 'quality:read', 'classification:read', 'classification:write', 'custom:retained'])
+        self.assertEqual(revoked['permissions'], ['catalog:read', 'quality:read', 'classification:read', 'classification:write', 'reference:read', 'reference:write', 'custom:retained'])
         harness = seed.Harness(Path('/synthetic-unused-attempt'))
         consumer = self.permissions()[2]
         with patch.object(harness, 'query') as query:
@@ -299,7 +301,7 @@ class QualitySeedPreservationTests(unittest.TestCase):
             # Shared recovery still changes only engineer/consumer; an owner
             # may have durable approval/classification references in this core.
             self.assertNotIn('10000000-0000-4000-8000-000000000002', statement)
-        for missing in ('domains:write', 'quality:execute', 'classification:approve'):
+        for missing in ('domains:write', 'quality:execute', 'classification:approve', 'reference:approve'):
             with self.assertRaises(RuntimeError):
                 seed.revoked_engineer(engineer | {'permissions': [v for v in engineer['permissions'] if v != missing]})
 
@@ -334,15 +336,98 @@ class QualitySeedPreservationTests(unittest.TestCase):
         classification = {key: value for key, value in expected.items() if key[2] == 'bootstrap.classification-permissions.v1'}
         self.assertEqual(len(classification), 5)
         self.assertNotIn((seed.HARBOR, seed.CONSUMER, 'bootstrap.classification-permissions.v1'), classification)
-        # Remove just the new family while retaining all eleven historical
-        # receipts, then append a forged consumer receipt. Both must refuse.
+        # Remove classification while retaining all other families, including
+        # the original eleven receipts, then append a forged consumer receipt.
         old_only = [row for row in self.markers() if row['operation'] != 'bootstrap.classification-permissions.v1']
-        self.assertEqual(len(old_only), 11)
+        self.assertEqual(len(old_only), 17)
+        self.assertEqual(len([row for row in old_only if row['operation'] != 'bootstrap.reference-permissions.v1']), 11)
         forged = copy.deepcopy(next(row for row in self.markers() if row['operation'] == 'bootstrap.classification-permissions.v1'))
         forged['actor_id'] = seed.CONSUMER
         for rows in (old_only, self.markers() + [forged]):
             with self.subTest(receipts=len(rows)), self.assertRaises(RuntimeError):
                 self.read('permission_markers', rows)
+
+
+    def test_six_reference_receipts_match_fixed_vectors_and_old_sixteen_remain_required(self):
+        expected = seed.expected_permission_markers()
+        pins = [
+            '9ff26a3c1e1144781a2438042f5fa3c697b97c7f22a286725a57a645a433d256',
+            '7841c47c3fcb9f50da4748870dcce734bfa2bb1e1f44b65f4cb7c19dff342b90',
+            'ebbb4edee81c37943669e571edbad206eefae4c7fd768ddba50cc2c470615a9b',
+            '820093bdeba363982098e0b0064551c0116cd9dcfe6a591398a00907f6d97026',
+            '44e28c3481b65726afdca5a4ff50c986393f31ecb613142d3d66e8dc721827e6',
+            '16a363bec82f47297ed13e90b83d5eb09d081433a237436b3a7922ab0e1b837d']
+        for index, ((_, tenant, _), pin) in enumerate(zip(seed.PERSONA_GRANTS, pins), 1):
+            self.assertEqual(expected[(tenant, '10000000-0000-4000-8000-' + str(index).zfill(12),
+                                       'bootstrap.reference-permissions.v1')], pin)
+        old = [row for row in self.markers() if row['operation'] != 'bootstrap.reference-permissions.v1']
+        self.assertEqual(len(old), 16)
+        reference = [row for row in self.markers() if row['operation'] == 'bootstrap.reference-permissions.v1']
+        self.assertEqual(len(reference), 6)
+        for rows in (old, reference, self.markers() + reference[:1]):
+            with self.subTest(receipts=len(rows)), self.assertRaises(RuntimeError):
+                self.read('permission_markers', rows)
+        _, (statement, _) = self.read('permission_markers', self.markers())
+        self.assertIn("'bootstrap.reference-permissions.v1'", statement)
+
+    def test_exact_reference_grants_keep_read_only_personas_and_other_authority(self):
+        rows = self.permissions()
+        original = copy.deepcopy(rows)
+        self.assertEqual(seed.verify_reference_permissions(rows), original)
+        self.assertEqual(rows, original)
+        for index in (2, 3):
+            self.assertEqual([p for p in rows[index]['permissions'] if p.startswith('reference:')], ['reference:read'])
+        self.assertIn('operator:preserved', rows[0]['permissions'])
+
+    def test_missing_revoked_widened_duplicate_or_transplanted_reference_grants_refuse(self):
+        cases = [[], self.permissions()[:-1]]
+        for index, field, value in (
+                (2, 'permissions', []), (2, 'permissions', ['reference:read', 'reference:write']),
+                (3, 'permissions', ['reference:read', 'reference:approve']),
+                (5, 'permissions', ['reference:read', 'reference:write']),
+                (0, 'permissions', ['reference:read', 'reference:write', 'reference:approve', 'reference:read']),
+                (0, 'permissions', ['reference:read', 'reference:write', 'reference:approve', 'reference:unknown']),
+                (0, 'permissions', ['reference:read', None]),
+                (4, 'tenant_id', seed.HARBOR), (1, 'active', False), (1, 'role', 'steward')):
+            changed = self.permissions()
+            changed[index][field] = value
+            cases.append(changed)
+        for index, rows in enumerate(cases):
+            with self.subTest(case=index), self.assertRaises(RuntimeError):
+                seed.verify_reference_permissions(rows)
+
+    def reference_snapshot(self):
+        return {name: {'rows': 0, 'serialized_bytes': 0, 'sha256': hashlib.sha256(b'').hexdigest()}
+                for name in (*seed.REFERENCE_TABLES, 'audit', 'outbox', 'idempotency')}
+
+    def test_reference_snapshot_includes_full_existing_versions_and_receipts_in_both_tenants(self):
+        expected = self.reference_snapshot()
+        expected['reference_releases'] = {'rows': 9, 'serialized_bytes': 8192, 'sha256': 'b' * 64}
+        actual, (statement, label) = self.read('reference_snapshot', expected)
+        self.assertEqual(actual, expected)
+        self.assertEqual(label, 'reference-row-digests')
+        tenant = "tenant_id IN ('" + seed.HARBOR + "','" + seed.SUMMIT + "')"
+        self.assertEqual(statement.count(tenant), 6)
+        for table in seed.REFERENCE_TABLES:
+            self.assertIn('FROM public.' + table + ' r WHERE ' + tenant, statement)
+        self.assertEqual(statement.count('to_jsonb(r)::text payload'), 6)
+        for column in ('action', 'event_type', 'operation'):
+            self.assertIn(column + " LIKE 'reference.%'", statement)
+        self.assertTrue(statement.startswith('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY;'))
+        for forbidden in ('UPDATE ', 'INSERT ', 'DELETE ', "-'processed_at'", "-'attempts'", 'bootstrap.reference'):
+            self.assertNotIn(forbidden, statement)
+
+    def test_reference_snapshot_missing_extra_overflow_or_unhashable_refuses(self):
+        cases = [{}, [], self.reference_snapshot() | {'unexpected': self.reference_snapshot()['audit']}]
+        for field, value in (('rows', True), ('rows', -1), ('rows', 20001),
+                             ('serialized_bytes', 67108865), ('serialized_bytes', -1),
+                             ('sha256', None), ('sha256', 'bad')):
+            changed = self.reference_snapshot()
+            changed['reference_values'][field] = value
+            cases.append(changed)
+        for index, value in enumerate(cases):
+            with self.subTest(case=index), self.assertRaises(RuntimeError):
+                self.read('reference_snapshot', value)
 
 
 if __name__ == '__main__':

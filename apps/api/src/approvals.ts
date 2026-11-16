@@ -16,6 +16,7 @@ import {getAssetGlossaryContext,type GlossaryContextQuery} from '../../../packag
 import {getGlossaryTerm} from '../../../packages/domain/src/glossary-publication-service.ts';
 import {publishApprovalFromSite} from './classification-publication.ts';
 import {classificationHttp} from './classification.ts';
+import {referenceHttp} from './reference-data.ts';
 
 const object=<T extends TProperties>(properties:T)=>Type.Object(properties,{additionalProperties:false});
 const choices=(...values:string[])=>Type.Union(values.map(value=>Type.Literal(value)));
@@ -44,7 +45,7 @@ const publication=object({typePin:object({typeId:uuid,modelId:key,version:positi
   targetAssetId:uuid,targetAssetVersion:positive}),{maxItems:GLOSSARY_LIMITS.links})});
 const glossaryProposal=object({requestId:uuid,resourceId:uuid,resourceVersion:nullable(positive),publication,
  workflowPin:object({id:key,version:positive,definitionHash:digest}),assignments:Type.Record(key,uuid,{minProperties:1,maxProperties:256,additionalProperties:false}),expiresAt:stamp});
-const summary={id:uuid,binding:choices('glossary.publish','classification.review'),resourceId:uuid,resourceVersion:nullable(positive),proposalDigest:digest,workflowId:key,
+const summary={id:uuid,binding:choices('glossary.publish','classification.review','reference.publish'),resourceId:uuid,resourceVersion:nullable(positive),proposalDigest:digest,workflowId:key,
  workflowVersion:positive,workflowHash:digest,requesterId:uuid,stageIndex:Type.Integer({minimum:0,maximum:15}),version:positive,status,
  expiresAt:stamp,createdAt:stamp,updatedAt:stamp,preconditionsCurrent:Type.Boolean()};
 // Typed custom attributes are interpreted only by the pure glossary/model
@@ -56,7 +57,8 @@ const requestFields={...summary,workflow:definitionView,errorCode:nullable(Type.
   status:choices('waiting','open','decided','cancelled'),openedAt:nullable(stamp),expiresAt:nullable(stamp)}),{maxItems:256}),
  decisions:Type.Array(object({id:uuid,taskId:uuid,taskVersion:positive,actorId:uuid,decision:choices('approve','reject'),reason:Type.String({minLength:1,maxLength:4096}),decidedAt:stamp}),{maxItems:256})};
 const requestView=Type.Union([object({...requestFields,binding:Type.Literal('glossary.publish'),payload:publication,result:nullable(publicationReceipt)}),
- object({...requestFields,binding:Type.Literal('classification.review'),payload:classificationHttp.approvalPayload,result:nullable(classificationHttp.approvalResult)})]);
+ object({...requestFields,binding:Type.Literal('classification.review'),payload:classificationHttp.approvalPayload,result:nullable(classificationHttp.approvalResult)}),
+ object({...requestFields,binding:Type.Literal('reference.publish'),payload:referenceHttp.approvalPayload,result:nullable(referenceHttp.approvalResult)})]);
 const pageOf=(schema:TSchema)=>object({items:Type.Array(schema,{maxItems:100}),nextCursor:nullable(Type.String({maxLength:1024}))});
 const invalid=()=>new Problem(400,'APPROVAL_INPUT_INVALID','Provide exactly the declared approval fields and values.');
 const problem=object({type:Type.String(),title:Type.String(),status:Type.Integer(),code:Type.String(),detail:Type.String(),correlationId:Type.String(),

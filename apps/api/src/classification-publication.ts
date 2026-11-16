@@ -4,6 +4,7 @@ import {Problem} from '../../../packages/authz/src/index.ts';
 import {approvalQuery,approvalStatus} from '../../../packages/domain/src/approval-service.ts';
 import {classificationFailure,parseClassificationApprovalResult} from '../../../packages/domain/src/classification-service.ts';
 import {publishGlossaryFromSite} from './glossary-publication.ts';
+import {publishReferenceFromSite} from './reference-data-publication.ts';
 
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 type FailureCode='CLASSIFICATION_AUTHORITY_REVOKED'|'CLASSIFICATION_PRECONDITIONS_CHANGED'|'CLASSIFICATION_EXPIRED'|'CLASSIFICATION_APPROVAL_INVALID';
@@ -50,8 +51,8 @@ export function createClassificationPublicationHandler(dependencies:Dependencies
  };
 }
 export const publishClassificationFromSite=createClassificationPublicationHandler();
-interface DispatchDependencies{scope:typeof scope;glossary:typeof publishGlossaryFromSite;classification:typeof publishClassificationFromSite}
-export function createApprovalPublicationDispatcher(dependencies:DispatchDependencies={scope,glossary:publishGlossaryFromSite,classification:publishClassificationFromSite}){
+interface DispatchDependencies{scope:typeof scope;glossary:typeof publishGlossaryFromSite;classification:typeof publishClassificationFromSite;reference:typeof publishReferenceFromSite}
+export function createApprovalPublicationDispatcher(dependencies:DispatchDependencies={scope,glossary:publishGlossaryFromSite,classification:publishClassificationFromSite,reference:publishReferenceFromSite}){
  return async(tenantId:string,requestId:string)=>{
   if(!uuid.test(tenantId)||!uuid.test(requestId))throw new Problem(400,'APPROVAL_INPUT_INVALID','Provide a valid approval identifier.');
   const binding=await dependencies.scope(tenantId,'site:local',async tx=>(await approvalQuery(tx,()=>sql<{binding:string}>`
@@ -59,6 +60,7 @@ export function createApprovalPublicationDispatcher(dependencies:DispatchDepende
   if(binding===undefined)throw new Problem(404,'APPROVAL_UNAVAILABLE','The approval request is unavailable.');
   if(binding==='glossary.publish')return dependencies.glossary(tenantId,requestId);
   if(binding==='classification.review')return dependencies.classification(tenantId,requestId);
+  if(binding==='reference.publish')return dependencies.reference(tenantId,requestId);
   throw new Problem(500,'APPROVAL_STORAGE_INVALID','The approval request could not be verified.');
  };
 }

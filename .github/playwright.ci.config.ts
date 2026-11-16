@@ -29,5 +29,6 @@ export default defineConfig({
     { name: 'quality', testMatch: /quality\.spec\.ts/, dependencies: ['glossary'] },
     { name: 'lineage', testMatch: /lineage\.spec\.ts/, dependencies: ['quality'] },
     { name: 'classification', testMatch: /classification\.spec\.ts/, dependencies: ['lineage'] },
+    { name: 'reference-data', testMatch: /reference-data\.spec\.ts/, dependencies: ['classification'] },
   ],
 });
