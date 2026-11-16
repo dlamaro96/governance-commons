@@ -1,5 +1,8 @@
 # Execution plan
 
+
+Latest checkpoint — 2026-11-16T08:42Z: SQL012 shared-core compatibility passes 154 API cases, 19 no-retry browser journeys and 137 scoped original-frame reviews. Local current-schema seed regression passes after the harness 11→12 migration guard correction; the first hosted Development attempt failed at that stage and skipped later gates. Publish the exact browser synchronization and schema-guard fixes with separate evidence, preserve every failed attempt and require fresh hosted qualification before PR21 merge. In parallel, finish the dedicated protected-broker/session/edge implementation and real isolated PostgreSQL/Keycloak/browser gate in codex/protected-broker. No content authority is activated; all remaining authority and M0–M10 obligations stay required.
+
 Latest checkpoint — 2026-11-16T07:55Z: root shared startup and independent33-check/source/schema/ACL/volume readback pass; SQL001–012 are immutable and imageb82f4d0b carries262 verified sources. Native21/14 and435-unit/types/publication gates remain separately qualified. Finish current synthetic API regression and full19 browser/rendered review, publish the coherent foundation increment and require fresh hosted gates. Continue real protected OIDC/lifecycle transport then all canonical content-authority/cutover and remaining programme requirements.
 
 

@@ -53757,7 +53757,8 @@
         "Fresh PR18 Source43809453368 and Development43809453362 pass at identical-tree ancestry head0fa61c/testedmergefa3e997:821 immutable files,154API,19one-attempt browsers,14mandatory stages and three zero-finding current analyses. Exact head merged as4102116d on2026-11-16T05:58:47Z. This is regression qualification of the preceding parser/interpreter source, separate from the new decision engine and from unverified postmerge runs.",
         "PR19 fresh Source43814105793 and Development43814105764 qualify admission headcc916580/testedmergec3fff2cb:885 immutable files,154API,19 one-attempt browser journeys,14 mandatory stages and three zero-finding stored analyses. Exact head merged as2c525712 on2026-11-16T06:32:14Z. Hosted raw unit count is not exported. This is premerge regression qualification of admission only; engine, protected storage, runtime cutover, postmerge execution and full profile/release qualification remain separate.",
         "PR20 fresh Source43817616108 and Development43817616265 qualify reference-engine headcdec876/testedmerge5e0234d:935 immutable files,154API,19 one-attempt browsers,14 mandatory stages and three zero-finding analyses. Exact head merged as94efe7f8 on2026-11-16T07:11:43Z. Hosted unit TAP/count is not exported;91 literal decision declarations are not an executed-result count. Protected authentication/storage, content authority, postmerge execution and complete profile/release qualification remain separate.",
-        "Inactive protected authentication foundation only: SQL012, thirteen private tables, nine owner-only installation operations, six finite native-role functions, typed transactional client and private installation CLI are implemented. The exact isolated native gate passes21 storage and14 concurrency cases with115 stable sources, preserved SQL001–011 data and owned cleanup.435 host units/root-web types/40 publication tests pass with269 stable inputs; historical type-upgrade9+9 is separate. Full protected OIDC broker, cookies/CSRF, canonical content authority, policy storage/loaders, SQL/OpenSearch equivalence, administration, service leases and atomic all-ingress cutover remain required. No complete profile or release outcome is promoted."
+        "Inactive protected authentication foundation only: SQL012, thirteen private tables, nine owner-only installation operations, six finite native-role functions, typed transactional client and private installation CLI are implemented. The exact isolated native gate passes21 storage and14 concurrency cases with115 stable sources, preserved SQL001–011 data and owned cleanup.435 host units/root-web types/40 publication tests pass with269 stable inputs; historical type-upgrade9+9 is separate. Full protected OIDC broker, cookies/CSRF, canonical content authority, policy storage/loaders, SQL/OpenSearch equivalence, administration, service leases and atomic all-ingress cutover remain required. No complete profile or release outcome is promoted.",
+        "SQL012 existing-core compatibility now passes154 API cases,19 browser journeys with zero retries and137 scoped original-frame reviews. The first hosted Development attempt failed its outdated11-migration seed guard and skipped later gates; a local12-migration repair passes three real seed invocations and exact22-table/persona restoration. These records preserve failures and do not qualify protected OIDC transport, content authority, any complete profile or release. See the separate current-core API, browser and seed evidence."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -53790,7 +53791,11 @@
         "docs/verification/authority-hosted-attempt-2.json",
         "docs/verification/authority-admission-hosted-attempt-1.json",
         "docs/verification/authority-engine-hosted-attempt-2.json",
-        "docs/verification/authentication-foundation.json"
+        "docs/verification/authentication-foundation.json",
+        "docs/verification/authentication-foundation-core-api.json",
+        "docs/verification/authentication-foundation-core-browser.json",
+        "docs/verification/authentication-foundation-domain-seed.json",
+        "docs/verification/authentication-foundation-hosted-attempt-1.json"
       ]
     },
     {
@@ -54007,7 +54012,8 @@
         "Fresh PR18 Source43809453368 and Development43809453362 pass at identical-tree ancestry head0fa61c/testedmergefa3e997:821 immutable files,154API,19one-attempt browsers,14mandatory stages and three zero-finding current analyses. Exact head merged as4102116d on2026-11-16T05:58:47Z. This is regression qualification of the preceding parser/interpreter source, separate from the new decision engine and from unverified postmerge runs.",
         "PR19 fresh Source43814105793 and Development43814105764 qualify admission headcc916580/testedmergec3fff2cb:885 immutable files,154API,19 one-attempt browser journeys,14 mandatory stages and three zero-finding stored analyses. Exact head merged as2c525712 on2026-11-16T06:32:14Z. Hosted raw unit count is not exported. This is premerge regression qualification of admission only; engine, protected storage, runtime cutover, postmerge execution and full profile/release qualification remain separate.",
         "PR20 fresh Source43817616108 and Development43817616265 qualify reference-engine headcdec876/testedmerge5e0234d:935 immutable files,154API,19 one-attempt browsers,14 mandatory stages and three zero-finding analyses. Exact head merged as94efe7f8 on2026-11-16T07:11:43Z. Hosted unit TAP/count is not exported;91 literal decision declarations are not an executed-result count. Protected authentication/storage, content authority, postmerge execution and complete profile/release qualification remain separate.",
-        "Inactive protected authentication foundation only: SQL012, thirteen private tables, nine owner-only installation operations, six finite native-role functions, typed transactional client and private installation CLI are implemented. The exact isolated native gate passes21 storage and14 concurrency cases with115 stable sources, preserved SQL001–011 data and owned cleanup.435 host units/root-web types/40 publication tests pass with269 stable inputs; historical type-upgrade9+9 is separate. Full protected OIDC broker, cookies/CSRF, canonical content authority, policy storage/loaders, SQL/OpenSearch equivalence, administration, service leases and atomic all-ingress cutover remain required. No complete profile or release outcome is promoted."
+        "Inactive protected authentication foundation only: SQL012, thirteen private tables, nine owner-only installation operations, six finite native-role functions, typed transactional client and private installation CLI are implemented. The exact isolated native gate passes21 storage and14 concurrency cases with115 stable sources, preserved SQL001–011 data and owned cleanup.435 host units/root-web types/40 publication tests pass with269 stable inputs; historical type-upgrade9+9 is separate. Full protected OIDC broker, cookies/CSRF, canonical content authority, policy storage/loaders, SQL/OpenSearch equivalence, administration, service leases and atomic all-ingress cutover remain required. No complete profile or release outcome is promoted.",
+        "SQL012 existing-core compatibility now passes154 API cases,19 browser journeys with zero retries and137 scoped original-frame reviews. The first hosted Development attempt failed its outdated11-migration seed guard and skipped later gates; a local12-migration repair passes three real seed invocations and exact22-table/persona restoration. These records preserve failures and do not qualify protected OIDC transport, content authority, any complete profile or release. See the separate current-core API, browser and seed evidence."
       ],
       "owner": "unassigned",
       "milestone": "M0",
@@ -54022,7 +54028,11 @@
         "docs/verification/authority-hosted-attempt-2.json",
         "docs/verification/authority-admission-hosted-attempt-1.json",
         "docs/verification/authority-engine-hosted-attempt-2.json",
-        "docs/verification/authentication-foundation.json"
+        "docs/verification/authentication-foundation.json",
+        "docs/verification/authentication-foundation-core-api.json",
+        "docs/verification/authentication-foundation-core-browser.json",
+        "docs/verification/authentication-foundation-domain-seed.json",
+        "docs/verification/authentication-foundation-hosted-attempt-1.json"
       ]
     },
     {

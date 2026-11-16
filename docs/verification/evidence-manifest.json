@@ -1226,6 +1226,56 @@
       },
       "runtime_authority_activated": false,
       "release_qualified": false
+    },
+    {
+      "path": "docs/verification/authentication-foundation-core-api.json",
+      "scope": "The existing core API/security suite continues to pass with SQL012 installed and finite executor roles provisioned. This qualifies compatibility of existing application behavior; it does not qualify an activated protected-session HTTP broker or scoped content authority.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_SHARED_CORE_SEED_AND_EXISTING_154_API_REGRESSIONS_AFTER_SQL012",
+      "source_binding": {
+        "base_revision": "e57cb2cfae7b3ec161b87cfa97c4c70edb1045cb",
+        "evidence_sha256": "5811f3fea091300e6e40ec9bac083bb93ccc9d04a96b4aa81f9ced0dded2c026"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/authentication-foundation-core-browser.json",
+      "scope": "Existing real OIDC, source scan, catalog, ownership, audit, models, migrations, types, relations and domain browser regression with SQL012 installed; separate from new protected login transport and content authority.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_19_EXISTING_CORE_BROWSER_JOURNEYS_AND_137_SCOPED_RENDERED_FRAMES",
+      "source_binding": {
+        "base_revision": "e57cb2cfae7b3ec161b87cfa97c4c70edb1045cb",
+        "evidence_sha256": "d441918703154f33596a8c8d990ef558df49eec377bcedae5743d417502dbc4b"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/authentication-foundation-domain-seed.json",
+      "scope": "Existing synthetic business-domain seed preserves exact domain rows and subsequent permission revocation/deleted membership under SQL012. The harness current-schema guard is advanced from11 to12; no seed product logic changed.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_CURRENT_SQL012_EXISTING_CORE_SEED_REGRESSION",
+      "source_binding": {
+        "base_revision": "e57cb2cfae7b3ec161b87cfa97c4c70edb1045cb",
+        "evidence_sha256": "78bdfabb5b273c2b4f5916d19b50ca1e3aaeafa2e44ed60cea9cf73fde038a8a"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/authentication-foundation-hosted-attempt-1.json",
+      "scope": "First hosted authentication-foundation attempt at exact e57cb2c head and tested merge7c55a80. Source security, dependency metadata, secret scopes and154 real API outcomes are verified. Development failed at business-domain seed qualification; the isolated authentication-foundation gate and browser stage did not run. This report preserves that failure and does not substitute later local or hosted evidence.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "NOT_PASSED_FIRST_HOSTED_DEVELOPMENT_ATTEMPT",
+      "source_binding": {
+        "base_revision": "e57cb2cfae7b3ec161b87cfa97c4c70edb1045cb",
+        "tested_merge": "7c55a80ff43afecc6e81cc938528e9900ecc9a14",
+        "verified_source_files": 987,
+        "evidence_sha256": "568e1c9fbe18cfd02e027b1a84f1be9631e3f13736bf895f0a8bce1a17c9a4d0"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
     }
   ],
   "limitations": [

@@ -1,0 +1,551 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-16T08:35:50.890567+00:00",
+  "implementation_status": "IN_PROGRESS",
+  "verification_status": "PASS_CURRENT_SQL012_EXISTING_CORE_SEED_REGRESSION",
+  "runtime_authority_activated": false,
+  "release_qualified": false,
+  "scope": "Existing synthetic business-domain seed preserves exact domain rows and subsequent permission revocation/deleted membership under SQL012. The harness current-schema guard is advanced from11 to12; no seed product logic changed.",
+  "base_revision": "e57cb2cfae7b3ec161b87cfa97c4c70edb1045cb",
+  "command": "python3 scripts/runtime-test-business-domain-seed.py --run-core",
+  "started_at": "2026-11-16T08:26:00.936372+00:00",
+  "finished_at": "2026-11-16T08:26:16.276145+00:00",
+  "profile": "core",
+  "checks": [
+    "two real seed replays preserve exact domain and persona membership row digests",
+    "later engineer domains:write revocation survives real seed",
+    "deleted synthetic consumer membership is not recreated",
+    "exact captured membership rows restored and all six personas unchanged"
+  ],
+  "seed_invocations": [
+    {
+      "domain_snapshot_equal": true,
+      "exit_status": 0,
+      "finished_at": "2026-11-16T08:26:06.524829+00:00",
+      "persona_memberships_equal": true,
+      "phase": "unchanged-1",
+      "result": "PASS",
+      "started_at": "2026-11-16T08:26:02.778589+00:00"
+    },
+    {
+      "domain_snapshot_equal": true,
+      "exit_status": 0,
+      "finished_at": "2026-11-16T08:26:10.548047+00:00",
+      "persona_memberships_equal": true,
+      "phase": "unchanged-2",
+      "result": "PASS",
+      "started_at": "2026-11-16T08:26:06.913325+00:00"
+    },
+    {
+      "consumer_membership_still_absent": true,
+      "domain_snapshot_equal": true,
+      "exit_status": 0,
+      "finished_at": "2026-11-16T08:26:14.822168+00:00",
+      "permission_still_revoked": true,
+      "phase": "revoked-engineer-and-deleted-consumer",
+      "result": "PASS",
+      "started_at": "2026-11-16T08:26:11.198340+00:00"
+    }
+  ],
+  "fixture_restore": {
+    "all_six_personas_sha256": "8ec7a1f59589c8b26784d438021185f6fd56014eb664d909f5f80124e78ee43b",
+    "original_rows_sha256": "4a5e1904f5430351910609f895bd0600ca620b2ae4bc2da76a883f702cd49178",
+    "prior_attempt_errors": [],
+    "required": true,
+    "result": "PASS"
+  },
+  "domain_table_count": 22,
+  "domain_rows_before_and_after": {
+    "asset_domain_placement_revisions": {
+      "rows": 63,
+      "serialized_bytes": 33523,
+      "sha256": "e417d9cee5c59c076dcdb16e81b71b19956398aef017cb62cef678d25b0bcaa8"
+    },
+    "asset_domain_placements": {
+      "rows": 46,
+      "serialized_bytes": 14834,
+      "sha256": "e7e637c330fd341d1d07b2be0aab9d46893e8a90cfc7a5db4c1d235e15bdc5fb"
+    },
+    "audit": {
+      "rows": 651,
+      "serialized_bytes": 1155648,
+      "sha256": "b6acbc1ac14d670079eaf2bf0c0ead63427a3626a1fcd36877a82f7f56f0a2de"
+    },
+    "domain_migration_operations": {
+      "rows": 20,
+      "serialized_bytes": 75732,
+      "sha256": "4e2f63ac09baf443479bb116952af253f7f7193fccb71a769ca7bed1b94986fd"
+    },
+    "domain_operation_contexts": {
+      "rows": 594,
+      "serialized_bytes": 2242031,
+      "sha256": "d24b1f6af36f56c212f33ef05f6b2015804145aba389eebd01a517d13d5973fc"
+    },
+    "domain_operation_domain_claims": {
+      "rows": 489,
+      "serialized_bytes": 1078494,
+      "sha256": "de597f898bb5cd69466763c39ad3968f0c61137dccde6b90b934cb638dd1b5fa"
+    },
+    "domain_operation_journal_claims": {
+      "rows": 651,
+      "serialized_bytes": 422239,
+      "sha256": "0c2084ea27d2e3549b3763b88ee18d10d6554bf06121302edc5eca53e5482914"
+    },
+    "domain_operation_placement_claims": {
+      "rows": 63,
+      "serialized_bytes": 139917,
+      "sha256": "3dc08530ede0c1fb598e03670d4152f22bb65e5d58b083b858771a9de06a403d"
+    },
+    "domain_operation_policies": {
+      "rows": 376,
+      "serialized_bytes": 511223,
+      "sha256": "d87407bb73cad11c249f0425ea567fa2914e9baf86d24f393fae03ae002d881a"
+    },
+    "domain_operation_scope_members": {
+      "rows": 1090,
+      "serialized_bytes": 197032,
+      "sha256": "b7965b364aa4fc0e238a256175b845557d4fd0cf31e4f5e6dd3abe58c0230dc0"
+    },
+    "domain_operation_type_claims": {
+      "rows": 216,
+      "serialized_bytes": 379958,
+      "sha256": "0b77a281200ab09afdb64f969b2f4fda4241cf3546e3e2c237702993cccaeea2"
+    },
+    "domain_revisions": {
+      "rows": 352,
+      "serialized_bytes": 308905,
+      "sha256": "bdb976d64c0c6bfff2998f9c1ed3685a12840bdc708952763dd7defeac8ba14c"
+    },
+    "domain_scope_state": {
+      "rows": 2,
+      "serialized_bytes": 132,
+      "sha256": "4a5c46486830fb944f593c8a582682981faa911bf245ea3dfbf52247e4a9be11"
+    },
+    "domain_transaction_bindings": {
+      "rows": 594,
+      "serialized_bytes": 118750,
+      "sha256": "ae538f31349dc8463e642d292ccec7bb699f761ad3ddd17969efefd75166b935"
+    },
+    "domain_type_dependencies": {
+      "rows": 27,
+      "serialized_bytes": 5319,
+      "sha256": "9b73ce9765e7b80164acc8c07bb4816e402b44a67d604af35e3d6f97f671c6cc"
+    },
+    "domain_type_migration_domains": {
+      "rows": 37,
+      "serialized_bytes": 13875,
+      "sha256": "c02a653bba6b603d773148c83f73148df7e1087ed9cba44091690f5ecda171da"
+    },
+    "domain_type_migrations": {
+      "rows": 20,
+      "serialized_bytes": 94035,
+      "sha256": "7aec9e376bc97c33836b81f69034eaf85df6c9d4f25b2f5f63accac7cb1f102b"
+    },
+    "domain_type_versions": {
+      "rows": 216,
+      "serialized_bytes": 243219,
+      "sha256": "d5844eb72ed8e7d10b43d4f130556a6abc69cf9eabbb9346684ff99a799a9d82"
+    },
+    "domain_types": {
+      "rows": 171,
+      "serialized_bytes": 46380,
+      "sha256": "e974b7992ab6db007c99d7798a60acfbecd723c17d837ea2cd207e2a8b279d89"
+    },
+    "domains": {
+      "rows": 198,
+      "serialized_bytes": 129233,
+      "sha256": "00af49893a86a0bc9c0c63e1f81a9d11a11bc1c6e1e94f61bd9d4652142b429c"
+    },
+    "idempotency": {
+      "rows": 599,
+      "serialized_bytes": 743686,
+      "sha256": "59566067a1466c8a264cc948133e25f64232e68c8c2f1a30f0d4cf93c97b2f4b"
+    },
+    "outbox": {
+      "rows": 651,
+      "serialized_bytes": 690979,
+      "sha256": "e6d2878e89bcb581a11f03930487a7bd4eb394ba477dfd6d6fbfb5178d8c4f7d"
+    }
+  },
+  "migrations": [
+    {
+      "checksum": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa",
+      "name": "001_foundation.sql"
+    },
+    {
+      "checksum": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728",
+      "name": "002_audit_envelopes.sql"
+    },
+    {
+      "checksum": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa",
+      "name": "003_governance_models.sql"
+    },
+    {
+      "checksum": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f",
+      "name": "004_model_migrations.sql"
+    },
+    {
+      "checksum": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763",
+      "name": "005_model_migration_integrity.sql"
+    },
+    {
+      "checksum": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8",
+      "name": "006_inherited_asset_types.sql"
+    },
+    {
+      "checksum": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7",
+      "name": "007_asset_type_migrations.sql"
+    },
+    {
+      "checksum": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2",
+      "name": "008_constrained_relations.sql"
+    },
+    {
+      "checksum": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe",
+      "name": "009_relation_participation.sql"
+    },
+    {
+      "checksum": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a",
+      "name": "010_relation_scope_discovery.sql"
+    },
+    {
+      "checksum": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78",
+      "name": "011_business_domains.sql"
+    },
+    {
+      "checksum": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77",
+      "name": "012_authentication_foundation.sql"
+    }
+  ],
+  "image_id": "sha256:b82f4d0b692cf9c7dbf338068eec5cded03909e76f1ffbb89f4187edc9d1d6b1",
+  "source_binding": {
+    "verified_files": 75,
+    "exact_base_blob_matches": 74,
+    "changed_harness_files": [
+      "scripts/runtime-test-business-domain-seed.py"
+    ],
+    "source_and_image_bytes_unchanged_during_execution": true,
+    "sources": [
+      {
+        "path": "apps/api/src/asset-type-migrations.ts",
+        "sha256": "02f530c3715801c222f4f98d65807f06d0b58d0193b05c6c4e9f3f0b78a00c92"
+      },
+      {
+        "path": "apps/api/src/asset-types.ts",
+        "sha256": "847e1a9492b79d45de5143aa80ff6e9f3e04fd898d934a2b15b8a46637902ac3"
+      },
+      {
+        "path": "apps/api/src/audit-reader.ts",
+        "sha256": "27f13130b1902bc7c9aa9656a1eebc9e680c906b977ac9e002f74c57355aea8e"
+      },
+      {
+        "path": "apps/api/src/audit.ts",
+        "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+      },
+      {
+        "path": "apps/api/src/business-domain-http.ts",
+        "sha256": "4d2f80dc0028363b2a295904d01d696eed2f66c23c71383113b9a15fdfad60b8"
+      },
+      {
+        "path": "apps/api/src/business-domains.ts",
+        "sha256": "cc4342f40e277611a337039415c3a8f2968123c563785e6ac596dc13b5cd678d"
+      },
+      {
+        "path": "apps/api/src/index.ts",
+        "sha256": "b8704fcf2be3ba757d1e0a51c85c1de1fa1fe7dafbac346be577a49e8a5171e7"
+      },
+      {
+        "path": "apps/api/src/model-http.ts",
+        "sha256": "78d176145b8713c5aca2797fad741653698c6f2439817fbf069d4842afcc5938"
+      },
+      {
+        "path": "apps/api/src/model-migrations.ts",
+        "sha256": "3d116bf6bc64ac3723f5aadef63d414f7920c584824a114e8bb6c2708d7129ad"
+      },
+      {
+        "path": "apps/api/src/models.ts",
+        "sha256": "d6212e6723236030f672cd67ce2f2de43b1e8f67216309f1a16c18dd257a0387"
+      },
+      {
+        "path": "apps/api/src/relation-migrations.ts",
+        "sha256": "f30df94c238f409afd303ea9e9dbd55a863e19702dc244798861dfc2b9aaa224"
+      },
+      {
+        "path": "apps/api/src/relations.ts",
+        "sha256": "0124c9190396dbcddf14ebb3fae67128ebaa97865aba97dc6b46000654f2b974"
+      },
+      {
+        "path": "apps/api/src/repository.ts",
+        "sha256": "78b98548857cc519e174813e4a3501d0f70462c4d9a31bae4eec421b342445a5"
+      },
+      {
+        "path": "apps/api/src/search.ts",
+        "sha256": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d"
+      },
+      {
+        "path": "apps/api/src/security.ts",
+        "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+      },
+      {
+        "path": "package.json",
+        "sha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7"
+      },
+      {
+        "path": "packages/authz/src/index.ts",
+        "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+      },
+      {
+        "path": "packages/db/migrations/001_foundation.sql",
+        "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "path": "packages/db/migrations/002_audit_envelopes.sql",
+        "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "path": "packages/db/migrations/003_governance_models.sql",
+        "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "path": "packages/db/migrations/004_model_migrations.sql",
+        "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "path": "packages/db/migrations/005_model_migration_integrity.sql",
+        "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "path": "packages/db/migrations/006_inherited_asset_types.sql",
+        "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "path": "packages/db/migrations/007_asset_type_migrations.sql",
+        "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "path": "packages/db/migrations/008_constrained_relations.sql",
+        "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "path": "packages/db/migrations/009_relation_participation.sql",
+        "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+        "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "path": "packages/db/migrations/011_business_domains.sql",
+        "sha256": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+      },
+      {
+        "path": "packages/db/migrations/012_authentication_foundation.sql",
+        "sha256": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77"
+      },
+      {
+        "path": "packages/db/src/index.ts",
+        "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+      },
+      {
+        "path": "packages/db/src/migrate.ts",
+        "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+      },
+      {
+        "path": "packages/db/src/seed-business-domains.ts",
+        "sha256": "382a9968582d3dfc54b6f60c1a3c1eefaac564d2c6db62469bc301ab753ffe7b"
+      },
+      {
+        "path": "packages/db/src/seed.ts",
+        "sha256": "6e0e2d71e64f60a825231587bca88ca03f59398c2f77ab2173d68229433c9a9a"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-contracts.ts",
+        "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-service.ts",
+        "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration.ts",
+        "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+      },
+      {
+        "path": "packages/domain/src/asset-type-policy.ts",
+        "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+      },
+      {
+        "path": "packages/domain/src/asset-type-service.ts",
+        "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/business-domain-contracts.ts",
+        "sha256": "b43ecced92ec6dd20392afc06a4f8e466819d98148e2b4bbce39ed91ec56edf1"
+      },
+      {
+        "path": "packages/domain/src/business-domain-migration.ts",
+        "sha256": "ca5396dc13234e6aa5be9f4087c3cad5bcbea2f05bcd88bb8873f70881972d99"
+      },
+      {
+        "path": "packages/domain/src/business-domain-preview.ts",
+        "sha256": "cc05d1567dd9d84b67245b9fa1b1d6bbd451c2ae8aa2f9cf38b54e44a2147478"
+      },
+      {
+        "path": "packages/domain/src/business-domain-read.ts",
+        "sha256": "29ef7892ca3c2e581679b269558af238246a77044d0153c61e47d8456e279b14"
+      },
+      {
+        "path": "packages/domain/src/business-domain-service-contracts.ts",
+        "sha256": "ba82f0ca537c67c96614dc97c7b3f3f6c1a201304713c2bae2c40a57e83832b6"
+      },
+      {
+        "path": "packages/domain/src/business-domain-service.ts",
+        "sha256": "5215ce759fbcf1f85327893476f213d009a0caa5f82acc4aa1df9723769a5cb4"
+      },
+      {
+        "path": "packages/domain/src/business-domain-store.ts",
+        "sha256": "ddfd6cd5c9846818c81093062132c27800717e10efd110a76a7cb54a1300d974"
+      },
+      {
+        "path": "packages/domain/src/business-domain-type.ts",
+        "sha256": "19c4a82916ba81f5d236c3e46e1edad94e7b747f68643556a6f98af53677885e"
+      },
+      {
+        "path": "packages/domain/src/business-domain-write.ts",
+        "sha256": "e6225dd90ca9ccadaa01d54c709ec4b32a182d52841e7208c4b7430b7671b067"
+      },
+      {
+        "path": "packages/domain/src/cursor.ts",
+        "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-persistence.ts",
+        "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-preparation.ts",
+        "sha256": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49"
+      },
+      {
+        "path": "packages/domain/src/model-migration-service.ts",
+        "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+      },
+      {
+        "path": "packages/domain/src/model-service.ts",
+        "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "ebf90e8d24a0cf969d0ebe3c915d5b5113574d354a6e5963d5bc9cd285bc79ad"
+      },
+      {
+        "path": "packages/domain/src/relation-contracts.ts",
+        "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+      },
+      {
+        "path": "packages/domain/src/relation-endpoint-guard.ts",
+        "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+      },
+      {
+        "path": "packages/domain/src/relation-graph.ts",
+        "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-contracts.ts",
+        "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-read.ts",
+        "sha256": "bf5dc16ff794343dbc68d2992644e840e07846f791f6c119a8a168bc53142ff7"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-service.ts",
+        "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-store.ts",
+        "sha256": "7fc1ffadfc3465f6c329f334d1910fb60093fafa3d1dc770341cb75d77988287"
+      },
+      {
+        "path": "packages/domain/src/relation-migration.ts",
+        "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+      },
+      {
+        "path": "packages/domain/src/relation-participation-read.ts",
+        "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+      },
+      {
+        "path": "packages/domain/src/relation-participation.ts",
+        "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+      },
+      {
+        "path": "packages/domain/src/relation-service.ts",
+        "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+      },
+      {
+        "path": "packages/domain/src/relation-store.ts",
+        "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+      },
+      {
+        "path": "packages/domain/src/relation.ts",
+        "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+      },
+      {
+        "path": "pnpm-workspace.yaml",
+        "sha256": "3d0651c8ee104733339c15831fc93e2429ddadf64b25c65f7d8040c5a6aa43bf"
+      },
+      {
+        "path": "scripts/runtime-test-business-domain-seed.py",
+        "sha256": "ff0432bf1a90f6482b74cd2634d81b1e6decf990d717c3ceb08acb96fefd0484"
+      },
+      {
+        "path": "dev",
+        "sha256": "3933fa6fdbbca26f1af4f1ad9b299cc651b6c7a51448c1cfcfa3468c933a26a5"
+      },
+      {
+        "path": "scripts/runtime.py",
+        "sha256": "f381ea8bf3a0fb1cca44195c24c269f3af32d0521698f0a0d99edaad2769baac"
+      },
+      {
+        "path": "deploy/compose/compose.yaml",
+        "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+      },
+      {
+        "path": "Dockerfile",
+        "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+      }
+    ]
+  },
+  "independent_review": {
+    "all75_live_source_hashes_match": true,
+    "all12_migration_checksums_match": true,
+    "all22_domain_digests_restored_exactly": true,
+    "all_command_exit_codes_zero": true,
+    "private_artifact_hashes_verified": 3
+  },
+  "private_original": {
+    "path": ".local/evidence/business-domain-seed.json",
+    "sha256": "4361874c4a8429b2d4f8a9e8d005d6928d12ced56dc711032246281f500861d1"
+  },
+  "limitations": [
+    "Existing initialized local synthetic core only; no clean-install or general source/seed qualification.",
+    "No concurrent mutating API/browser/seed tests; local lock excludes only this harness.",
+    "All columns of domain rows/journals are hashed; unrelated non-domain fixtures and legacy transaction bindings are excluded.",
+    "Outbox delivery must drain before baseline; no projector or service is stopped.",
+    "Privileged local PostgreSQL inspection/restoration is separate from the real seed runtime gc_owner/gc_app paths.",
+    "SIGINT/SIGTERM trigger finally restoration; SIGKILL or host failure requires the private recovery SQL before other tests.",
+    "The first hosted attempt failed at business_domain_seed and skipped later foundation/browser gates. This local repair pass does not relabel hosted failure; a new hosted run is required."
+  ]
+}

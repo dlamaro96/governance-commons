@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Qualify initialized local core seed replay and synthetic membership revocation.
 
-Run only in the root-coordinated exclusive core slot, after SQL011 and the first
+Run only in the root-coordinated exclusive core slot, after SQL012 and the first
 harbor-demo seed. This is not a clean-install, restore or general authz test. It
 runs the real developer seed command twice unchanged, then once with two known
 synthetic memberships temporarily changed. It never builds, migrates explicitly,
@@ -355,10 +355,10 @@ def main():
         import shutil
         require(shutil.disk_usage(ROOT).free >= 2 * 1024**3, 'Free disk below 2GiB; no seed invocation started')
         migrations = sorted((ROOT / 'packages/db/migrations').glob('*.sql'))
-        require(len(migrations) == 11 and migrations[-1].name == '011_business_domains.sql', 'This harness requires the reviewed exact SQL001–011 source')
+        require(len(migrations) == 12 and migrations[-1].name == '012_authentication_foundation.sql', 'This harness requires the reviewed exact SQL001–012 source')
         applied = json.loads(harness.query("SELECT coalesce(jsonb_agg(jsonb_build_object('name',name,'checksum',checksum) ORDER BY name),'[]') FROM schema_migrations", 'applied-migration-readback'))
         expected = [{'name': p.name, 'checksum': digest(p.read_bytes())} for p in migrations]
-        require(applied == expected, 'Running core schema does not exactly match SQL001–011; harness never applies migrations')
+        require(applied == expected, 'Running core schema does not exactly match SQL001–012; harness never applies migrations')
         report['migrations'] = applied
         report['docker_versions'] = {'engine': harness.command(['docker', 'version', '--format', '{{.Server.Version}}'], 'docker-engine-version'),
                                      'compose': harness.command(['docker', 'compose', 'version', '--short'], 'docker-compose-version')}
