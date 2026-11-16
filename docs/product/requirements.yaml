@@ -11630,9 +11630,17 @@
         "Every starter template has an end-to-end seeded scenario."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations/022_reference_publication.sql",
+        "packages/domain/src/reference-data-service.ts",
+        "apps/api/src/reference-data-publication.ts",
+        "apps/web/src/referenceData/Read.tsx"
+      ],
+      "test_ids": [
+        "tests/api/reference-data-storage.test.ts",
+        "tests/e2e/reference-data.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -11660,9 +11668,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M3"
+      "limitations": [
+        "Scoped native18 and real browser publication/history/export journey pass. Full compound requirements, remaining starter workflows, webhooks and release/profile qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M3",
+      "partial_evidence": [
+        "docs/verification/product-reference-local.json"
+      ]
     },
     {
       "id": "GOV-004",
@@ -20503,9 +20516,17 @@
       "acceptance_ids": [
         "AT-REF-01"
       ],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations/022_reference_publication.sql",
+        "packages/domain/src/reference-data-service.ts",
+        "apps/api/src/reference-data-publication.ts",
+        "apps/web/src/referenceData/Read.tsx"
+      ],
+      "test_ids": [
+        "tests/api/reference-data-storage.test.ts",
+        "tests/e2e/reference-data.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -20533,9 +20554,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "Scoped native18 and real browser publication/history/export journey pass. Full compound requirements, remaining starter workflows, webhooks and release/profile qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/product-reference-local.json"
+      ]
     },
     {
       "id": "REF-001.01",
@@ -20569,9 +20595,17 @@
       "acceptance_ids": [
         "AT-REF-01"
       ],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations/022_reference_publication.sql",
+        "packages/domain/src/reference-data-service.ts",
+        "apps/api/src/reference-data-publication.ts",
+        "apps/web/src/referenceData/Read.tsx"
+      ],
+      "test_ids": [
+        "tests/api/reference-data-storage.test.ts",
+        "tests/e2e/reference-data.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -20599,9 +20633,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "Scoped native18 and real browser publication/history/export journey pass. Full compound requirements, remaining starter workflows, webhooks and release/profile qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/product-reference-local.json"
+      ]
     },
     {
       "id": "REF-001.02",
@@ -20635,9 +20674,17 @@
       "acceptance_ids": [
         "AT-REF-01"
       ],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations/022_reference_publication.sql",
+        "packages/domain/src/reference-data-service.ts",
+        "apps/api/src/reference-data-publication.ts",
+        "apps/web/src/referenceData/Read.tsx"
+      ],
+      "test_ids": [
+        "tests/api/reference-data-storage.test.ts",
+        "tests/e2e/reference-data.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -20665,9 +20712,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "Scoped native18 and real browser publication/history/export journey pass. Full compound requirements, remaining starter workflows, webhooks and release/profile qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/product-reference-local.json"
+      ]
     },
     {
       "id": "REF-002",
@@ -20761,9 +20813,17 @@
         "Consumers can request the code set as of a historical date."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations/022_reference_publication.sql",
+        "packages/domain/src/reference-data-service.ts",
+        "apps/api/src/reference-data-publication.ts",
+        "apps/web/src/referenceData/Read.tsx"
+      ],
+      "test_ids": [
+        "tests/api/reference-data-storage.test.ts",
+        "tests/e2e/reference-data.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -20791,9 +20851,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "Scoped native18 and real browser publication/history/export journey pass. Full compound requirements, remaining starter workflows, webhooks and release/profile qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/product-reference-local.json"
+      ]
     },
     {
       "id": "REF-004",
@@ -20824,9 +20889,17 @@
         "Subscriber detects a new published version and retrieves exact values."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations/022_reference_publication.sql",
+        "packages/domain/src/reference-data-service.ts",
+        "apps/api/src/reference-data-publication.ts",
+        "apps/web/src/referenceData/Read.tsx"
+      ],
+      "test_ids": [
+        "tests/api/reference-data-storage.test.ts",
+        "tests/e2e/reference-data.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -20854,9 +20927,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "Scoped native18 and real browser publication/history/export journey pass. Full compound requirements, remaining starter workflows, webhooks and release/profile qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/product-reference-local.json"
+      ]
     },
     {
       "id": "REF-005",

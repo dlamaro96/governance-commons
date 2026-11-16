@@ -1,5 +1,12 @@
 # Current state — 2026-11-16
 
+## Product checkpoint — 2026-11-16T23:01Z
+
+Product implementation remains the priority. Shared SQL001–022 is applied and immutable. Governed reference code lists now support bilingual authoring, independent approval, scheduled activation, historical reads and complete CSV/JSON exports through real services. The isolated upgrade passes18 native cases; existing API regression passes168/168; the new reference browser journey passes without retries or skips. All12 original captures were visually inspected with viewport limits. Seed replay and793 scoped host units pass. See `../verification/product-reference-local.json`; full28-browser and fresh hosted qualification remain pending.
+
+Reference-backed allowed-values quality is integrated in an isolated development candidate: canonical version pins, source worker, UI and synthetic source fixture. Its SQL023 forward gate is running; it is not applied to shared core. Candidate host checks pass813 TypeScript units, full types,212 Python host tests (three live-source cases explicitly deferred), and fixture/bootstrap controls. Finish native upgrade, real source execution and browser qualification before advancing it. Continue the complete programme; hierarchies, crosswalks, other quality families and all remaining requirements stay open. Private dossiers, Azure costs and presentation work remain deferred.
+
+
 ## Product checkpoint — 2026-11-16T22:32Z
 
 Product work remains the priority. Shared core SQL001–021 is applied and immutable. Native PostgreSQL lineage and reviewed metadata classification now work through real services. The current application passes all168 API cases and all27 browser journeys without skips or retries, plus scoped753 host units,14 classification native cases and seed replay. All185 original captures were inspected with viewport limits; no blocking visual defect observed. See `../verification/product-lineage-classification-local.json`; this is local development evidence, not whole-capability or release qualification.

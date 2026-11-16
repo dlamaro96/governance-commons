@@ -1486,6 +1486,16 @@
         "implementation_commit": "49c166c2f2e2da9a3e9723880b7fb239af20f684",
         "method": "Exact application source/image readback plus independently retained host, native, seed, API and browser receipts. Scope limitations preserved."
       }
+    },
+    {
+      "path": "docs/verification/product-reference-local.json",
+      "scope": "local-reference-publication-history-and-exports",
+      "source_binding": {
+        "implementation_commit": "b5d1531d5be1bef0ab188e9e7e6d081a672e630a",
+        "browser_commit": "591220ab2b398c8af2ed3c9a8441641fa77bfc8d",
+        "method": "Exact application source/image readback; isolated forward native18, existing API168, seed replay and one real no-retry browser workflow with12 original captures visually inspected.",
+        "evidence_sha256": "badb7cc89ac0490eaefbcd91f68fca4580a7b78a92247d2eee337ce9617c911c"
+      }
     }
   ],
   "limitations": [
