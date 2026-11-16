@@ -67,16 +67,43 @@ services:
     command:
       - >-
         umask 077;
-        test -f /input/config.json && test ! -L /input/config.json;
-        test "$$(wc -c < /input/config.json)" -le 65536;
-        test ! -e /output/config.json && test ! -e /output/batch;
-        cp /input/config.json /output/config.json;
+        test -d /output && test ! -L /output;
+        test ! -e /output/config.json && test ! -L /output/config.json;
+        test ! -e /output/batch && test ! -L /output/batch;
         mkdir /output/batch;
-        chmod 0600 /output/config.json;
         chmod 0700 /output /output/batch;
-        chown ${LOCAL_UID:?}:${LOCAL_GID:?} /output/config.json /output/batch /output
+        chown ${LOCAL_UID:?}:${LOCAL_GID:?} /output/batch /output
     volumes:
-      - ${AUTHN_RUN_DIR:?}/private-config.json:/input/config.json:ro
+      - qualification-private:/output
+  qualification-private-copy:
+    image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
+    pull_policy: never
+    profiles: [tools]
+    user: '${LOCAL_UID:?}:${LOCAL_GID:?}'
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 16
+    mem_limit: 64m
+    memswap_limit: 64m
+    logging: {driver: none}
+    stdin_open: true
+    entrypoint: [/bin/sh, -ec]
+    # Sensitive bounded stdin avoids host/container bind-file UID translation.
+    # Only the preceding CHOWN-only stage runs as root; this copy has no capabilities.
+    command:
+      - >-
+        umask 077;
+        test -d /output && test ! -L /output;
+        test -d /output/batch && test ! -L /output/batch;
+        test ! -e /output/config.json && test ! -L /output/config.json;
+        set -C;
+        head -c 65537 > /output/config.json;
+        test "$$(wc -c < /output/config.json)" -ge 1;
+        test "$$(wc -c < /output/config.json)" -le 65536;
+        chmod 0600 /output/config.json
+    volumes:
       - qualification-private:/output
   identity-bootstrap:
     image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5

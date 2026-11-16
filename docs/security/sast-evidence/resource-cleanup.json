@@ -114,5 +114,5 @@
   "hostFreeBytesBeforeFinalAdmission": 4925825024,
   "scanAdmissionGiB": 4.5,
   "hardFloorGiB": 2,
-  "excluded": "No unrelated/Hive Citadel resources, images, containers or volumes removed."
+  "excluded": "No unrelated/unrelated local projects resources, images, containers or volumes removed."
 }

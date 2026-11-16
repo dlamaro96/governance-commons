@@ -16,6 +16,7 @@ import re
 import secrets
 import shutil
 import socket
+import stat
 import sys
 import time
 import urllib.request
@@ -60,6 +61,26 @@ def binary_sha(path):
         for block in iter(lambda: stream.read(MIB), b''):
             digest.update(block)
     return digest.hexdigest()
+
+
+def private_configuration(path):
+    """Read only this host-owned regular 0600 file; never follow a link or block on a FIFO."""
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        before = os.fstat(fd)
+        require(stat.S_ISREG(before.st_mode) and before.st_uid == os.getuid()
+                and stat.S_IMODE(before.st_mode) == 0o600 and 0 < before.st_size <= 65536,
+                'Private native configuration metadata refused')
+        with os.fdopen(fd, 'rb', closefd=False) as stream:
+            data = stream.read(65537)
+        after = os.fstat(fd)
+        require(0 < len(data) <= 65536 and len(data) == before.st_size
+                and (before.st_size, before.st_mtime_ns, before.st_ctime_ns)
+                    == (after.st_size, after.st_mtime_ns, after.st_ctime_ns),
+                'Private native configuration changed or exceeded64KiB')
+        return data
+    finally:
+        os.close(fd)
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -285,13 +306,17 @@ try{directory(root);directory(root+'/batch');if(mode==='verify'){const b=read(ro
             sensitive=True, timeout=20, cleanup=cleanup)
 
     def prepare_private(self):
-        require(self.secret_path.stat().st_size <= 65536, 'Private native configuration exceeded64KiB')
+        data = private_configuration(self.secret_path)
         self.compose('run', '--rm', '--no-deps', 'qualification-private-bootstrap', timeout=30)
         label = self.docker('volume', 'inspect', '--format', '{{index .Labels "com.docker.compose.project"}}', self.id+'_qualification-private', sensitive=True).stdout.strip()
         require(label == self.id, 'Private volume is not owned by this exact project')
+        # The root stage never receives credentials. Copy as the host UID with no capabilities.
+        self.compose('run', '--rm', '--no-deps', '-T', 'qualification-private-copy',
+                     input=data, sensitive=True, timeout=30)
+        require(private_configuration(self.secret_path) == data, 'Private host configuration changed during copy')
         observed = json.loads(self.private_reader('verify').stdout)
         require(observed == {'uid': os.getuid(), 'gid': os.getgid(), 'configMode': 0o600, 'batchMode': 0o700,
-                             'configSha256': sha(self.secret_path.read_bytes())}, 'Nonroot private-volume metadata or content differs')
+                             'configSha256': sha(data)}, 'Nonroot private-volume metadata or content differs')
         self.private_ready = True
         self.report['privateStorage'] = {'namedVolume': True, 'nonrootUid': observed['uid'], 'nonrootGid': observed['gid'],
             'configMode': '0600', 'batchDirectoryMode': '0700', 'bootstrapNetwork': 'none', 'bootstrapCapabilities': ['CHOWN'],

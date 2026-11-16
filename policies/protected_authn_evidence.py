@@ -24,11 +24,12 @@ NATIVE = 'tests/qualification/protected-authn-http.test.ts'
 BROWSER = 'tests/e2e-protected/protected-authn.spec.ts'
 COMPOSE = 'deploy/protected-authn/compose.yaml'
 FIXED_SOURCES = (
-    'AGENTS.md', 'dev', 'scripts/runtime.py', 'scripts/authentication_roles.py',
+    'CONTRIBUTING.md', 'dev', 'scripts/runtime.py', 'scripts/authentication_roles.py',
     'scripts/runtime-test-authority-authn-foundation.py', 'scripts/runtime-test-protected-authn.py',
     'scripts/authentication-install.ts', 'scripts/authentication-install-demo.ts',
     'scripts/runtime-protected-ci.py', 'scripts/protected_authn_image.py', 'scripts/test_protected_authn_image.py',
     'scripts/protected_browser_process.py', 'scripts/test_protected_browser_process.py',
+    'scripts/test_protected_authn_bootstrap.py',
     'tests/fixtures/authority-authn-foundation.ts',
     'docs/execution/PROTECTED_BROKER_CONTRACT.md', 'docs/execution/AUTHENTICATION_FOUNDATION_CONTRACT.md',
     'docs/execution/authentication-legacy-function-census.json', 'docs/development/protected-authentication.md',

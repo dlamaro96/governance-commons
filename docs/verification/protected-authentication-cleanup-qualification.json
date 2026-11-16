@@ -131,6 +131,6 @@
   "limitations": [
     "The 14 process regressions ran on macOS with synthetic owned subprocesses; Linux execution remains for hosted CI.",
     "Launch9 uses the actual local Chrome, PostgreSQL and Keycloak with read-only source mounts. No baked-image or hosted qualification is inferred.",
-    "Shared core and Hive Citadel were preserved. All full capability/profile/release obligations remain open."
+    "Shared core and unrelated local projects were preserved. All full capability/profile/release obligations remain open."
   ]
 }

@@ -1377,7 +1377,7 @@
   },
   "operational_attempts": [
     "Initial tab edit refused a duplicate desktop/responsive selector count before writing; subsequent unchanged-source build is recorded separately and does not qualify that fix.",
-    "Corrected tab source build at03:33 stopped at the2GiB disk admission floor. Exact obsolete Governance Commons build-cache cleanup recovered about0.6GiB; no containers/images/volumes/evidence or HiveCitadel data deleted. Retrybuild/core at03:37 passed before this targeted execution."
+    "Corrected tab source build at03:33 stopped at the2GiB disk admission floor. Exact obsolete Governance Commons build-cache cleanup recovered about0.6GiB; no containers/images/volumes/evidence or unrelated project data deleted. Retrybuild/core at03:37 passed before this targeted execution."
   ],
   "limitations": [
     "Only synthetic local core on declared host; no vendor-live/enterprise/HA/offline/performance qualification.",

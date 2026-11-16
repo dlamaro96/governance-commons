@@ -776,7 +776,12 @@
         "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
         "working_tree_dirty": true,
         "method": "Original execution and review report hashes retained;169 actual-image source hashes and27 served assets bind the final passing source. This document does not imply a test rerun or whole-requirement completion.",
-        "evidence_sha256": "9872e843d8b2be7d3c61f879fab6cb0159bb46e96780e134f32572f7a0c98d98"
+        "evidence_sha256": "26c3d474826ac806a3d6e0c2d73afc008d3848575b72aca2d917943aa8f7824e"
+      },
+      "editorial_redaction": {
+        "reason": "Remove an unrelated project name from a historical capacity note; no execution result changes.",
+        "original_evidence_sha256": "9872e843d8b2be7d3c61f879fab6cb0159bb46e96780e134f32572f7a0c98d98",
+        "redacted_evidence_sha256": "26c3d474826ac806a3d6e0c2d73afc008d3848575b72aca2d917943aa8f7824e"
       }
     },
     {
@@ -1222,10 +1227,16 @@
       "source_binding": {
         "base_revision": "94efe7f8bec0fe054ed003521b832f9a02239910",
         "verified_source_files": 262,
-        "evidence_sha256": "05c45ff1f8d5c883abef56a5d7f89b60d4d411effadbdd022f6cb5636e6a7d0e"
+        "evidence_sha256": "1ae2c6bbb126f3f4bbf1d334cf49007a8037678848023fe325ad09d4fd9ae1f5"
       },
       "runtime_authority_activated": false,
-      "release_qualified": false
+      "release_qualified": false,
+      "editorial_redaction": {
+        "recorded_at": "2026-11-16T11:32:05.039407+00:00",
+        "reason": "Remove local account paths and unrelated project references at the owner\u2019s request. Original execution outcomes and source binding are unchanged. Original evidence remains in private archive and Git history.",
+        "original_evidence_sha256": "05c45ff1f8d5c883abef56a5d7f89b60d4d411effadbdd022f6cb5636e6a7d0e",
+        "redacted_evidence_sha256": "1ae2c6bbb126f3f4bbf1d334cf49007a8037678848023fe325ad09d4fd9ae1f5"
+      }
     },
     {
       "path": "docs/verification/authentication-foundation-core-api.json",
@@ -1372,10 +1383,16 @@
       "verification_status": "PASS_SCOPED_OWNED_PROCESS_CLEANUP",
       "source_binding": {
         "implementation_commit": "d5c7d8aa9f3cd592fd13117c2c267ced6767270b",
-        "evidence_sha256": "ac3f41617053e65973adda8dabaf5eab1d7cdb229a53491b63a49cf0a4255d23"
+        "evidence_sha256": "1145e9af123a8accb70525071e4ac13197b8fba55ba3b6aa8bef903b7dfaff7a"
       },
       "runtime_authority_activated": false,
-      "release_qualified": false
+      "release_qualified": false,
+      "editorial_redaction": {
+        "recorded_at": "2026-11-16T11:32:05.042226+00:00",
+        "reason": "Remove local account paths and unrelated project references at the owner\u2019s request. Original execution outcomes and source binding are unchanged. Original evidence remains in private archive and Git history.",
+        "original_evidence_sha256": "ac3f41617053e65973adda8dabaf5eab1d7cdb229a53491b63a49cf0a4255d23",
+        "redacted_evidence_sha256": "1145e9af123a8accb70525071e4ac13197b8fba55ba3b6aa8bef903b7dfaff7a"
+      }
     },
     {
       "path": "docs/verification/protected-authentication-hosted-source-attempt-1.json",
@@ -1424,6 +1441,15 @@
       },
       "runtime_authority_activated": false,
       "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-local-attempt-11.json",
+      "scope": "protected-login-linux-portable-bootstrap",
+      "source_binding": {
+        "method": "Closed publisher independently revalidated132 exact mounted source files,15 native HTTP cases and2 real Keycloak browser journeys. Local execution only; no hosted or release qualification.",
+        "verified_files": 132,
+        "evidence_sha256": "4abc7feadb6455a97dfc3bbc8b6669ca2a11990c4a5e94d3ce82c32fb6b82ee5"
+      }
     }
   ],
   "limitations": [

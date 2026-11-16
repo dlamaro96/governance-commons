@@ -55,6 +55,8 @@ jobs:
         run: python3 policies/test_ci_evidence.py
       - name: Immutable application-image admission
         run: python3 scripts/test_protected_authn_image.py
+      - name: Private authentication bootstrap permissions
+        run: python3 scripts/test_protected_authn_bootstrap.py
       - name: Owned browser process lifecycle
         run: python3 scripts/test_protected_browser_process.py
       - name: build

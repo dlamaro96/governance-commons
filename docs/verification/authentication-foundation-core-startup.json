@@ -177,22 +177,22 @@
         "name": "all14 service Compose working_dir labels point to root deploy/compose",
         "result": "PASS",
         "detail": {
-          "expected": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
+          "expected": "[private workspace]/deploy/compose",
           "actual": {
-            "workflow-worker": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "site-runner": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "api": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "python-worker": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "source-postgres": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "temporal": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "temporal-migrate": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "seaweedfs": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "migrate": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "postgres": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "init-secrets": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "temporal-namespace": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "keycloak": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose",
-            "opensearch": "/Users/daniamaro96/Documents/ChatGPT/Collibra Replacement/deploy/compose"
+            "workflow-worker": "[private workspace]/deploy/compose",
+            "site-runner": "[private workspace]/deploy/compose",
+            "api": "[private workspace]/deploy/compose",
+            "python-worker": "[private workspace]/deploy/compose",
+            "source-postgres": "[private workspace]/deploy/compose",
+            "temporal": "[private workspace]/deploy/compose",
+            "temporal-migrate": "[private workspace]/deploy/compose",
+            "seaweedfs": "[private workspace]/deploy/compose",
+            "migrate": "[private workspace]/deploy/compose",
+            "postgres": "[private workspace]/deploy/compose",
+            "init-secrets": "[private workspace]/deploy/compose",
+            "temporal-namespace": "[private workspace]/deploy/compose",
+            "keycloak": "[private workspace]/deploy/compose",
+            "opensearch": "[private workspace]/deploy/compose"
           }
         }
       },

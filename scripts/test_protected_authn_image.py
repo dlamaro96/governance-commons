@@ -21,10 +21,10 @@ class ImageAdmissionTests(unittest.TestCase):
 
     def test_real_git_blob_matches_and_changed_declared_bytes_are_refused(self):
         commit = subprocess.check_output(['git','rev-parse','HEAD'], cwd=ROOT, text=True).strip()
-        blob = subprocess.check_output(['git','--no-replace-objects','show',commit+':AGENTS.md'],cwd=ROOT)
-        rows = [{'path':'AGENTS.md','sha256':hashlib.sha256(blob).hexdigest()}]
+        blob = subprocess.check_output(['git','--no-replace-objects','show',commit+':CONTRIBUTING.md'],cwd=ROOT)
+        rows = [{'path':'CONTRIBUTING.md','sha256':hashlib.sha256(blob).hexdigest()}]
         verify_git_sources(ROOT, rows, commit)
-        with self.assertRaises(RuntimeError): verify_git_sources(ROOT,[{'path':'AGENTS.md','sha256':'0'*64}],commit)
+        with self.assertRaises(RuntimeError): verify_git_sources(ROOT,[{'path':'CONTRIBUTING.md','sha256':'0'*64}],commit)
 
     def test_aggregate_byte_budget_refuses_before_blob_materialization(self):
         rows = [{'path':str(i), 'sha256':'a'*64} for i in range(5)]

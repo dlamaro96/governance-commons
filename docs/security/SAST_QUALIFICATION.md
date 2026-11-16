@@ -114,7 +114,7 @@ Twelve completed product extracted-database caches were removed after journaling
 17,620 file hashes; all 80 retained report/coverage/query hashes were verified
 unchanged. Snapshots, manifests, original SARIF, decoded coverage, query outputs,
 diagnostics and logs remain. Cache re-extraction is reproducible using the pinned
-toolchain and exact snapshots. No unrelated/Hive Citadel resources were changed.
+toolchain and exact snapshots. No unrelated/unrelated local projects resources were changed.
 
 Physical free space initially remained approximately 4.33 GiB, so execution
 waited. Exact-ID pruning of 16 obsolete, non-shared Governance Commons COPY/build
