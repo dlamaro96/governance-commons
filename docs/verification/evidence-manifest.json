@@ -1089,6 +1089,60 @@
       },
       "release_qualified": false,
       "runtime_authority_activated": false
+    },
+    {
+      "path": "docs/verification/authority-admission.json",
+      "scope": "Generic pure JSON input admission only;18 focused and313 combined host unit cases with root/web types. No semantic authority or runtime activation.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOCUSED_AND_COMBINED_HOST_UNIT_AND_TYPECHECK_SCOPE",
+      "source_binding": {
+        "base_commit": "974105cdf571fac655a624335d387b165e7033f8",
+        "verified_source_files": 210,
+        "method": "Before/after exact hashes;206 tracked base files and4 untracked admission additions.42 TSX sources recorded without browser execution.",
+        "evidence_sha256": "7739a70546341f8147521ef53488f3a95a4941634be82a4d94cfd2eea6e42fab"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
+    },
+    {
+      "path": "docs/verification/authority-admission-budget-alignment.json",
+      "scope": "Generic admission proposed dependency-depth alignment8\u219216;18 focused and313 combined host unit cases/types. No semantic engine or runtime claim.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOCUSED_AND_COMBINED_HOST_UNIT_AND_TYPECHECK_SCOPE",
+      "source_binding": {
+        "base_commit": "974105cdf571fac655a624335d387b165e7033f8",
+        "verified_source_files": 210,
+        "evidence_sha256": "df6902c7835627a63dacc75d29b49004613c2fef166199163146bcb9e4d6b6e7"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
+    },
+    {
+      "path": "docs/verification/business-domains-hosted-attempt-2.json",
+      "scope": "Exact PR17 premerge source and synthetic hosted core qualification:154API,19one-attempt browsers,14mandatory stages; original failure preserved.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EXACT_HOSTED_SOURCE_AND_DEVELOPMENT_SCOPE",
+      "source_binding": {
+        "head_commit": "4c4479a09ff7add447aee0e6272c2bb61eefbd3a",
+        "tested_merge": "ed0e0cbd14a5637fa9e20f5738da84f67c1fc6b5",
+        "verified_source_files": 807,
+        "evidence_sha256": "833741f62e29f4ea237e2fe8c20ff1c26a2ea87c78c07cb1eaf5612940645bcb"
+      },
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/authority-hosted-attempt-1.json",
+      "scope": "Historical PR18 source and synthetic hosted core qualification at974105c:154API,19one-attempt browsers,14mandatory stages. Fresh main-ancestry checks separate.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EXACT_HOSTED_SOURCE_AND_DEVELOPMENT_SCOPE",
+      "source_binding": {
+        "head_commit": "974105cdf571fac655a624335d387b165e7033f8",
+        "tested_merge": "27087fda4d09309ffcf904f190cad3829b401ef2",
+        "verified_source_files": 821,
+        "evidence_sha256": "8ae42b56b0fdcc92b756becd7c34b157da7e165ab82de9da240b71b3d5742228"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
     }
   ],
   "limitations": [
