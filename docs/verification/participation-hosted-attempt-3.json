@@ -1,0 +1,766 @@
+{
+  "api": {
+    "command": "./dev test --suite security",
+    "counts": {
+      "cancelled": 0,
+      "fail": 0,
+      "pass": 126,
+      "skipped": 0,
+      "suites": 0,
+      "tests": 126,
+      "todo": 0
+    },
+    "exit_code": 0,
+    "expected_tests": 126,
+    "flags": [],
+    "limitation": "Artifact binds the17 executed integration test files before/after runtime. No application image digest, full runtime application-file manifest or API wall duration is present; none is inferred.",
+    "observed_results": 126,
+    "original_private_report": {
+      "bytes": 21989,
+      "path": ".local/evidence/participation-hosted-attempt-3/development/api-summary.json",
+      "sha256": "6ecb4fd0dc955eb25c23629f005829757bf328aaf5f4f4e8a849d3d856ad37ab"
+    },
+    "profile": "real core API/PostgreSQL; Node TAP; synthetic fixtures",
+    "runtime_test_sources_match": true,
+    "safe_collector_sources": [
+      {
+        "path": "policies/api_evidence.py",
+        "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2"
+      },
+      {
+        "path": "policies/ci_evidence.py",
+        "sha256": "b50ab54d2087d4dae72875a9ec0c6de52bfaff9e76c6a1c6207e98bde77eefd3"
+      }
+    ],
+    "safe_report_independently_revalidated": true,
+    "source_files": [
+      {
+        "git_blob_oid": "881bc316c6ae4cfcf14d922c1fa701323a799567",
+        "path": "tests/integration/asset-type-api-limits.test.ts",
+        "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4"
+      },
+      {
+        "git_blob_oid": "6375386f6afbf2ef87c7c72cf8f7b4676189a22c",
+        "path": "tests/integration/asset-type-migration-storage.test.ts",
+        "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+      },
+      {
+        "git_blob_oid": "fcdd25b2c2fe690de205f477a24fa32bbc2d1362",
+        "path": "tests/integration/asset-type-migrations.test.ts",
+        "sha256": "c5ad40c323b3405243e95c9b33b62d81e86ab596bca361779219c489fb7aa407"
+      },
+      {
+        "git_blob_oid": "606749cc79a6b2474f5bca0e65a16e4bb41635c5",
+        "path": "tests/integration/asset-type-storage.test.ts",
+        "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+      },
+      {
+        "git_blob_oid": "dcee265941a881c3a507e1c08c53fa74953a4803",
+        "path": "tests/integration/asset-types.test.ts",
+        "sha256": "08c5b7fd9aebea55d498b97b4c524e6e83eefb4c7e604b519996ec1932a2145e"
+      },
+      {
+        "git_blob_oid": "4ac7184f60733ee3440586e40072771e6770acd6",
+        "path": "tests/integration/audit-integrity.test.ts",
+        "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad"
+      },
+      {
+        "git_blob_oid": "823e8287fa8f9b74f49f06e3ae3c726a0cda9aeb",
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "eb1159e5c2f3004c3d90a82b2361c2665efff90d20b3eb18f8e58a7929ebd579"
+      },
+      {
+        "git_blob_oid": "f3172293cb9020a3b686b71da6ed35ab5851d64e",
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7"
+      },
+      {
+        "git_blob_oid": "52f4e8f8c6069d243e229b7ee4376ef19b3ad770",
+        "path": "tests/integration/model-migration-api.test.ts",
+        "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb"
+      },
+      {
+        "git_blob_oid": "a9fe29c1204d753fbccaf08c15774d9459f7c758",
+        "path": "tests/integration/model-migration-storage.test.ts",
+        "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+      },
+      {
+        "git_blob_oid": "afbabb29c2400b6814d99cdfd2593120cf5682d3",
+        "path": "tests/integration/model-migrations.test.ts",
+        "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+      },
+      {
+        "git_blob_oid": "d0c8eba5d2efc29a8aa35d7c5133a6b2f88e3423",
+        "path": "tests/integration/model-pagination.test.ts",
+        "sha256": "0809f4e7711f3fea796edc1f87a82fc6ece9684c0c6483e4d506a233c4d0d0d2"
+      },
+      {
+        "git_blob_oid": "c04929cbd331d4b608b597baa3a4108d01e55d66",
+        "path": "tests/integration/models.test.ts",
+        "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1"
+      },
+      {
+        "git_blob_oid": "a9afca3a5887a4a635a3b91738944feaf7d54bd5",
+        "path": "tests/integration/relation-migration-api.test.ts",
+        "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db"
+      },
+      {
+        "git_blob_oid": "2676bfe9f521971b2e3bb121d8c153a8a5435802",
+        "path": "tests/integration/relation-participation-storage.test.ts",
+        "sha256": "17fcf6a093e501e0743d9ec5a6b50046b00b3cb59e7be86f802003699d27830e"
+      },
+      {
+        "git_blob_oid": "e09089bd02c62004cf4c2e59429ef6ec3752fb2d",
+        "path": "tests/integration/relation-storage.test.ts",
+        "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619"
+      },
+      {
+        "git_blob_oid": "0ad770b3ac9c65f226284a9fb7ae3fb593922055",
+        "path": "tests/integration/relations.test.ts",
+        "sha256": "eef1490ff12eae279018027edfdbbbd9dee2bae739cf925e82f16fd81ecba760"
+      }
+    ],
+    "source_manifest_sha256": "23ca5eb02d7960988a54413fdc71361796883fc33eb142ca84ace2aad8d1f72b",
+    "status": "PASS",
+    "test_file_count": 17,
+    "timestamp": "2026-11-16T02:20:21.216269+00:00",
+    "wall_duration_ms": null
+  },
+  "archive_digest_limitation": "ZIP digests observed in GitHub UI by parent; gh run download extracted original files, whose hashes were independently computed. ZIP bytes were not retained or recomputed.",
+  "archive_ui_digests": [
+    {
+      "name": "sast-actions-43790913509-1",
+      "sha256": "f5cc979cad776b9907d1b9dba4b411e58e0d09816f9a5cf1f8cc66204a417cc0"
+    },
+    {
+      "name": "sast-javascript-typescript-43790913509-1",
+      "sha256": "fbdc5c3d457a29883cc54fe7600199bb0cca95495447437ea6bd823d1a6aa173"
+    },
+    {
+      "name": "sast-python-43790913509-1",
+      "sha256": "4e717c9c21bb13596f1ae3c625198bfeb402e710a4642eff80993ace1f34322d"
+    },
+    {
+      "name": "behavior-7dae0affcda18169f9a7526799f6ded9ce0a61b3",
+      "sha256": "088f6f6c0598871d3faadd9cc3a0f5849331a5643490197e83bce99c76a1775d"
+    }
+  ],
+  "browser": {
+    "attempts": 16,
+    "duration_semantics": "Sum of recorded per-test durations, not browser wall-clock duration or full workflow duration.",
+    "duration_sum_ms": 354822,
+    "journeys": 16,
+    "original_png_count": 10,
+    "private_original_pngs": [
+      {
+        "bytes": 162562,
+        "path": ".local/evidence/participation-hosted-attempt-3/development/catalog-ar-dark-1440.png",
+        "sha256": "35c0a8048d6cf7380880567a22ac4924f0470aad42cf94c9594cdb977d36c46f"
+      },
+      {
+        "bytes": 78285,
+        "path": ".local/evidence/participation-hosted-attempt-3/development/catalog-ar-dark-390.png",
+        "sha256": "f6773c31f97e3a51a93bee28ad5121c0fedb906936aa7549010d60d0aa96fca5"
+      },
+      {
+        "bytes": 118575,
+        "path": ".local/evidence/participation-hosted-attempt-3/development/catalog-ar-dark-768.png",
+        "sha256": "d5cf44b947b03c3f89c4a6977630700bbd15155c14607ccdb2306cbcfac91d65"
+      },
+      {
+        "bytes": 179415,
+        "path": ".local/evidence/participation-hosted-attempt-3/development/catalog-en-dark-1440.png",
+        "sha256": "9ae829d3b992d96a92d3b6db196a29cf52cca873777ef89ea62852a84f746db3"
+      },
+      {
+        "bytes": 159797,
+        "path": ".local/evidence/participation-hosted-attempt-3/development/catalog-en-light-1024.png",
+        "sha256": "5c4284c0c566e3bca2c7b67c7d44765110bd6d2226d2b12571b62634ad7ecac8"
+      },
+      {
+        "bytes": 169529,
+        "path": ".local/evidence/participation-hosted-attempt-3/development/catalog-en-light-1280.png",
+        "sha256": "15a5120f8726d3708415e971a44ea0d070e04a31a4e3ab9a6564937b8e918bce"
+      },
+      {
+        "bytes": 177494,
+        "path": ".local/evidence/participation-hosted-attempt-3/development/catalog-en-light-1440.png",
+        "sha256": "a52dbe9442b6b163ea1013cf736e1b3c67b1a3645ff2ade881d4395a924d6733"
+      },
+      {
+        "bytes": 83078,
+        "path": ".local/evidence/participation-hosted-attempt-3/development/catalog-en-light-390.png",
+        "sha256": "7a4262180e3dd7b4e69706fa8e7e8db0e8fc7ddaf3db9fec3f5a3987f722bff6"
+      },
+      {
+        "bytes": 125379,
+        "path": ".local/evidence/participation-hosted-attempt-3/development/catalog-en-light-768.png",
+        "sha256": "d69c4e860ddd1d9186b766055b38bbbaa0abdb1b87c769a8953a0f2f797a851c"
+      },
+      {
+        "bytes": 77181,
+        "path": ".local/evidence/participation-hosted-attempt-3/development/catalog-history.png",
+        "sha256": "253b892dd6e49e99ae66c240e9cc0bc12fcec81ebd5e3c3decdebc980437872b"
+      }
+    ],
+    "retries": 0,
+    "status": "PASS",
+    "test_sources": [
+      {
+        "path": "tests/e2e/asset-type-migrations.spec.ts",
+        "sha256": "b6b0fa5dd017c13595db91ee785a9d44f6c59958d79d48e582cd8cbaaf4b4329"
+      },
+      {
+        "path": "tests/e2e/asset-types.spec.ts",
+        "sha256": "8d6e7f8ccedb3774557f71470e52ec7bea8ee60e2b86d1ee414bc17b5ec5ac04"
+      },
+      {
+        "path": "tests/e2e/model-migrations.spec.ts",
+        "sha256": "6da5e76511b535bdef770fdad27d72861cf299a1c4a91c3e6f64d218572b33e8"
+      },
+      {
+        "path": "tests/e2e/models.spec.ts",
+        "sha256": "d25dc12de6cbff6642169b15ca8797d2275a5eab165242b0c88a09b959d73f3f"
+      },
+      {
+        "path": "tests/e2e/relation-migrations.spec.ts",
+        "sha256": "1c74ef81ca8f686341f112c5452c0cab3720235d54fcc66df574b6fda8c07f9b"
+      },
+      {
+        "path": "tests/e2e/relations.spec.ts",
+        "sha256": "70cd56fe9ad19943ed35bf6735bb992a7b06a47a92d72a1c926a1f91d155a9f5"
+      },
+      {
+        "path": "tests/e2e/ui-accessibility.spec.ts",
+        "sha256": "a55a5c6fdc2506d70c2840e75486d235a8c7440964376a2fa25ee88a7c65e504"
+      },
+      {
+        "path": "tests/e2e/vertical-slice.spec.ts",
+        "sha256": "67a01a7a4951c991231b59ce20bf3f9cacd6c11a1d4ee5ec86b88048ac931b18"
+      }
+    ],
+    "tests": [
+      {
+        "attempts": 1,
+        "duration_ms": 7264,
+        "failure_locations": [],
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 17,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 1383,
+        "failure_locations": [],
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 122,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 10163,
+        "failure_locations": [],
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 30,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 1125,
+        "failure_locations": [],
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 74,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 20894,
+        "failure_locations": [],
+        "file": "tests/e2e/models.spec.ts",
+        "line": 77,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 3504,
+        "failure_locations": [],
+        "file": "tests/e2e/models.spec.ts",
+        "line": 257,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 17922,
+        "failure_locations": [],
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 80,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 3050,
+        "failure_locations": [],
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 218,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 24282,
+        "failure_locations": [],
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 97,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 48724,
+        "failure_locations": [],
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 242,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 22955,
+        "failure_locations": [],
+        "file": "tests/e2e/asset-type-migrations.spec.ts",
+        "line": 97,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 43329,
+        "failure_locations": [],
+        "file": "tests/e2e/asset-type-migrations.spec.ts",
+        "line": 252,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 65292,
+        "failure_locations": [],
+        "file": "tests/e2e/relations.spec.ts",
+        "line": 145,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 7307,
+        "failure_locations": [],
+        "file": "tests/e2e/relations.spec.ts",
+        "line": 358,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 23373,
+        "failure_locations": [],
+        "file": "tests/e2e/relation-migrations.spec.ts",
+        "line": 124,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 54255,
+        "failure_locations": [],
+        "file": "tests/e2e/relation-migrations.spec.ts",
+        "line": 194,
+        "status": "expected"
+      }
+    ],
+    "unexpected": 0,
+    "unique_source_coordinates": 16,
+    "visual_inspection": {
+      "inspected_originals": [
+        "catalog-en-light-1440.png",
+        "catalog-ar-dark-390.png"
+      ],
+      "limitation": "Two original captures inspected; no full accessibility, localization or visual-review certification.",
+      "observations": [
+        "Actual synthetic catalog rendered in English/light desktop view and Arabic/dark narrow view.",
+        "Screenshots show catalog search, filters and asset rows. Arabic view explicitly retains the pending human translation-review banner."
+      ],
+      "reviewer": "Model agent, not independent human reviewer"
+    }
+  },
+  "development_workflow": {
+    "api_evidence": "VERIFIED_PASS",
+    "artifact_timestamp": "2026-11-16T02:33:08.675395+00:00",
+    "job_seconds": {
+      "behavior": 1167,
+      "quality": 50,
+      "required": 3,
+      "secrets": 26
+    },
+    "public_ui_observed_by": "Root model agent; not independent human review",
+    "run_id": 43790913426,
+    "stage_count": 12,
+    "status": "PASS",
+    "steps": {
+      "asset_type_upgrade": "success",
+      "bootstrap": "success",
+      "browser": "success",
+      "connectors": "success",
+      "model_upgrade": "success",
+      "object_store": "success",
+      "relation_participation_upgrade": "success",
+      "relations_upgrade": "success",
+      "security": "success",
+      "seed": "success",
+      "services": "success",
+      "type_migration_upgrade": "success"
+    },
+    "total_workflow_seconds": null,
+    "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43790913426"
+  },
+  "historical_result_handling": [
+    "Hosted attempts1/2 remain failed historical invocations with their original reports preserved. This fresh126-API/16-browser/source PASS does not relabel them.",
+    "The two earlier high CodeQL alerts are independently fixed in the PR ref inventory. No suppression or weakened query/extraction gate was used.",
+    "The historical hosted HTTP assertion failure cause remains unproven; this passing run does not retrospectively identify it."
+  ],
+  "limitations": [
+    "No CI Actions/check/log endpoints were queried. Only explicitly observed artifact downloads and code-scanning/Git security/source metadata were used.",
+    "Source analysis does not qualify SQL/RLS, dependencies, images, general IaC or independent human security review.",
+    "The12 hosted behavior stages are recorded as actually successful; the safe artifact does not include detailed connector/storage subcase reports, so no unreported counts are invented.",
+    "Controlled completion-handler fixtures use real Temporal reservation/API/PostgreSQL with synthetic worker input; the separate connectors stage is the actual PostgreSQL source acceptance.",
+    "This exact PR16 tree does not include the independently developing business-domain/scoped-authority worktree. No qualification transfers to those changes.",
+    "Postmerge default-branch workflows, fork/Dependabot, full programme and release readiness remain separate qualifications; observing a merge does not qualify them.",
+    "Public candidate originals are byte-identical selected safe JSON. Raw API/security responses, TAP/logs and downloaded screenshots remain private."
+  ],
+  "merged_pr": {
+    "main_branch_qualification": "NOT_INFERRED; no postmerge Source/Development result is included.",
+    "merge_commit": "bd652b375bc773bdbe0cf22abb1033edeba2c354",
+    "merged_at": "2026-11-16T02:43:52Z",
+    "number": 16,
+    "provenance": "Root agent reported authenticated normal PR metadata readback confirming MERGED; this subagent did not query CI metadata for this fact.",
+    "qualified_head": "e16529d157f959cb1d3c03dd2d44cebc2a06a747",
+    "state": "MERGED"
+  },
+  "original_publication_files": [
+    {
+      "bytes": 4152,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-actions/actions-summary.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/actions/actions-summary.json",
+      "sha256": "83d4c975aebcfb885300f96b34ef5f17906bef5bd1875c0a941203ce6829b101"
+    },
+    {
+      "bytes": 145095,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-actions/source-manifest.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/actions/source-manifest.json",
+      "sha256": "62fded999684668a86784fe2e72fcc73a721f87f9bc11fb526b39501780a51bc"
+    },
+    {
+      "bytes": 6255,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-actions/summary.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/actions/summary.json",
+      "sha256": "a05ce8e82d8a4bddb2792a6b56f87ea5f8f4abb66b65b494d4c4c1f240ad6e71"
+    },
+    {
+      "bytes": 290,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-actions/upload-status.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/actions/upload-status.json",
+      "sha256": "7e8ff0f4d2b96445ca5e449d8422b8ce23055c98481ed6caa0cc023081795f41"
+    },
+    {
+      "bytes": 4645,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-javascript-typescript/javascript-typescript-summary.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/javascript-typescript/javascript-typescript-summary.json",
+      "sha256": "fb81116b3cf0e41390884346a8d7d73be7413660c3af3f8cbaa9f92cdd62cd20"
+    },
+    {
+      "bytes": 145095,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-javascript-typescript/source-manifest.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/javascript-typescript/source-manifest.json",
+      "sha256": "62fded999684668a86784fe2e72fcc73a721f87f9bc11fb526b39501780a51bc"
+    },
+    {
+      "bytes": 6840,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-javascript-typescript/summary.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/javascript-typescript/summary.json",
+      "sha256": "e0137dd56900baac14c353a48a0fd84f416e180f8f7c505ade3e07dcbc2ef51f"
+    },
+    {
+      "bytes": 304,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-javascript-typescript/upload-status.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/javascript-typescript/upload-status.json",
+      "sha256": "96900b142c683d25cf860d5602c62093f997d9b6843687c53de278c1517d55b9"
+    },
+    {
+      "bytes": 4622,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-python/python-summary.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/python/python-summary.json",
+      "sha256": "321aa615f9b0ce00edf50bf997aec0a66feafe1df4763a8b300cecd1ad4abd4c"
+    },
+    {
+      "bytes": 145095,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-python/source-manifest.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/python/source-manifest.json",
+      "sha256": "62fded999684668a86784fe2e72fcc73a721f87f9bc11fb526b39501780a51bc"
+    },
+    {
+      "bytes": 6787,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-python/summary.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/python/summary.json",
+      "sha256": "56c5fc67c340f01a891ca6d946ff3a1aa156ef0b4d23c024b8865e9f6e29b33d"
+    },
+    {
+      "bytes": 289,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-python/upload-status.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/python/upload-status.json",
+      "sha256": "7d36fc00f8788e8adeab557844e5e6226763e5bdeb6999d6bef1827fff01d0e9"
+    },
+    {
+      "bytes": 4390,
+      "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/development/behavior-summary.json",
+      "path": "docs/security/sast-evidence/participation-attempt-3/development/behavior-summary.json",
+      "sha256": "54b79a0c3ceccd88ac201717eba911ac302f7309d35a735157de894c3f9b8fcd"
+    }
+  ],
+  "outcome": "PASS",
+  "prior_evidence_preserved": [
+    {
+      "bytes": 58880,
+      "path": "docs/verification/participation-repair-reference.json",
+      "sha256": "e2e2622b6ae761de3cca6a9cd0c8eba9e5fec9d72e919d05e9622c23c8b319d9"
+    },
+    {
+      "bytes": 21754,
+      "path": "docs/verification/participation-hosted-attempt-2.json",
+      "sha256": "d62e2a2df056163ff0ad1ac89492a47f3cc41521500580670e2f8222b31e02f3"
+    },
+    {
+      "bytes": 40459,
+      "path": "docs/verification/participation-audit-fixture-correction.json",
+      "sha256": "06c0ee7d231bf0a8048b49aa7b1bcb306b973fc2bf12467e92cd2b0029309fbd"
+    }
+  ],
+  "publication_note": {
+    "api_original_status": "Retained byte-identical privately; not published.",
+    "candidate_secret_check": {
+      "finding_count": 0,
+      "limitations": [
+        "Pinned detector result, not proof that every possible secret is absent.",
+        "No historical report or prior failed scan was relabeled."
+      ],
+      "scope": "All13 exact original JSON copies plus this scoped report",
+      "status": "PASS",
+      "tool": "gitleaks",
+      "version": "8.30.1"
+    },
+    "initial_candidate_scan": {
+      "bytes": 1398,
+      "path": ".local/evidence/participation-hosted-attempt-3/publication-secrets.json",
+      "sha256": "364624e48ce78530af2df3f467e4166fe4ed23a2a13b13bfba740c9aee23b7d6"
+    },
+    "private_original": {
+      "bytes": 21989,
+      "path": ".local/evidence/participation-hosted-attempt-3/development/api-summary.json",
+      "sha256": "6ecb4fd0dc955eb25c23629f005829757bf328aaf5f4f4e8a849d3d856ad37ab"
+    },
+    "published_original_count": 13,
+    "reason": "Pinned generic-api-key detector matched four source-file SHA256 map entries in the original API summary. Each was independently verified against the exact tested Git blob. No credential was identified, no scanner rule was relaxed and the original was not edited. This scoped report publishes the same exact counts and source fingerprints in path/SHA arrays."
+  },
+  "purpose": "PR16_PARTICIPATION_HOSTED_ATTEMPT_3",
+  "recorded_at": "2026-11-16T02:45:27.314113+00:00",
+  "schema_version": 1,
+  "scope": "Exact PR16 merge source scan, independent stored-analysis readback, and actual hosted core behavior; not complete programme/release qualification.",
+  "source_binding": {
+    "authenticated_immutable_git_metadata": {
+      "bytes": 2725,
+      "path": ".local/evidence/participation-hosted-attempt-3/private/tested-merge-commit.json",
+      "sha256": "d9bd0ab5dfe55e18dc0f4711bbee851f04fb9c5d2bb0bba5933f60659148b4ac"
+    },
+    "bytes": 24763818,
+    "files": 680,
+    "identical_tree": "754a4bf9ae5d6cb8aca742801a0a2b7a9c9e0bea",
+    "method": "All 680 exact local head Git blobs match original scan manifest bytes and SHA256; authenticated immutable Git commit metadata confirms tested merge has the identical tree and expected parents. No current worktree content substituted.",
+    "original_manifest": {
+      "path": "docs/security/sast-evidence/participation-attempt-3/python/source-manifest.json",
+      "sha256": "62fded999684668a86784fe2e72fcc73a721f87f9bc11fb526b39501780a51bc"
+    },
+    "private_verification": {
+      "bytes": 172550,
+      "path": ".local/evidence/participation-hosted-attempt-3/source-binding.json",
+      "sha256": "530ab8daa9cfa3a402a9da4761f42e31369da5a19f5a63a8436988685c4c4b5f"
+    },
+    "scan_source_digest": "d041e9b141fc6201f16dca9ab7c70531f88b0d0879238d4540158ee0c69cf913",
+    "status": "PASS"
+  },
+  "source_commit": "e16529d157f959cb1d3c03dd2d44cebc2a06a747",
+  "source_languages": [
+    {
+      "analysisId": 2173259339,
+      "category": "governance-commons/actions",
+      "coverage": {
+        "databaseFiles": 2,
+        "expectedFiles": 2,
+        "extractedExpectedFiles": 2,
+        "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+      },
+      "extractorRuntime": null,
+      "finishedAt": "2026-11-16T02:15:41.358741+00:00",
+      "language": "actions",
+      "libraryVersion": "0.7.1",
+      "outcome": "PASS",
+      "queryPack": "codeql/actions-queries",
+      "queryVersion": "0.6.39",
+      "resolvedQueryCount": 24,
+      "results": 0,
+      "sarifId": "a0714688-e163-11f1-97ec-f857a1a0c0a4",
+      "sarifRules": 23,
+      "scanDurationSeconds": 43.427,
+      "startedAt": "2026-11-16T02:14:57.931289+00:00",
+      "toolVersion": "2.27.4"
+    },
+    {
+      "analysisId": 2173261559,
+      "category": "governance-commons/javascript-typescript",
+      "coverage": {
+        "databaseFiles": 177,
+        "expectedFiles": 152,
+        "extractedExpectedFiles": 152,
+        "extractedPathsDigest": "fe36506cad3c005d09457c924d724b27eb5bf6dbd963d23a64a1a2e3f31182f7"
+      },
+      "extractorRuntime": "v24.22.3",
+      "finishedAt": "2026-11-16T02:16:15.470658+00:00",
+      "language": "javascript-typescript",
+      "libraryVersion": "3.0.0",
+      "outcome": "PASS",
+      "queryPack": "codeql/javascript-queries",
+      "queryVersion": "2.5.0",
+      "resolvedQueryCount": 105,
+      "results": 0,
+      "sarifId": "b46b7186-e163-11f1-849b-dd22d9328392",
+      "sarifRules": 103,
+      "scanDurationSeconds": 82.987,
+      "startedAt": "2026-11-16T02:14:52.483245+00:00",
+      "toolVersion": "2.27.4"
+    },
+    {
+      "analysisId": 2173259472,
+      "category": "governance-commons/python",
+      "coverage": {
+        "databaseFiles": 47,
+        "expectedFiles": 28,
+        "extractedExpectedFiles": 28,
+        "extractedPathsDigest": "430e3f157c090a774678bf7f539f05e21ae84ddf10f251f6ba7fe3943a2e932a"
+      },
+      "extractorRuntime": "Python 3.14.5",
+      "finishedAt": "2026-11-16T02:15:43.642093+00:00",
+      "language": "python",
+      "libraryVersion": "7.2.9",
+      "outcome": "PASS",
+      "queryPack": "codeql/python-queries",
+      "queryVersion": "1.9.0",
+      "resolvedQueryCount": 52,
+      "results": 0,
+      "sarifId": "a1752586-e163-11f1-8441-3ba3e59b20e6",
+      "sarifRules": 50,
+      "scanDurationSeconds": 43.892,
+      "startedAt": "2026-11-16T02:14:59.749765+00:00",
+      "toolVersion": "2.27.4"
+    }
+  ],
+  "source_workflow": {
+    "jobSeconds": {
+      "actions": 100,
+      "javascript-typescript": 133,
+      "policy": 5,
+      "python": 101,
+      "sast-required": 3
+    },
+    "runId": 43790913509,
+    "status": "PASS",
+    "totalSeconds": 140,
+    "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43790913509",
+    "verification": "Parent observed final public UI reload at 2026-11-16T02:19Z; no Actions status/log/check API used."
+  },
+  "stored_analysis_readback": {
+    "alert_inventory_complete": true,
+    "alerts": [
+      {
+        "line": 26,
+        "mostRecentCommit": "2c81c529d0edd5cf0204af98b38ad2d74335b5b9",
+        "number": 4,
+        "path": "policies/api_evidence.py",
+        "ruleId": "py/redos",
+        "severity": "high",
+        "state": "fixed"
+      },
+      {
+        "line": 102,
+        "mostRecentCommit": "6a3f53abc8e112c6656795219cf5c681b458254a",
+        "number": 3,
+        "path": "packages/domain/src/relation-migration-store.ts",
+        "ruleId": "js/user-controlled-bypass",
+        "severity": "high",
+        "state": "fixed"
+      }
+    ],
+    "analyses": [
+      {
+        "category": "governance-commons/javascript-typescript",
+        "commit_sha": "7dae0affcda18169f9a7526799f6ded9ce0a61b3",
+        "created_at": "2026-11-16T02:16:18Z",
+        "error": "",
+        "id": 2173261559,
+        "ref": "refs/pull/16/merge",
+        "results_count": 0,
+        "rules_count": 103,
+        "sarif_id": "b46b7186-e163-11f1-849b-dd22d9328392",
+        "tool": {
+          "guid": null,
+          "name": "CodeQL",
+          "version": "2.27.4"
+        },
+        "warning": ""
+      },
+      {
+        "category": "governance-commons/python",
+        "commit_sha": "7dae0affcda18169f9a7526799f6ded9ce0a61b3",
+        "created_at": "2026-11-16T02:15:46Z",
+        "error": "",
+        "id": 2173259472,
+        "ref": "refs/pull/16/merge",
+        "results_count": 0,
+        "rules_count": 50,
+        "sarif_id": "a1752586-e163-11f1-8441-3ba3e59b20e6",
+        "tool": {
+          "guid": null,
+          "name": "CodeQL",
+          "version": "2.27.4"
+        },
+        "warning": ""
+      },
+      {
+        "category": "governance-commons/actions",
+        "commit_sha": "7dae0affcda18169f9a7526799f6ded9ce0a61b3",
+        "created_at": "2026-11-16T02:15:44Z",
+        "error": "",
+        "id": 2173259339,
+        "ref": "refs/pull/16/merge",
+        "results_count": 0,
+        "rules_count": 23,
+        "sarif_id": "a0714688-e163-11f1-97ec-f857a1a0c0a4",
+        "tool": {
+          "guid": null,
+          "name": "CodeQL",
+          "version": "2.27.4"
+        },
+        "warning": ""
+      }
+    ],
+    "analysis_inventory_complete": true,
+    "exact_commit_ref_category_sarif_id_tool_and_counts_match": true,
+    "limitation": "Stored analysis metadata independently verified; stored SARIF bytes were not downloaded. Historical fixed alert locations retain their actual older most-recent-instance commits.",
+    "open_alerts": 0,
+    "private_safe_readback": {
+      "bytes": 2076,
+      "path": ".local/evidence/participation-hosted-attempt-3/security-readback.json",
+      "sha256": "4b42b92ee34cc2e0223f0d609785c6f7885b5f39f58e90480c17822f916f910d"
+    },
+    "status": "PASS"
+  },
+  "tested_merge": "7dae0affcda18169f9a7526799f6ded9ce0a61b3"
+}

@@ -51,6 +51,54 @@ The final authored acceptance adds a real PostgreSQL rescan after domain placeme
 
 SCOPED_AUTHORITY_DRAFT.md and SCOPED_AUTHORITY_INGRESS_INVENTORY.md are proposals only. Root must adopt the exact action/resource/compatibility and storage contracts before implementation or activation. The root participation checkout is correcting an audit scope-before-limit bug and a controlled scan-fixture/live-dispatch race revealed by its122/124 API run; retain that failed attempt and merge its checked correction before rebuilding this checkout. No affected milestone or release gate advances.
 
+
+## Participation main independently qualified — 2026-11-16T03:18Z
+
+Postmerge main `bd652b375bc773bdbe0cf22abb1033edeba2c354` now has its own passing Source security run `43793922273` and Development run `43793922298`. The complete source manifest binds680 immutable Git blobs; all three stored CodeQL analyses have zero findings. The downloaded behavior artifact verifies126/126 real API cases, sixteen one-attempt browser journeys and twelve successful stages. Consolidation independently revalidated27 immutable blobs, the exact API declaration inventory and all142 API/browser source coordinates. See `docs/verification/participation-main.json` and its thirteen byte-identical safe original reports. The original API digest-map report stays privately preserved; no scanner rule was relaxed.
+
+This evidence is separate from the passing PR invocation and earlier failed attempts. The safe hosted artifact records seventeen runtime test-file hashes; it does not provide a full application-image binding or API/browser wall duration. Browser durations are per-test sums, and this consolidation made no fresh visual-review claim. The fourteen-file publication candidate passes pinned Gitleaks8.30.1 with zero findings; the broader documentation/publication checks are recorded separately.
+
+The shared local core remains owned by the isolated `codex/business-domains` worktree, with SQL001–011 immutable. Its newer implementation and current browser qualification are outside this main tree and must use their own evidence. Do not rebuild the root checkout against that runtime. Scoped authority, broader capability requirements, fork/Dependabot qualification and release gates remain open; requirement statuses are unchanged.
+
+
+## Participation merged after exact hosted qualification — 2026-11-16T02:44Z
+
+PR16 head `e16529d157f959cb1d3c03dd2d44cebc2a06a747` merged at `2026-11-16T02:43:52Z` as `bd652b375bc773bdbe0cf22abb1033edeba2c354`. Public workflow UI shows Source43790913509 and Development43790913426 passing; independently verified artifacts bind 680 exact source files, all three zero-finding stored analyses, 126 API tests and sixteen one-attempt browser journeys to tested merge `7dae0affcda18169f9a7526799f6ded9ce0a61b3`. Thirteen safe original reports are byte-identical; the original API summary remains private because its digest-map serialization triggered four secret-scanner patterns, and the public report uses verified path/SHA arrays without changing execution data. No scanner rule was relaxed. See `docs/verification/participation-hosted-attempt-3.json` for exact bounds and preserved failed attempts. Postmerge qualification remains separate.
+
+The shared local core is still owned by the isolated `codex/business-domains` checkout, with SQL001–011 applied and immutable. Its two scoped HTTP/query corrections pass257 pure tests, type/build checks and ten real targeted database/HTTP cases; the full154 API gate is running. Those newer uncommitted domain sources are outside PR16's qualification. Do not rebuild this root checkout against the shared core. Full programme, scoped authority and release gates remain open.
+
+## Shared local runtime — 2026-11-16T02:19Z
+
+PR16 is published at e16529d157f959cb1d3c03dd2d44cebc2a06a747. Fresh hosted Source security run 43790913509 passes all five jobs; stored-analysis verification is being collected. Development run 43790913426 is still running. Neither the prior failed invocations nor the full programme are relabeled.
+
+The shared local core now runs the isolated `codex/business-domains` checkout, source checkpoint 6ff4afd47693a05b8baa2343d24321fcc3451361. SQL011 applied at 2026-11-16T02:13:09.714989Z; all eleven stored checksums match source. SQL001–011 are now immutable. This root participation checkout does not contain SQL011: do not use it to rebuild the shared runtime or infer domain source qualification. Continue domain work in the existing isolated checkout and preserve both histories.
+
+The final domain upgrade gate passes eight checks, 18 storage and nine concurrency cases, with 76 committed source matches; 254 units and root/web types pass. Initial core startup failed on a missing isolated source-secret bind file; an empty Docker-created directory was replaced with a link to the existing private bootstrap file, preserving credential bytes. The separate startup retry passes. Actual seed and seed recovery pass; domain API acceptance is running and domain browser acceptance remains NOT_RUN. Exact reports are retained in the isolated checkout. Authority contracts remain proposals pending integration review.
+
+## Checked audit/fixture correction — 2026-11-16T02:03Z
+
+The corrected core passes all126 real API cases in337668.204696ms, zero failures/cancellations/skips/todos. The actual API/workflow/site image and all81 executed source files are bound in participation-audit-fixture-correction.json. Pure210, root/web types and production build pass in the same pipeline. API attempt10 retains original TAP, summary, wrapper and execution report; attempt9's122/124 failure is preserved separately. SQL001–010 are unchanged. The previous16-browser pass remains historical; this correction has not rerun the browser or hosted gates yet.
+
+Audit integrity now rechecks the exact active session and current membership within a read-only repeatable-read snapshot and denies hidden scope before any profile-limit response. Two real SQL regressions cover10001 normal events plus hidden history in a fully rolled-back transaction, and stale caller permissions/session mismatch/expiry. No fixture rows persist; PostgreSQL sequence allocations still advance. Controlled completion-handler tests reserve exact Temporal workflow IDs before publishing synthetic jobs and verify terminal jobs before exact-run cleanup. Their worker input is synthetic; actual connector acceptance remains separate. Test HTTP admission is paced500ms without retries or production limit changes.
+
+The reviewed domain test/CI/seed-recovery checkpoint is committed separately as4f94f3c. Integrate this checked root source there, refresh the SQL011 isolated source gate, then apply011 once and qualify actual seed/revocation, API, targeted3/full19 browser journeys and rendered UI. SQL011 is still unapplied to core. Proposed authority contracts remain unadopted. PR16 requires fresh Source and Development success before merge; full programme and release remain open.
+
+## API correction in progress — 2026-11-16T01:55Z
+
+The first paced API invocation executed all124 cases:122 pass, two fail, zero skips/cancellations. Its original report, private TAP, runner and safe summary are preserved in participation-api-attempt-9. Pure210, root/web types and production build passed first. The actual API/workflow/site image was9fcdca09; source bindings matched. The deterministic declaration reader executed successfully as a collector, but this invocation did not pass the product gate.
+
+The real tenant ledger now exceeds10000 audit entries. Integrity returned422 before its hidden-history403 check. A repeatable-read authorization snapshot correction is being implemented with a rollback-only large-ledger regression. The second failure is a controlled-input running job racing the real dispatcher: its response reports30 ingested assets although the fixture submits only two. Test-only Temporal reservations will isolate direct completion-handler inputs while retaining actual API/PostgreSQL checks. Real connector acceptance stays separate and uses normal dispatch. Both fixes require a fresh rebuilt invocation; no failure is relabeled.
+
+The combined a55731c domain SQL rerun passed8 upgrade checks,18 storage and9 concurrency cases. SQL011 is still not applied to core. The isolated seed harness, API/browser rescan acceptance and CI registry are authored, with runtime qualification pending integration of this checked correction. Broader capabilities and release remain open.
+
+## PR16 hosted attempt two — 2026-11-16T01:31Z
+
+Source run43785726080 failed on one high Python py/redos finding in the new API evidence declaration regex; JS/TS and Actions now pass with zero stored findings. Independent readback confirms all three exact tested-merge analyses, full extraction coverage, and complete659-file source binding. The earlier JavaScript alert is fixed. Development43785726232 passes quality/secrets but executes124 API tests with117 pass/7 fail, all failures at HTTP assertions in relations.test.ts. Upgrades and browser are skipped. The safe artifact has no HTTP statuses or error values; request-rate pressure is a hypothesis under investigation, not an established historical cause. See participation-hosted-attempt-2.json and13 byte-identical public originals (the original API summary remains privately archived).
+
+A deterministic linear declaration reader replaces the ambiguous regex. Its collector suite passes40 test executions and recognizes all124 static declarations. The archived regex times out on64 malformed backslashes while the correction rejects131072 in0.002516 seconds. This is a parser regression, not a new API or hosted scan pass. The last real local124-test API run remains bound to its original runner hash. Do not merge PR16 until fresh hosted Source and Development gates pass.
+
+The combined isolated domain checkpoint a55731c retains both histories and the first18-storage/9-concurrency upgrade PASS. Its combined-source rerun is underway; SQL011 has not been applied to core and real domain API/browser/seed remain NOT_RUN.
+
 ## PR16 repair-reference follow-up — 2026-11-16T01:20Z
 
 PR16 first hosted attempt failed. Source run43781088999 uploaded all three analyses for tested merge6a3f53ab: JS/TS has one high js/user-controlled-bypass finding, Actions/Python zero; independent stored-analysis readback agrees. Development43781089046 failed at the security step; original safe evidence contains no assertion coordinates, so its precise cause remains unknown. Both original failures are preserved in docs/verification/participation-repair-reference.json and13 byte-identical hosted reports.

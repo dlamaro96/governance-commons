@@ -1,0 +1,832 @@
+{
+  "api": {
+    "command": "./dev test --suite security",
+    "counts": {
+      "cancelled": 0,
+      "fail": 0,
+      "pass": 126,
+      "skipped": 0,
+      "suites": 0,
+      "tests": 126,
+      "todo": 0
+    },
+    "exit_code": 0,
+    "expected_tests": 126,
+    "flags": [],
+    "limitation": "The artifact binds17 executed integration test files before/after runtime. No full runtime application-file manifest, application image digest or API wall duration is present. Private TAP was not downloaded or independently rehashed.",
+    "observed_results": 126,
+    "original_private_report": {
+      "bytes": 21989,
+      "path": ".local/evidence/participation-main/development/api-summary.json",
+      "sha256": "838ed64d75df59cfc83def8769b744a7422e368a7c3c12272fcd7ac43c058eb2"
+    },
+    "private_tap_sha256_reported_by_collector": "e274a685dcfbb55e57309e90d5eb88ec0a7150001c082a848358715ea142302a",
+    "profile": "real core API/PostgreSQL; Node TAP; synthetic fixtures",
+    "runtime_test_sources_match": true,
+    "safe_collector_sources": [
+      {
+        "git_blob_oid": "2258166a701ee081b7a3834207865678c04ae97f",
+        "path": "policies/api_evidence.py",
+        "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2"
+      },
+      {
+        "git_blob_oid": "266a762351fcb76db5d6e071d89e31447e34ec52",
+        "path": "policies/ci_evidence.py",
+        "sha256": "b50ab54d2087d4dae72875a9ec0c6de52bfaff9e76c6a1c6207e98bde77eefd3"
+      }
+    ],
+    "safe_report_independently_revalidated": true,
+    "safe_report_method": "Exact policy and17 integration files read from qualified immutable Git blobs into a temporary snapshot; safe_report(snapshot, original, exact_main_commit) returns the identical report with126 unique static declarations. No tests were rerun.",
+    "source_files": [
+      {
+        "git_blob_oid": "881bc316c6ae4cfcf14d922c1fa701323a799567",
+        "path": "tests/integration/asset-type-api-limits.test.ts",
+        "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4"
+      },
+      {
+        "git_blob_oid": "6375386f6afbf2ef87c7c72cf8f7b4676189a22c",
+        "path": "tests/integration/asset-type-migration-storage.test.ts",
+        "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+      },
+      {
+        "git_blob_oid": "fcdd25b2c2fe690de205f477a24fa32bbc2d1362",
+        "path": "tests/integration/asset-type-migrations.test.ts",
+        "sha256": "c5ad40c323b3405243e95c9b33b62d81e86ab596bca361779219c489fb7aa407"
+      },
+      {
+        "git_blob_oid": "606749cc79a6b2474f5bca0e65a16e4bb41635c5",
+        "path": "tests/integration/asset-type-storage.test.ts",
+        "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+      },
+      {
+        "git_blob_oid": "dcee265941a881c3a507e1c08c53fa74953a4803",
+        "path": "tests/integration/asset-types.test.ts",
+        "sha256": "08c5b7fd9aebea55d498b97b4c524e6e83eefb4c7e604b519996ec1932a2145e"
+      },
+      {
+        "git_blob_oid": "4ac7184f60733ee3440586e40072771e6770acd6",
+        "path": "tests/integration/audit-integrity.test.ts",
+        "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad"
+      },
+      {
+        "git_blob_oid": "823e8287fa8f9b74f49f06e3ae3c726a0cda9aeb",
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "eb1159e5c2f3004c3d90a82b2361c2665efff90d20b3eb18f8e58a7929ebd579"
+      },
+      {
+        "git_blob_oid": "f3172293cb9020a3b686b71da6ed35ab5851d64e",
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7"
+      },
+      {
+        "git_blob_oid": "52f4e8f8c6069d243e229b7ee4376ef19b3ad770",
+        "path": "tests/integration/model-migration-api.test.ts",
+        "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb"
+      },
+      {
+        "git_blob_oid": "a9fe29c1204d753fbccaf08c15774d9459f7c758",
+        "path": "tests/integration/model-migration-storage.test.ts",
+        "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+      },
+      {
+        "git_blob_oid": "afbabb29c2400b6814d99cdfd2593120cf5682d3",
+        "path": "tests/integration/model-migrations.test.ts",
+        "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+      },
+      {
+        "git_blob_oid": "d0c8eba5d2efc29a8aa35d7c5133a6b2f88e3423",
+        "path": "tests/integration/model-pagination.test.ts",
+        "sha256": "0809f4e7711f3fea796edc1f87a82fc6ece9684c0c6483e4d506a233c4d0d0d2"
+      },
+      {
+        "git_blob_oid": "c04929cbd331d4b608b597baa3a4108d01e55d66",
+        "path": "tests/integration/models.test.ts",
+        "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1"
+      },
+      {
+        "git_blob_oid": "a9afca3a5887a4a635a3b91738944feaf7d54bd5",
+        "path": "tests/integration/relation-migration-api.test.ts",
+        "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db"
+      },
+      {
+        "git_blob_oid": "2676bfe9f521971b2e3bb121d8c153a8a5435802",
+        "path": "tests/integration/relation-participation-storage.test.ts",
+        "sha256": "17fcf6a093e501e0743d9ec5a6b50046b00b3cb59e7be86f802003699d27830e"
+      },
+      {
+        "git_blob_oid": "e09089bd02c62004cf4c2e59429ef6ec3752fb2d",
+        "path": "tests/integration/relation-storage.test.ts",
+        "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619"
+      },
+      {
+        "git_blob_oid": "0ad770b3ac9c65f226284a9fb7ae3fb593922055",
+        "path": "tests/integration/relations.test.ts",
+        "sha256": "eef1490ff12eae279018027edfdbbbd9dee2bae739cf925e82f16fd81ecba760"
+      }
+    ],
+    "source_manifest_sha256": "23ca5eb02d7960988a54413fdc71361796883fc33eb142ca84ace2aad8d1f72b",
+    "status": "PASS",
+    "test_file_count": 17,
+    "timestamp": "2026-11-16T02:50:01.562794+00:00",
+    "wall_duration_ms": null
+  },
+  "archive_digest_limitation": "ZIP digests were observed in GitHub UI by root; artifact extraction retained original file bytes, whose hashes were computed. ZIP bytes were not retained or independently rehashed.",
+  "archive_ui_digests": [
+    {
+      "name": "sast-actions-43793922273-1",
+      "sha256": "a80c475fcac73acbc53c87b5bbdb9366be155e46d9f460083831d9fa35245425"
+    },
+    {
+      "name": "sast-javascript-typescript-43793922273-1",
+      "sha256": "d65e998225137d3c7801203957d0ffe0b113dc1dc30bc2a9d6b44a027ae3cc61"
+    },
+    {
+      "name": "sast-python-43793922273-1",
+      "sha256": "1e04957f28b49f6734fe3beb71264033a654a747caa93772f1dffec47055ea0e"
+    },
+    {
+      "name": "behavior-bd652b375bc773bdbe0cf22abb1033edeba2c354",
+      "sha256": "b042963b02127e148bb0585908eb9b141b3ee71c27bf05939e772fd46f19436e"
+    }
+  ],
+  "browser": {
+    "attempts": 16,
+    "duration_semantics": "Sum of recorded per-test durations, not browser wall-clock duration or full workflow duration.",
+    "duration_sum_ms": 356040,
+    "journeys": 16,
+    "original_png_count": 10,
+    "private_original_pngs": [
+      {
+        "bytes": 162094,
+        "path": ".local/evidence/participation-main/development/catalog-ar-dark-1440.png",
+        "sha256": "c7b8c6a0114a942aba3d7bbcf4fc6c8e9de0ccef576458700da61ab612a841a2"
+      },
+      {
+        "bytes": 77905,
+        "path": ".local/evidence/participation-main/development/catalog-ar-dark-390.png",
+        "sha256": "8f29a9b856d9ba12506c5357d11b10cf327587428828514923a93fb4eaec14b0"
+      },
+      {
+        "bytes": 118256,
+        "path": ".local/evidence/participation-main/development/catalog-ar-dark-768.png",
+        "sha256": "7474230f9306098ea5c4213195f6d49e35130557e74bbd0846da0b3b8e3e1193"
+      },
+      {
+        "bytes": 179886,
+        "path": ".local/evidence/participation-main/development/catalog-en-dark-1440.png",
+        "sha256": "28dd1324c71b450177aba7d219eaa0cefdd7f64bd6007ed5d76c68e66845bede"
+      },
+      {
+        "bytes": 160609,
+        "path": ".local/evidence/participation-main/development/catalog-en-light-1024.png",
+        "sha256": "83167d7775180dd966d20a8a97280188a35cb2dade27a0c6e62c9bf59abb41cf"
+      },
+      {
+        "bytes": 169876,
+        "path": ".local/evidence/participation-main/development/catalog-en-light-1280.png",
+        "sha256": "4fd9cf0b166ae3cdf916575933964de6724f7e339d36f4c0825d19179b06fb71"
+      },
+      {
+        "bytes": 178362,
+        "path": ".local/evidence/participation-main/development/catalog-en-light-1440.png",
+        "sha256": "1955eea6be5c157a7272dbf5b53184f67874598ccb2ae69062107cec0cadc882"
+      },
+      {
+        "bytes": 83438,
+        "path": ".local/evidence/participation-main/development/catalog-en-light-390.png",
+        "sha256": "06e8406bd3a46265c2c3844b3b1b678d929f47460da66328c4acd06cd652b88d"
+      },
+      {
+        "bytes": 125666,
+        "path": ".local/evidence/participation-main/development/catalog-en-light-768.png",
+        "sha256": "1608d9e336a1dfb2fc26c9f2389ed38ab85b7bb9d1a9f314016f8fa60478b778"
+      },
+      {
+        "bytes": 77661,
+        "path": ".local/evidence/participation-main/development/catalog-history.png",
+        "sha256": "3adfaf4d572b21f51d3c8e0dfc52e931a3463ef8d561cbc887fdbf74dd25dad6"
+      }
+    ],
+    "retries": 0,
+    "source_coordinates_independently_verified": true,
+    "status": "PASS",
+    "test_sources": [
+      {
+        "git_blob_oid": "0cfa0fe87a3491fed71a8cdc7c47fdeff1c8e4ce",
+        "path": "tests/e2e/asset-type-migrations.spec.ts",
+        "sha256": "b6b0fa5dd017c13595db91ee785a9d44f6c59958d79d48e582cd8cbaaf4b4329"
+      },
+      {
+        "git_blob_oid": "517a4b20b698bc200d41714f90e868369a3923ab",
+        "path": "tests/e2e/asset-types.spec.ts",
+        "sha256": "8d6e7f8ccedb3774557f71470e52ec7bea8ee60e2b86d1ee414bc17b5ec5ac04"
+      },
+      {
+        "git_blob_oid": "5fa6ece3a50caed4bce8645ea60fac07f1395a79",
+        "path": "tests/e2e/model-migrations.spec.ts",
+        "sha256": "6da5e76511b535bdef770fdad27d72861cf299a1c4a91c3e6f64d218572b33e8"
+      },
+      {
+        "git_blob_oid": "f8b9bbc7134e1f371098fb38df247e41b46f834e",
+        "path": "tests/e2e/models.spec.ts",
+        "sha256": "d25dc12de6cbff6642169b15ca8797d2275a5eab165242b0c88a09b959d73f3f"
+      },
+      {
+        "git_blob_oid": "0453f46721806b24543367b34124055cf2e22595",
+        "path": "tests/e2e/relation-migrations.spec.ts",
+        "sha256": "1c74ef81ca8f686341f112c5452c0cab3720235d54fcc66df574b6fda8c07f9b"
+      },
+      {
+        "git_blob_oid": "3f550a80a745a67cd448b70a1240308aca5020d8",
+        "path": "tests/e2e/relations.spec.ts",
+        "sha256": "70cd56fe9ad19943ed35bf6735bb992a7b06a47a92d72a1c926a1f91d155a9f5"
+      },
+      {
+        "git_blob_oid": "b1ee99d0532b42510dcf17b0b14f2813802b3ebd",
+        "path": "tests/e2e/ui-accessibility.spec.ts",
+        "sha256": "a55a5c6fdc2506d70c2840e75486d235a8c7440964376a2fa25ee88a7c65e504"
+      },
+      {
+        "git_blob_oid": "b78c950fe6f9ea9bd67d3112ad93024ab85ba885",
+        "path": "tests/e2e/vertical-slice.spec.ts",
+        "sha256": "67a01a7a4951c991231b59ce20bf3f9cacd6c11a1d4ee5ec86b88048ac931b18"
+      }
+    ],
+    "tests": [
+      {
+        "attempts": 1,
+        "duration_ms": 6912,
+        "failure_locations": [],
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 17,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 1267,
+        "failure_locations": [],
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 122,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 9986,
+        "failure_locations": [],
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 30,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 1293,
+        "failure_locations": [],
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 74,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 21354,
+        "failure_locations": [],
+        "file": "tests/e2e/models.spec.ts",
+        "line": 77,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 3904,
+        "failure_locations": [],
+        "file": "tests/e2e/models.spec.ts",
+        "line": 257,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 16064,
+        "failure_locations": [],
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 80,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 3043,
+        "failure_locations": [],
+        "file": "tests/e2e/model-migrations.spec.ts",
+        "line": 218,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 24827,
+        "failure_locations": [],
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 97,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 47438,
+        "failure_locations": [],
+        "file": "tests/e2e/asset-types.spec.ts",
+        "line": 242,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 22450,
+        "failure_locations": [],
+        "file": "tests/e2e/asset-type-migrations.spec.ts",
+        "line": 97,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 43344,
+        "failure_locations": [],
+        "file": "tests/e2e/asset-type-migrations.spec.ts",
+        "line": 252,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 66085,
+        "failure_locations": [],
+        "file": "tests/e2e/relations.spec.ts",
+        "line": 145,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 8940,
+        "failure_locations": [],
+        "file": "tests/e2e/relations.spec.ts",
+        "line": 358,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 21965,
+        "failure_locations": [],
+        "file": "tests/e2e/relation-migrations.spec.ts",
+        "line": 124,
+        "status": "expected"
+      },
+      {
+        "attempts": 1,
+        "duration_ms": 57168,
+        "failure_locations": [],
+        "file": "tests/e2e/relation-migrations.spec.ts",
+        "line": 194,
+        "status": "expected"
+      }
+    ],
+    "unexpected": 0,
+    "unique_source_coordinates": 16,
+    "visual_inspection": {
+      "limitation": "PNG signatures, filenames and hashes verified only. No fresh visual, localization or complete accessibility certification is inferred.",
+      "status": "NOT_PERFORMED_IN_THIS_CONSOLIDATION"
+    }
+  },
+  "development_workflow": {
+    "api_evidence": "VERIFIED_PASS",
+    "artifact_timestamp": "2026-11-16T03:02:48.069970+00:00",
+    "job_seconds": {
+      "behavior": 1164,
+      "quality": 56,
+      "required": 2,
+      "secrets": 21
+    },
+    "public_ui_observed_by": "Root model agent; not independent human review",
+    "run_id": 43793922298,
+    "stage_count": 12,
+    "status": "PASS",
+    "steps": {
+      "asset_type_upgrade": "success",
+      "bootstrap": "success",
+      "browser": "success",
+      "connectors": "success",
+      "model_upgrade": "success",
+      "object_store": "success",
+      "relation_participation_upgrade": "success",
+      "relations_upgrade": "success",
+      "security": "success",
+      "seed": "success",
+      "services": "success",
+      "type_migration_upgrade": "success"
+    },
+    "total_workflow_seconds": null,
+    "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43793922298"
+  },
+  "historical_result_handling": [
+    "PR16 hosted attempts1/2 remain failed historical invocations. The passing PR attempt3 and this fresh postmerge main invocation each retain their own exact commit, source, timestamps and artifacts.",
+    "This main qualification does not retrospectively identify the cause of earlier HTTP failures or transfer qualification to later business-domain/scoped-authority changes."
+  ],
+  "limitations": [
+    "No CI Actions/check/log API endpoints were queried during this consolidation. Prior independently qualified Git/security metadata and explicitly observed artifact downloads were reused.",
+    "Source analysis covers only the recorded Actions, JavaScript/TypeScript and Python sources; it does not qualify SQL/RLS, dependencies, images, general IaC or independent human security review.",
+    "The12 hosted behavior stages are recorded as actually successful. Detailed connector/storage subcase reports are absent from this safe artifact, so no additional counts are inferred.",
+    "Controlled completion-handler fixtures use real Temporal reservations/API/PostgreSQL with synthetic worker input; the separate connectors stage supplies actual PostgreSQL source acceptance.",
+    "The exact qualified main tree excludes the independently developing business-domain/scoped-authority worktree. No result is transferred to those changes.",
+    "Fork/Dependabot qualification, full programme and release gates remain open. No required repository check or security setting was changed.",
+    "Only selected byte-identical safe JSON originals are published. SARIF, raw API/security responses, logs and screenshots remain in the private evidence archive."
+  ],
+  "original_publication_files": [
+    {
+      "bytes": 4151,
+      "originalPrivatePath": ".local/evidence/participation-main/sast-actions/actions-summary.json",
+      "path": "docs/security/sast-evidence/participation-main/actions/actions-summary.json",
+      "sha256": "ac62e859213c20a169652c1c3078dfae32a15095dbf8a19b061e3236a84680ec"
+    },
+    {
+      "bytes": 145095,
+      "originalPrivatePath": ".local/evidence/participation-main/sast-actions/source-manifest.json",
+      "path": "docs/security/sast-evidence/participation-main/actions/source-manifest.json",
+      "sha256": "72f6ad18642b3f8dd6aaefb16778655a3a4ac2a4b897200cc0612471a04c682f"
+    },
+    {
+      "bytes": 6254,
+      "originalPrivatePath": ".local/evidence/participation-main/sast-actions/summary.json",
+      "path": "docs/security/sast-evidence/participation-main/actions/summary.json",
+      "sha256": "97f15fc749a0bbe99ec15c453b3bb60eda89d4634d8402d671a493e5e85683ff"
+    },
+    {
+      "bytes": 290,
+      "originalPrivatePath": ".local/evidence/participation-main/sast-actions/upload-status.json",
+      "path": "docs/security/sast-evidence/participation-main/actions/upload-status.json",
+      "sha256": "630449907596fc5a82922045035ae58caf19eefbb7709fe79eea4f82e9ae93d9"
+    },
+    {
+      "bytes": 4645,
+      "originalPrivatePath": ".local/evidence/participation-main/sast-javascript-typescript/javascript-typescript-summary.json",
+      "path": "docs/security/sast-evidence/participation-main/javascript-typescript/javascript-typescript-summary.json",
+      "sha256": "f5d760e4b620f05f7d375b7d90440ae511ddfa715ed26c3e2e70f67e8e681cfc"
+    },
+    {
+      "bytes": 145095,
+      "originalPrivatePath": ".local/evidence/participation-main/sast-javascript-typescript/source-manifest.json",
+      "path": "docs/security/sast-evidence/participation-main/javascript-typescript/source-manifest.json",
+      "sha256": "72f6ad18642b3f8dd6aaefb16778655a3a4ac2a4b897200cc0612471a04c682f"
+    },
+    {
+      "bytes": 6840,
+      "originalPrivatePath": ".local/evidence/participation-main/sast-javascript-typescript/summary.json",
+      "path": "docs/security/sast-evidence/participation-main/javascript-typescript/summary.json",
+      "sha256": "14abaf871968d7109a83d3454dbd8eb5017802285fd8e9fd5005d8025e9d9e53"
+    },
+    {
+      "bytes": 304,
+      "originalPrivatePath": ".local/evidence/participation-main/sast-javascript-typescript/upload-status.json",
+      "path": "docs/security/sast-evidence/participation-main/javascript-typescript/upload-status.json",
+      "sha256": "2945a1d03bbb5d10c22adf6009909c649a7a3f0033b33df4377b9cbb75b3a7de"
+    },
+    {
+      "bytes": 4621,
+      "originalPrivatePath": ".local/evidence/participation-main/sast-python/python-summary.json",
+      "path": "docs/security/sast-evidence/participation-main/python/python-summary.json",
+      "sha256": "6f7dad6a1f8357267b4f91eb3034d1a92d0272ab90edd1e32cb9630e0ba367b1"
+    },
+    {
+      "bytes": 145095,
+      "originalPrivatePath": ".local/evidence/participation-main/sast-python/source-manifest.json",
+      "path": "docs/security/sast-evidence/participation-main/python/source-manifest.json",
+      "sha256": "72f6ad18642b3f8dd6aaefb16778655a3a4ac2a4b897200cc0612471a04c682f"
+    },
+    {
+      "bytes": 6786,
+      "originalPrivatePath": ".local/evidence/participation-main/sast-python/summary.json",
+      "path": "docs/security/sast-evidence/participation-main/python/summary.json",
+      "sha256": "b371a9ad2bd389c08ce0b1ed433c27caf49c4f46d77eef58b6c10264031124a6"
+    },
+    {
+      "bytes": 289,
+      "originalPrivatePath": ".local/evidence/participation-main/sast-python/upload-status.json",
+      "path": "docs/security/sast-evidence/participation-main/python/upload-status.json",
+      "sha256": "b6a80a1e0c1538a770a017cf2c1f78139e04a6575d35e09e89a6b4638eb71278"
+    },
+    {
+      "bytes": 4389,
+      "originalPrivatePath": ".local/evidence/participation-main/development/behavior-summary.json",
+      "path": "docs/security/sast-evidence/participation-main/development/behavior-summary.json",
+      "sha256": "8aa01566643c520a954d98953b929f420d84957cd85b966659d06ae8b2941a3b"
+    }
+  ],
+  "outcome": "PASS",
+  "prior_evidence_preserved": [
+    {
+      "bytes": 58880,
+      "path": "docs/verification/participation-repair-reference.json",
+      "sha256": "e2e2622b6ae761de3cca6a9cd0c8eba9e5fec9d72e919d05e9622c23c8b319d9"
+    },
+    {
+      "bytes": 21754,
+      "path": "docs/verification/participation-hosted-attempt-2.json",
+      "sha256": "d62e2a2df056163ff0ad1ac89492a47f3cc41521500580670e2f8222b31e02f3"
+    },
+    {
+      "bytes": 40459,
+      "path": "docs/verification/participation-audit-fixture-correction.json",
+      "sha256": "06c0ee7d231bf0a8048b49aa7b1bcb306b973fc2bf12467e92cd2b0029309fbd"
+    },
+    {
+      "bytes": 31051,
+      "path": "docs/verification/participation-hosted-attempt-3.json",
+      "sha256": "55bd1f9f7e282e92ab252d7152babe38f9a0b2eb270368d63a9ae46c2890f96c"
+    }
+  ],
+  "private_source_originals": [
+    {
+      "bytes": 4151,
+      "path": ".local/evidence/participation-main/sast-actions/actions-summary.json",
+      "sha256": "ac62e859213c20a169652c1c3078dfae32a15095dbf8a19b061e3236a84680ec"
+    },
+    {
+      "bytes": 207388,
+      "path": ".local/evidence/participation-main/sast-actions/actions.sarif",
+      "sha256": "c48ea8d2b94d02bdd652d5da254633e81f97c670d611319f11e655872b2c393e"
+    },
+    {
+      "bytes": 145095,
+      "path": ".local/evidence/participation-main/sast-actions/source-manifest.json",
+      "sha256": "72f6ad18642b3f8dd6aaefb16778655a3a4ac2a4b897200cc0612471a04c682f"
+    },
+    {
+      "bytes": 6254,
+      "path": ".local/evidence/participation-main/sast-actions/summary.json",
+      "sha256": "97f15fc749a0bbe99ec15c453b3bb60eda89d4634d8402d671a493e5e85683ff"
+    },
+    {
+      "bytes": 290,
+      "path": ".local/evidence/participation-main/sast-actions/upload-status.json",
+      "sha256": "630449907596fc5a82922045035ae58caf19eefbb7709fe79eea4f82e9ae93d9"
+    },
+    {
+      "bytes": 4645,
+      "path": ".local/evidence/participation-main/sast-javascript-typescript/javascript-typescript-summary.json",
+      "sha256": "f5d760e4b620f05f7d375b7d90440ae511ddfa715ed26c3e2e70f67e8e681cfc"
+    },
+    {
+      "bytes": 441948,
+      "path": ".local/evidence/participation-main/sast-javascript-typescript/javascript-typescript.sarif",
+      "sha256": "f1bdf58e5426347995623838e7f1cd1d77e25ce3dbf01e50f7627af3f9714aef"
+    },
+    {
+      "bytes": 145095,
+      "path": ".local/evidence/participation-main/sast-javascript-typescript/source-manifest.json",
+      "sha256": "72f6ad18642b3f8dd6aaefb16778655a3a4ac2a4b897200cc0612471a04c682f"
+    },
+    {
+      "bytes": 6840,
+      "path": ".local/evidence/participation-main/sast-javascript-typescript/summary.json",
+      "sha256": "14abaf871968d7109a83d3454dbd8eb5017802285fd8e9fd5005d8025e9d9e53"
+    },
+    {
+      "bytes": 304,
+      "path": ".local/evidence/participation-main/sast-javascript-typescript/upload-status.json",
+      "sha256": "2945a1d03bbb5d10c22adf6009909c649a7a3f0033b33df4377b9cbb75b3a7de"
+    },
+    {
+      "bytes": 4621,
+      "path": ".local/evidence/participation-main/sast-python/python-summary.json",
+      "sha256": "6f7dad6a1f8357267b4f91eb3034d1a92d0272ab90edd1e32cb9630e0ba367b1"
+    },
+    {
+      "bytes": 280529,
+      "path": ".local/evidence/participation-main/sast-python/python.sarif",
+      "sha256": "885b1edddd4b72d6db5ebfd2c946c35b9653b972e19089f8ec250c7d5869971b"
+    },
+    {
+      "bytes": 145095,
+      "path": ".local/evidence/participation-main/sast-python/source-manifest.json",
+      "sha256": "72f6ad18642b3f8dd6aaefb16778655a3a4ac2a4b897200cc0612471a04c682f"
+    },
+    {
+      "bytes": 6786,
+      "path": ".local/evidence/participation-main/sast-python/summary.json",
+      "sha256": "b371a9ad2bd389c08ce0b1ed433c27caf49c4f46d77eef58b6c10264031124a6"
+    },
+    {
+      "bytes": 289,
+      "path": ".local/evidence/participation-main/sast-python/upload-status.json",
+      "sha256": "b6a80a1e0c1538a770a017cf2c1f78139e04a6575d35e09e89a6b4638eb71278"
+    }
+  ],
+  "publication_note": {
+    "api_original_status": "Retained byte-identical privately; not published.",
+    "candidate_secret_check": {
+      "binary_sha256": "ba52fb1bfabbcde42f032afad3d6e0b19dff8ed105229a16e7caa338bbc0e84f",
+      "finding_count": 0,
+      "limitations": [
+        "Pinned detector result, not proof that every possible secret is absent.",
+        "No original API report was edited and no detector rule was relaxed."
+      ],
+      "scope": "All13 byte-identical original JSON copies plus this scoped report; the exact final scan manifest remains private.",
+      "status": "PASS",
+      "tool": "gitleaks",
+      "version": "8.30.1"
+    },
+    "prior_false_positive_record": "docs/verification/participation-hosted-attempt-3.json",
+    "private_original": {
+      "bytes": 21989,
+      "path": ".local/evidence/participation-main/development/api-summary.json",
+      "sha256": "838ed64d75df59cfc83def8769b744a7422e368a7c3c12272fcd7ac43c058eb2"
+    },
+    "published_original_count": 13,
+    "reason": "The established publication policy retains API digest-map originals privately: the same exact17 source-file hash map triggered generic-api-key false positives in the prior hosted artifact. All current hashes were independently matched to qualified Git blobs. This record preserves the current counts and fingerprints in path/SHA arrays without changing original execution data or weakening scanner rules.",
+    "source_agent_candidate_scan": {
+      "bytes": 3480,
+      "path": ".local/evidence/participation-main/candidate-secrets.json",
+      "sha256": "ead683aa1e9d73a004df891f08ab2057542a8fbb40ff24f20b1306da3084985e"
+    }
+  },
+  "purpose": "PARTICIPATION_MAIN_POSTMERGE_QUALIFICATION",
+  "recorded_at": "2026-11-16T03:17:31.453646+00:00",
+  "ref": "refs/heads/main",
+  "schema_version": 1,
+  "scope": "Exact postmerge main source security and hosted core behavior; not business-domain, scoped-authority, complete programme or release qualification.",
+  "source_binding": {
+    "authenticated_immutable_git_metadata": {
+      "bytes": 2799,
+      "path": ".local/evidence/participation-main/private/main-commit.json",
+      "sha256": "feff40564b04a438203114edbf62c3a7fcaa40d86ad23407cbaeb811b83a2271"
+    },
+    "bytes": 24763818,
+    "files": 680,
+    "identical_local_commit": "e16529d157f959cb1d3c03dd2d44cebc2a06a747",
+    "identical_tree": "754a4bf9ae5d6cb8aca742801a0a2b7a9c9e0bea",
+    "method": "Authenticated immutable Git main-commit metadata proves its exact tree equals the local qualified commit tree. Complete local Git file set and every blob byte length/SHA256 match the new main scan manifest. No mutable worktree content substituted and no Git fetch/mutation performed.",
+    "original_manifest": {
+      "path": "docs/security/sast-evidence/participation-main/python/source-manifest.json",
+      "sha256": "72f6ad18642b3f8dd6aaefb16778655a3a4ac2a4b897200cc0612471a04c682f"
+    },
+    "private_verification": {
+      "bytes": 172572,
+      "path": ".local/evidence/participation-main/source-binding.json",
+      "sha256": "b866ba9d4fb5c1466d2f8d6ebdc7c5f1e6c714f26fa98fa59a96189c7be7ae2b"
+    },
+    "provenance": "Prior source agent independently qualified all680 blobs and stored analyses. This consolidation verifies the recorded evidence hashes and independently rereads immutable Git blobs for17 API files,8 browser files and2 collector policies; it does not repeat network queries.",
+    "qualified_handoff": {
+      "bytes": 8053,
+      "path": ".local/evidence/participation-main/source-qualification-handoff.json",
+      "sha256": "21302d074e0d8a5299720a0a9e8f7ef797cc97320163efec1418fb41c2e3fa44"
+    },
+    "scan_source_digest": "d041e9b141fc6201f16dca9ab7c70531f88b0d0879238d4540158ee0c69cf913",
+    "status": "PASS"
+  },
+  "source_commit": "bd652b375bc773bdbe0cf22abb1033edeba2c354",
+  "source_languages": [
+    {
+      "analysisId": 2173366684,
+      "category": "governance-commons/actions",
+      "coverage": {
+        "databaseFiles": 2,
+        "expectedFiles": 2,
+        "extractedExpectedFiles": 2,
+        "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+      },
+      "extractorRuntime": null,
+      "finishedAt": "2026-11-16T02:44:55.267466+00:00",
+      "language": "actions",
+      "libraryVersion": "0.7.1",
+      "outcome": "PASS",
+      "queryPack": "codeql/actions-queries",
+      "queryVersion": "0.6.39",
+      "resolvedQueryCount": 24,
+      "results": 0,
+      "sarifId": "b57f74d8-e167-11f1-9c6a-56d182bf68da",
+      "sarifRules": 23,
+      "scanDurationSeconds": 27.394,
+      "startedAt": "2026-11-16T02:44:27.873084+00:00",
+      "toolVersion": "2.27.4"
+    },
+    {
+      "analysisId": 2173370448,
+      "category": "governance-commons/javascript-typescript",
+      "coverage": {
+        "databaseFiles": 177,
+        "expectedFiles": 152,
+        "extractedExpectedFiles": 152,
+        "extractedPathsDigest": "fe36506cad3c005d09457c924d724b27eb5bf6dbd963d23a64a1a2e3f31182f7"
+      },
+      "extractorRuntime": "v24.22.3",
+      "finishedAt": "2026-11-16T02:46:05.518327+00:00",
+      "language": "javascript-typescript",
+      "libraryVersion": "3.0.0",
+      "outcome": "PASS",
+      "queryPack": "codeql/javascript-queries",
+      "queryVersion": "2.5.0",
+      "resolvedQueryCount": 105,
+      "results": 0,
+      "sarifId": "df54bf2a-e167-11f1-8cae-7d4f3880bf04",
+      "sarifRules": 103,
+      "scanDurationSeconds": 94.298,
+      "startedAt": "2026-11-16T02:44:31.220432+00:00",
+      "toolVersion": "2.27.4"
+    },
+    {
+      "analysisId": 2173367520,
+      "category": "governance-commons/python",
+      "coverage": {
+        "databaseFiles": 47,
+        "expectedFiles": 28,
+        "extractedExpectedFiles": 28,
+        "extractedPathsDigest": "430e3f157c090a774678bf7f539f05e21ae84ddf10f251f6ba7fe3943a2e932a"
+      },
+      "extractorRuntime": "Python 3.14.5",
+      "finishedAt": "2026-11-16T02:45:10.194437+00:00",
+      "language": "python",
+      "libraryVersion": "7.2.9",
+      "outcome": "PASS",
+      "queryPack": "codeql/python-queries",
+      "queryVersion": "1.9.0",
+      "resolvedQueryCount": 52,
+      "results": 0,
+      "sarifId": "be92bf30-e167-11f1-8dfa-93b8037a28ec",
+      "sarifRules": 50,
+      "scanDurationSeconds": 38.511,
+      "startedAt": "2026-11-16T02:44:31.683742+00:00",
+      "toolVersion": "2.27.4"
+    }
+  ],
+  "source_workflow": {
+    "job_seconds": {
+      "actions": 68,
+      "javascript-typescript": 139,
+      "policy": 8,
+      "python": 85,
+      "sast-required": 5
+    },
+    "public_ui_observed_by": "Root model agent; not independent human review",
+    "run_id": 43793922273,
+    "status": "PASS",
+    "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43793922273"
+  },
+  "stored_analysis_readback": {
+    "alert_inventory_complete": true,
+    "alerts": [],
+    "analyses": [
+      {
+        "category": "governance-commons/actions",
+        "commit_sha": "bd652b375bc773bdbe0cf22abb1033edeba2c354",
+        "created_at": "2026-11-16T02:44:57Z",
+        "error": "",
+        "id": 2173366684,
+        "ref": "refs/heads/main",
+        "results_count": 0,
+        "rules_count": 23,
+        "sarif_id": "b57f74d8-e167-11f1-9c6a-56d182bf68da",
+        "tool": {
+          "guid": null,
+          "name": "CodeQL",
+          "version": "2.27.4"
+        },
+        "warning": ""
+      },
+      {
+        "category": "governance-commons/javascript-typescript",
+        "commit_sha": "bd652b375bc773bdbe0cf22abb1033edeba2c354",
+        "created_at": "2026-11-16T02:46:08Z",
+        "error": "",
+        "id": 2173370448,
+        "ref": "refs/heads/main",
+        "results_count": 0,
+        "rules_count": 103,
+        "sarif_id": "df54bf2a-e167-11f1-8cae-7d4f3880bf04",
+        "tool": {
+          "guid": null,
+          "name": "CodeQL",
+          "version": "2.27.4"
+        },
+        "warning": ""
+      },
+      {
+        "category": "governance-commons/python",
+        "commit_sha": "bd652b375bc773bdbe0cf22abb1033edeba2c354",
+        "created_at": "2026-11-16T02:45:13Z",
+        "error": "",
+        "id": 2173367520,
+        "ref": "refs/heads/main",
+        "results_count": 0,
+        "rules_count": 50,
+        "sarif_id": "be92bf30-e167-11f1-8dfa-93b8037a28ec",
+        "tool": {
+          "guid": null,
+          "name": "CodeQL",
+          "version": "2.27.4"
+        },
+        "warning": ""
+      }
+    ],
+    "analysis_inventory_complete": true,
+    "limitation": "Stored-analysis metadata and complete ref alert inventory were read by the source agent; no claim of independently downloading stored SARIF bytes.",
+    "private_evidence": {
+      "bytes": 1682,
+      "path": ".local/evidence/participation-main/security-readback.json",
+      "sha256": "5c0eba61dcd72bceba1b3229e2d58ba5c7382b1c8c049812c3c5e58a73e94ec8"
+    },
+    "recorded_at": "2026-11-16T02:50:36.324523+00:00",
+    "status": "PASS"
+  },
+  "tested_commit": "bd652b375bc773bdbe0cf22abb1033edeba2c354"
+}

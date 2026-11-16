@@ -425,7 +425,7 @@
     },
     {
       "path": "docs/verification/relation-participation-upgrade-security-regression.json",
-      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001\u2013010 unchanged; prior executions retained."
+      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001–010 unchanged; prior executions retained."
     },
     {
       "path": "docs/verification/m2-relation-participation-api-final.json",
@@ -443,7 +443,7 @@
     },
     {
       "path": "docs/verification/relation-participation-graph-copy-upgrade.json",
-      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001\u2013010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
+      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001–010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
       "source_binding": {
         "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
         "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
@@ -814,11 +814,217 @@
         "method": "Original execution and review report hashes retained;169 actual-image source hashes and27 served assets bind the final passing source. This document does not imply a test rerun or whole-requirement completion.",
         "evidence_sha256": "9514ab544d1bacbb27f99aa9d38b3c568d6c5ac4260f3b57801115e596a1a076"
       }
+    },
+    {
+      "path": "docs/verification/participation-hosted-attempt-2.json",
+      "scope": "Original failed second PR16 hosted attempt, independently read-back analysis and bounded parser correction; no new runtime qualification",
+      "source_binding": {
+        "implementation_commit": "96ba3503ff2af2bfcd23ce2d551bf127ec19cdc1",
+        "method": "Original hosted files copied byte-for-byte; exact659-file scanned source binding. Parser correction is a separate unhosted source.",
+        "evidence_sha256": "d62e2a2df056163ff0ad1ac89492a47f3cc41521500580670e2f8222b31e02f3"
+      },
+      "evidence_sha256": "d62e2a2df056163ff0ad1ac89492a47f3cc41521500580670e2f8222b31e02f3"
+    },
+    {
+      "path": "docs/verification/participation-audit-fixture-correction.json",
+      "scope": "Checked audit RR/session/scope ordering, controlled-input Temporal reservations, test HTTP admission and deterministic declaration collection.126 real API and210 pure pass; prior browser binding retained, current hosted not run.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_LOCAL_SCOPE",
+      "source_binding": {
+        "implementation_commit": "bea1d356ced6d7297e40e5692d098c7833ff8563",
+        "method": "All81 actual-image and121 host pipeline source hashes equal committed Git blobs; original execution timestamps preserved.",
+        "evidence_sha256": "06c0ee7d231bf0a8048b49aa7b1bcb306b973fc2bf12467e92cd2b0029309fbd"
+      }
+    },
+    {
+      "path": "docs/verification/participation-hosted-attempt-3.json",
+      "scope": "Exact PR16 source-security, independently verified stored analyses, 126 real API cases and 16 browser journeys; historical failures retained; not full programme/release qualification",
+      "source_binding": {
+        "implementation_commit": "e16529d157f959cb1d3c03dd2d44cebc2a06a747",
+        "tested_merge": "7dae0affcda18169f9a7526799f6ded9ce0a61b3",
+        "verified_source_files": 680,
+        "runtime_test_files": 17,
+        "method": "Actual source scan manifests matched exact Git blobs; API artifact binds executed test files only, not a full application-image manifest. Original execution timestamps preserved.",
+        "evidence_sha256": "55bd1f9f7e282e92ab252d7152babe38f9a0b2eb270368d63a9ae46c2890f96c"
+      },
+      "original_reports": [
+        {
+          "bytes": 4152,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-actions/actions-summary.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/actions/actions-summary.json",
+          "sha256": "83d4c975aebcfb885300f96b34ef5f17906bef5bd1875c0a941203ce6829b101"
+        },
+        {
+          "bytes": 145095,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-actions/source-manifest.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/actions/source-manifest.json",
+          "sha256": "62fded999684668a86784fe2e72fcc73a721f87f9bc11fb526b39501780a51bc"
+        },
+        {
+          "bytes": 6255,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-actions/summary.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/actions/summary.json",
+          "sha256": "a05ce8e82d8a4bddb2792a6b56f87ea5f8f4abb66b65b494d4c4c1f240ad6e71"
+        },
+        {
+          "bytes": 290,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-actions/upload-status.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/actions/upload-status.json",
+          "sha256": "7e8ff0f4d2b96445ca5e449d8422b8ce23055c98481ed6caa0cc023081795f41"
+        },
+        {
+          "bytes": 4645,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-javascript-typescript/javascript-typescript-summary.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/javascript-typescript/javascript-typescript-summary.json",
+          "sha256": "fb81116b3cf0e41390884346a8d7d73be7413660c3af3f8cbaa9f92cdd62cd20"
+        },
+        {
+          "bytes": 145095,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-javascript-typescript/source-manifest.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/javascript-typescript/source-manifest.json",
+          "sha256": "62fded999684668a86784fe2e72fcc73a721f87f9bc11fb526b39501780a51bc"
+        },
+        {
+          "bytes": 6840,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-javascript-typescript/summary.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/javascript-typescript/summary.json",
+          "sha256": "e0137dd56900baac14c353a48a0fd84f416e180f8f7c505ade3e07dcbc2ef51f"
+        },
+        {
+          "bytes": 304,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-javascript-typescript/upload-status.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/javascript-typescript/upload-status.json",
+          "sha256": "96900b142c683d25cf860d5602c62093f997d9b6843687c53de278c1517d55b9"
+        },
+        {
+          "bytes": 4622,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-python/python-summary.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/python/python-summary.json",
+          "sha256": "321aa615f9b0ce00edf50bf997aec0a66feafe1df4763a8b300cecd1ad4abd4c"
+        },
+        {
+          "bytes": 145095,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-python/source-manifest.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/python/source-manifest.json",
+          "sha256": "62fded999684668a86784fe2e72fcc73a721f87f9bc11fb526b39501780a51bc"
+        },
+        {
+          "bytes": 6787,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-python/summary.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/python/summary.json",
+          "sha256": "56c5fc67c340f01a891ca6d946ff3a1aa156ef0b4d23c024b8865e9f6e29b33d"
+        },
+        {
+          "bytes": 289,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/sast-python/upload-status.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/python/upload-status.json",
+          "sha256": "7d36fc00f8788e8adeab557844e5e6226763e5bdeb6999d6bef1827fff01d0e9"
+        },
+        {
+          "bytes": 4390,
+          "originalPrivatePath": ".local/evidence/participation-hosted-attempt-3/development/behavior-summary.json",
+          "path": "docs/security/sast-evidence/participation-attempt-3/development/behavior-summary.json",
+          "sha256": "54b79a0c3ceccd88ac201717eba911ac302f7309d35a735157de894c3f9b8fcd"
+        }
+      ]
+    },
+    {
+      "path": "docs/verification/participation-main.json",
+      "scope": "Exact postmerge main source-security, three independently verified zero-finding stored analyses,126 real API cases and16 one-attempt browser journeys; does not qualify later business-domain/scoped-authority sources or the full programme/release",
+      "source_binding": {
+        "implementation_commit": "bd652b375bc773bdbe0cf22abb1033edeba2c354",
+        "tested_commit": "bd652b375bc773bdbe0cf22abb1033edeba2c354",
+        "ref": "refs/heads/main",
+        "verified_source_files": 680,
+        "runtime_test_files": 17,
+        "method": "Previously qualified complete main Git tree and stored analyses retained; consolidation independently reread27 immutable blobs and revalidated exact126 API declarations plus16 browser coordinates. Runtime artifact binds executed test files only, not a full application-image manifest. Original execution times and prior failures preserved.",
+        "evidence_sha256": "d5cbbcf264bc31f9831c2038fc602a3498410ed6ed5db73e03fe2555f4233b87"
+      },
+      "original_reports": [
+        {
+          "bytes": 4151,
+          "originalPrivatePath": ".local/evidence/participation-main/sast-actions/actions-summary.json",
+          "path": "docs/security/sast-evidence/participation-main/actions/actions-summary.json",
+          "sha256": "ac62e859213c20a169652c1c3078dfae32a15095dbf8a19b061e3236a84680ec"
+        },
+        {
+          "bytes": 145095,
+          "originalPrivatePath": ".local/evidence/participation-main/sast-actions/source-manifest.json",
+          "path": "docs/security/sast-evidence/participation-main/actions/source-manifest.json",
+          "sha256": "72f6ad18642b3f8dd6aaefb16778655a3a4ac2a4b897200cc0612471a04c682f"
+        },
+        {
+          "bytes": 6254,
+          "originalPrivatePath": ".local/evidence/participation-main/sast-actions/summary.json",
+          "path": "docs/security/sast-evidence/participation-main/actions/summary.json",
+          "sha256": "97f15fc749a0bbe99ec15c453b3bb60eda89d4634d8402d671a493e5e85683ff"
+        },
+        {
+          "bytes": 290,
+          "originalPrivatePath": ".local/evidence/participation-main/sast-actions/upload-status.json",
+          "path": "docs/security/sast-evidence/participation-main/actions/upload-status.json",
+          "sha256": "630449907596fc5a82922045035ae58caf19eefbb7709fe79eea4f82e9ae93d9"
+        },
+        {
+          "bytes": 4645,
+          "originalPrivatePath": ".local/evidence/participation-main/sast-javascript-typescript/javascript-typescript-summary.json",
+          "path": "docs/security/sast-evidence/participation-main/javascript-typescript/javascript-typescript-summary.json",
+          "sha256": "f5d760e4b620f05f7d375b7d90440ae511ddfa715ed26c3e2e70f67e8e681cfc"
+        },
+        {
+          "bytes": 145095,
+          "originalPrivatePath": ".local/evidence/participation-main/sast-javascript-typescript/source-manifest.json",
+          "path": "docs/security/sast-evidence/participation-main/javascript-typescript/source-manifest.json",
+          "sha256": "72f6ad18642b3f8dd6aaefb16778655a3a4ac2a4b897200cc0612471a04c682f"
+        },
+        {
+          "bytes": 6840,
+          "originalPrivatePath": ".local/evidence/participation-main/sast-javascript-typescript/summary.json",
+          "path": "docs/security/sast-evidence/participation-main/javascript-typescript/summary.json",
+          "sha256": "14abaf871968d7109a83d3454dbd8eb5017802285fd8e9fd5005d8025e9d9e53"
+        },
+        {
+          "bytes": 304,
+          "originalPrivatePath": ".local/evidence/participation-main/sast-javascript-typescript/upload-status.json",
+          "path": "docs/security/sast-evidence/participation-main/javascript-typescript/upload-status.json",
+          "sha256": "2945a1d03bbb5d10c22adf6009909c649a7a3f0033b33df4377b9cbb75b3a7de"
+        },
+        {
+          "bytes": 4621,
+          "originalPrivatePath": ".local/evidence/participation-main/sast-python/python-summary.json",
+          "path": "docs/security/sast-evidence/participation-main/python/python-summary.json",
+          "sha256": "6f7dad6a1f8357267b4f91eb3034d1a92d0272ab90edd1e32cb9630e0ba367b1"
+        },
+        {
+          "bytes": 145095,
+          "originalPrivatePath": ".local/evidence/participation-main/sast-python/source-manifest.json",
+          "path": "docs/security/sast-evidence/participation-main/python/source-manifest.json",
+          "sha256": "72f6ad18642b3f8dd6aaefb16778655a3a4ac2a4b897200cc0612471a04c682f"
+        },
+        {
+          "bytes": 6786,
+          "originalPrivatePath": ".local/evidence/participation-main/sast-python/summary.json",
+          "path": "docs/security/sast-evidence/participation-main/python/summary.json",
+          "sha256": "b371a9ad2bd389c08ce0b1ed433c27caf49c4f46d77eef58b6c10264031124a6"
+        },
+        {
+          "bytes": 289,
+          "originalPrivatePath": ".local/evidence/participation-main/sast-python/upload-status.json",
+          "path": "docs/security/sast-evidence/participation-main/python/upload-status.json",
+          "sha256": "b6a80a1e0c1538a770a017cf2c1f78139e04a6575d35e09e89a6b4638eb71278"
+        },
+        {
+          "bytes": 4389,
+          "originalPrivatePath": ".local/evidence/participation-main/development/behavior-summary.json",
+          "path": "docs/security/sast-evidence/participation-main/development/behavior-summary.json",
+          "sha256": "8aa01566643c520a954d98953b929f420d84957cd85b966659d06ae8b2941a3b"
+        }
+      ]
     }
   ],
   "limitations": [
     "Passing scoped development gates does not complete compound baseline requirements.",
-    "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
+    "M1 core local journey passes; full M0 repository/release and M2–M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
   "bound_at": "2026-11-15T22:23:28.996008+00:00"

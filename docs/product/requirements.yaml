@@ -5215,7 +5215,10 @@
         "docs/verification/m2-relation-participation-api-graph-copy.json",
         "docs/verification/m2-relation-participation-ui.json",
         "docs/verification/business-domains-upgrade-final-source.json",
-        "docs/verification/business-domains-api.json"
+        "docs/verification/business-domains-api.json",
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {
@@ -6304,7 +6307,12 @@
         "docs/verification/business-domains-ui-targeted.json",
         "docs/verification/business-domains-ui-visual-review.json",
         "docs/verification/business-domains-ui-full.json",
-        "docs/verification/business-domains-ui-full-visual-review.json"
+        "docs/verification/business-domains-ui-full-visual-review.json",
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json",
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {
@@ -43091,7 +43099,12 @@
         "docs/verification/business-domains-ui-targeted.json",
         "docs/verification/business-domains-ui-visual-review.json",
         "docs/verification/business-domains-ui-full.json",
-        "docs/verification/business-domains-ui-full-visual-review.json"
+        "docs/verification/business-domains-ui-full-visual-review.json",
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json",
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {
@@ -53167,7 +53180,8 @@
         "docs/runbooks/constrained-relations.md",
         "packages/db/migrations/011_business_domains.sql",
         "packages/domain/src/business-domain-write.ts",
-        "packages/domain/src/business-domain-read.ts"
+        "packages/domain/src/business-domain-read.ts",
+        "apps/api/src/audit-reader.ts"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -53177,7 +53191,8 @@
         "tests/qualification/relation-concurrency.test.ts",
         "tests/e2e/relations.spec.ts",
         "tests/integration/business-domains-storage.test.ts",
-        "tests/integration/business-domains-api.test.ts"
+        "tests/integration/business-domains-api.test.ts",
+        "tests/integration/audit-integrity.test.ts"
       ],
       "verification": {
         "fixture": {
@@ -53221,7 +53236,10 @@
         "docs/verification/m2-relations-ui.json",
         "docs/verification/hosted-relations.json",
         "docs/verification/business-domains-upgrade-final-source.json",
-        "docs/verification/business-domains-api.json"
+        "docs/verification/business-domains-api.json",
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {
@@ -54557,7 +54575,11 @@
       },
       "limitations": [],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json"
+      ]
     },
     {
       "id": "SYS-SEC-005.01",
@@ -57835,11 +57857,15 @@
         "scripts/runtime.py",
         "tests",
         "packages/db/src/seed-business-domains.ts",
-        "packages/db/src/seed.ts"
+        "packages/db/src/seed.ts",
+        "docs/runbooks/api-qualification.md",
+        "tests/fixtures/manual-scan.ts",
+        "tests/fixtures/http-budget.ts"
       ],
       "test_ids": [
         "scripts/runtime-test-business-domain-seed.py",
-        "tests/integration/business-domains-api.test.ts"
+        "tests/integration/business-domains-api.test.ts",
+        "tests/unit/http-budget.test.ts"
       ],
       "verification": {
         "fixture": {
@@ -57876,7 +57902,10 @@
       "milestone": "M0",
       "partial_evidence": [
         "docs/verification/business-domains-seed-runtime.json",
-        "docs/verification/business-domains-api.json"
+        "docs/verification/business-domains-api.json",
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {
@@ -67316,7 +67345,14 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
       ],
       "owner": "governance-commons maintainers",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json",
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
+      ]
     },
     {
       "id": "OSS-006.01",
@@ -68140,7 +68176,12 @@
       "owner": "governance-commons maintainers",
       "milestone": "M0",
       "partial_evidence": [
-        "docs/verification/dependency-security-updates.json"
+        "docs/verification/dependency-security-updates.json",
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json",
+        "docs/verification/participation-audit-fixture-correction.json",
+        "docs/verification/participation-hosted-attempt-3.json",
+        "docs/verification/participation-main.json"
       ]
     },
     {

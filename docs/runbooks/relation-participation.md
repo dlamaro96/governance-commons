@@ -1,6 +1,6 @@
 # Required participation and relation operations
 
-Implementation remains in progress. The latest graph copier correction passes
+Implementation remains in progress. The current audit and controlled scan-fixture correction is documented in [API qualification](api-qualification.md); consult [STATE](../execution/STATE.md) for its exact result and hosted status. The following graph copier results are earlier recorded checkpoints. That correction passes
 [204 pure tests and typechecks](../verification/relation-participation-graph-copy-pure.json)
 with 115 source hashes, plus [eight upgrade checks, twenty storage tests and
 thirteen concurrency tests](../verification/relation-participation-graph-copy-upgrade.json)
@@ -28,8 +28,7 @@ labels, preserving both accessibility and horizontal table scrolling. The full
 sixteen-journey gate passes against the later graph copier image, with zero
 failures, skips or retries and 139 source hashes plus 22 served assets matched.
 All sixteen final screenshots were inspected; see the [UI report](../verification/m2-relation-participation-ui.json). Original screenshots and reports remain archived. Hosted
-participation qualification remains open. Draft PR16 needs its main-branch
-conflict reconciled with histories preserved. Consult [STATE](../execution/STATE.md)
+participation qualification remains open. PR16 has integrated main history and still requires its fresh hosted gates. Consult [STATE](../execution/STATE.md)
 for subsequent qualification and source binding.
 
 Run the isolated gate first; advance to the running services only after it passes:
