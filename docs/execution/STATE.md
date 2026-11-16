@@ -1,5 +1,13 @@
 # Current state — 2026-11-16
 
+## PR17 test repairs locally qualified — 2026-11-16T04:33Z
+
+Hosted attempt1 remains failed: Source reports seven high JavaScript findings in test fixtures; Development passes152/154 API cases and skips later upgrade/browser stages. Original safe artifacts are preserved in business-domains-hosted-attempt-1.json. Local diagnostics prove two fragile storage-test assumptions: mixed-family idempotency deletion observes different protected error codes, and normal outbox delivery changes bookkeeping independently of immutable event contents. Hosted raw errors were unavailable, so these observations are not claimed as an exact reconstruction.
+
+Four test/fixture corrections now pass47 affected actual API/storage cases (313136.902ms),257 units and root/web types. A disposable runner mounts the revised tests read-only; all71 application-image and65 mounted test hashes remain stable, with the existing API/workflow/site image unchanged. No application or SQL source changed. Independent static review preserves all assertions and immutable outbox columns. See business-domains-test-repair.json for exact provenance and the two preserved evidence-wrapper failures.
+
+Next: publish the checked repair and require fresh hosted Source/Development success before merging draft PR17. Historical154API/19browser qualification stays separate. Shared core remains owned by this isolated business-domains checkout; SQL001–011 are immutable. Root pure authority work is published independently at27a3b07 and is not active here. Full programme, profile verification and release remain open.
+
 ## Pure authority parser and compatibility checkpoint — 2026-11-16T04:22Z
 
 The root `codex/scoped-authority` checkout has the strict typed policy parser, safe normalization/canonical hash and literal 103-action compatibility map; an independent oracle covers all 1,024 subsets of the ten legacy permissions. The unchanged [historical report](../verification/authority-pure.json) records 22 focused and 232 full unit tests plus root/web typechecks. The separate [combined-domain report](../verification/authority-pure-domain-integration.json) records 279 full unit tests and types at base `c6c27bc`, with all 192 source/config/contract hashes stable and all five authority files equal to the historical snapshot. The pure additions were untracked at execution; exact hashes, rather than the base commit alone, identify them. External policy documents require raw 64-KiB admission; already-materialized object/catalog/permission inputs require a trusted caller. No evaluator, SQL authority, administration or runtime ingress was implemented or activated by this increment.

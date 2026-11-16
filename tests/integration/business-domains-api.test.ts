@@ -343,9 +343,12 @@ test('domain HTTP raw envelopes queries and headers reject duplicates prototype 
   const headers = await session(), type = await createType(headers), row = await createDomain(headers, type), valid = edit(row, 'Uncommitted malformed change');
   for (const query of ['limit=01', 'limit=1.0', 'limit=1e0', 'limit=0', 'limit=101', 'limit=1&limit=2', 'status[]=active', 'status=unknown', 'q=%FF', 'offset=1', 'q=a&q=b', 'parentId=ROOT', 'cursor='])
     await failure(await request('/domains?' + query, headers), 400, 'DOMAIN_PAGE_INVALID');
-  const encoded = JSON.stringify(valid), cases = [encoded.replace('"name":', '"name":"Duplicate raw name","name":'),
-    encoded.replace('"name":', '"na\\u006de":"Duplicate escaped name","name":'), encoded.replace('{', '{"__proto__":{},'),
-    encoded.replace('{', '{"constructor":{},'), encoded.replace('{', '{"extra":true,'), encoded.replace('"amount":7', '"amount":"7"'),
+  const encoded = JSON.stringify(valid);
+  assert.equal(encoded[0], '{', 'The adversarial fixture must start with its top-level object');
+  // Insert only at the known outer object boundary; nested objects remain intact.
+  const cases = [encoded.replace('"name":', '"name":"Duplicate raw name","name":'),
+    encoded.replace('"name":', '"na\\u006de":"Duplicate escaped name","name":'), '{"__proto__":{},' + encoded.slice(1),
+    '{"constructor":{},' + encoded.slice(1), '{"extra":true,' + encoded.slice(1), encoded.replace('"amount":7', '"amount":"7"'),
     encoded.replace('"amount":7', '"amount":-0'), encoded.replace('"amount":7', '"amount":1e999'), encoded.replace('"Uncommitted malformed change"', '"\\ud800"')];
   for (const raw of cases) {
     const result = await fetch(`${base}/api/v1/domains/${row.id}`, { method: 'PATCH', headers: mutation(headers, row.version), body: raw, signal: AbortSignal.timeout(45_000) });

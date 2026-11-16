@@ -189,7 +189,16 @@ test('exact idempotency response is immutable and same request retries only once
   assert.deepEqual(await counts(f), before);
   const receipt = await execute(f, change, { key, operationId }), replay = await execute(f, change, { key }); assert.deepEqual(replay, receipt);
   await scope(tenant, actor, async tx => { assert.equal((await tx.selectFrom('relation_graph_receipts').select('id').where('id', '=', operationId).execute()).length, 1); });
-  for (const table of ['idempotency', 'relation_revisions', 'relation_participation_revisions', 'relation_graph_receipts']) {
+  const success = () => scope(tenant, actor, tx => tx.selectFrom('idempotency').selectAll()
+    .where('tenant_id', '=', tenant).where('actor_id', '=', actor).where('operation', '=', 'relation-migration.execute').where('key', '=', key).executeTakeFirstOrThrow());
+  const stored = await success();
+  assert.equal(stored.key, key); assert.equal(stored.request_hash, receipt.requestHash); assert.deepEqual(stored.response, { receipt });
+  // Target this graph success exactly: other immutable families deliberately use
+  // their own rejection codes, independent of PostgreSQL's tenant-row order.
+  await assert.rejects(() => scope(tenant, actor, tx => tx.deleteFrom('idempotency')
+    .where('tenant_id', '=', tenant).where('actor_id', '=', actor).where('operation', '=', 'relation-migration.execute').where('key', '=', key).execute()), sqlCode('42501'));
+  assert.deepEqual(await success(), stored, 'Rejected deletion preserves the exact graph success key and response');
+  for (const table of ['relation_revisions', 'relation_participation_revisions', 'relation_graph_receipts']) {
     await assert.rejects(() => scope(tenant, actor, tx => tx.deleteFrom(table).execute()), sqlCode('42501'));
   }
 });

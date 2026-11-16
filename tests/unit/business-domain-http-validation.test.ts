@@ -25,9 +25,9 @@ async function application() {
     installDomainHttpValidation(child);
     child.post('/domains/:id', { schema: { params: domainParams(['id']), querystring: domainQuerySchema(['limit', 'q']),
       headers: Type.Object({ 'idempotency-key': Type.String({ minLength: 8, maxLength: 128 }) }, { additionalProperties: true }),
-      body: domainHttp.request.create, response: { 200: domainHttp.request.create } } }, async req => { handled++; transport.push({ params: { ...(req.params as object) }, query: { ...(req.query as object) }, key: req.headers['idempotency-key'] }); return req.body; });
+      body: domainHttp.request.create, response: { 200: domainHttp.request.create } } }, async (req, reply) => { handled++; transport.push({ params: { ...(req.params as object) }, query: { ...(req.query as object) }, key: req.headers['idempotency-key'] }); return reply.type('application/json').send(req.body); });
     child.post('/domain-types', { schema: { body: domainHttp.request.definition,
-      response: { 200: domainHttp.request.definition } } }, async req => { handled++; return req.body; });
+      response: { 200: domainHttp.request.definition } } }, async (req, reply) => { handled++; return reply.type('application/json').send(req.body); });
   });
   return { app, handled: () => handled, transport };
 }
@@ -39,12 +39,14 @@ test('domain Fastify schema phase preserves numeric, boolean and precise decimal
     const body = { ...creation(), name: '😀'.repeat(200) }, before = structuredClone(body);
     const result = await app.inject({ method: 'POST', url: `/domains/${id}?limit=10&q=independent`, headers, payload: body });
     assert.equal(result.statusCode, 200, result.body);
+    assert.match(result.headers['content-type'] ?? '', /^application\/json(?:;|$)/);
     assert.deepEqual(result.json(), before);
     assert.deepEqual(body, before);
     assert.deepEqual(transport, [{ params: { id }, query: { limit: '10', q: 'independent' }, key: headers['idempotency-key'] }]);
     const policy = definition();
     const published = await app.inject({ method: 'POST', url: '/domain-types', payload: policy });
     assert.equal(published.statusCode, 200, published.body);
+    assert.match(published.headers['content-type'] ?? '', /^application\/json(?:;|$)/);
     assert.deepEqual(published.json(), policy);
     assert.equal(handled(), 2);
   } finally { await app.close(); }
@@ -85,15 +87,21 @@ test('domain Fastify validation rejects coercion, unknown fields, malformed and 
 test('domain validator configuration stays within its Fastify child context', async () => {
   const app = Fastify({ logger: false });
   try {
-    app.post('/existing', { schema: { body: Type.Object({ value: Type.String() }) } }, async req => req.body);
+    app.post('/existing', { schema: { body: Type.Object({ value: Type.String() }) } }, async (req, reply) => reply.type('application/json').send(req.body));
     await app.register(async child => {
       installDomainHttpValidation(child);
-      child.post('/domain-probe', { schema: { body: Type.Object({ value: Type.String() }) } }, async req => req.body);
+      child.post('/domain-probe', { schema: { body: Type.Object({ value: Type.String() }) } }, async (req, reply) => reply.type('application/json').send(req.body));
     });
     const scoped = await app.inject({ method: 'POST', url: '/domain-probe', payload: { value: 7 } });
     assert.equal(scoped.statusCode, 400);
+    const acceptedBody = { value: '<em>JSON text</em>' };
+    const accepted = await app.inject({ method: 'POST', url: '/domain-probe', payload: acceptedBody });
+    assert.equal(accepted.statusCode, 200);
+    assert.match(accepted.headers['content-type'] ?? '', /^application\/json(?:;|$)/);
+    assert.deepEqual(accepted.json(), acceptedBody);
     const existing = await app.inject({ method: 'POST', url: '/existing', payload: { value: 7 } });
     assert.equal(existing.statusCode, 200);
+    assert.match(existing.headers['content-type'] ?? '', /^application\/json(?:;|$)/);
     assert.deepEqual(existing.json(), { value: '7' }, 'The existing parent compiler remains unchanged');
   } finally { await app.close(); }
 });
