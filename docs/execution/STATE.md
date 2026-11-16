@@ -1,5 +1,17 @@
 # Current state — 2026-11-16
 
+## Business-domain isolated storage qualification — 2026-11-16T01:25Z
+
+SQL011 sourceece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78 passes the isolated SQL010-to011 gate: eight upgrade checks,18 real runtime-role storage cases and9 independent PostgreSQL concurrency/original-clock cases. The exact legacy catalog/model/relation/participation/receipt/journal baseline is unchanged, all19 domain tables force tenant RLS, runtime roles cannot bypass RLS or own tables, and all applied predecessor checksums survive. The final75-file snapshot is stable; the disposable container was removed. Six failed development attempts remain archived. See docs/verification/business-domains-upgrade.json for original execution01:20:13–01:22:34UTC and limitations.
+
+The isolated implementation includes current-authority domain reads/previews/mutations, exact captured-scope retry checks,25 strict HTTP handlers, versioned type/hierarchy/placement UI, eight API journeys and three browser journeys, plus a real-service typed-tree seed with revocation-preserving bootstrap.248 pure tests and root/web types pass. Complete HTTP/API, repeated seed and scanner/browser runtime qualification have NOT_RUN. Core still has only SQL001–010. Integrate the latest graph repair-reference change, preserve this original gate, qualify the combined source, then rebuild/apply011/seed and run the real API/browser workflows. No full compound requirement or release status is upgraded.
+
+
+## Isolated domain integration — 2026-11-16T01:09Z
+
+The existing `codex/business-domains` worktree now contains authored SQL011, pure engines, current-authority service reads/previews/writes/replays, HTTP handlers/OpenAPI, UI and three browser journeys. Root owns the contracts, facade, journal integration, route registration, one-time synthetic permission upgrade and real runtime-role typed-tree seed. The storage agent owns SQL011 and its isolated upgrade/storage/concurrency gate; HTTP and web agents own their assigned routes/tests/screens. Independent review fixes include exact inherited resolution precedence, immutable outbox family protection, original captured-scope replay authorization, early transaction-family refusal, Unicode search cursor bounds and scalar physical-payload preflight. Type checks and focused parser/schema units pass. SQL011 has NOT_RUN against PostgreSQL; API/domain browser/seed runtime qualification remain NOT_RUN. SQL001–010 remain immutable. Do not apply SQL011 to core before the isolated upgrade/storage/concurrency gate passes. Root is currently running the preceding participation full16 browser regression; serialize Docker-heavy work until it completes. No full requirement or release status is upgraded.
+
+
 ## Isolated domain pure checkpoint — 2026-11-16T00:10Z
 
 The codex/business-domains worktree contains strict domain-type definitions/resolution and complete supplied domain-type migration projection. The recorded isolated suite passes144/144, TypeScript and whitespace checks; a separate read-only agent review found no concrete blocker and reran no tests. See docs/verification/business-domain-pure.json. This checkpoint starts from d3bf25ba and has not integrated the newer participation branch; it does not implement SQL011, domain storage, service/API/UI or current scoped authority. Preserve the original12-source evidence and all earlier tests. Root must integrate the reviewed modules after the preceding browser gate, then qualify the actual combined sources. Full programme and release remain open.

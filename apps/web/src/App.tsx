@@ -23,6 +23,15 @@ const AssetTypeMigrationReceiptPage = lazy(() => import('./pages/AssetTypeMigrat
 const ModelMigrationPage = lazy(() => import('./pages/ModelMigrations').then(module => ({ default: module.ModelMigrationPage })));
 const ModelMigrationReceiptPage = lazy(() => import('./pages/ModelMigrations').then(module => ({ default: module.ModelMigrationReceiptPage })));
 
+const BusinessDomainsPage = lazy(() => import('./pages/BusinessDomains').then(module => ({ default: module.BusinessDomainsPage })));
+const BusinessDomainPage = lazy(() => import('./pages/BusinessDomains').then(module => ({ default: module.BusinessDomainPage })));
+const BusinessDomainEditorPage = lazy(() => import('./pages/BusinessDomains').then(module => ({ default: module.BusinessDomainEditorPage })));
+const DomainTypesPage = lazy(() => import('./pages/DomainTypes').then(module => ({ default: module.DomainTypesPage })));
+const DomainTypePage = lazy(() => import('./pages/DomainTypes').then(module => ({ default: module.DomainTypePage })));
+const DomainTypeEditorPage = lazy(() => import('./pages/DomainTypes').then(module => ({ default: module.DomainTypeEditorPage })));
+const DomainTypeMigrationPage = lazy(() => import('./pages/DomainTypeMigrations').then(module => ({ default: module.DomainTypeMigrationPage })));
+const DomainTypeMigrationReceiptPage = lazy(() => import('./pages/DomainTypeMigrations').then(module => ({ default: module.DomainTypeMigrationReceiptPage })));
+
 export default function App() {
   const session = useResource<Session>('/me');
   const { t, locale, setLocale } = useLocale();
@@ -64,11 +73,12 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   const navItems = [
     { href: '/', key: 'home' as const, icon: House, visible: true },
     { href: '/catalog', key: 'catalog' as const, icon: BookOpen, visible: can('catalog:read') },
+    { href: '/domains', key: 'businessDomains' as const, icon: GitBranch, visible: can('domains:read') },
     { href: '/sources', key: 'sources' as const, icon: Database, visible: can('sources:read') },
     { href: '/models', key: 'models' as const, icon: GitBranch, visible: can('models:read') },
     { href: '/audit', key: 'audit' as const, icon: ClockCounterClockwise, visible: can('audit:read') },
   ];
-  const navigation = <><Link href="/" className="brand" onClick={() => setMenuOpen(false)}><BrandMark size={30}/><span>Governance<br/>Commons</span></Link><nav aria-label={t('workspace')}><div className="nav-section-label">{t('workspace')}</div>{navItems.filter(item => item.visible).map(({ href, key, icon: Icon }) => <Link key={href} href={href} className={`nav-link ${path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'selected' : ''}`} aria-current={path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><Icon size={20}/>{t(key)}</Link>)}</nav><div className="sidebar-bottom"><button className="sidebar-help" onClick={() => { setMenuOpen(false); setHelpOpen(true); }}><Question size={20}/>{t('help')}</button><div className="sidebar-tagline">{t('tagline')}</div></div></>;
+  const navigation = <><Link href="/" className="brand" onClick={() => setMenuOpen(false)}><BrandMark size={30}/><span>Governance<br/>Commons</span></Link><nav aria-label={t('workspace')}><div className="nav-section-label">{t('workspace')}</div>{navItems.filter(item => item.visible).map(({ href, key, icon: Icon }) => <Link key={href} href={href} className={`nav-link ${path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/domain-types') || path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'selected' : ''}`} aria-current={path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/domain-types') || path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><Icon size={20}/>{t(key)}</Link>)}</nav><div className="sidebar-bottom"><button className="sidebar-help" onClick={() => { setMenuOpen(false); setHelpOpen(true); }}><Question size={20}/>{t('help')}</button><div className="sidebar-tagline">{t('tagline')}</div></div></>;
   async function switchTenant(tenantId: string) {
     setSwitching(true); setError(null);
     try { await api('/session/tenant', { method: 'POST', body: JSON.stringify({ tenantId }) }); window.location.assign('/'); }
@@ -100,6 +110,9 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   const relationMatch = path.match(/^\/relations\/([a-f0-9-]+)$/i);
   let relationTypeId: string | null = null;
   if (relationTypeMatch) { try { relationTypeId = decodeURIComponent(relationTypeMatch[1]); } catch { relationTypeId = null; } }
+  const domainMatch = path.match(/^\/domains\/([a-f0-9-]+)(\/edit)?$/i);
+  const domainTypeMatch = path.match(/^\/domain-types\/([a-f0-9-]+)(\/edit)?$/i);
+  const domainMigrationMatch = path.match(/^\/domain-types\/([a-f0-9-]+)\/(migrate|migrations\/([a-f0-9-]+))$/i);
   let content;
   if (path === '/') content = <HomePage/>;
   else if (path === '/catalog') content = can('catalog:read') ? <CatalogPage/> : <PermissionDenied/>;
@@ -110,6 +123,13 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   else if (path === '/relation-types/new/definition') content = can('models:read') && can('models:write') ? <RelationTypeEditorPage/> : <PermissionDenied/>;
   else if (relationTypeId) content = can('models:read') && (!relationTypeMatch?.[2] || can('models:write') && can('catalog:read')) ? (relationTypeMatch?.[2] ? <RelationTypeEditorPage key={relationTypeId} id={relationTypeId}/> : <RelationTypePage key={relationTypeId} id={relationTypeId}/>) : <PermissionDenied/>;
   else if (relationMatch) content = can('models:read') && can('catalog:read') ? <RelationPage key={relationMatch[1]} id={relationMatch[1]}/> : <PermissionDenied/>;
+  else if (path === '/domains') content = can('domains:read') ? <BusinessDomainsPage/> : <PermissionDenied/>;
+  else if (path === '/domains/new') content = can('domains:read') && can('domains:write') ? <BusinessDomainEditorPage/> : <PermissionDenied/>;
+  else if (domainMatch) content = can('domains:read') && (!domainMatch[2] || can('domains:write')) ? domainMatch[2] ? <BusinessDomainEditorPage key={domainMatch[1]} id={domainMatch[1]}/> : <BusinessDomainPage key={domainMatch[1]} id={domainMatch[1]}/> : <PermissionDenied/>;
+  else if (path === '/domain-types') content = can('models:read') ? <DomainTypesPage/> : <PermissionDenied/>;
+  else if (path === '/domain-types/new') content = can('models:read') && can('models:write') ? <DomainTypeEditorPage/> : <PermissionDenied/>;
+  else if (domainMigrationMatch) content = can('models:read') && can('domains:read') && (domainMigrationMatch[3] || can('models:write') && can('domains:write')) ? domainMigrationMatch[3] ? <DomainTypeMigrationReceiptPage key={domainMigrationMatch[3]} id={domainMigrationMatch[1]} migrationId={domainMigrationMatch[3]}/> : <DomainTypeMigrationPage key={domainMigrationMatch[1]} id={domainMigrationMatch[1]}/> : <PermissionDenied/>;
+  else if (domainTypeMatch) content = can('models:read') && (!domainTypeMatch[2] || can('models:write') && can('domains:read')) ? domainTypeMatch[2] ? <DomainTypeEditorPage key={domainTypeMatch[1]} id={domainTypeMatch[1]}/> : <DomainTypePage key={domainTypeMatch[1]} id={domainTypeMatch[1]}/> : <PermissionDenied/>;
   else if (path === '/sources') content = can('sources:read') ? <SourcesPage/> : <PermissionDenied/>;
   else if (path === '/asset-types') content = can('models:read') ? <AssetTypesPage/> : <PermissionDenied/>;
   else if (path === '/asset-types/new/definition') content = can('models:write') && can('models:read') ? <AssetTypeEditorPage/> : <PermissionDenied/>;

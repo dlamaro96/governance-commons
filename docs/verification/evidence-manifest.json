@@ -678,6 +678,13 @@
     {
       "path": "docs/verification/business-domain-combined-pure.json",
       "scope": "Fresh combined240 pure tests and root/web types on pinned Node24, with124 source hashes stable. Domain runtime remains unimplemented/unverified."
+    },
+    {
+      "path": "docs/verification/business-domains-upgrade.json",
+      "scope": "Exact isolated SQL010-to011 upgrade,18 runtime-role storage cases and9 independent concurrency/original-clock cases. HTTP/seed/scanner/browser remain NOT_RUN.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_SCOPE",
+      "evidence_sha256": "349286f4ea74736656441244ca1237bf9eba6286af2020734e85227ccf748f93"
     }
   ],
   "limitations": [
