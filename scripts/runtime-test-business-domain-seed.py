@@ -38,6 +38,7 @@ CONSUMER = '10000000-0000-4000-8000-000000000003'
 ENGINEER = '10000000-0000-4000-8000-000000000006'
 REVOKED = 'domains:write'
 QUALITY_REVOKED = 'quality:execute'
+CLASSIFICATION_REVOKED = 'classification:approve'
 QUALITY_TABLES = ('quality_rules', 'quality_rule_versions', 'quality_runs')
 # Independent historical marker inputs: do not derive these from the new seed
 # implementation, which could otherwise change both the writer and its oracle.
@@ -82,8 +83,11 @@ def expected_permission_markers():
     for index, (role, tenant, domain_grants) in enumerate(PERSONA_GRANTS, 1):
         identity = '10000000-0000-4000-8000-' + str(index).zfill(12)
         quality_grants = ['quality:read'] if role in ('consumer', 'auditor') else ['quality:read', 'quality:write', 'quality:execute']
+        classification_grants = ([] if role == 'consumer' else ['classification:read'] if role == 'auditor'
+                                 else ['classification:read', 'classification:write', 'classification:approve'])
         for operation, grants in (('bootstrap.domain-permissions.v1', list(domain_grants)),
-                                  ('bootstrap.quality-permissions.v1', quality_grants)):
+                                  ('bootstrap.quality-permissions.v1', quality_grants),
+                                  ('bootstrap.classification-permissions.v1', classification_grants)):
             if grants:
                 body = {'dataset': 'harbor-demo', 'identityId': identity, 'role': role, 'permissions': grants}
                 result[(tenant, identity, operation)] = digest(json.dumps(body, sort_keys=True, separators=(',', ':')).encode())
@@ -92,10 +96,27 @@ def expected_permission_markers():
 
 def revoked_engineer(engineer):
     require(isinstance(engineer.get('permissions'), list)
-            and all(permission in engineer['permissions'] for permission in (REVOKED, QUALITY_REVOKED)),
-            'Engineer must initially hold both exact permissions being tested')
+            and all(permission in engineer['permissions'] for permission in (REVOKED, QUALITY_REVOKED, CLASSIFICATION_REVOKED)),
+            'Engineer must initially hold all three exact permissions being tested')
     return {**engineer, 'permissions': [permission for permission in engineer['permissions']
-                                      if permission not in (REVOKED, QUALITY_REVOKED)]}
+                                      if permission not in (REVOKED, QUALITY_REVOKED, CLASSIFICATION_REVOKED)]}
+
+
+def verify_classification_permissions(rows):
+    """Validate the same six read-back personas; never repair their authority."""
+    require(isinstance(rows, list) and len(rows) == len(PERSONA_GRANTS),
+            'All six seeded classification memberships are required')
+    for index, ((role, tenant, _), row) in enumerate(zip(PERSONA_GRANTS, rows), 1):
+        grants = (set() if role == 'consumer' else {'classification:read'} if role == 'auditor'
+                  else {'classification:read', 'classification:write', 'classification:approve'})
+        require(isinstance(row, dict) and set(row) == {'identity_id', 'tenant_id', 'role', 'active', 'permissions'}
+                and row['identity_id'] == '10000000-0000-4000-8000-' + str(index).zfill(12)
+                and row['tenant_id'] == tenant and row['role'] == role and row['active'] is True
+                and isinstance(row['permissions'], list) and all(isinstance(value, str) for value in row['permissions'])
+                and len([value for value in row['permissions'] if value.startswith('classification:')]) == len(grants)
+                and {value for value in row['permissions'] if value.startswith('classification:')} == grants,
+                'Seeded classification authority is missing, revoked or wider than the declared persona baseline')
+    return rows
 
 
 def migration_inventory(directory):
@@ -346,9 +367,9 @@ class Harness:
         # Retain the entire row, including creation time, for replay equality.
         result = json.loads(self.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY; SELECT coalesce(jsonb_agg(to_jsonb(r) ORDER BY tenant_id,actor_id,operation),'[]') FROM ("
             "SELECT * FROM public.idempotency WHERE tenant_id IN (" + literal(HARBOR) + ',' + literal(SUMMIT)
-            + ") AND operation IN ('bootstrap.domain-permissions.v1','bootstrap.quality-permissions.v1')"
-            " AND key='harbor-demo' ORDER BY tenant_id,actor_id,operation LIMIT 12) r; COMMIT;", 'permission-marker-readback'))
-        require(isinstance(result, list) and len(result) == len(expected), 'Initial domain and quality permission markers are incomplete or unexpected')
+            + ") AND operation IN ('bootstrap.domain-permissions.v1','bootstrap.quality-permissions.v1','bootstrap.classification-permissions.v1')"
+            " AND key='harbor-demo' ORDER BY tenant_id,actor_id,operation LIMIT 17) r; COMMIT;", 'permission-marker-readback'))
+        require(isinstance(result, list) and len(result) == len(expected), 'Initial domain, quality and classification permission markers are incomplete or unexpected')
         seen = set()
         for row in result:
             require(isinstance(row, dict) and set(row) == {'tenant_id', 'actor_id', 'operation', 'key', 'request_hash', 'response', 'created_at'},
@@ -361,7 +382,7 @@ class Harness:
                     and isinstance(response, dict) and set(response) == {'dataset', 'version', 'applied'}
                     and response['dataset'] == 'harbor-demo' and type(response['version']) is int and response['version'] == 1
                     and type(response['applied']) is bool and bool(row['created_at']),
-                    'Permission marker differs from the independent declared domain/quality upgrade')
+                    'Permission marker differs from the independent declared domain/quality/classification upgrade')
             seen.add(key)
         return result
 
@@ -485,7 +506,8 @@ def main():
                               'All columns of domain rows/journals are hashed; unrelated non-domain fixtures and legacy transaction bindings are excluded.',
                               'Glossary definition equality covers only business_term and glossary_review in the two synthetic tenants; glossary journals and resource effects are excluded.',
                               'Quality equality covers all rule/version/run rows and quality journals/idempotency in the two synthetic tenants; no queued/running quality run is allowed.',
-                              'Both permission-marker families are checked against independent declared hashes; quality permissions are a baseline prerequisite, never repaired by this gate.',
+                              'All three permission-marker families are checked against independent declared hashes; exact quality/classification grants are baseline prerequisites, never repaired by this gate.',
+                              'Classification scope covers persona grants and immutable seed receipts, not definition/evaluation/assignment storage or deleted-owner recovery.',
                               'Outbox delivery must drain before baseline; no projector or service is stopped.',
                               'Privileged local PostgreSQL inspection/restoration is separate from the real seed runtime gc_owner/gc_app paths.',
                               'SIGINT/SIGTERM trigger finally restoration; SIGKILL or host failure requires the private recovery SQL before other tests.']}
@@ -537,7 +559,7 @@ def main():
         report['baseline_markers'] = markers
         permission_markers = harness.permission_markers()
         report['permissionMarkerSnapshot'] = {'before': permission_markers}
-        harness.quality_permissions()
+        verify_classification_permissions(harness.quality_permissions())
         original = harness.memberships()
         require(len(original) == 2, 'Both original engineer/consumer synthetic memberships are required')
         engineer = next(v for v in original if v['identity_id'] == ENGINEER)
@@ -587,7 +609,7 @@ def main():
             require(harness.all_personas_digest() == persona_digest, 'Repeated real seed changed existing persona memberships')
             require(harness.glossary_definition_snapshot() == glossary_definitions, 'Repeated real seed changed existing glossary definition rows')
             require(harness.quality_snapshot() == quality, 'Repeated real seed changed quality canonical/history/journal/idempotency bytes')
-            require(harness.permission_markers() == permission_markers, 'Repeated real seed changed domain or quality permission marker rows')
+            require(harness.permission_markers() == permission_markers, 'Repeated real seed changed domain, quality or classification permission marker rows')
             entry.update({'domain_snapshot_equal': True, 'persona_memberships_equal': True, 'glossary_definitions_equal': True,
                           'quality_snapshot_equal': True, 'permission_markers_equal': True})
         report['checks'].append('two real seed replays preserve exact domain and persona membership row digests')
@@ -603,12 +625,14 @@ def main():
         require(harness.quality_snapshot() == quality, 'Seed after revocation/deletion changed quality data or journals')
         require(harness.permission_markers() == permission_markers, 'Seed after revocation/deletion changed permission marker rows')
         entry.update({'domain_snapshot_equal': True, 'permission_still_revoked': True, 'consumer_membership_still_absent': True, 'glossary_definitions_equal': True,
-                      'quality_execute_still_revoked': True, 'quality_snapshot_equal': True, 'permission_markers_equal': True})
+                      'quality_execute_still_revoked': True, 'classification_approve_still_revoked': True,
+                      'quality_snapshot_equal': True, 'permission_markers_equal': True})
         report['checks'] += ['later engineer domains:write revocation survives real seed', 'deleted synthetic consumer membership is not recreated',
                              'three real seed replays preserve exact existing business_term and glossary_review definition rows',
                              'later engineer quality:execute revocation survives real seed',
+                             'later engineer classification:approve revocation survives real seed',
                              'three real seed replays preserve exact quality canonical/history/journal/idempotency bytes',
-                             'three real seed replays retain exact independently checked old domain and new quality permission markers']
+                             'three real seed replays retain exact independently checked domain, quality and classification permission markers']
         report['result'] = 'PASS'
     except BaseException as error:
         report['result'] = 'FAIL'
@@ -674,7 +698,7 @@ def main():
             if 'permissionMarkerSnapshot' in report:
                 report['permissionMarkerSnapshot']['after_restoration'] = harness.permission_markers()
                 require(report['permissionMarkerSnapshot']['after_restoration'] == report['permissionMarkerSnapshot']['before'],
-                        'Domain or quality permission markers changed before final readback')
+                        'Domain, quality or classification permission markers changed before final readback')
         except Exception as error:
             report['result'] = 'FAIL'
             report['final_readback_failure'] = str(error) if isinstance(error, RuntimeError) else type(error).__name__
