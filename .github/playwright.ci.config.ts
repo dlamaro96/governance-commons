@@ -28,5 +28,6 @@ export default defineConfig({
     { name: 'glossary', testMatch: /glossary\.spec\.ts/, dependencies: ['approvals'] },
     { name: 'quality', testMatch: /quality\.spec\.ts/, dependencies: ['glossary'] },
     { name: 'lineage', testMatch: /lineage\.spec\.ts/, dependencies: ['quality'] },
+    { name: 'classification', testMatch: /classification\.spec\.ts/, dependencies: ['lineage'] },
   ],
 });

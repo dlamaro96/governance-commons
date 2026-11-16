@@ -14,7 +14,8 @@ import {GLOSSARY_LIMITS} from '../../../packages/domain/src/glossary-contracts.t
 import {MODEL_LIMITS} from '../../../packages/domain/src/model.ts';
 import {getAssetGlossaryContext,type GlossaryContextQuery} from '../../../packages/domain/src/glossary-context.ts';
 import {getGlossaryTerm} from '../../../packages/domain/src/glossary-publication-service.ts';
-import {publishGlossaryFromSite} from './glossary-publication.ts';
+import {publishApprovalFromSite} from './classification-publication.ts';
+import {classificationHttp} from './classification.ts';
 
 const object=<T extends TProperties>(properties:T)=>Type.Object(properties,{additionalProperties:false});
 const choices=(...values:string[])=>Type.Union(values.map(value=>Type.Literal(value)));
@@ -43,17 +44,19 @@ const publication=object({typePin:object({typeId:uuid,modelId:key,version:positi
   targetAssetId:uuid,targetAssetVersion:positive}),{maxItems:GLOSSARY_LIMITS.links})});
 const glossaryProposal=object({requestId:uuid,resourceId:uuid,resourceVersion:nullable(positive),publication,
  workflowPin:object({id:key,version:positive,definitionHash:digest}),assignments:Type.Record(key,uuid,{minProperties:1,maxProperties:256,additionalProperties:false}),expiresAt:stamp});
-const summary={id:uuid,binding:Type.Literal('glossary.publish'),resourceId:uuid,resourceVersion:nullable(positive),proposalDigest:digest,workflowId:key,
+const summary={id:uuid,binding:choices('glossary.publish','classification.review'),resourceId:uuid,resourceVersion:nullable(positive),proposalDigest:digest,workflowId:key,
  workflowVersion:positive,workflowHash:digest,requesterId:uuid,stageIndex:Type.Integer({minimum:0,maximum:15}),version:positive,status,
  expiresAt:stamp,createdAt:stamp,updatedAt:stamp,preconditionsCurrent:Type.Boolean()};
 // Typed custom attributes are interpreted only by the pure glossary/model
 // parsers. Their open JSON value shape is not an additional command language.
 const publicationReceipt=object({id:uuid,assetId:uuid,assetVersion:positive,proposalDigest:digest,workflowPin:object({id:key,version:positive,definitionHash:digest}),
  graphReceiptId:nullable(uuid),executedBy:uuid,executedAt:stamp});
-const requestView=object({...summary,payload:Type.Unknown(),workflow:definitionView,result:nullable(publicationReceipt),errorCode:nullable(Type.String({maxLength:80})),
+const requestFields={...summary,workflow:definitionView,errorCode:nullable(Type.String({maxLength:80})),
  tasks:Type.Array(object({id:uuid,stageIndex:Type.Integer({minimum:0,maximum:15}),assignment:key,assignedIdentityId:uuid,version:positive,
   status:choices('waiting','open','decided','cancelled'),openedAt:nullable(stamp),expiresAt:nullable(stamp)}),{maxItems:256}),
- decisions:Type.Array(object({id:uuid,taskId:uuid,taskVersion:positive,actorId:uuid,decision:choices('approve','reject'),reason:Type.String({minLength:1,maxLength:4096}),decidedAt:stamp}),{maxItems:256})});
+ decisions:Type.Array(object({id:uuid,taskId:uuid,taskVersion:positive,actorId:uuid,decision:choices('approve','reject'),reason:Type.String({minLength:1,maxLength:4096}),decidedAt:stamp}),{maxItems:256})};
+const requestView=Type.Union([object({...requestFields,binding:Type.Literal('glossary.publish'),payload:publication,result:nullable(publicationReceipt)}),
+ object({...requestFields,binding:Type.Literal('classification.review'),payload:classificationHttp.approvalPayload,result:nullable(classificationHttp.approvalResult)})]);
 const pageOf=(schema:TSchema)=>object({items:Type.Array(schema,{maxItems:100}),nextCursor:nullable(Type.String({maxLength:1024}))});
 const invalid=()=>new Problem(400,'APPROVAL_INPUT_INVALID','Provide exactly the declared approval fields and values.');
 const problem=object({type:Type.String(),title:Type.String(),status:Type.Integer(),code:Type.String(),detail:Type.String(),correlationId:Type.String(),
@@ -146,7 +149,7 @@ export async function installApprovals(app:FastifyInstance):Promise<void>{
    (req,tx,s)=>cancelApprovalRequest(tx,s.principal!,params(req).id,req.body as ApprovalCancelInput,s.commandKey!,req.id));
   route('GET','/internal/approvals/pending',{internal:true,response:object({items:Type.Array(object({tenantId:uuid,requestId:uuid,eventId:uuid}),{maxItems:50})})},(_req,tx,s)=>pendingApprovals(tx,s.tenant));
   route('GET','/internal/approvals/:id/status',{internal:true,params:{id:uuid},response:object({id:uuid,status,version:positive,nextWakeAt:nullable(stamp)})},(req,tx,s)=>approvalStatus(tx,s.tenant,params(req).id));
-  route('POST','/internal/approvals/:id/publish',{internal:true,independentScope:(req,s)=>publishGlossaryFromSite(s.tenant,params(req).id),params:{id:uuid},body:object({}),response:object({id:uuid,status,version:positive,nextWakeAt:nullable(stamp)})});
+  route('POST','/internal/approvals/:id/publish',{internal:true,independentScope:(req,s)=>publishApprovalFromSite(s.tenant,params(req).id),params:{id:uuid},body:object({}),response:object({id:uuid,status,version:positive,nextWakeAt:nullable(stamp)})});
   route('POST','/internal/approvals/:id/tick',{internal:true,params:{id:uuid},body:object({}),response:object({id:uuid,status,version:positive,nextWakeAt:nullable(stamp)})},(req,tx)=>tickApproval(tx,params(req).id));
   route('POST','/internal/approvals/dispatch/:id/ack',{internal:true,params:{id:uuid},body:object({}),response:object({id:uuid,acknowledged:Type.Literal(true)})},(req,tx)=>acknowledgeApprovalDispatch(tx,params(req).id));
  });

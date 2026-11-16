@@ -57,7 +57,7 @@ const visible=(row:Row,identity:string)=>row.visibility==='tenant'||Array.isArra
 
 /** Submission performs no resource effect. The canonical approval command owns
  * request/tasks, exact idempotency, journal and dispatch in this transaction. */
-export async function submitGlossaryProposal(tx:Tx,p:Principal,correlationId:string,idempotencyKey:string,input:GlossaryProposalInput):Promise<{request:ApprovalRequestView}>{
+export async function submitGlossaryProposal(tx:Tx,p:Principal,correlationId:string,idempotencyKey:string,input:GlossaryProposalInput):Promise<{request:Extract<ApprovalRequestView,{binding:'glossary.publish'}>}>{
  const value=parse(input);context(idempotencyKey,correlationId);
  const publication=value.publication,body={id:value.requestId,binding:'glossary.publish',resourceId:value.resourceId,resourceVersion:value.resourceVersion,payload:publication,
   workflowId:value.workflowPin.id,workflowVersion:value.workflowPin.version,workflowHash:value.workflowPin.definitionHash,assignments:value.assignments,expiresAt:value.expiresAt};
@@ -168,5 +168,6 @@ export async function submitGlossaryProposal(tx:Tx,p:Principal,correlationId:str
  if(!receipt||receipt.id!==value.requestId||receipt.proposalDigest!==hash||receipt.resourceId!==value.resourceId||receipt.resourceVersion!==value.resourceVersion
   ||receipt.workflowId!==value.workflowPin.id||receipt.workflowVersion!==value.workflowPin.version||receipt.workflowHash!==value.workflowPin.definitionHash
   ||modelPersistence.hash(receipt.payload)!==modelPersistence.hash(publication)||current.proposalDigest!==hash||!Array.isArray(receipt.tasks)||receipt.tasks.length>256||!Array.isArray(receipt.decisions)||receipt.decisions.length>256)throw integrity();
- return {request:{...receipt,workflow:current.workflow,preconditionsCurrent:current.preconditionsCurrent} as ApprovalRequestView};
+ if(current.binding!=='glossary.publish'||receipt.binding!=='glossary.publish')throw new Problem(500,'GLOSSARY_STORAGE_INVALID','The glossary approval receipt could not be verified.');
+ return {request:{...receipt,workflow:current.workflow,preconditionsCurrent:current.preconditionsCurrent} as Extract<ApprovalRequestView,{binding:'glossary.publish'}>};
 }
