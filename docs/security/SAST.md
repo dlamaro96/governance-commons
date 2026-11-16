@@ -3,14 +3,16 @@
 Status: the isolated Linux arm64 qualification has executed all three source
 analyses and the real vulnerable-fixture rejection control. Their exact source,
 findings and artifact-hygiene results are recorded separately in
-`SAST_QUALIFICATION.md`; this is **not a full security/release pass**. The sixth
-hosted attempt completes all three analyses, exact extraction coverage and
-independent stored-analysis read-back. One high JavaScript finding blocks its
-findings gate at the own-property sink; private-Map materialization in the relation
-and migration copiers passes111 units and root/web types but needs a new scan. See `SAST_HOSTED_QUALIFICATION.md` for exact
-attempts, original failures and the open finding. Clean integrated-source,
-fork/Dependabot and default-branch qualification remain open. No human finding
-disposition is inferred.
+`SAST_QUALIFICATION.md`; this is **not a full security/release pass**. The eighth
+hosted attempt passes default-branch source analysis, exact coverage, zero
+findings and independent stored-analysis read-back on
+`77b73e75016435d6f12e67cda76ea84b91cd1086`. Main's complete alert inventory is
+empty. The prior PR source/ingestion and14-browser/11-step Development pass remain
+bound to their exact merge. See `SAST_HOSTED_QUALIFICATION.md` for originals and
+source binding. Post-merge Development also passes14 browser journeys and11
+service steps on the exact main commit. Fork/Dependabot qualification remains
+open; the new required status remains disabled. No human finding disposition or
+complete release qualification is inferred.
 This implements the bounded source-scanning part of issue 11 and OSS-006/007;
 SQL/RLS, dependency vulnerabilities, images, general IaC, ASVS and independent
 review remain separate required work.
@@ -271,3 +273,18 @@ Equivalent inherited-setter regressions fail before and pass after the repair;
 validation, order, budgets, ordinary prototypes and dense output are preserved.
 The sixth hosted scan retains its original blocked finding; no rescan is inferred
 from these local checks.
+
+The seventh hosted attempt executes the Map-based repair with complete coverage
+and zero findings. Its exact stored analyses and fixed alert inventory are
+verified independently. This qualifies that tested source only; original failed
+reports, separate runtime qualification and remaining permission/release gates
+retain their own statuses.
+
+PR15 merged as `77b73e75016435d6f12e67cda76ea84b91cd1086` after the exact
+qualified head passed Source security and Development. Post-merge default-branch
+execution/read-back and fork/Dependabot qualification remain pending.
+
+The eighth hosted attempt separately qualifies default-branch source scanning and
+exact stored-analysis read-back on the repository merge commit. This resolves the
+previous default-branch prerequisite without altering the earlier PR evidence.
+Fork/Dependabot and wider release prerequisites remain open.

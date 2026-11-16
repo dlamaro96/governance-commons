@@ -27,6 +27,7 @@ export interface AssetModelView {
   attributes: AttributeValues; definition: ModelDefinition | null;
 }
 export interface AssetModelInput { modelId: string; modelVersion: number; attributes: unknown }
+interface PreparedModelAssignment { modelId: string; modelVersion: number; attributes: AttributeValues; state: string | null }
 export interface ModelPreview {
   modelId: string; currentVersion: number; proposedVersion: number;
   coverage: 'complete-tenant-model-bindings'; assetCount: number;
@@ -168,23 +169,28 @@ export async function createModel(tx: Tx, principal: Principal, correlationId: s
   return { model: view(row, 1) };
 }
 
-async function modelCohort(tx: Tx, principal: Principal, modelId: string): Promise<Row[]> {
+/** Read-only discovery. Parent must authorize its whole operation before using counts/limits. */
+async function authorizeModelCohort(tx: Tx, principal: Principal, modelId: string): Promise<void> {
   // Never expose even a count when complete validation requires inaccessible assets.
   const hidden = await tx.selectFrom('assets').select('id').where('tenant_id', '=', principal.tenantId).where('model_id', '=', modelId)
     .where(sql<boolean>`NOT (visibility = 'tenant' OR allowed_identities @> ${JSON.stringify([principal.id])}::jsonb)`).limit(1).executeTakeFirst();
   if (hidden) throw new Problem(403, 'MODEL_SCOPE_UNAVAILABLE', 'The complete model scope is unavailable for this operation.');
+}
+async function discoverModelCohort(tx: Tx, principal: Principal, modelId: string): Promise<{ id: string; model_version: number }[]> {
+  await authorizeModelCohort(tx, principal, modelId);
   const size = await sql<{ count: string; bytes: string }>`select count(*)::text as count,
     coalesce(sum(octet_length(attributes::text)),0)::text as bytes from assets
     where tenant_id=${principal.tenantId}::uuid and model_id=${modelId}`.execute(tx);
   if (Number(size.rows[0].count) > MODEL_LIMITS.previewAssets || Number(size.rows[0].bytes) > MODEL_SERVICE_LIMITS.previewBytes) {
     throw new Problem(422, 'MODEL_PREVIEW_LIMIT', 'This model exceeds the bounded synchronous preview profile. No partial preview or publication was performed.');
   }
-  // Discover the entire incident endpoint union before the first canonical row lock.
-  const cohortIds = await tx.selectFrom('assets').select('id').where('tenant_id', '=', principal.tenantId).where('model_id', '=', modelId).orderBy('id').execute();
-  await (await import('./relation-endpoint-guard.ts')).lockRelationEndpointUnion(tx, principal, cohortIds.map(row => row.id));
-  // Canonical asset locks also protect digest generation against scanner/normal PATCH changes.
+  return tx.selectFrom('assets').select(['id', 'model_version']).where('tenant_id', '=', principal.tenantId)
+    .where('model_id', '=', modelId).orderBy('id').execute();
+}
+/** Capture after the parent has locked its complete canonical asset union. No new lock phase. */
+async function captureModelCohort(tx: Tx, principal: Principal, modelId: string): Promise<Row[]> {
   const rows = await tx.selectFrom('assets').select(['tenant_id', 'id', 'version', 'model_id', 'model_version', 'attributes', 'visibility', 'allowed_identities', 'owner_id', 'type_state'])
-    .where('tenant_id', '=', principal.tenantId).where('model_id', '=', modelId).orderBy('id').forUpdate().execute();
+    .where('tenant_id', '=', principal.tenantId).where('model_id', '=', modelId).orderBy('id').execute();
   let nodes = 0;
   for (const row of rows) {
     if (!canView(principal, { tenantId: row.tenant_id, visibility: row.visibility, allowedIdentities: row.allowed_identities })) {
@@ -201,6 +207,11 @@ async function modelCohort(tx: Tx, principal: Principal, modelId: string): Promi
     }
   }
   return rows;
+}
+async function modelCohort(tx: Tx, principal: Principal, modelId: string): Promise<Row[]> {
+  const identities = await discoverModelCohort(tx, principal, modelId);
+  await (await import('./relation-endpoint-guard.ts')).lockRelationEndpointUnion(tx, principal, identities.map(row => row.id));
+  return captureModelCohort(tx, principal, modelId);
 }
 
 async function previewLocked(tx: Tx, principal: Principal, id: string, expectedVersion: number, input: unknown): Promise<ModelPreview> {
@@ -302,25 +313,36 @@ export async function assignAssetModel(tx: Tx, principal: Principal, correlation
   }
   if (Buffer.byteLength(JSON.stringify(parsed.value), 'utf8') > MODEL_SERVICE_LIMITS.previewBytes) throw new Problem(422, 'ATTRIBUTE_PROFILE_LIMIT', 'The typed attributes exceed this development storage profile.');
   await (await import('./relation-endpoint-guard.ts')).validateRelationsForEndpointChanges(tx, principal, [{ assetId, expectedAssetVersion, modelId: input.modelId, modelVersion: input.modelVersion, state, policy }]);
-  // An explicit pin and full replacement are required; no source metadata is interpreted as governed attributes.
-  const updated = await tx.updateTable('assets').set({ model_id: input.modelId, model_version: input.modelVersion,
-    attributes: JSON.stringify(parsed.value), type_state: state, version: asset.version + 1, updated_at: new Date() })
-    .where('tenant_id', '=', principal.tenantId).where('id', '=', assetId).where('version', '=', expectedAssetVersion)
+  const updated = await persistAssignment(tx, principal, correlationId, asset,
+    { modelId: input.modelId, modelVersion: input.modelVersion, attributes: parsed.value, state }, hooks);
+  return assetModelView(tx, principal, updated);
+}
+
+/** Internal write-only primitive. The complete service owns authorization,
+ * validation and locking; a parent graph operation additionally needs protected
+ * SQL claims. Neither this row nor the prepared values are proof of authority. */
+async function persistAssignment(tx: Tx, principal: Principal, correlationId: string, asset: Row,
+  prepared: PreparedModelAssignment, hooks: ModelHooks): Promise<Row> {
+  // Preserve owner, ACL and source provenance; assign only the explicit pin and
+  // full governed attributes. The returned canonical row supplies the revision.
+  const updated = await tx.updateTable('assets').set({ model_id: prepared.modelId, model_version: prepared.modelVersion,
+    attributes: JSON.stringify(prepared.attributes), type_state: prepared.state, version: asset.version + 1, updated_at: new Date() })
+    .where('tenant_id', '=', principal.tenantId).where('id', '=', asset.id).where('version', '=', asset.version)
     .returningAll().executeTakeFirst();
   if (!updated) throw new Problem(409, 'VERSION_CONFLICT', 'The asset changed. Load its current version before saving.');
-  await tx.insertInto('asset_revisions').values({ tenant_id: principal.tenantId, asset_id: assetId,
+  await tx.insertInto('asset_revisions').values({ tenant_id: principal.tenantId, asset_id: asset.id,
     version: updated.version, snapshot: JSON.stringify(hooks.assetSnapshot(updated)) }).execute();
-  await hooks.record(tx, principal, 'asset.model_assigned', assetId, updated.version, {
+  await hooks.record(tx, principal, 'asset.model_assigned', asset.id, updated.version, {
     before: { modelId: asset.model_id, modelVersion: asset.model_version, attributesHash: hash(asset.attributes) },
-    after: { modelId: input.modelId, modelVersion: input.modelVersion, attributesHash: hash(parsed.value) },
+    after: { modelId: prepared.modelId, modelVersion: prepared.modelVersion, attributesHash: hash(prepared.attributes) },
     revision: updated.version,
   }, correlationId);
-  return assetModelView(tx, principal, updated);
+  return updated;
 }
 
 /** Internal persistence primitives for the guarded migration application service.
  * Ingress adapters must call complete services, never these individual helpers. */
 export const modelPersistence = Object.freeze({
   authorize, lockTenantModels, head, assertHead, definition, storedDefinition,
-  versionRow, modelCohort, hash, view, assetRow, checkVersion,
+  versionRow, modelCohort, authorizeModelCohort, discoverModelCohort, captureModelCohort, hash, view, assetRow, checkVersion, persistAssignment,
 });

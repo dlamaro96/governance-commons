@@ -15,11 +15,21 @@ export interface RelationTypeDefinition {
   readonly attributes: Readonly<Record<string, AttributeDefinition>>;
   readonly requiredOwner: boolean; readonly lifecycle: LifecycleDefinition;
 }
+export type RelationTypeDefinitionV2 = Omit<RelationTypeDefinition, 'formatVersion' | 'cardinality'> & {
+  formatVersion: 2;
+  cardinality: {
+    outgoing: { min: number; max: number | null };
+    incoming: { min: number; max: number | null };
+  };
+};
+export type RelationDefinition = RelationTypeDefinition | RelationTypeDefinitionV2;
+
+export interface ResolvedRelationDefinition { readonly definition: RelationDefinition; readonly model: ModelDefinition }
 export interface RelationTypeSummary {
   id: string; relationTypeId: string; currentVersion: number; label: string; createdAt: string; createdBy: string;
 }
 export interface RelationTypeView extends RelationTypeSummary {
-  version: number; definition: RelationTypeDefinition; definitionHash: string; versionCreatedAt: string; versionCreatedBy: string;
+  version: number; definition: RelationDefinition; definitionHash: string; versionCreatedAt: string; versionCreatedBy: string;
   endpointTypeIdentities: readonly { typeId: string; id: string }[];
 }
 export interface RelationEndpointView {
@@ -52,7 +62,7 @@ export interface RelationTypePreview {
   relations: readonly { relationId: string; relationVersion: number; currentIssues: readonly ValidationIssue[]; proposedIssues: readonly ValidationIssue[] }[];
   requiresExplicitMigration: boolean; compatibleWithProvidedRelations: boolean; pinsPreserved: true; previewDigest: string;
 }
-export interface RelationRevisionView { relationId: string; version: number; snapshot: RelationView; recordedAt: string; recordedBy: string }
+export interface RelationRevisionView { relationId: string; version: number; snapshot: RelationView; recordedAt: string; recordedBy: string; operationId: string | null }
 export interface RelationPageQuery { limit?: number; cursor?: string }
 export interface RelationTypeListQuery extends RelationPageQuery { q?: string }
 export interface RelationListQuery extends RelationPageQuery { direction?: 'in' | 'out' | 'both'; relationTypeId?: string; validAt?: string }
@@ -65,7 +75,7 @@ export interface RelationListPage { items: readonly RelationView[]; nextCursor: 
 
 /** Pure validation inputs. Callers establish authorization and database completeness. */
 export interface ResolvedRelationType { readonly definition: RelationTypeDefinition; readonly model: ModelDefinition }
-export interface RelationPolicyPin { readonly relationTypeId: string; readonly policy: ResolvedRelationType }
+export interface RelationPolicyPin { readonly relationTypeId: string; readonly policy: ResolvedRelationDefinition }
 export interface RelationConstraintEdge {
   readonly id: string; readonly version: number; readonly relationTypeId: string; readonly relationTypeVersion: number;
   readonly sourceAssetId: string; readonly targetAssetId: string;
@@ -94,7 +104,7 @@ export interface RelationStructureInput {
   readonly relationTypeId: string; readonly completeLiveRelations: readonly RelationConstraintEdge[]; readonly policies: readonly RelationPolicyPin[];
 }
 export interface RelationUpgradeInput {
-  readonly relationTypeId: string; readonly head: ResolvedRelationType; readonly target: ResolvedRelationType;
+  readonly relationTypeId: string; readonly head: ResolvedRelationDefinition; readonly target: ResolvedRelationDefinition;
   readonly policies: readonly RelationPolicyPin[]; readonly completeLiveRelations: readonly RelationUpgradeBinding[];
   readonly activeOwnerIds: ReadonlySet<string>;
 }

@@ -1,9 +1,11 @@
 # Hosted source scanning attempts
 
-Latest checkpoint: attempt 6 completes all three analyses and independent stored
-analysis read-back, but its JavaScript gate still blocks the own-property write
-sink. Private-Map materialization now passes111 pure tests and root/web types;
-its hosted source scan remains required. Earlier outcomes are preserved.
+Latest checkpoint: attempt 8 passes default-branch source scanning and independent
+stored-analysis read-back on `77b73e75016435d6f12e67cda76ea84b91cd1086`, with
+complete extraction coverage, zero findings and an empty main-ref alert inventory.
+Both attempt7 PR Development and attempt8 main Development also pass their
+exact-revision gates. Fork/Dependabot and release qualifications remain open;
+original failures and earlier evidence are preserved.
 
 Status: source-security run [43768124973](https://github.com/dlamaro96/governance-commons/actions/runs/43768124973)
 **failed** on PR15 merge commit `1bb4637def199c12226d1d337dcd2eece61ee57e`.
@@ -315,3 +317,77 @@ steps on mergea8443c4 and is retained byte-identically beside attempt6; that
 historical behavior pass does not execute the subsequent Map repair.
 Fork/Dependabot, default-branch, independent review and full release qualification
 remain open.
+
+
+## Seventh hosted attempt: exact source and ingestion pass
+
+[Source-security run43777260932](https://github.com/dlamaro96/governance-commons/actions/runs/43777260932)
+passes all five jobs in2m4s on source `fe2dc1897e1b07ffd41dc27d64e1eacf700e7391`,
+tested merge `ece773e27c3f3a25822984578dee4a1dedddb970`, source digest
+`e7f9d5a143fa18ab4d6281f25536538d7e3bb05d19fe0fb6864ed24f92863c31`.
+Original safe artifacts are preserved byte-identically under
+`sast-evidence/hosted-attempt-7/`; all145 covered executable file hashes match
+the corrected source, including the three Map-based copiers.
+
+| Language | Extracted/expected | Resolved queries | Findings | Stored analysis |
+| --- | --- | --- | --- | --- |
+| JavaScript/TypeScript |118/118|105|0|2172770044|
+| Python |25/25|52|0|2172769871|
+| Actions |2/2|24|0|2172769007|
+
+Independent per-analysis security API reads match exact commit/ref/category,
+SARIF IDs, published report hashes, tool version and stored result/rule counts.
+No analysis error or warning is present. This read-back is separate from the
+Action's successful upload/processing step; the portable scanner itself still
+accurately records that it did not upload. The independent complete all-state
+pull-request alert inventory contains the two historical alerts, both fixed,
+and zero open alerts. No finding disposition or suppression was supplied.
+
+This qualifies the exact same-repository pull-request source gate and ingestion.
+Separate Development43777260929 passes all four required checks in12m23s
+(root public UI confirmation recorded at 2026-11-16T00:09:00Z). Its original safe summary passes14 browser
+journeys and11 service steps on the same exact merge and is preserved
+byte-identically as `hosted-attempt-7/behavior-summary.json`.
+Default-branch execution/read-back and untrusted
+fork/Dependabot permission/upload behavior must still be qualified before the
+new required status is enabled. Private-operator licensing/fallback, dependency,
+image, SQL/RLS, independent review and the complete programme/release gates remain
+separate. This report does not qualify newer participation source or relabel any
+prior failed scan.
+
+PR15 merged the exact qualified head at2026-11-16T00:09:17Z as
+`77b73e75016435d6f12e67cda76ea84b91cd1086`. This merge fact was read back by
+the root agent. Post-merge default-branch execution/read-back remains pending;
+the PR test merge above retains its own exact qualification. The separate newer
+root graph copier is outside this scan and is not qualified by this report.
+
+
+## Eighth hosted attempt: default-branch source and ingestion pass
+
+[Source-security run43778676116](https://github.com/dlamaro96/governance-commons/actions/runs/43778676116)
+passes all five jobs in2m12s on main commit
+`77b73e75016435d6f12e67cda76ea84b91cd1086`. Its source digest is
+`e7f9d5a143fa18ab4d6281f25536538d7e3bb05d19fe0fb6864ed24f92863c31`,
+identical to the qualified PR source. All145 covered executable hashes match.
+The original13 safe reports are preserved under `sast-evidence/hosted-attempt-8/`;
+attempt7 artifacts and its historical status record are unchanged.
+
+JavaScript118/118 files and105 queries, Python25/25 and52, and Actions2/2 and24
+all pass analysis, exact coverage and zero-findings gates. Independent security
+API reads verify stored JavaScript analysis2172825594, Python2172823623 and
+Actions2172823537 against the exact main commit/ref/categories, SARIF IDs, report
+hashes and zero result counts, with no error/warning. A separate complete
+all-state `refs/heads/main` alert inventory is empty. This is distinct from the
+PR's two fixed historical alerts and does not infer branch state from a PR scan.
+
+The post-merge default-branch source/ingestion prerequisite is now qualified for
+this commit. [Development43778676120](https://github.com/dlamaro96/governance-commons/actions/runs/43778676120)
+also passes all four checks in12m15s (root public UI observation around
+2026-11-16T00:23Z). Its byte-identical original safe summary verifies14 distinct
+browser journeys, one attempt each, and11 successful service steps on the exact
+main commit. The summary is preserved as `hosted-attempt-8/behavior-summary.json`.
+Untrusted fork and Dependabot permissions/analysis/upload behavior still require
+qualification before
+the new required status is enabled. Private-operator fallback/licensing and the
+wider security/release programme remain open. Newer root participation and graph
+copier changes are outside this scan's source.

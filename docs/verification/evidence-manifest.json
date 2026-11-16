@@ -1,160 +1,162 @@
 {
-  "bound_at": "2026-11-15T23:33:36.600655+00:00",
+  "schema_version": 1,
+  "programme_status": "IN_PROGRESS",
+  "release_qualified": false,
   "evidence": [
     {
       "path": "docs/verification/core-runtime.json",
       "scope": "core-runtime",
       "source_binding": {
-        "evidence_sha256": "9ecfc5a4aef9532c6ff1313b1641be223e6b3fdfe64c21c2cf32f13a0b62be42",
         "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
         "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
-        "verified_files": 8
+        "verified_files": 8,
+        "evidence_sha256": "9ecfc5a4aef9532c6ff1313b1641be223e6b3fdfe64c21c2cf32f13a0b62be42"
       }
     },
     {
       "path": "docs/verification/core-connectors.json",
       "scope": "core-connectors",
       "source_binding": {
-        "evidence_sha256": "f4a90d9bb5c4e0b32474f97b0da7d5cf8c6f6a2f50bed1889e6b1a912f135308",
         "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
         "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
-        "verified_files": 12
+        "verified_files": 12,
+        "evidence_sha256": "f4a90d9bb5c4e0b32474f97b0da7d5cf8c6f6a2f50bed1889e6b1a912f135308"
       }
     },
     {
       "path": "docs/verification/core-temporal-payloads.json",
       "scope": "core-temporal-payloads",
       "source_binding": {
-        "evidence_sha256": "a60b1b9415f002b20b2885e9a01654149586a1bdd82b48b9791bce41973846c6",
         "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
         "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
-        "verified_files": 4
+        "verified_files": 4,
+        "evidence_sha256": "a60b1b9415f002b20b2885e9a01654149586a1bdd82b48b9791bce41973846c6"
       }
     },
     {
       "path": "docs/verification/core-recovery.json",
       "scope": "core-recovery",
       "source_binding": {
-        "evidence_sha256": "29050dd6a543a755b89d1397a7f9297b117b04a744776f4993d00d09e58e79fe",
         "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
         "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
-        "verified_files": 6
+        "verified_files": 6,
+        "evidence_sha256": "29050dd6a543a755b89d1397a7f9297b117b04a744776f4993d00d09e58e79fe"
       }
     },
     {
       "path": "docs/verification/m1-security.json",
       "scope": "m1-security",
       "source_binding": {
-        "evidence_sha256": "1d4ea7a20074101257645e0b9b8a08414a50a555087c14ec30a11196c7337843",
         "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
         "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
-        "verified_files": 9
+        "verified_files": 9,
+        "evidence_sha256": "1d4ea7a20074101257645e0b9b8a08414a50a555087c14ec30a11196c7337843"
       }
     },
     {
       "path": "docs/verification/m1-browser.json",
       "scope": "m1-browser",
       "source_binding": {
-        "evidence_sha256": "761253ac9424e3346f22a47cdef91a026c4f2a92d12653d37cc74e267e6449b3",
         "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
         "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
-        "verified_files": 39
+        "verified_files": 39,
+        "evidence_sha256": "761253ac9424e3346f22a47cdef91a026c4f2a92d12653d37cc74e267e6449b3"
       }
     },
     {
       "path": "docs/verification/model-validation.json",
       "scope": "model-validation",
       "source_binding": {
-        "evidence_sha256": "34b2f8173c32796aec1acf84a83c83bb6a63b3a86ae3d609ed541b398ddc12ca",
         "implementation_commit": "8232c186fe2aff5cee2cae787bdf3d44ab4335c4",
         "method": "Recorded SHA256 digests matched against committed Git blobs; original execution times and dirty-worktree provenance preserved. No test rerun is inferred.",
-        "verified_files": 3
+        "verified_files": 3,
+        "evidence_sha256": "34b2f8173c32796aec1acf84a83c83bb6a63b3a86ae3d609ed541b398ddc12ca"
       }
     },
     {
       "path": "docs/verification/core-object-store.json",
       "scope": "core-object-store",
       "source_binding": {
+        "implementation_commit": "7928c59f03ee74f7aaaefe15b4705b66cdc50345",
+        "method": "Recorded implementation digests matched to committed blobs except the explicit evidence-serialization equivalence below; execution times preserved.",
+        "verified_files": 6,
+        "evidence_sha256": "9145dcb8bdf7286a04213526472a1ef87588b5732123d6021707d49b3463aaed",
         "encoding_only_equivalence": [
           "scripts/runtime-test-object-store.py"
         ],
-        "equivalence_note": "runtime-test-object-store.py now serializes digest evidence as explicit path/sha256 and service/sha256 entries; probe inputs, Node S3 implementation, response checks and exit behavior are unchanged. This is source equivalence, not a rerun.",
-        "evidence_sha256": "9145dcb8bdf7286a04213526472a1ef87588b5732123d6021707d49b3463aaed",
-        "implementation_commit": "7928c59f03ee74f7aaaefe15b4705b66cdc50345",
-        "method": "Recorded implementation digests matched to committed blobs except the explicit evidence-serialization equivalence below; execution times preserved.",
-        "verified_files": 6
+        "equivalence_note": "runtime-test-object-store.py now serializes digest evidence as explicit path/sha256 and service/sha256 entries; probe inputs, Node S3 implementation, response checks and exit behavior are unchanged. This is source equivalence, not a rerun."
       }
     },
     {
       "path": "docs/verification/core-runtime-fix.json",
       "scope": "core-runtime-fix",
       "source_binding": {
+        "implementation_commit": "7928c59f03ee74f7aaaefe15b4705b66cdc50345",
+        "method": "Recorded implementation digests matched to committed blobs except the explicit evidence-serialization equivalence below; execution times preserved.",
+        "verified_files": 8,
+        "evidence_sha256": "05ef4492652cf05aa23b9cb0f151e11df4600816a93d65fe0a70b9761e8e2f60",
         "encoding_only_equivalence": [
           "scripts/runtime-test-object-store.py"
         ],
-        "equivalence_note": "runtime-test-object-store.py now serializes digest evidence as explicit path/sha256 and service/sha256 entries; probe inputs, Node S3 implementation, response checks and exit behavior are unchanged. This is source equivalence, not a rerun.",
-        "evidence_sha256": "05ef4492652cf05aa23b9cb0f151e11df4600816a93d65fe0a70b9761e8e2f60",
-        "implementation_commit": "7928c59f03ee74f7aaaefe15b4705b66cdc50345",
-        "method": "Recorded implementation digests matched to committed blobs except the explicit evidence-serialization equivalence below; execution times preserved.",
-        "verified_files": 8
+        "equivalence_note": "runtime-test-object-store.py now serializes digest evidence as explicit path/sha256 and service/sha256 entries; probe inputs, Node S3 implementation, response checks and exit behavior are unchanged. This is source equivalence, not a rerun."
       }
     },
     {
       "path": "docs/verification/core-launch.json",
       "scope": "core-launch",
       "source_binding": {
-        "evidence_sha256": "72152fbc5191047219b7c96856a4123a8962000431701db4d1fa1289f4728562",
         "implementation_commit": "e97d8135b54faeea9004f174f914ad39af6aeddb",
         "method": "Recorded source/screenshot SHA256 digests matched to committed Git blobs. Original execution timestamps, runtime image and dirty-worktree provenance preserved; no test rerun inferred.",
-        "verified_files": 7
+        "verified_files": 7,
+        "evidence_sha256": "72152fbc5191047219b7c96856a4123a8962000431701db4d1fa1289f4728562"
       }
     },
     {
       "path": "docs/verification/m2-model-service.json",
       "scope": "m2-model-service",
       "source_binding": {
-        "evidence_sha256": "d8aa10d03dcf75207ea6827d0f878730ca8a968fdbb4f747a024014c1dc3481b",
         "implementation_commit": "e97d8135b54faeea9004f174f914ad39af6aeddb",
         "method": "Recorded source/screenshot SHA256 digests matched to committed Git blobs. Original execution timestamps, runtime image and dirty-worktree provenance preserved; no test rerun inferred.",
-        "verified_files": 8
+        "verified_files": 8,
+        "evidence_sha256": "d8aa10d03dcf75207ea6827d0f878730ca8a968fdbb4f747a024014c1dc3481b"
       }
     },
     {
       "path": "docs/verification/m2-model-api.json",
       "scope": "m2-model-api",
       "source_binding": {
-        "evidence_sha256": "027418811b2df2bab52d5b6aeaa5939a15b06518436c80a9710e1da1eba9aa77",
         "implementation_commit": "e97d8135b54faeea9004f174f914ad39af6aeddb",
         "method": "Recorded source/screenshot SHA256 digests matched to committed Git blobs. Original execution timestamps, runtime image and dirty-worktree provenance preserved; no test rerun inferred.",
-        "verified_files": 15
+        "verified_files": 15,
+        "evidence_sha256": "027418811b2df2bab52d5b6aeaa5939a15b06518436c80a9710e1da1eba9aa77"
       }
     },
     {
       "path": "docs/verification/model-migration-transform.json",
       "scope": "model-migration-transform",
       "source_binding": {
-        "evidence_sha256": "745fe322a73366f953863eedb9c61dd966fe5067ed08bcb5b575032de675053f",
         "implementation_commit": "e97d8135b54faeea9004f174f914ad39af6aeddb",
         "method": "Recorded source/screenshot SHA256 digests matched to committed Git blobs. Original execution timestamps, runtime image and dirty-worktree provenance preserved; no test rerun inferred.",
-        "verified_files": 5
+        "verified_files": 5,
+        "evidence_sha256": "745fe322a73366f953863eedb9c61dd966fe5067ed08bcb5b575032de675053f"
       }
     },
     {
       "path": "docs/verification/m2-ui.json",
       "scope": "m2-ui",
       "source_binding": {
-        "evidence_sha256": "ac67e3deb679f5076d8895f644682d0a589637c8edbffa004cebe10c843294cc",
         "implementation_commit": "e97d8135b54faeea9004f174f914ad39af6aeddb",
         "method": "Recorded source/screenshot SHA256 digests matched to committed Git blobs. Original execution timestamps, runtime image and dirty-worktree provenance preserved; no test rerun inferred.",
-        "verified_files": 45
+        "verified_files": 45,
+        "evidence_sha256": "ac67e3deb679f5076d8895f644682d0a589637c8edbffa004cebe10c843294cc"
       }
     },
     {
       "path": "docs/verification/hosted-model-authoring.json",
       "scope": "hosted-model-authoring",
       "source_binding": {
-        "ci_tested_merge_commit": "e7bb0d55eca635e4e3b09cb95323f5a5bc8bb6de",
         "implementation_commit": "2a6aff77d423a650b4fdcc6b034a5de9201787c2",
+        "ci_tested_merge_commit": "e7bb0d55eca635e4e3b09cb95323f5a5bc8bb6de",
         "method": "GitHub required-check readback and downloaded allowlisted behavior summary from run43735027282; this record preserves the tested pull-request merge revision."
       }
     },
@@ -169,38 +171,38 @@
       "path": "docs/verification/m2-migration-api.json",
       "scope": "model-migration-api-storage-pagination",
       "source_binding": {
-        "evidence_sha256": "bd5111c7f8c32c7c8a573e59d4449e9faa2b7ebd321e7a7cd9cc8853aacacc4d",
         "implementation_commit": "779dafb15e67d6813cae3ee50d0b5da43c83156a",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct runtime images and dirty-worktree provenance are preserved; no test rerun is inferred.",
-        "verified_files": 45
+        "verified_files": 45,
+        "evidence_sha256": "bd5111c7f8c32c7c8a573e59d4449e9faa2b7ebd321e7a7cd9cc8853aacacc4d"
       }
     },
     {
       "path": "docs/verification/m2-migration-ui.json",
       "scope": "model-migration-ui",
       "source_binding": {
-        "evidence_sha256": "f52c4f5465f5e71d3178f484801c032cf4d4aef275f99439da4f0bae189b5232",
         "implementation_commit": "779dafb15e67d6813cae3ee50d0b5da43c83156a",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct runtime images and dirty-worktree provenance are preserved; no test rerun is inferred.",
-        "verified_files": 43
+        "verified_files": 43,
+        "evidence_sha256": "f52c4f5465f5e71d3178f484801c032cf4d4aef275f99439da4f0bae189b5232"
       }
     },
     {
       "path": "docs/verification/model-migration-upgrade.json",
       "scope": "model-migration-upgrade",
       "source_binding": {
-        "evidence_sha256": "aa389350cb7bb6b6ca3d7449d18ed3f1bb1af63a8d0b7e77a00d35f4eb6d0798",
         "implementation_commit": "779dafb15e67d6813cae3ee50d0b5da43c83156a",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct runtime images and dirty-worktree provenance are preserved; no test rerun is inferred.",
-        "verified_files": 7
+        "verified_files": 7,
+        "evidence_sha256": "aa389350cb7bb6b6ca3d7449d18ed3f1bb1af63a8d0b7e77a00d35f4eb6d0798"
       }
     },
     {
       "path": "docs/verification/hosted-model-migrations.json",
       "scope": "hosted-model-migrations",
       "source_binding": {
-        "ci_tested_merge_commit": "d3831ebbdacc88441bf605b8ff6eb289b93ef842",
         "implementation_commit": "c666ca64a05f357efb130bd78f0470c4f7c82cc3",
+        "ci_tested_merge_commit": "d3831ebbdacc88441bf605b8ff6eb289b93ef842",
         "method": "GitHub required-check readback and downloaded allowlisted behavior summary from run43738876918; original tested pull-request merge revision retained."
       }
     },
@@ -208,38 +210,38 @@
       "path": "docs/verification/asset-type-upgrade.json",
       "scope": "isolated SQL005-to006 upgrade and nine actual PostgreSQL runtime-role storage invariants",
       "source_binding": {
-        "evidence_sha256": "5cabbc089047cb688404c9af656e229ae1b94021e601a85c2c64366df5f12d7e",
         "implementation_commit": "d518ddbb35200166b38ba88396986fa4827413f1",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
-        "verified_files": 25
+        "verified_files": 25,
+        "evidence_sha256": "5cabbc089047cb688404c9af656e229ae1b94021e601a85c2c64366df5f12d7e"
       }
     },
     {
       "path": "docs/verification/m2-asset-type-api.json",
       "scope": "inherited asset-type API, lifecycle, ownership, storage, pagination and prior regression checks",
       "source_binding": {
-        "evidence_sha256": "04f0b0c590026c97c73fab1d02b8fce4fd444348f33a2a14b8f41ae66c31b850",
         "implementation_commit": "d518ddbb35200166b38ba88396986fa4827413f1",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
-        "verified_files": 58
+        "verified_files": 58,
+        "evidence_sha256": "04f0b0c590026c97c73fab1d02b8fce4fd444348f33a2a14b8f41ae66c31b850"
       }
     },
     {
       "path": "docs/verification/m2-asset-type-ui.json",
       "scope": "inherited asset-type UI, ten real browser journeys, 17 inspected screenshots and 41 preserved historical screenshots",
       "source_binding": {
-        "evidence_sha256": "84b74c9b18fa3a9a15f04dc98d266c2d0cd16f36c392ebf6df03a5776682cea9",
         "implementation_commit": "d518ddbb35200166b38ba88396986fa4827413f1",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
-        "verified_files": 108
+        "verified_files": 108,
+        "evidence_sha256": "84b74c9b18fa3a9a15f04dc98d266c2d0cd16f36c392ebf6df03a5776682cea9"
       }
     },
     {
       "path": "docs/verification/hosted-inherited-types.json",
       "scope": "hosted-inherited-types",
       "source_binding": {
-        "ci_tested_merge_commit": "3b8e5ba562ed327727f457299899e4f6203ef6e5",
         "implementation_commit": "7eaa7627dfa4dba99f7e395e8836b862b816658b",
+        "ci_tested_merge_commit": "3b8e5ba562ed327727f457299899e4f6203ef6e5",
         "method": "GitHub required-check readback and downloaded allowlisted behavior summary from run43743365601; original tested pull-request merge revision retained."
       }
     },
@@ -247,48 +249,48 @@
       "path": "docs/verification/type-migration-pure.json",
       "scope": "complete type migration pure parsing, scope and policy transforms",
       "source_binding": {
-        "evidence_sha256": "62bdb7206c24e2750d80640a9b1071d5ddafc06e8a3d0d56c911cf70d24f5562",
         "implementation_commit": "e5910a78cbe9b7aa7600f06b356dd9cefbee4a88",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
-        "verified_files": 7
+        "verified_files": 7,
+        "evidence_sha256": "62bdb7206c24e2750d80640a9b1071d5ddafc06e8a3d0d56c911cf70d24f5562"
       }
     },
     {
       "path": "docs/verification/type-migration-upgrade.json",
       "scope": "isolated complete typed-receipt upgrade, scoped principal locking and numeric storage bounds",
       "source_binding": {
-        "evidence_sha256": "81a59fe29575b1559bbd282ce9c9e48b4529a0affd7b2c8f7581f4a931b1228a",
         "implementation_commit": "e5910a78cbe9b7aa7600f06b356dd9cefbee4a88",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
-        "verified_files": 32
+        "verified_files": 32,
+        "evidence_sha256": "81a59fe29575b1559bbd282ce9c9e48b4529a0affd7b2c8f7581f4a931b1228a"
       }
     },
     {
       "path": "docs/verification/m2-type-migration-api.json",
       "scope": "complete bounded authored-type migration core API/storage and rollback",
       "source_binding": {
-        "evidence_sha256": "5f576085d8ceccfc46ffba3ffed2918bb56e4eb8d74eba11796e84fc47164163",
         "implementation_commit": "e5910a78cbe9b7aa7600f06b356dd9cefbee4a88",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
-        "verified_files": 52
+        "verified_files": 52,
+        "evidence_sha256": "5f576085d8ceccfc46ffba3ffed2918bb56e4eb8d74eba11796e84fc47164163"
       }
     },
     {
       "path": "docs/verification/m2-type-migration-ui.json",
       "scope": "Complete type-migration browser workflows and all12 browser regressions;17 inspected new and58 preserved historical screenshots",
       "source_binding": {
-        "evidence_sha256": "7d939da2202370ecf20488deae1d835353a18333399fd6d349827815501141c0",
         "implementation_commit": "e5910a78cbe9b7aa7600f06b356dd9cefbee4a88",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original timestamps, distinct runtime images, dirty-worktree provenance and failed diagnostics are preserved; no test rerun is inferred.",
-        "verified_files": 131
+        "verified_files": 131,
+        "evidence_sha256": "7d939da2202370ecf20488deae1d835353a18333399fd6d349827815501141c0"
       }
     },
     {
       "path": "docs/verification/hosted-type-migrations.json",
       "scope": "hosted-complete-type-migrations",
       "source_binding": {
-        "ci_tested_merge_commit": "59ed35bec2d0a668096735a71c1b316387de9e37",
         "implementation_commit": "0fa4e7ef2ee46251741304bb9288af2eb34d19d6",
+        "ci_tested_merge_commit": "59ed35bec2d0a668096735a71c1b316387de9e37",
         "method": "GitHub required-check readback and downloaded allowlisted behavior summary from run43748230994; original tested merge revision retained, tested and final merged trees equal."
       }
     },
@@ -296,60 +298,60 @@
       "path": "docs/verification/relations-pure.json",
       "scope": "constrained-relations-pure-only",
       "source_binding": {
-        "evidence_sha256": "985ba58b58eeaf296df53a68c3078403659420f3c8b9edbd0cee75e6db2c773a",
         "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
-        "verified_files": 9
+        "verified_files": 9,
+        "evidence_sha256": "985ba58b58eeaf296df53a68c3078403659420f3c8b9edbd0cee75e6db2c773a"
       }
     },
     {
       "path": "docs/verification/relations-upgrade.json",
       "scope": "isolated SQL007-to008 upgrade, twelve runtime storage tests and nine fence/concurrency tests",
       "source_binding": {
-        "evidence_sha256": "e97483f715d92b73ea76f3567914f3f76753616fa0f22ebe412656dd51b29667",
         "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
-        "verified_files": 39
+        "verified_files": 39,
+        "evidence_sha256": "e97483f715d92b73ea76f3567914f3f76753616fa0f22ebe412656dd51b29667"
       }
     },
     {
       "path": "docs/verification/relations-type-migration-regression.json",
       "scope": "historical SQL006-to007 storage upgrade and current SQL008 service/concurrency regression",
       "source_binding": {
-        "evidence_sha256": "fbfdeca64cf9ccf5e91b7a6886cd0ff47df3e22bf07f9c1033aae8d287920b52",
         "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
-        "verified_files": 39
+        "verified_files": 39,
+        "evidence_sha256": "fbfdeca64cf9ccf5e91b7a6886cd0ff47df3e22bf07f9c1033aae8d287920b52"
       }
     },
     {
       "path": "docs/verification/relations-model-upgrade-regression.json",
       "scope": "current-source historical model-upgrade regression; original public evidence preserved",
       "source_binding": {
-        "evidence_sha256": "3613478a69d61a9b7353dfcaae161f53dc28d5c4715ef23e1e18252e539b7439",
         "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
-        "verified_files": 7
+        "verified_files": 7,
+        "evidence_sha256": "3613478a69d61a9b7353dfcaae161f53dc28d5c4715ef23e1e18252e539b7439"
       }
     },
     {
       "path": "docs/verification/relations-asset-type-upgrade-regression.json",
       "scope": "current-source historical asset-type-upgrade regression; original public evidence preserved",
       "source_binding": {
-        "evidence_sha256": "d06b46a2df1fafebfac6a9fe58c7955fd0fe32da8a98e5c33e8ef7a83a641b06",
         "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
-        "verified_files": 34
+        "verified_files": 34,
+        "evidence_sha256": "d06b46a2df1fafebfac6a9fe58c7955fd0fe32da8a98e5c33e8ef7a83a641b06"
       }
     },
     {
       "path": "docs/verification/m2-relations-api.json",
       "scope": "Bounded constrained asserted relation service/API: exact pinned policy, canonical values/history, tenant privacy, graph cursor authorization and incident asset mutation guards; partial M2/MOD programme",
       "source_binding": {
-        "evidence_sha256": "c6da07f40c26d16ca54ab71477448a573233a6a54040c9889dcc5044aa39986a",
         "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
-        "verified_files": 60
+        "verified_files": 60,
+        "evidence_sha256": "c6da07f40c26d16ca54ab71477448a573233a6a54040c9889dcc5044aa39986a"
       }
     },
     {
@@ -364,10 +366,109 @@
       "path": "docs/verification/m2-relations-ui.json",
       "scope": "Bounded relation authoring, immutable history and authorized responsive graph; targeted2 and complete14 browser journeys,20 inspected new and75 preserved historical screenshots",
       "source_binding": {
-        "evidence_sha256": "11231c7e1f9c36474f1acfc69f151be974c09f18ba430a495d1ca32a1b9f379f",
         "implementation_commit": "dbb50dc0c66368325270b2a3cc1201293384eb7f",
         "method": "Recorded source and screenshot SHA256 digests matched against committed Git blobs. Original execution timestamps, distinct images, dirty-worktree provenance and diagnostic outcomes remain intact; no test rerun is inferred.",
-        "verified_files": 160
+        "verified_files": 160,
+        "evidence_sha256": "11231c7e1f9c36474f1acfc69f151be974c09f18ba430a495d1ca32a1b9f379f"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-relations.json",
+      "scope": "hosted-constrained-relations",
+      "source_binding": {
+        "implementation_commit": "3ad8d3f78539bdbcae6880703f2d1b20a929dc51",
+        "ci_tested_merge_commit": "2218573964896a9f33309b421416b310c7f606e1",
+        "merged_commit": "a8cfef10cc6e677f164d20bc41c76c33cd6d4424",
+        "method": "Public GitHub required-check readback and downloaded allowlisted behavior summary from run43764871580. Original tested pull-request merge revision and earlier failed attempts retained; no root participation execution is inferred.",
+        "evidence_sha256": "4883c95b2cf05e148739f9c58e3977fcabfbb9f7b8cba8493b5a14b9299b486a"
+      }
+    },
+    {
+      "path": "docs/verification/relation-participation-upgrade.json",
+      "scope": "relation-participation-storage-and-concurrency"
+    },
+    {
+      "path": "docs/verification/relation-scope-discovery-review.json",
+      "scope": "relation-scope-discovery-correction-review"
+    },
+    {
+      "path": "docs/verification/m2-relation-participation-api.json",
+      "scope": "Bounded required participation and complete graph-operation core API/service execution;123 passing cases with76 actual-image source hashes; original failures and isolated-snapshot drift retained.",
+      "source_binding": {
+        "implementation_commit": "46d5b57ca8ba102ee4939f98fce85f0d41ce9998",
+        "method": "All recorded source SHA256 digests matched committed Git blobs. Original execution time, image and dirty-worktree provenance preserved; no test rerun inferred.",
+        "verified_files": 76,
+        "evidence_sha256": "ca12d1992fd8b1b6e41e17f4dbb1eef00865fdd095d6e44f3e3813ef975422d0"
+      }
+    },
+    {
+      "path": "docs/verification/m2-relation-participation-expiry.json",
+      "scope": "Real fifteen-minute preparation expiry and completed-operation replay; one passing core HTTP/runtime case with82 recorded running-image source hashes.",
+      "source_binding": {
+        "implementation_commit": "46d5b57ca8ba102ee4939f98fce85f0d41ce9998",
+        "method": "All82 recorded source SHA256 digests matched committed Git blobs after execution. Original execution time and unchanged image preserved; later parser hardening is outside this snapshot.",
+        "verified_files": 82,
+        "evidence_sha256": "97a693c45694dc3ca0e91ca5fe54340f62fb85b2ba8009a33c6aca0588ce1773"
+      }
+    },
+    {
+      "path": "docs/verification/relation-participation-upgrade-final.json",
+      "scope": "Fresh post-parser-hardening SQL008-to009 preservation and SQL010 runtime regression: eight upgrade checks,20 storage and13 concurrency cases,51 exact mounted source hashes. Earlier public execution reports remain unchanged."
+    },
+    {
+      "path": "docs/verification/relation-participation-pure.json",
+      "scope": "Post-parser-hardening200 passing pure cases and root/web typecheck command, with119 source hashes matched before and after execution; no runtime or later-source qualification inferred."
+    },
+    {
+      "path": "docs/verification/relation-participation-pure-final.json",
+      "scope": "Fresh Map-copier correction snapshot:202 passing pure tests and root/web typechecks;119 source hashes matched before/after; runtime and hosted scanner qualification remain separate."
+    },
+    {
+      "path": "docs/verification/relation-participation-upgrade-security-regression.json",
+      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001\u2013010 unchanged; prior executions retained."
+    },
+    {
+      "path": "docs/verification/m2-relation-participation-api-final.json",
+      "scope": "Fresh Map-copier correction core API/storage execution:123 passing cases,76 actual-image source hashes; exact fifth attempt archived and earlier failures/passes retained. Targeted browser failure remains separate."
+    },
+    {
+      "path": "docs/verification/relation-participation-graph-copy-pure.json",
+      "scope": "Graph asset preparation copier correction:204 passing pure cases and root/web typechecks with115 stable source hashes; isolated old-source reproduction13 pass/2 fail and corrected source15 pass retained separately.",
+      "source_binding": {
+        "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
+        "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
+        "verified_files": 115,
+        "evidence_sha256": "ac96820b48ecaf14ee7b87c6a1e98f7a1e9b0226da0ce0e99029f9e685826dd4"
+      }
+    },
+    {
+      "path": "docs/verification/relation-participation-graph-copy-upgrade.json",
+      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001\u2013010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
+      "source_binding": {
+        "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
+        "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
+        "verified_files": 51,
+        "evidence_sha256": "231011f43f81ae4fa7be1c59daec693118a885fd491838c880207d4ac995ffbe"
+      }
+    },
+    {
+      "path": "docs/verification/m2-relation-participation-api-graph-copy.json",
+      "scope": "Fresh graph asset copier correction core API/storage execution:123 passing cases with76 actual-image source hashes; exact sixth attempt archived and earlier failures/passes retained. Browser and hosted outcomes remain separate.",
+      "source_binding": {
+        "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
+        "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
+        "verified_files": 76,
+        "evidence_sha256": "9cbe8030e1a194e8833aeb38ad3eaff8186520e0820df4f5456c07c102557ef6"
+      }
+    },
+    {
+      "path": "docs/verification/m2-relation-participation-ui.json",
+      "scope": "Required participation UI: full16/16 browser journeys pass once with139 stable source hashes,22 served assets and76 API-source equivalents;16 new screenshots inspected, five separately spot-checked by root,95 historical PNGs preserved. All four targeted attempts retain their original outcomes and diagnostics.",
+      "source_binding": {
+        "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
+        "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
+        "verified_files": 155,
+        "evidence_sha256": "e262580680acae02a0ecf69b4f8e225619b323faebdec181fa096f21c639e41c"
       }
     },
     {
@@ -515,6 +616,87 @@
     {
       "path": "docs/security/sast-evidence/hosted-attempt-6/secret-scan.json",
       "scope": "Pinned worktree and reachable-history secret check for copier repair and original attempt6 evidence"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-7/record.json",
+      "scope": "Exact same-repository PR hosted source/ingestion PASS and same-merge Development PASS;145 source hashes and13 original reports retained; default-branch/fork/release remain open",
+      "source_binding": {
+        "ci_tested_merge_commit": "ece773e27c3f3a25822984578dee4a1dedddb970",
+        "evidence_sha256": "5699eb2aebf7415c92ef86ac6b98adc07c2acd228215020ff27a8f7a162b2713",
+        "implementation_commit": "fe2dc1897e1b07ffd41dc27d64e1eacf700e7391",
+        "method": "Original hosted artifacts and independent exact stored-analysis/read-back with zero open ref alerts.",
+        "repository_merge_commit": "77b73e75016435d6f12e67cda76ea84b91cd1086"
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-7/analysis-readback.json",
+      "scope": "Independent exact stored analysis/category/SARIF/hash/count verification for all three zero-finding analyses"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-7/alert-metadata.json",
+      "scope": "Independent complete pull-request alert inventory: two fixed historical alerts, zero open"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-7/qualification-checks.json",
+      "scope": "Publication/requirements/whitespace checks for scoped hosted qualification documentation"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-7/secret-scan.json",
+      "scope": "Pinned worktree/history secret scan for original safe reports and scoped qualification documentation"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-8/record.json",
+      "scope": "Exact default-branch source-security/ingestion and Development PASS: all3 languages/full coverage/zero findings,145 source hashes,14 browser journeys/11 steps,13 original reports; fork and wider qualifications separate",
+      "source_binding": {
+        "ci_tested_commit": "77b73e75016435d6f12e67cda76ea84b91cd1086",
+        "evidence_sha256": "8dff26440d13ecf0722b1d0db5fb31634cd615ea0fd8502e7df3036ed2151e22",
+        "implementation_commit": "fe2dc1897e1b07ffd41dc27d64e1eacf700e7391",
+        "method": "Original main-branch source and behavior artifacts plus independent exact stored-analysis/read-back and complete empty main alert inventory; final workflow status observed in public UI.",
+        "repository_merge_commit": "77b73e75016435d6f12e67cda76ea84b91cd1086"
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-8/analysis-readback.json",
+      "scope": "Exact stored default-branch analysis/category/SARIF/hash/count verification for all three zero-finding analyses"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-8/alert-metadata.json",
+      "scope": "Independent complete main-ref all-state alert inventory: zero alerts"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-8/qualification-checks.json",
+      "scope": "Publication/requirements/whitespace checks for scoped default-branch qualification documentation"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-8/secret-scan.json",
+      "scope": "Pinned worktree/history secret scan for original main safe reports and scoped qualification documentation"
+    },
+    {
+      "path": "docs/verification/participation-repair-reference.json",
+      "scope": "Unconditional repair-reference authorization, bounded private API diagnostics and repeatable source-specific catalog browser acceptance. Full required-participation/M2 and hosted requalification remain open.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_LOCAL_SCOPE"
+    },
+    {
+      "path": "docs/verification/participation-hosted-attempt-2.json",
+      "scope": "Original failed second PR16 hosted attempt, independently read-back analysis and bounded parser correction; no new runtime qualification",
+      "source_binding": {
+        "implementation_commit": "96ba3503ff2af2bfcd23ce2d551bf127ec19cdc1",
+        "method": "Original hosted files copied byte-for-byte; exact659-file scanned source binding. Parser correction is a separate unhosted source.",
+        "evidence_sha256": "d62e2a2df056163ff0ad1ac89492a47f3cc41521500580670e2f8222b31e02f3"
+      },
+      "evidence_sha256": "d62e2a2df056163ff0ad1ac89492a47f3cc41521500580670e2f8222b31e02f3"
+    },
+    {
+      "path": "docs/verification/participation-audit-fixture-correction.json",
+      "scope": "Checked audit RR/session/scope ordering, controlled-input Temporal reservations, test HTTP admission and deterministic declaration collection.126 real API and210 pure pass; prior browser binding retained, current hosted not run.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_LOCAL_SCOPE",
+      "source_binding": {
+        "implementation_commit": "bea1d356ced6d7297e40e5692d098c7833ff8563",
+        "method": "All81 actual-image and121 host pipeline source hashes equal committed Git blobs; original execution timestamps preserved.",
+        "evidence_sha256": "06c0ee7d231bf0a8048b49aa7b1bcb306b973fc2bf12467e92cd2b0029309fbd"
+      }
     }
   ],
   "limitations": [
@@ -522,7 +704,5 @@
     "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "programme_status": "IN_PROGRESS",
-  "release_qualified": false,
-  "schema_version": 1
+  "bound_at": "2026-11-15T22:23:28.996008+00:00"
 }

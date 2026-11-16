@@ -4,10 +4,10 @@ import { canView, Problem, type Principal } from '../../authz/src/index.ts';
 import { modelPersistence as persistence, type ModelHooks } from './model-service.ts';
 import { storedAssetType, typeHash } from './asset-type-policy.ts';
 import { resolveAssetType, type ResolvedAssetType } from './asset-type.ts';
-import { resolveRelationType } from './relation.ts';
+import { resolveRelationDefinition } from './relation.ts';
 import type { ValidationIssue } from './model.ts';
 import type { RelationTypeView, RelationView, RelationEndpointPolicyState, RelationEndpointView,
-  RelationConstraintEdge, RelationPolicyPin, ResolvedRelationType } from './relation-contracts.ts';
+  RelationConstraintEdge, RelationPolicyPin, ResolvedRelationDefinition } from './relation-contracts.ts';
 export type Row = Record<string, any>;
 export type RelationHooks = Pick<ModelHooks, 'record'>;
 export const RELATION_READ = ['catalog:read', 'models:read'] as const;
@@ -57,8 +57,13 @@ export function relationFailure(error: unknown): unknown {
   if (!error || typeof error !== 'object' || !('code' in error)) return error;
   const e = error as { code: string; message?: string; constraint?: string };
   if (['55P03', '40P01', '57014', '40001'].includes(e.code)) return new Problem(503, 'RELATION_RETRY', 'A stable execution window was unavailable. Retry with the same idempotency key.');
+  if (e.code === '23514' && e.message === 'RELATION_PREPARATION_EXPIRED')
+    return new Problem(410, 'RELATION_PREPARATION_EXPIRED', 'Create a new preparation and run a fresh preview.');
+  if (['23514', '23505'].includes(e.code) && e.message === 'RELATION_PREPARATION_CONFLICT')
+    return new Problem(409, 'RELATION_PREPARATION_CONFLICT', 'The preparation conflicts with its reserved definition or consumption.');
   if (e.code === '23505') return new Problem(409, 'RELATION_DUPLICATE', 'The relationship or definition already exists.');
-  const known = ['RELATION_INVALID', 'RELATION_CARDINALITY', 'RELATION_CYCLE', 'RELATION_PROFILE_LIMIT', 'RELATION_MIGRATION_REQUIRED'];
+  if (e.code === '42501' && e.message === 'RELATION_SCOPE_UNAVAILABLE') return hiddenScope();
+  const known = ['RELATION_INVALID', 'RELATION_CARDINALITY', 'RELATION_CYCLE', 'RELATION_PROFILE_LIMIT', 'RELATION_MIGRATION_REQUIRED', 'RELATION_PARTICIPATION_REQUIRED'];
   if (e.code === '23514' && known.includes(e.message ?? '')) return new Problem(422, e.message!, 'The proposed relationship change does not satisfy its pinned constraints.');
   if (e.code === '54000' && e.message === 'RELATION_PROFILE_LIMIT') return profileLimit();
   if (e.code === '23503') return new Problem(422, 'RELATION_INVALID', 'A referenced relationship identity or revision is unavailable.');
@@ -70,12 +75,12 @@ export async function lockRelationScope(tx: Tx, p: Principal, actions: readonly 
   await relationQuery(tx, () => sql`select pg_advisory_xact_lock(hashtextextended(${`governance-models:${p.tenantId}`},0))`.execute(tx));
   await relationQuery(tx, () => persistence.authorize(tx, p, actions));
 }
-export function relationDefinition(input: unknown): ResolvedRelationType {
-  const parsed = resolveRelationType(input); if (!parsed.ok) throw relationValidationFailure(parsed.issues);
+export function relationDefinition(input: unknown): ResolvedRelationDefinition {
+  const parsed = resolveRelationDefinition(input); if (!parsed.ok) throw relationValidationFailure(parsed.issues);
   if (Buffer.byteLength(JSON.stringify(parsed.value.definition)) > 262144) throw profileLimit();
   return parsed.value;
 }
-export function storedRelationType(row: Row): ResolvedRelationType {
+export function storedRelationType(row: Row): ResolvedRelationDefinition {
   const parsed = relationDefinition(row.definition);
   if (parsed.definition.version !== row.version || typeHash(parsed.definition) !== row.definition_hash) throw new Problem(500, 'RELATION_STORAGE_INVALID', 'Stored relationship policy could not be verified.');
   return parsed;
@@ -93,7 +98,7 @@ export async function relationTypeVersion(tx: Tx, p: Principal, typeId: string, 
   const row = await relationQuery(tx, () => query.selectAll().executeTakeFirst());
   if (!row) throw new Problem(404, 'RELATION_TYPE_NOT_FOUND', 'Relationship type version is unavailable.'); return row;
 }
-export async function endpointTypeIdentities(tx: Tx, p: Principal, policy: ResolvedRelationType) {
+export async function endpointTypeIdentities(tx: Tx, p: Principal, policy: ResolvedRelationDefinition) {
   const ids = [...new Set([...policy.definition.sourceTypes, ...policy.definition.targetTypes].map(rule => rule.typeId))].sort();
   const rows = await relationQuery(tx, () => tx.selectFrom('governance_models').select(['id', 'type_id']).where('tenant_id', '=', p.tenantId).where('type_id', 'in', ids).orderBy('type_id').execute());
   if (rows.length !== ids.length) throw new Problem(422, 'RELATION_INVALID', 'An endpoint type identity is unavailable in this organization.');

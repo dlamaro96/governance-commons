@@ -4365,7 +4365,19 @@
         "apps/web/src/pages/RelationTypes.tsx",
         "apps/web/src/pages/Relation.tsx",
         "apps/web/src/relations/RelationGraph.tsx",
-        "docs/runbooks/constrained-relations.md"
+        "docs/runbooks/constrained-relations.md",
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -4373,7 +4385,15 @@
         "tests/integration/relations.test.ts",
         "tests/integration/relation-storage.test.ts",
         "tests/qualification/relation-concurrency.test.ts",
-        "tests/e2e/relations.spec.ts"
+        "tests/e2e/relations.spec.ts",
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -4404,7 +4424,9 @@
       },
       "limitations": [
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M1",
@@ -4412,7 +4434,21 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json",
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json"
       ]
     },
     {
@@ -5018,7 +5054,19 @@
         "apps/web/src/pages/RelationTypes.tsx",
         "apps/web/src/pages/Relation.tsx",
         "apps/web/src/relations/RelationGraph.tsx",
-        "docs/runbooks/constrained-relations.md"
+        "docs/runbooks/constrained-relations.md",
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -5026,7 +5074,15 @@
         "tests/integration/relations.test.ts",
         "tests/integration/relation-storage.test.ts",
         "tests/qualification/relation-concurrency.test.ts",
-        "tests/e2e/relations.spec.ts"
+        "tests/e2e/relations.spec.ts",
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -5056,7 +5112,9 @@
         "evidence": []
       },
       "limitations": [
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M1",
@@ -5064,7 +5122,22 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json",
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json",
+        "docs/verification/participation-audit-fixture-correction.json"
       ]
     },
     {
@@ -5235,7 +5308,19 @@
         "apps/web/src/pages/RelationTypes.tsx",
         "apps/web/src/pages/Relation.tsx",
         "apps/web/src/relations/RelationGraph.tsx",
-        "docs/runbooks/constrained-relations.md"
+        "docs/runbooks/constrained-relations.md",
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -5243,7 +5328,15 @@
         "tests/integration/relations.test.ts",
         "tests/integration/relation-storage.test.ts",
         "tests/qualification/relation-concurrency.test.ts",
-        "tests/e2e/relations.spec.ts"
+        "tests/e2e/relations.spec.ts",
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -5273,7 +5366,9 @@
         "evidence": []
       },
       "limitations": [
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M1",
@@ -5281,7 +5376,21 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json",
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json"
       ]
     },
     {
@@ -5909,7 +6018,19 @@
         "apps/web/src/pages/RelationTypes.tsx",
         "apps/web/src/pages/Relation.tsx",
         "apps/web/src/relations/RelationGraph.tsx",
-        "docs/runbooks/constrained-relations.md"
+        "docs/runbooks/constrained-relations.md",
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
       ],
       "test_ids": [
         "tests/unit/model.test.ts",
@@ -5932,7 +6053,15 @@
         "tests/integration/relations.test.ts",
         "tests/integration/relation-storage.test.ts",
         "tests/qualification/relation-concurrency.test.ts",
-        "tests/e2e/relations.spec.ts"
+        "tests/e2e/relations.spec.ts",
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -5965,7 +6094,9 @@
         "Immutable tenant-scoped typed model versions, explicit asset pins, complete bounded server previews, compatible publication, shared validation, visual editor and model-file import/export are implemented. Scoped real API/service and browser tests pass; full-row verification remains open.",
         "Complete bounded authored-type migration service/API/UI and immutable SQL007 are implemented. The 82-unit suite, 69 core PostgreSQL/API cases and isolated six-check upgrade with nine storage and nine service/concurrency cases pass for the recorded source. Targeted two-journey and full 12-journey browser gates pass after correcting a disclosure target-size defect and a test selector; original diagnostic failures remain recorded. All 17 new screenshots were inspected and 58 historical images preserved. Full-row and release qualification remain open.",
         "Required relation participation/migration, domain/attribute model kinds, scoped overrides, additional responsibility roles, durable large-cohort migrations and required bulk/workflow/MCP ingress remain open. Typed search/sort/catalog export, production restore and full MOD/AT-MOD/M2 qualification are not established by this bounded development evidence.",
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M3",
@@ -5985,7 +6116,24 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json",
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json",
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json",
+        "docs/verification/participation-audit-fixture-correction.json"
       ]
     },
     {
@@ -6067,7 +6215,19 @@
         "apps/web/src/pages/RelationTypes.tsx",
         "apps/web/src/pages/Relation.tsx",
         "apps/web/src/relations/RelationGraph.tsx",
-        "docs/runbooks/constrained-relations.md"
+        "docs/runbooks/constrained-relations.md",
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
       ],
       "test_ids": [
         "tests/unit/model.test.ts",
@@ -6096,7 +6256,15 @@
         "tests/integration/relations.test.ts",
         "tests/integration/relation-storage.test.ts",
         "tests/qualification/relation-concurrency.test.ts",
-        "tests/e2e/relations.spec.ts"
+        "tests/e2e/relations.spec.ts",
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -6130,7 +6298,9 @@
         "Explicit bounded transactional migration, production audit/outbox, immutable normalized receipt references and the complete eight-browser development gate pass. The isolated real-PostgreSQL upgrade check passes five cases, including atomic rollback on malformed history. Fifteen historical pre005 synthetic receipts with missing initial revisions are quarantined as explicit unverifiable exceptions; no history is fabricated. Full operating-model AT-MOD-01 and production restore remain open.",
         "Complete bounded authored-type migration service/API/UI and immutable SQL007 are implemented. The 82-unit suite, 69 core PostgreSQL/API cases and isolated six-check upgrade with nine storage and nine service/concurrency cases pass for the recorded source. Targeted two-journey and full 12-journey browser gates pass after correcting a disclosure target-size defect and a test selector; original diagnostic failures remain recorded. All 17 new screenshots were inspected and 58 historical images preserved. Full-row and release qualification remain open.",
         "Required relation participation/migration, domain/attribute model kinds, scoped overrides, additional responsibility roles, durable large-cohort migrations and required bulk/workflow/MCP ingress remain open. Typed search/sort/catalog export, production restore and full MOD/AT-MOD/M2 qualification are not established by this bounded development evidence.",
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M3",
@@ -6155,7 +6325,21 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json",
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json"
       ]
     },
     {
@@ -6459,7 +6643,19 @@
         "apps/web/src/pages/RelationTypes.tsx",
         "apps/web/src/pages/Relation.tsx",
         "apps/web/src/relations/RelationGraph.tsx",
-        "docs/runbooks/constrained-relations.md"
+        "docs/runbooks/constrained-relations.md",
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -6467,7 +6663,15 @@
         "tests/integration/relations.test.ts",
         "tests/integration/relation-storage.test.ts",
         "tests/qualification/relation-concurrency.test.ts",
-        "tests/e2e/relations.spec.ts"
+        "tests/e2e/relations.spec.ts",
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -6497,7 +6701,9 @@
         "evidence": []
       },
       "limitations": [
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M3",
@@ -6505,7 +6711,21 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json",
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json"
       ]
     },
     {
@@ -42499,7 +42719,19 @@
         "apps/web/src/pages/RelationTypes.tsx",
         "apps/web/src/pages/Relation.tsx",
         "apps/web/src/relations/RelationGraph.tsx",
-        "docs/runbooks/constrained-relations.md"
+        "docs/runbooks/constrained-relations.md",
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
       ],
       "test_ids": [
         "tests/unit/asset-type-migration.test.ts",
@@ -42512,7 +42744,15 @@
         "tests/integration/relations.test.ts",
         "tests/integration/relation-storage.test.ts",
         "tests/qualification/relation-concurrency.test.ts",
-        "tests/e2e/relations.spec.ts"
+        "tests/e2e/relations.spec.ts",
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -42544,7 +42784,9 @@
       "limitations": [
         "Complete bounded authored-type migration service/API/UI and immutable SQL007 are implemented. The 82-unit suite, 69 core PostgreSQL/API cases and isolated six-check upgrade with nine storage and nine service/concurrency cases pass for the recorded source. Targeted two-journey and full 12-journey browser gates pass after correcting a disclosure target-size defect and a test selector; original diagnostic failures remain recorded. All 17 new screenshots were inspected and 58 historical images preserved. Full-row and release qualification remain open.",
         "Required relation participation/migration, domain/attribute model kinds, scoped overrides, additional responsibility roles, durable large-cohort migrations and required bulk/workflow/MCP ingress remain open. Typed search/sort/catalog export, production restore and full MOD/AT-MOD/M2 qualification are not established by this bounded development evidence.",
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M10",
@@ -42557,7 +42799,24 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json",
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json",
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json",
+        "docs/verification/participation-audit-fixture-correction.json"
       ]
     },
     {
@@ -51054,7 +51313,8 @@
       },
       "limitations": [
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -51062,7 +51322,8 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json"
       ]
     },
     {
@@ -51090,8 +51351,30 @@
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_paths": [
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
+      ],
+      "test_ids": [
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -51119,9 +51402,26 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json"
+      ]
     },
     {
       "id": "SYS-DATA-001.02",
@@ -51148,8 +51448,30 @@
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_paths": [
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
+      ],
+      "test_ids": [
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -51177,9 +51499,26 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json"
+      ]
     },
     {
       "id": "SYS-DATA-001.03",
@@ -51206,8 +51545,30 @@
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_paths": [
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
+      ],
+      "test_ids": [
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -51235,9 +51596,26 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json"
+      ]
     },
     {
       "id": "SYS-DATA-001.04",
@@ -51264,8 +51642,30 @@
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_paths": [
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
+      ],
+      "test_ids": [
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -51293,9 +51693,26 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json"
+      ]
     },
     {
       "id": "SYS-DATA-001.05",
@@ -51322,8 +51739,30 @@
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_paths": [
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
+      ],
+      "test_ids": [
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -51351,9 +51790,26 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json"
+      ]
     },
     {
       "id": "SYS-DATA-002",
@@ -51435,7 +51891,8 @@
       },
       "limitations": [
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -51443,7 +51900,8 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json"
       ]
     },
     {
@@ -51753,7 +52211,8 @@
         "evidence": []
       },
       "limitations": [
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -51761,7 +52220,8 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json"
       ]
     },
     {
@@ -52018,7 +52478,8 @@
       },
       "limitations": [
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -52026,7 +52487,8 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json"
       ]
     },
     {
@@ -52244,7 +52706,8 @@
         "apps/web/src/pages/RelationTypes.tsx",
         "apps/web/src/pages/Relation.tsx",
         "apps/web/src/relations/RelationGraph.tsx",
-        "docs/runbooks/constrained-relations.md"
+        "docs/runbooks/constrained-relations.md",
+        "apps/api/src/audit-reader.ts"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -52252,7 +52715,8 @@
         "tests/integration/relations.test.ts",
         "tests/integration/relation-storage.test.ts",
         "tests/qualification/relation-concurrency.test.ts",
-        "tests/e2e/relations.spec.ts"
+        "tests/e2e/relations.spec.ts",
+        "tests/integration/audit-integrity.test.ts"
       ],
       "verification": {
         "fixture": {
@@ -52283,7 +52747,8 @@
       },
       "limitations": [
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -52291,7 +52756,9 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json",
+        "docs/verification/participation-audit-fixture-correction.json"
       ]
     },
     {
@@ -52688,7 +53155,19 @@
         "apps/web/src/pages/RelationTypes.tsx",
         "apps/web/src/pages/Relation.tsx",
         "apps/web/src/relations/RelationGraph.tsx",
-        "docs/runbooks/constrained-relations.md"
+        "docs/runbooks/constrained-relations.md",
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -52696,7 +53175,15 @@
         "tests/integration/relations.test.ts",
         "tests/integration/relation-storage.test.ts",
         "tests/qualification/relation-concurrency.test.ts",
-        "tests/e2e/relations.spec.ts"
+        "tests/e2e/relations.spec.ts",
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -52727,7 +53214,9 @@
       },
       "limitations": [
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -52735,7 +53224,21 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json",
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json"
       ]
     },
     {
@@ -53010,7 +53513,19 @@
         "apps/web/src/pages/RelationTypes.tsx",
         "apps/web/src/pages/Relation.tsx",
         "apps/web/src/relations/RelationGraph.tsx",
-        "docs/runbooks/constrained-relations.md"
+        "docs/runbooks/constrained-relations.md",
+        "packages/db/migrations/009_relation_participation.sql",
+        "packages/db/migrations/010_relation_scope_discovery.sql",
+        "packages/domain/src/relation-migration-service.ts",
+        "packages/domain/src/relation-migration-store.ts",
+        "packages/domain/src/relation-migration-read.ts",
+        "packages/domain/src/relation-participation.ts",
+        "packages/domain/src/relation-participation-read.ts",
+        "packages/domain/src/graph-asset-preparation.ts",
+        "packages/domain/src/graph-asset-persistence.ts",
+        "apps/api/src/relation-migrations.ts",
+        "apps/web/src/pages/RelationMigrations.tsx",
+        "docs/runbooks/relation-participation.md"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -53018,7 +53533,15 @@
         "tests/integration/relations.test.ts",
         "tests/integration/relation-storage.test.ts",
         "tests/qualification/relation-concurrency.test.ts",
-        "tests/e2e/relations.spec.ts"
+        "tests/e2e/relations.spec.ts",
+        "tests/unit/relation-migration.test.ts",
+        "tests/unit/relation-participation.test.ts",
+        "tests/unit/relation-migration-preconditions.test.ts",
+        "tests/integration/relation-migration-api.test.ts",
+        "tests/integration/relation-participation-storage.test.ts",
+        "tests/qualification/relation-participation-concurrency.test.ts",
+        "tests/qualification/relation-preparation-expiry.test.ts",
+        "tests/e2e/relation-migrations.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -53049,7 +53572,9 @@
       },
       "limitations": [
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
-        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open."
+        "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
+        "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -53057,7 +53582,21 @@
         "docs/verification/relations-pure.json",
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
-        "docs/verification/m2-relations-ui.json"
+        "docs/verification/m2-relations-ui.json",
+        "docs/verification/hosted-relations.json",
+        "docs/verification/relation-participation-upgrade.json",
+        "docs/verification/relation-scope-discovery-review.json",
+        "docs/verification/m2-relation-participation-api.json",
+        "docs/verification/m2-relation-participation-expiry.json",
+        "docs/verification/relation-participation-upgrade-final.json",
+        "docs/verification/relation-participation-pure.json",
+        "docs/verification/relation-participation-pure-final.json",
+        "docs/verification/relation-participation-upgrade-security-regression.json",
+        "docs/verification/m2-relation-participation-api-final.json",
+        "docs/verification/relation-participation-graph-copy-pure.json",
+        "docs/verification/relation-participation-graph-copy-upgrade.json",
+        "docs/verification/m2-relation-participation-api-graph-copy.json",
+        "docs/verification/m2-relation-participation-ui.json"
       ]
     },
     {
@@ -53522,7 +54061,11 @@
       },
       "limitations": [],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json"
+      ]
     },
     {
       "id": "SYS-SEC-005.01",
@@ -56739,9 +57282,14 @@
         "deploy/compose",
         "dev",
         "scripts/runtime.py",
-        "tests"
+        "tests",
+        "docs/runbooks/api-qualification.md",
+        "tests/fixtures/manual-scan.ts",
+        "tests/fixtures/http-budget.ts"
       ],
-      "test_ids": [],
+      "test_ids": [
+        "tests/unit/http-budget.test.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -56773,7 +57321,10 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
       ],
       "owner": "governance-commons maintainers",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/participation-audit-fixture-correction.json"
+      ]
     },
     {
       "id": "SYS-TEST-002.01",
@@ -66112,7 +66663,12 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
       ],
       "owner": "governance-commons maintainers",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json",
+        "docs/verification/participation-audit-fixture-correction.json"
+      ]
     },
     {
       "id": "OSS-006.01",
@@ -66936,7 +67492,10 @@
       "owner": "governance-commons maintainers",
       "milestone": "M0",
       "partial_evidence": [
-        "docs/verification/dependency-security-updates.json"
+        "docs/verification/dependency-security-updates.json",
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json",
+        "docs/verification/participation-audit-fixture-correction.json"
       ]
     },
     {

@@ -2,13 +2,24 @@
 import {randomUUID,createHash} from 'node:crypto';
 import {sql,lockTenantLedger,type Tx} from '../../../packages/db/src/index.ts';
 import {Problem,type Principal} from '../../../packages/authz/src/index.ts';
+import {visibleRelationOperation} from '../../../packages/domain/src/relation-migration-read.ts';
 export function assetView(r:any){return {id:r.id,name:r.name,qualifiedName:r.qualified_name,type:r.type,description:r.description,ownerId:r.owner_id??null,ownerName:r.owner_name??null,sourceId:r.source_id??null,sourceName:r.source_name??null,version:r.version,observedAt:r.observed_at,updatedAt:r.updated_at,status:r.status,metadata:r.metadata,modelId:r.model_id??null,modelVersion:r.model_version??null,attributes:r.attributes??{},typeState:r.type_state??null};}
 export function sourceView(r:any){return {id:r.id,name:r.name,host:r.host,port:r.port,database:r.database_name,schema:r.schema_name,secretRef:r.secret_ref,status:r.status,lastSuccessfulScan:r.last_successful_scan,capabilities:{metadata:{implemented:true,verification:'NOT_RUN'},columnLineage:{implemented:false,reason:'Parser qualification remains pending.'}}};}
 export function jobView(r:any){return {id:r.id,sourceId:r.source_id,status:r.status,createdAt:r.created_at,finishedAt:r.finished_at,assetCount:r.asset_count,errorCode:r.error_code};}
 export function auditView(r:any){return {id:r.id,action:r.action,resourceId:r.resource_id,actorName:r.actor_name,occurredAt:r.occurred_at,changes:r.changes,hash:r.hash,previousHash:r.previous_hash,correlationId:r.correlation_id};}
 export function visibleAssets(tx:Tx,p:Principal){return tx.selectFrom('assets').leftJoin('identities as owners','owners.id','assets.owner_id').leftJoin('sources',j=>j.onRef('sources.id','=','assets.source_id').onRef('sources.tenant_id','=','assets.tenant_id')).selectAll('assets').select(['owners.name as owner_name','sources.name as source_name']).where('assets.tenant_id','=',p.tenantId).where(eb=>eb.or([eb('assets.visibility','=','tenant'),sql<boolean>`assets.allowed_identities @> ${JSON.stringify([p.id])}::jsonb`]));}
 export function visibleAudit(tx:Tx,p:Principal){return tx.selectFrom('audit').selectAll().where('audit.tenant_id','=',p.tenantId).where(eb=>eb.or([
- eb.and([eb('audit.action','not like','asset.%'),eb('audit.action','not like','relation.%')]),
+ eb.and(['asset.%','relation.%','relation_participation.%','participation.%','relation_migration.%','relation_preparation.%'].map(pattern=>eb('audit.action','not like',pattern))),
+ sql<boolean>`audit.action LIKE 'relation_migration.%' AND (${visibleRelationOperation(p,sql`audit.resource_id`)})`,
+ sql<boolean>`${p.permissions.includes('models:read') && p.permissions.includes('catalog:read')} AND audit.action LIKE 'relation_preparation.%' AND EXISTS (
+   SELECT 1 FROM relation_type_preparations preparation WHERE preparation.tenant_id=audit.tenant_id
+    AND preparation.id::text=audit.resource_id AND preparation.created_by=${p.id}::uuid)`,
+ sql<boolean>`audit.action LIKE 'relation_participation.%' AND EXISTS (
+   SELECT 1 FROM relation_graph_receipt_bindings outcome JOIN relation_participations binding
+    ON binding.tenant_id=outcome.tenant_id AND binding.id=outcome.binding_id
+   WHERE outcome.tenant_id=audit.tenant_id AND outcome.binding_id::text=audit.resource_id AND outcome.role='changed'
+    AND outcome.after_version::text=audit.changes->>'resourceVersion'
+    AND (${visibleRelationOperation(p,sql`outcome.operation_id`)}))`,
  sql<boolean>`${p.permissions.includes('catalog:read')} AND audit.action LIKE 'asset.%' AND EXISTS (SELECT 1 FROM assets WHERE assets.tenant_id=audit.tenant_id AND assets.id::text=audit.resource_id AND (assets.visibility='tenant' OR assets.allowed_identities @> ${JSON.stringify([p.id])}::jsonb))`,
  sql<boolean>`${p.permissions.includes('catalog:read') && p.permissions.includes('models:read')} AND audit.action LIKE 'relation.%' AND EXISTS (SELECT 1 FROM relations r JOIN assets s ON s.tenant_id=r.tenant_id AND s.id=r.source_asset_id JOIN assets t ON t.tenant_id=r.tenant_id AND t.id=r.target_asset_id WHERE r.tenant_id=audit.tenant_id AND r.id::text=audit.resource_id AND (r.visibility='tenant' OR r.allowed_identities @> ${JSON.stringify([p.id])}::jsonb) AND (s.visibility='tenant' OR s.allowed_identities @> ${JSON.stringify([p.id])}::jsonb) AND (t.visibility='tenant' OR t.allowed_identities @> ${JSON.stringify([p.id])}::jsonb))`
 ]));}

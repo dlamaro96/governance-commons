@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
+import { pacedFetch as fetch } from '../fixtures/http-budget.ts';
+import { createManualScanFixture } from '../fixtures/manual-scan.ts';
 import assert from 'node:assert/strict';
 import { after, test } from 'node:test';
 import { createHash, randomUUID } from 'node:crypto';
@@ -452,7 +454,7 @@ test('relation HTTP boundaries enforce authentication, CSRF, strict fields/queri
   assert.equal((await read(edge.id)).relation.version, 1);
 });
 
-test('real internal source completions preserve assertions through rename, empty, partial, failed, permission-reduced and unavailable results', async () => {
+test('real internal source completions preserve assertions through rename, empty, partial, failed, permission-reduced and unavailable results', async t => {
   assert.ok(process.env.SITE_TOKEN, 'The real internal-site credential is required for this gate.');
   const model = assetDefinition(), authored = (await createAssetDefinition(model)).type, sourceId = randomUUID();
   await scoped(tx => tx.insertInto('sources').values({ tenant_id: tenant, id: sourceId, name: 'Synthetic relationship scan preservation', host: 'source-postgres', port: 5432,
@@ -460,7 +462,7 @@ test('real internal source completions preserve assertions through rename, empty
   const workerHeaders = { Authorization: `Bearer ${process.env.SITE_TOKEN}`, 'X-Tenant-Id': tenant, 'Content-Type': 'application/json' };
   const records = [{ externalId: 'relation-source', name: 'Observed source', qualifiedName: 'synthetic.source', type: 'table', metadata: {} },
     { externalId: 'relation-target', name: 'Observed target', qualifiedName: 'synthetic.target', type: 'table', metadata: {} }];
-  async function job() { const id = randomUUID(); await scoped(tx => tx.insertInto('jobs').values({ tenant_id: tenant, id, source_id: sourceId, actor_id: steward, status: 'running' }).execute()); return id; }
+  const { job } = await createManualScanFixture(t, { tenantId: tenant, sourceId, actorId: steward, fetch });
   const complete = (id: string, rows: typeof records, permissionFingerprint = 'wide', finished: boolean = true) => fetch(base + '/internal/jobs/' + id + '/complete', {
     method: 'POST', headers: workerHeaders, body: JSON.stringify({ observedAt: new Date().toISOString(), sourceVersion: 'synthetic-real-handler', permissionFingerprint, complete: finished, records: rows }) });
   await response(await complete(await job(), records), 200);

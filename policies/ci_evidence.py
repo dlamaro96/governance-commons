@@ -8,6 +8,7 @@ import re
 from pathlib import Path
 import shutil
 import sys
+from api_evidence import safe_report
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / ".local/ci-artifacts"
@@ -16,7 +17,7 @@ if any(DEST.iterdir()):
     raise SystemExit("Artifact staging must be empty; refusing to publish a mixed or stale directory")
 allowed_outcomes = {"success", "failure", "cancelled", "skipped"}
 outcomes = {}
-for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "browser"):
+for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "browser"):
     value = os.environ.get(f"GC_{step.upper()}_RESULT", "skipped")
     outcomes[step] = value if value in allowed_outcomes else "unknown"
 report = {
@@ -32,6 +33,25 @@ report = {
     "limitations": ["No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
                     "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification."],
 }
+# The API runner retains raw TAP privately. Only an independently revalidated,
+# exact-source report enters this staging directory; absence cannot turn a
+# claimed successful security step into verified behavior.
+api_source = ROOT / ".local/evidence/api-summary.json"
+api_report = None
+if api_source.is_file() and not api_source.is_symlink() and api_source.stat().st_size <= 4 * 1024 * 1024:
+    try:
+        api_report = safe_report(ROOT, json.loads(api_source.read_text()), os.environ.get("GITHUB_SHA"))
+    except (OSError, ValueError):
+        pass
+api_mismatch = bool(api_report and (outcomes["security"] == "skipped" or
+                    (outcomes["security"] == "success") != (api_report["outcome"] == "PASS")))
+if api_mismatch:
+    api_report = None
+report["api_evidence"] = "STEP_RESULT_MISMATCH" if api_mismatch else "VERIFIED_PASS" if api_report and api_report["outcome"] == "PASS" else "NOT_PASSED" if api_report else "UNAVAILABLE_OR_INVALID"
+if api_report:
+    (DEST / "api-summary.json").write_text(json.dumps(api_report, indent=2) + "\n")
+if outcomes["security"] == "success" and (not api_report or api_report["outcome"] != "PASS"):
+    report["outcome"] = "NOT_PASSED"
 def failure_locations(results, filename):
     """Only reviewed repository coordinates; never copy exception text/paths."""
     locations = set()
@@ -71,7 +91,7 @@ if source.is_file():
                     results = test.get("results", [])
                     status = test.get("status", "unknown")
                     filename = Path(str(spec.get("file", ""))).name
-                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts"}:
+                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts", "relation-migrations.spec.ts"}:
                         continue
                     line = spec.get("line")
                     report["tests"].append({"file": "tests/e2e/" + filename, "line": line if isinstance(line, int) else None,
@@ -82,7 +102,7 @@ if source.is_file():
 if outcomes["browser"] == "success":
     # A successful filtered run is not the mandatory browser gate. Require all
     # registered journeys, once each, as well as their successful outcomes.
-    expected = {f"tests/e2e/{name}.spec.ts": 2 for name in ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations")}
+    expected = {f"tests/e2e/{name}.spec.ts": 2 for name in ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations")}
     observed = {name: sum(test["file"] == name for test in report["tests"]) for name in expected}
     locations = {(test["file"], test["line"]) for test in report["tests"]}
     if observed != expected or len(locations) != sum(expected.values()) or any(test["status"] != "expected" or test["attempts"] != 1 for test in report["tests"]):

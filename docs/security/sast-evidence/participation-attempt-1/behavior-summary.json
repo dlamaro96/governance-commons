@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "timestamp": "2026-11-16T00:37:21.070851+00:00",
+  "commit": "6a3f53abc8e112c6656795219cf5c681b458254a",
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43781089046",
+  "profile": "core / GitHub-hosted Ubuntu 24.04 / synthetic PostgreSQL",
+  "steps": {
+    "bootstrap": "success",
+    "services": "success",
+    "object_store": "success",
+    "seed": "success",
+    "connectors": "success",
+    "security": "failure",
+    "model_upgrade": "skipped",
+    "asset_type_upgrade": "skipped",
+    "type_migration_upgrade": "skipped",
+    "relations_upgrade": "skipped",
+    "relation_participation_upgrade": "skipped",
+    "browser": "skipped"
+  },
+  "outcome": "NOT_PASSED",
+  "tests": [],
+  "screenshots": [],
+  "limitations": [
+    "No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
+    "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification."
+  ]
+}

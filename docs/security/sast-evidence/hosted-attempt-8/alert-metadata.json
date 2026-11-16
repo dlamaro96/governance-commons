@@ -1,0 +1,15 @@
+{
+  "alerts": [],
+  "completePagination": true,
+  "count": 0,
+  "limitations": [
+    "Default-branch alert inventory is distinct from the PR inventory containing two fixed historical alerts.",
+    "No later source or release qualification is inferred."
+  ],
+  "observedAt": "2026-11-16T00:13:19.567001+00:00",
+  "openCount": 0,
+  "purpose": "INDEPENDENT_DEFAULT_BRANCH_COMPLETE_ALL_STATE_ALERT_INVENTORY",
+  "rawResponseSha256": "531578b5f853f827b126f01de319cb3d9887ee514d5ad93e66324fd6e8087804",
+  "ref": "refs/heads/main",
+  "schemaVersion": 1
+}
