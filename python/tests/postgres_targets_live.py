@@ -6,6 +6,7 @@ credential, exception text, source records or connection string is printed.
 """
 from contextlib import contextmanager
 import hashlib
+import ipaddress
 import json
 import os
 from pathlib import Path
@@ -171,11 +172,16 @@ def execute(config, passed):
         passed.append(CHECKS[10])
         # Real libpq client, real Docker DNS and a real peer that receives an
         # SSLRequest but never acknowledges it. No resolver/driver replacement.
+        worker_address = ipaddress.IPv4Address(config['workerAddress'])
+        require(str(worker_address) == config['workerAddress'] and not
+                (worker_address.is_unspecified or worker_address.is_loopback
+                 or worker_address.is_link_local or worker_address.is_multicast
+                 or worker_address.is_reserved))
         listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         stop = threading.Event()
         ssl_request = []
         worker_errors = []
-        listener.bind(('0.0.0.0',0))
+        listener.bind((str(worker_address),0))
         listener.listen(1)
         listener.settimeout(.2)
         port = listener.getsockname()[1]

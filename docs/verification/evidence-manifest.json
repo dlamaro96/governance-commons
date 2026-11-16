@@ -1450,6 +1450,15 @@
         "verified_files": 132,
         "evidence_sha256": "4abc7feadb6455a97dfc3bbc8b6669ca2a11990c4a5e94d3ce82c32fb6b82ee5"
       }
+    },
+    {
+      "path": "docs/verification/product-search-postgres-local.json",
+      "scope": "product-search-postgres-local",
+      "source_binding": {
+        "base_commit": "0c7982f83cd9c66c377e7eb804e6ca5d70205d18",
+        "method": "Recorded dirty-worktree source hashes; scoped executions only.",
+        "evidence_sha256": "33261438f5072b40a07eaa5ffe01f5cf8d6c5cc8838e4e158b7fe4f2e7c61606"
+      }
     }
   ],
   "limitations": [

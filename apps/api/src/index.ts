@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from 'fastify';
 import cookie from '@fastify/cookie';import helmet from '@fastify/helmet';import rateLimit from '@fastify/rate-limit';import swagger from '@fastify/swagger';import fastifyStatic from '@fastify/static';
-import {Type} from '@sinclair/typebox';import {randomUUID,createHmac} from 'node:crypto';import {existsSync} from 'node:fs';import {resolve} from 'node:path';
+import {Type} from '@sinclair/typebox';import {randomUUID} from 'node:crypto';import {existsSync} from 'node:fs';import {resolve} from 'node:path';
 import {db,scope,sql,lockTenantLedger} from '../../../packages/db/src/index.ts';
 import {Problem,requirePermission,type Principal} from '../../../packages/authz/src/index.ts';
 import {Id,SourceInput,SourceListInput,AssetEdit,ScanCompletion} from '../../../packages/contracts/src/index.ts';
 import {sourceStorage,sourceConfiguration,mayReconcileAbsence,validateSourceInput} from '../../../packages/connectors/src/sources.ts';
 import {listSources,type SourceListQuery} from '../../../packages/connectors/src/source-list.ts';
 import {connectorInventory} from '../../../packages/connectors/src/capabilities.ts';
-import {authenticate,installAuth,siteTenant,random,publicUrl,equal} from './security.ts';
+import {authenticate,installAuth,siteTenant,random,publicUrl} from './security.ts';
 import {assetView,sourceView,jobView,auditView,visibleAssets,visibleAudit,record,once} from './repository.ts';
-import {searchRequest,index,startProjector} from './search.ts';
+import {startProjector} from './search.ts';
+import {searchAssets,type AssetSearchQuery} from './asset-search.ts';
 import {readAuditIntegrity} from './audit-reader.ts';
 import {installModels} from './models.ts';
 import {installAssetTypes} from './asset-types.ts';
@@ -48,19 +49,8 @@ app.get('/api/v1/me',async req=>{const a=await authenticate(req);return {user:{i
 app.post('/api/v1/session/tenant',{schema:{body:Type.Object({tenantId:Id},{additionalProperties:false})}},async req=>{const a=await authenticate(req),tenant=(req.body as any).tenantId;if(!a.tenants.some(x=>x.id===tenant))throw new Problem(403,'TENANT_DENIED','Organization access is not permitted.');await db.updateTable('sessions').set({tenant_id:tenant,csrf:random()}).where('id_hash','=',a.sessionHash).execute();return {changed:true};});
 app.get('/api/v1/openapi',async req=>{await authenticate(req);return app.swagger();});
 app.get('/api/v1/members',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'catalog:write');return scope(p.tenantId,p.id,async tx=>({items:await tx.selectFrom('memberships').innerJoin('identities','identities.id','memberships.identity_id').select(['identities.id','identities.name','memberships.role']).where('memberships.active','=',true).where('identities.active','=',true).where('memberships.tenant_id','=',p.tenantId).execute()}));});
-function cursorDecode(input:string|undefined,binding:string){if(!input)return 0;try{const [payload,signature]=input.split('.');const expected=createHmac('sha256',process.env.SESSION_KEY??'').update(payload).digest('base64url');if(!equal(signature,expected))throw Error();const data=JSON.parse(Buffer.from(payload,'base64url').toString());if(data.binding!==binding||!Number.isInteger(data.offset)||data.offset<0||data.offset>9000)throw Error();return data.offset;}catch{throw new Problem(400,'CURSOR_INVALID','This page cursor is invalid or belongs to another search.');}}
-function cursorEncode(offset:number,binding:string){const payload=Buffer.from(JSON.stringify({offset,binding})).toString('base64url');return payload+'.'+createHmac('sha256',process.env.SESSION_KEY??'').update(payload).digest('base64url');}
 app.get('/api/v1/assets',{schema:{querystring:Type.Object({q:Type.Optional(Type.String({maxLength:200})),type:Type.Optional(Type.String({maxLength:64})),limit:Type.Optional(Type.Integer({minimum:1,maximum:100})),cursor:Type.Optional(Type.String({maxLength:2048}))},{additionalProperties:false})}},async req=>{
- const {principal:p}=await authenticate(req);requirePermission(p,'catalog:read');const q=req.query as {q?:string;type?:string;limit?:number;cursor?:string};const binding=JSON.stringify([p.tenantId,p.id,q.q??'',q.type??'',q.limit??50]),offset=cursorDecode(q.cursor,binding);
- return scope(p.tenantId,p.id,async tx=>{
-  const permitted=await visibleAssets(tx,p).where('assets.status','=','active').limit(10001).execute();
-  if(permitted.length>10000)throw new Problem(422,'SEARCH_PROFILE_LIMIT','This development search profile supports at most 10,000 authorized assets.');
-  if(!permitted.length)return {items:[],total:0,nextCursor:null,facets:[]};
-  const filter:any[]=[{term:{tenantId:p.tenantId}},{terms:{id:permitted.map(a=>a.id)}},{term:{status:'active'}}];if(q.type)filter.push({term:{type:q.type}});
-  const results=await searchRequest('/'+index+'/_search',{track_total_hits:true,from:offset,size:q.limit??50,query:{bool:{filter,must:q.q?[{multi_match:{query:q.q,fields:['name^3','qualifiedName^2','description'],fuzziness:'AUTO'}}]:[{match_all:{}}]}},sort:[{'name.exact':'asc'},{id:'asc'}],aggs:{types:{terms:{field:'type',size:30}}}});
-  const map=new Map(permitted.map(a=>[a.id,a]));const items=results.hits.hits.map((h:any)=>map.get(h._id)).filter(Boolean).map(assetView),total=results.hits.total.value;
-  return {items,total,nextCursor:offset+items.length<total?cursorEncode(offset+items.length,binding):null,facets:results.aggregations.types.buckets.map((b:any)=>({type:b.key,count:b.doc_count}))};
- });
+ return searchAssets(await authenticate(req),req.query as AssetSearchQuery);
 });
 app.get('/api/v1/assets/:id',{schema:params},async req=>{
  const {principal:p}=await authenticate(req);requirePermission(p,'catalog:read');const {id}=req.params as any;

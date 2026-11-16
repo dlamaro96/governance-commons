@@ -339,8 +339,25 @@ def _open_file(path, resources):
     return fd
 
 
+def _read_policy_bytes(fd):
+    chunks, size = [], 0
+    while size <= MAX_BYTES:
+        block = os.read(fd, min(65536, MAX_BYTES + 1 - size))
+        if not block:
+            break
+        size += len(block)
+        chunks.append(block)
+    return b"".join(chunks)
+
+
 def load_policy(path: str | os.PathLike) -> TargetPolicy:
-    """Read one atomic old/new file snapshot; no chmod, cache or fallback path."""
+    """Verify one descriptor snapshot; concurrent rotation may safely refuse.
+
+    Both reads are bounded. Matching bytes supplement metadata checks because
+    equal-length in-place writes can share filesystem timestamps. The operator
+    must still publish by atomic replacement; repeated reads do not provide an
+    immutable snapshot against an adversarial writer changing the open inode.
+    """
     try:
         with _Resources() as resources:
             fd = _open_file(path, resources)
@@ -349,16 +366,14 @@ def load_policy(path: str | os.PathLike) -> TargetPolicy:
                     or before.st_uid not in (0, os.geteuid()) or before.st_nlink != 1
                     or not 0 < before.st_size <= MAX_BYTES):
                 _fail("SOURCE_TARGET_POLICY_UNAVAILABLE")
-            chunks, size = [], 0
-            while size <= MAX_BYTES:
-                block = os.read(fd, min(65536, MAX_BYTES + 1 - size))
-                if not block:
-                    break
-                size += len(block)
-                chunks.append(block)
-            if size != before.st_size or _stamp(before) != _stamp(os.fstat(fd)):
+            raw = _read_policy_bytes(fd)
+            if len(raw) != before.st_size or _stamp(before) != _stamp(os.fstat(fd)):
                 _fail("SOURCE_TARGET_POLICY_UNAVAILABLE")
-        return parse_policy(b"".join(chunks))
+            os.lseek(fd, 0, os.SEEK_SET)
+            verified = _read_policy_bytes(fd)
+            if raw != verified or _stamp(before) != _stamp(os.fstat(fd)):
+                _fail("SOURCE_TARGET_POLICY_UNAVAILABLE")
+        return parse_policy(raw)
     except (OSError, TypeError, ValueError):
         raise TargetPolicyError("SOURCE_TARGET_POLICY_UNAVAILABLE") from None
 

@@ -52,27 +52,27 @@ test('INT-001/003: editable PostgreSQL configuration survives connector switchin
   const dialog=page.getByRole('dialog'),connector=dialog.getByRole('combobox',{name:/^Connector/});
   await expect(dialog).toHaveAccessibleName('Connect PostgreSQL');await expect(connector).toHaveValue('postgresql');
   for(const [label,value] of [['Host','source-postgres'],['Port','5432'],['Database','harbor'],['Schema','public'],['Credential reference','demo-postgres']])
-    await expect(dialog.getByLabel(label!,{exact:true})).toHaveValue(value!);
+    await expect(dialog.getByLabel(label === 'Credential reference' ? /^Credential reference/ : label!,{exact:true})).toHaveValue(value!);
   await expect(dialog.locator('input[type="password"]')).toHaveCount(0);
   const register=dialog.getByRole('button',{name:'Register source',exact:true});await expect(register).toBeDisabled();
   await dialog.getByLabel(/^Connection name/).fill(name);
   for(const [label,value] of [['Host',input.host],['Database',input.database],['Schema',input.schema],['Credential reference',input.secretRef]]){
-    await expect(dialog.getByLabel(label!,{exact:true})).toBeEditable();await dialog.getByLabel(label!,{exact:true}).fill(value!);
+    await expect(dialog.getByLabel(label === 'Credential reference' ? /^Credential reference/ : label!,{exact:true})).toBeEditable();await dialog.getByLabel(label === 'Credential reference' ? /^Credential reference/ : label!,{exact:true}).fill(value!);
   }
   await dialog.getByLabel('Port',{exact:true}).fill('0');await expect(register).toBeDisabled();
   await dialog.getByLabel('Port',{exact:true}).fill(String(input.port));await expect(register).toBeEnabled();
   await connector.selectOption('unity-catalog');await expect(dialog).toHaveAccessibleName('Connect Unity Catalog');
-  await expect(dialog.getByLabel('Schema',{exact:true})).toHaveValue('');await expect(dialog.getByLabel('Credential reference',{exact:true})).toHaveValue('');
-  await dialog.getByLabel('Workspace URL',{exact:true}).fill('https://synthetic.cloud.databricks.com');
+  await expect(dialog.getByLabel('Schema',{exact:true})).toHaveValue('');await expect(dialog.getByLabel(/^Credential reference/)).toHaveValue('');
+  await dialog.getByLabel(/^Workspace URL/).fill('https://synthetic.cloud.databricks.com');
   await dialog.getByLabel('Catalog',{exact:true}).fill('independent_catalog');
   await dialog.getByLabel('Schema',{exact:true}).fill('independent_schema');
-  await dialog.getByLabel('Credential reference',{exact:true}).fill('independent-uc-reference');
+  await dialog.getByLabel(/^Credential reference/).fill('independent-uc-reference');
   await connector.selectOption('postgresql');await expect(dialog).toHaveAccessibleName('Connect PostgreSQL');
   for(const [label,value] of [['Host',input.host],['Port',String(input.port)],['Database',input.database],['Schema',input.schema],['Credential reference',input.secretRef]])
-    await expect(dialog.getByLabel(label!,{exact:true})).toHaveValue(value!);
+    await expect(dialog.getByLabel(label === 'Credential reference' ? /^Credential reference/ : label!,{exact:true})).toHaveValue(value!);
   await connector.selectOption('unity-catalog');
   await expect(dialog.getByLabel('Schema',{exact:true})).toHaveValue('independent_schema');
-  await expect(dialog.getByLabel('Credential reference',{exact:true})).toHaveValue('independent-uc-reference');
+  await expect(dialog.getByLabel(/^Credential reference/)).toHaveValue('independent-uc-reference');
   await connector.selectOption('postgresql');await capture(page,'form-en',1440);
   await dialog.getByRole('button',{name:'Cancel',exact:true}).click();await language(page,'ar');
   await page.getByRole('button',{name:'ربط مصدر',exact:true}).first().click();

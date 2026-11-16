@@ -8126,7 +8126,10 @@
         "apps/api/src",
         "packages/db/migrations",
         "apps/web/src/pages",
-        "tests/integration/foundation.test.ts"
+        "tests/integration/foundation.test.ts",
+        "apps/api/src/asset-search.ts",
+        "tests/unit/asset-search.test.ts",
+        "tests/integration/asset-search.test.ts"
       ],
       "test_ids": [],
       "verification": {
@@ -8160,7 +8163,10 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
       ],
       "owner": "governance-commons maintainers",
-      "milestone": "M2"
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/product-search-postgres-local.json"
+      ]
     },
     {
       "id": "CAT-005.01",
@@ -25372,7 +25378,10 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
       ],
       "owner": "governance-commons maintainers",
-      "milestone": "M8"
+      "milestone": "M8",
+      "partial_evidence": [
+        "docs/verification/product-search-postgres-local.json"
+      ]
     },
     {
       "id": "INT-002",
@@ -27247,7 +27256,10 @@
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M8",
-      "public_comparison_baseline": "Native catalog and lineage source in the published matrix"
+      "public_comparison_baseline": "Native catalog and lineage source in the published matrix",
+      "partial_evidence": [
+        "docs/verification/product-search-postgres-local.json"
+      ]
     },
     {
       "id": "CX-001.SRC-01",
@@ -54302,7 +54314,8 @@
         "docs/verification/business-domains-upgrade-final-source.json",
         "docs/verification/business-domains-asset-scope-correction.json",
         "docs/verification/business-domains-api.json",
-        "docs/verification/business-domains-seed-runtime.json"
+        "docs/verification/business-domains-seed-runtime.json",
+        "docs/verification/product-search-postgres-local.json"
       ]
     },
     {

@@ -129,6 +129,151 @@ class SecretProviderTest(unittest.TestCase):
         with patch.object(provider.os, "read", side_effect=read):
             self.denied("SECRET_PROVIDER_UNAVAILABLE")
 
+    def test_same_stamp_same_length_rewrites_refused_even_when_json_equivalent(self):
+        original = self.path.read_bytes()
+        equivalent = original.replace(b'"connectorId": ', b'"connectorId":\t')
+        self.assertEqual(json.loads(original), json.loads(equivalent))
+        for replacement in (original.replace(b"synthetic-old-credential", b"synthetic-new-credential"), equivalent):
+            with self.subTest(equivalent=replacement == equivalent):
+                self.assertEqual(len(original), len(replacement))
+                self.path.write_bytes(original)
+                before, original_read, changed = self.path.stat(), os.read, False
+
+                def read(fd, count):
+                    nonlocal changed
+                    data = original_read(fd, count)
+                    if data and not changed:
+                        changed = True
+                        self.path.write_bytes(replacement)
+                    return data
+
+                # Simulate an indistinguishable filesystem metadata timestamp;
+                # bytes still come from real reads and writes of the same inode.
+                with patch.object(provider.os, "fstat", return_value=before), patch.object(provider.os, "read", side_effect=read):
+                    self.denied("SECRET_PROVIDER_UNAVAILABLE")
+                self.assertTrue(changed)
+
+    def test_same_stamp_torn_valid_json_cannot_mix_tenant_and_credential(self):
+        original = self.path.read_bytes().replace(b'"clientSecret":', b" " * 65536 + b'"clientSecret":')
+        replacement = original.replace(b"harbor", b"summit").replace(b"synthetic-old-credential", b"synthetic-new-credential")
+        self.assertEqual(len(original), len(replacement))
+        self.path.write_bytes(original)
+        before, original_read = self.path.stat(), os.read
+        first_pass, changed, first_complete = [], False, False
+
+        def read(fd, count):
+            nonlocal changed, first_complete
+            data = original_read(fd, count)
+            if not first_complete:
+                first_pass.append(data)
+                first_complete = not data
+            if data and not changed:
+                changed = True
+                self.path.write_bytes(replacement)
+            return data
+
+        with patch.object(provider.os, "fstat", return_value=before), patch.object(provider.os, "read", side_effect=read):
+            self.denied("SECRET_PROVIDER_UNAVAILABLE")
+        mixed = json.loads(b"".join(first_pass))["selected"]
+        self.assertEqual(mixed["tenantIds"], ["harbor"])
+        self.assertEqual(mixed["clientSecret"], "synthetic-new-credential")
+        self.denied("SOURCE_SCOPE_DENIED")
+        self.assertEqual(self.resolve(tenant="summit")["clientSecret"], "synthetic-new-credential")
+
+    def test_verification_growth_is_bounded_and_refused(self):
+        before, original_read, original_seek = self.path.stat(), os.read, os.lseek
+        verifying, verification_bytes = False, 0
+
+        def seek(fd, offset, whence):
+            nonlocal verifying
+            result = original_seek(fd, offset, whence)
+            verifying = True
+            self.path.write_bytes(b"x" * (provider.MAX_BYTES + 100))
+            return result
+
+        def read(fd, count):
+            nonlocal verification_bytes
+            data = original_read(fd, count)
+            if verifying:
+                verification_bytes += len(data)
+            return data
+
+        with patch.object(provider.os, "fstat", return_value=before), patch.object(provider.os, "lseek", side_effect=seek), patch.object(provider.os, "read", side_effect=read):
+            self.denied("SECRET_PROVIDER_UNAVAILABLE")
+        self.assertEqual(verification_bytes, provider.MAX_BYTES + 1)
+
+    def test_verification_metadata_change_refuses_identical_bytes(self):
+        original_read, original_seek, verifying, changed = os.read, os.lseek, False, False
+
+        def seek(fd, offset, whence):
+            nonlocal verifying
+            verifying = True
+            return original_seek(fd, offset, whence)
+
+        def read(fd, count):
+            nonlocal changed
+            data = original_read(fd, count)
+            if verifying and data and not changed:
+                changed = True
+                self.path.chmod(0o400)
+            return data
+
+        with patch.object(provider.os, "lseek", side_effect=seek), patch.object(provider.os, "read", side_effect=read):
+            self.denied("SECRET_PROVIDER_UNAVAILABLE")
+        self.assertTrue(changed)
+        self.assertEqual(self.resolve(), self.entry)
+
+    def test_in_flight_atomic_replacement_refuses_then_next_call_loads_new_file(self):
+        replacement = self.path.with_suffix(".new")
+        replacement.write_bytes(self.path.read_bytes().replace(b"synthetic-old-credential", b"synthetic-new-credential"))
+        replacement.chmod(0o600)
+        original_read, replaced = os.read, False
+
+        def read(fd, count):
+            nonlocal replaced
+            data = original_read(fd, count)
+            if data and not replaced:
+                replaced = True
+                os.replace(replacement, self.path)
+            return data
+
+        with patch.object(provider.os, "read", side_effect=read):
+            self.denied("SECRET_PROVIDER_UNAVAILABLE")
+        self.assertTrue(replaced)
+        self.assertEqual(self.resolve()["clientSecret"], "synthetic-new-credential")
+
+    def test_unlinked_or_multiple_link_provider_is_not_admitted(self):
+        original_open = os.open
+
+        def open_then_unlink(*args, **kwargs):
+            fd = original_open(*args, **kwargs)
+            self.path.unlink()
+            return fd
+
+        with patch.object(provider.os, "open", side_effect=open_then_unlink):
+            self.denied("SECRET_PROVIDER_UNAVAILABLE")
+        self.write({"selected": self.entry})
+        alias = self.path.with_suffix(".hardlink")
+        os.link(self.path, alias)
+        self.denied("SECRET_PROVIDER_UNAVAILABLE")
+        alias.unlink()
+        self.assertEqual(self.resolve(), self.entry)
+
+    def test_maximum_size_snapshot_is_bounded_on_both_reads(self):
+        raw = self.path.read_bytes()
+        self.path.write_bytes(raw + b" " * (provider.MAX_BYTES - len(raw)))
+        original_read, total = os.read, 0
+
+        def read(fd, count):
+            nonlocal total
+            data = original_read(fd, count)
+            total += len(data)
+            return data
+
+        with patch.object(provider.os, "read", side_effect=read):
+            self.assertEqual(self.resolve(), self.entry)
+        self.assertEqual(total, 2 * provider.MAX_BYTES)
+
     def test_errors_do_not_expose_path_or_underlying_io_details(self):
         with patch.object(provider.os, "open", side_effect=PermissionError("synthetic-private-path-and-value")):
             with self.assertRaises(ScanFailure) as caught:

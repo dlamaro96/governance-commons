@@ -1,5 +1,11 @@
 # Current state — 2026-11-16
 
+## Product checkpoint — 2026-11-16T14:56Z
+
+Product first; private reports, cost estimates and presentation polish remain deferred. Bounded catalog search now passes9 real PostgreSQL/OpenSearch/API cases, including10,005 assets, all9,101 paginated matches, canonical ACL/count/facet isolation and revoked sessions. Dedicated nonlogin test tenants avoid changing demo authority; repeated owner preparation validates existing state without resetting it. Host checks pass551 units, root/web types and174 focused Python policy/collector/provider cases on386 stable source/config files. PostgreSQL worker passes149 cases plus real metadata conformance; the corrected isolated TLS gate passes12 native checks. See `../verification/product-search-postgres-local.json`.
+
+The current search qualification used mounted source; final baked API/browser and fresh hosted scans remain next. Existing hosted failures are retained. SQL001–014 remain immutable; content authority remains inactive. Continue the complete programme, with glossary authoring/approval as the next product workflow. No whole-profile or release completion is claimed.
+
 ## Product checkpoint — 2026-11-16T14:12Z
 
 Product implementation takes priority; private reports and presentation work remain deferred. The next configurable PostgreSQL increment passes533 host units, root/web types,134 Python cases (three live-source cases require the Compose gate), and12 real isolated TLS/metadata checks with exact owned-resource cleanup. The native TLS attempt3 is retained at `.local/evidence/postgres-targets-20261116T140802-861b8925cfce/report.json`; earlier launch and disk-admission failures remain unchanged. Generic registration/UI and final baked images still require runtime qualification.

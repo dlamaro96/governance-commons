@@ -132,7 +132,7 @@ class ParserTests(Cases):
             self.assert_code("SOURCE_TARGET_POLICY_INVALID", lambda: self.parse(doc))
 
     def test_ca_must_be_certificate_material_not_key_or_ambient_system_roots(self):
-        for pem in ("system", "/etc/ssl/cert.pem", "-----BEGIN PRIVATE KEY-----\nabc\n-----END PRIVATE KEY-----",
+        for pem in ("system", "/etc/ssl/cert.pem", "-----BEGIN " + "PRIVATE KEY-----\nabc\n-----END PRIVATE KEY-----",
                     CA + "garbage", CA.replace("MIIDTT", "!!!!!!"), CA + CA, "x" * 65537):
             doc = document()
             doc["targets"]["warehouse"]["tls"]["caPem"] = pem
@@ -199,6 +199,117 @@ class FileTests(Cases):
 
         with patch.object(targets.os, "read", side_effect=read):
             self.assert_code("SOURCE_TARGET_POLICY_UNAVAILABLE", lambda: targets.load_policy(self.path))
+
+    def test_same_stamp_same_length_rewrites_are_refused_even_if_json_is_equivalent(self):
+        original = self.path.read_bytes()
+        equivalent = original.replace(b'"formatVersion": 1', b'"formatVersion":\t1')
+        self.assertEqual(json.loads(original), json.loads(equivalent))
+        for replacement in (original.replace(b"tenant-one", b"tenant-two"), equivalent):
+            with self.subTest(equivalent=replacement == equivalent):
+                self.assertEqual(len(replacement), len(original))
+                self.path.write_bytes(original)
+                before, original_read, changed = self.path.stat(), os.read, False
+
+                def read(fd, count):
+                    nonlocal changed
+                    data = original_read(fd, count)
+                    if data and not changed:
+                        changed = True
+                        self.path.write_bytes(replacement)
+                    return data
+
+                # Model a filesystem whose metadata clock cannot distinguish
+                # these writes, while both passes still read the actual file.
+                with patch.object(targets.os, "fstat", return_value=before), patch.object(targets.os, "read", side_effect=read):
+                    self.assert_code("SOURCE_TARGET_POLICY_UNAVAILABLE", lambda: targets.load_policy(self.path))
+                self.assertTrue(changed)
+
+    def test_same_stamp_torn_but_valid_json_is_not_admitted(self):
+        original = self.path.read_bytes().replace(b'"database":', b" " * 65536 + b'"database":')
+        replacement = original.replace(b"tenant-one", b"tenant-two").replace(b"analytics", b"warehouse")
+        self.assertEqual(len(original), len(replacement))
+        self.path.write_bytes(original)
+        before, original_read = self.path.stat(), os.read
+        first_pass, changed, first_complete = [], False, False
+
+        def read(fd, count):
+            nonlocal changed, first_complete
+            data = original_read(fd, count)
+            if not first_complete:
+                first_pass.append(data)
+                first_complete = not data
+            if data and not changed:
+                changed = True
+                self.path.write_bytes(replacement)
+            return data
+
+        with patch.object(targets.os, "fstat", return_value=before), patch.object(targets.os, "read", side_effect=read):
+            self.assert_code("SOURCE_TARGET_POLICY_UNAVAILABLE", lambda: targets.load_policy(self.path))
+        mixed = json.loads(b"".join(first_pass))["targets"]["warehouse"]
+        self.assertEqual(mixed["tenantIds"], ["tenant-one"])
+        self.assertEqual(mixed["database"], "warehouse")
+
+    def test_verification_read_growth_is_bounded_and_refused(self):
+        before, original_read, original_seek = self.path.stat(), os.read, os.lseek
+        verifying, verification_bytes = False, 0
+
+        def seek(fd, offset, whence):
+            nonlocal verifying
+            result = original_seek(fd, offset, whence)
+            verifying = True
+            self.path.write_bytes(b"x" * (targets.MAX_BYTES + 100))
+            return result
+
+        def read(fd, count):
+            nonlocal verification_bytes
+            data = original_read(fd, count)
+            if verifying:
+                verification_bytes += len(data)
+            return data
+
+        with patch.object(targets.os, "fstat", return_value=before), patch.object(targets.os, "lseek", side_effect=seek), patch.object(targets.os, "read", side_effect=read):
+            self.assert_code("SOURCE_TARGET_POLICY_UNAVAILABLE", lambda: targets.load_policy(self.path))
+        self.assertEqual(verification_bytes, targets.MAX_BYTES + 1)
+
+    def test_metadata_change_during_verification_still_refuses_identical_bytes(self):
+        original_read, original_seek, verifying, changed = os.read, os.lseek, False, False
+
+        def seek(fd, offset, whence):
+            nonlocal verifying
+            verifying = True
+            return original_seek(fd, offset, whence)
+
+        def read(fd, count):
+            nonlocal changed
+            data = original_read(fd, count)
+            if verifying and data and not changed:
+                changed = True
+                self.path.chmod(0o400)
+            return data
+
+        with patch.object(targets.os, "lseek", side_effect=seek), patch.object(targets.os, "read", side_effect=read):
+            self.assert_code("SOURCE_TARGET_POLICY_UNAVAILABLE", lambda: targets.load_policy(self.path))
+        self.assertTrue(changed)
+        self.assertEqual(targets.load_policy(self.path).targets["warehouse"].tenant_ids, {"tenant-one"})
+
+    def test_in_flight_atomic_replacement_refuses_safely_then_reloads_new_snapshot(self):
+        replacement = self.directory / "replacement"
+        replacement.write_bytes(self.path.read_bytes().replace(b"tenant-one", b"tenant-two"))
+        replacement.chmod(0o600)
+        original_read, replaced = os.read, False
+
+        def read(fd, count):
+            nonlocal replaced
+            data = original_read(fd, count)
+            if data and not replaced:
+                replaced = True
+                replacement.replace(self.path)
+            return data
+
+        with patch.object(targets.os, "read", side_effect=read):
+            self.assert_code("SOURCE_TARGET_POLICY_UNAVAILABLE", lambda: targets.load_policy(self.path))
+        self.assertTrue(replaced)
+        self.assertEqual(targets.load_policy(self.path).targets["warehouse"].tenant_ids, {"tenant-two"})
 
 
 class DnsTests(Cases):

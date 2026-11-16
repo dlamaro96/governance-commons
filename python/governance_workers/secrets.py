@@ -73,8 +73,19 @@ def _parse(raw):
 
 
 def _stamp(info):
-    return (info.st_dev, info.st_ino, info.st_mode, info.st_uid, info.st_size,
+    return (info.st_dev, info.st_ino, info.st_mode, info.st_uid, info.st_nlink, info.st_size,
             info.st_mtime_ns, info.st_ctime_ns)
+
+
+def _read_bytes(fd):
+    chunks, size = [], 0
+    while size <= MAX_BYTES:
+        block = os.read(fd, min(65536, MAX_BYTES + 1 - size))
+        if not block:
+            break
+        size += len(block)
+        chunks.append(block)
+    return b"".join(chunks)
 
 
 def _read(path):
@@ -83,19 +94,19 @@ def _read(path):
     try:
         before = os.fstat(fd)
         if (not stat.S_ISREG(before.st_mode) or before.st_mode & 0o077
-                or before.st_uid not in (0, os.geteuid())
+                or before.st_uid not in (0, os.geteuid()) or before.st_nlink != 1
                 or not 0 < before.st_size <= MAX_BYTES):
             _fail("SECRET_PROVIDER_UNAVAILABLE")
-        chunks, size = [], 0
-        while size <= MAX_BYTES:
-            block = os.read(fd, min(65536, MAX_BYTES + 1 - size))
-            if not block:
-                break
-            size += len(block)
-            chunks.append(block)
-        if size != before.st_size or _stamp(before) != _stamp(os.fstat(fd)):
+        raw = _read_bytes(fd)
+        if len(raw) != before.st_size or _stamp(before) != _stamp(os.fstat(fd)):
             _fail("SECRET_PROVIDER_UNAVAILABLE")
-        return b"".join(chunks)
+        # Equal-length writes can share filesystem timestamps. Compare two
+        # bounded reads of the same descriptor as well as strict metadata.
+        os.lseek(fd, 0, os.SEEK_SET)
+        verified = _read_bytes(fd)
+        if raw != verified or _stamp(before) != _stamp(os.fstat(fd)):
+            _fail("SECRET_PROVIDER_UNAVAILABLE")
+        return raw
     finally:
         os.close(fd)
 
@@ -106,6 +117,9 @@ def resolve(path, ref, tenant_id, connector_id):
     The operator owns the configured path. No cache, chmod, fallback reference,
     environment lookup or secret mutation is performed. A missing connectorId
     denotes PostgreSQL only, preserving the original local provider format.
+    Operators must publish by atomic replacement. An in-flight rotation can
+    safely refuse; the next call opens the replacement. Two matching reads are
+    not an immutable snapshot against an adversarial writer of the open inode.
     """
     if not isinstance(ref, str) or not REFERENCE.fullmatch(ref):
         _fail("SECRET_REFERENCE_DENIED")

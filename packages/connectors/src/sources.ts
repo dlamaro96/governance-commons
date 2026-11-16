@@ -1,11 +1,21 @@
 // SPDX-License-Identifier: Apache-2.0
 import type { Static } from '@sinclair/typebox';
-import { isIP } from 'node:net';
+import { BlockList, isIP } from 'node:net';
 import { Value } from '@sinclair/typebox/value';
 import { SourceInput } from '../../contracts/src/index.ts';
 import { Problem } from '../../authz/src/index.ts';
 
 export type SourceConfiguration = Static<typeof SourceInput>;
+
+// Registration rejects literal local/metadata endpoints before persistence.
+// DNS and actual destination authorization remain the worker policy's job.
+const forbiddenPostgresAddresses = new BlockList();
+for (const [network, prefix] of [['0.0.0.0',8],['127.0.0.0',8],['169.254.0.0',16],['224.0.0.0',4],['240.0.0.0',4]] as const)
+  forbiddenPostgresAddresses.addSubnet(network,prefix,'ipv4');
+for (const address of ['168.63.129.16','100.100.100.200']) forbiddenPostgresAddresses.addAddress(address,'ipv4');
+for (const [network, prefix] of [['::',128],['::1',128],['fe80::',10],['fec0::',10],['ff00::',8],['2002::',16],['2001::',32]] as const)
+  forbiddenPostgresAddresses.addSubnet(network,prefix,'ipv6');
+for (const address of ['fd00:ec2::254','fd20:ce::254']) forbiddenPostgresAddresses.addAddress(address,'ipv6');
 
 /** Admit one canonical destination, never a libpq URI, socket or host list.
  * Deployment-owned worker policy separately authorizes tenant, DNS addresses,
@@ -13,8 +23,9 @@ export type SourceConfiguration = Static<typeof SourceInput>;
  */
 function postgresHost(host: string) {
   const family = isIP(host);
-  if (family === 4) return true;
-  if (family === 6) return !host.includes('%') && new URL(`https://[${host}]`).hostname === `[${host}]`;
+  if (family === 4) return !forbiddenPostgresAddresses.check(host,'ipv4');
+  if (family === 6) return !host.includes('%') && !host.startsWith('::ffff:') && new URL(`https://[${host}]`).hostname === `[${host}]`
+    && !forbiddenPostgresAddresses.check(host,'ipv6');
   // Reject legacy numeric IPv4 spellings, even when they resemble DNS labels.
   if (/^[0-9.]+$/.test(host) || /^(?:0x[0-9a-f]+|[0-9]+)(?:\.(?:0x[0-9a-f]+|[0-9]+))*$/.test(host)) return false;
   return host.split('.').every(label => /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(label));
