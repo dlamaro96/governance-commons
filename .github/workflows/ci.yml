@@ -39,7 +39,7 @@ jobs:
         run: python3 policies/check_dependencies.py --write
       - name: Preserve the executed dependency inventory
         if: always() && steps.dependency_license.outcome != 'skipped'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: dependency-inventory-${{ github.sha }}
           path: docs/legal/dependency-inventory.json
@@ -74,7 +74,7 @@ jobs:
         run: python3 policies/scan_secrets.py --install --output .local/evidence/secret-scan.json
       - name: Preserve redacted scanner summary
         if: always() && steps.secret_scan.outcome != 'skipped'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: secret-scan-${{ github.sha }}
           path: .local/evidence/secret-scan.json
@@ -187,7 +187,7 @@ jobs:
         run: python3 policies/ci_evidence.py
       - name: Preserve only safe behavior summary and catalog screenshots
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: behavior-${{ github.sha }}
           path: .local/ci-artifacts/
