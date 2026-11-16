@@ -8406,9 +8406,15 @@
         "Suggestions do not become approved classifications unless an explicit rule or reviewer approves them."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/domain/src/classification-service.ts",
+        "packages/db/migrations/021_classification_review.sql",
+        "apps/web/src/classification/AssetClassification.tsx"
+      ],
+      "test_ids": [
+        "tests/e2e/classification.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -8436,9 +8442,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "Scoped local implementation and regression checks pass; the compound capability, additional source families and release qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/product-lineage-classification-local.json"
+      ]
     },
     {
       "id": "CAT-007.01",
@@ -8472,9 +8483,15 @@
         "Suggestions do not become approved classifications unless an explicit rule or reviewer approves them."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/domain/src/classification-service.ts",
+        "packages/db/migrations/021_classification_review.sql",
+        "apps/web/src/classification/AssetClassification.tsx"
+      ],
+      "test_ids": [
+        "tests/e2e/classification.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -8502,9 +8519,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "Scoped local implementation and regression checks pass; the compound capability, additional source families and release qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/product-lineage-classification-local.json"
+      ]
     },
     {
       "id": "CAT-007.02",
@@ -8538,9 +8560,15 @@
         "Suggestions do not become approved classifications unless an explicit rule or reviewer approves them."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/domain/src/classification-service.ts",
+        "packages/db/migrations/021_classification_review.sql",
+        "apps/web/src/classification/AssetClassification.tsx"
+      ],
+      "test_ids": [
+        "tests/e2e/classification.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -8568,9 +8596,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "Scoped local implementation and regression checks pass; the compound capability, additional source families and release qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/product-lineage-classification-local.json"
+      ]
     },
     {
       "id": "CAT-008",
@@ -13671,9 +13704,17 @@
         "No lineage edge exists without a reproducible source or explicit manual assertion."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/domain/src/lineage-read.ts",
+        "packages/domain/src/lineage-ingest.ts",
+        "packages/db/migrations/020_native_lineage.sql",
+        "python/governance_workers/postgres_lineage.py",
+        "apps/api/src/lineage.ts"
+      ],
+      "test_ids": [
+        "tests/e2e/lineage.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -13701,9 +13742,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M4"
+      "limitations": [
+        "Scoped local implementation and regression checks pass; the compound capability, additional source families and release qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M4",
+      "partial_evidence": [
+        "docs/verification/product-lineage-classification-local.json"
+      ]
     },
     {
       "id": "LIN-002",
@@ -14129,9 +14175,17 @@
         "Fixture containing unsupported code produces a visible unresolved edge, not invented mappings."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/domain/src/lineage-read.ts",
+        "packages/domain/src/lineage-ingest.ts",
+        "packages/db/migrations/020_native_lineage.sql",
+        "python/governance_workers/postgres_lineage.py",
+        "apps/api/src/lineage.ts"
+      ],
+      "test_ids": [
+        "tests/e2e/lineage.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -14159,9 +14213,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M4"
+      "limitations": [
+        "Scoped local implementation and regression checks pass; the compound capability, additional source families and release qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M4",
+      "partial_evidence": [
+        "docs/verification/product-lineage-classification-local.json"
+      ]
     },
     {
       "id": "LIN-004.01",
@@ -14517,9 +14576,17 @@
         "Large graph remains usable through pagination/expansion; no browser-wide unbounded graph fetch."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/domain/src/lineage-read.ts",
+        "packages/domain/src/lineage-ingest.ts",
+        "packages/db/migrations/020_native_lineage.sql",
+        "python/governance_workers/postgres_lineage.py",
+        "apps/api/src/lineage.ts"
+      ],
+      "test_ids": [
+        "tests/e2e/lineage.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -14547,9 +14614,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M4"
+      "limitations": [
+        "Scoped local implementation and regression checks pass; the compound capability, additional source families and release qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M4",
+      "partial_evidence": [
+        "docs/verification/product-lineage-classification-local.json"
+      ]
     },
     {
       "id": "LIN-007",

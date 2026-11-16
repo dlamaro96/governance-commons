@@ -1478,6 +1478,14 @@
         "method": "Executed dirty-tree source hashes, real native/worker/seed/browser evidence; not whole release qualification.",
         "evidence_sha256": "0b7251c927a6f7ce62ca983e22cbb44b7c7bd26987b2ee08b217156bdca69d89"
       }
+    },
+    {
+      "path": "docs/verification/product-lineage-classification-local.json",
+      "scope": "local-lineage-classification-and-existing-regression",
+      "source_binding": {
+        "implementation_commit": "49c166c2f2e2da9a3e9723880b7fb239af20f684",
+        "method": "Exact application source/image readback plus independently retained host, native, seed, API and browser receipts. Scope limitations preserved."
+      }
     }
   ],
   "limitations": [

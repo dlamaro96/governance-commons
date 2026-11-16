@@ -1,5 +1,11 @@
 # Current state — 2026-11-16
 
+## Product checkpoint — 2026-11-16T22:32Z
+
+Product work remains the priority. Shared core SQL001–021 is applied and immutable. Native PostgreSQL lineage and reviewed metadata classification now work through real services. The current application passes all168 API cases and all27 browser journeys without skips or retries, plus scoped753 host units,14 classification native cases and seed replay. All185 original captures were inspected with viewport limits; no blocking visual defect observed. See `../verification/product-lineage-classification-local.json`; this is local development evidence, not whole-capability or release qualification.
+
+Reference code-list publication, independent review, scheduled releases, historical reads and CSV/JSON downloads are implemented in an isolated candidate. SQL022 has not been applied to shared core; its real isolated upgrade/security gate is running. Finish that gate, integrate, rebuild and verify its browser workflow before advancing the affected milestone. Root remains the sole shared-runtime launcher. Private reports, Azure costs and presentation polish remain deferred.
+
 ## Product checkpoint — 2026-11-16T19:48Z
 
 Product implementation remains the priority. Core SQL001–019 is applied and immutable; bounded PostgreSQL completeness now works through real OIDC, source scans, Temporal and the browser. The current image passes the no-retry rule/version/history/authorization journey; all four original English/Arabic desktop/mobile frames were inspected after repairing a cramped action label. Native upgrade15, host units675, rebuilt Python179 plus real metadata conformance, aggregate worker checks and seed replay pass in their recorded scopes. See `../verification/product-quality-local.json`. Full integrated API/browser and fresh hosted security qualification are still pending. All earlier failed attempts remain retained; this is not a whole-profile or release claim.
