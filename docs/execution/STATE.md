@@ -1,5 +1,10 @@
 # Current state — 2026-11-16
 
+## Protected correction local gate — 2026-11-16T10:49Z
+
+Fresh launch10 on committed90986ff5d3aa0f2bc6dbd594a32019f8bbe05dd3 passes15/15 native HTTP/PostgreSQL cases and2/2 real Keycloak journeys with zero failures/skips/retries. All131 measured source hashes match both the checkout and immutable Git blobs; independent safe publisher revalidation succeeds. All8 actual original EN/AR desktop/mobile captures were inspected and retained; no viewport blocker observed. Owned Docker/browser resources and generated credentials are removed; exact preexisting inventories are preserved. See protected-authentication-local-attempt-10.json and visual-review-attempt-10.json. This mounted-source local pass qualifies the rate-limit correction only in its recorded scope; hosted scan and immutable-image qualification remain pending. The original hosted ten-finding failure remains unchanged.
+
+
 ## Protected hosted source finding and correction — 2026-11-16T10:43Z
 
 PR22 source run43849455765 on74b2acb/tested8dc61b8 completes all three analyses and exact coverage(237 JavaScript/TypeScript,43 Python,2 Actions), then correctly fails on9 high missing-rate-limiting findings and1 reflected-XSS test response. All15 original artifacts are preserved; independent immutable1050-file/tree/source/policy checks and stored3-analysis/all-state10-open-alert readback agree. Python, Actions and policy pass; aggregateFAIL. Development43849455714 remains running at this checkpoint; quality/secrets pass in UI. No failure is relabeled.

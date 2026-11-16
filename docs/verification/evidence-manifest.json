@@ -1400,6 +1400,30 @@
       },
       "runtime_authority_activated": false,
       "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-local-attempt-10.json",
+      "scope": "15 native HTTP/SQL cases and2 real Keycloak journeys on exact131-source rate-limit correction; owned-resource cleanup verified.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_ISOLATED_MOUNTED_SOURCE_AUTHENTICATION",
+      "source_binding": {
+        "implementation_commit": "90986ff5d3aa0f2bc6dbd594a32019f8bbe05dd3",
+        "evidence_sha256": "d3657c3d9b1e2023759227a5b8bc7ded8ea4cbb75bfe85c1abfa321e96e95e40"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-visual-review-attempt-10.json",
+      "scope": "Actual English/Arabic desktop/mobile captures from launch10 reviewed; no linguistic certification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EIGHT_SCOPED_ORIGINAL_FRAME_REVIEWS",
+      "source_binding": {
+        "implementation_commit": "90986ff5d3aa0f2bc6dbd594a32019f8bbe05dd3",
+        "evidence_sha256": "efa59438179300a4852cf5899a2944fa992be839734a06a3c7e0fd60225c5461"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
     }
   ],
   "limitations": [
