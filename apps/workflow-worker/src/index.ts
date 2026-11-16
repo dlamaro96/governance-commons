@@ -3,17 +3,20 @@ import { createServer } from 'node:http';
 import { Client, Connection, WorkflowExecutionAlreadyStartedError } from '@temporalio/client';
 import { NativeConnection, Worker } from '@temporalio/worker';
 import { fileURLToPath } from 'node:url';
+import {createApprovalActivities,dispatchApprovalEvent} from './approval-activities.ts';
 const address = process.env.TEMPORAL_ADDRESS ?? 'temporal:7233';
 const namespace = process.env.TEMPORAL_NAMESPACE ?? 'default';
 const api = process.env.API_URL ?? 'http://api:4310';
 const token = process.env.SITE_TOKEN;
 const tenants = (process.env.SITE_TENANTS ?? '').split(',').filter(Boolean);
 if (!token || tenants.length === 0) throw new Error('SITE_TOKEN and SITE_TENANTS are required');
+const approvals=createApprovalActivities({apiUrl:api,token});
 const connection = await Connection.connect({ address });
 const client = new Client({ connection, namespace });
 const workerConnection = await NativeConnection.connect({ address });
 const worker = await Worker.create({ connection: workerConnection, namespace, taskQueue: 'gc-workflow',
-  workflowsPath: fileURLToPath(new URL('./workflows.ts', import.meta.url)), maxConcurrentWorkflowTaskExecutions: 8 });
+  workflowsPath: fileURLToPath(new URL('./workflows.ts', import.meta.url)), maxConcurrentWorkflowTaskExecutions: 8,
+  activities:{tickApproval:approvals.tickApproval},maxConcurrentActivityTaskExecutions:8 });
 const health = createServer((request, response) => {
   const ready = request.url === '/health' && worker.getState() === 'RUNNING';
   response.writeHead(ready ? 200 : 503, { 'Content-Type': 'application/json' });
@@ -42,6 +45,26 @@ async function dispatch() {
       } catch (error) {
         console.error(JSON.stringify({ event: 'dispatcher_retry', code: error instanceof Error && /^API_\d+$/.test(error.message) ? error.message : 'DISPATCH_FAILED' }));
       }
+      if(stopping)break;
+      try{
+        const pending=await approvals.pendingApprovals(tenantId);
+        for(const event of pending.items){
+          if(stopping)break;
+          try{
+            await dispatchApprovalEvent(event,approvals,async(input,eventId)=>{
+              try{
+                await connection.withDeadline(Date.now()+10_000,()=>client.workflow.signalWithStart('approvalWorkflow',{
+                  taskQueue:'gc-workflow',workflowId:`approval:${input.tenantId}:${input.requestId}`,args:[input],
+                  signal:'approvalChanged',signalArgs:[eventId],workflowIdReusePolicy:'REJECT_DUPLICATE',workflowIdConflictPolicy:'USE_EXISTING',
+                }));
+                return 'accepted';
+              }catch(error){if(error instanceof WorkflowExecutionAlreadyStartedError)return 'closed';throw error;}
+            });
+          }catch(error){
+            console.error(JSON.stringify({event:'approval_dispatch_retry',code:error instanceof Error&&error.message==='APPROVAL_CLOSED_PENDING'?'APPROVAL_CLOSED_PENDING':'APPROVAL_DISPATCH_FAILED'}));
+          }
+        }
+      }catch{console.error(JSON.stringify({event:'approval_dispatch_retry',code:'APPROVAL_DISPATCH_FAILED'}));}
     }
     await new Promise(resolve => setTimeout(resolve, 1500));
   }

@@ -5,6 +5,7 @@ import {Problem,type Principal} from '../../../packages/authz/src/index.ts';
 import type {DomainJournalOptions,DomainOnceOptions} from '../../../packages/domain/src/business-domain-service-contracts.ts';
 import {visibleDomainMigration} from '../../../packages/domain/src/business-domain-read.ts';
 import {visibleRelationOperation} from '../../../packages/domain/src/relation-migration-read.ts';
+import {visibleApprovalRequest} from '../../../packages/domain/src/approval-service.ts';
 import {sourceConfiguration} from '../../../packages/connectors/src/sources.ts';
 import {connectorCapabilities} from '../../../packages/connectors/src/capabilities.ts';
 export function assetView(r:any){return {id:r.id,name:r.name,qualifiedName:r.qualified_name,type:r.type,description:r.description,ownerId:r.owner_id??null,ownerName:r.owner_name??null,sourceId:r.source_id??null,sourceName:r.source_name??null,version:r.version,observedAt:r.observed_at,updatedAt:r.updated_at,status:r.status,metadata:r.metadata,modelId:r.model_id??null,modelVersion:r.model_version??null,attributes:r.attributes??{},typeState:r.type_state??null};}
@@ -13,7 +14,9 @@ export function jobView(r:any){return {id:r.id,sourceId:r.source_id,status:r.sta
 export function auditView(r:any){return {id:r.id,action:r.action,resourceId:r.resource_id,actorName:r.actor_name,occurredAt:r.occurred_at,changes:r.changes,hash:r.hash,previousHash:r.previous_hash,correlationId:r.correlation_id};}
 export function visibleAssets(tx:Tx,p:Principal){return tx.selectFrom('assets').leftJoin('identities as owners','owners.id','assets.owner_id').leftJoin('sources',j=>j.onRef('sources.id','=','assets.source_id').onRef('sources.tenant_id','=','assets.tenant_id')).selectAll('assets').select(['owners.name as owner_name','sources.name as source_name']).where('assets.tenant_id','=',p.tenantId).where(eb=>eb.or([eb('assets.visibility','=','tenant'),sql<boolean>`assets.allowed_identities @> ${JSON.stringify([p.id])}::jsonb`]));}
 export function visibleAudit(tx:Tx,p:Principal){return tx.selectFrom('audit').selectAll().where('audit.tenant_id','=',p.tenantId).where(eb=>eb.or([
- eb.and(['asset.%','relation.%','relation_participation.%','participation.%','relation_migration.%','relation_preparation.%','domain_type.%','domain.%','asset_domain_placement.%','domain_type_migration.%'].map(pattern=>eb('audit.action','not like',pattern))),
+ sql<boolean>`${p.permissions.includes('models:read')} AND audit.action LIKE 'workflow.%' AND EXISTS(SELECT 1 FROM workflow_definitions w WHERE w.tenant_id=audit.tenant_id AND w.id=audit.resource_id)`,
+ sql<boolean>`${p.permissions.includes('catalog:read')&&p.permissions.includes('catalog:write')} AND audit.action LIKE 'approval.%' AND EXISTS(SELECT 1 FROM approval_requests r WHERE r.tenant_id=audit.tenant_id AND r.id::text=audit.resource_id AND (${visibleApprovalRequest(p)}))`,
+ eb.and(['approval.%','workflow.%','glossary.%','asset.%','relation.%','relation_participation.%','participation.%','relation_migration.%','relation_preparation.%','domain_type.%','domain.%','asset_domain_placement.%','domain_type_migration.%'].map(pattern=>eb('audit.action','not like',pattern))),
  sql<boolean>`${p.permissions.includes('models:read')} AND audit.action LIKE 'domain_type.%' AND audit.changes->>'resourceKind'='domain-type'
   AND EXISTS(SELECT 1 FROM domain_types d WHERE d.tenant_id=audit.tenant_id AND d.id::text=audit.resource_id)`,
  sql<boolean>`${p.permissions.includes('domains:read')} AND audit.action LIKE 'domain.%' AND audit.changes->>'resourceKind'='domain'

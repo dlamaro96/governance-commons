@@ -12,6 +12,12 @@ import { CatalogPage } from './pages/Catalog';
 import { AssetPage } from './pages/Asset';
 import { SourcesPage } from './pages/Sources';
 import { AuditPage } from './pages/Audit';
+import { approvalsCopy } from './pages/approvals-copy';
+const ApprovalsPage = lazy(() => import('./pages/Approvals').then(module => ({ default: module.ApprovalsPage })));
+const ApprovalPage = lazy(() => import('./pages/Approvals').then(module => ({ default: module.ApprovalPage })));
+const WorkflowsPage = lazy(() => import('./pages/Approvals').then(module => ({ default: module.WorkflowsPage })));
+const WorkflowPage = lazy(() => import('./pages/Approvals').then(module => ({ default: module.WorkflowPage })));
+const WorkflowEditorPage = lazy(() => import('./pages/Approvals').then(module => ({ default: module.WorkflowEditorPage })));
 const ModelsPage = lazy(() => import('./pages/Models').then(module => ({ default: module.ModelsPage })));
 const ModelPage = lazy(() => import('./pages/Models').then(module => ({ default: module.ModelPage })));
 const ModelEditorPage = lazy(() => import('./pages/Models').then(module => ({ default: module.ModelEditorPage })));
@@ -65,6 +71,7 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   const [switching, setSwitching] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const can = (permission: string) => session.permissions.includes(permission);
+  const approvalLabels = approvalsCopy[locale];
   useEffect(() => {
     const focusSearch = (event: KeyboardEvent) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); document.querySelector<HTMLInputElement>('.global-search input')?.focus(); } };
     window.addEventListener('keydown', focusSearch);
@@ -78,7 +85,7 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
     { href: '/models', key: 'models' as const, icon: GitBranch, visible: can('models:read') },
     { href: '/audit', key: 'audit' as const, icon: ClockCounterClockwise, visible: can('audit:read') },
   ];
-  const navigation = <><Link href="/" className="brand" onClick={() => setMenuOpen(false)}><BrandMark size={30}/><span>Governance<br/>Commons</span></Link><nav aria-label={t('workspace')}><div className="nav-section-label">{t('workspace')}</div>{navItems.filter(item => item.visible).map(({ href, key, icon: Icon }) => <Link key={href} href={href} className={`nav-link ${path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/domain-types') || path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'selected' : ''}`} aria-current={path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/domain-types') || path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><Icon size={20}/>{t(key)}</Link>)}</nav><div className="sidebar-bottom"><button className="sidebar-help" onClick={() => { setMenuOpen(false); setHelpOpen(true); }}><Question size={20}/>{t('help')}</button><div className="sidebar-tagline">{t('tagline')}</div></div></>;
+  const navigation = <><Link href="/" className="brand" onClick={() => setMenuOpen(false)}><BrandMark size={30}/><span>Governance<br/>Commons</span></Link><nav aria-label={t('workspace')}><div className="nav-section-label">{t('workspace')}</div>{navItems.filter(item => item.visible).map(({ href, key, icon: Icon }) => <Link key={href} href={href} className={`nav-link ${path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/domain-types') || path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'selected' : ''}`} aria-current={path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/domain-types') || path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><Icon size={20}/>{t(key)}</Link>)}{can('catalog:read') && can('catalog:write') && <Link href="/approvals" className={`nav-link ${path.startsWith('/approvals') ? 'selected' : ''}`} aria-current={path.startsWith('/approvals') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><ClockCounterClockwise size={20}/>{approvalLabels.approvals}</Link>}{can('models:read') && <Link href="/workflows" className={`nav-link ${path.startsWith('/workflows') ? 'selected' : ''}`} aria-current={path.startsWith('/workflows') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><GitBranch size={20}/>{approvalLabels.workflows}</Link>}</nav><div className="sidebar-bottom"><button className="sidebar-help" onClick={() => { setMenuOpen(false); setHelpOpen(true); }}><Question size={20}/>{t('help')}</button><div className="sidebar-tagline">{t('tagline')}</div></div></>;
   async function switchTenant(tenantId: string) {
     setSwitching(true); setError(null);
     try { await api('/session/tenant', { method: 'POST', body: JSON.stringify({ tenantId }) }); window.location.assign('/'); }
@@ -131,6 +138,12 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   else if (domainMigrationMatch) content = can('models:read') && can('domains:read') && (domainMigrationMatch[3] || can('models:write') && can('domains:write')) ? domainMigrationMatch[3] ? <DomainTypeMigrationReceiptPage key={domainMigrationMatch[3]} id={domainMigrationMatch[1]} migrationId={domainMigrationMatch[3]}/> : <DomainTypeMigrationPage key={domainMigrationMatch[1]} id={domainMigrationMatch[1]}/> : <PermissionDenied/>;
   else if (domainTypeMatch) content = can('models:read') && (!domainTypeMatch[2] || can('models:write') && can('domains:read')) ? domainTypeMatch[2] ? <DomainTypeEditorPage key={domainTypeMatch[1]} id={domainTypeMatch[1]}/> : <DomainTypePage key={domainTypeMatch[1]} id={domainTypeMatch[1]}/> : <PermissionDenied/>;
   else if (path === '/sources') content = can('sources:read') ? <SourcesPage/> : <PermissionDenied/>;
+  else if (path === '/approvals') content = can('catalog:read') && can('catalog:write') ? <ApprovalsPage/> : <PermissionDenied/>;
+  else if (/^\/approvals\/[a-f0-9-]{36}$/.test(path)) content = can('catalog:read') && can('catalog:write') ? <ApprovalPage key={path} id={path.split('/')[2]}/> : <PermissionDenied/>;
+  else if (path === '/workflows') content = can('models:read') ? <WorkflowsPage/> : <PermissionDenied/>;
+  else if (path === '/workflows/new/definition') content = can('models:read') && can('models:write') ? <WorkflowEditorPage/> : <PermissionDenied/>;
+  else if (/^\/workflows\/[A-Za-z_][A-Za-z0-9_.-]{0,63}\/edit$/.test(path)) content = can('models:read') && can('models:write') ? <WorkflowEditorPage key={path} id={path.split('/')[2]}/> : <PermissionDenied/>;
+  else if (/^\/workflows\/[A-Za-z_][A-Za-z0-9_.-]{0,63}$/.test(path)) content = can('models:read') ? <WorkflowPage key={path} id={path.split('/')[2]}/> : <PermissionDenied/>;
   else if (path === '/asset-types') content = can('models:read') ? <AssetTypesPage/> : <PermissionDenied/>;
   else if (path === '/asset-types/new/definition') content = can('models:write') && can('models:read') ? <AssetTypeEditorPage/> : <PermissionDenied/>;
   else if (migrationTypeId && typeMigrationMatch) content = typeMigrationMatch[3] ? (can('models:read') && can('catalog:read') ? <AssetTypeMigrationReceiptPage id={migrationTypeId} migrationId={typeMigrationMatch[3]}/> : <PermissionDenied/>) : (can('models:read') && can('models:write') && can('catalog:read') && can('catalog:write') ? <AssetTypeMigrationPage id={migrationTypeId}/> : <PermissionDenied/>);

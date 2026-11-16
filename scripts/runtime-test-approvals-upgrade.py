@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+"""SQL014→015 native approval upgrade; disposable PostgreSQL, no shared launch."""
+from datetime import datetime, timezone
+import importlib.util
+import json
+from pathlib import Path
+import re
+import shutil
+
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('approval_upgrade_base',ROOT/'scripts/runtime-test-source-connectors-upgrade.py')
+base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
+REPORT=ROOT/'.local/evidence/approvals-upgrade.json'
+MIGRATION='015_approval_workflows.sql'
+TEST='tests/qualification/approvals-storage.test.ts'
+require,sha=base.require,base.sha
+
+def sources():
+ paths={row['path'] for row in base.sources()}
+ paths.update(['scripts/runtime-test-approvals-upgrade.py',TEST,'packages/db/migrations/'+MIGRATION,'apps/api/src/repository.ts','packages/domain/src/approval-service.ts','packages/domain/src/approval.ts','packages/domain/src/approval-contracts.ts','packages/domain/src/glossary.ts','packages/domain/src/glossary-contracts.ts','packages/domain/src/model-service.ts','packages/domain/src/cursor.ts'])
+ return [{'path':name,'sha256':sha((ROOT/name).read_bytes())} for name in sorted(paths)]
+
+class Harness(base.Harness):
+ def __init__(self):
+  base.REPORT=REPORT
+  super().__init__()
+  self.report.update(command='./dev test --suite approvals-upgrade',profile='isolated-approval-storage')
+
+def execute(h):
+ frozen=sources()
+ # Execute the real predecessor storage gate; retain its original checks.
+ base.execute(h)
+ h.report['sources']=frozen
+ h.phase='approval-predecessor'
+ tables=json.loads(h.sql("SELECT json_agg(schemaname||'.'||tablename ORDER BY schemaname,tablename) FROM pg_tables WHERE schemaname IN('public','gc_authn','gc_authority') AND tablename<>'schema_migrations';"))
+ before=h.snapshot(tables)
+ ledger=json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))
+ target=h.folder/'approval-target';target.mkdir()
+ for name in [*base.NAMES,MIGRATION]:shutil.copyfile(base.base.MIGRATIONS/name,target/name)
+ h.phase='approval-upgrade'
+ result=h.migrate(target)
+ require(re.findall(r'^Applied (.+)$',result.stdout,re.MULTILINE)==[MIGRATION],'Expected exact SQL015 application')
+ require(h.snapshot(tables)==before,'Approval upgrade changed predecessor canonical/history rows')
+ after=json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))
+ require(after[:14]==ledger and len(after)==15,'Approval upgrade changed predecessor ledger')
+ require('Applied' not in h.migrate(target).stdout and h.snapshot(tables)==before,'Approval replay changed predecessor rows')
+ h.report['checks'].append('Exact SQL014→015 application and inert replay preserve all predecessor canonical, protected, audit and receipt rows and original migration ledger')
+ h.phase='approval-native-tests'
+ expected=len(re.findall(r'^test\(', (ROOT/TEST).read_text(),re.MULTILINE))
+ tested=h.helper(['node','--import','tsx','--test','--test-reporter=tap','--test-concurrency=1',TEST],timeout=180,allow_failure=True)
+ require(tested.returncode==0,'Native approval suite failed; retained bounded TAP identifies failing case')
+ h.report['tests']=base.base.tap_summary(tested.stdout,expected)
+ require(sources()==frozen,'Approval source changed during native qualification')
+ h.report['migrations']=[{'name':name,'sha256':sha((base.base.MIGRATIONS/name).read_bytes())} for name in [*base.NAMES,MIGRATION]]
+ h.report['limitations']=['Initial human approval family storage only; resource publication, API/browser and Temporal restart qualification remain separate.','Canonical content authority remains inactive. No shared runtime or external infrastructure was modified.']
+
+def main():
+ h,failed=Harness(),False
+ try:execute(h)
+ except BaseException as error:
+  failed=True;h.report.update(failed_phase=h.phase,error_type=type(error).__name__,error='Inspect bounded private diagnostics')
+ finally:
+  try:
+   h.phase='cleanup';h.cleanup()
+   if h.resources_before is not None:
+    h.deadline=h.cleanup_deadline;require(h.inventory()==h.resources_before,'Preexisting resource inventory changed');h.report['cleanup']['resourceInventoryPreserved']=True
+  except BaseException as error:
+   failed=True;h.report['cleanupErrorType']=type(error).__name__
+  h.report.update(result='FAIL' if failed else 'PASS',recorded_at=datetime.now(timezone.utc).isoformat(),evidence_directory=str(h.folder.relative_to(ROOT)))
+  h.report['private_logs']=[{'path':str(p.relative_to(ROOT)),'sha256':sha(p.read_bytes())} for p in sorted(h.folder.glob('*.log'))];h.save(final=True)
+ print(json.dumps({'result':h.report['result'],'report':str(REPORT.relative_to(ROOT))}));return int(failed)
+
+if __name__=='__main__':raise SystemExit(main())
