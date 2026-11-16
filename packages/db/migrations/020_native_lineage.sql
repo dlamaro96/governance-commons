@@ -46,6 +46,26 @@ BEGIN
  OR NOT EXISTS(SELECT 1 FROM public.assets a WHERE a.tenant_id=NEW.tenant_id AND a.id=NEW.downstream_asset_id AND a.source_id=NEW.source_id AND a.type='view') THEN
   RAISE EXCEPTION 'LINEAGE_SCOPE_INVALID' USING ERRCODE='23514';
  END IF;
+ -- Verify each insertion as well as deferred completeness. A caller may flush
+ -- deferred constraints early; subsequent inserts must still belong to the
+ -- immutable observation and its exact scan-pinned endpoint revisions.
+ IF NOT EXISTS(
+  SELECT 1 FROM public.lineage_observations l
+  JOIN public.assets u ON u.tenant_id=l.tenant_id AND u.id=NEW.upstream_asset_id
+  JOIN public.assets d ON d.tenant_id=l.tenant_id AND d.id=NEW.downstream_asset_id
+  JOIN public.asset_revisions ur ON ur.tenant_id=u.tenant_id AND ur.asset_id=u.id AND ur.version=NEW.upstream_version
+  JOIN public.asset_revisions dr ON dr.tenant_id=d.tenant_id AND dr.asset_id=d.id AND dr.version=NEW.downstream_version
+  CROSS JOIN LATERAL jsonb_array_elements(l.payload->'views') v
+  CROSS JOIN LATERAL jsonb_array_elements(v.value->'dependencies') dep
+  WHERE l.tenant_id=NEW.tenant_id AND l.id=NEW.observation_id
+   AND v.value->>'viewExternalId'=d.external_id AND dep.value->>'referencedExternalId'=u.external_id
+   AND NEW.id=public.gc_type_migration_hash(jsonb_build_object('jobId',l.id,'upstream',u.id,'downstream',d.id))
+   AND NEW.evidence_hash=public.gc_type_migration_hash(jsonb_build_object('viewExternalId',v.value->>'viewExternalId','rewriteOid',v.value->>'rewriteOid')||dep.value)
+   AND to_jsonb(NEW.referenced_attribute_numbers)=dep.value->'referencedAttributeNumbers'
+   AND ur.snapshot#>>'{metadata,scanId}'=l.id::text AND dr.snapshot#>>'{metadata,scanId}'=l.id::text
+   AND ur.snapshot->>'sourceId'=l.source_id::text AND dr.snapshot->>'sourceId'=l.source_id::text
+   AND ur.snapshot->>'type' IN ('table','view') AND dr.snapshot->>'type'='view'
+ ) THEN RAISE EXCEPTION 'LINEAGE_PROJECTION_INVALID' USING ERRCODE='23514'; END IF;
  RETURN NEW;
 END $$;
 CREATE TRIGGER lineage_edge_scope BEFORE INSERT ON public.lineage_edge_observations FOR EACH ROW EXECUTE FUNCTION public.gc_lineage_edge_scope();

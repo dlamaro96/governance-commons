@@ -142,6 +142,8 @@ def main():
   ./dev test --suite glossary-population-upgrade Verify multi-policy publication on populated catalogs
   ./dev test --suite quality-upgrade  Verify completeness storage, upgrade and current authorization
   ./dev test --suite quality-worker   Verify completeness execution against the local synthetic source
+  ./dev test --suite lineage-upgrade Verify PostgreSQL lineage storage, generation fencing and upgrade
+  ./dev test --suite lineage-worker  Verify real PostgreSQL dependency extraction and owned fixture cleanup
   ./dev authn-install --input FILE    Apply one private, typed inactive installation manifest
   ./dev test --suite relation-preparation-expiry Verify the original fifteen-minute lease and committed retries
   ./dev test --suite connectors       Run Python contract/source tests
@@ -183,6 +185,9 @@ Never use docker compose config output in public logs: it expands secrets.""")
     if args.command == "test" and args.suite == "glossary-population-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-glossary-population-upgrade.py"], timeout=1500); return
+    if args.command == "test" and args.suite == "lineage-upgrade":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-lineage-upgrade.py"], timeout=1800); return
     if args.command == "test" and args.suite == "quality-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-quality-upgrade.py"], timeout=1800); return
@@ -251,6 +256,8 @@ Never use docker compose config output in public logs: it expands secrets.""")
             run(["sh", str(script)], timeout=2100 if args.suite == "security" else 900)
         elif args.suite == "connectors":
             run([sys.executable, "scripts/runtime-test-connectors.py"], timeout=300)
+        elif args.suite == "lineage-worker":
+            run([sys.executable, "python/tests/test_postgres_lineage_conformance.py", "--run-core"], timeout=720)
         elif args.suite == "quality-worker":
             run([sys.executable, "scripts/runtime-test-quality-worker.py", "--run-local"], timeout=360)
         elif args.suite == "recovery":

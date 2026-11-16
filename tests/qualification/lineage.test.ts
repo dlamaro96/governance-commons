@@ -260,6 +260,26 @@ test('native lineage completion rolls back assets, evidence, audit and outbox as
      upstream_asset_id:upstream,upstream_version:variant==='nonexistent-version'?999:1,downstream_asset_id:downstream,downstream_version:1,
      referenced_attribute_numbers:dependency.referencedAttributeNumbers,evidence_hash:digest({viewExternalId:external(201),rewriteOid:'301',...dependency})}).execute();
    }
-  }),variant==='nonexistent-version'?sqlstate('23503'):refusal(variant==='forged-payload-hash'?'LINEAGE_EVIDENCE_INVALID':'LINEAGE_PROJECTION_INVALID'));
+  }),refusal(variant==='forged-payload-hash'?'LINEAGE_EVIDENCE_INVALID':'LINEAGE_PROJECTION_INVALID'));
  }
+});
+
+
+test('native lineage rejects extra same-transaction edges after deferred checks are flushed',async t=>{
+ const f=await fixture(t),id=await f.newJob(),body=completion();await f.claim(id);let flushed=false;
+ await f.unchanged(()=>f.site(async tx=>{
+  assert.equal((await completeSourceScan(tx,f.tenant,id,body,'lineage-native')).job.status,'succeeded');
+  await sql`SET CONSTRAINTS ALL IMMEDIATE`.execute(tx);flushed=true;
+  const assets=await tx.selectFrom('assets').selectAll().where('source_id','=',f.sourceId).execute();
+  const upstream=assets.find(row=>row.external_id===external(101))!,downstream=assets.find(row=>row.external_id===external(202))!;
+  assert.ok(upstream);assert.ok(downstream);
+  // Valid identity, hashes, source, revision pins and transaction; this edge is
+  // absent from the immutable empty view observation already checked above.
+  const dependency={referencedExternalId:external(101),referencedAttributeNumbers:[1]};
+  await tx.insertInto('lineage_edge_observations').values({tenant_id:f.tenant,id:digest({jobId:id,upstream:upstream.id,downstream:downstream.id}),
+   observation_id:id,source_id:f.sourceId,upstream_asset_id:upstream.id,upstream_version:upstream.version,
+   downstream_asset_id:downstream.id,downstream_version:downstream.version,referenced_attribute_numbers:dependency.referencedAttributeNumbers,
+   evidence_hash:digest({viewExternalId:external(202),rewriteOid:'302',...dependency})}).execute();
+ }),refusal('LINEAGE_PROJECTION_INVALID'));
+ assert.equal(flushed,true,'The regression must reach insertion after a successful constraint flush');
 });

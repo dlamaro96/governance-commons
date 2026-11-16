@@ -27,5 +27,6 @@ export default defineConfig({
     { name: 'approvals', testMatch: /approvals\.spec\.ts/, dependencies: ['postgres-configuration'] },
     { name: 'glossary', testMatch: /glossary\.spec\.ts/, dependencies: ['approvals'] },
     { name: 'quality', testMatch: /quality\.spec\.ts/, dependencies: ['glossary'] },
+    { name: 'lineage', testMatch: /lineage\.spec\.ts/, dependencies: ['quality'] },
   ],
 });
