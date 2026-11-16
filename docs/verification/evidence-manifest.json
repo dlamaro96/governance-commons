@@ -425,7 +425,7 @@
     },
     {
       "path": "docs/verification/relation-participation-upgrade-security-regression.json",
-      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001\u2013010 unchanged; prior executions retained."
+      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001–010 unchanged; prior executions retained."
     },
     {
       "path": "docs/verification/m2-relation-participation-api-final.json",
@@ -443,7 +443,7 @@
     },
     {
       "path": "docs/verification/relation-participation-graph-copy-upgrade.json",
-      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001\u2013010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
+      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001–010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
       "source_binding": {
         "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
         "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
@@ -1031,11 +1031,39 @@
         "method": "SHA256 of immutable committed Git blobs equals each original executed source digest and current file. Documentation-only history integration introduces no application source changes. This is source binding, not a test rerun.",
         "evidence_sha256": "6e67c33d521f7266824c0ec411e8cb86e304e769a649e4edbb6f9ded4833df54"
       }
+    },
+    {
+      "path": "docs/verification/authority-pure.json",
+      "scope": "Strict pure policy parsing/normalization/hash and closed compatibility mapping only: 22 focused and 232 full unit tests, root/web types, independent 1,024-subset/103-action oracle; no evaluator, SQL or runtime authority qualification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_RECORDED_PURE_AND_TYPECHECK_SCOPE",
+      "source_binding": {
+        "base_commit": "b58d36ade127407750d1c51e37c2c4000baa883a",
+        "verified_source_files": 162,
+        "method": "Exact before/after file hashes include the untracked pure additions; the base commit alone does not contain them. Original execution, input-admission limitations and failed attempts remain in the unchanged report.",
+        "evidence_sha256": "4abadab5822e48c02dd6be330e22996b490619e44d2a09f21035e10525fcfa02"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
+    },
+    {
+      "path": "docs/verification/authority-pure-domain-integration.json",
+      "scope": "Separate actual combined domain/authority host regression: 279 full unit tests including 22 authority cases and root/web types; five authority source/test files equal the historical report. No domain runtime rerun or authority activation.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_COMBINED_DOMAIN_UNIT_AND_TYPECHECK_SCOPE",
+      "source_binding": {
+        "base_commit": "c6c27bcf2fcf68fc48a5ce37550afbf024fcfbca",
+        "verified_source_files": 192,
+        "method": "Exact before/after file hashes include the untracked pure additions; the base commit alone does not contain them. Original execution, input-admission limitations and failed attempts remain in the unchanged report.",
+        "evidence_sha256": "24a6b624cfb0c4f09ee68911af4392f3e4c98a8e12e31e31c802455141ecbe90"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
     }
   ],
   "limitations": [
     "Passing scoped development gates does not complete compound baseline requirements.",
-    "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
+    "M1 core local journey passes; full M0 repository/release and M2–M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
   "bound_at": "2026-11-15T22:23:28.996008+00:00"

@@ -1,0 +1,1046 @@
+{
+  "schema_version": 1,
+  "implementation_status": "IMPLEMENTED_PURE_PARSER_AND_COMPATIBILITY_MAPPING_ONLY",
+  "verification_status": "PASS_RECORDED_PURE_AND_TYPECHECK_SCOPE",
+  "release_qualified": false,
+  "runtime_authority_activated": false,
+  "scope": "Pure scoped-authority policy parsing, exact literal legacy-action compatibility, safe normalization and canonical hashing. This report qualifies executed pure tests and typechecks only; it does not qualify scoped authorization in any runtime ingress.",
+  "recorded_at": "2026-11-16T04:08:53.918781+00:00",
+  "profile": "host-pure-node24-no-services",
+  "contract": {
+    "path": "docs/execution/SCOPED_AUTHORITY_PURE_CONTRACT.md",
+    "sha256": "00fd5a4aee6e067bd81ed66ef4b812f7019851fc4082a27609098c531fb36dd6",
+    "reviewed_registry_candidate": {
+      "document": "SCOPED_AUTHORITY_CONTRACT_CANDIDATE.md",
+      "sha256": "443a6b796354f6b8daf2dea3b98e83426faca19d4c57139e89a526c533433802",
+      "sections": [
+        "2 exact action registry",
+        "3 pure policy grammar",
+        "4 parser and mapping exports only"
+      ]
+    },
+    "admission_refinement": "Root adopted the own-key enumeration limitation after independent agent review. The clarified contract and source comments are included in this final executed snapshot. This is not a human security sign-off."
+  },
+  "source_binding": {
+    "base_commit": "b58d36ade127407750d1c51e37c2c4000baa883a",
+    "working_tree_dirty": true,
+    "before_after_hashes_match": true,
+    "file_count": 162,
+    "method": "Conservative source/configuration superset for focused/full root unit execution and root/web typechecks: package/app/test .ts/.tsx plus package/type/workspace/lock files and the adopted contract. Hashing does not imply every code path executed.",
+    "implemented_files": [
+      {
+        "path": "packages/authority/src/actions.ts",
+        "sha256": "203e81870496129a7914bcadb5c6f0c268612449d59319e1450350d250604a95"
+      },
+      {
+        "path": "packages/authority/src/policy.ts",
+        "sha256": "914a45dcdd74abfa9805f9414ccffb6bf1ddbce47d615ed6e57a49d21ff030ec"
+      },
+      {
+        "path": "packages/authority/src/types.ts",
+        "sha256": "044e1ecf9ddb03a5a77ecbf71ae170aac6965690f4bc8522709609c688178164"
+      },
+      {
+        "path": "tests/unit/authority-policy.test.ts",
+        "sha256": "fe14102afade73e1c65264cff02fc565f18befe48f340b2020177c4ae19860bf"
+      },
+      {
+        "path": "tests/unit/authority-compatibility.test.ts",
+        "sha256": "e484f7ce578179b11579ac705e69226a7ac78dbfaced30bf4a02ef5f6ac477f7"
+      }
+    ],
+    "files": [
+      {
+        "path": "apps/api/src/asset-type-migrations.ts",
+        "sha256": "02f530c3715801c222f4f98d65807f06d0b58d0193b05c6c4e9f3f0b78a00c92"
+      },
+      {
+        "path": "apps/api/src/asset-types.ts",
+        "sha256": "847e1a9492b79d45de5143aa80ff6e9f3e04fd898d934a2b15b8a46637902ac3"
+      },
+      {
+        "path": "apps/api/src/audit-reader.ts",
+        "sha256": "27f13130b1902bc7c9aa9656a1eebc9e680c906b977ac9e002f74c57355aea8e"
+      },
+      {
+        "path": "apps/api/src/audit.ts",
+        "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+      },
+      {
+        "path": "apps/api/src/index.ts",
+        "sha256": "5354cc8b217923585aa1bdf32362488b6d660d3a4a65d6ffe1e56b3fd58fdfde"
+      },
+      {
+        "path": "apps/api/src/model-http.ts",
+        "sha256": "78d176145b8713c5aca2797fad741653698c6f2439817fbf069d4842afcc5938"
+      },
+      {
+        "path": "apps/api/src/model-migrations.ts",
+        "sha256": "3d116bf6bc64ac3723f5aadef63d414f7920c584824a114e8bb6c2708d7129ad"
+      },
+      {
+        "path": "apps/api/src/models.ts",
+        "sha256": "d6212e6723236030f672cd67ce2f2de43b1e8f67216309f1a16c18dd257a0387"
+      },
+      {
+        "path": "apps/api/src/relation-migrations.ts",
+        "sha256": "f30df94c238f409afd303ea9e9dbd55a863e19702dc244798861dfc2b9aaa224"
+      },
+      {
+        "path": "apps/api/src/relations.ts",
+        "sha256": "0124c9190396dbcddf14ebb3fae67128ebaa97865aba97dc6b46000654f2b974"
+      },
+      {
+        "path": "apps/api/src/repository.ts",
+        "sha256": "0bbb03ae711f9bcac7c04b15e85871c27016b575c50514f2076ec7793dae6cdb"
+      },
+      {
+        "path": "apps/api/src/search.ts",
+        "sha256": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d"
+      },
+      {
+        "path": "apps/api/src/security.ts",
+        "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+      },
+      {
+        "path": "apps/site-runner/src/index.ts",
+        "sha256": "d865e76e317ec784bd7c90cff4f11555022e73948f2a8a571a761a0b9a2df6d7"
+      },
+      {
+        "path": "apps/web/package.json",
+        "sha256": "cf72e592f6444959c257e304abb0c455fd28d4e297a4e2601339ea38fd427b3c"
+      },
+      {
+        "path": "apps/web/src/App.tsx",
+        "sha256": "62709418804355c5c5ab14c5e2ebbce7c7ce22f2a9a69f5e33b8e30ed93b9cdf"
+      },
+      {
+        "path": "apps/web/src/api.ts",
+        "sha256": "62ca221c1b8ba76a0d20f89699735129768890419a13f8f3a0338b213197bac9"
+      },
+      {
+        "path": "apps/web/src/assetTypes/DefinitionEditor.tsx",
+        "sha256": "9cc48f54c315abe5886704086e40323464432c0296bf0d38ed9ff0ffbbb32f0a"
+      },
+      {
+        "path": "apps/web/src/assetTypes/LifecyclePanel.tsx",
+        "sha256": "cc72e38f95de507c8def9f069deacc3bcfb607dc3a7f4e21b8d616be1a1bea07"
+      },
+      {
+        "path": "apps/web/src/assetTypes/TypeMigrationPolicyEditor.tsx",
+        "sha256": "a42f5da323a3a2587c39d1fb53939e359057aff4e48d5ecf8bf8b112e49d267a"
+      },
+      {
+        "path": "apps/web/src/assetTypes/contracts.ts",
+        "sha256": "30219291a4a91b6bc62bb460c839d274b14926d88e6bd1c8cbe7713a1bc7ed20"
+      },
+      {
+        "path": "apps/web/src/assetTypes/messages.ts",
+        "sha256": "2217173a00d9f9ac2548ba1dd3a983d032f0495fb03f7457cccd9b35c57a7516"
+      },
+      {
+        "path": "apps/web/src/assetTypes/migrationMessages.ts",
+        "sha256": "d876d2eeaa69153e4c44a7e5e56a74136e16cd5c4b131407a8cb472667e992d8"
+      },
+      {
+        "path": "apps/web/src/components.tsx",
+        "sha256": "217df6f66523f65accc3269304660c6ac90db9b84e4ce46937e3d546864f4187"
+      },
+      {
+        "path": "apps/web/src/i18n.tsx",
+        "sha256": "939d1ece45df055a510061ebfaa7c6c4c82e820ad62159bb1d2910fd1f815036"
+      },
+      {
+        "path": "apps/web/src/main.tsx",
+        "sha256": "666b70ce5765a222777738d2b1f9120c1d2c2914daa96de87574853fb65e475c"
+      },
+      {
+        "path": "apps/web/src/models/AssetAttributes.tsx",
+        "sha256": "553c2ef43d1463fd60a511b2570049e9eae8437e9f37e72b10802392fa50fbb5"
+      },
+      {
+        "path": "apps/web/src/models/MigrationPlanEditor.tsx",
+        "sha256": "3e4cb6d421007ec6be00ec64f3ed3574dadcb1072450fa642bd5eeaf278469df"
+      },
+      {
+        "path": "apps/web/src/models/ModelBrowser.tsx",
+        "sha256": "c1452c9b036daec1e0ff8d49f58a276a3dcd6917098fd300c2bf834657017830"
+      },
+      {
+        "path": "apps/web/src/models/ModelFeedback.tsx",
+        "sha256": "6aceb40423dda70a7b9337431e4840adc030da01f50a6a3f296207f26170affb"
+      },
+      {
+        "path": "apps/web/src/models/SchemaEditor.tsx",
+        "sha256": "c028b4d34d4ee84bc9250b718f2ed1aff5b7f881be29a0fe1cde7ff0da82ca06"
+      },
+      {
+        "path": "apps/web/src/models/ValueFields.tsx",
+        "sha256": "fd0980ca3945be050410da3040a5e7f5cabf55edf372eef4ee9ef1532741335d"
+      },
+      {
+        "path": "apps/web/src/models/VersionPicker.tsx",
+        "sha256": "95781b042c066ebe9e8cd1af841eeb80e6166146e588ac94280038b514756660"
+      },
+      {
+        "path": "apps/web/src/models/contracts.ts",
+        "sha256": "a0204509d5e69bf1974288399098b334564c7d4cc9b001a004d2aa804630f18e"
+      },
+      {
+        "path": "apps/web/src/models/messages.ts",
+        "sha256": "667433010425fa8a457de9edc47a797e828e819b748ef0566736a040cc0bcb5f"
+      },
+      {
+        "path": "apps/web/src/models/migrationMessages.ts",
+        "sha256": "808cb94cbeccb5617a8fddb59dce1f14d214f32b01e787ad0d7ca5b00eb072dc"
+      },
+      {
+        "path": "apps/web/src/models/planMessages.ts",
+        "sha256": "244916806562a9046bce7f4bb364990842f02975c5e17df14d4c57a8f207039f"
+      },
+      {
+        "path": "apps/web/src/navigation.tsx",
+        "sha256": "d15a75f39edb92ee626bd0682353466b433f5be7cb5104bc1b0a256a7d61913c"
+      },
+      {
+        "path": "apps/web/src/pages/Asset.tsx",
+        "sha256": "cce8f52bf64921efbd2234e762af305177d92385e61d8e2e8deb40b94784186d"
+      },
+      {
+        "path": "apps/web/src/pages/AssetTypeMigrations.tsx",
+        "sha256": "bb23a2ee373fcfceb30f47bb29878302552a0505390ed520b13c1ae98e7d4929"
+      },
+      {
+        "path": "apps/web/src/pages/AssetTypes.tsx",
+        "sha256": "bb034cd0d6532378553976e1e7fafbd1c5dc844fae69f9a38454d477d9c5046f"
+      },
+      {
+        "path": "apps/web/src/pages/Audit.tsx",
+        "sha256": "01484216a2ee1a0b7b96e8d9480e85f962165da4ebde4a461ac821af6dccee88"
+      },
+      {
+        "path": "apps/web/src/pages/Catalog.tsx",
+        "sha256": "259126c8daccae7b8eb692cf15a2cef8cd359ee12318c0940a2c39fea3f763ed"
+      },
+      {
+        "path": "apps/web/src/pages/Home.tsx",
+        "sha256": "bb08cf9f5b6d107de73ee3dee400ccd0392f4a826811ab6000a224669d1f0f05"
+      },
+      {
+        "path": "apps/web/src/pages/ModelMigrations.tsx",
+        "sha256": "cc23198090ba7896bb9d5c684dca255df57d4b75dad9fe8752810be95ac804aa"
+      },
+      {
+        "path": "apps/web/src/pages/Models.tsx",
+        "sha256": "1860307f05c7c5b31d309ba42996a555486030eacce3f5bc110cba88ba8a2f48"
+      },
+      {
+        "path": "apps/web/src/pages/Relation.tsx",
+        "sha256": "bac63985a62d0680cd25eab940dd09bb0fb8c0673d5ab9cca2d1b04561787c59"
+      },
+      {
+        "path": "apps/web/src/pages/RelationMigrations.tsx",
+        "sha256": "147e05ca2fcc0476cfee4f02dbf5a79f2d103642386fb1c7d8dc39d8adbdebb6"
+      },
+      {
+        "path": "apps/web/src/pages/RelationTypes.tsx",
+        "sha256": "972c4734ffcf09058c082558b257b202336b2a3aadaf03f58812463f59759288"
+      },
+      {
+        "path": "apps/web/src/pages/Sources.tsx",
+        "sha256": "5df5464c6baea87b932433b9fe4dbf9d52cdc0073369598cdc4feb4c40a82f42"
+      },
+      {
+        "path": "apps/web/src/relations/AssetRelations.tsx",
+        "sha256": "7b678d89693c30c9a5107da05233e55d93962151238ba174270954462982cfe3"
+      },
+      {
+        "path": "apps/web/src/relations/MigrationPlanEditor.tsx",
+        "sha256": "46b938bcf4ae8ed8f392cb30662262a5313ff7cf7f8ee3bcc2128614520e5bd9"
+      },
+      {
+        "path": "apps/web/src/relations/Participation.tsx",
+        "sha256": "0636d2bf61a4b0110b2c0849400be5f51ee3b3fccd8df86e20a34fa3f98a28df"
+      },
+      {
+        "path": "apps/web/src/relations/RelationForm.tsx",
+        "sha256": "c23c6534f1d3be1fe327dcbf0cadf79659e6d76a4df5051f79a0c097f0e5e25f"
+      },
+      {
+        "path": "apps/web/src/relations/RelationGraph.tsx",
+        "sha256": "2f6c1bba61718d08c9df7eaa2f3022de847fdecdcc8c87c9e0052a01517ecd13"
+      },
+      {
+        "path": "apps/web/src/relations/TypeEditor.tsx",
+        "sha256": "b993657b02a54c4b057238a8ea6f361acded6c46c7f8b11a1f65ca97a7f9ccdf"
+      },
+      {
+        "path": "apps/web/src/relations/messages.ts",
+        "sha256": "0bc37f4eef26c574d531dcad5fafd9fd65f8802e60c1ad7dc56329eb2c5305dc"
+      },
+      {
+        "path": "apps/web/src/relations/shared.tsx",
+        "sha256": "d94f857ea6b2eb44ea370e4348696a914d7a9099541524b0d9a5867391cba55f"
+      },
+      {
+        "path": "apps/web/src/session.tsx",
+        "sha256": "8194132b7f7b979ea515bf8eab8eb9b00c1f4b7699f16740352cbf84a1165cea"
+      },
+      {
+        "path": "apps/web/src/types.ts",
+        "sha256": "2c121eba06c772d494ae715a03ea8a473ed4f23ffea6748b3fd361b4804e14c7"
+      },
+      {
+        "path": "apps/web/src/vite-env.d.ts",
+        "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+      },
+      {
+        "path": "apps/web/tsconfig.json",
+        "sha256": "76b2915cb9623d54b4ce6366ac36ce8302a388e67955382075f3b3cfe8baee49"
+      },
+      {
+        "path": "apps/web/vite.config.ts",
+        "sha256": "be49a3fcab78673178e11c775172a65ab07bb80cf95c50f093189929b08b1044"
+      },
+      {
+        "path": "apps/workflow-worker/src/index.ts",
+        "sha256": "2da4bad00e77a37caa9d24fc140b1d88dabe96300ccc78f9c957299484220d15"
+      },
+      {
+        "path": "apps/workflow-worker/src/workflows.ts",
+        "sha256": "627720148248703a529fbdc2ddf819aff348f8e09f89e0496852761ac0f737a4"
+      },
+      {
+        "path": "docs/execution/SCOPED_AUTHORITY_PURE_CONTRACT.md",
+        "sha256": "00fd5a4aee6e067bd81ed66ef4b812f7019851fc4082a27609098c531fb36dd6"
+      },
+      {
+        "path": "package.json",
+        "sha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7"
+      },
+      {
+        "path": "packages/authority/src/actions.ts",
+        "sha256": "203e81870496129a7914bcadb5c6f0c268612449d59319e1450350d250604a95"
+      },
+      {
+        "path": "packages/authority/src/policy.ts",
+        "sha256": "914a45dcdd74abfa9805f9414ccffb6bf1ddbce47d615ed6e57a49d21ff030ec"
+      },
+      {
+        "path": "packages/authority/src/types.ts",
+        "sha256": "044e1ecf9ddb03a5a77ecbf71ae170aac6965690f4bc8522709609c688178164"
+      },
+      {
+        "path": "packages/authz/src/index.ts",
+        "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "sha256": "8d23a38cad9af4c69471b6369d1106382e34518f1b13a00be6590ee6e28bb453"
+      },
+      {
+        "path": "packages/db/src/index.ts",
+        "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+      },
+      {
+        "path": "packages/db/src/migrate.ts",
+        "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+      },
+      {
+        "path": "packages/db/src/seed.ts",
+        "sha256": "f871502f2215b538199df0a4aef501954a7f558b249311d6cb3b1129c763c151"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-contracts.ts",
+        "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-service.ts",
+        "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration.ts",
+        "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+      },
+      {
+        "path": "packages/domain/src/asset-type-policy.ts",
+        "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+      },
+      {
+        "path": "packages/domain/src/asset-type-service.ts",
+        "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/cursor.ts",
+        "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-persistence.ts",
+        "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-preparation.ts",
+        "sha256": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49"
+      },
+      {
+        "path": "packages/domain/src/model-migration-service.ts",
+        "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+      },
+      {
+        "path": "packages/domain/src/model-service.ts",
+        "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "57fde5df7d27d3b63e645ead707cd131290378ebe924dbb328d1db5b45bb254a"
+      },
+      {
+        "path": "packages/domain/src/relation-contracts.ts",
+        "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+      },
+      {
+        "path": "packages/domain/src/relation-endpoint-guard.ts",
+        "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+      },
+      {
+        "path": "packages/domain/src/relation-graph.ts",
+        "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-contracts.ts",
+        "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-read.ts",
+        "sha256": "bf5dc16ff794343dbc68d2992644e840e07846f791f6c119a8a168bc53142ff7"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-service.ts",
+        "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-store.ts",
+        "sha256": "7fc1ffadfc3465f6c329f334d1910fb60093fafa3d1dc770341cb75d77988287"
+      },
+      {
+        "path": "packages/domain/src/relation-migration.ts",
+        "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+      },
+      {
+        "path": "packages/domain/src/relation-participation-read.ts",
+        "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+      },
+      {
+        "path": "packages/domain/src/relation-participation.ts",
+        "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+      },
+      {
+        "path": "packages/domain/src/relation-service.ts",
+        "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+      },
+      {
+        "path": "packages/domain/src/relation-store.ts",
+        "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+      },
+      {
+        "path": "packages/domain/src/relation.ts",
+        "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+      },
+      {
+        "path": "packages/ui/package.json",
+        "sha256": "749924710147d652fad712f4298c681b38de73f913f4e75accca8590bf8a97a0"
+      },
+      {
+        "path": "packages/ui/src/index.tsx",
+        "sha256": "9fdb615913bb9d6055b02bf38e7c670fd91ce190b51436dfc9a2d5df8cb584b3"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+      },
+      {
+        "path": "pnpm-workspace.yaml",
+        "sha256": "3d0651c8ee104733339c15831fc93e2429ddadf64b25c65f7d8040c5a6aa43bf"
+      },
+      {
+        "path": "tests/e2e/asset-type-migrations.spec.ts",
+        "sha256": "b6b0fa5dd017c13595db91ee785a9d44f6c59958d79d48e582cd8cbaaf4b4329"
+      },
+      {
+        "path": "tests/e2e/asset-types.spec.ts",
+        "sha256": "8d6e7f8ccedb3774557f71470e52ec7bea8ee60e2b86d1ee414bc17b5ec5ac04"
+      },
+      {
+        "path": "tests/e2e/model-migrations.spec.ts",
+        "sha256": "6da5e76511b535bdef770fdad27d72861cf299a1c4a91c3e6f64d218572b33e8"
+      },
+      {
+        "path": "tests/e2e/models.spec.ts",
+        "sha256": "d25dc12de6cbff6642169b15ca8797d2275a5eab165242b0c88a09b959d73f3f"
+      },
+      {
+        "path": "tests/e2e/relation-migrations.spec.ts",
+        "sha256": "1c74ef81ca8f686341f112c5452c0cab3720235d54fcc66df574b6fda8c07f9b"
+      },
+      {
+        "path": "tests/e2e/relations.spec.ts",
+        "sha256": "70cd56fe9ad19943ed35bf6735bb992a7b06a47a92d72a1c926a1f91d155a9f5"
+      },
+      {
+        "path": "tests/e2e/ui-accessibility.spec.ts",
+        "sha256": "a55a5c6fdc2506d70c2840e75486d235a8c7440964376a2fa25ee88a7c65e504"
+      },
+      {
+        "path": "tests/e2e/vertical-slice.spec.ts",
+        "sha256": "67a01a7a4951c991231b59ce20bf3f9cacd6c11a1d4ee5ec86b88048ac931b18"
+      },
+      {
+        "path": "tests/fixtures/http-budget.ts",
+        "sha256": "d0d772ca40196ef90b7f570bcf19123c8f53543ed664e716139e30a4f4682e95"
+      },
+      {
+        "path": "tests/fixtures/manual-scan.ts",
+        "sha256": "23b28b2cbf33bcc6c779ed16e940287d3918d9e2153deace925021edfb726979"
+      },
+      {
+        "path": "tests/fixtures/relation-migration-api.ts",
+        "sha256": "e68e89aff887339a035364f124f1ae8888d740b92cf55ff8466c687324a2e65f"
+      },
+      {
+        "path": "tests/fixtures/relation-participation.ts",
+        "sha256": "209132979d10001c59e464c5b9a43e63ea82135962a46bfe0b6329a1b243f6e8"
+      },
+      {
+        "path": "tests/integration/asset-type-api-limits.test.ts",
+        "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4"
+      },
+      {
+        "path": "tests/integration/asset-type-migration-storage.test.ts",
+        "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+      },
+      {
+        "path": "tests/integration/asset-type-migrations.test.ts",
+        "sha256": "c5ad40c323b3405243e95c9b33b62d81e86ab596bca361779219c489fb7aa407"
+      },
+      {
+        "path": "tests/integration/asset-type-storage.test.ts",
+        "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+      },
+      {
+        "path": "tests/integration/asset-types.test.ts",
+        "sha256": "08c5b7fd9aebea55d498b97b4c524e6e83eefb4c7e604b519996ec1932a2145e"
+      },
+      {
+        "path": "tests/integration/audit-integrity.test.ts",
+        "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad"
+      },
+      {
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "eb1159e5c2f3004c3d90a82b2361c2665efff90d20b3eb18f8e58a7929ebd579"
+      },
+      {
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7"
+      },
+      {
+        "path": "tests/integration/model-migration-api.test.ts",
+        "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb"
+      },
+      {
+        "path": "tests/integration/model-migration-storage.test.ts",
+        "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+      },
+      {
+        "path": "tests/integration/model-migrations.test.ts",
+        "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+      },
+      {
+        "path": "tests/integration/model-pagination.test.ts",
+        "sha256": "0809f4e7711f3fea796edc1f87a82fc6ece9684c0c6483e4d506a233c4d0d0d2"
+      },
+      {
+        "path": "tests/integration/models.test.ts",
+        "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1"
+      },
+      {
+        "path": "tests/integration/relation-migration-api.test.ts",
+        "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db"
+      },
+      {
+        "path": "tests/integration/relation-participation-storage.test.ts",
+        "sha256": "17fcf6a093e501e0743d9ec5a6b50046b00b3cb59e7be86f802003699d27830e"
+      },
+      {
+        "path": "tests/integration/relation-storage.test.ts",
+        "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619"
+      },
+      {
+        "path": "tests/integration/relations.test.ts",
+        "sha256": "eef1490ff12eae279018027edfdbbbd9dee2bae739cf925e82f16fd81ecba760"
+      },
+      {
+        "path": "tests/qualification/asset-type-migration-concurrency.test.ts",
+        "sha256": "e7a5af01808fbe14b0c6bbc5c2a314661af7f2f3197157bf12740ee9cdb46df6"
+      },
+      {
+        "path": "tests/qualification/relation-concurrency.test.ts",
+        "sha256": "a4cffd57dd1eb68650b454a44763570d69842516849ccbf68258ab2a31383bf1"
+      },
+      {
+        "path": "tests/qualification/relation-participation-concurrency.test.ts",
+        "sha256": "2c4a405833ad5dcf7c9708b2ad804d2c8d72e316417bad6304497ea463962330"
+      },
+      {
+        "path": "tests/qualification/relation-preparation-expiry.test.ts",
+        "sha256": "8525cac9e701b847b1ac1631ff7ff55d1ea7bd7ed8f7881593f359a9374f2897"
+      },
+      {
+        "path": "tests/unit/asset-type-migration.test.ts",
+        "sha256": "1757639171aaea4eee56a020009cca3d20df193af4be026a4b52f58afef7c99d"
+      },
+      {
+        "path": "tests/unit/asset-type-policy.test.ts",
+        "sha256": "3a16e214f96bd105f73e26610244355aa9973f4a5f1d9c931606953a659685ee"
+      },
+      {
+        "path": "tests/unit/asset-type.test.ts",
+        "sha256": "bf88f0e64f5b038957837a4e8031efd2ef09a6149af37068fcdf21f71e479aff"
+      },
+      {
+        "path": "tests/unit/audit.test.ts",
+        "sha256": "5aa3b0ac05a755e7eebfee74d5ed9d0aa776e133315d5f235823b9c7a6349501"
+      },
+      {
+        "path": "tests/unit/authority-compatibility.test.ts",
+        "sha256": "e484f7ce578179b11579ac705e69226a7ac78dbfaced30bf4a02ef5f6ac477f7"
+      },
+      {
+        "path": "tests/unit/authority-policy.test.ts",
+        "sha256": "fe14102afade73e1c65264cff02fc565f18befe48f340b2020177c4ae19860bf"
+      },
+      {
+        "path": "tests/unit/authz.test.ts",
+        "sha256": "9f6bad0b18e4025df11f9f4dc61f13f6db47ac42aa6f0cf23d0cea359c8c6b7d"
+      },
+      {
+        "path": "tests/unit/cursor.test.ts",
+        "sha256": "a4afac623ce94760dc7d9d654d61fb82e017655ec7dbf9ed9eb7fece19f9ca6b"
+      },
+      {
+        "path": "tests/unit/graph-asset-preparation.test.ts",
+        "sha256": "8ac01346fe84c66c3ab27bd5a4de2dc9d07a1c3614be3fe158a4d0605d7bae29"
+      },
+      {
+        "path": "tests/unit/http-budget.test.ts",
+        "sha256": "b1426f3bb0e4d49f807e2486744cc221450d40ce035f9385e9db34d737962695"
+      },
+      {
+        "path": "tests/unit/json-envelope.test.ts",
+        "sha256": "fe6eae3e6ba41a3922f70f6b480428ce6f08e428dc543d746fb02df2b7a8ab21"
+      },
+      {
+        "path": "tests/unit/model-migration-file.test.ts",
+        "sha256": "130db7830dfc09286dce285721747bfbe1ebf61c411630c92b77ee05e8ad0929"
+      },
+      {
+        "path": "tests/unit/model-migration.test.ts",
+        "sha256": "dc6c42b66be1d6ff5215e9ae096682376be0e41d999f73c86f3fc2250ba658b0"
+      },
+      {
+        "path": "tests/unit/model.test.ts",
+        "sha256": "bbdfc4842bd1c0496344f306ed7aea1dd9a371fe59e570d08c3d45eaa834118c"
+      },
+      {
+        "path": "tests/unit/relation-failure.test.ts",
+        "sha256": "52f7ca924c81e89ea748974a9be2091465f9a1ec49e8a4ea12d67fd4e33a194c"
+      },
+      {
+        "path": "tests/unit/relation-migration-preconditions.test.ts",
+        "sha256": "09be8172caf4e301fc398a373dbbe993b5f1a9d16b1f753baed8a346de3925c0"
+      },
+      {
+        "path": "tests/unit/relation-migration-ui.test.ts",
+        "sha256": "5e5ce0c298ca4b181198b0abe76bd126922d39871320b75c031b11ed8adf1fb3"
+      },
+      {
+        "path": "tests/unit/relation-migration.test.ts",
+        "sha256": "31aab099bb90d9795854bb264b8ee01cd2a4670ccd14fcb5d4a5be7882a5dc02"
+      },
+      {
+        "path": "tests/unit/relation-participation-fixtures.ts",
+        "sha256": "be5a0a88548c67dc501c5e24083048e42827e99a7810c07f8c68cb308ef4168a"
+      },
+      {
+        "path": "tests/unit/relation-participation-read.test.ts",
+        "sha256": "b9d15989a5ad281772703282a9d71d2eb18e746ad41bffa7e1adfebc4bce08ed"
+      },
+      {
+        "path": "tests/unit/relation-participation.test.ts",
+        "sha256": "f8a36fffff339d7051f828cdd924738cade588833a941e829712b51d21b2bb3d"
+      },
+      {
+        "path": "tests/unit/relation-preparation-read.test.ts",
+        "sha256": "c2b6d11062618d1a8688bf66dac5eb91b11c7489682319a9bde372a21e1f0591"
+      },
+      {
+        "path": "tests/unit/relation.test.ts",
+        "sha256": "737b1f133fdd950ba0dd5a379ae257acd5046e3af35cb7a8672354e44d05f4af"
+      },
+      {
+        "path": "tsconfig.json",
+        "sha256": "a123b4fe43b17517d14b6b839781d3e3f1745ea6c368f24d9f8aaccb602382b3"
+      }
+    ]
+  },
+  "toolchain": {
+    "node": "v24.22.3",
+    "pnpm": "10.32.1",
+    "typescript": "7.0.2",
+    "tsx": "4.23.15",
+    "version_methods": "node/pnpm version commands; installed TypeScript/tsx package.json read without invoking the tsx IPC CLI."
+  },
+  "execution": {
+    "result": "PASS",
+    "started_at": "2026-11-16T04:08:51.064201+00:00",
+    "finished_at": "2026-11-16T04:08:53.918781+00:00",
+    "private_original": {
+      "path": ".local/evidence/authority-pure/final-admission-2/execution.json",
+      "sha256": "6e6da13d04856375ab3c5c37683a49d301fbd749454c3297d346339610b4e1de"
+    },
+    "checks": [
+      {
+        "name": "focused-unit",
+        "command": [
+          "node",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-reporter=tap",
+          "tests/unit/authority-policy.test.ts",
+          "tests/unit/authority-compatibility.test.ts"
+        ],
+        "started_at": "2026-11-16T04:08:51.106446+00:00",
+        "finished_at": "2026-11-16T04:08:51.770492+00:00",
+        "exit_code": 0,
+        "private_log": {
+          "path": ".local/evidence/authority-pure/final-admission-2/focused-unit.log",
+          "sha256": "37570d77a5eca368d055de9333350ef220fae8756d9dff7ee5ec978d8d13d4c8"
+        },
+        "counts": {
+          "tests": 22,
+          "suites": 0,
+          "pass": 22,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 392.157333
+        }
+      },
+      {
+        "name": "full-root-unit",
+        "command": [
+          "node",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-reporter=tap",
+          "tests/unit/asset-type-migration.test.ts",
+          "tests/unit/asset-type-policy.test.ts",
+          "tests/unit/asset-type.test.ts",
+          "tests/unit/audit.test.ts",
+          "tests/unit/authority-compatibility.test.ts",
+          "tests/unit/authority-policy.test.ts",
+          "tests/unit/authz.test.ts",
+          "tests/unit/cursor.test.ts",
+          "tests/unit/graph-asset-preparation.test.ts",
+          "tests/unit/http-budget.test.ts",
+          "tests/unit/json-envelope.test.ts",
+          "tests/unit/model-migration-file.test.ts",
+          "tests/unit/model-migration.test.ts",
+          "tests/unit/model.test.ts",
+          "tests/unit/relation-failure.test.ts",
+          "tests/unit/relation-migration-preconditions.test.ts",
+          "tests/unit/relation-migration-ui.test.ts",
+          "tests/unit/relation-migration.test.ts",
+          "tests/unit/relation-participation-read.test.ts",
+          "tests/unit/relation-participation.test.ts",
+          "tests/unit/relation-preparation-read.test.ts",
+          "tests/unit/relation.test.ts"
+        ],
+        "started_at": "2026-11-16T04:08:51.106517+00:00",
+        "finished_at": "2026-11-16T04:08:53.775493+00:00",
+        "exit_code": 0,
+        "private_log": {
+          "path": ".local/evidence/authority-pure/final-admission-2/full-root-unit.log",
+          "sha256": "8cc615de4c5f05742d9aebff0b78127bc8e8e522f38facec003fb0c22a0cd2f3"
+        },
+        "counts": {
+          "tests": 232,
+          "suites": 0,
+          "pass": 232,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2396.984417
+        }
+      },
+      {
+        "name": "root-web-typecheck",
+        "command": [
+          "pnpm",
+          "typecheck"
+        ],
+        "started_at": "2026-11-16T04:08:51.106588+00:00",
+        "finished_at": "2026-11-16T04:08:53.032483+00:00",
+        "exit_code": 0,
+        "private_log": {
+          "path": ".local/evidence/authority-pure/final-admission-2/root-web-typecheck.log",
+          "sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+        }
+      }
+    ],
+    "qualification": "Focused tests are included in the232-test full suite;22+232 is not a unique-test count. TAP duration is each command reported duration. The three command processes ran concurrently."
+  },
+  "focused_tests": [
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 22,
+      "title": "strict parsing returns a fresh frozen policy while retaining rule and child order"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 35,
+      "title": "all declared predicates accept their exact grammar and normalize scalar or tuple sets"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 56,
+      "title": "canonical JSON and SHA-256 match independently calculated Python vectors and project hashing"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 68,
+      "title": "canonical Unicode vector uses UTF-16 lexical sets and exact escaping without Unicode normalization"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 78,
+      "title": "JSON ingestion rejects actual duplicate and escaped duplicate keys before materialization"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 91,
+      "title": "all grammar objects require exact own properties and reject unsupported discriminators"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 113,
+      "title": "duplicate rule IDs and all declared set members fail rather than being discarded"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 128,
+      "title": "null fields and exact registered field sets never confer alternate action kinds"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 141,
+      "title": "UUIDs, versions and half-open validity intervals have exact canonical boundaries"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 149,
+      "title": "raw UTF-8 boundary accepts 64KiB exactly and rejects one additional byte"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 157,
+      "title": "canonical normalized policy accepts exact 64KiB and rejects one more byte"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 168,
+      "title": "128 rules and cumulative expression nodes, depth8 and finite-set256 boundaries are exact"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 184,
+      "title": "all nonempty grammar collections reject empty arrays"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 189,
+      "title": "catalog has independent entry, byte and field limits and never leaks trusted values"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 202,
+      "title": "bounded issues are deterministic, refer to submitted paths and stop at64"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 209,
+      "title": "accessors, symbols, exotic/inherited objects, proxies and malformed Unicode never execute or silently copy"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 229,
+      "title": "prototype setters and inherited readonly fields cannot intercept safe normalization"
+    },
+    {
+      "file": "tests/unit/authority-policy.test.ts",
+      "line": 240,
+      "title": "wide, deep and huge-length hostile inputs stop at bounded preflight"
+    },
+    {
+      "file": "tests/unit/authority-compatibility.test.ts",
+      "line": 41,
+      "title": "all 1024 permission subsets match the independent 103-action legacy oracle"
+    },
+    {
+      "file": "tests/unit/authority-compatibility.test.ts",
+      "line": 54,
+      "title": "registry is finite, disjoint, immutable and adds no administrative, field or service grant"
+    },
+    {
+      "file": "tests/unit/authority-compatibility.test.ts",
+      "line": 65,
+      "title": "mapping rejects unknown, duplicated, coerced and hostile permission inputs without executing them"
+    },
+    {
+      "file": "tests/unit/authority-compatibility.test.ts",
+      "line": 79,
+      "title": "legacy compatibility keeps asymmetric validator, source and domain permissions exact"
+    }
+  ],
+  "compatibility_oracle": {
+    "legacy_permission_count": 10,
+    "permission_subsets_executed": 1024,
+    "compatible_action_count": 103,
+    "subset_action_predicates_compared": 105472,
+    "baseline_actions": [
+      "session:self.read",
+      "session:tenant.select",
+      "schema:read",
+      "capability:read"
+    ],
+    "administration_actions": 21,
+    "field_actions": 2,
+    "service_actions": 10,
+    "total_registered_actions": 136,
+    "method": "An independently authored103-entry literal action-to-numeric-bitmask oracle in authority-compatibility.test.ts supplies expected all-of predicates. Expected results are not derived from COMPATIBILITY_ACTIONS. Each of1024 subsets is compared in forward and reverse input order. Separate assertions verify literal registry order, uniqueness, immutability, rejection of malformed/unknown/duplicate inputs and absence of automatic administration/field/service grants.",
+    "limits": "The mapping presumes an authenticated active member. Identity/activity, tenant/ACL scope, conditional hierarchy catalog permission, subordinate operation authority and response-field policy are not proved by this pure oracle."
+  },
+  "parser_and_normalization": {
+    "external_raw_text_limit_utf8_bytes": 65536,
+    "normalized_policy_limit_utf8_bytes": 65536,
+    "expression_nodes_cumulative": 128,
+    "root_expression_depth": 1,
+    "maximum_expression_depth": 8,
+    "rules_minimum": 1,
+    "rules_maximum": 128,
+    "finite_set_maximum": 256,
+    "children_declared_maximum": 256,
+    "issue_maximum": 64,
+    "postgres_version_maximum": 2147483647,
+    "trusted_catalog": {
+      "maximum_entries": 16384,
+      "maximum_total_field_utf8_bytes": 131072,
+      "maximum_field_utf8_bytes": 256,
+      "empty_default": true,
+      "proof": "Syntax and exact membership only; catalog registration/provenance and loader admission are future protected boundaries."
+    },
+    "tested_boundaries": [
+      "Raw and canonical64KiB pass-at-limit/fail-over-limit, including supplementary Unicode.",
+      "128 cumulative expression nodes and128 rules; depth8;256-entry finite sets;64 deterministic issues.",
+      "Catalog16384 entries,128KiB total UTF8 and256-byte field IDs; duplicate/accessor/Unicode rejection.",
+      "Canonical lowercase UUIDs, positive PostgreSQL integer versions and canonical millisecond UTC half-open intervals.",
+      "Actual duplicate and escaped duplicate JSON keys are rejected before ordinary JSON.parse materialization.",
+      "Unknown/missing grammar fields, unsupported actions/resource kinds/operators, field/non-field action mismatch, malformed numbers and Unicode, cycles, accessors, proxies, inherited/exotic objects, sparse arrays, symbols and hidden properties.",
+      "Fresh frozen normalized output, exact scalar/tuple ordering, preserved rule/child order and inherited-setter/read-only-property regressions."
+    ],
+    "normalization": "Only declared sets are sorted. Rule order and all/any child order remain meaningful and unchanged. Duplicate members are rejected rather than deduplicated.",
+    "hash": "SHA-256 over canonical UTF8 JSON: recursive own object keys in lexical UTF16 order, normalized arrays in order, JSON.stringify primitive escaping/number formatting, no whitespace or Unicode normalization. Two independently calculated Python known vectors and existing project typeHash comparisons pass. This is not a signature or SQL parity proof.",
+    "bound_interactions": [
+      "The128-node aggregate ceiling dominates the256-child array ceiling: a valid all/any root may contain at most127 leaf children. The suite proves127 children pass and128/257 fail.",
+      "The32 canonical-domain-ancestor ceiling is declared for the future loader. Policy AST contains includeAncestors, not loaded ancestor evidence; no ancestry loader/evaluator is implemented or qualified here."
+    ]
+  },
+  "input_admission_boundary": {
+    "external_documents": "External policy adapters must call parsePolicyFile on raw text. Its65536-byte UTF8 admission check precedes JSON materialization. Future ingress gates must verify this sequence; no such adapter is implemented in this increment.",
+    "in_memory_inputs": "parsePolicy, canonicalPolicyJSON, policyHash, field catalog and compatibility permission arrays require trusted caller admission. Exact own-key rejection uses reflection whose cost scales with preexisting own-key metadata. Arbitrarily large already-materialized objects do not have a globally bounded enumeration guarantee.",
+    "remaining_checks": "After caller admission, the module rejects proxies before reflection and rejects accessors, unsupported values, unknown/non-enumerable/symbol keys and malformed data. The tests do not claim a universal arbitrary-object resource bound."
+  },
+  "preserved_history": [
+    {
+      "result": "FAIL_FOCUSED_FIXTURE_BOUNDARY",
+      "private_report": {
+        "path": ".local/evidence/authority-pure/attempt-1/execution.json",
+        "sha256": "30fecc62fbd86bcc9a0c278f9b3be15ea0bd52d549d5f2807e210f2c99bb88e3"
+      },
+      "focused_counts": {
+        "tests": 21,
+        "pass": 20,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 262.979917
+      },
+      "root_web_types": "PASS",
+      "diagnosis": "The exact64KiB test fixture used251 maximum-length field identifiers, producing65294bytes. It was corrected to252 identifiers, producing65553bytes, with17bytes removed from the final identifier. The parser and compatibility tests otherwise passed. A later Unicode known-vector case increased the focused suite to22.",
+      "private_logs": [
+        {
+          "path": ".local/evidence/authority-pure/attempt-1/unit.log",
+          "sha256": "b6103ff0ab884c198690484254349e49c27f8b6c1716c6295a2df84d6022f818"
+        },
+        {
+          "path": ".local/evidence/authority-pure/attempt-1/types.log",
+          "sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+        }
+      ]
+    },
+    {
+      "result": "PASS_EARLIER_PURE_SNAPSHOT",
+      "private_report": {
+        "path": ".local/evidence/authority-pure/attempt-2/execution.json",
+        "sha256": "905d23908e0ef21520e3aa718be2d2131802e8796066377a7aee0b2a769c90a8"
+      },
+      "scope": "Earlier22/22 focused tests and root/web types before the admission-comment refinement; retained as historical evidence, not the final snapshot."
+    },
+    {
+      "result": "PASS_EARLIER_FULL_PURE_SNAPSHOT",
+      "private_report": {
+        "path": ".local/evidence/authority-pure/full-1/execution.json",
+        "sha256": "9f06ddcc1da5c0dbf91a0eb803463bd37d84f8b57b92ed436c3ad8fc6aa6fe66"
+      },
+      "scope": "Earlier232/232 full root suite with89 .ts/config hash inputs before the final broader source snapshot."
+    },
+    {
+      "result": "INCOMPLETE_EVIDENCE_WRAPPER_METADATA_FAILURE",
+      "private_report": {
+        "path": ".local/evidence/authority-pure/final-admission/metadata-probe-failure.json",
+        "sha256": "ecf7b96a1732e7d596ea148f3908662e512aacc5703a5ca1e994aaa072dc38e3"
+      },
+      "scope": "A metadata-only tsx --version probe failed with sandbox IPC EPERM after22/22 focused and232/232 full unit logs and the typecheck log were produced. That wrapper did not persist before/after snapshots, so it is not used as final source-bound execution. Original logs remain private; the succeeding final run reads installed package metadata without invoking the tsx CLI."
+    }
+  ],
+  "limitations": [
+    "No evaluator, authority decision, protected policy/grant storage, administration/bootstrap, delegation/elevation, field projection, service lease, runtime adapter or tenant activation is implemented or qualified by this report.",
+    "All136 actions are accepted syntax; mixed human/service non-field arrays remain syntax only. Grant provenance and human/service separation must be proved at future protected publication/activation boundaries.",
+    "Purpose/environment/classification/tag predicates parse but have no live provenance/evaluation qualification. Field catalog membership is not a grant. Null fields do not imply resource-wide authority.",
+    "Canonical TypeScript hashing has not been proved equivalent to a future SQL implementation. Current database receipts and migration histories were not changed.",
+    "No Docker, PostgreSQL/core API, browser, worker/search authorization or hosted/scanner gate was executed for this pure increment. Earlier product gates do not qualify these new authority modules.",
+    "The broader governing specification, all scoped-authority runtime integration and release gates remain open."
+  ]
+}
