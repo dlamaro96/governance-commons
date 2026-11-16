@@ -176,8 +176,21 @@ class BootstrapPersistenceTests(unittest.TestCase):
         compose=(ROOT/'deploy/compose/compose.yaml').read_text()
         worker=compose[compose.index('  python-worker:\n'):]
         self.assertIn('SOURCE_SECRETS_FILE: /run/source-credentials/secrets.json',worker)
+        self.assertIn('POSTGRES_TARGETS_FILE: /run/source-credentials/postgres-targets.json',worker)
         self.assertIn('../../.local/source-credentials:/run/source-credentials:ro',worker)
         self.assertNotIn('../../.local/source-secrets.json:',worker)
+
+    def test_bootstrap_never_creates_or_rewrites_operator_postgres_target_policy(self):
+        self.run_bootstrap()
+        policy=self.provider.parent/'postgres-targets.json'
+        self.assertFalse(policy.exists())
+        raw=b'{"formatVersion":1,"targets":{"operator-controlled":"preserve exact bytes"}}\n'
+        policy.write_bytes(raw);policy.chmod(0o400)
+        before=policy.stat()
+        self.run_bootstrap()
+        after=policy.stat()
+        self.assertEqual(policy.read_bytes(),raw)
+        self.assertEqual((after.st_ino,after.st_mtime_ns,after.st_mode),(before.st_ino,before.st_mtime_ns,before.st_mode))
 
 
 if __name__=='__main__': unittest.main()

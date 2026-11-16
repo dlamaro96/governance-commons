@@ -265,6 +265,7 @@ services:
     environment:
       WORKER_TOKEN: ${WORKER_TOKEN}
       SOURCE_SECRETS_FILE: /run/source-credentials/secrets.json
+      POSTGRES_TARGETS_FILE: /run/source-credentials/postgres-targets.json
     volumes:
       - ../../.local/source-credentials:/run/source-credentials:ro
     read_only: true

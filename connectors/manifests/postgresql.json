@@ -14,17 +14,18 @@
   ],
   "execution_location": "tenant-assigned local Python execution worker",
   "authentication_methods": [
-    "password via site-local secret reference"
+    "Password resolved from a tenant-bound site-local credential reference; generic targets require operator-approved verify-full TLS with a private CA policy"
   ],
   "required_permissions": [
     "CONNECT database",
     "USAGE selected schema",
     "SELECT all relations in scan scope"
   ],
-  "tenant_scope": "secret reference binds tenant IDs and exact destination",
+  "tenant_scope": "Credential and operator target policy independently bind tenant IDs and exact host, port, database and schema",
   "region_scope": "execution site network",
   "network_destinations": [
-    "operator-registered PostgreSQL host and port; local profile source-postgres:5432 only"
+    "Exact operator-approved PostgreSQL host and port, with every resolved address admitted by explicit CIDRs and pinned for verify-full TLS",
+    "Bundled synthetic profile only: source-postgres:5432 / harbor / public; explicit separate local plaintext exception"
   ],
   "source_identity_rules": "Within an existing registered source/database: database OID + relation OID + column attnum; display paths never identify objects. Database recreation/recycled-OID detection and source epochs remain unimplemented.",
   "supported_asset_types": [
@@ -52,8 +53,8 @@
       ],
       "verification_level": "V2",
       "limitations": [
-        "Bounded schema/table/view/column catalog extraction only; exact local destination and tenant allowlist.",
-        "Other PostgreSQL versions, architectures and remote deployment profiles remain unqualified.",
+        "Bounded schema/table/view/column catalog extraction; bundled local metadata qualification is distinct from the configurable target policy/TLS native gate.",
+        "Configurable targets are implemented with DNS/CIDR pinning and verify-full TLS. Other source versions, architectures, external deployments and end-to-end custom-target scans remain unqualified.",
         "Database/cluster recreation and recycled OID detection are not implemented; source-epoch reconciliation remains required and unverified."
       ],
       "test_evidence": [

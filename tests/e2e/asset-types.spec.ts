@@ -63,8 +63,20 @@ async function scannedAsset(page: Page) {
   await expect.poll(async () => (await (await page.request.get(`/api/v1/jobs/${job.id}`)).json()).job.status, { timeout: 100_000, intervals: [1000, 2000] }).toBe('succeeded');
   let asset: { id: string } | undefined;
   await expect.poll(async () => {
-    const results = await (await page.request.get('/api/v1/assets?q=orders&type=table&limit=100')).json();
-    asset = results.items.find((item: { sourceId: string }) => item.sourceId === source.id);
+    // Existing synthetic sources can place this scan beyond the first page.
+    // Traverse the actual cursor protocol; a successful scan is not proof that
+    // its projection is present, and unrelated same-name assets cannot satisfy it.
+    let cursor: string | null = null;
+    const visited = new Set<string>();
+    for (let count = 0; count < 20; count++) {
+      const response = await page.request.get(`/api/v1/assets?q=orders&type=table&limit=100${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''}`);
+      expect(response.status()).toBe(200);
+      const result: { items: { id: string; sourceId: string; name: string }[]; nextCursor: string | null } = await response.json();
+      asset = result.items.find(item => item.sourceId === source.id && item.name === 'orders');
+      cursor = result.nextCursor;
+      if (asset || !cursor) break;
+      expect(visited.has(cursor)).toBe(false); visited.add(cursor);
+    }
     return !!asset;
   }, { timeout: 25_000 }).toBeTruthy();
   return asset!.id;

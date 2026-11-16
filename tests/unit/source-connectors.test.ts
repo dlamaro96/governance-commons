@@ -40,3 +40,31 @@ test('permission-filtered connectors cannot gain absence authority from missing 
   assert.equal(mayReconcileAbsence('postgresql',{}),true);
   assert.equal(mayReconcileAbsence('postgresql',{absenceReconciliation:false}),false);
 });
+
+test('PostgreSQL registration admits canonical configurable scopes without network or credential authority',async()=>{
+  const app=Fastify();
+  app.post('/source',{schema:{body:SourceInput},validatorCompiler:()=>validateSourceInput},async request=>({accepted:request.body}));
+  try {
+    for(const host of ['db.example.invalid','tenant-db.internal','10.42.0.7','2001:db8::1','::ffff:c000:201']) {
+      const input={...postgres,connectorId:'postgresql' as const,host,port:6432,database:'warehouse',schema:'المبيعات',secretRef:'warehouse-reader.1'};
+      const response=await app.inject({method:'POST',url:'/source',payload:input});
+      assert.equal(response.statusCode,200,response.body);assert.deepEqual(response.json().accepted,input);
+      assert.deepEqual(sourceConfiguration(sourceStorage(input)),{connectorId:'postgresql',host,port:6432,database:input.database,schema:input.schema,secretRef:input.secretRef});
+    }
+    const invalid=[
+      ...['DB.example.invalid','db.example.invalid.','db,backup','db:5432','postgresql://db','/var/run/postgresql','*','0x7f000001','0x7f.0.0.1','127.1','0177.0.0.1','2130706433','[2001:db8::1]','2001:0db8::1','fe80::1%eth0','a'.repeat(64)+'.invalid'].map(host=>({host})),
+      ...[0,65536,1.5,true,'5432'].map(port=>({port})),
+      ...['host=db','postgresql://db','postgres://db','é'.repeat(32),'x\n','x\ud800'].map(database=>({database})),
+      {schema:'界'.repeat(22)},{schema:'x\0'},{secretRef:'../secrets'},{password:'must-never-be-accepted'},
+    ];
+    for(const change of invalid){
+      const response=await app.inject({method:'POST',url:'/source',payload:{...postgres,...change}});
+      assert.equal(response.statusCode,400,JSON.stringify(change));assert.equal(response.json().code,'VALIDATION_FAILED');
+      assert.equal(response.body.includes('must-never-be-accepted'),false);
+    }
+    for(const change of [{database:'é'.repeat(31)+'x'},{schema:'界'.repeat(21)}]) {
+      const response=await app.inject({method:'POST',url:'/source',payload:{...postgres,...change}});
+      assert.equal(response.statusCode,200,response.body);
+    }
+  }finally{await app.close();}
+});

@@ -1,5 +1,11 @@
 # Current state — 2026-11-16
 
+## Product checkpoint — 2026-11-16T14:12Z
+
+Product implementation takes priority; private reports and presentation work remain deferred. The next configurable PostgreSQL increment passes533 host units, root/web types,134 Python cases (three live-source cases require the Compose gate), and12 real isolated TLS/metadata checks with exact owned-resource cleanup. The native TLS attempt3 is retained at `.local/evidence/postgres-targets-20261116T140802-861b8925cfce/report.json`; earlier launch and disk-admission failures remain unchanged. Generic registration/UI and final baked images still require runtime qualification.
+
+On cdb82fe application images, protected login passes15 HTTP plus2 real browser journeys; Unity Catalog registration/missing-reference failure passes its browser journey. The full API run passed158/159; the corrected seeded-persona pagination fixture separately passes2/2. Full browser attempt2 passes15, fails one retry-label assertion and does not run four dependent journeys. That fixture now matches the existing “Try again” control and verifies exact request replay; a fresh run remains required. Hosted PR23 source analysis found one high Python synthetic-fixture storage issue; the closed private-mode fixture repair passes10 focused HTTP tests but awaits fresh CodeQL. No full-suite, vendor-live or release pass is claimed. SQL001–014 remain applied and immutable; content authority remains inactive. Continue the full programme.
+
 ## Product integration checkpoint — 2026-11-16T13:17Z
 
 Product implementation remains the priority; private reports, cost estimates and presentation work are deferred. SQL001–014 are now applied to shared core and immutable. SQL013 canonical authority storage remains inactive for content authorization. Unity Catalog metadata registration/worker execution, Microsoft Entra protected-broker configuration, source search/pagination and slimmer runtime images are integrated development work; external vendor qualification and complete capability coverage remain open.

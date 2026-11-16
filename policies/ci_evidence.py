@@ -20,7 +20,7 @@ if any(DEST.iterdir()):
     raise SystemExit("Artifact staging must be empty; refusing to publish a mixed or stale directory")
 allowed_outcomes = {"success", "failure", "cancelled", "skipped"}
 outcomes = {}
-for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "browser", "protected_authn"):
+for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "browser", "protected_authn"):
     value = os.environ.get(f"GC_{step.upper()}_RESULT", "skipped")
     outcomes[step] = value if value in allowed_outcomes else "unknown"
 report = {
@@ -35,7 +35,7 @@ report = {
     "screenshots": [],
     "limitations": ["No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
                     "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification.",
-                    "Canonical authority and source-connector upgrade entries are required CI step outcomes only; their private native reports/logs are not exported or independently revalidated by this collector."],
+                    "Canonical authority, source-connector upgrade and configurable PostgreSQL TLS entries are required CI step outcomes only; their private native reports/logs are not exported or independently revalidated by this collector."],
 }
 # The API runner retains raw TAP privately. Only an independently revalidated,
 # exact-source report enters this staging directory; absence cannot turn a
@@ -68,7 +68,7 @@ if authn_report:
 if outcomes["authority_authn_foundation"] == "success" and not authn_report:
     report["outcome"] = "NOT_PASSED"
 # Protected transport is a separate required gate, never a replacement for
-# native foundation or the twenty core browser journeys. Hosted collection
+# native foundation or the twenty-one core browser journeys. Hosted collection
 # requires the independently bound, baked image mode; local overlays refuse.
 protected_report = load_protected_report(ROOT, os.environ.get("GITHUB_SHA"))
 protected_mismatch = bool(protected_report and outcomes["protected_authn"] != "success")
@@ -130,7 +130,7 @@ if source.is_file():
                     results = test.get("results", [])
                     status = test.get("status", "unknown")
                     filename = Path(str(spec.get("file", ""))).name
-                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts", "relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts"}:
+                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts", "relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts"}:
                         continue
                     line = spec.get("line")
                     report["tests"].append({"file": "tests/e2e/" + filename, "line": line if isinstance(line, int) else None,
@@ -144,6 +144,7 @@ if outcomes["browser"] == "success":
     expected = {f"tests/e2e/{name}.spec.ts": 2 for name in ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations")}
     expected["tests/e2e/business-domains.spec.ts"] = 3
     expected["tests/e2e/source-connectors.spec.ts"] = 1
+    expected["tests/e2e/postgres-configuration.spec.ts"] = 1
     observed = {name: sum(test["file"] == name for test in report["tests"]) for name in expected}
     locations = {(test["file"], test["line"]) for test in report["tests"]}
     if observed != expected or len(locations) != sum(expected.values()) or any(test["status"] != "expected" or test["attempts"] != 1 for test in report["tests"]):
@@ -156,12 +157,16 @@ if outcomes["browser"] == "success":
                           for state in ("form", "registered", "failure", "denial")
                           for language, width in (("en", 1440), ("ar", 390))}
     names += sorted(connector_captures)
+    postgres_captures = {f"m8-postgres-configuration-{state}-{language}-{width}.png"
+                         for state in ("form", "failure")
+                         for language, width in (("en", 1440), ("ar", 390))}
+    names += sorted(postgres_captures)
     for name in names:
         path = ROOT / "docs/verification/screenshots" / name
         if path.is_file() and not path.is_symlink() and 0 < path.stat().st_size < 16 * 1024 * 1024:
             shutil.copyfile(path, DEST / name)
             report["screenshots"].append(name)
-        elif name in connector_captures:
+        elif name in connector_captures | postgres_captures:
             report["outcome"] = "NOT_PASSED"
 (DEST / "behavior-summary.json").write_text(json.dumps(report, indent=2) + "\n")
 print(json.dumps({"outcome": report["outcome"], "test_records": len(report["tests"]), "screenshots": len(report["screenshots"])}))

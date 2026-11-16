@@ -6,6 +6,7 @@ qualification is implied. The server runs on the main thread as in production.
 """
 import copy
 import json
+import os
 from pathlib import Path
 import select
 import socket
@@ -27,16 +28,31 @@ class WorkerHTTPTest(unittest.TestCase):
         directory = tempfile.TemporaryDirectory()
         self.addCleanup(directory.cleanup)
         self.path = Path(directory.name) / "secrets.json"
-        self.write_secret(SECRET)
+        self.write_fixture("initial")
         self.http = server.WorkerServer(("127.0.0.1", 0), TOKEN, self.path)
         self.http.timeout = 2
         self.addCleanup(self.http.server_close)
         self.payload = {"tenantId": "harbor-tenant", "source": dict(SOURCE, secretRef="selected")}
 
-    def write_secret(self, secret):
+    def write_fixture(self, variant):
+        # Closed, public synthetic documents only: this fixture helper cannot
+        # serialize a caller-supplied credential object to disk.
+        documents = {
+            "initial": '{"selected":{"connectorId":"unity-catalog",'
+                       '"workspaceUrl":"https://adb-123456789.1.azuredatabricks.net",'
+                       '"catalog":"harbor","schema":"commerce","tenantIds":["harbor-tenant"],'
+                       '"accessToken":"synthetic-fixture-token-only","principalId":"fixture-reader"}}',
+            "rotated": '{"selected":{"connectorId":"unity-catalog",'
+                       '"workspaceUrl":"https://adb-123456789.1.azuredatabricks.net",'
+                       '"catalog":"harbor","schema":"commerce","tenantIds":["harbor-tenant"],'
+                       '"accessToken":"synthetic-rotated-token-only","principalId":"fixture-reader"}}',
+        }
+        document = documents[variant]
         replacement = self.path.with_suffix(".new")
-        replacement.write_text(json.dumps({"selected": secret}))
-        replacement.chmod(0o600)
+        fd = os.open(replacement, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            self.assertEqual(os.fstat(stream.fileno()).st_mode & 0o777, 0o600)
+            stream.write(document)
         replacement.replace(self.path)
 
     def request(self, body=None, headers=None, *, length=None, half_close=False, trickle=False):
@@ -89,10 +105,12 @@ class WorkerHTTPTest(unittest.TestCase):
     def test_exact_secret_selected_freshly_and_not_returned(self):
         with patch.object(server, "scan", return_value={"complete": True, "records": []}) as scan:
             self.assertEqual(self.request(), (200, {"complete": True, "records": []}))
-            self.assertEqual(scan.call_args.args[1]["accessToken"], SECRET["accessToken"])
-            self.write_secret(dict(SECRET, accessToken="synthetic-rotated-token-only"))
-            self.assertEqual(self.request()[0], 200)
-            self.assertEqual(scan.call_args.args[1]["accessToken"], "synthetic-rotated-token-only")
+            self.assertEqual(scan.call_args.args[1], SECRET)
+            previous_inode = self.path.stat().st_ino
+            self.write_fixture("rotated")
+            self.assertNotEqual(self.path.stat().st_ino, previous_inode)
+            self.assertEqual(self.request(), (200, {"complete": True, "records": []}))
+            self.assertEqual(scan.call_args.args[1], dict(SECRET, accessToken="synthetic-rotated-token-only"))
             self.assertEqual(scan.call_args.args[2], "harbor-tenant")
 
     def test_wrong_tenant_connector_reference_and_target_never_complete(self):
