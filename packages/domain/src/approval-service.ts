@@ -11,6 +11,9 @@ import type {GlossaryPublicationInput} from './glossary-contracts.ts';
 import type {GlossaryPublicationReceipt} from './glossary-publication-service.ts';
 import type {ClassificationApprovalPayload,ClassificationApprovalResult} from './classification-contracts.ts';
 import {parseClassificationApprovalPayload,parseClassificationApprovalResult} from './classification-service.ts';
+import type {ApprovalPayload as ReferenceApprovalPayload,PublicationResult as ReferencePublicationResult} from './reference-data-contracts.ts';
+import {parseApprovalPayload as parseReferenceApprovalPayload} from './reference-data.ts';
+import {parseReferencePublicationResult} from './reference-data-service.ts';
 
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 const key=/^(?!(?:__proto__|constructor|prototype)$)[A-Za-z_][A-Za-z0-9_.-]{0,63}$/;
@@ -23,7 +26,7 @@ export interface ApprovalDefinitionView {definition:ApprovalDefinition;definitio
 export interface ApprovalTaskView {id:string;stageIndex:number;assignment:string;assignedIdentityId:string;version:number;status:'waiting'|'open'|'decided'|'cancelled';openedAt:string|null;expiresAt:string|null}
 export interface ApprovalDecisionView {id:string;taskId:string;taskVersion:number;actorId:string;decision:'approve'|'reject';reason:string;decidedAt:string}
 export interface ApprovalRequestSummary {
- id:string;binding:'glossary.publish'|'classification.review';resourceId:string;resourceVersion:number|null;proposalDigest:string;
+ id:string;binding:'glossary.publish'|'classification.review'|'reference.publish';resourceId:string;resourceVersion:number|null;proposalDigest:string;
  workflowId:string;workflowVersion:number;workflowHash:string;requesterId:string;stageIndex:number;version:number;status:ApprovalStatus;
  expiresAt:string;createdAt:string;updatedAt:string;preconditionsCurrent:boolean;
 }
@@ -32,7 +35,8 @@ interface ApprovalRequestDetail extends Omit<ApprovalRequestSummary,'binding'> {
 }
 export type ApprovalRequestView=ApprovalRequestDetail & (
  {binding:'glossary.publish';payload:GlossaryPublicationInput;result:GlossaryPublicationReceipt|null}
- |{binding:'classification.review';payload:ClassificationApprovalPayload;result:ClassificationApprovalResult|null});
+ |{binding:'classification.review';payload:ClassificationApprovalPayload;result:ClassificationApprovalResult|null}
+ |{binding:'reference.publish';payload:ReferenceApprovalPayload;result:ReferencePublicationResult|null});
 export interface ApprovalDecisionInput {proposalDigest:string;taskId:string;taskVersion:number;decision:'approve'|'reject';reason:string}
 export interface ApprovalCancelInput {proposalDigest:string;reason:string}
 type Row=Record<string,any>;
@@ -152,14 +156,15 @@ export function visibleApprovalRequest(p:Principal){return sql<boolean>`r.tenant
  and not exists(select 1 from jsonb_array_elements(case when jsonb_typeof(r.payload->'links')='array' then r.payload->'links' else '[]'::jsonb end) link
   where not exists(select 1 from public.assets target where target.tenant_id=r.tenant_id and target.id::text=link->>'targetAssetId'
    and (target.visibility='tenant' or target.allowed_identities @> ${JSON.stringify([p.id])}::jsonb))))
- or (r.binding='classification.review' and public.gc_classification_visible(r.resource_id,${p.id}::uuid)))`;}
-function current(){return sql<boolean>`case when r.binding='classification.review' then public.gc_classification_payload_current(r.payload) when r.binding='glossary.publish' then ((r.resource_version is null and not exists(select 1 from public.assets base where base.tenant_id=r.tenant_id and base.id=r.resource_id))
+ or (r.binding='classification.review' and public.gc_classification_visible(r.resource_id,${p.id}::uuid))
+ or (r.binding='reference.publish' and public.gc_reference_request_visible(r.id,${p.id}::uuid)))`;}
+function current(){return sql<boolean>`case when r.binding='reference.publish' then public.gc_reference_payload_current(r.payload) when r.binding='classification.review' then public.gc_classification_payload_current(r.payload) when r.binding='glossary.publish' then ((r.resource_version is null and not exists(select 1 from public.assets base where base.tenant_id=r.tenant_id and base.id=r.resource_id))
  or exists(select 1 from public.assets base where base.tenant_id=r.tenant_id and base.id=r.resource_id and base.version=r.resource_version and base.status='active'))
  and not exists(select 1 from jsonb_array_elements(case when jsonb_typeof(r.payload->'links')='array' then r.payload->'links' else '[]'::jsonb end) link
  where not exists(select 1 from public.assets target where target.tenant_id=r.tenant_id and target.id::text=link->>'targetAssetId' and target.version::text=link->>'targetAssetVersion' and target.status='active')) else false end`;}
 const summaryColumns=sql`r.id,r.binding,r.resource_id,r.resource_version,r.proposal_digest,r.workflow_id,r.workflow_version,r.workflow_hash,r.requester_id,r.stage_index,r.version,r.status,r.expires_at,r.created_at,r.updated_at`;
 function summary(r:Row):ApprovalRequestSummary {
- if(!uuid.test(r.id)||!['glossary.publish','classification.review'].includes(r.binding)||!statuses.includes(r.status)||typeof r.preconditions_current!=='boolean')throw integrity();
+ if(!uuid.test(r.id)||!['glossary.publish','classification.review','reference.publish'].includes(r.binding)||!statuses.includes(r.status)||typeof r.preconditions_current!=='boolean')throw integrity();
  return {id:r.id,binding:r.binding,resourceId:r.resource_id,resourceVersion:r.resource_version,proposalDigest:r.proposal_digest,workflowId:r.workflow_id,
   workflowVersion:r.workflow_version,workflowHash:r.workflow_hash,requesterId:r.requester_id,stageIndex:r.stage_index,version:r.version,status:r.status,
   expiresAt:iso(r.expires_at),createdAt:iso(r.created_at),updatedAt:iso(r.updated_at),preconditionsCurrent:r.preconditions_current};
@@ -169,12 +174,13 @@ async function authorizeRequestRead(tx:Tx,p:Principal):Promise<Principal>{
  const member=await approvalQuery(tx,()=>tx.selectFrom('memberships').innerJoin('identities','identities.id','memberships.identity_id')
   .select('memberships.permissions').where('memberships.tenant_id','=',p.tenantId).where('memberships.identity_id','=',p.id)
   .where('memberships.active','=',true).where('identities.active','=',true).executeTakeFirst());
- if(!member||!Array.isArray(member.permissions)||!member.permissions.includes('catalog:read')||!['catalog:write','classification:read'].some(action=>member.permissions.includes(action)))
+ if(!member||!Array.isArray(member.permissions)||!member.permissions.includes('catalog:read')||!['catalog:write','classification:read','reference:read'].some(action=>member.permissions.includes(action)))
   throw new Problem(403,'FORBIDDEN','Your current permissions do not allow this action.');
  return {...p,permissions:member.permissions};
 }
-function requestPayload(row:Row):GlossaryPublicationInput|ClassificationApprovalPayload{
+function requestPayload(row:Row):GlossaryPublicationInput|ClassificationApprovalPayload|ReferenceApprovalPayload{
  if(row.binding==='glossary.publish'){const parsed=parseGlossaryPublication(row.payload);if(!parsed.ok)throw integrity();return parsed.value.input;}
+ if(row.binding==='reference.publish')try{const parsed=parseReferenceApprovalPayload(row.payload);if(!parsed.ok||parsed.value.setId!==row.resource_id)throw 0;return parsed.value;}catch{throw integrity();}
  if(row.binding==='classification.review')try{const payload=parseClassificationApprovalPayload(row.payload);if(payload.assetId!==row.resource_id)throw 0;return payload;}catch{throw integrity();}
  throw integrity();
 }
@@ -191,6 +197,11 @@ async function requestRow(tx:Tx,p:Principal,requestId:string):Promise<Row> {
  const row=(await approvalQuery(tx,()=>sql<Row>`select r.*,(${current()}) as preconditions_current from public.approval_requests r where r.id=${requestId}::uuid and ${visibleApprovalRequest(p)}`.execute(tx))).rows[0];
  if(!row)throw unavailable();requestPayload(row);return row;
 }
+function referenceResult(status:string,result:unknown,payload:ReferenceApprovalPayload):ReferencePublicationResult|null {
+ try {if((status==='succeeded')!==(result!==null))throw 0;if(result===null)return null;const value=parseReferencePublicationResult(result);
+  if(value.setId!==payload.setId||value.version!==payload.expectedVersion+1||value.effectiveFrom!==(payload.release.activation.kind==='at'?payload.release.activation.at:value.publishedAt))throw 0;return value;
+ }catch{throw integrity();}
+}
 async function detail(tx:Tx,p:Principal,row:Row):Promise<ApprovalRequestView>{
  const workflow=await definitionAt(tx,p,row.workflow_id,row.workflow_version);if(workflow.definitionHash!==row.workflow_hash)throw integrity();
  const tasks=(await approvalQuery(tx,()=>sql<Row>`select * from public.approval_tasks where tenant_id=${p.tenantId}::uuid and request_id=${row.id}::uuid order by stage_index,assignment collate "C" limit 257`.execute(tx))).rows;
@@ -199,6 +210,7 @@ async function detail(tx:Tx,p:Principal,row:Row):Promise<ApprovalRequestView>{
  const payload=requestPayload(row);let result=row.result;
  if(row.binding==='classification.review')try{if((row.status==='succeeded')!==(result!==null))throw 0;if(result!==null){result=parseClassificationApprovalResult(result);const proposal=payload as ClassificationApprovalPayload;
   if(result.assetId!==row.resource_id||result.assignmentId!==proposal.assignmentId||result.evidenceHash!==proposal.evidenceHash||result.assignmentVersion!==proposal.expectedAssignmentVersion+1||result.status!==(proposal.change==='apply'?'active':'withdrawn'))throw 0;}}catch{throw integrity();}
+ if(row.binding==='reference.publish')result=referenceResult(row.status,result,payload as ReferenceApprovalPayload);
  return {...summary(row),payload,workflow,result,errorCode:row.error_code,
   tasks:tasks.map(t=>({id:t.id,stageIndex:t.stage_index,assignment:t.assignment,assignedIdentityId:t.assigned_identity_id,version:t.version,status:t.status,openedAt:t.opened_at===null?null:iso(t.opened_at),expiresAt:t.expires_at===null?null:iso(t.expires_at)})),
   decisions:decisions.map(d=>({id:d.id,taskId:d.task_id,taskVersion:d.task_version,actorId:d.actor_id,decision:d.decision,reason:d.reason,decidedAt:iso(d.decided_at)}))} as ApprovalRequestView;
@@ -209,9 +221,22 @@ async function lockRequest(tx:Tx,p:Principal,requestId:string,cancel:boolean):Pr
  // Gather every principal before taking the first identity lock: actor-only
  // prelocking would invert SQL015's global sorted requester/assignee lock order.
  const row=await requestRow(tx,p,requestId);
- const actions=row.binding==='classification.review'?['catalog:read','classification:read',cancel?'classification:write':'classification:approve']:read;
+ const actions=row.binding==='reference.publish'?['catalog:read','reference:read',cancel?'reference:write':'reference:approve']:row.binding==='classification.review'?['catalog:read','classification:read',cancel?'classification:write':'classification:approve']:read;
  await authorize(tx,p,actions);
  const payload=requestPayload(row);
+ if(row.binding==='reference.publish'){
+  // Lock the complete requester/reviewer/value-owner/audience set in one
+  // global order. The tenant ledger serializes this preflight; the protected
+  // command locks its module-owned head under owner privileges.
+  const proposal=payload as ReferenceApprovalPayload;
+  const owners=[proposal.release.ownerId,...proposal.release.values.map(value=>value.ownerId),...proposal.audience.allowedIdentityIds];
+  await approvalQuery(tx,()=>sql`select public.gc_lock_type_migration_principals(array(select distinct principal from (
+   select ${p.id}::uuid as principal union select ${row.requester_id}::uuid union
+   select assigned_identity_id from public.approval_tasks where tenant_id=${p.tenantId}::uuid and request_id=${requestId}::uuid
+   union select unnest(${owners}::uuid[])
+  ) complete order by principal))`.execute(tx));
+  await authorize(tx,p,actions);return requestRow(tx,p,requestId);
+ }
  const ruleOwners=row.binding==='classification.review'?sql`union select owner_id from public.classification_rule_versions where tenant_id=${p.tenantId}::uuid and rule_id=${(payload as ClassificationApprovalPayload).evidence.rule.id}::uuid and version=${(payload as ClassificationApprovalPayload).evidence.rule.version}`:sql``;
  await approvalQuery(tx,()=>sql`select public.gc_lock_type_migration_principals(array(select distinct principal from (
   select ${p.id}::uuid as principal union select ${row.requester_id}::uuid union
@@ -247,6 +272,7 @@ async function mutation(tx:Tx,p:Principal,requestId:string,input:unknown,command
   ||!Array.isArray(value.tasks)||value.tasks.length>256||!Array.isArray(value.decisions)||value.decisions.length>256)throw integrity();
  if(currentRow.binding==='classification.review')try{const payload=parseClassificationApprovalPayload(value.payload);if((value.status==='succeeded')!==(value.result!==null))throw 0;if(value.result!==null){const result=parseClassificationApprovalResult(value.result);
   if(result.assetId!==payload.assetId||result.assignmentId!==payload.assignmentId||result.evidenceHash!==payload.evidenceHash||result.assignmentVersion!==payload.expectedAssignmentVersion+1||result.status!==(payload.change==='apply'?'active':'withdrawn'))throw 0;}}catch{throw integrity();}
+ if(currentRow.binding==='reference.publish')referenceResult(value.status,value.result,requestPayload({...currentRow,payload:value.payload}) as ReferenceApprovalPayload);
  const workflow=await definitionAt(tx,p,currentRow.workflow_id,currentRow.workflow_version);if(workflow.definitionHash!==currentRow.workflow_hash)throw integrity();
  return {request:{...value,workflow,preconditionsCurrent:currentRow.preconditions_current} as ApprovalRequestView};
 }

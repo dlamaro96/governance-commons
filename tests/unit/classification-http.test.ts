@@ -242,11 +242,33 @@ test('site classification publication resolves canonical requester and records o
 });
 
 test('site publication dispatcher accepts only canonical stored binding and never guesses an effect',async()=>{
- for(const binding of ['glossary.publish','classification.review','unknown']){
+ for(const binding of ['glossary.publish','classification.review','reference.publish','unknown']){
   const f=recording(()=>[{binding}]),calls:string[]=[],status={id:instanceId,status:'succeeded' as const,version:3,nextWakeAt:null};
-  const run=createApprovalPublicationDispatcher({scope:(async(_t:string,_a:string,work:(tx:Tx)=>Promise<unknown>)=>work(f.tx)) as ClassificationDependencies['scope'],glossary:async()=>{calls.push('glossary');return status;},classification:async()=>{calls.push('classification');return status;}});
-  try{if(binding==='unknown')await assert.rejects(()=>run(tenant,instanceId),isCode('APPROVAL_STORAGE_INVALID'));else assert.deepEqual(await run(tenant,instanceId),status);assert.deepEqual(calls,binding==='unknown'?[]:[binding==='glossary.publish'?'glossary':'classification']);assert.deepEqual(f.calls.find(q=>q.sql.includes('select binding'))?.parameters,[tenant,instanceId]);}finally{await f.close();}
+  const run=createApprovalPublicationDispatcher({scope:(async(t:string,a:string,work:(tx:Tx)=>Promise<unknown>)=>{assert.equal(t,tenant);assert.equal(a,'site:local');const value=await work(f.tx);calls.push('lookup');return value;}) as ClassificationDependencies['scope'],
+   glossary:async(t,r)=>{assert.deepEqual([t,r],[tenant,instanceId]);calls.push('glossary');return status;},
+   classification:async(t,r)=>{assert.deepEqual([t,r],[tenant,instanceId]);calls.push('classification');return status;},
+   reference:async(t,r)=>{assert.deepEqual([t,r],[tenant,instanceId]);calls.push('reference');return status;}});
+  try{if(binding==='unknown')await assert.rejects(()=>run(tenant,instanceId),isCode('APPROVAL_STORAGE_INVALID'));else assert.deepEqual(await run(tenant,instanceId),status);
+   assert.deepEqual(calls,binding==='unknown'?['lookup']:['lookup',binding==='glossary.publish'?'glossary':binding==='classification.review'?'classification':'reference']);
+   assert.deepEqual(f.calls.find(q=>q.sql.includes('select binding'))?.parameters,[tenant,instanceId]);
+  }finally{await f.close();}
  }
+});
+
+test('reference dispatch does not guess absent requests or accept malformed IDs before canonical lookup',async()=>{
+ const f=recording(()=>[]);let lookups=0,effects=0;
+ const effect=async()=>{effects++;return {id:instanceId,status:'succeeded' as const,version:3,nextWakeAt:null};};
+ const run=createApprovalPublicationDispatcher({scope:(async(_t:string,_a:string,work:(tx:Tx)=>Promise<unknown>)=>{lookups++;return work(f.tx);}) as ClassificationDependencies['scope'],glossary:effect,classification:effect,reference:effect});
+ try{for(const pair of [['bad',instanceId],[tenant,'bad']])await assert.rejects(run(pair[0],pair[1]),isCode('APPROVAL_INPUT_INVALID'));assert.equal(lookups,0);
+  await assert.rejects(run(tenant,instanceId),isCode('APPROVAL_UNAVAILABLE'));assert.equal(lookups,1);assert.equal(effects,0);
+ }finally{await f.close();}
+});
+
+test('reference publication failure propagates without invoking another family or inventing success',async()=>{
+ const f=recording(()=>[{binding:'reference.publish'}]);const calls:string[]=[],failure=new Problem(503,'REFERENCE_RETRY','Retry the same canonical request.');
+ const run=createApprovalPublicationDispatcher({scope:(async(_t:string,_a:string,work:(tx:Tx)=>Promise<unknown>)=>work(f.tx)) as ClassificationDependencies['scope'],
+  glossary:async()=>{calls.push('glossary');throw new Error('Wrong family');},classification:async()=>{calls.push('classification');throw new Error('Wrong family');},reference:async(t,r)=>{assert.deepEqual([t,r],[tenant,instanceId]);calls.push('reference');throw failure;}});
+ try{await assert.rejects(run(tenant,instanceId),error=>error===failure);assert.deepEqual(calls,['reference']);}finally{await f.close();}
 });
 
 test('site publication returns canonical terminal status only after a valid protected result',async()=>{

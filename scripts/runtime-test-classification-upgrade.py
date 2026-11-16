@@ -95,6 +95,11 @@ class Harness(base.Harness):
         super().__init__()
         self.report.update(command='./dev test --suite classification-upgrade', profile='isolated-postgresql-classification')
 
+    def classification_native_source_expectations(self, measured):
+        # A later isolated upgrader may declare exact predecessor modules.
+        # Standalone classification still expects every checkout byte.
+        return measured
+
     def native_source_expectations(self, measured):
         require(self.classification_predecessor is not None and self.classification_current is None
                 and self.phase == 'lineage-native-tests' and self.repository_stage is None,
@@ -128,6 +133,10 @@ class Harness(base.Harness):
         self.classification_serial += 1
         original_repository_stage = self.repository_stage
         effective = [dict(row) for row in (stage or current)['sources']]
+        if current is not None:
+            native = self.classification_native_source_expectations([row for row in effective if row['path'].endswith('.ts')])
+            expected = {row['path']: row['sha256'] for row in native}
+            effective = [{**row, 'sha256': expected.get(row['path'], row['sha256'])} for row in effective]
         selected = []
         if stage is not None:
             for row in PREDECESSORS:
@@ -232,8 +241,9 @@ def execute(h):
         measured = [row for row in frozen if row['path'].endswith('.ts')]
         probe = "const fs=require('node:fs'),crypto=require('node:crypto');console.log(JSON.stringify(" + json.dumps([row['path'] for row in measured]) + ".map(path=>({path,sha256:crypto.createHash('sha256').update(fs.readFileSync(path)).digest('hex')}))));"
         observed = json.loads(h.helper(['node', '-e', probe]).stdout)
-        require(observed == measured, 'Actual classification native source bytes differ')
-        h.report['classificationNativeSourceReadback'] = {'result': 'PASS', 'files': len(measured), 'manifestSha256': sha(json.dumps(observed, sort_keys=True).encode())}
+        expected_sources = h.classification_native_source_expectations(measured)
+        require(observed == expected_sources, 'Actual classification native source bytes differ')
+        h.report['classificationNativeSourceReadback'] = {'result': 'PASS', 'files': len(measured), 'checkoutManifestSha256': sha(json.dumps(measured, sort_keys=True).encode()), 'manifestSha256': sha(json.dumps(observed, sort_keys=True).encode())}
         expected = sum(len(re.findall(r'^test\(', (ROOT / name).read_text(), re.MULTILINE)) for name in TESTS)
         require(expected == 14, 'Expected fourteen native classification cases')
         tested = h.helper(['node', '--import', 'tsx', '--test', '--test-reporter=tap', '--test-concurrency=1', *TESTS], timeout=240, allow_failure=True)

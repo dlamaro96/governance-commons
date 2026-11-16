@@ -39,6 +39,8 @@ ENGINEER = '10000000-0000-4000-8000-000000000006'
 REVOKED = 'domains:write'
 QUALITY_REVOKED = 'quality:execute'
 CLASSIFICATION_REVOKED = 'classification:approve'
+REFERENCE_REVOKED = 'reference:approve'
+REFERENCE_TABLES = ('reference_sets', 'reference_releases', 'reference_values')
 QUALITY_TABLES = ('quality_rules', 'quality_rule_versions', 'quality_runs')
 # Independent historical marker inputs: do not derive these from the new seed
 # implementation, which could otherwise change both the writer and its oracle.
@@ -85,9 +87,12 @@ def expected_permission_markers():
         quality_grants = ['quality:read'] if role in ('consumer', 'auditor') else ['quality:read', 'quality:write', 'quality:execute']
         classification_grants = ([] if role == 'consumer' else ['classification:read'] if role == 'auditor'
                                  else ['classification:read', 'classification:write', 'classification:approve'])
+        reference_grants = (['reference:read'] if role in ('consumer', 'auditor')
+                            else ['reference:read', 'reference:write', 'reference:approve'])
         for operation, grants in (('bootstrap.domain-permissions.v1', list(domain_grants)),
                                   ('bootstrap.quality-permissions.v1', quality_grants),
-                                  ('bootstrap.classification-permissions.v1', classification_grants)):
+                                  ('bootstrap.classification-permissions.v1', classification_grants),
+                                  ('bootstrap.reference-permissions.v1', reference_grants)):
             if grants:
                 body = {'dataset': 'harbor-demo', 'identityId': identity, 'role': role, 'permissions': grants}
                 result[(tenant, identity, operation)] = digest(json.dumps(body, sort_keys=True, separators=(',', ':')).encode())
@@ -96,10 +101,10 @@ def expected_permission_markers():
 
 def revoked_engineer(engineer):
     require(isinstance(engineer.get('permissions'), list)
-            and all(permission in engineer['permissions'] for permission in (REVOKED, QUALITY_REVOKED, CLASSIFICATION_REVOKED)),
-            'Engineer must initially hold all three exact permissions being tested')
+            and all(permission in engineer['permissions'] for permission in (REVOKED, QUALITY_REVOKED, CLASSIFICATION_REVOKED, REFERENCE_REVOKED)),
+            'Engineer must initially hold all four exact permissions being tested')
     return {**engineer, 'permissions': [permission for permission in engineer['permissions']
-                                      if permission not in (REVOKED, QUALITY_REVOKED, CLASSIFICATION_REVOKED)]}
+                                      if permission not in (REVOKED, QUALITY_REVOKED, CLASSIFICATION_REVOKED, REFERENCE_REVOKED)]}
 
 
 def verify_classification_permissions(rows):
@@ -116,6 +121,23 @@ def verify_classification_permissions(rows):
                 and len([value for value in row['permissions'] if value.startswith('classification:')]) == len(grants)
                 and {value for value in row['permissions'] if value.startswith('classification:')} == grants,
                 'Seeded classification authority is missing, revoked or wider than the declared persona baseline')
+    return rows
+
+
+def verify_reference_permissions(rows):
+    """Validate the same six read-back personas; never repair their authority."""
+    require(isinstance(rows, list) and len(rows) == len(PERSONA_GRANTS),
+            'All six seeded reference memberships are required')
+    for index, ((role, tenant, _), row) in enumerate(zip(PERSONA_GRANTS, rows), 1):
+        grants = ({'reference:read'} if role in ('consumer', 'auditor')
+                  else {'reference:read', 'reference:write', 'reference:approve'})
+        require(isinstance(row, dict) and set(row) == {'identity_id', 'tenant_id', 'role', 'active', 'permissions'}
+                and row['identity_id'] == '10000000-0000-4000-8000-' + str(index).zfill(12)
+                and row['tenant_id'] == tenant and row['role'] == role and row['active'] is True
+                and isinstance(row['permissions'], list) and all(isinstance(value, str) for value in row['permissions'])
+                and len([value for value in row['permissions'] if value.startswith('reference:')]) == len(grants)
+                and {value for value in row['permissions'] if value.startswith('reference:')} == grants,
+                'Seeded reference authority is missing, revoked or wider than the declared persona baseline')
     return rows
 
 
@@ -367,9 +389,9 @@ class Harness:
         # Retain the entire row, including creation time, for replay equality.
         result = json.loads(self.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY; SELECT coalesce(jsonb_agg(to_jsonb(r) ORDER BY tenant_id,actor_id,operation),'[]') FROM ("
             "SELECT * FROM public.idempotency WHERE tenant_id IN (" + literal(HARBOR) + ',' + literal(SUMMIT)
-            + ") AND operation IN ('bootstrap.domain-permissions.v1','bootstrap.quality-permissions.v1','bootstrap.classification-permissions.v1')"
-            " AND key='harbor-demo' ORDER BY tenant_id,actor_id,operation LIMIT 17) r; COMMIT;", 'permission-marker-readback'))
-        require(isinstance(result, list) and len(result) == len(expected), 'Initial domain, quality and classification permission markers are incomplete or unexpected')
+            + ") AND operation IN ('bootstrap.domain-permissions.v1','bootstrap.quality-permissions.v1','bootstrap.classification-permissions.v1','bootstrap.reference-permissions.v1')"
+            " AND key='harbor-demo' ORDER BY tenant_id,actor_id,operation LIMIT 23) r; COMMIT;", 'permission-marker-readback'))
+        require(isinstance(result, list) and len(result) == len(expected), 'Initial domain, quality, classification and reference permission markers are incomplete or unexpected')
         seen = set()
         for row in result:
             require(isinstance(row, dict) and set(row) == {'tenant_id', 'actor_id', 'operation', 'key', 'request_hash', 'response', 'created_at'},
@@ -382,7 +404,7 @@ class Harness:
                     and isinstance(response, dict) and set(response) == {'dataset', 'version', 'applied'}
                     and response['dataset'] == 'harbor-demo' and type(response['version']) is int and response['version'] == 1
                     and type(response['applied']) is bool and bool(row['created_at']),
-                    'Permission marker differs from the independent declared domain/quality/classification upgrade')
+                    'Permission marker differs from the independent declared domain/quality/classification/reference upgrade')
             seen.add(key)
         return result
 
@@ -431,6 +453,32 @@ class Harness:
                         and isinstance(row['sha256'], str) and re.fullmatch('[a-f0-9]{64}', row['sha256'])
                         for row in result.values()),
                 'Quality digest profile exceeded its bounded snapshot size or shape')
+        return result
+
+    def reference_snapshot(self):
+        # Separate from the immutable historical domain/glossary snapshot shapes.
+        # Empty reference data is valid: seed creates no sets, releases or fake approvals.
+        tenant = "tenant_id IN ('" + HARBOR + "','" + SUMMIT + "')"
+        tables = [(name, tenant) for name in REFERENCE_TABLES]
+        tables += [('audit', tenant + " AND action LIKE 'reference.%'"),
+                   ('outbox', tenant + " AND event_type LIKE 'reference.%'"),
+                   ('idempotency', tenant + " AND operation LIKE 'reference.%'")]
+        values = []
+        for table, predicate in tables:
+            values.append(literal(table) + ", (SELECT jsonb_build_object('rows',count(*),'serialized_bytes',coalesce(sum(octet_length(payload)),0),"
+                          "'sha256',CASE WHEN count(*)<=20000 AND coalesce(sum(octet_length(payload)),0)<=67108864 THEN "
+                          "encode(sha256(convert_to(coalesce(string_agg(encode(sha256(convert_to(payload,'UTF8')),'hex'),'' ORDER BY "
+                          "encode(sha256(convert_to(payload,'UTF8')),'hex')),''),'UTF8')),'hex') ELSE NULL END) "
+                          'FROM (SELECT to_jsonb(r)::text payload FROM public.' + table + ' r WHERE ' + predicate + ') s)')
+        result = json.loads(self.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY; SELECT jsonb_build_object('
+                                     + ','.join(values) + '); COMMIT;', 'reference-row-digests'))
+        require(isinstance(result, dict) and set(result) == {table for table, _ in tables}
+                and all(isinstance(row, dict) and set(row) == {'rows', 'serialized_bytes', 'sha256'}
+                        and type(row['rows']) is int and 0 <= row['rows'] <= 20000
+                        and type(row['serialized_bytes']) is int and 0 <= row['serialized_bytes'] <= 67108864
+                        and isinstance(row['sha256'], str) and re.fullmatch('[a-f0-9]{64}', row['sha256'])
+                        for row in result.values()),
+                'Reference digest profile exceeded its bounded snapshot size or shape')
         return result
 
     def all_personas_digest(self):
@@ -506,7 +554,8 @@ def main():
                               'All columns of domain rows/journals are hashed; unrelated non-domain fixtures and legacy transaction bindings are excluded.',
                               'Glossary definition equality covers only business_term and glossary_review in the two synthetic tenants; glossary journals and resource effects are excluded.',
                               'Quality equality covers all rule/version/run rows and quality journals/idempotency in the two synthetic tenants; no queued/running quality run is allowed.',
-                              'All three permission-marker families are checked against independent declared hashes; exact quality/classification grants are baseline prerequisites, never repaired by this gate.',
+                              'All four permission-marker families are checked against independent declared hashes; exact quality/classification/reference grants are baseline prerequisites, never repaired by this gate.',
+                              'Reference equality covers all set/release/value rows and reference journals/idempotency in both synthetic tenants; pending or ready reference approvals are excluded by admission.',
                               'Classification scope covers persona grants and immutable seed receipts, not definition/evaluation/assignment storage or deleted-owner recovery.',
                               'Outbox delivery must drain before baseline; no projector or service is stopped.',
                               'Privileged local PostgreSQL inspection/restoration is separate from the real seed runtime gc_owner/gc_app paths.',
@@ -535,6 +584,8 @@ def main():
         import shutil
         require(shutil.disk_usage(ROOT).free >= 2 * 1024**3, 'Free disk below 2GiB; no seed invocation started')
         expected = migration_inventory(ROOT / 'packages/db/migrations')
+        require(len(expected) >= 22 and expected[21]['name'] == '022_reference_publication.sql',
+                'Current seed preservation gate requires SQL022 reference publication')
         applied = json.loads(harness.query("SELECT coalesce(jsonb_agg(jsonb_build_object('name',name,'checksum',checksum) ORDER BY name),'[]') FROM schema_migrations", 'applied-migration-readback'))
         verify_applied_migrations(applied, expected)
         report['migrations'] = applied
@@ -543,6 +594,8 @@ def main():
         require(harness.query("SELECT count(*) FROM jobs WHERE status IN ('queued','running')", 'active-job-precondition') == '0', 'Wait for existing queued/running jobs before this gate')
         require(harness.query("SELECT count(*) FROM public.quality_runs WHERE status IN ('queued','running')", 'active-quality-run-precondition') == '0',
                 'Wait for existing queued/running quality runs before this gate')
+        require(harness.query("SELECT count(*) FROM public.approval_requests WHERE binding='reference.publish' AND status IN ('pending','ready')", 'active-reference-approval-precondition') == '0',
+                'Wait for existing pending/ready reference approvals before this gate')
         roles = json.loads(harness.query("SELECT jsonb_object_agg(rolname,jsonb_build_object('superuser',rolsuper,'bypassrls',rolbypassrls)) FROM pg_roles WHERE rolname IN ('gc_owner','gc_app')", 'seed-role-readback'))
         require(set(roles) == {'gc_owner', 'gc_app'} and all(not value['superuser'] and not value['bypassrls'] for value in roles.values()), 'Seed roles must remain nonsuperuser and nonbypass')
         report['roles'] = roles
@@ -559,7 +612,7 @@ def main():
         report['baseline_markers'] = markers
         permission_markers = harness.permission_markers()
         report['permissionMarkerSnapshot'] = {'before': permission_markers}
-        verify_classification_permissions(harness.quality_permissions())
+        verify_reference_permissions(verify_classification_permissions(harness.quality_permissions()))
         original = harness.memberships()
         require(len(original) == 2, 'Both original engineer/consumer synthetic memberships are required')
         engineer = next(v for v in original if v['identity_id'] == ENGINEER)
@@ -581,6 +634,11 @@ def main():
                             + ") AND processed_at IS NULL AND event_type LIKE 'quality.%'", 'wait-quality-outbox-drain') != '0':
             require(time.monotonic() < deadline, 'Quality outbox did not drain before exact-byte baseline')
             time.sleep(0.25)
+        deadline = time.monotonic() + 20
+        while harness.query('SELECT count(*) FROM public.outbox WHERE tenant_id IN (' + literal(HARBOR) + ',' + literal(SUMMIT)
+                            + ") AND processed_at IS NULL AND event_type LIKE 'reference.%'", 'wait-reference-outbox-drain') != '0':
+            require(time.monotonic() < deadline, 'Reference outbox did not drain before exact-byte baseline')
+            time.sleep(0.25)
         before = harness.snapshot()
         require(before['domain_types']['rows'] >= 2 and before['domains']['rows'] >= 6 and before['domain_revisions']['rows'] >= 6 and before['audit']['rows'] >= 8 and before['outbox']['rows'] >= 8, 'Actual typed domain/revision/journal baseline is incomplete')
         report['before'] = before
@@ -588,6 +646,8 @@ def main():
         report['glossaryDefinitionSnapshot'] = {'before': glossary_definitions}
         quality = harness.quality_snapshot()
         report['qualitySnapshot'] = {'before': quality}
+        reference = harness.reference_snapshot()
+        report['referenceSnapshot'] = {'before': reference}
         def run_seed(phase):
             entry = {'phase': phase, 'started_at': now(), 'result': 'RUNNING'}
             report['seed_invocations'].append(entry)
@@ -609,9 +669,10 @@ def main():
             require(harness.all_personas_digest() == persona_digest, 'Repeated real seed changed existing persona memberships')
             require(harness.glossary_definition_snapshot() == glossary_definitions, 'Repeated real seed changed existing glossary definition rows')
             require(harness.quality_snapshot() == quality, 'Repeated real seed changed quality canonical/history/journal/idempotency bytes')
-            require(harness.permission_markers() == permission_markers, 'Repeated real seed changed domain, quality or classification permission marker rows')
+            require(harness.reference_snapshot() == reference, 'Repeated real seed changed reference canonical/history/journal/idempotency bytes')
+            require(harness.permission_markers() == permission_markers, 'Repeated real seed changed domain, quality, classification or reference permission marker rows')
             entry.update({'domain_snapshot_equal': True, 'persona_memberships_equal': True, 'glossary_definitions_equal': True,
-                          'quality_snapshot_equal': True, 'permission_markers_equal': True})
+                          'quality_snapshot_equal': True, 'reference_snapshot_equal': True, 'permission_markers_equal': True})
         report['checks'].append('two real seed replays preserve exact domain and persona membership row digests')
         mutation_attempted = True  # Even uncertain command outcome requires restore.
         report['fixture_restore'] = {'required': True, 'result': 'PENDING'}
@@ -623,16 +684,19 @@ def main():
         require(harness.snapshot() == before, 'Seed after revocation/deletion changed domain data or journals')
         require(harness.glossary_definition_snapshot() == glossary_definitions, 'Seed after revocation/deletion changed glossary definition rows')
         require(harness.quality_snapshot() == quality, 'Seed after revocation/deletion changed quality data or journals')
+        require(harness.reference_snapshot() == reference, 'Seed after revocation/deletion changed reference data or journals')
         require(harness.permission_markers() == permission_markers, 'Seed after revocation/deletion changed permission marker rows')
         entry.update({'domain_snapshot_equal': True, 'permission_still_revoked': True, 'consumer_membership_still_absent': True, 'glossary_definitions_equal': True,
-                      'quality_execute_still_revoked': True, 'classification_approve_still_revoked': True,
-                      'quality_snapshot_equal': True, 'permission_markers_equal': True})
+                      'quality_execute_still_revoked': True, 'classification_approve_still_revoked': True, 'reference_approve_still_revoked': True,
+                      'quality_snapshot_equal': True, 'reference_snapshot_equal': True, 'permission_markers_equal': True})
         report['checks'] += ['later engineer domains:write revocation survives real seed', 'deleted synthetic consumer membership is not recreated',
                              'three real seed replays preserve exact existing business_term and glossary_review definition rows',
                              'later engineer quality:execute revocation survives real seed',
                              'later engineer classification:approve revocation survives real seed',
+                             'later engineer reference:approve revocation survives real seed',
+                             'three real seed replays preserve exact reference canonical/history/journal/idempotency bytes',
                              'three real seed replays preserve exact quality canonical/history/journal/idempotency bytes',
-                             'three real seed replays retain exact independently checked domain, quality and classification permission markers']
+                             'three real seed replays retain exact independently checked domain, quality, classification and reference permission markers']
         report['result'] = 'PASS'
     except BaseException as error:
         report['result'] = 'FAIL'
@@ -695,10 +759,14 @@ def main():
                 report['qualitySnapshot']['after_restoration'] = harness.quality_snapshot()
                 require(report['qualitySnapshot']['after_restoration'] == report['qualitySnapshot']['before'],
                         'Quality rows changed before final readback')
+            if 'referenceSnapshot' in report:
+                report['referenceSnapshot']['after_restoration'] = harness.reference_snapshot()
+                require(report['referenceSnapshot']['after_restoration'] == report['referenceSnapshot']['before'],
+                        'Reference rows changed before final readback')
             if 'permissionMarkerSnapshot' in report:
                 report['permissionMarkerSnapshot']['after_restoration'] = harness.permission_markers()
                 require(report['permissionMarkerSnapshot']['after_restoration'] == report['permissionMarkerSnapshot']['before'],
-                        'Domain, quality or classification permission markers changed before final readback')
+                        'Domain, quality, classification or reference permission markers changed before final readback')
         except Exception as error:
             report['result'] = 'FAIL'
             report['final_readback_failure'] = str(error) if isinstance(error, RuntimeError) else type(error).__name__

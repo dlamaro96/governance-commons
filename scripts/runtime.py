@@ -145,6 +145,7 @@ def main():
   ./dev test --suite lineage-upgrade Verify PostgreSQL lineage storage, generation fencing and upgrade
   ./dev test --suite lineage-worker  Verify real PostgreSQL dependency extraction and owned fixture cleanup
   ./dev test --suite classification-upgrade Verify immutable suggestions, review decisions and label history
+  ./dev test --suite reference-upgrade Verify governed code-list publication, effective dates and immutable downloads
   ./dev authn-install --input FILE    Apply one private, typed inactive installation manifest
   ./dev test --suite relation-preparation-expiry Verify the original fifteen-minute lease and committed retries
   ./dev test --suite connectors       Run Python contract/source tests
@@ -186,6 +187,9 @@ Never use docker compose config output in public logs: it expands secrets.""")
     if args.command == "test" and args.suite == "glossary-population-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-glossary-population-upgrade.py"], timeout=1500); return
+    if args.command == "test" and args.suite == "reference-upgrade":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-reference-upgrade.py"], timeout=2400); return
     if args.command == "test" and args.suite == "classification-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-classification-upgrade.py"], timeout=2100); return
