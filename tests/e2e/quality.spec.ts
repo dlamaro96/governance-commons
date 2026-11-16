@@ -90,6 +90,7 @@ async function publish(page:Page,body:QualityPublishInput,version:number){
  return rule;
 }
 async function run(page:Page,rule:QualityRuleView,verdict:'PASS'|'FAIL'){
+ if(rule.definition.kind!=='completeness')throw new Error('The completeness acceptance helper requires its exact rule family');
  const panel=page.getByRole('region',{name:'Immutable rule version',exact:true});
  const pending=responseFor(page,'/api/v1/quality/rules/'+rule.id+'/runs');
  await panel.getByRole('button',{name:'Run check',exact:true}).click();

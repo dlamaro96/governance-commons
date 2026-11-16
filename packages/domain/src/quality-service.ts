@@ -27,6 +27,7 @@ export function qualityFailure(error:unknown):Problem {
  if(code==='23505')return new Problem(409,'QUALITY_CONFLICT','The quality command conflicts with an existing record.');
  if(['22023','22007','22008','22P02','22003'].includes(code))return qualityInvalid();
  if(code==='54000')return new Problem(422,'QUALITY_LIMIT','The quality operation exceeds its supported bounds.');
+ if(code==='0A000'&&message==='QUALITY_REFERENCE_UNAVAILABLE')return new Problem(422,'QUALITY_REFERENCE_UNAVAILABLE','No usable reference release is available for this execution.');
  if(code==='0A000')return new Problem(422,'QUALITY_TARGET_UNSUPPORTED','This target is not supported by this execution family.');
  return integrity();
 }
@@ -44,7 +45,8 @@ function options(p:Principal,scopeId:string,kind:'rules'|'runs',query:QualityPag
 }
 async function visibleRule(tx:Tx,p:Principal,id:string):Promise<void>{
  const row=(await qualityQuery(tx,()=>sql`select 1 from public.quality_rules r where r.tenant_id=${p.tenantId}::uuid and r.id=${id}::uuid
-  and public.gc_quality_visible(r.column_asset_id,${p.id}::uuid)`.execute(tx))).rows[0];if(!row)throw unavailable();
+  and exists(select 1 from public.quality_rule_versions v where v.tenant_id=r.tenant_id and v.rule_id=r.id
+   and public.gc_quality_rule_visible(v.rule_id,v.version,${p.id}::uuid))`.execute(tx))).rows[0];if(!row)throw unavailable();
 }
 export async function getQualityAsset(tx:Tx,p:Principal,assetId:string,query:QualityPageQuery={}):Promise<QualityAssetView>{
  qualityId(assetId);const page=options(p,assetId,'rules',query);await authorize(tx,p);
@@ -56,14 +58,14 @@ export async function getQualityAsset(tx:Tx,p:Principal,assetId:string,query:Qua
  if(!eligibility||typeof eligibility.supported!=='boolean')throw integrity();
  const after=page.after===null?sql`true`:sql`r.id>${page.after}::uuid`;
  const rows=(await qualityQuery(tx,()=>sql<{value:unknown}>`select public.gc_quality_rule_view(r.id,r.current_version) as value from public.quality_rules r
-  where r.tenant_id=${p.tenantId}::uuid and r.column_asset_id=${assetId}::uuid and public.gc_quality_visible(r.column_asset_id,${p.id}::uuid)
+  where r.tenant_id=${p.tenantId}::uuid and r.column_asset_id=${assetId}::uuid and public.gc_quality_rule_visible(r.id,r.current_version,${p.id}::uuid)
   and ${after} order by r.id limit ${page.limit+1}`.execute(tx))).rows;
  const items=rows.slice(0,page.limit).map(r=>ruleView(r.value));return bounded({assetId,eligibility,items,nextCursor:rows.length>page.limit?page.next(items.at(-1)!.id):null});
 }
 export async function getQualityRule(tx:Tx,p:Principal,ruleId:string,version?:number):Promise<QualityRuleView>{
- qualityId(ruleId);if(version!==undefined)qualityInteger(version);await authorize(tx,p);await visibleRule(tx,p,ruleId);
+ qualityId(ruleId);if(version!==undefined)qualityInteger(version);await authorize(tx,p);
  const value=(await qualityQuery(tx,()=>sql<{value:unknown}>`select public.gc_quality_rule_view(r.id,${version===undefined?sql`r.current_version`:sql`${version}`}) as value
-  from public.quality_rules r where r.tenant_id=${p.tenantId}::uuid and r.id=${ruleId}::uuid and public.gc_quality_visible(r.column_asset_id,${p.id}::uuid)`.execute(tx))).rows[0]?.value;
+  from public.quality_rules r where r.tenant_id=${p.tenantId}::uuid and r.id=${ruleId}::uuid and public.gc_quality_rule_visible(r.id,${version===undefined?sql`r.current_version`:sql`${version}`},${p.id}::uuid)`.execute(tx))).rows[0]?.value;
  if(!value)throw unavailable();return ruleView(value);
 }
 export async function listQualityRuns(tx:Tx,p:Principal,ruleId:string,query:QualityPageQuery={}):Promise<QualityPage<QualityRunView>>{
@@ -71,7 +73,7 @@ export async function listQualityRuns(tx:Tx,p:Principal,ruleId:string,query:Qual
  const after=page.after===null?sql`true`:sql`q.id>${page.after}::uuid`;
  const rows=(await qualityQuery(tx,()=>sql<{value:unknown}>`select public.gc_quality_run_view(q.id) as value from public.quality_runs q
   join public.quality_rules r on r.tenant_id=q.tenant_id and r.id=q.rule_id
-  where q.tenant_id=${p.tenantId}::uuid and q.rule_id=${ruleId}::uuid and public.gc_quality_visible(r.column_asset_id,${p.id}::uuid)
+  where q.tenant_id=${p.tenantId}::uuid and q.rule_id=${ruleId}::uuid and public.gc_quality_run_visible(q.id,${p.id}::uuid)
   and ${after} order by q.id limit ${page.limit+1}`.execute(tx))).rows;
  const items=rows.slice(0,page.limit).map(r=>checked(parseQualityRunView,r.value));return bounded({items,nextCursor:rows.length>page.limit?page.next(items.at(-1)!.id):null});
 }
@@ -79,7 +81,7 @@ export async function getQualityRun(tx:Tx,p:Principal,runId:string):Promise<Qual
  qualityId(runId);await authorize(tx,p);
  const value=(await qualityQuery(tx,()=>sql<{value:unknown}>`select public.gc_quality_run_view(q.id) as value from public.quality_runs q
   join public.quality_rules r on r.tenant_id=q.tenant_id and r.id=q.rule_id
-  where q.tenant_id=${p.tenantId}::uuid and q.id=${runId}::uuid and public.gc_quality_visible(r.column_asset_id,${p.id}::uuid)`.execute(tx))).rows[0]?.value;
+  where q.tenant_id=${p.tenantId}::uuid and q.id=${runId}::uuid and public.gc_quality_run_visible(q.id,${p.id}::uuid)`.execute(tx))).rows[0]?.value;
  if(!value)throw unavailable();return checked(parseQualityRunView,value);
 }
 async function command(tx:Tx,operation:string,key:string,body:unknown,correlation:string):Promise<Record<string,unknown>>{
@@ -93,7 +95,7 @@ export async function publishQualityRule(tx:Tx,p:Principal,input:unknown,key:str
 }
 export async function requestQualityRun(tx:Tx,p:Principal,ruleId:string,input:unknown,key:string,correlation:string){
  qualityId(ruleId);const body=parseQualityRunInput(input);await authorize(tx,p,['quality:execute']);const result=await command(tx,'quality.run.request',key,{ruleId,...body},correlation);
- const run=checked(parseQualityRunView,result.run);if(run.id!==body.id||run.ruleId!==ruleId||run.ruleVersion!==body.ruleVersion||run.ruleHash!==body.ruleHash)throw integrity();return {run};
+ const run=checked(parseQualityRunView,result.run);if(run.id!==body.id||run.ruleId!==ruleId||run.ruleVersion!==body.ruleVersion||run.ruleHash!==body.ruleHash||body.referenceAsOf!==undefined&&(run.kind!=='reference-allowed-values'||run.reference.asOf!==body.referenceAsOf))throw integrity();return {run};
 }
 export async function cancelQualityRun(tx:Tx,p:Principal,runId:string,input:unknown,key:string,correlation:string){
  qualityId(runId);const body=qualityObject(input,['expectedVersion','reason']);qualityInteger(body.expectedVersion);const reason=qualityText(body.reason,4096);

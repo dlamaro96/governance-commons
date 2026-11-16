@@ -423,7 +423,7 @@ class WorkerHTTPTest(unittest.TestCase):
         with patch.object(server, "resolve") as resolve, patch.object(server, "execute_quality") as execute:
             for value in invalid:
                 self.assertEqual(self.request(value, path="/quality"), (400, {"code": "INVALID_REQUEST"}))
-            self.assertEqual(self.request(raw, length=16385, path="/quality"), (413, {"code": "REQUEST_SIZE"}))
+            self.assertEqual(self.request(raw + b" " * (16385 - len(raw)), path="/quality"), (413, {"code": "REQUEST_SIZE"}))
             resolve.assert_not_called()
             execute.assert_not_called()
 

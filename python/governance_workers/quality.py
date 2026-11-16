@@ -1,10 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
-"""Exact bounded SQL-NULL completeness for one pinned PostgreSQL column.
+"""Exact bounded completeness or reference membership for one pinned column.
 
 No source-authored SQL or business rows cross this interface. Planner costs and
 widths are estimates, never a claim to enforce physical I/O or byte consumption.
 The initial profile excludes RLS, inheritance and nonbuiltin scalar columns.
 """
+import hashlib
+import hmac
 import json
 import math
 import re
@@ -27,6 +29,10 @@ MAX_ESTIMATED_COST = 1000000
 MAX_ESTIMATED_BYTES = 67108864
 MAX_PLAN_BYTES = 65536
 MAX_PLAN_NODES = 64
+REFERENCE_KIND = 'reference-allowed-values'
+MAX_REFERENCE_CODES = 256
+REFERENCE_KEYS = frozenset(('setId', 'version', 'publicationHash', 'asOf',
+                            'codeStatus', 'codes', 'bindingHash'))
 TARGET_KEYS = frozenset(('databaseOid', 'schemaOid', 'relationOid', 'attributeNumber',
                          'schemaName', 'tableName', 'columnName', 'dataType'))
 BUDGETS = {'maximumRows': MAX_ROWS, 'maximumSeconds': MAX_SECONDS,
@@ -59,6 +65,55 @@ def _integer(value, maximum):
         _fail()
 
 
+def validate_reference_binding(value):
+    """Verify the complete canonical detached binding before credential access.
+
+    Only closed ASCII scalars and integer versions reach the canonical encoder,
+    so compact sorted-key JSON matches the domain/SQL UTF-8 hash preimage.
+    Selection, publication provenance and current authority are server duties;
+    this worker verifies the retained binding, not a fresh reference head.
+    """
+    _keys(value, REFERENCE_KEYS)
+    set_id = value['setId']
+    if (type(set_id) is not str or not re.fullmatch(
+            r'[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}', set_id)
+            or set_id == '00000000-0000-0000-0000-000000000000'):
+        _fail()
+    _integer(value['version'], 2147483647)
+    for key in ('publicationHash', 'bindingHash'):
+        if type(value[key]) is not str or not re.fullmatch(r'[a-f0-9]{64}', value[key]):
+            _fail()
+    instant = value['asOf']
+    if type(instant) is not str or not re.fullmatch(
+            r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z', instant):
+        _fail()
+    try:
+        parsed = datetime.fromisoformat(instant)
+        if parsed.isoformat(timespec='milliseconds').replace('+00:00', 'Z') != instant:
+            _fail()
+    except ValueError:
+        _fail()
+    if type(value['codeStatus']) is not str or value['codeStatus'] != 'active':
+        _fail()
+    codes = value['codes']
+    if type(codes) is not list or len(codes) > MAX_REFERENCE_CODES:
+        _fail()
+    previous = None
+    for code in codes:
+        if (type(code) is not str or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}', code)
+                or (previous is not None and previous >= code)):
+            _fail()
+        previous = code
+    detached = {key: value[key] for key in REFERENCE_KEYS if key != 'bindingHash'}
+    detached['codes'] = list(codes)
+    encoded = json.dumps(detached, sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode('utf-8')
+    expected = hashlib.sha256(encoded).hexdigest()
+    if not hmac.compare_digest(expected, value['bindingHash']):
+        _fail()
+    detached['bindingHash'] = expected
+    return detached
+
+
 def validate_execution(source, execution):
     """Closed fixed-shape JSON admission, before credentials or connection use."""
     _keys(source, ('connectorId', 'host', 'port', 'database', 'schema', 'secretRef'))
@@ -70,9 +125,15 @@ def validate_execution(source, execution):
         _text(source[key], 63, bytes_limit=True)
     if type(source['secretRef']) is not str or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,127}', source['secretRef']):
         _fail()
-    _keys(execution, ('formatVersion', 'kind', 'target', 'budget'))
-    if type(execution['formatVersion']) is not int or execution['formatVersion'] != 1 or execution['kind'] != 'completeness':
+    if type(execution) is not dict or type(execution.get('kind')) is not str:
         _fail()
+    kind = execution['kind']
+    _keys(execution, ('formatVersion', 'kind', 'target', 'budget', 'reference')
+          if kind == REFERENCE_KIND else ('formatVersion', 'kind', 'target', 'budget'))
+    if type(execution['formatVersion']) is not int or execution['formatVersion'] != 1 or kind not in ('completeness', REFERENCE_KIND):
+        _fail()
+    if kind == REFERENCE_KIND:
+        validate_reference_binding(execution['reference'])
     target, budget = execution['target'], execution['budget']
     _keys(target, TARGET_KEYS)
     _keys(budget, BUDGETS)
@@ -173,7 +234,7 @@ def _query(conn, statement, parameters, budget, deadline_at):
     return result
 
 
-def _measure(conn, target, budget, deadline_at):
+def _measure(conn, target, budget, deadline_at, reference=None):
     conn.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY')
     relation = sql.Identifier(target['schemaName'], target['tableName'])
     # Lock by safely quoted name, then independently prove that the lock belongs
@@ -195,7 +256,7 @@ def _measure(conn, target, budget, deadline_at):
         EXISTS(SELECT 1 FROM pg_catalog.pg_inherits i WHERE i.inhrelid=c.oid OR i.inhparent=c.oid) AS inherited,
         has_schema_privilege(n.oid,'USAGE') AS schema_allowed,has_table_privilege(c.oid,'SELECT') AS table_allowed,
         a.attnum,a.attname,a.attisdropped,format_type(a.atttypid,a.atttypmod) AS data_type,
-        t.typtype,t.typcategory,t.typelem::text AS type_element,tn.nspname AS type_namespace,
+        t.oid::text AS type_oid,t.typtype,t.typcategory,t.typelem::text AS type_element,tn.nspname AS type_namespace,
         EXISTS(SELECT 1 FROM pg_catalog.pg_locks l WHERE l.pid=pg_backend_pid()
           AND l.locktype='relation' AND l.relation=c.oid AND l.mode='AccessShareLock' AND l.granted) AS locked
         FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
@@ -214,26 +275,45 @@ def _measure(conn, target, budget, deadline_at):
             or row['inherited'] is not False or row['type_namespace'] != 'pg_catalog' or row['typtype'] != 'b'
             or row['typcategory'] in ('A', 'C', 'P') or row['type_element'] != '0'):
         _fail('QUALITY_TARGET_UNSUPPORTED')
-    aggregate = sql.SQL('SELECT count(*) AS row_count, count(*) FILTER (WHERE missing) AS null_count '
-                        'FROM (SELECT {} IS NULL AS missing FROM ONLY {} LIMIT %s) AS bounded').format(
-                            sql.Identifier(target['columnName']), relation)
-    parameters = (budget['maximumRows'] + 1,)
+    if reference is not None:
+        # Actual built-in OIDs, not a name/category check, exclude domains,
+        # char padding, extension types and user-authored casts/operators.
+        if row['type_oid'] not in ('25', '1043'):
+            _fail('QUALITY_TARGET_UNSUPPORTED')
+        aggregate = sql.SQL(
+            'SELECT count(*) AS row_count, count(*) FILTER (WHERE value IS NULL) AS null_count, '
+            'count(*) FILTER (WHERE value IS NOT NULL AND NOT '
+            '(pg_catalog.convert_to(value, \'UTF8\') OPERATOR(pg_catalog.=) ANY (%s::pg_catalog.bytea[]))) AS invalid_count '
+            'FROM (SELECT {} AS value FROM ONLY {} LIMIT %s) AS bounded').format(
+                sql.Identifier(target['columnName']), relation)
+        parameters = ([code.encode('ascii') for code in reference['codes']], budget['maximumRows'] + 1)
+    else:
+        aggregate = sql.SQL('SELECT count(*) AS row_count, count(*) FILTER (WHERE missing) AS null_count '
+                            'FROM (SELECT {} IS NULL AS missing FROM ONLY {} LIMIT %s) AS bounded').format(
+                                sql.Identifier(target['columnName']), relation)
+        parameters = (budget['maximumRows'] + 1,)
     plan = _query(conn, sql.SQL('EXPLAIN (FORMAT JSON, ANALYZE FALSE, COSTS TRUE) ') + aggregate,
                   parameters, budget, deadline_at).fetchone()
     cost, estimated_bytes = _estimates(plan.get('QUERY PLAN') if type(plan) is dict else None, budget)
     counts = _query(conn, aggregate, parameters, budget, deadline_at).fetchone()
-    if (type(counts) is not dict or set(counts) != {'row_count', 'null_count'}
+    expected_counts = {'row_count', 'null_count', 'invalid_count'} if reference is not None else {'row_count', 'null_count'}
+    if (type(counts) is not dict or set(counts) != expected_counts
             or type(counts['row_count']) is not int or type(counts['null_count']) is not int
             or not 0 <= counts['null_count'] <= counts['row_count'] <= budget['maximumRows'] + 1):
         _fail('SOURCE_DATABASE_ERROR')
+    if reference is not None and (type(counts['invalid_count']) is not int
+            or not 0 <= counts['invalid_count'] <= counts['row_count'] - counts['null_count']):
+        _fail('SOURCE_DATABASE_ERROR')
     if counts['row_count'] > budget['maximumRows']:
         _fail('QUALITY_RESOURCE_LIMIT')
-    return counts['row_count'], counts['null_count'], version, cost, estimated_bytes
+    result = (counts['row_count'], counts['null_count'], version, cost, estimated_bytes)
+    return result + (counts['invalid_count'],) if reference is not None else result
 
 
 def execute(source, secret, tenant_id, execution):
     started, observed_started = time.monotonic(), _stamp()
     source, target, budget = validate_execution(source, execution)
+    reference = validate_reference_binding(execution['reference']) if execution['kind'] == REFERENCE_KIND else None
     deadline_at = started + budget['maximumSeconds']
     try:
         with deadline(_remaining(deadline_at)):
@@ -248,15 +328,20 @@ def execute(source, secret, tenant_id, execution):
                         conn = psycopg.connect(**kwargs, row_factory=dict_row)
                         resources.own(conn.close)
                     set_json_loads(_plan_json, context=conn)
-                    rows, nulls, version, cost, estimated_bytes = _measure(conn, target, budget, deadline_at)
+                    measured = _measure(conn, target, budget, deadline_at, reference)
+                    rows, nulls, version, cost, estimated_bytes = measured[:5]
             # Connection close (rollback) and CA cleanup are inside the original
             # wall deadline. No connection context manager can print DB details.
             _remaining(deadline_at)
-            return {'formatVersion': 1, 'kind': 'completeness', 'strategy': 'exact-bounded-role-scope',
+            result = {'formatVersion': 1, 'kind': REFERENCE_KIND if reference is not None else 'completeness', 'strategy': 'exact-bounded-role-scope',
                     'rowCount': rows, 'nullCount': nulls, 'observedStartedAt': observed_started,
                     'observedFinishedAt': _stamp(), 'elapsedMs': math.floor((time.monotonic() - started) * 1000),
-                    'sourceVersion': version, 'adapterVersion': '1', 'queryTemplate': 'postgresql-completeness-v1',
+                    'sourceVersion': version, 'adapterVersion': '1',
+                    'queryTemplate': 'postgresql-reference-allowed-values-v1' if reference is not None else 'postgresql-completeness-v1',
                     'estimatedCost': cost, 'estimatedBytes': estimated_bytes}
+            if reference is not None:
+                result.update(invalidCount=measured[5], referenceBindingHash=reference['bindingHash'])
+            return result
     except TargetPolicyError as error:
         raise ScanFailure(error.code) from None
     except psycopg.Error as error:

@@ -5,7 +5,7 @@ import {LIMITS,type PublishedBundle,type ReferenceEffectiveView,type ReferencePa
 import {useResource} from '../api';
 import {PermissionDenied,RequestError} from '../components';
 import {useLocale} from '../i18n';
-import {Link} from '../navigation';
+import {Link,useNavigation} from '../navigation';
 import {usePermission} from '../session';
 import {exactTime,Field,Pager,Panel,useContextKey,useCopy} from './shared';
 import './reference-data.css';
@@ -21,7 +21,14 @@ function SetList(){
   <Pager cursor={cursor} next={resource.error?null:resource.data?.nextCursor??null} change={setCursor} disabled={resource.loading}/>
  </section>;
 }
-export function ReferenceSetPage({id}:{id:string}){const context=useContextKey(),reference=usePermission('reference:read'),catalog=usePermission('catalog:read'),read=reference&&catalog;return read?<SetWorkspace key={context+id} id={id}/>:<PermissionDenied/>;}
+export function ReferenceSetPage({id}:{id:string}){
+ const context=useContextKey(),reference=usePermission('reference:read'),catalog=usePermission('catalog:read'),read=reference&&catalog,{search}=useNavigation(),c=useCopy();
+ const params=new URLSearchParams(search),versions=params.getAll('version'),raw=versions[0];
+ const invalid=versions.length>1||(raw!==undefined&&(!/^[1-9][0-9]{0,9}$/.test(raw)||Number(raw)>LIMITS.version));
+ if(!read)return <PermissionDenied/>;
+ if(invalid)return <Notice tone="error">{c.invalid}</Notice>;
+ return raw===undefined?<SetWorkspace key={context+id} id={id}/>:<section key={context+id+raw} className="reference-workspace"><Link href={'/reference-data/'+id}>{c.back}</Link><h1 id="main-heading" tabIndex={-1}>{c.exact}</h1><ExactRelease id={id} version={Number(raw)}/></section>;
+}
 function SetWorkspace({id}:{id:string}){
  const c=useCopy(),{locale,number}=useLocale(),write=usePermission('reference:write'),[asOf,setAsOf]=useState<string|null>(null),[draft,setDraft]=useState(''),[invalid,setInvalid]=useState(false),[mode,setMode]=useState<'effective'|'history'>('effective');
  const summary=useResource<ReferenceEffectiveView>(base+id+'/effective?limit=1');
