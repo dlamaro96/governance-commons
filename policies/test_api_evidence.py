@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from api_evidence import collect, run, safe_report, source_inventory
+from api_evidence import collect, declaration_literal, run, safe_report, source_inventory
 
 COMMIT = "a" * 40
 SOURCE = """// SPDX-License-Identifier: Apache-2.0
@@ -136,6 +136,38 @@ class ApiEvidenceTests(unittest.TestCase):
         for addition in ("test(`dynamic ${secret}`, async () => {});\n", "  test('nested', async () => {});\n", "test('first static test', async () => {});\n"):
             self.source.write_text(SOURCE + addition)
             self.assertIn("SOURCE_DECLARATION_INVALID", self.report()["flags"])
+
+    def test_static_literal_scan_preserves_escaped_quotes_and_backslashes(self):
+        single = r"""test('escaped \' quote and \\ slash', async () => {});"""
+        double = r'''test("double \" quote and \\ slash", async () => {});'''
+        self.source.write_text(SOURCE + single + "\n" + double + "\n")
+        _, declarations, flags = source_inventory(self.root)
+        self.assertEqual(flags, set())
+        self.assertEqual(set(declarations), {"first static test", "second static test",
+                                            "escaped ' quote and \\ slash", 'double " quote and \\ slash'})
+        self.assertEqual(declaration_literal('test( \t"name" \t, async () => {});'), '"name"')
+
+    def test_static_literal_scan_rejects_malformed_or_nonliteral_declarations(self):
+        malformed = ["test(", "test(   ", "test('unclosed", 'test("unclosed', "test('trailing\\",
+                     "test('name')", "test('name' + 'suffix', async () => {});", "test(`dynamic`, async () => {});",
+                     "test(identifier, async () => {});", " test('nested', async () => {});",
+                     "test.only('focused', async () => {});", "test('escaped\\' quote, async () => {});"]
+        for text in malformed:
+            with self.subTest(length=len(text)):
+                self.assertIsNone(declaration_literal(text))
+                self.source.write_text(SOURCE + text + "\n")
+                self.assertIn("SOURCE_DECLARATION_INVALID", source_inventory(self.root)[2])
+
+    def test_long_malformed_backslash_and_quote_sequences_fail_closed(self):
+        for quote in ("'", '"'):
+            for payload in ("\\" * 131072, ("\\" + quote) * 65536 + "\\"):
+                with self.subTest(quote=quote, length=len(payload)):
+                    text = "test(" + quote + payload
+                    self.assertIsNone(declaration_literal(text))
+                    self.source.write_text(SOURCE + text + "\n")
+                    _, declarations, flags = source_inventory(self.root)
+                    self.assertEqual(set(declarations), {"first static test", "second static test"})
+                    self.assertEqual(flags, {"SOURCE_DECLARATION_INVALID"})
 
     def test_staging_rejects_wrong_commit_changed_source_and_extra_fields(self):
         report = self.report()

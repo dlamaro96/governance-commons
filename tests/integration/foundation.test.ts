@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
+import { pacedFetch as fetch } from '../fixtures/http-budget.ts';
+import { createManualScanFixture } from '../fixtures/manual-scan.ts';
 import {test,after} from 'node:test';import assert from 'node:assert/strict';import {randomUUID,createHash} from 'node:crypto';
 import {db,scope,sql} from '../../packages/db/src/index.ts';
 import {record} from '../../apps/api/src/repository.ts';
@@ -46,9 +48,9 @@ test('restricted asset denied through direct detail and stale projection search'
  const auditor=await session('10000000-0000-4000-8000-000000000004');for(const path of ['/api/v1/audit','/api/v1/overview']){const r=await fetch(base+path,{headers:auditor});assert.equal(r.status,200);const body=await r.text();assert.equal(body.includes(name),false);assert.equal(body.includes(id),false);}
  await scope(A,steward,tx=>tx.deleteFrom('assets').where('id','=',id).execute());
 });
-test('worker completion rechecks requester authority and publishes no revoked scan assets',async()=>{
+test('worker completion rechecks requester authority and publishes no revoked scan assets',async t=>{
  const headers=await session();const response=await fetch(base+'/api/v1/sources',{method:'POST',headers:{...headers,'Idempotency-Key':randomUUID()},body:JSON.stringify(sourceBody)});assert.equal(response.status,201);const source=(await response.json() as any).source;
- const id=randomUUID();await scope(A,steward,tx=>tx.insertInto('jobs').values({tenant_id:A,id,source_id:source.id,actor_id:consumer,status:'running'}).execute());
+ const {job}=await createManualScanFixture(t,{tenantId:A,sourceId:source.id,actorId:consumer,fetch});const id=await job();
  const workerHeaders={'Authorization':`Bearer ${process.env.SITE_TOKEN}`,'X-Tenant-Id':A,'Content-Type':'application/json'};
  const completed=await fetch(base+`/internal/jobs/${id}/complete`,{method:'POST',headers:workerHeaders,body:JSON.stringify({observedAt:new Date().toISOString(),sourceVersion:'integration-fixture',permissionFingerprint:'fixture',complete:true,records:[{externalId:'revoked',name:'Revoked result',qualifiedName:'revoked.result',type:'table',metadata:{}}]})});
  assert.equal(completed.status,200);assert.equal((await completed.json() as any).job.status,'cancelled');

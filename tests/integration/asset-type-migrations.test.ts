@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+import { pacedFetch as fetch } from '../fixtures/http-budget.ts';
 import assert from 'node:assert/strict';
 import { after, test } from 'node:test';
 import { createHash, randomUUID } from 'node:crypto';

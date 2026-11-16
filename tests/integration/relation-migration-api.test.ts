@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+import { pacedFetch as fetch } from '../fixtures/http-budget.ts';
 /** Real HTTP + SQL009 integration. Authored tests are not execution evidence. */
 import assert from 'node:assert/strict';
 import { after, before, test } from 'node:test';

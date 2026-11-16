@@ -23,7 +23,6 @@ import uuid
 ROOT = Path(__file__).resolve().parents[1]
 MAX_OUTPUT = 32 * 1024 * 1024
 FILE = re.compile(r"tests/integration/[a-z0-9-]+\.test\.ts\Z")
-DECLARATION = re.compile(r"^test\(\s*((['\"])(?:\\.|(?!\2).)*\2)\s*,")
 COUNTERS = ("tests", "suites", "pass", "fail", "cancelled", "skipped", "todo")
 FLAGS = {"SOURCE_DECLARATION_INVALID", "OUTPUT_TRUNCATED", "TAP_ENVELOPE_INVALID", "TAP_COUNTS_INVALID",
          "UNMAPPED_RESULT", "DUPLICATE_RESULT", "MISSING_RESULT", "RUNTIME_SOURCE_MISMATCH", "RUNNER_FAILED"}
@@ -31,6 +30,32 @@ FLAGS = {"SOURCE_DECLARATION_INVALID", "OUTPUT_TRUNCATED", "TAP_ENVELOPE_INVALID
 
 def digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def declaration_literal(text: str) -> str | None:
+    """Read one quoted static title in a single forward pass, without backtracking."""
+    if not text.startswith("test("):
+        return None
+    index = len("test(")
+    while index < len(text) and text[index].isspace():
+        index += 1
+    if index == len(text) or text[index] not in ("'", '"'):
+        return None
+    start, quote = index, text[index]
+    index += 1
+    while index < len(text):
+        if text[index] == "\\":
+            # Consume the escape and its character together, including quotes.
+            index += 2
+        elif text[index] == quote:
+            end = index + 1
+            index = end
+            while index < len(text) and text[index].isspace():
+                index += 1
+            return text[start:end] if index < len(text) and text[index] == "," else None
+        else:
+            index += 1
+    return None
 
 
 def source_inventory(root: Path) -> tuple[dict, dict, set[str]]:
@@ -46,9 +71,9 @@ def source_inventory(root: Path) -> tuple[dict, dict, set[str]]:
         for line, text in enumerate(lines, 1):
             if not re.match(r"^\s*(?:test|it|describe)(?:\s*\(|\.)", text):
                 continue
-            match = DECLARATION.match(text)
+            literal = declaration_literal(text)
             try:
-                title = ast.literal_eval(match[1]) if match else None
+                title = ast.literal_eval(literal) if literal is not None else None
             except (SyntaxError, ValueError):
                 title = None
             if not isinstance(title, str) or not title or len(title) > 1000 or any(ord(c) < 32 for c in title) or title in declarations:
