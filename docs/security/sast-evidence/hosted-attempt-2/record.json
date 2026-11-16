@@ -1,0 +1,286 @@
+{
+  "limitations": [
+    "JavaScript extraction exited2 after3.503 seconds, before analysis, findings or SARIF publication.",
+    "Fixed markers confirm initialization, autobuild and abnormal child exit, but no specific error class or root cause.",
+    "No raw logs are present in safe artifacts. Original private log byte counts and hashes remain exactly as reported.",
+    "Python and Actions analysis, coverage, findings and upload/processing pass; independent commit/category analysis read-back remains open.",
+    "The additive fixed diagnostic patch changes no scanner execution policy or configuration and still requires hosted execution.",
+    "Prior local product-5 and prior hosted behavior passes have different source digests; they do not qualify this changed snapshot.",
+    "Fork and Dependabot permissions, default-branch execution, complete OSS-007 and release readiness remain open."
+  ],
+  "prUrl": "https://github.com/dlamaro96/governance-commons/pull/15",
+  "preservedCopiesSha256": {
+    "actions/actions-summary.json": "dac944607341f84358067db18fe95e9656525313dcd21fc05e4bdb695f8d5693",
+    "actions/source-manifest.json": "0199f5a9e1176844c966a145bc6bbc09312a0e7b5debf850080aea693daaece2",
+    "actions/summary.json": "6b4cf80c4f0b211d4f4ac2e2da53020e034cfab07b71ccd24c02676e819ebe47",
+    "actions/upload-status.json": "638dfe5c2c381b03f448b73e4e23d64d838b881fbbcf8550659e3415c0ddbec7",
+    "javascript-typescript/javascript-typescript-summary.json": "c53d844c02b308d7ad66320073f14078152d4997b932678addfae6f03ce572ef",
+    "javascript-typescript/source-manifest.json": "0199f5a9e1176844c966a145bc6bbc09312a0e7b5debf850080aea693daaece2",
+    "javascript-typescript/summary.json": "1d59828eec29daa6424961e84796294fec040b727c6117317072a1c08d6a3f69",
+    "javascript-typescript/upload-status.json": "9b50262f57c5166dbbd0aea1963c8a45828c4894fe197ec3c174a236d4b22760",
+    "python/python-summary.json": "0b4e83cef9275c6c1c6ff2ff49f5e26f19b240e995c3622a365f39ea20c813ef",
+    "python/source-manifest.json": "0199f5a9e1176844c966a145bc6bbc09312a0e7b5debf850080aea693daaece2",
+    "python/summary.json": "c46af727392ed8f88e7d5e29f041b8d1cf940d17016ea41cb3a92e7d57b54c04",
+    "python/upload-status.json": "d43f15294051a8f76caca495721228a6ffa57e7b752b063b05a03dafb843559a"
+  },
+  "purpose": "SECOND_HOSTED_INTEGRATED_ATTEMPT_NOT_A_PASS",
+  "recordedAt": "2026-11-15T22:44:33.125457+00:00",
+  "schemaVersion": 1,
+  "sourceDigest": "f3f93d9944b9f143068cdfea8e34ed8648f2da41258f1ead46142e1bd009f904",
+  "sourceHead": "61543a062b9818d08f2b7a7904383d58303d562a",
+  "sourceSecurity": {
+    "aggregate": "FAIL",
+    "analysisReadBack": "NOT_PERFORMED",
+    "jobStatusEvidence": "Root agent observed public Actions UI; individual outcomes independently read from downloaded safe artifacts.",
+    "languages": {
+      "actions": {
+        "analysis": "PASS",
+        "coverage": {
+          "databaseFiles": 2,
+          "expectedFiles": 2,
+          "extractedExpectedFiles": 2,
+          "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+        },
+        "durationSeconds": 29.564,
+        "findingCount": 0,
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-15T22:36:22.734225+00:00",
+        "queryCount": 24,
+        "steps": [
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.003,
+            "exitCode": 0,
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 3.758,
+            "exitCode": 0,
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 8.513,
+            "exitCode": 0,
+            "step": "analyze"
+          },
+          {
+            "durationSeconds": 11.266,
+            "exitCode": 0,
+            "step": "coverage-query"
+          },
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "step": "coverage-decode"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "success",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "6521d92cab468ad434117cfe2eebe8d53d3272be",
+          "language": "actions",
+          "sarifId": "fcfd77a6-e144-11f1-8a27-43e0e5a2d4e3",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "success"
+        }
+      },
+      "javascript-typescript": {
+        "analysis": "NOT_PASSED",
+        "durationSeconds": 12.885,
+        "failure": "scanner-command-failed:extract",
+        "failureDiagnostics": {
+          "schemaVersion": 1,
+          "scope": "FIXED_MARKERS_ONLY_NOT_A_CAUSE_DETERMINATION",
+          "streams": {
+            "stderr": {
+              "available": true,
+              "bytes": 554,
+              "markers": [
+                "build_command_started",
+                "database_initializing",
+                "extractor_command_started",
+                "fatal_error"
+              ],
+              "sample": "HEAD_AND_TAIL_UP_TO_64_KIB",
+              "sha256": "a2b0334cb593659d2c30e62dfc8bd89be0f0fb0b7efcc150cab0689b45a4d703"
+            },
+            "stdout": {
+              "available": true,
+              "bytes": 3994,
+              "markers": [
+                "spawn_abnormal"
+              ],
+              "sample": "HEAD_AND_TAIL_UP_TO_64_KIB",
+              "sha256": "3366f20647849e22283c8ead05b011f2c05ee8483e22ebcf3a7fabdf4d762de5"
+            }
+          }
+        },
+        "findingsGate": "NOT_EVALUATED",
+        "finishedAt": "2026-11-15T22:36:19.201693+00:00",
+        "queryCount": 105,
+        "steps": [
+          {
+            "durationSeconds": 0.251,
+            "exitCode": 0,
+            "step": "extractor-runtime"
+          },
+          {
+            "durationSeconds": 0.751,
+            "exitCode": 0,
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.753,
+            "exitCode": 0,
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 3.503,
+            "exitCode": 2,
+            "step": "extract"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "failure",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "6521d92cab468ad434117cfe2eebe8d53d3272be",
+          "language": "javascript-typescript",
+          "sarifId": "",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "skipped"
+        }
+      },
+      "python": {
+        "analysis": "PASS",
+        "coverage": {
+          "databaseFiles": 44,
+          "expectedFiles": 25,
+          "extractedExpectedFiles": 25,
+          "extractedPathsDigest": "e688c8917445c800d41ad89449f4ac7c3d48fb5c7444a26e90554c70a3eebaf7"
+        },
+        "durationSeconds": 43.581,
+        "findingCount": 0,
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-15T22:36:46.787804+00:00",
+        "queryCount": 52,
+        "steps": [
+          {
+            "durationSeconds": 0.251,
+            "exitCode": 0,
+            "step": "extractor-runtime"
+          },
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.251,
+            "exitCode": 0,
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 9.261,
+            "exitCode": 0,
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 14.273,
+            "exitCode": 0,
+            "step": "analyze"
+          },
+          {
+            "durationSeconds": 14.524,
+            "exitCode": 0,
+            "step": "coverage-query"
+          },
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "step": "coverage-decode"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "success",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "6521d92cab468ad434117cfe2eebe8d53d3272be",
+          "language": "python",
+          "sarifId": "0b4e3e6c-e145-11f1-86ba-4a74b4d46525",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "success"
+        }
+      }
+    },
+    "originalArtifactFiles": {
+      "actions": {
+        "actions-summary.json": {
+          "bytes": 1641,
+          "sha256": "dac944607341f84358067db18fe95e9656525313dcd21fc05e4bdb695f8d5693"
+        },
+        "actions.sarif": {
+          "bytes": 171394,
+          "sha256": "7ee60666d895c954287d64d0e998eab80edc3aee947db44e882c994481da53ad"
+        },
+        "source-manifest.json": {
+          "bytes": 93191,
+          "sha256": "0199f5a9e1176844c966a145bc6bbc09312a0e7b5debf850080aea693daaece2"
+        },
+        "summary.json": {
+          "bytes": 3280,
+          "sha256": "6b4cf80c4f0b211d4f4ac2e2da53020e034cfab07b71ccd24c02676e819ebe47"
+        },
+        "upload-status.json": {
+          "bytes": 290,
+          "sha256": "638dfe5c2c381b03f448b73e4e23d64d838b881fbbcf8550659e3415c0ddbec7"
+        }
+      },
+      "javascript-typescript": {
+        "javascript-typescript-summary.json": {
+          "bytes": 1955,
+          "sha256": "c53d844c02b308d7ad66320073f14078152d4997b932678addfae6f03ce572ef"
+        },
+        "source-manifest.json": {
+          "bytes": 93191,
+          "sha256": "0199f5a9e1176844c966a145bc6bbc09312a0e7b5debf850080aea693daaece2"
+        },
+        "summary.json": {
+          "bytes": 3683,
+          "sha256": "1d59828eec29daa6424961e84796294fec040b727c6117317072a1c08d6a3f69"
+        },
+        "upload-status.json": {
+          "bytes": 268,
+          "sha256": "9b50262f57c5166dbbd0aea1963c8a45828c4894fe197ec3c174a236d4b22760"
+        }
+      },
+      "python": {
+        "python-summary.json": {
+          "bytes": 1780,
+          "sha256": "0b4e83cef9275c6c1c6ff2ff49f5e26f19b240e995c3622a365f39ea20c813ef"
+        },
+        "python.sarif": {
+          "bytes": 242249,
+          "sha256": "aedd0045b48eddfcac92d5b08fa7ddd57bcf39a13f71f5dda8982fd51ced3c5f"
+        },
+        "source-manifest.json": {
+          "bytes": 93191,
+          "sha256": "0199f5a9e1176844c966a145bc6bbc09312a0e7b5debf850080aea693daaece2"
+        },
+        "summary.json": {
+          "bytes": 3441,
+          "sha256": "c46af727392ed8f88e7d5e29f041b8d1cf940d17016ea41cb3a92e7d57b54c04"
+        },
+        "upload-status.json": {
+          "bytes": 289,
+          "sha256": "d43f15294051a8f76caca495721228a6ffa57e7b752b063b05a03dafb843559a"
+        }
+      }
+    },
+    "runAttempt": 1,
+    "runUrl": "https://github.com/dlamaro96/governance-commons/actions/runs/43770132214"
+  },
+  "testedMergeCommit": "6521d92cab468ad434117cfe2eebe8d53d3272be"
+}

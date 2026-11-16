@@ -1,0 +1,22 @@
+{
+  "alerts": [
+    {
+      "commit": "45fa82d11f11ec23d28bdd7cafea080432c46c40",
+      "endLine": 91,
+      "htmlUrl": "https://github.com/dlamaro96/governance-commons/security/code-scanning/1",
+      "number": 1,
+      "path": "packages/domain/src/relation.ts",
+      "ref": "refs/pull/15/merge",
+      "ruleId": "js/remote-property-injection",
+      "securitySeverityLevel": "high",
+      "severity": "warning",
+      "startLine": 91,
+      "state": "open"
+    }
+  ],
+  "completeListPage": true,
+  "observedAt": "2026-11-15T23:26:05.198204+00:00",
+  "purpose": "BOUNDED_SECURITY_ALERT_METADATA_ONLY",
+  "responseSha256": "a777c518786a695e8f4347e5d90e48e8fa64464ed4bec481410ae1be72139c99",
+  "targetMerge": "45fa82d11f11ec23d28bdd7cafea080432c46c40"
+}

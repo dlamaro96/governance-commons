@@ -1,0 +1,8 @@
+{
+  "controlOutcome": "PASS",
+  "expectedOutcome": "successful analysis and rejected high/critical findings in all three languages",
+  "productScan": false,
+  "purpose": "SYNTHETIC_NEGATIVE_CONTROL",
+  "sourceDigest": "e6b3e6f6115ef40ff3c0edafbfe8e56b2846fc4b8d89fe581df84087f258677f",
+  "upload": "NOT_ATTEMPTED"
+}

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-15T21:52:54.565448+00:00",
+  "sourceDigest": "b841349ba0f21dc2d57cdd77b078b318dce41687038a47cce894b716117e73b8",
+  "analysis": "PASS",
+  "findingsGate": "PASS",
+  "artifactHygiene": "PASS",
+  "uploads": "NOT_PERFORMED",
+  "checks": [
+    "Every published JSON/SARIF parses.",
+    "No plain or twice-percent-decoded local user/worktree path remains.",
+    "No SARIF source contents/snippets, command lines, environment variables or executable locations remain.",
+    "Published results retain actual raw counts; all three are zero.",
+    "Actual raw/published SARIF hashes match original scanner summaries.",
+    "Every required executable source path still matches the frozen source manifest.",
+    "Triage register is empty."
+  ],
+  "files": [
+    {
+      "file": "actions-summary.json",
+      "bytes": 1710,
+      "sha256": "b1d347f1c548978f195473d267164e63f5dc4f336595e3965aad026647d91eb6"
+    },
+    {
+      "file": "actions.sarif",
+      "bytes": 153612,
+      "sha256": "daae362522511dd76a861b678e2bb5746d07e0ad070ac75c6a09c0452b35519f"
+    },
+    {
+      "file": "javascript-typescript-summary.json",
+      "bytes": 1869,
+      "sha256": "258d80f56e4e38af924b1452c42bfbacf94afc84352f23881d098144f82b3eec"
+    },
+    {
+      "file": "javascript-typescript.sarif",
+      "bytes": 345616,
+      "sha256": "8d3a88d6c2011f4156ce2eb32464512dd3d387fb4570ff220a7bc013e4e67ed8"
+    },
+    {
+      "file": "python-summary.json",
+      "bytes": 1848,
+      "sha256": "8dfa219ed923b219456b4e70a5b4f18747bfbe097e2177f623cfc0bb40344112"
+    },
+    {
+      "file": "python.sarif",
+      "bytes": 229397,
+      "sha256": "f965764d6d59bc59637d26b5932fc64bb20c31b6c94da4da1e45b3957f6c4023"
+    },
+    {
+      "file": "source-manifest.json",
+      "bytes": 74071,
+      "sha256": "66ff481c7f4aa88b684feb2fc43fc84e66bf4625ea2ef02d9bb930e9312a3293"
+    },
+    {
+      "file": "summary.json",
+      "bytes": 7920,
+      "sha256": "465f95b5a110d60ca80fd3550e855ee29094bde0df7c85884179fca42bdbf126"
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "timestamp": "2026-11-16T00:05:37.466147+00:00",
+  "commit": "ece773e27c3f3a25822984578dee4a1dedddb970",
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/43777260929",
+  "profile": "core / GitHub-hosted Ubuntu 24.04 / synthetic PostgreSQL",
+  "steps": {
+    "bootstrap": "success",
+    "services": "success",
+    "object_store": "success",
+    "seed": "success",
+    "connectors": "success",
+    "security": "success",
+    "model_upgrade": "success",
+    "asset_type_upgrade": "success",
+    "type_migration_upgrade": "success",
+    "relations_upgrade": "success",
+    "browser": "success"
+  },
+  "outcome": "PASS",
+  "tests": [
+    {
+      "file": "tests/e2e/vertical-slice.spec.ts",
+      "line": 17,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 7028,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/vertical-slice.spec.ts",
+      "line": 101,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 1433,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/ui-accessibility.spec.ts",
+      "line": 30,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 11128,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/ui-accessibility.spec.ts",
+      "line": 74,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 1179,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/models.spec.ts",
+      "line": 77,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 22380,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/models.spec.ts",
+      "line": 257,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 3522,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/model-migrations.spec.ts",
+      "line": 80,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 16818,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/model-migrations.spec.ts",
+      "line": 218,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 3204,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/asset-types.spec.ts",
+      "line": 97,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 24346,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/asset-types.spec.ts",
+      "line": 242,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 48853,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/asset-type-migrations.spec.ts",
+      "line": 97,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 21005,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/asset-type-migrations.spec.ts",
+      "line": 252,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 43945,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/relations.spec.ts",
+      "line": 145,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 69046,
+      "failure_locations": []
+    },
+    {
+      "file": "tests/e2e/relations.spec.ts",
+      "line": 358,
+      "status": "expected",
+      "attempts": 1,
+      "duration_ms": 9803,
+      "failure_locations": []
+    }
+  ],
+  "screenshots": [
+    "catalog-en-light-390.png",
+    "catalog-en-light-768.png",
+    "catalog-en-light-1024.png",
+    "catalog-en-light-1280.png",
+    "catalog-en-light-1440.png",
+    "catalog-en-dark-1440.png",
+    "catalog-history.png",
+    "catalog-ar-dark-390.png",
+    "catalog-ar-dark-768.png",
+    "catalog-ar-dark-1440.png"
+  ],
+  "limitations": [
+    "No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
+    "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification."
+  ]
+}

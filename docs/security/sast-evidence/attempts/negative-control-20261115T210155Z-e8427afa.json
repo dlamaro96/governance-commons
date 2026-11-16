@@ -1,0 +1,220 @@
+{
+  "analysis": "PASS",
+  "bundleSha256": "7dd066f805dfed19c9c4323d5f2003cd24fabd6e7304cdf799b94a84509fe92b",
+  "configurationSha256": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+  "containerImages": {
+    "actions": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+    "javascript-typescript": "sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651",
+    "python": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a"
+  },
+  "dirty": false,
+  "findingsGate": "BLOCKED",
+  "head": "771e35047fc72c419684d42e8529592637741009",
+  "languages": {
+    "actions": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+      "coverage": {
+        "databaseFiles": 1,
+        "expectedFiles": 1,
+        "extractedExpectedFiles": 1,
+        "extractedPathsDigest": "cfe162a901270c79d43bea2270d3f0ddc03795c20abd3ae2c6b9c33fa7361f7f"
+      },
+      "dirty": false,
+      "findings": [
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "75f9a864fcce62900575bce1ec208243f06e258c9d539fbb41da9ac221d392d9",
+          "line": 9,
+          "path": ".github/workflows/probe.yml",
+          "ruleId": "actions/code-injection/medium",
+          "severity": "medium",
+          "sourceSuppressed": false
+        }
+      ],
+      "findingsGate": "BLOCKED",
+      "head": "771e35047fc72c419684d42e8529592637741009",
+      "language": "actions",
+      "publishedSarifSha256": "6c58fd63ffbbf13e2750e248aca308a03b11bf590b1a72a0b6303b55458bea41",
+      "queryCount": 24,
+      "queryPack": "codeql/actions-queries",
+      "querySetDigest": "109c0f4a3b614aa9f782d403ecc45e5830ed72620e8fc1eeff93ae613bfb9f6e",
+      "queryVersion": "0.6.39",
+      "rawSarifSha256": "e10d601bfd046badb0cb82590ba31c301bbfea71eadcd7009d5d10660d76b0f8",
+      "schemaVersion": 1,
+      "sourceDigest": "33863683059acc419a2687ef9af826c8f353de36eb15bab8fd18c5859c064902",
+      "steps": [
+        {
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    },
+    "javascript-typescript": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": "sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651",
+      "coverage": {
+        "databaseFiles": 6,
+        "expectedFiles": 1,
+        "extractedExpectedFiles": 1,
+        "extractedPathsDigest": "a2b3b29a884f18d11ec795c1fa16dbd4bb670b91653d7c4257249f21d37eed07"
+      },
+      "dirty": false,
+      "findings": [
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "954cea660d16ad04c35241df5ee1f4f85af40a426293202d9716086779fd2516",
+          "line": 4,
+          "path": "app.ts",
+          "ruleId": "js/missing-rate-limiting",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "31f3837087126bfcf1f590b6e8ab284e2193c6fe445c2771c43f8f2ae7590864",
+          "line": 5,
+          "path": "app.ts",
+          "ruleId": "js/command-line-injection",
+          "severity": "critical",
+          "sourceSuppressed": false
+        }
+      ],
+      "findingsGate": "BLOCKED",
+      "head": "771e35047fc72c419684d42e8529592637741009",
+      "language": "javascript-typescript",
+      "publishedSarifSha256": "a2c3621df4ffe8bd5dcdb6c88f2afd7ac514f486e5726593f302a8009b581472",
+      "queryCount": 105,
+      "queryPack": "codeql/javascript-queries",
+      "querySetDigest": "213bda4e81b066a5b255ff54cd70bbac5caaafe63742af25eeb890308d3c28dd",
+      "queryVersion": "2.5.0",
+      "rawSarifSha256": "8eaeaa416061664cee84ee6f98a855c167a8b9ac25fa01fd75bf5b1276e23aca",
+      "schemaVersion": 1,
+      "sourceDigest": "33863683059acc419a2687ef9af826c8f353de36eb15bab8fd18c5859c064902",
+      "steps": [
+        {
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    },
+    "python": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+      "coverage": {
+        "databaseFiles": 6,
+        "expectedFiles": 1,
+        "extractedExpectedFiles": 1,
+        "extractedPathsDigest": "f628385d0a3e4dd277949cf48f793279c7b85b0499db4bd7198e454d0f554152"
+      },
+      "dirty": false,
+      "findings": [
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "1e7c007b9173324712a88bb294f4acfa527556a9c65f9587a3077064830684d3",
+          "line": 6,
+          "path": "worker.py",
+          "ruleId": "py/command-line-injection",
+          "severity": "critical",
+          "sourceSuppressed": false
+        }
+      ],
+      "findingsGate": "BLOCKED",
+      "head": "771e35047fc72c419684d42e8529592637741009",
+      "language": "python",
+      "publishedSarifSha256": "8a97cd884de0901ae01cadaf33e83328e2dd201a9e395b89d881617382819af7",
+      "queryCount": 52,
+      "queryPack": "codeql/python-queries",
+      "querySetDigest": "8d865c71bba12677546d6ed9e9a33b2a2fa4fd0ad90c75c29cd87c457d0bf969",
+      "queryVersion": "1.9.0",
+      "rawSarifSha256": "bd0515a7d7a622dabb44a4c31403108f6d8cda8c1d9e1d1bb7065bbc69856836",
+      "schemaVersion": 1,
+      "sourceDigest": "33863683059acc419a2687ef9af826c8f353de36eb15bab8fd18c5859c064902",
+      "steps": [
+        {
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    }
+  },
+  "outcome": "NOT_PASSED",
+  "platform": "linux-arm64",
+  "policySha256": "2931b5fe970e847b773d9663a029e052f5b3b190d27040b677757cf97beec8b7",
+  "purpose": "SYNTHETIC_NEGATIVE_CONTROL",
+  "schemaVersion": 1,
+  "scope": "ALL_REQUIRED_LANGUAGES",
+  "sourceDigest": "33863683059acc419a2687ef9af826c8f353de36eb15bab8fd18c5859c064902",
+  "triageSha256": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+  "upload": "NOT_ATTEMPTED"
+}

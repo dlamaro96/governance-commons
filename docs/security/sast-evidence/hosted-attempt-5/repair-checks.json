@@ -1,0 +1,168 @@
+{
+  "checks": [
+    {
+      "check": "final-unit",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "tests/unit/asset-type-migration.test.ts",
+        "tests/unit/asset-type-policy.test.ts",
+        "tests/unit/asset-type.test.ts",
+        "tests/unit/audit.test.ts",
+        "tests/unit/authz.test.ts",
+        "tests/unit/cursor.test.ts",
+        "tests/unit/json-envelope.test.ts",
+        "tests/unit/model-migration-file.test.ts",
+        "tests/unit/model-migration.test.ts",
+        "tests/unit/model.test.ts",
+        "tests/unit/relation.test.ts"
+      ],
+      "exitCode": 0,
+      "logSha256": "2adf37c48d6d6a97e534c7daa25004034b433868ec5c3b33b651ab12832ebad9",
+      "startedAt": "2026-11-15T23:30:45.184758+00:00"
+    },
+    {
+      "check": "final-typecheck",
+      "command": [
+        "pnpm",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "logSha256": "146aa7bcf7f02a73c49b26725655dfcaafb0536b511721a3b52e1c6b04cd7f58",
+      "startedAt": "2026-11-15T23:30:45.568051+00:00"
+    },
+    {
+      "check": "sast-policy",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "policies",
+        "-p",
+        "test_sast.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "logSha256": "80a671049cc9fe15cd8241d8f12cccf45b892cb42399c66f8a69d1d807bd0683",
+      "startedAt": "2026-11-15T23:35:16.541592+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "requirements",
+      "command": [
+        "python3",
+        "scripts/requirements.py",
+        "validate"
+      ],
+      "exitCode": 0,
+      "logSha256": "20b5661cffd29d5850117ecf93d7e608b9770219ee9d038fbf917c4114b58c44",
+      "startedAt": "2026-11-15T23:35:17.602033+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "509a509b036cb432d04b75c95158245dd89768867829fa3ab52ffef3fe6eba5d",
+      "startedAt": "2026-11-15T23:35:17.702068+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-15T23:35:31.877729+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "secret-scan-preflight-symlink-rejection",
+      "command": [
+        "python3",
+        "policies/scan_secrets.py",
+        "--install",
+        "--output",
+        "docs/security/sast-evidence/hosted-attempt-5/secret-scan.json"
+      ],
+      "exitCode": 1,
+      "logSha256": "9baaf9d41b6a5206bf0e422705665558c6277bc260c2943d8324c791bf86db34",
+      "resolution": "Removed only the exact temporary dependency symlink after completing tests; no scanner policy change.",
+      "startedAt": "2026-11-15T23:35:31.887134+00:00",
+      "status": "FAIL"
+    },
+    {
+      "check": "secret-scan-after-symlink-removal",
+      "command": [
+        "python3",
+        "policies/scan_secrets.py",
+        "--install",
+        "--output",
+        "docs/security/sast-evidence/hosted-attempt-5/secret-scan.json"
+      ],
+      "exitCode": 0,
+      "logSha256": "423bda2b735bcc786cc02376b32b19c36e9dbce795282d3b5080c01a4fbd0a1b",
+      "startedAt": "2026-11-15T23:38:29.404549+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "final-publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "111a7047297278fea6b385cbe055385ed9155756556e8045b493912c24ce9dc2",
+      "startedAt": "2026-11-15T23:38:31.231446+00:00",
+      "status": "PASS"
+    },
+    {
+      "check": "final-whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-15T23:38:45.202986+00:00",
+      "status": "PASS"
+    }
+  ],
+  "dirty": true,
+  "head": "d3bf25ba86d31d84534bb78249c3e5168ec43fdf",
+  "limitations": [
+    "Pure/type and scanner-policy tooling checks are distinct from source-scanning, API/browser, ingestion and hosted qualification.",
+    "The original hosted high finding remains preserved and blocking; no risk disposition or suppression was added.",
+    "Pinned secret scanning is separately recorded. No heavy local CodeQL or Docker execution was performed.",
+    "The first secret-scan command rejected a temporary dependency symlink before scanning; original failure is retained and a complete rerun follows its removal."
+  ],
+  "policyTests": 42,
+  "schemaVersion": 1,
+  "sourceScanOfRepair": "NOT_RUN",
+  "sourceSha256": {
+    ".github/codeql/codeql-config.yml": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+    ".github/workflows/security.yml": "87704b640679588d83b0c4d76a4fe35e07e74ee60f821da2f926f3ed10fa89ed",
+    "package.json": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7",
+    "packages/domain/src/relation.ts": "229760bf5094e49bc078025a3cba792b8ce1d944cdc4547e42f6a23635ad2a3d",
+    "pnpm-lock.yaml": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829",
+    "policies/sast-policy.json": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+    "policies/sast-triage.json": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+    "policies/sast.py": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7",
+    "policies/test_sast.py": "015c11e7092ed1a8dfd630d495e3b5f05cb36caf55754ad7cbab79cfa769fdc5",
+    "tests/unit/relation.test.ts": "357a001ffd7754326c08ef5a8cab43f2095e729cbc12dc8dec320f4d7c1d427b"
+  },
+  "unitTests": 109
+}

@@ -1,0 +1,302 @@
+{
+  "analysis": "PASS",
+  "bundleSha256": "7dd066f805dfed19c9c4323d5f2003cd24fabd6e7304cdf799b94a84509fe92b",
+  "configurationSha256": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+  "containerImages": {
+    "actions": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+    "javascript-typescript": "sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651",
+    "python": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a"
+  },
+  "dirty": true,
+  "durationSeconds": 198.282,
+  "findingsGate": "BLOCKED",
+  "finishedAt": "2026-11-15T21:20:50.288760+00:00",
+  "freeDiskBytesAtFinish": 5124603904,
+  "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+  "invocation": {
+    "entrypoint": "policies/sast.py",
+    "language": "all",
+    "platform": "linux-arm64"
+  },
+  "languages": {
+    "actions": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+      "coverage": {
+        "databaseFiles": 2,
+        "expectedFiles": 2,
+        "extractedExpectedFiles": 2,
+        "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+      },
+      "coverageQuerySha256": "aad6da298334a842bea221711b0e7c8b1c4864ce2c66632e4d93c846742a4505",
+      "dirty": true,
+      "findings": [],
+      "findingsGate": "PASS",
+      "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+      "language": "actions",
+      "library": "codeql/actions-all",
+      "libraryVersion": "0.7.1",
+      "publishedSarifSha256": "ddbc8359cad9ce99ea42fe91344b61bf7279c628194f746ac55d04b196f89cf9",
+      "queryCount": 24,
+      "queryPack": "codeql/actions-queries",
+      "querySetDigest": "109c0f4a3b614aa9f782d403ecc45e5830ed72620e8fc1eeff93ae613bfb9f6e",
+      "queryVersion": "0.6.39",
+      "rawSarifSha256": "dba609bdaead41dbf98efdc6a06ef5800b19bb2e2d7bbf78fdc2e890219f1f31",
+      "schemaVersion": 1,
+      "sourceDigest": "c5b1d43986aa95232576d55e22de46c21cef5f64d7b3d23e3f4603285940adf9",
+      "steps": [
+        {
+          "durationSeconds": 0.761,
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "durationSeconds": 2.039,
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 3.296,
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 10.735,
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 19.08,
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.776,
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    },
+    "javascript-typescript": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": "sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651",
+      "coverage": {
+        "databaseFiles": 122,
+        "expectedFiles": 97,
+        "extractedExpectedFiles": 97,
+        "extractedPathsDigest": "6a006f23f839c418366d861ed637fc90f23d352e1ce69984af66c82585a5871b"
+      },
+      "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+      "dirty": true,
+      "extractorRuntime": "v24.22.3",
+      "findings": [
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "c165f18711cd8b9cdd5501697439e640c675c80da5f5096bf46215435a5c83be",
+          "line": 356,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "a0b0e3a5195127670f60c6c4e963d5acaf28f7d8aa905cf46bdcdaea1696f528",
+          "line": 359,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "d5fd84bfaa58232dae7267cc1fe610aa57b95fa52f0d6965a0cb3d5bd15e39d4",
+          "line": 368,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "a97c1a3aed54fa91e92ff23c26ff24a14a246d8c190038f5bd6bd6d4b4dec338",
+          "line": 369,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "010602280742844210ef4f7d3b0a1e32d06694430dc54ff85d774aabd0c6bc11",
+          "line": 376,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "54b2450b5986c12190a51955ee1b669be20a7c7a49e66e958fae4bf0aaa0cd2d",
+          "line": 382,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "c4536e43ddc0f27cbaaa0a1d33154b545fd2b5e014a6968540aaabfece515b7d",
+          "line": 386,
+          "path": "packages/domain/src/model-migration.ts",
+          "ruleId": "js/remote-property-injection",
+          "severity": "high",
+          "sourceSuppressed": false
+        }
+      ],
+      "findingsGate": "BLOCKED",
+      "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+      "language": "javascript-typescript",
+      "library": "codeql/javascript-all",
+      "libraryVersion": "3.0.0",
+      "publishedSarifSha256": "163473f3e9bc5a33a03a397434780e5df8f2a8ba6f731f55d770de439a19a55b",
+      "queryCount": 105,
+      "queryPack": "codeql/javascript-queries",
+      "querySetDigest": "213bda4e81b066a5b255ff54cd70bbac5caaafe63742af25eeb890308d3c28dd",
+      "queryVersion": "2.5.0",
+      "rawSarifSha256": "28ace6143332c118f1455f37e66bb67a2f3e5b5c10f60f96c244e8297db3b49b",
+      "schemaVersion": 1,
+      "sourceDigest": "c5b1d43986aa95232576d55e22de46c21cef5f64d7b3d23e3f4603285940adf9",
+      "steps": [
+        {
+          "durationSeconds": 0.515,
+          "exitCode": 0,
+          "step": "extractor-runtime"
+        },
+        {
+          "durationSeconds": 0.777,
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "durationSeconds": 2.063,
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 12.814,
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 71.864,
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 17.723,
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.775,
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    },
+    "python": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+      "coverage": {
+        "databaseFiles": 43,
+        "expectedFiles": 24,
+        "extractedExpectedFiles": 24,
+        "extractedPathsDigest": "4d2f7b20a32cf6abbd6e7e081ab632e55f46a3484c67de62a295fee0efd2274f"
+      },
+      "coverageQuerySha256": "e3c2c759bc1eda89b0ea538c161831cc41422adfbacdc43a1a5af3bbe4148f15",
+      "dirty": true,
+      "extractorRuntime": "Python 3.14.5",
+      "findings": [],
+      "findingsGate": "PASS",
+      "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+      "language": "python",
+      "library": "codeql/python-all",
+      "libraryVersion": "7.2.9",
+      "publishedSarifSha256": "c5007f28e68191a5641a9df8e44cddf44a42ed6900183550d112548312c69fdb",
+      "queryCount": 52,
+      "queryPack": "codeql/python-queries",
+      "querySetDigest": "8d865c71bba12677546d6ed9e9a33b2a2fa4fd0ad90c75c29cd87c457d0bf969",
+      "queryVersion": "1.9.0",
+      "rawSarifSha256": "c70bb7ac8392e80a12e44322589d4a1ad3113e49db7dd0ddd7328648cba44380",
+      "schemaVersion": 1,
+      "sourceDigest": "c5b1d43986aa95232576d55e22de46c21cef5f64d7b3d23e3f4603285940adf9",
+      "steps": [
+        {
+          "durationSeconds": 0.258,
+          "exitCode": 0,
+          "step": "extractor-runtime"
+        },
+        {
+          "durationSeconds": 0.767,
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "durationSeconds": 2.302,
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 13.044,
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 17.172,
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 13.334,
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.755,
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    }
+  },
+  "limitations": [
+    "No hosted ingestion or analysis read-back in this command.",
+    "SQL/RLS, dependencies, images and general IaC are outside this source scan.",
+    "Automated findings do not replace independent security review."
+  ],
+  "outcome": "NOT_PASSED",
+  "platform": "linux-arm64",
+  "policySha256": "920038aebeb759097d57f7712b3269ebd29b9e3ff488164ded57a0d772cda581",
+  "purpose": "REPOSITORY_SOURCE",
+  "runnerSha256": "39a95f4eb6d1e89301ac9e9d4371e46de07b6dd17666472ac656ffcf7b480bbf",
+  "schemaVersion": 1,
+  "scope": "ALL_REQUIRED_LANGUAGES",
+  "sourceDigest": "c5b1d43986aa95232576d55e22de46c21cef5f64d7b3d23e3f4603285940adf9",
+  "startedAt": "2026-11-15T21:17:32.007624+00:00",
+  "triageSha256": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+  "upload": "NOT_ATTEMPTED"
+}

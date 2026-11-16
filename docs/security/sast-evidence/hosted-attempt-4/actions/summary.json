@@ -1,0 +1,99 @@
+{
+  "analysis": "PASS",
+  "bundleSha256": "89ed56c8ec6bfccef6a0d2e7fe86da0469ca24b4db08b88016ec134b942c17a4",
+  "configurationSha256": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+  "containerImages": null,
+  "dirty": false,
+  "durationSeconds": 27.531,
+  "findingsGate": "PASS",
+  "finishedAt": "2026-11-15T23:02:38.251746+00:00",
+  "freeDiskBytesAtFinish": 93446193152,
+  "head": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1",
+  "invocation": {
+    "entrypoint": "policies/sast.py",
+    "language": "actions",
+    "platform": "linux-x64"
+  },
+  "languages": {
+    "actions": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": null,
+      "coverage": {
+        "databaseFiles": 2,
+        "expectedFiles": 2,
+        "extractedExpectedFiles": 2,
+        "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+      },
+      "coverageQuerySha256": "aad6da298334a842bea221711b0e7c8b1c4864ce2c66632e4d93c846742a4505",
+      "dirty": false,
+      "findings": [],
+      "findingsGate": "PASS",
+      "head": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1",
+      "language": "actions",
+      "library": "codeql/actions-all",
+      "libraryVersion": "0.7.1",
+      "publishedSarifSha256": "c67b80aa6c6797c9304ff8bbe1c0671083f7577f6bf5f610f9cb76a342a9bebb",
+      "queryCount": 24,
+      "queryPack": "codeql/actions-queries",
+      "querySetDigest": "109c0f4a3b614aa9f782d403ecc45e5830ed72620e8fc1eeff93ae613bfb9f6e",
+      "queryVersion": "0.6.39",
+      "rawSarifSha256": "85730cb8f2b0647346b1dd9201df47a7ca5cf317e4e31fe2c04c1d601643e800",
+      "schemaVersion": 1,
+      "sourceDigest": "e70eb504e06494664ba853222592eedfa05fa757b3ec0e783319e251e38c7a68",
+      "steps": [
+        {
+          "durationSeconds": 0.501,
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "durationSeconds": 1.002,
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 3.504,
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 8.014,
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 10.017,
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.501,
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    }
+  },
+  "limitations": [
+    "No hosted ingestion or analysis read-back in this command.",
+    "SQL/RLS, dependencies, images and general IaC are outside this source scan.",
+    "Automated findings do not replace independent security review."
+  ],
+  "nativePackageScope": {
+    "mode": "EXPLICIT_COMMONJS",
+    "packageSha256": "7d38de102f9d211b8a221ab5943610473c4b23aeee36e9a9cf0e22848e04b9d4"
+  },
+  "outcome": "PASS",
+  "platform": "linux-x64",
+  "policySha256": "920038aebeb759097d57f7712b3269ebd29b9e3ff488164ded57a0d772cda581",
+  "purpose": "REPOSITORY_SOURCE",
+  "runnerSha256": "b94eedcde7dc1d2a1f1b866a036b36e4b360f0e41cebe95b937c650aac94755a",
+  "schemaVersion": 1,
+  "scope": "SINGLE_LANGUAGE",
+  "sourceDigest": "e70eb504e06494664ba853222592eedfa05fa757b3ec0e783319e251e38c7a68",
+  "startedAt": "2026-11-15T23:02:10.720851+00:00",
+  "triageSha256": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+  "upload": "NOT_ATTEMPTED"
+}

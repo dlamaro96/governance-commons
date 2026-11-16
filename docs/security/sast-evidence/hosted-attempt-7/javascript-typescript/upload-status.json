@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "language": "javascript-typescript",
+  "commit": "ece773e27c3f3a25822984578dee4a1dedddb970",
+  "analysisAndFindingsStep": "success",
+  "uploadAndProcessingStep": "success",
+  "sarifId": "10ad4fb4-e150-11f1-843c-3b42746a48bf",
+  "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB"
+}

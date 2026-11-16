@@ -1,0 +1,39 @@
+{
+  "analysis": "retained-original-PASS",
+  "findingsGate": "retained-original-PASS",
+  "originalAttempt": "product-4",
+  "records": [
+    {
+      "analysisRerun": false,
+      "artifactHygiene": "PASS",
+      "language": "javascript-typescript",
+      "originalPublishedSha256": "4a45b5d6b8b816824cedf502e13f7afed6151b483c89be0a0343ad392184afaa",
+      "rawSha256": "cebce4286978053bb00a2df3a24d3a869d08cf534f078913a563895d9b3f694d",
+      "reprocessedSha256": "f270ee17aa4cb42f294ab697cec59065f4b89946b42d17adbd345801f1da028f",
+      "resultCount": 0
+    },
+    {
+      "analysisRerun": false,
+      "artifactHygiene": "PASS",
+      "language": "python",
+      "originalPublishedSha256": "543da35eb775bf96100fd6adc4499b7fa1f0148e9d50d14fc5f800c0e4c76ce0",
+      "rawSha256": "eabde8b72bc9c4d3e6d8f7dfdf3ce3f6a95e2fc9781a9a5ab6c1b3bd6c0e2890",
+      "reprocessedSha256": "bed0ed67f8ebe11e6126b6f7c0697fc8454aed9898a18ad5f6adb0839ad398f6",
+      "resultCount": 0
+    },
+    {
+      "analysisRerun": false,
+      "artifactHygiene": "PASS",
+      "language": "actions",
+      "originalPublishedSha256": "3ea970643a414d1059064e5d971394a2916d6cbd3a8ef4abddf597f7cd607281",
+      "rawSha256": "23734a6f841b453ae8cfcdc99761bfea5a46d7ee62c0435b39420be8b4ada2a2",
+      "reprocessedSha256": "e35aa3eccb9aade6ee4eba38bbb7bf5552f4dc7c0bbcd39915b1b5a46c468457",
+      "resultCount": 0
+    }
+  ],
+  "runnerSha256": "4a4be36bc3dd5dbd59ee62bf250f021bc46ce9f244c141516e92b21d839f3fd3",
+  "schemaVersion": 1,
+  "sourceDigest": "69ae3b93308e71761b50781ae3446ef7bfef1e3de7b8d613fb7056e0c1142591",
+  "status": "PASS",
+  "upload": "NOT_PERFORMED"
+}

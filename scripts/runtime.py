@@ -107,6 +107,7 @@ def main():
   ./dev status                        Show project service status
   ./dev test --suite smoke            Run locally configured smoke acceptance gate
   ./dev test --suite security         Run locally configured isolation gate
+  ./dev test --suite sast             Run pinned local CodeQL; no Docker or token required
   ./dev test --suite model-upgrade    Verify receipt upgrade in isolated PostgreSQL
   ./dev test --suite asset-type-upgrade Verify inherited-type upgrade in isolated PostgreSQL
   ./dev test --suite type-migration-upgrade Verify complete typed receipts and principal locking
@@ -134,6 +135,11 @@ Never use docker compose config output in public logs: it expands secrets.""")
         raise SystemExit(f"NOT IMPLEMENTED: {args.command}; requirement remains open. No operation performed.")
     if args.profile != "core":
         raise SystemExit(f"PROFILE NOT IMPLEMENTED: {args.profile}; full/ai-local qualification remains open.")
+    if args.command == "test" and args.suite == "sast":
+        command = [sys.executable, "policies/sast.py", "run"]
+        if args.output:
+            command.extend(["--output", args.output])
+        run(command, timeout=5500); return
     require_bootstrap(); require_local()
     if args.command == "up":
         if not doctor():

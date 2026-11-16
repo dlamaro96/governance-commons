@@ -1,0 +1,130 @@
+{
+  "checks": [
+    {
+      "check": "requirements",
+      "command": [
+        "python3",
+        "scripts/requirements.py",
+        "validate"
+      ],
+      "exitCode": 0,
+      "logSha256": "20b5661cffd29d5850117ecf93d7e608b9770219ee9d038fbf917c4114b58c44",
+      "startedAt": "2026-11-16T00:01:47.694262+00:00"
+    },
+    {
+      "check": "publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "99c8d87313836a9dca5d22b84fd8d5273dc3215e9968856f914c8095855c6282",
+      "startedAt": "2026-11-16T00:01:47.806483+00:00"
+    },
+    {
+      "check": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-16T00:02:02.835854+00:00"
+    },
+    {
+      "check": "secret-scan",
+      "command": [
+        "python3",
+        "policies/scan_secrets.py",
+        "--install",
+        "--output",
+        "docs/security/sast-evidence/hosted-attempt-7/secret-scan.json"
+      ],
+      "exitCode": 0,
+      "logSha256": "a88ffb0827428b7c8fe7e565d5b63bd335149d080c5757161ccf93ad9a03a40e",
+      "startedAt": "2026-11-16T00:02:02.845873+00:00"
+    },
+    {
+      "check": "final-publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "8067f009097f401ed4b87dec75011acf198d24fa842c7c8cb60da2b4006a14ad",
+      "startedAt": "2026-11-16T00:09:17.383309+00:00"
+    },
+    {
+      "check": "final-secret-scan",
+      "command": [
+        "python3",
+        "policies/scan_secrets.py",
+        "--install",
+        "--output",
+        "docs/security/sast-evidence/hosted-attempt-7/secret-scan.json"
+      ],
+      "exitCode": 0,
+      "logSha256": "d85d1408406745c77d49bc3a02e96fab88b4ab12dc18131c6df61be6dfb06d67",
+      "startedAt": "2026-11-16T00:09:31.339101+00:00"
+    },
+    {
+      "check": "final-whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-16T00:09:33.242155+00:00"
+    },
+    {
+      "check": "merge-fact-publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "logSha256": "8067f009097f401ed4b87dec75011acf198d24fa842c7c8cb60da2b4006a14ad",
+      "startedAt": "2026-11-16T00:10:48.552797+00:00"
+    },
+    {
+      "check": "merge-fact-secret-scan",
+      "command": [
+        "python3",
+        "policies/scan_secrets.py",
+        "--install",
+        "--output",
+        "docs/security/sast-evidence/hosted-attempt-7/secret-scan.json"
+      ],
+      "exitCode": 0,
+      "logSha256": "d85d1408406745c77d49bc3a02e96fab88b4ab12dc18131c6df61be6dfb06d67",
+      "startedAt": "2026-11-16T00:11:03.368729+00:00"
+    },
+    {
+      "check": "merge-fact-whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startedAt": "2026-11-16T00:11:05.304535+00:00"
+    }
+  ],
+  "coveredExecutableHashCount": 145,
+  "dirty": true,
+  "head": "fe2dc1897e1b07ffd41dc27d64e1eacf700e7391",
+  "hostedTestedMerge": "ece773e27c3f3a25822984578dee4a1dedddb970",
+  "limitations": [
+    "Evidence documents the exact historical tested merge, not this later dirty documentation snapshot.",
+    "Do not push documentation while the qualified source head is still running its required Development workflow."
+  ],
+  "purpose": "QUALIFICATION_DOCUMENTATION_CHECKS_NOT_A_NEW_SOURCE_SCAN",
+  "schemaVersion": 1
+}

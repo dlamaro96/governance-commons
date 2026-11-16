@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "language": "actions",
+  "commit": "77b73e75016435d6f12e67cda76ea84b91cd1086",
+  "analysisAndFindingsStep": "success",
+  "uploadAndProcessingStep": "success",
+  "sarifId": "2add5dc8-e152-11f1-93ca-66f6a0c60ee9",
+  "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB"
+}

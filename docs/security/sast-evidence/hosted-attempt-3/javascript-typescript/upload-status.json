@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "language": "javascript-typescript",
+  "commit": "fba921b340943af4ca811eb09ce4cc761d7dc1bc",
+  "analysisAndFindingsStep": "failure",
+  "uploadAndProcessingStep": "skipped",
+  "sarifId": "",
+  "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB"
+}

@@ -433,19 +433,243 @@
     },
     {
       "path": "docs/verification/relation-participation-graph-copy-pure.json",
-      "scope": "Graph asset preparation copier correction:204 passing pure cases and root/web typechecks with115 stable source hashes; isolated old-source reproduction13 pass/2 fail and corrected source15 pass retained separately."
+      "scope": "Graph asset preparation copier correction:204 passing pure cases and root/web typechecks with115 stable source hashes; isolated old-source reproduction13 pass/2 fail and corrected source15 pass retained separately.",
+      "source_binding": {
+        "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
+        "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
+        "verified_files": 115,
+        "evidence_sha256": "ac96820b48ecaf14ee7b87c6a1e98f7a1e9b0226da0ce0e99029f9e685826dd4"
+      }
     },
     {
       "path": "docs/verification/relation-participation-graph-copy-upgrade.json",
-      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001\u2013010 preserved and disposable database removed. Earlier reports retain their own exact snapshots."
+      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001\u2013010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
+      "source_binding": {
+        "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
+        "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
+        "verified_files": 51,
+        "evidence_sha256": "231011f43f81ae4fa7be1c59daec693118a885fd491838c880207d4ac995ffbe"
+      }
     },
     {
       "path": "docs/verification/m2-relation-participation-api-graph-copy.json",
-      "scope": "Fresh graph asset copier correction core API/storage execution:123 passing cases with76 actual-image source hashes; exact sixth attempt archived and earlier failures/passes retained. Browser and hosted outcomes remain separate."
+      "scope": "Fresh graph asset copier correction core API/storage execution:123 passing cases with76 actual-image source hashes; exact sixth attempt archived and earlier failures/passes retained. Browser and hosted outcomes remain separate.",
+      "source_binding": {
+        "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
+        "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
+        "verified_files": 76,
+        "evidence_sha256": "9cbe8030e1a194e8833aeb38ad3eaff8186520e0820df4f5456c07c102557ef6"
+      }
     },
     {
       "path": "docs/verification/m2-relation-participation-ui.json",
-      "scope": "Required participation UI: full16/16 browser journeys pass once with139 stable source hashes,22 served assets and76 API-source equivalents;16 new screenshots inspected, five separately spot-checked by root,95 historical PNGs preserved. All four targeted attempts retain their original outcomes and diagnostics."
+      "scope": "Required participation UI: full16/16 browser journeys pass once with139 stable source hashes,22 served assets and76 API-source equivalents;16 new screenshots inspected, five separately spot-checked by root,95 historical PNGs preserved. All four targeted attempts retain their original outcomes and diagnostics.",
+      "source_binding": {
+        "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
+        "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
+        "verified_files": 155,
+        "evidence_sha256": "e262580680acae02a0ecf69b4f8e225619b323faebdec181fa096f21c639e41c"
+      }
+    },
+    {
+      "path": "docs/verification/source-sast.json",
+      "scope": "local-source-sast",
+      "source_binding": {
+        "evidence_sha256": "7b43f2ee5ee0390867ce0db4b294a74f1b8619b4eb9171fb837f75adf9a3adf5",
+        "implementation_commit": "5ea6eee38ac6aaf129e225d45be57e15762b0722",
+        "method": "Recorded final scan executable hashes match committed Git blobs. This binding is not a scan rerun.",
+        "verified_files": 123
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-1/record.json",
+      "scope": "First integrated hosted source-security failure, separately passing behavior and bounded extraction diagnostics",
+      "source_binding": {
+        "ci_tested_merge_commit": "1bb4637def199c12226d1d337dcd2eece61ee57e",
+        "evidence_sha256": "1c255703f39d67912e057c0aa854d74a2280b6f3f8f5148c1b71541f4a1a85f4",
+        "implementation_commit": "94e21a1afae84b81f800a686b808349703e73374",
+        "method": "Original sanitized hosted manifests and summaries preserved byte-identically; public job status readback. Failed JavaScript extraction remains NOT_PASSED; no complete SAST qualification inferred."
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-2/record.json",
+      "scope": "Second integrated hosted source-security failure with fixed failure markers; original safe artifacts preserved, cause undetermined",
+      "source_binding": {
+        "ci_tested_merge_commit": "6521d92cab468ad434117cfe2eebe8d53d3272be",
+        "evidence_sha256": "4e091db6b8d4fa4acea7bb139f57e76f85b471a884fe12149cf1d97abb102d07",
+        "implementation_commit": "61543a062b9818d08f2b7a7904383d58303d562a",
+        "method": "Original safe hosted manifests, summaries and upload statuses preserved byte-identically. JavaScript extraction remains NOT_PASSED; Python and Actions pass separately. Expanded diagnostics are tooling changes and do not establish a scan pass."
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-2/diagnostic-checks.json",
+      "scope": "Focused additive failure-diagnostic policy tests, publication and whitespace checks; no scanner execution"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-2/secret-scan.json",
+      "scope": "Pinned gitleaks worktree and reachable-history publication check for the second diagnostic increment; not SAST qualification"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-3/record.json",
+      "scope": "Third hosted source-security failure and separately reproduced native package-scope defect; no corrected hosted scan yet",
+      "source_binding": {
+        "ci_tested_merge_commit": "fba921b340943af4ca811eb09ce4cc761d7dc1bc",
+        "evidence_sha256": "f1086dc0d8c8b8d1dbe6737b2b4292e4ab768a6991c566e6996454b233796e7f",
+        "implementation_commit": "123d9b8b8960cedd4817da776fe2953749d50e89",
+        "method": "Original hosted safe artifacts preserved byte-identically. Native wrapper reproduction and repair are a separate exact-byte protocol probe; no source scan rerun or hosted pass is inferred."
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-3/native-package-boundary.json",
+      "scope": "Exact bundled TypeScript wrapper metadata handshake fails under inherited ES-module scope and passes with owned CommonJS boundary; all137 wrapper files unchanged, no CodeQL source scan"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-3/boundary-checks.json",
+      "scope": "Focused package-boundary policy tests, publication and whitespace; no scanner execution"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-3/secret-scan.json",
+      "scope": "Pinned gitleaks worktree and reachable-history publication check for native package-boundary correction; not SAST qualification"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-4/record.json",
+      "scope": "Fourth hosted SAST attempt: corrected JavaScript extraction passes, analysis OOM exits99; Python/Actions pass, aggregate fails;13 original JSON artifacts including separate passing Development summary preserved",
+      "source_binding": {
+        "ci_tested_merge_commit": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1",
+        "evidence_sha256": "c146594def9dc5776d50dbab3353f1849b6fca98bdfd84b02bc0873a40154115",
+        "implementation_commit": "3a5de6090a5a04e056c3e848d8fe272d20a713e4",
+        "method": "Original hosted safe artifacts preserved byte-identically; resource correction and read-back are separately recorded and do not relabel failure."
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-4/analysis-readback.json",
+      "scope": "Independent exact-commit/category/SARIF stored Python/Actions analyses and separate complete zero-alert inventory; JavaScript absent and full gate unqualified"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-4/resource-diagnosis.json",
+      "scope": "Demonstrated native2048MiB CodeQL OOM and bounded4096MiB correction; host counter probe only, no scanner execution"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-4/memory-checks.json",
+      "scope": "Focused native-memory admission/mode policy tests, publication and whitespace; no source scan"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-4/secret-scan.json",
+      "scope": "Pinned gitleaks publication worktree/history check for native memory correction and sanitized attempt4 evidence"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-5/record.json",
+      "scope": "Fifth hosted SAST attempt: all analyses/coverage pass, actual high JavaScript finding blocks gate; originals preserved",
+      "source_binding": {
+        "ci_tested_merge_commit": "45fa82d11f11ec23d28bdd7cafea080432c46c40",
+        "evidence_sha256": "45e28f5b81a2a96554878e0b660e0f0267846356a9819f81a5a5d250fcfa0c40",
+        "implementation_commit": "d3bf25ba86d31d84534bb78249c3e5168ec43fdf",
+        "method": "Original safe reports preserved byte-identically; source repair has separate local tests and no corrected-source scan yet."
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-5/analysis-readback.json",
+      "scope": "Exact stored analysis/commit/category/SARIF/hash/count read-back for all languages; ingestion passes while high finding remains blocking"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-5/alert-metadata.json",
+      "scope": "Bounded independent metadata of the open high relation-copy alert, without raw alert payload"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-5/relation-copy-remediation.json",
+      "scope": "Same targeted regression fails before own-property repair and passes after;109 final units and root/web types, no scanner/API/browser execution inferred"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-5/repair-checks.json",
+      "scope": "Focused policy, publication, requirements and whitespace checks for relation copier correction, separate from full source-scanning qualification"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-5/secret-scan.json",
+      "scope": "Pinned gitleaks publication worktree/history scan for narrow relation-copy repair and preserved attempt5 evidence"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-6/record.json",
+      "scope": "Sixth hosted SAST attempt: all analysis/coverage pass, own-property key finding still blocks;13 original reports including separate passing behavior retained",
+      "source_binding": {
+        "ci_tested_merge_commit": "a8443c4af88c9c77a37e9d4c7f9411262f6845fb",
+        "evidence_sha256": "176b6af2049ed5bf804e8454bdc91633a577162ba84d60a029bd1b98ab75409b",
+        "implementation_commit": "b6328a3962607d4e808750cc0afb8cd2b7e487bd",
+        "method": "Original safe artifacts preserved byte-identically; subsequent private-Map repair has separate local checks."
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-6/analysis-readback.json",
+      "scope": "Independent exact stored analyses/category/SARIF/hash/count read-back; one high finding remains blocking"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-6/alert-metadata.json",
+      "scope": "Bounded independent all-state ref alert metadata; prior assignment fixed, own-property result open"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-6/copy-materialization.json",
+      "scope": "Private-Map materialization of three pure copiers, two genuine pre-fix failures and four focused passes;111 final units/types"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-6/repair-checks.json",
+      "scope": "Pure/type/policy/requirements/publication/whitespace checks, no corrected-source scan inferred"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-6/secret-scan.json",
+      "scope": "Pinned worktree and reachable-history secret check for copier repair and original attempt6 evidence"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-7/record.json",
+      "scope": "Exact same-repository PR hosted source/ingestion PASS and same-merge Development PASS;145 source hashes and13 original reports retained; default-branch/fork/release remain open",
+      "source_binding": {
+        "ci_tested_merge_commit": "ece773e27c3f3a25822984578dee4a1dedddb970",
+        "evidence_sha256": "5699eb2aebf7415c92ef86ac6b98adc07c2acd228215020ff27a8f7a162b2713",
+        "implementation_commit": "fe2dc1897e1b07ffd41dc27d64e1eacf700e7391",
+        "method": "Original hosted artifacts and independent exact stored-analysis/read-back with zero open ref alerts.",
+        "repository_merge_commit": "77b73e75016435d6f12e67cda76ea84b91cd1086"
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-7/analysis-readback.json",
+      "scope": "Independent exact stored analysis/category/SARIF/hash/count verification for all three zero-finding analyses"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-7/alert-metadata.json",
+      "scope": "Independent complete pull-request alert inventory: two fixed historical alerts, zero open"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-7/qualification-checks.json",
+      "scope": "Publication/requirements/whitespace checks for scoped hosted qualification documentation"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-7/secret-scan.json",
+      "scope": "Pinned worktree/history secret scan for original safe reports and scoped qualification documentation"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-8/record.json",
+      "scope": "Exact default-branch source-security/ingestion and Development PASS: all3 languages/full coverage/zero findings,145 source hashes,14 browser journeys/11 steps,13 original reports; fork and wider qualifications separate",
+      "source_binding": {
+        "ci_tested_commit": "77b73e75016435d6f12e67cda76ea84b91cd1086",
+        "evidence_sha256": "8dff26440d13ecf0722b1d0db5fb31634cd615ea0fd8502e7df3036ed2151e22",
+        "implementation_commit": "fe2dc1897e1b07ffd41dc27d64e1eacf700e7391",
+        "method": "Original main-branch source and behavior artifacts plus independent exact stored-analysis/read-back and complete empty main alert inventory; final workflow status observed in public UI.",
+        "repository_merge_commit": "77b73e75016435d6f12e67cda76ea84b91cd1086"
+      }
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-8/analysis-readback.json",
+      "scope": "Exact stored default-branch analysis/category/SARIF/hash/count verification for all three zero-finding analyses"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-8/alert-metadata.json",
+      "scope": "Independent complete main-ref all-state alert inventory: zero alerts"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-8/qualification-checks.json",
+      "scope": "Publication/requirements/whitespace checks for scoped default-branch qualification documentation"
+    },
+    {
+      "path": "docs/security/sast-evidence/hosted-attempt-8/secret-scan.json",
+      "scope": "Pinned worktree/history secret scan for original main safe reports and scoped qualification documentation"
     }
   ],
   "limitations": [

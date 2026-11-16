@@ -1,0 +1,60 @@
+{
+  "analysis": "PASS",
+  "cliVersion": "2.27.4",
+  "containerImage": null,
+  "coverage": {
+    "databaseFiles": 2,
+    "expectedFiles": 2,
+    "extractedExpectedFiles": 2,
+    "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+  },
+  "coverageQuerySha256": "aad6da298334a842bea221711b0e7c8b1c4864ce2c66632e4d93c846742a4505",
+  "dirty": false,
+  "findings": [],
+  "findingsGate": "PASS",
+  "head": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1",
+  "language": "actions",
+  "library": "codeql/actions-all",
+  "libraryVersion": "0.7.1",
+  "publishedSarifSha256": "c67b80aa6c6797c9304ff8bbe1c0671083f7577f6bf5f610f9cb76a342a9bebb",
+  "queryCount": 24,
+  "queryPack": "codeql/actions-queries",
+  "querySetDigest": "109c0f4a3b614aa9f782d403ecc45e5830ed72620e8fc1eeff93ae613bfb9f6e",
+  "queryVersion": "0.6.39",
+  "rawSarifSha256": "85730cb8f2b0647346b1dd9201df47a7ca5cf317e4e31fe2c04c1d601643e800",
+  "schemaVersion": 1,
+  "sourceDigest": "e70eb504e06494664ba853222592eedfa05fa757b3ec0e783319e251e38c7a68",
+  "steps": [
+    {
+      "durationSeconds": 0.501,
+      "exitCode": 0,
+      "step": "version"
+    },
+    {
+      "durationSeconds": 1.002,
+      "exitCode": 0,
+      "step": "queries"
+    },
+    {
+      "durationSeconds": 3.504,
+      "exitCode": 0,
+      "step": "extract"
+    },
+    {
+      "durationSeconds": 8.014,
+      "exitCode": 0,
+      "step": "analyze"
+    },
+    {
+      "durationSeconds": 10.017,
+      "exitCode": 0,
+      "step": "coverage-query"
+    },
+    {
+      "durationSeconds": 0.501,
+      "exitCode": 0,
+      "step": "coverage-decode"
+    }
+  ],
+  "upload": "NOT_ATTEMPTED"
+}

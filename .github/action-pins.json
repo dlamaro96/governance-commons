@@ -33,5 +33,12 @@
     "commit": "ea165f8d65b6e75b540449e92b4886f43607fa02",
     "retrieved_at": "2026-11-15",
     "source": "https://api.github.com/repos/actions/upload-artifact/git/commits/ea165f8d65b6e75b540449e92b4886f43607fa02"
+  },
+  {
+    "repository": "github/codeql-action/upload-sarif",
+    "version": "v4.39.3",
+    "commit": "33d7b85da1a04171e211befe2c739303b9a4c066",
+    "retrieved_at": "2026-11-16",
+    "source": "https://api.github.com/repos/github/codeql-action/commits/33d7b85da1a04171e211befe2c739303b9a4c066"
   }
 ]

@@ -1,0 +1,43 @@
+{
+  "analysis": "NOT_PASSED",
+  "cliVersion": "2.27.4",
+  "containerImage": null,
+  "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+  "dirty": false,
+  "extractorRuntime": "v24.22.3",
+  "failure": "scanner-command-failed:extract",
+  "findingsGate": "NOT_EVALUATED",
+  "head": "1bb4637def199c12226d1d337dcd2eece61ee57e",
+  "language": "javascript-typescript",
+  "library": "codeql/javascript-all",
+  "libraryVersion": "3.0.0",
+  "queryCount": 105,
+  "queryPack": "codeql/javascript-queries",
+  "querySetDigest": "213bda4e81b066a5b255ff54cd70bbac5caaafe63742af25eeb890308d3c28dd",
+  "queryVersion": "2.5.0",
+  "schemaVersion": 1,
+  "sourceDigest": "ab80a7ab2f90ea68a7f139de1154dff1c563b094c68baff533edb846371a336e",
+  "steps": [
+    {
+      "durationSeconds": 0.25,
+      "exitCode": 0,
+      "step": "extractor-runtime"
+    },
+    {
+      "durationSeconds": 0.752,
+      "exitCode": 0,
+      "step": "version"
+    },
+    {
+      "durationSeconds": 1.251,
+      "exitCode": 0,
+      "step": "queries"
+    },
+    {
+      "durationSeconds": 2.504,
+      "exitCode": 2,
+      "step": "extract"
+    }
+  ],
+  "upload": "NOT_ATTEMPTED"
+}

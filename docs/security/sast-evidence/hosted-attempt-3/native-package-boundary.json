@@ -1,0 +1,66 @@
+{
+  "bundleProvenance": {
+    "bundleSha256": "7dd066f805dfed19c9c4323d5f2003cd24fabd6e7304cdf799b94a84509fe92b",
+    "cliVersion": "2.27.4",
+    "platform": "linux-arm64",
+    "scope": "Previously installed verified Linux arm64 bundle; the executed CommonJS JavaScript wrapper and dependencies are platform independent. No native Linux CodeQL CLI was executed."
+  },
+  "cases": [
+    {
+      "case": "original_repository_esm_ancestor",
+      "durationSeconds": 0.03,
+      "exitCode": 1,
+      "fixedMarkers": [
+        "exports_undefined_es_module",
+        "ancestor_type_module",
+        "js_extension_es_module"
+      ],
+      "responseType": null,
+      "startedAt": "2026-11-15T22:56:10.977000+00:00",
+      "stderrBytes": 1000,
+      "stderrSha256": "daae372a7e96de28b5b5e2dac35ca272b8bd34b641986cabba01cdb2c78c8e78",
+      "stdoutBytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "owned_commonjs_boundary",
+      "durationSeconds": 0.108,
+      "exitCode": 0,
+      "fixedMarkers": [],
+      "responseType": "metadata",
+      "startedAt": "2026-11-15T22:56:11.007871+00:00",
+      "stderrBytes": 0,
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutBytes": 19319,
+      "stdoutSha256": "f3a59252325648379e4298065b6a2882bcfc7def6fe2131cc87e0bb01907db84"
+    }
+  ],
+  "command": "Pinned Node v24.22.3 executes the exact bundled TypeScript parser main.js; stdin contains only the synthetic get-metadata protocol request. Eight-second subprocess deadline. Original and corrected attempts use the same Node, wrapper bytes, cwd and allowlisted environment.",
+  "finishedAt": "2026-11-15T22:56:11.131640+00:00",
+  "head": "123d9b8b8960cedd4817da776fe2953749d50e89",
+  "limitations": [
+    "This reproduces a concrete native package-boundary defect and verifies the minimal boundary repair on macOS arm64.",
+    "Hosted Linux x64 exact error text is unavailable; its third attempt records CatastrophicError after Node detection and child exit1. A new hosted scan is required to establish that this correction fixes that execution.",
+    "No CodeQL database creation, extraction coverage, security queries, findings gate, SARIF upload or analysis read-back was run by this probe.",
+    "Raw stdout/stderr for both attempts remain under ignored mode0700 local evidence with mode0600 files; only fixed flags, sizes and hashes are public."
+  ],
+  "nodeVersion": "v24.22.3",
+  "ownedBoundary": {
+    "outsideVerifiedBundle": true,
+    "path": ".local/security-tools/package.json",
+    "scope": {
+      "mode": "EXPLICIT_COMMONJS",
+      "packageSha256": "7d38de102f9d211b8a221ab5943610473c4b23aeee36e9a9cf0e22848e04b9d4"
+    },
+    "sha256": "7d38de102f9d211b8a221ab5943610473c4b23aeee36e9a9cf0e22848e04b9d4"
+  },
+  "platform": "darwin-arm64",
+  "purpose": "EXACT_BUNDLED_TYPESCRIPT_WRAPPER_HANDSHAKE_NOT_A_SOURCE_SCAN",
+  "repositoryPackageType": "module",
+  "schemaVersion": 1,
+  "startedAt": "2026-11-15T22:56:10.976542+00:00",
+  "wrapperFilesMatchedProvenance": 137,
+  "wrapperFilesUnchanged": true,
+  "wrapperInventorySha256": "7b160222fc1dc7ff031d8717d0835a1860c9801e4d07cfce62bacc365f6b9b3a",
+  "wrapperSha256": "55ef3c5edff9137aa9a38899916a5a189225671206bbb07ee322a52742335424"
+}

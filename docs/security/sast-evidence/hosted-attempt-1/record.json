@@ -1,0 +1,285 @@
+{
+  "behavior": {
+    "distinctBrowserTests": 14,
+    "oneAttemptEach": true,
+    "outcome": "PASS",
+    "runUrl": "https://github.com/dlamaro96/governance-commons/actions/runs/43768124770",
+    "source": "Byte-identical safe behavior summary plus parent public workflow UI observation of all four development jobs passing.",
+    "successfulSteps": 11
+  },
+  "limitations": [
+    "Hosted JavaScript extraction stopped with exit 2 after 2.504 seconds; no SARIF or findings evaluation exists for that language.",
+    "The first attempt has no failure diagnostic flags and no public raw logs; cause remains undetermined.",
+    "Python and Actions uploaded and processed successfully; commit/category analyses have not been independently read back.",
+    "New failure-only diagnostics have focused tests but no hosted execution or full source scan qualification yet.",
+    "Earlier isolated product-5 is a different source digest and cannot qualify this integrated snapshot.",
+    "Fork and Dependabot permission qualification, complete OSS-007 and release readiness remain open."
+  ],
+  "localDiagnostic": {
+    "bounds": {
+      "containers": "Both invocation-owned containers removed.",
+      "diskFloorGiB": 2,
+      "network": "none",
+      "timeoutSecondsEach": 70
+    },
+    "bundleSha256": "7dd066f805dfed19c9c4323d5f2003cd24fabd6e7304cdf799b94a84509fe92b",
+    "cliVersion": "2.27.4",
+    "command": "codeql database create --language=javascript --build-mode=none --source-root=<same-frozen-source> --codescanning-config=<same-pinned-config> --threads=2 --ram=2048 --common-caches=<private-owned-output>; identical inputs, optional /usr/bin/env -u HOME prefix",
+    "comparison": "home-extraction-comparison.json",
+    "conclusion": "Extraction passed with HOME unset and with the image default. This test does not reproduce the hosted linux-x64 failure; HOME was not changed in the runner.",
+    "containerImage": "sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651",
+    "platform": "linux-arm64",
+    "purpose": "EXTRACTION_ONLY_NOT_ANALYSIS_OR_FINDINGS",
+    "sourceDigest": "ab80a7ab2f90ea68a7f139de1154dff1c563b094c68baff533edb846371a336e"
+  },
+  "prUrl": "https://github.com/dlamaro96/governance-commons/pull/15",
+  "preservedCopiesSha256": {
+    "actions/actions-summary.json": "372d47e8b166a1f9ad477d0a85ac04d68bf7a41ec4a10741c5cef4961c95ab4a",
+    "actions/source-manifest.json": "ed550e4b9e505fa6657616db5fffd4d99cb7335816400eb23fdd0566e915f3f6",
+    "actions/summary.json": "4e3dd18fb4048bb2cf38aceb5a711ea3512015a0157e4cfd89a3ee1334893d2d",
+    "actions/upload-status.json": "509873fcc21d7570d272992dbc5d28e174d99db496e90d9f70f418c49a7c8cd7",
+    "behavior-summary.json": "0773807949188780f1bc4a3b69b236db60560d3c2be6ca6402bd565dde942a94",
+    "home-extraction-comparison.json": "8501315124e8204353f50ce698783ae14a5b04d30b04c0c6fba75660b0b2451d",
+    "javascript-typescript/javascript-typescript-summary.json": "a3180bf016e8c1454188911ebc21da39422d3d30e4fe03789f74054299760162",
+    "javascript-typescript/source-manifest.json": "ed550e4b9e505fa6657616db5fffd4d99cb7335816400eb23fdd0566e915f3f6",
+    "javascript-typescript/summary.json": "b2921a0e34c801d0dd64efb4c43d3075829f960a1edda7b7eb3f08e789a7c9c3",
+    "javascript-typescript/upload-status.json": "2ec197c8e946f1c2ed027c34b9a1a1bb6b853b928a7ca5885cb7cef682397568",
+    "python/python-summary.json": "171b0acc7723eebbfb3c63be1a9252decbf2d44722a21e5d1aca6ea7b67e02bc",
+    "python/source-manifest.json": "ed550e4b9e505fa6657616db5fffd4d99cb7335816400eb23fdd0566e915f3f6",
+    "python/summary.json": "ccae38cee19cb41ef3c630a22d3e538dcb11a3e13ecbd233472253a55256e9e7",
+    "python/upload-status.json": "3b9f60eee7969a173c1e4e89a875adb32ad2f1474554e898b291429baa1945ed"
+  },
+  "purpose": "FIRST_HOSTED_INTEGRATED_ATTEMPT_NOT_A_PASS",
+  "recordedAt": "2026-11-15T22:32:00.939580+00:00",
+  "schemaVersion": 1,
+  "sourceDigest": "ab80a7ab2f90ea68a7f139de1154dff1c563b094c68baff533edb846371a336e",
+  "sourceSecurity": {
+    "aggregate": "FAIL",
+    "analysisReadBack": "NOT_PERFORMED",
+    "jobStatusEvidence": "Parent observed public Actions UI; individual scanner outcomes independently verified from downloaded safe artifacts.",
+    "languages": {
+      "actions": {
+        "analysis": "PASS",
+        "coverage": {
+          "databaseFiles": 2,
+          "expectedFiles": 2,
+          "extractedExpectedFiles": 2,
+          "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+        },
+        "durationSeconds": 30.993,
+        "findingCount": 0,
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-15T22:14:59.321581+00:00",
+        "queryCount": 24,
+        "steps": [
+          {
+            "durationSeconds": 0.751,
+            "exitCode": 0,
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.251,
+            "exitCode": 0,
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 3.754,
+            "exitCode": 0,
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 9.26,
+            "exitCode": 0,
+            "step": "analyze"
+          },
+          {
+            "durationSeconds": 10.767,
+            "exitCode": 0,
+            "step": "coverage-query"
+          },
+          {
+            "durationSeconds": 0.501,
+            "exitCode": 0,
+            "step": "coverage-decode"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "success",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "1bb4637def199c12226d1d337dcd2eece61ee57e",
+          "language": "actions",
+          "sarifId": "001d7c18-e142-11f1-88de-c755f18f9011",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "success"
+        }
+      },
+      "javascript-typescript": {
+        "analysis": "NOT_PASSED",
+        "durationSeconds": 8.736,
+        "failure": "scanner-command-failed:extract",
+        "findingsGate": "NOT_EVALUATED",
+        "finishedAt": "2026-11-15T22:14:43.354659+00:00",
+        "queryCount": 105,
+        "steps": [
+          {
+            "durationSeconds": 0.25,
+            "exitCode": 0,
+            "step": "extractor-runtime"
+          },
+          {
+            "durationSeconds": 0.752,
+            "exitCode": 0,
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.251,
+            "exitCode": 0,
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 2.504,
+            "exitCode": 2,
+            "step": "extract"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "failure",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "1bb4637def199c12226d1d337dcd2eece61ee57e",
+          "language": "javascript-typescript",
+          "sarifId": "",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "skipped"
+        }
+      },
+      "python": {
+        "analysis": "PASS",
+        "coverage": {
+          "databaseFiles": 44,
+          "expectedFiles": 25,
+          "extractedExpectedFiles": 25,
+          "extractedPathsDigest": "e688c8917445c800d41ad89449f4ac7c3d48fb5c7444a26e90554c70a3eebaf7"
+        },
+        "durationSeconds": 57.371,
+        "findingCount": 0,
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-15T22:15:35.674821+00:00",
+        "queryCount": 52,
+        "steps": [
+          {
+            "durationSeconds": 0.251,
+            "exitCode": 0,
+            "step": "extractor-runtime"
+          },
+          {
+            "durationSeconds": 0.751,
+            "exitCode": 0,
+            "step": "version"
+          },
+          {
+            "durationSeconds": 1.502,
+            "exitCode": 0,
+            "step": "queries"
+          },
+          {
+            "durationSeconds": 12.27,
+            "exitCode": 0,
+            "step": "extract"
+          },
+          {
+            "durationSeconds": 20.041,
+            "exitCode": 0,
+            "step": "analyze"
+          },
+          {
+            "durationSeconds": 18.025,
+            "exitCode": 0,
+            "step": "coverage-query"
+          },
+          {
+            "durationSeconds": 0.751,
+            "exitCode": 0,
+            "step": "coverage-decode"
+          }
+        ],
+        "upload": {
+          "analysisAndFindingsStep": "success",
+          "analysisReadBack": "NOT_PERFORMED_BY_THIS_JOB",
+          "commit": "1bb4637def199c12226d1d337dcd2eece61ee57e",
+          "language": "python",
+          "sarifId": "15b8f692-e142-11f1-97ca-7b10e3e84113",
+          "schemaVersion": 1,
+          "uploadAndProcessingStep": "success"
+        }
+      }
+    },
+    "originalArtifactFiles": {
+      "actions": {
+        "actions-summary.json": {
+          "bytes": 1640,
+          "sha256": "372d47e8b166a1f9ad477d0a85ac04d68bf7a41ec4a10741c5cef4961c95ab4a"
+        },
+        "actions.sarif": {
+          "bytes": 171397,
+          "sha256": "bf1b07a3ccba52ccf8745a4cade84ccebd5f2cd47014ccec9dc8d1d921d3cc6c"
+        },
+        "source-manifest.json": {
+          "bytes": 89507,
+          "sha256": "ed550e4b9e505fa6657616db5fffd4d99cb7335816400eb23fdd0566e915f3f6"
+        },
+        "summary.json": {
+          "bytes": 3279,
+          "sha256": "4e3dd18fb4048bb2cf38aceb5a711ea3512015a0157e4cfd89a3ee1334893d2d"
+        },
+        "upload-status.json": {
+          "bytes": 290,
+          "sha256": "509873fcc21d7570d272992dbc5d28e174d99db496e90d9f70f418c49a7c8cd7"
+        }
+      },
+      "javascript-typescript": {
+        "javascript-typescript-summary.json": {
+          "bytes": 1173,
+          "sha256": "a3180bf016e8c1454188911ebc21da39422d3d30e4fe03789f74054299760162"
+        },
+        "source-manifest.json": {
+          "bytes": 89507,
+          "sha256": "ed550e4b9e505fa6657616db5fffd4d99cb7335816400eb23fdd0566e915f3f6"
+        },
+        "summary.json": {
+          "bytes": 2792,
+          "sha256": "b2921a0e34c801d0dd64efb4c43d3075829f960a1edda7b7eb3f08e789a7c9c3"
+        },
+        "upload-status.json": {
+          "bytes": 268,
+          "sha256": "2ec197c8e946f1c2ed027c34b9a1a1bb6b853b928a7ca5885cb7cef682397568"
+        }
+      },
+      "python": {
+        "python-summary.json": {
+          "bytes": 1780,
+          "sha256": "171b0acc7723eebbfb3c63be1a9252decbf2d44722a21e5d1aca6ea7b67e02bc"
+        },
+        "python.sarif": {
+          "bytes": 242251,
+          "sha256": "3b4c4694fee2e88b12ca5909d13db329bec1502acdf80668db708afd017036f5"
+        },
+        "source-manifest.json": {
+          "bytes": 89507,
+          "sha256": "ed550e4b9e505fa6657616db5fffd4d99cb7335816400eb23fdd0566e915f3f6"
+        },
+        "summary.json": {
+          "bytes": 3441,
+          "sha256": "ccae38cee19cb41ef3c630a22d3e538dcb11a3e13ecbd233472253a55256e9e7"
+        },
+        "upload-status.json": {
+          "bytes": 289,
+          "sha256": "3b9f60eee7969a173c1e4e89a875adb32ad2f1474554e898b291429baa1945ed"
+        }
+      }
+    },
+    "policyJob": "PASS",
+    "runAttempt": 1,
+    "runUrl": "https://github.com/dlamaro96/governance-commons/actions/runs/43768124973"
+  },
+  "testedMergeCommit": "1bb4637def199c12226d1d337dcd2eece61ee57e"
+}

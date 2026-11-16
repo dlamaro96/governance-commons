@@ -1,0 +1,274 @@
+{
+  "analysis": "PASS",
+  "bundleSha256": "7dd066f805dfed19c9c4323d5f2003cd24fabd6e7304cdf799b94a84509fe92b",
+  "configurationSha256": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+  "containerImages": {
+    "actions": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+    "javascript-typescript": "sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651",
+    "python": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a"
+  },
+  "dirty": false,
+  "durationSeconds": 139.406,
+  "findingsGate": "BLOCKED",
+  "finishedAt": "2026-11-15T21:26:07.000342+00:00",
+  "freeDiskBytesAtFinish": 5037395968,
+  "head": "f5d77d3b44130b0d7b9fb4ec2f53c3a965e81797",
+  "invocation": {
+    "entrypoint": "policies/sast_probe.py",
+    "language": "all",
+    "platform": "linux-arm64"
+  },
+  "languages": {
+    "actions": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+      "coverage": {
+        "databaseFiles": 1,
+        "expectedFiles": 1,
+        "extractedExpectedFiles": 1,
+        "extractedPathsDigest": "cfe162a901270c79d43bea2270d3f0ddc03795c20abd3ae2c6b9c33fa7361f7f"
+      },
+      "coverageQuerySha256": "aad6da298334a842bea221711b0e7c8b1c4864ce2c66632e4d93c846742a4505",
+      "dirty": false,
+      "findings": [
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "a694c379358a8d730160462c0406ea8a7576da5af65e8741d9b85edf91ecbf3b",
+          "line": 9,
+          "path": ".github/workflows/probe.yml",
+          "ruleId": "actions/code-injection/critical",
+          "severity": "critical",
+          "sourceSuppressed": false
+        }
+      ],
+      "findingsGate": "BLOCKED",
+      "head": "f5d77d3b44130b0d7b9fb4ec2f53c3a965e81797",
+      "language": "actions",
+      "library": "codeql/actions-all",
+      "libraryVersion": "0.7.1",
+      "publishedSarifSha256": "bcce7ff6c8032ad9c6c840bd503a5695794e24f52a175d534d6d50c46ceccbd6",
+      "queryCount": 24,
+      "queryPack": "codeql/actions-queries",
+      "querySetDigest": "109c0f4a3b614aa9f782d403ecc45e5830ed72620e8fc1eeff93ae613bfb9f6e",
+      "queryVersion": "0.6.39",
+      "rawSarifSha256": "82f415ad787111afe3d79a3a7c025bab630550a701da9131c41b9b6c767ec86a",
+      "schemaVersion": 1,
+      "sourceDigest": "e6b3e6f6115ef40ff3c0edafbfe8e56b2846fc4b8d89fe581df84087f258677f",
+      "steps": [
+        {
+          "durationSeconds": 0.756,
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "durationSeconds": 2.051,
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 3.336,
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 9.712,
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 20.513,
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.773,
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    },
+    "javascript-typescript": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": "sha256:309f28b6153c822533b01c29a72b79db58c9ecbaaf1f803c8386c511ec059651",
+      "coverage": {
+        "databaseFiles": 6,
+        "expectedFiles": 1,
+        "extractedExpectedFiles": 1,
+        "extractedPathsDigest": "a2b3b29a884f18d11ec795c1fa16dbd4bb670b91653d7c4257249f21d37eed07"
+      },
+      "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+      "dirty": false,
+      "extractorRuntime": "v24.22.3",
+      "findings": [
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "954cea660d16ad04c35241df5ee1f4f85af40a426293202d9716086779fd2516",
+          "line": 4,
+          "path": "app.ts",
+          "ruleId": "js/missing-rate-limiting",
+          "severity": "high",
+          "sourceSuppressed": false
+        },
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "31f3837087126bfcf1f590b6e8ab284e2193c6fe445c2771c43f8f2ae7590864",
+          "line": 5,
+          "path": "app.ts",
+          "ruleId": "js/command-line-injection",
+          "severity": "critical",
+          "sourceSuppressed": false
+        }
+      ],
+      "findingsGate": "BLOCKED",
+      "head": "f5d77d3b44130b0d7b9fb4ec2f53c3a965e81797",
+      "language": "javascript-typescript",
+      "library": "codeql/javascript-all",
+      "libraryVersion": "3.0.0",
+      "publishedSarifSha256": "247601289518c2a3c03a8dcf95b2c2a9d8899c32a6539cfd2c2b3abf5d993ec4",
+      "queryCount": 105,
+      "queryPack": "codeql/javascript-queries",
+      "querySetDigest": "213bda4e81b066a5b255ff54cd70bbac5caaafe63742af25eeb890308d3c28dd",
+      "queryVersion": "2.5.0",
+      "rawSarifSha256": "860ab886b86db6903bc9bd7e005f0d47ef87d966b3f8ed74feb4b7a2ebfe9523",
+      "schemaVersion": 1,
+      "sourceDigest": "e6b3e6f6115ef40ff3c0edafbfe8e56b2846fc4b8d89fe581df84087f258677f",
+      "steps": [
+        {
+          "durationSeconds": 0.512,
+          "exitCode": 0,
+          "step": "extractor-runtime"
+        },
+        {
+          "durationSeconds": 0.771,
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "durationSeconds": 2.304,
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 6.396,
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 26.177,
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 17.191,
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.781,
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    },
+    "python": {
+      "analysis": "PASS",
+      "cliVersion": "2.27.4",
+      "containerImage": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+      "coverage": {
+        "databaseFiles": 6,
+        "expectedFiles": 1,
+        "extractedExpectedFiles": 1,
+        "extractedPathsDigest": "f628385d0a3e4dd277949cf48f793279c7b85b0499db4bd7198e454d0f554152"
+      },
+      "coverageQuerySha256": "e3c2c759bc1eda89b0ea538c161831cc41422adfbacdc43a1a5af3bbe4148f15",
+      "dirty": false,
+      "extractorRuntime": "Python 3.14.5",
+      "findings": [
+        {
+          "blocking": true,
+          "disposition": "untriaged",
+          "fingerprint": "1e7c007b9173324712a88bb294f4acfa527556a9c65f9587a3077064830684d3",
+          "line": 6,
+          "path": "worker.py",
+          "ruleId": "py/command-line-injection",
+          "severity": "critical",
+          "sourceSuppressed": false
+        }
+      ],
+      "findingsGate": "BLOCKED",
+      "head": "f5d77d3b44130b0d7b9fb4ec2f53c3a965e81797",
+      "language": "python",
+      "library": "codeql/python-all",
+      "libraryVersion": "7.2.9",
+      "publishedSarifSha256": "9e70ab277c0c497cca490400b72d3bfc802af7300e7edec498d3c1d078e27046",
+      "queryCount": 52,
+      "queryPack": "codeql/python-queries",
+      "querySetDigest": "8d865c71bba12677546d6ed9e9a33b2a2fa4fd0ad90c75c29cd87c457d0bf969",
+      "queryVersion": "1.9.0",
+      "rawSarifSha256": "c892d9907d4e3369000c08dbb285cd50f641aa77f9c584eaa12febb91a4d1718",
+      "schemaVersion": 1,
+      "sourceDigest": "e6b3e6f6115ef40ff3c0edafbfe8e56b2846fc4b8d89fe581df84087f258677f",
+      "steps": [
+        {
+          "durationSeconds": 0.262,
+          "exitCode": 0,
+          "step": "extractor-runtime"
+        },
+        {
+          "durationSeconds": 0.767,
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "durationSeconds": 2.567,
+          "exitCode": 0,
+          "step": "queries"
+        },
+        {
+          "durationSeconds": 8.74,
+          "exitCode": 0,
+          "step": "extract"
+        },
+        {
+          "durationSeconds": 14.627,
+          "exitCode": 0,
+          "step": "analyze"
+        },
+        {
+          "durationSeconds": 12.841,
+          "exitCode": 0,
+          "step": "coverage-query"
+        },
+        {
+          "durationSeconds": 0.773,
+          "exitCode": 0,
+          "step": "coverage-decode"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    }
+  },
+  "limitations": [
+    "No hosted ingestion or analysis read-back in this command.",
+    "SQL/RLS, dependencies, images and general IaC are outside this source scan.",
+    "Automated findings do not replace independent security review."
+  ],
+  "outcome": "NOT_PASSED",
+  "platform": "linux-arm64",
+  "policySha256": "920038aebeb759097d57f7712b3269ebd29b9e3ff488164ded57a0d772cda581",
+  "purpose": "SYNTHETIC_NEGATIVE_CONTROL",
+  "runnerSha256": "b9cd377cf74900647de6cb978b90c58b80bb9e6a20bd8eb3c7a502defc1b1c87",
+  "schemaVersion": 1,
+  "scope": "ALL_REQUIRED_LANGUAGES",
+  "sourceDigest": "e6b3e6f6115ef40ff3c0edafbfe8e56b2846fc4b8d89fe581df84087f258677f",
+  "startedAt": "2026-11-15T21:23:47.594684+00:00",
+  "triageSha256": "39819b1ed23bc93a23ceb76901612e35db13e6b146c5d129aeb88e15bd0c62dc",
+  "upload": "NOT_ATTEMPTED"
+}

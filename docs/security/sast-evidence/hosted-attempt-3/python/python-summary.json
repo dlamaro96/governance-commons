@@ -1,0 +1,66 @@
+{
+  "analysis": "PASS",
+  "cliVersion": "2.27.4",
+  "containerImage": null,
+  "coverage": {
+    "databaseFiles": 44,
+    "expectedFiles": 25,
+    "extractedExpectedFiles": 25,
+    "extractedPathsDigest": "e688c8917445c800d41ad89449f4ac7c3d48fb5c7444a26e90554c70a3eebaf7"
+  },
+  "coverageQuerySha256": "e3c2c759bc1eda89b0ea538c161831cc41422adfbacdc43a1a5af3bbe4148f15",
+  "dirty": false,
+  "extractorRuntime": "Python 3.14.5",
+  "findings": [],
+  "findingsGate": "PASS",
+  "head": "fba921b340943af4ca811eb09ce4cc761d7dc1bc",
+  "language": "python",
+  "library": "codeql/python-all",
+  "libraryVersion": "7.2.9",
+  "publishedSarifSha256": "0d9ea2c2b7fe1e3754e202c544a13c1fa82abdde24fd90a9cba2d5c3f387419d",
+  "queryCount": 52,
+  "queryPack": "codeql/python-queries",
+  "querySetDigest": "8d865c71bba12677546d6ed9e9a33b2a2fa4fd0ad90c75c29cd87c457d0bf969",
+  "queryVersion": "1.9.0",
+  "rawSarifSha256": "e9aea1fd7c0227a49c55036faea79f12feac7e5170b0f38afce6d7b5a62cc928",
+  "schemaVersion": 1,
+  "sourceDigest": "2ae949bd3d7b7bd842e4dbe171d43909bbf6178bb99104a77d0e9f63d6fb99ff",
+  "steps": [
+    {
+      "durationSeconds": 0.25,
+      "exitCode": 0,
+      "step": "extractor-runtime"
+    },
+    {
+      "durationSeconds": 0.501,
+      "exitCode": 0,
+      "step": "version"
+    },
+    {
+      "durationSeconds": 1.001,
+      "exitCode": 0,
+      "step": "queries"
+    },
+    {
+      "durationSeconds": 8.013,
+      "exitCode": 0,
+      "step": "extract"
+    },
+    {
+      "durationSeconds": 12.771,
+      "exitCode": 0,
+      "step": "analyze"
+    },
+    {
+      "durationSeconds": 12.019,
+      "exitCode": 0,
+      "step": "coverage-query"
+    },
+    {
+      "durationSeconds": 0.501,
+      "exitCode": 0,
+      "step": "coverage-decode"
+    }
+  ],
+  "upload": "NOT_ATTEMPTED"
+}

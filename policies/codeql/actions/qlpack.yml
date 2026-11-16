@@ -1,0 +1,4 @@
+name: governance-commons/coverage-actions
+version: 0.0.1
+dependencies:
+  codeql/actions-all: 0.7.1

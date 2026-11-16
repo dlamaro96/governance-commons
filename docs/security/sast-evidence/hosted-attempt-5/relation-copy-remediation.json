@@ -1,0 +1,131 @@
+{
+  "after": {
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "relation copying",
+      "tests/unit/relation.test.ts"
+    ],
+    "domainSha256": "229760bf5094e49bc078025a3cba792b8ce1d944cdc4547e42f6a23635ad2a3d",
+    "exitCode": 0,
+    "fail": 0,
+    "logSha256": "3bbaeb71dc445323bb650bd62a2f15b50a6001ffb4d4eb815646aac87b4ab556",
+    "observedAt": "2026-11-15T23:28:52.493589+00:00",
+    "observedInheritedSetterCalls": 0,
+    "pass": 2,
+    "purpose": "TARGETED_SYNTHETIC_REGRESSION_AFTER",
+    "testSha256": "6ccb132cc352b7d1e621a96d4dda6a68ae4315a9a8b25f718d89f1a4776a3c0c",
+    "tests": 2
+  },
+  "before": {
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "relation copying",
+      "tests/unit/relation.test.ts"
+    ],
+    "domainSha256": "c4624630c377796685d57a5069f0c852e1f18fe74f8f5bfcc968d116b56733dc",
+    "exitCode": 1,
+    "fail": 1,
+    "logSha256": "39436fd3b25875832bfd7dc134f8447c4b301f5f6d65a710cf32b147cefef4e7",
+    "observedAt": "2026-11-15T23:28:52.354373+00:00",
+    "observedInheritedSetterCalls": 1,
+    "pass": 1,
+    "purpose": "TARGETED_SYNTHETIC_REGRESSION_BEFORE",
+    "testSha256": "6ccb132cc352b7d1e621a96d4dda6a68ae4315a9a8b25f718d89f1a4776a3c0c",
+    "tests": 2
+  },
+  "correction": "Replace the single dynamic assignment with Object.defineProperty using an own data value and enumerable/writable/configurable true. Plain-object and dense-array behavior, input getter refusal, reserved-key validation and bounds remain unchanged.",
+  "currentSourceSha256": {
+    ".github/codeql/codeql-config.yml": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+    ".github/workflows/security.yml": "87704b640679588d83b0c4d76a4fe35e07e74ee60f821da2f926f3ed10fa89ed",
+    "package.json": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7",
+    "packages/domain/src/relation.ts": "229760bf5094e49bc078025a3cba792b8ce1d944cdc4547e42f6a23635ad2a3d",
+    "pnpm-lock.yaml": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829",
+    "policies/sast-policy.json": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+    "policies/sast-triage.json": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+    "policies/sast.py": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7",
+    "tests/unit/relation.test.ts": "357a001ffd7754326c08ef5a8cab43f2095e729cbc12dc8dec320f4d7c1d427b"
+  },
+  "demonstratedCause": "Assigning a valid input-derived field name onto a normal output object invokes an existing inherited setter before the parser catches its exception. Reserved-key guards do not prevent that inherited-property side effect.",
+  "dirty": true,
+  "finalChecks": [
+    {
+      "check": "final-unit",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "tests/unit/asset-type-migration.test.ts",
+        "tests/unit/asset-type-policy.test.ts",
+        "tests/unit/asset-type.test.ts",
+        "tests/unit/audit.test.ts",
+        "tests/unit/authz.test.ts",
+        "tests/unit/cursor.test.ts",
+        "tests/unit/json-envelope.test.ts",
+        "tests/unit/model-migration-file.test.ts",
+        "tests/unit/model-migration.test.ts",
+        "tests/unit/model.test.ts",
+        "tests/unit/relation.test.ts"
+      ],
+      "exitCode": 0,
+      "logSha256": "2adf37c48d6d6a97e534c7daa25004034b433868ec5c3b33b651ab12832ebad9",
+      "startedAt": "2026-11-15T23:30:45.184758+00:00"
+    },
+    {
+      "check": "final-typecheck",
+      "command": [
+        "pnpm",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "logSha256": "146aa7bcf7f02a73c49b26725655dfcaafb0536b511721a3b52e1c6b04cd7f58",
+      "startedAt": "2026-11-15T23:30:45.568051+00:00"
+    }
+  ],
+  "finding": {
+    "blocking": true,
+    "fingerprint": "8eef7d20e673a8cb904b5374acc4420ebd9fa5309737bc984c3e55e9c24b0aad",
+    "hostedDisposition": "untriaged",
+    "line": 91,
+    "path": "packages/domain/src/relation.ts",
+    "ruleId": "js/remote-property-injection",
+    "severity": "high",
+    "sourceSuppressed": false
+  },
+  "head": "d3bf25ba86d31d84534bb78249c3e5168ec43fdf",
+  "hostedRemediationScan": "NOT_RUN",
+  "limitations": [
+    "Original pre-fix, post-fix and tooling diagnostics remain private; no raw alert payload or logs are republished.",
+    "An initial isolated invocation lacked tsx and did not run tests. Existing dependencies were reused through an ignored symlink only after package.json and pnpm-lock.yaml matched root; no package installation occurred.",
+    "The first full type check found widened text literals in intentionally shadowing test fields; explicit literal types corrected the fixture. Final109 unit tests and both type checks pass.",
+    "The initial before/after pair used the identical test source; final type-only fixture annotations have separate current hashes and final execution evidence.",
+    "Root product/SQL sources stayed untouched during the frozen runtime gate. No browser/API rerun, scanner execution or new hosted pass is inferred.",
+    "Initial secret-scan publication preflight rejected the temporary dependency symlink before scanning. The symlink was removed after pure/type checks; the original failed summary/log are retained privately and checks were rerun without weakening policy."
+  ],
+  "privateDiagnosticLogsSha256": {
+    "after.log": "3bbaeb71dc445323bb650bd62a2f15b50a6001ffb4d4eb815646aac87b4ab556",
+    "before-parser-rejection.log": "cf66eae04dcec385ca2579dee6d3ba161add0bc7b3f3419882462824729c5293",
+    "before.log": "39436fd3b25875832bfd7dc134f8447c4b301f5f6d65a710cf32b147cefef4e7",
+    "final-typecheck.log": "146aa7bcf7f02a73c49b26725655dfcaafb0536b511721a3b52e1c6b04cd7f58",
+    "final-unit.log": "2adf37c48d6d6a97e534c7daa25004034b433868ec5c3b33b651ab12832ebad9",
+    "secret-scan-preflight-failure.json": "eb8a8b10ae5266341926631b603dd3f5d6e639f4a64739c9514b4f049331f028",
+    "secret-scan-preflight-failure.log": "9baaf9d41b6a5206bf0e422705665558c6277bc260c2943d8324c791bf86db34",
+    "tool-bootstrap-failure.log": "b0307e96b116e99b6106e05e78358f43caaee432940b4cd9da209a7f7a103895",
+    "typecheck-fixture-failure.log": "5b20898791c374ed4c24fa117c943128d44506575d525f4857caea6d07bf04fc",
+    "unit.log": "54c889901c31933ae702ba79d4591d1c7085863054f1e2a841ebf089192b0c89"
+  },
+  "purpose": "NARROW_RELATION_COPY_HARDENING_NOT_A_RESCAN",
+  "recordedAt": "2026-11-15T23:32:25.567856+00:00",
+  "rootAndWebTypecheck": "PASS",
+  "schemaVersion": 1,
+  "scopeLimitation": "The concrete reproduction deliberately installs a hostile shared-prototype setter. It does not prove an unaided remote attacker can install that setter or bypass existing reserved-key rejection.",
+  "unitTests": 109
+}

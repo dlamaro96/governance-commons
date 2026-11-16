@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "source_head_before_integration": "6c1b9edb118e058b24927f96fb9a2518800dc386",
+  "integrated_main": "a8cfef10cc6e677f164d20bc41c76c33cd6d4424",
+  "unit_cases_passed": 107,
+  "checks": [
+    {
+      "check": "units",
+      "exitCode": 0,
+      "durationSeconds": 0.724,
+      "log": ".local/sast/integrated-units.log",
+      "logSha256": "535c773f34108ed4dca540dc326b0cd06a88a48ea6e558b64f95d7fe0253901b"
+    },
+    {
+      "check": "types",
+      "exitCode": 0,
+      "durationSeconds": 0.989,
+      "log": ".local/sast/integrated-types.log",
+      "logSha256": "146aa7bcf7f02a73c49b26725655dfcaafb0536b511721a3b52e1c6b04cd7f58"
+    },
+    {
+      "check": "build",
+      "exitCode": 0,
+      "durationSeconds": 1.395,
+      "log": ".local/sast/integrated-build.log",
+      "logSha256": "5318672df38f19c33b0ed3a53c19651de62fffc21195078de67f132ff05beb8f"
+    },
+    {
+      "check": "policy",
+      "exitCode": 0,
+      "durationSeconds": 0.242,
+      "log": ".local/sast/integrated-policy.log",
+      "logSha256": "7afd45791a1a84997b1452cfb975e96ad8a42d4e3a47a36365d76108db8991cf"
+    },
+    {
+      "check": "requirements",
+      "exitCode": 0,
+      "durationSeconds": 0.09,
+      "log": ".local/sast/integrated-requirements.log",
+      "logSha256": "20b5661cffd29d5850117ecf93d7e608b9770219ee9d038fbf917c4114b58c44"
+    },
+    {
+      "check": "publication",
+      "exitCode": 0,
+      "durationSeconds": 10.027,
+      "log": ".local/sast/integrated-publication.log",
+      "logSha256": "23828740b98eabdcffcf19dfd6fc59204508fb8904619ef862f6da410f2692c0"
+    },
+    {
+      "check": "whitespace",
+      "exitCode": 0,
+      "durationSeconds": 0.021,
+      "log": ".local/sast/integrated-whitespace.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "secret_scan": {
+    "outcome": "PASS",
+    "reportSha256": "5ccabfa14fbc32f44ba0ab7df1a5beccbeaf56a161f1c8298c1ecd1b0b523663"
+  },
+  "sast_on_integrated_source": "NOT_RUN",
+  "behavior_on_integrated_source": "NOT_RUN",
+  "limitations": [
+    "Earlier product-5 source scanning qualifies only its recorded isolated snapshot. Hosted checks will qualify the merged source."
+  ]
+}

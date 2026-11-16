@@ -1,0 +1,136 @@
+{
+  "after": {
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "copies preserve own data|relation copying",
+      "tests/unit/model-migration.test.ts",
+      "tests/unit/asset-type-migration.test.ts",
+      "tests/unit/relation.test.ts"
+    ],
+    "exitCode": 0,
+    "fail": 0,
+    "inheritedSetterCalls": 0,
+    "logSha256": "a3fb4a33a245382d20da8274b3ee206f3d92f61a7e5f5c3f3e9808ea55de29d7",
+    "pass": 4,
+    "recordedAt": "2026-11-15T23:45:02.301192+00:00",
+    "schemaVersion": 1,
+    "sourceSha256": {
+      "packages/domain/src/asset-type-migration.ts": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450",
+      "packages/domain/src/model-migration.ts": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072",
+      "packages/domain/src/relation.ts": "4b7ef422f88e32375efafb8c55ba3ed9b54ee0640e308bae27357c97e1a039eb",
+      "tests/unit/asset-type-migration.test.ts": "1757639171aaea4eee56a020009cca3d20df193af4be026a4b52f58afef7c99d",
+      "tests/unit/model-migration.test.ts": "dc6c42b66be1d6ff5215e9ae096682376be0e41d999f73c86f3fc2250ba658b0",
+      "tests/unit/relation.test.ts": "357a001ffd7754326c08ef5a8cab43f2095e729cbc12dc8dec320f4d7c1d427b"
+    },
+    "tests": 4
+  },
+  "before": {
+    "assetTypeInheritedSetterCalls": 1,
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "copies preserve own data",
+      "tests/unit/model-migration.test.ts",
+      "tests/unit/asset-type-migration.test.ts"
+    ],
+    "exitCode": 1,
+    "fail": 2,
+    "logSha256": "8bfa40e1405edd2853a71cf10d5f6b0c957f3fe314f9b2b5434a911b1f0c62b1",
+    "modelInheritedSetterThrown": true,
+    "pass": 0,
+    "recordedAt": "2026-11-15T23:44:20.322254+00:00",
+    "schemaVersion": 1,
+    "sourceSha256": {
+      "packages/domain/src/asset-type-migration.ts": "ab1aef383c8cbaca99df276f168e9e9bda3fb9d04fc863f641ae6fd8a2e05319",
+      "packages/domain/src/model-migration.ts": "19f375ebf8f424b74e1643255ba776d09234c986e45298c7a0fb5ecd72559ed0",
+      "tests/unit/asset-type-migration.test.ts": "1757639171aaea4eee56a020009cca3d20df193af4be026a4b52f58afef7c99d",
+      "tests/unit/model-migration.test.ts": "dc6c42b66be1d6ff5215e9ae096682376be0e41d999f73c86f3fc2250ba658b0"
+    },
+    "tests": 2
+  },
+  "currentSourceSha256": {
+    "packages/domain/src/asset-type-migration.ts": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450",
+    "packages/domain/src/model-migration.ts": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072",
+    "packages/domain/src/relation.ts": "4b7ef422f88e32375efafb8c55ba3ed9b54ee0640e308bae27357c97e1a039eb",
+    "tests/unit/asset-type-migration.test.ts": "1757639171aaea4eee56a020009cca3d20df193af4be026a4b52f58afef7c99d",
+    "tests/unit/model-migration.test.ts": "dc6c42b66be1d6ff5215e9ae096682376be0e41d999f73c86f3fc2250ba658b0",
+    "tests/unit/relation.test.ts": "357a001ffd7754326c08ef5a8cab43f2095e729cbc12dc8dec320f4d7c1d427b"
+  },
+  "demonstratedCause": "The pinned remote-property query models the input-derived Object.defineProperty key as a write sink. The separate two migration copiers retained guarded assignments onto normal objects; synthetic inherited setters execute in both before repair.",
+  "dirty": true,
+  "finalChecks": [
+    {
+      "check": "unit",
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "tests/unit/asset-type-migration.test.ts",
+        "tests/unit/asset-type-policy.test.ts",
+        "tests/unit/asset-type.test.ts",
+        "tests/unit/audit.test.ts",
+        "tests/unit/authz.test.ts",
+        "tests/unit/cursor.test.ts",
+        "tests/unit/json-envelope.test.ts",
+        "tests/unit/model-migration-file.test.ts",
+        "tests/unit/model-migration.test.ts",
+        "tests/unit/model.test.ts",
+        "tests/unit/relation.test.ts"
+      ],
+      "exitCode": 0,
+      "logSha256": "f61a5d9f036b89b268cb5f52a6abab2cfd2bd25c0e700b2e8695100f4d3a6263",
+      "startedAt": "2026-11-15T23:45:02.302023+00:00"
+    },
+    {
+      "check": "typecheck",
+      "command": [
+        "pnpm",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "logSha256": "146aa7bcf7f02a73c49b26725655dfcaafb0536b511721a3b52e1c6b04cd7f58",
+      "startedAt": "2026-11-15T23:45:02.638356+00:00"
+    }
+  ],
+  "firstRepairHostedResult": "ANALYSIS_PASS_FINDINGS_BLOCKED_AT_DEFINEPROPERTY_KEY",
+  "head": "b6328a3962607d4e808750cc0afb8cd2b7e487bd",
+  "hostedRemediationScan": "NOT_RUN",
+  "invariants": [
+    "Original selected-entry order is retained (including sorted migration keys and ascending array indices).",
+    "Plain object and array prototypes, own enumerable data, dense array cardinality, deep freeze and source immutability remain covered.",
+    "Reserved names, source getter rejection, cycles, depth/nodes/bytes/properties bounds and issue handling are unchanged."
+  ],
+  "limitations": [
+    "The first defineProperty repair genuinely prevented inherited setters but the sixth hosted scan remained blocked. It is preserved without relabeling.",
+    "New migration regressions use the identical test source before and after; after selection also includes the two existing relation regressions.",
+    "A hostile shared prototype is deliberately installed in the synthetic tests; unaided remote installation is not established.",
+    "No heavy local scanner, Docker, API/browser execution or qualification of newer root product source is inferred.",
+    "No suppression, severity/query/coverage change, finding disposition or human review sign-off was added."
+  ],
+  "purpose": "PRIVATE_MAP_MATERIALIZATION_REPAIR_NOT_A_SOURCE_RESCAN",
+  "queryModel": {
+    "observation": "PropertyWriteSink includes DataFlow::PropWrite property names; original SARIF identifies four taint paths ending at relation.ts91 key.",
+    "path": "qlpacks/codeql/javascript-all/3.0.0/semmle/javascript/security/dataflow/RemotePropertyInjectionCustomizations.qll",
+    "sha256": "285ba0a71c79e4961195e9c76db6fd22085543b47941e3e0909638f469dc66de"
+  },
+  "recordedAt": "2026-11-15T23:46:53.820052+00:00",
+  "repair": "Collect copied children in private Maps and materialize objects using Object.fromEntries and dense arrays using Array.from(values), inside try before active-cycle cleanup. Input-derived names are data entries throughout copying, rather than output-property mutation targets.",
+  "rootAndWebTypecheck": "PASS",
+  "schemaVersion": 1,
+  "unchangedScannerPolicySha256": {
+    ".github/codeql/codeql-config.yml": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+    ".github/workflows/security.yml": "87704b640679588d83b0c4d76a4fe35e07e74ee60f821da2f926f3ed10fa89ed",
+    "policies/sast-policy.json": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+    "policies/sast-triage.json": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+    "policies/sast.py": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7"
+  },
+  "unitTests": 111
+}
