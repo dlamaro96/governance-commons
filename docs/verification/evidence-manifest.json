@@ -1143,6 +1143,34 @@
       },
       "release_qualified": false,
       "runtime_authority_activated": false
+    },
+    {
+      "path": "docs/verification/authority-decisions.json",
+      "scope": "Pure reference-engine qualification only:415 host unit cases,root/web types,229 exact unchanged source/config/contract hashes; runtime,profiles and release remain open.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_PURE_HOST_UNIT_AND_TYPECHECK_SCOPE",
+      "source_binding": {
+        "base_revision": "cc91658059d7d0b2bf646414824697866fabb7c9",
+        "verified_source_files": 229,
+        "tracked_base_matches": 210,
+        "evidence_sha256": "4839c9b3aedf8daee9e73b429d06c5281e6e1ac8081fb9699cd8ed09be8dedb0"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
+    },
+    {
+      "path": "docs/verification/authority-hosted-attempt-2.json",
+      "scope": "Fresh exact PR18 premerge regression qualification:154API,19one-attempt browsers,14stages. Merge status separately recorded; no postmerge qualification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EXACT_HOSTED_SOURCE_AND_DEVELOPMENT_SCOPE",
+      "source_binding": {
+        "head_commit": "0fa61ccf42571e65a7dd7ce371fff70db5c5f515",
+        "tested_merge": "fa3e997d811532725726ea3af6b7efc5e0c64f5f",
+        "verified_source_files": 821,
+        "evidence_sha256": "17021561a8675225832d226a39796064ad9549a77596ffc1e8bfec6d8183f592"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
     }
   ],
   "limitations": [

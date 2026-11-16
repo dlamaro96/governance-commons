@@ -1,0 +1,2320 @@
+{
+  "schema_version": 1,
+  "status": "PASS_EXACT_HOSTED_SOURCE_AND_DEVELOPMENT_SCOPE",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "recorded_at": "2026-11-16T06:07:32.836428+00:00",
+  "repository": "dlamaro96/governance-commons",
+  "pull_request": 18,
+  "attempt": 2,
+  "workflow_attempt": 1,
+  "scope": "Fresh PR18 ancestry head0fa61c and tested mergefa3e997d: exact hosted Source and synthetic core Development qualification for the pure parser/compatibility/predicate increment. Later admission/decision implementation, postmerge execution, full-programme and release qualification remain separate.",
+  "workflow_observations": {
+    "source": {
+      "run_id": 43809453368,
+      "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43809453368",
+      "outcome": "SUCCESS",
+      "jobs_passed": 5,
+      "provenance": "Root inspected public GitHub UI; exact observed artifacts and stored CodeQL data were audited separately."
+    },
+    "development": {
+      "run_id": 43809453362,
+      "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43809453362",
+      "outcome": "SUCCESS",
+      "jobs_passed": 4,
+      "quality_duration": "1m2s",
+      "secrets_duration": "24s",
+      "behavior_duration": "25m58s",
+      "required_duration": "3s",
+      "provenance": "Root directly inspected GitHub UI; this audit did not query Actions metadata, logs or checks."
+    }
+  },
+  "source_binding": {
+    "tested_merge": "fa3e997d811532725726ea3af6b7efc5e0c64f5f",
+    "head_commit": "0fa61ccf42571e65a7dd7ce371fff70db5c5f515",
+    "ref": "refs/pull/18/merge",
+    "identical_tree": "982ed457e533fa4b489a4f0b78a15517391042d9",
+    "immutable_git_blobs": 821,
+    "source_bytes": 31480992,
+    "source_digest": "9df8db955358064ac7b39bd0da51ba6fe609a47bf5f80f5ba233561287b0cf45",
+    "method": "Re-read all821 immutable head Git blobs and exact paths, bytes and SHA256 values; recomputed canonical source digest against frozen binding. Original tested-merge metadata establishes equal trees. No mutable worktree or new runtime substituted.",
+    "original_private_binding": {
+      "path": ".local/evidence/authority-hosted-attempt-2/source/source-binding.json",
+      "sha256": "4ad56bc3375f88356929cb54733a6bc453d245698b0dd09f62cc0befea56f731",
+      "bytes": 167542
+    },
+    "runtime_binding_limit": "The safe API artifact binds20 executed test-file hashes. No full application-image digest/source manifest or rebuilt-image attestation was exported."
+  },
+  "source_security": {
+    "gate": "PASS",
+    "blocking_results": 0,
+    "languages": [
+      {
+        "analysis": "PASS",
+        "analysisId": 2173945122,
+        "category": "governance-commons/actions",
+        "coverage": {
+          "databaseFiles": 2,
+          "expectedFiles": 2,
+          "extractedExpectedFiles": 2,
+          "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+        },
+        "coverageQuerySha256": "aad6da298334a842bea221711b0e7c8b1c4864ce2c66632e4d93c846742a4505",
+        "expectedPathsVerifiedAgainstImmutableSource": 2,
+        "extractorRuntime": null,
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-16T05:20:14.187124+00:00",
+        "language": "actions",
+        "libraryVersion": "0.7.1",
+        "outcome": "PASS",
+        "publishedSarifSha256": "7a3e786d941a57f02b13e548985fd45b8c9c0022d7f7a089dc8922c6637c43bc",
+        "queryPack": "codeql/actions-queries",
+        "queryVersion": "0.6.39",
+        "resolvedQueryCount": 24,
+        "results": 0,
+        "sarifId": "681a3870-e17d-11f1-828e-63539c008ee0",
+        "sarifRules": 23,
+        "scanDurationSeconds": 27.147,
+        "startedAt": "2026-11-16T05:19:47.039994+00:00",
+        "storedAnalysis": {
+          "analysis_key": ".github/workflows/security.yml:sast-actions",
+          "category": "governance-commons/actions",
+          "commit_sha": "fa3e997d811532725726ea3af6b7efc5e0c64f5f",
+          "created_at": "2026-11-16T05:20:17Z",
+          "deletable": true,
+          "environment": "{}",
+          "error": "",
+          "id": 2173945122,
+          "ref": "refs/pull/18/merge",
+          "results_count": 0,
+          "rules_count": 23,
+          "sarif_id": "681a3870-e17d-11f1-828e-63539c008ee0",
+          "tool": {
+            "guid": null,
+            "name": "CodeQL",
+            "version": "2.27.4"
+          },
+          "url": "https://api.github.com/repos/dlamaro96/governance-commons/code-scanning/analyses/2173945122",
+          "warning": ""
+        },
+        "toolVersion": "2.27.4",
+        "uiObservedArchive": {
+          "name": "sast-actions-43809453368-1",
+          "sha256": "ff2244b5e93e36d30452f5ac4f62a971263b694d81030add1496561fbb3809ce"
+        },
+        "published_sarif": {
+          "path": "docs/verification/hosted-authority-attempt-2/source/actions/actions.sarif",
+          "sha256": "7a3e786d941a57f02b13e548985fd45b8c9c0022d7f7a089dc8922c6637c43bc"
+        }
+      },
+      {
+        "analysis": "PASS",
+        "analysisId": 2173946782,
+        "category": "governance-commons/python",
+        "coverage": {
+          "databaseFiles": 49,
+          "expectedFiles": 30,
+          "extractedExpectedFiles": 30,
+          "extractedPathsDigest": "33afb6b7321d50567ce32ad2dfbc3e8c3e2d30864315adf10f09c4153057f455"
+        },
+        "coverageQuerySha256": "e3c2c759bc1eda89b0ea538c161831cc41422adfbacdc43a1a5af3bbe4148f15",
+        "expectedPathsVerifiedAgainstImmutableSource": 30,
+        "extractorRuntime": "Python 3.14.5",
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-16T05:20:40.062684+00:00",
+        "language": "python",
+        "libraryVersion": "7.2.9",
+        "outcome": "PASS",
+        "publishedSarifSha256": "e8e92f98a493cb121a5920c3f1559f36b2a8e8cc1ec2cbc0659214f10c5c5dac",
+        "queryPack": "codeql/python-queries",
+        "queryVersion": "1.9.0",
+        "resolvedQueryCount": 52,
+        "results": 0,
+        "sarifId": "7813abb2-e17d-11f1-99fe-ae7d79878d0f",
+        "sarifRules": 50,
+        "scanDurationSeconds": 44.166,
+        "startedAt": "2026-11-16T05:19:55.897129+00:00",
+        "storedAnalysis": {
+          "analysis_key": ".github/workflows/security.yml:sast-python",
+          "category": "governance-commons/python",
+          "commit_sha": "fa3e997d811532725726ea3af6b7efc5e0c64f5f",
+          "created_at": "2026-11-16T05:20:43Z",
+          "deletable": true,
+          "environment": "{}",
+          "error": "",
+          "id": 2173946782,
+          "ref": "refs/pull/18/merge",
+          "results_count": 0,
+          "rules_count": 50,
+          "sarif_id": "7813abb2-e17d-11f1-99fe-ae7d79878d0f",
+          "tool": {
+            "guid": null,
+            "name": "CodeQL",
+            "version": "2.27.4"
+          },
+          "url": "https://api.github.com/repos/dlamaro96/governance-commons/code-scanning/analyses/2173946782",
+          "warning": ""
+        },
+        "toolVersion": "2.27.4",
+        "uiObservedArchive": {
+          "name": "sast-python-43809453368-1",
+          "sha256": "064cebb1b05bb558ebb2f7eae70136c78d28928bd02a0638e4e9f2d1cb117f56"
+        },
+        "published_sarif": {
+          "path": "docs/verification/hosted-authority-attempt-2/source/python/python.sarif",
+          "sha256": "e8e92f98a493cb121a5920c3f1559f36b2a8e8cc1ec2cbc0659214f10c5c5dac"
+        }
+      },
+      {
+        "analysis": "PASS",
+        "analysisId": 2173949601,
+        "category": "governance-commons/javascript-typescript",
+        "coverage": {
+          "databaseFiles": 213,
+          "expectedFiles": 188,
+          "extractedExpectedFiles": 188,
+          "extractedPathsDigest": "b6076d77e4f510deb4f8aa068f38d4c3d1f89618fb293abb0b5704814bca874b"
+        },
+        "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+        "expectedPathsVerifiedAgainstImmutableSource": 188,
+        "extractorRuntime": "v24.22.3",
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-16T05:21:26.797739+00:00",
+        "language": "javascript-typescript",
+        "libraryVersion": "3.0.0",
+        "outcome": "PASS",
+        "publishedSarifSha256": "d4e0a7896382162221828b1f1332a1528a134a72f7d83499c1a9cbc8aebe3766",
+        "queryPack": "codeql/javascript-queries",
+        "queryVersion": "2.5.0",
+        "resolvedQueryCount": 105,
+        "results": 0,
+        "sarifId": "93975d0c-e17d-11f1-9c2f-9fbe240095aa",
+        "sarifRules": 103,
+        "scanDurationSeconds": 93.235,
+        "startedAt": "2026-11-16T05:19:53.562597+00:00",
+        "storedAnalysis": {
+          "analysis_key": ".github/workflows/security.yml:sast-javascript-typescript",
+          "category": "governance-commons/javascript-typescript",
+          "commit_sha": "fa3e997d811532725726ea3af6b7efc5e0c64f5f",
+          "created_at": "2026-11-16T05:21:29Z",
+          "deletable": true,
+          "environment": "{}",
+          "error": "",
+          "id": 2173949601,
+          "ref": "refs/pull/18/merge",
+          "results_count": 0,
+          "rules_count": 103,
+          "sarif_id": "93975d0c-e17d-11f1-9c2f-9fbe240095aa",
+          "tool": {
+            "guid": null,
+            "name": "CodeQL",
+            "version": "2.27.4"
+          },
+          "url": "https://api.github.com/repos/dlamaro96/governance-commons/code-scanning/analyses/2173949601",
+          "warning": ""
+        },
+        "toolVersion": "2.27.4",
+        "uiObservedArchive": {
+          "name": "sast-javascript-typescript-43809453368-1",
+          "sha256": "91ef3e6e2ca0653ad29b54593da03bcf692ff1724a7681979de9df1128a3cd63"
+        },
+        "published_sarif": {
+          "path": "docs/verification/hosted-authority-attempt-2/source/javascript-typescript/javascript-typescript.sarif",
+          "sha256": "d4e0a7896382162221828b1f1332a1528a134a72f7d83499c1a9cbc8aebe3766"
+        }
+      }
+    ],
+    "stored_analysis_readback": {
+      "verified_at": "2026-11-16T05:25:59.231403+00:00",
+      "current_merge_analysis_count": 3,
+      "complete_inventory_count": 6,
+      "analysis_inventory_complete": true,
+      "alert_inventory_complete": true,
+      "open_alerts": 0,
+      "all_state_alerts": 0,
+      "alerts": [],
+      "interpretation": "The complete PR18 ref-scoped all-state alert inventory was empty at readback. Three analyses belong to this exact tested merge; the complete six-analysis inventory also includes prior tested-merge analyses. All three current analyses have zero results and no error/warning."
+    }
+  },
+  "development": {
+    "gate": "PASS",
+    "profile": "core / GitHub-hosted Ubuntu 24.04 / synthetic PostgreSQL",
+    "mandatory_stages": [
+      {
+        "command": "./dev bootstrap",
+        "id": "bootstrap",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev up --profile core",
+        "id": "services",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite object-store",
+        "id": "object_store",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev seed --dataset harbor-demo",
+        "id": "seed",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite connectors",
+        "id": "connectors",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite security",
+        "id": "security",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite model-upgrade",
+        "id": "model_upgrade",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite asset-type-upgrade",
+        "id": "asset_type_upgrade",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite type-migration-upgrade",
+        "id": "type_migration_upgrade",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite relations-upgrade",
+        "id": "relations_upgrade",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite relation-participation-upgrade",
+        "id": "relation_participation_upgrade",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite business-domains-upgrade",
+        "id": "business_domains_upgrade",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite business-domain-seed",
+        "id": "business_domain_seed",
+        "outcome": "success"
+      },
+      {
+        "command": "pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts",
+        "id": "browser",
+        "outcome": "success"
+      }
+    ],
+    "api": {
+      "counts": {
+        "cancelled": 0,
+        "fail": 0,
+        "pass": 154,
+        "skipped": 0,
+        "suites": 0,
+        "tests": 154,
+        "todo": 0
+      },
+      "expectedTests": 154,
+      "observedResults": 154,
+      "privateTapSha256Reported": "158ea166f47bc43e4c9ba03ac8c9c50f251a6a1362e6ae1e42d5ccc3ab34d0d7",
+      "runtimeTestSourcesMatchReported": true,
+      "sourceManifestSha256": "d3fb257a0827f96b403e69a873641a5d2e217dec9e83a7cb12ea60bca2fd727c",
+      "staticDeclarations": 154,
+      "testSourceFiles": 20,
+      "tests": [
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-api-limits.test.ts",
+          "line": 38,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-api-limits.test.ts",
+          "line": 60,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 84,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 102,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 108,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 128,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 156,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 167,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 177,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 191,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 206,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migrations.test.ts",
+          "line": 71,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migrations.test.ts",
+          "line": 99,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migrations.test.ts",
+          "line": 117,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migrations.test.ts",
+          "line": 143,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migrations.test.ts",
+          "line": 153,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 64,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 73,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 80,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 88,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 93,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 101,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 131,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 140,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 164,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 97,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 136,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 171,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 182,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 206,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 224,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 241,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 286,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 314,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/audit-integrity.test.ts",
+          "line": 46,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/audit-integrity.test.ts",
+          "line": 92,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domain-asset-scope.test.ts",
+          "line": 40,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 137,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 161,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 245,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 266,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 295,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 315,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 342,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 370,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 399,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 17,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 31,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 42,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 53,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 68,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 77,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 86,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 99,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 112,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 123,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 136,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 156,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 164,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 174,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 183,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 193,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 202,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 216,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/foundation.test.ts",
+          "line": 12,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/foundation.test.ts",
+          "line": 22,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/foundation.test.ts",
+          "line": 30,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/foundation.test.ts",
+          "line": 39,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/foundation.test.ts",
+          "line": 51,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-api.test.ts",
+          "line": 20,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-api.test.ts",
+          "line": 37,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-api.test.ts",
+          "line": 52,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-api.test.ts",
+          "line": 37,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-api.test.ts",
+          "line": 55,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-api.test.ts",
+          "line": 89,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-storage.test.ts",
+          "line": 61,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-storage.test.ts",
+          "line": 77,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-storage.test.ts",
+          "line": 98,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-storage.test.ts",
+          "line": 110,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-storage.test.ts",
+          "line": 124,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-storage.test.ts",
+          "line": 135,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 72,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 119,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 139,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 168,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 188,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 208,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 221,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 234,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-pagination.test.ts",
+          "line": 22,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-pagination.test.ts",
+          "line": 56,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 67,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 76,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 88,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 100,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 110,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 123,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 130,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 176,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-migration-api.test.ts",
+          "line": 97,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-migration-api.test.ts",
+          "line": 158,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-migration-api.test.ts",
+          "line": 182,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-migration-api.test.ts",
+          "line": 216,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-migration-api.test.ts",
+          "line": 245,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-migration-api.test.ts",
+          "line": 280,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 46,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 60,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 83,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 103,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 121,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 133,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 149,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 162,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 173,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 186,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 206,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 216,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 227,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 240,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 263,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 281,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 310,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 321,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 339,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 374,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 98,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 116,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 131,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 151,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 163,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 173,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 184,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 203,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 220,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 235,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 267,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 278,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 143,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 165,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 192,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 215,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 238,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 254,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 274,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 293,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 306,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 343,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 362,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 383,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 398,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 420,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 457,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 494,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 524,
+          "status": "passed"
+        }
+      ],
+      "timestamp": "2026-11-16T05:27:02.037829+00:00",
+      "source_files": [
+        {
+          "path": "tests/integration/asset-type-api-limits.test.ts",
+          "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4"
+        },
+        {
+          "path": "tests/integration/asset-type-migration-storage.test.ts",
+          "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+        },
+        {
+          "path": "tests/integration/asset-type-migrations.test.ts",
+          "sha256": "c5ad40c323b3405243e95c9b33b62d81e86ab596bca361779219c489fb7aa407"
+        },
+        {
+          "path": "tests/integration/asset-type-storage.test.ts",
+          "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+        },
+        {
+          "path": "tests/integration/asset-types.test.ts",
+          "sha256": "08c5b7fd9aebea55d498b97b4c524e6e83eefb4c7e604b519996ec1932a2145e"
+        },
+        {
+          "path": "tests/integration/audit-integrity.test.ts",
+          "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad"
+        },
+        {
+          "path": "tests/integration/business-domain-asset-scope.test.ts",
+          "sha256": "d93449ab4014ee5feb45ab1fc30ce28c061675868139bf7595f79b815f5939a1"
+        },
+        {
+          "path": "tests/integration/business-domains-api.test.ts",
+          "sha256": "2ea88c68f5d96fffeecb80ed889b03ce7d0c40ffc30cb685d5aa9f1932dbc9a5"
+        },
+        {
+          "path": "tests/integration/business-domains-storage.test.ts",
+          "sha256": "1e1b0712c63bf957e33328285a42baad55adc07f1047cc53e7cdc608e8aff8f0"
+        },
+        {
+          "path": "tests/integration/foundation.test.ts",
+          "sha256": "eb1159e5c2f3004c3d90a82b2361c2665efff90d20b3eb18f8e58a7929ebd579"
+        },
+        {
+          "path": "tests/integration/model-api.test.ts",
+          "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7"
+        },
+        {
+          "path": "tests/integration/model-migration-api.test.ts",
+          "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb"
+        },
+        {
+          "path": "tests/integration/model-migration-storage.test.ts",
+          "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+        },
+        {
+          "path": "tests/integration/model-migrations.test.ts",
+          "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+        },
+        {
+          "path": "tests/integration/model-pagination.test.ts",
+          "sha256": "0809f4e7711f3fea796edc1f87a82fc6ece9684c0c6483e4d506a233c4d0d0d2"
+        },
+        {
+          "path": "tests/integration/models.test.ts",
+          "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1"
+        },
+        {
+          "path": "tests/integration/relation-migration-api.test.ts",
+          "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db"
+        },
+        {
+          "path": "tests/integration/relation-participation-storage.test.ts",
+          "sha256": "3e85a9ead572f743fec618c0fe2cca042cf0005f79c63cac08cb4ddddf3c6765"
+        },
+        {
+          "path": "tests/integration/relation-storage.test.ts",
+          "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619"
+        },
+        {
+          "path": "tests/integration/relations.test.ts",
+          "sha256": "eef1490ff12eae279018027edfdbbbd9dee2bae739cf925e82f16fd81ecba760"
+        }
+      ]
+    },
+    "browser": {
+      "attemptsPerJourney": 1,
+      "distinctJourneys": 19,
+      "durationSumMilliseconds": 490221,
+      "expected": 19,
+      "flaky": 0,
+      "screenshots": [
+        {
+          "bytes": 73882,
+          "height": 960,
+          "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-en-light-390.png",
+          "sha256": "c9ac6d640ca67bc2db37341d7c8b820208fedc36d9ceecdd02fec3bd40a63355",
+          "width": 390
+        },
+        {
+          "bytes": 111879,
+          "height": 960,
+          "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-en-light-768.png",
+          "sha256": "6381e98be445c661403e0546c3674c0f2265b4c8a5db7ab4647753c2cf406330",
+          "width": 768
+        },
+        {
+          "bytes": 146564,
+          "height": 960,
+          "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-en-light-1024.png",
+          "sha256": "a94f508fc8870716e743fe2dd50429f83fc4d34335df0f377f5dcf110e15877d",
+          "width": 1024
+        },
+        {
+          "bytes": 155373,
+          "height": 960,
+          "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-en-light-1280.png",
+          "sha256": "502abb6c46feeaa0d9d72bdd49dba6624914dda1703b83ca2e9bbc3882126deb",
+          "width": 1280
+        },
+        {
+          "bytes": 163287,
+          "height": 960,
+          "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-en-light-1440.png",
+          "sha256": "42b30b4eb59bd722c1f5f34ccc7306ed79a88ccc6e25ad39f8736b47e2f6ec8e",
+          "width": 1440
+        },
+        {
+          "bytes": 164532,
+          "height": 960,
+          "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-en-dark-1440.png",
+          "sha256": "9613cc8bb2094992dba66117a18c490964d3d63ef1f3f4e96e377ff45b2d52f4",
+          "width": 1440
+        },
+        {
+          "bytes": 79814,
+          "height": 960,
+          "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-history.png",
+          "sha256": "369b43fd06009d8190b392b8c8a95f0b717455196b1a5f243253e148755df4c4",
+          "width": 1440
+        },
+        {
+          "bytes": 69177,
+          "height": 960,
+          "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-ar-dark-390.png",
+          "sha256": "4bd42ab890abca019d1d2e9c4e5c96b9115556d210d8ee5152afa5ae19305989",
+          "width": 390
+        },
+        {
+          "bytes": 105282,
+          "height": 960,
+          "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-ar-dark-768.png",
+          "sha256": "41ac4b4115f917c0459ce15cf0803de236728c12f41505256b9b972575849c59",
+          "width": 768
+        },
+        {
+          "bytes": 146224,
+          "height": 960,
+          "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-ar-dark-1440.png",
+          "sha256": "e5440d4ef7176ebe9ce5fb981b1aa98fc8a79ebb9ec67a5f321a46877ad98b86",
+          "width": 1440
+        }
+      ],
+      "skipped": 0,
+      "tests": [
+        {
+          "attempts": 1,
+          "duration_ms": 7105,
+          "failure_locations": [],
+          "file": "tests/e2e/vertical-slice.spec.ts",
+          "line": 17,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 1424,
+          "failure_locations": [],
+          "file": "tests/e2e/vertical-slice.spec.ts",
+          "line": 122,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 10023,
+          "failure_locations": [],
+          "file": "tests/e2e/ui-accessibility.spec.ts",
+          "line": 30,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 1145,
+          "failure_locations": [],
+          "file": "tests/e2e/ui-accessibility.spec.ts",
+          "line": 74,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 22599,
+          "failure_locations": [],
+          "file": "tests/e2e/models.spec.ts",
+          "line": 77,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 3765,
+          "failure_locations": [],
+          "file": "tests/e2e/models.spec.ts",
+          "line": 257,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 18405,
+          "failure_locations": [],
+          "file": "tests/e2e/model-migrations.spec.ts",
+          "line": 80,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 3142,
+          "failure_locations": [],
+          "file": "tests/e2e/model-migrations.spec.ts",
+          "line": 218,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 24720,
+          "failure_locations": [],
+          "file": "tests/e2e/asset-types.spec.ts",
+          "line": 97,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 48412,
+          "failure_locations": [],
+          "file": "tests/e2e/asset-types.spec.ts",
+          "line": 242,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 21578,
+          "failure_locations": [],
+          "file": "tests/e2e/asset-type-migrations.spec.ts",
+          "line": 97,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 43794,
+          "failure_locations": [],
+          "file": "tests/e2e/asset-type-migrations.spec.ts",
+          "line": 252,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 67217,
+          "failure_locations": [],
+          "file": "tests/e2e/relations.spec.ts",
+          "line": 145,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 7606,
+          "failure_locations": [],
+          "file": "tests/e2e/relations.spec.ts",
+          "line": 358,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 21934,
+          "failure_locations": [],
+          "file": "tests/e2e/relation-migrations.spec.ts",
+          "line": 124,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 57193,
+          "failure_locations": [],
+          "file": "tests/e2e/relation-migrations.spec.ts",
+          "line": 194,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 64894,
+          "failure_locations": [],
+          "file": "tests/e2e/business-domains.spec.ts",
+          "line": 25,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 9535,
+          "failure_locations": [],
+          "file": "tests/e2e/business-domains.spec.ts",
+          "line": 80,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 55730,
+          "failure_locations": [],
+          "file": "tests/e2e/business-domains.spec.ts",
+          "line": 92,
+          "status": "expected"
+        }
+      ],
+      "timestamp": "2026-11-16T05:44:39.731636+00:00",
+      "unexpected": 0
+    },
+    "dependency_inventory": {
+      "outcome": "PASS",
+      "packages": 316,
+      "decisionCounts": {
+        "REVIEWED_EXCEPTION": 5,
+        "ALLOW": 311
+      },
+      "unresolved": 0,
+      "lockSha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829",
+      "method": "Byte-identical to prior independently audited report; exact policy/license/lock bindings verified against new immutable head. No additional scanner execution inferred.",
+      "policy_and_lock_bindings": [
+        {
+          "path": "policies/check_dependencies.py",
+          "sha256": "91bc1badc641f19936016689c9e9634152137ed4781e9ba975f89c48b32dc6fe"
+        },
+        {
+          "path": "policies/dependencies.yml",
+          "sha256": "358f1af7ddb4f8202348e846f27042c176ea920de01a2bd649e95c4cae82211d"
+        },
+        {
+          "path": "policies/license-evidence.json",
+          "sha256": "5ab76dc9dc2a8f278be0acdd2b1a11e4b6e3635190805339f644f68d66b24a4c"
+        },
+        {
+          "path": "policies/license-exceptions.yml",
+          "sha256": "9f2f08c972580b15a1ea4933f980dd9e6db8a0df1c7b428dfe83463be77c8b49"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+        }
+      ],
+      "previous_independent_verification": {
+        "path": ".local/evidence/authority-hosted-attempt-1/development/quality-secrets-handoff.json",
+        "sha256": "c08077b1044cbd5780fa6f94c0072dd2c24a0692362af8a97c41543e8e471678"
+      },
+      "limitations": [
+        "Installed pnpm development host profile only; platform-specific uninstalled optional packages are outside this inventory.",
+        "Not a finished-artifact SBOM. Image OS layers, Python distributions, external drivers and model weights require separate qualification.",
+        "ALLOW identifies a policy-compatible declared license; required notices must still be preserved in each distribution."
+      ]
+    },
+    "secret_scan": {
+      "schema_version": 1,
+      "tool": "gitleaks",
+      "tool_version": "8.30.1",
+      "tool_pin": "policies/security-tools.json",
+      "command": "python3 policies/scan_secrets.py --install",
+      "timestamp": "2026-11-16T05:19:37.086232+00:00",
+      "commit": "fa3e997d811532725726ea3af6b7efc5e0c64f5f",
+      "working_tree_manifest_sha256": "53e551e52b1c9e60013ca5e6b3df0ecfe754f19b1fd728842fac16cf5c161e1f",
+      "publishable_files_scanned": 821,
+      "worktree_dirty": false,
+      "platform": {
+        "system": "Linux",
+        "architecture": "x86_64"
+      },
+      "outcome": "PASS",
+      "results": [
+        {
+          "scope": "publishable_worktree",
+          "outcome": "PASS",
+          "exit_code": 0,
+          "finding_count": 0,
+          "findings": []
+        },
+        {
+          "scope": "reachable_git_history",
+          "outcome": "PASS",
+          "exit_code": 0,
+          "finding_count": 0,
+          "findings": []
+        }
+      ],
+      "limitations": [
+        "Detection by pinned gitleaks rules is not proof that every possible secret is absent.",
+        "Scans publishable files, excluding ignored runtime secrets/dependencies and this newly generated safe summary; history covers every reachable revision.",
+        "The source snapshot hash identifies uncommitted files tested; a supported release must rerun at its exact final commit.",
+        "Tool checksum verification is against pinned official release metadata; no independent signing/provenance claim."
+      ]
+    },
+    "archive_ui_observations": [
+      {
+        "name": "dependency-inventory-fa3e997d811532725726ea3af6b7efc5e0c64f5f",
+        "ui_zip_sha256": "cfba9ca83eaa934e5a4a10347c24065100d6f3ff857542559976c3acaf8ce0bf"
+      },
+      {
+        "name": "secret-scan-fa3e997d811532725726ea3af6b7efc5e0c64f5f",
+        "ui_zip_sha256": "2b01004433aa7aa50e35f6d60597465c2975e223ebb0a6d6f70344d5960919d2"
+      },
+      {
+        "name": "behavior-fa3e997d811532725726ea3af6b7efc5e0c64f5f",
+        "ui_zip_sha256": "dd34757028bf23dca5bc46231ec40b3e227cac8bf4c6a8091f1c86406b91b517"
+      }
+    ],
+    "handoff_history": "The earlier quality/secrets artifact handoff remains byte-identical; the separate completed behavior audit supplies actual154 API and19 browser results."
+  },
+  "merge_metadata": {
+    "state": "MERGED",
+    "head_commit": "0fa61ccf42571e65a7dd7ce371fff70db5c5f515",
+    "merged_at": "2026-11-16T05:58:47Z",
+    "merge_commit": "4102116d12fd0401bf278b3fb26d1391abc175eb",
+    "provenance": "Root verified PR18 merge after exact-head qualified hosted checks and supplied this status to the consolidation agent. No merge command or independent API read was performed by this consolidation.",
+    "postmerge_execution_qualified": false,
+    "interpretation": "Merge is repository status only. The hosted results above remain bound to tested mergefa3e997d and head0fa61c; no postmerge execution result is inferred."
+  },
+  "static_validation": {
+    "fresh_immutable_blob_readback": "PASS_821_FILES",
+    "fresh_original_digest_readback": "PASS_29_EXTRACTED_ORIGINALS",
+    "prior_public_json_reports_preserved": 122,
+    "private_files_preserved": 85,
+    "existing_behavior_static_checks": 1196,
+    "api_static_declarations": 154,
+    "browser_static_declarations": 19,
+    "source_test_and_workflow_bindings": [
+      {
+        "bytes": 1664,
+        "path": ".github/playwright.ci.config.ts",
+        "sha256": "dd3fe590901b052434d7c213fb13a2cd79d010a8d5ee28e227bd9fc6d2adb6f0"
+      },
+      {
+        "bytes": 8443,
+        "path": ".github/workflows/ci.yml",
+        "sha256": "5c1698bb61b7447f5574e65bbf586ddece9d71a53b83728ffd2bd37d5602aa55"
+      },
+      {
+        "bytes": 553,
+        "path": "Dockerfile",
+        "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+      },
+      {
+        "bytes": 10687,
+        "path": "deploy/compose/compose.yaml",
+        "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+      },
+      {
+        "bytes": 151,
+        "path": "dev",
+        "sha256": "3933fa6fdbbca26f1af4f1ad9b299cc651b6c7a51448c1cfcfa3468c933a26a5"
+      },
+      {
+        "bytes": 5839,
+        "path": "packages/db/migrations/001_foundation.sql",
+        "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "bytes": 251,
+        "path": "packages/db/migrations/002_audit_envelopes.sql",
+        "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "bytes": 3006,
+        "path": "packages/db/migrations/003_governance_models.sql",
+        "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "bytes": 1771,
+        "path": "packages/db/migrations/004_model_migrations.sql",
+        "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "bytes": 14532,
+        "path": "packages/db/migrations/005_model_migration_integrity.sql",
+        "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "bytes": 11862,
+        "path": "packages/db/migrations/006_inherited_asset_types.sql",
+        "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "bytes": 26050,
+        "path": "packages/db/migrations/007_asset_type_migrations.sql",
+        "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "bytes": 65745,
+        "path": "packages/db/migrations/008_constrained_relations.sql",
+        "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "bytes": 249871,
+        "path": "packages/db/migrations/009_relation_participation.sql",
+        "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "bytes": 39978,
+        "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+        "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "bytes": 119588,
+        "path": "packages/db/migrations/011_business_domains.sql",
+        "sha256": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+      },
+      {
+        "bytes": 898,
+        "path": "playwright.config.ts",
+        "sha256": "f671166e0edf378678ffdde7a643c2cfb4e3e8a5092517e94c38620acf3ffe45"
+      },
+      {
+        "bytes": 17367,
+        "path": "policies/api_evidence.py",
+        "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2"
+      },
+      {
+        "bytes": 7474,
+        "path": "policies/ci_evidence.py",
+        "sha256": "d16fcca55303bbf89e9b4892f1b28419f2b1fea84e01ea34b35f63d22456525f"
+      },
+      {
+        "bytes": 4906,
+        "path": "scripts/runtime-bootstrap.py",
+        "sha256": "538f6bf85eeb07538720fd32eea12e4d29aecf76a40d05daec944bb4db537e95"
+      },
+      {
+        "bytes": 562,
+        "path": "scripts/runtime-credential.py",
+        "sha256": "b161e3f18afeed4184f008372c9b5a104d733fbc7629352a62ec23fbf73b51f5"
+      },
+      {
+        "bytes": 4627,
+        "path": "scripts/runtime-s3-check.mjs",
+        "sha256": "8fa2bf342caab867b1c1b9b2d6193fc18aa4cd4c40ad986d83613338c596eca4"
+      },
+      {
+        "bytes": 19309,
+        "path": "scripts/runtime-test-asset-type-upgrade.py",
+        "sha256": "7a20b9edbc3c7a45c6b205331b4baa1c98a7211b29e2b4cd367f48be51556032"
+      },
+      {
+        "bytes": 35103,
+        "path": "scripts/runtime-test-business-domain-seed.py",
+        "sha256": "ef734f3100df73c278554927862e225952d38bca0c736fca750498b4e13dea6d"
+      },
+      {
+        "bytes": 25476,
+        "path": "scripts/runtime-test-business-domains-upgrade.py",
+        "sha256": "0f5b688d0f8b30db18ff8ec8065ef11144e153d2daaaae3943dc66e6b40092cd"
+      },
+      {
+        "bytes": 4268,
+        "path": "scripts/runtime-test-connectors.py",
+        "sha256": "8ac59b37af6f0de156929b40c06440a290a02603473ca9a6858244ff6fd3662d"
+      },
+      {
+        "bytes": 5524,
+        "path": "scripts/runtime-test-histories.py",
+        "sha256": "7b443afd10491d71ab67471901c51686f8040407f2f5be3fc94ca7da55d12b34"
+      },
+      {
+        "bytes": 15951,
+        "path": "scripts/runtime-test-model-upgrade.py",
+        "sha256": "e82a9361ab119dc9fa10003749be554f3ff801f5b06f72369c91880169274212"
+      },
+      {
+        "bytes": 3435,
+        "path": "scripts/runtime-test-object-store.py",
+        "sha256": "79fb70907c657c7ebe08d9c523320800ddc01c906c0894d8383e1ec85e0221f8"
+      },
+      {
+        "bytes": 5345,
+        "path": "scripts/runtime-test-recovery.py",
+        "sha256": "ded9d3cdbb0b68c531cdd4905599a5f33cbb737956155c178304e8d694e40d5f"
+      },
+      {
+        "bytes": 35569,
+        "path": "scripts/runtime-test-relation-participation-upgrade.py",
+        "sha256": "fd3c5ffd5fd24365fd96affad43a25eae47c4ad0a44717519c046fad7ac483d4"
+      },
+      {
+        "bytes": 28133,
+        "path": "scripts/runtime-test-relations-upgrade.py",
+        "sha256": "e622512771dffb0d17e5cf85e0000cf3348aa80c20b678c88f3efe6c41358546"
+      },
+      {
+        "bytes": 29091,
+        "path": "scripts/runtime-test-type-migration-upgrade.py",
+        "sha256": "a202bbbb09fe46738e5cc9aea978b4d2e6eac955b831a3ed4a02650dfdb0e87f"
+      },
+      {
+        "bytes": 12695,
+        "path": "scripts/runtime.py",
+        "sha256": "5e978b2a6aae3ae7afed2fc5cbf9d78565c252bd416a37437b512ecd28ceceaa"
+      },
+      {
+        "bytes": 27698,
+        "path": "tests/e2e/asset-type-migrations.spec.ts",
+        "sha256": "b6b0fa5dd017c13595db91ee785a9d44f6c59958d79d48e582cd8cbaaf4b4329"
+      },
+      {
+        "bytes": 23231,
+        "path": "tests/e2e/asset-types.spec.ts",
+        "sha256": "8d6e7f8ccedb3774557f71470e52ec7bea8ee60e2b86d1ee414bc17b5ec5ac04"
+      },
+      {
+        "bytes": 25534,
+        "path": "tests/e2e/business-domains.spec.ts",
+        "sha256": "8d6556f30510ba42eb2d7a537004060fbbf0b9f2714f3f09b8c26d31d25005f6"
+      },
+      {
+        "bytes": 20417,
+        "path": "tests/e2e/model-migrations.spec.ts",
+        "sha256": "6da5e76511b535bdef770fdad27d72861cf299a1c4a91c3e6f64d218572b33e8"
+      },
+      {
+        "bytes": 22673,
+        "path": "tests/e2e/models.spec.ts",
+        "sha256": "d25dc12de6cbff6642169b15ca8797d2275a5eab165242b0c88a09b959d73f3f"
+      },
+      {
+        "bytes": 25693,
+        "path": "tests/e2e/relation-migrations.spec.ts",
+        "sha256": "1c74ef81ca8f686341f112c5452c0cab3720235d54fcc66df574b6fda8c07f9b"
+      },
+      {
+        "bytes": 40411,
+        "path": "tests/e2e/relations.spec.ts",
+        "sha256": "70cd56fe9ad19943ed35bf6735bb992a7b06a47a92d72a1c926a1f91d155a9f5"
+      },
+      {
+        "bytes": 4716,
+        "path": "tests/e2e/ui-accessibility.spec.ts",
+        "sha256": "a55a5c6fdc2506d70c2840e75486d235a8c7440964376a2fa25ee88a7c65e504"
+      },
+      {
+        "bytes": 9674,
+        "path": "tests/e2e/vertical-slice.spec.ts",
+        "sha256": "67a01a7a4951c991231b59ce20bf3f9cacd6c11a1d4ee5ec86b88048ac931b18"
+      },
+      {
+        "bytes": 7413,
+        "path": "tests/integration/asset-type-api-limits.test.ts",
+        "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4"
+      },
+      {
+        "bytes": 18757,
+        "path": "tests/integration/asset-type-migration-storage.test.ts",
+        "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+      },
+      {
+        "bytes": 16520,
+        "path": "tests/integration/asset-type-migrations.test.ts",
+        "sha256": "c5ad40c323b3405243e95c9b33b62d81e86ab596bca361779219c489fb7aa407"
+      },
+      {
+        "bytes": 12504,
+        "path": "tests/integration/asset-type-storage.test.ts",
+        "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+      },
+      {
+        "bytes": 27847,
+        "path": "tests/integration/asset-types.test.ts",
+        "sha256": "08c5b7fd9aebea55d498b97b4c524e6e83eefb4c7e604b519996ec1932a2145e"
+      },
+      {
+        "bytes": 7798,
+        "path": "tests/integration/audit-integrity.test.ts",
+        "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad"
+      },
+      {
+        "bytes": 6000,
+        "path": "tests/integration/business-domain-asset-scope.test.ts",
+        "sha256": "d93449ab4014ee5feb45ab1fc30ce28c061675868139bf7595f79b815f5939a1"
+      },
+      {
+        "bytes": 43876,
+        "path": "tests/integration/business-domains-api.test.ts",
+        "sha256": "2ea88c68f5d96fffeecb80ed889b03ce7d0c40ffc30cb685d5aa9f1932dbc9a5"
+      },
+      {
+        "bytes": 23330,
+        "path": "tests/integration/business-domains-storage.test.ts",
+        "sha256": "1e1b0712c63bf957e33328285a42baad55adc07f1047cc53e7cdc608e8aff8f0"
+      },
+      {
+        "bytes": 8505,
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "eb1159e5c2f3004c3d90a82b2361c2665efff90d20b3eb18f8e58a7929ebd579"
+      },
+      {
+        "bytes": 7853,
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7"
+      },
+      {
+        "bytes": 9390,
+        "path": "tests/integration/model-migration-api.test.ts",
+        "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb"
+      },
+      {
+        "bytes": 12873,
+        "path": "tests/integration/model-migration-storage.test.ts",
+        "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+      },
+      {
+        "bytes": 22229,
+        "path": "tests/integration/model-migrations.test.ts",
+        "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+      },
+      {
+        "bytes": 8372,
+        "path": "tests/integration/model-pagination.test.ts",
+        "sha256": "0809f4e7711f3fea796edc1f87a82fc6ece9684c0c6483e4d506a233c4d0d0d2"
+      },
+      {
+        "bytes": 12559,
+        "path": "tests/integration/models.test.ts",
+        "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1"
+      },
+      {
+        "bytes": 29866,
+        "path": "tests/integration/relation-migration-api.test.ts",
+        "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db"
+      },
+      {
+        "bytes": 37926,
+        "path": "tests/integration/relation-participation-storage.test.ts",
+        "sha256": "3e85a9ead572f743fec618c0fe2cca042cf0005f79c63cac08cb4ddddf3c6765"
+      },
+      {
+        "bytes": 29130,
+        "path": "tests/integration/relation-storage.test.ts",
+        "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619"
+      },
+      {
+        "bytes": 55982,
+        "path": "tests/integration/relations.test.ts",
+        "sha256": "eef1490ff12eae279018027edfdbbbd9dee2bae739cf925e82f16fd81ecba760"
+      }
+    ],
+    "original_validators": [
+      {
+        "bytes": 14657,
+        "path": ".local/evidence/authority-hosted-attempt-2/source/verify-private-evidence.py",
+        "sha256": "39aa87c5dbbc47627538b17f708f8598fca7471be44afa19344fdf33132fb7ba"
+      },
+      {
+        "bytes": 13876,
+        "path": ".local/evidence/authority-hosted-attempt-2/development/verify-behavior.py",
+        "sha256": "f800a3da5f802019132701e524d8167d7adccb5467696ddfa6bd77cf4b5af5cf"
+      }
+    ],
+    "method": "Reused frozen successful independent audits, checked their original digests and all artifact originals, and re-read821 immutable blobs. No original validator, CodeQL scan, runtime or test was rerun during consolidation."
+  },
+  "private_provenance": [
+    {
+      "path": ".local/evidence/authority-hosted-attempt-2/source/source-qualification-handoff.json",
+      "sha256": "3eb6f2176ea273267ee2b92da982c6a81743c6c479f068721e7f78c9ba89f307",
+      "bytes": 80123
+    },
+    {
+      "path": ".local/evidence/authority-hosted-attempt-2/development/behavior-qualification-handoff.json",
+      "sha256": "e4c6a83883766ffe175a030e9a9b23d1536d21f25bcd5686e741c0cfc9e30be3",
+      "bytes": 214761
+    },
+    {
+      "path": ".local/evidence/authority-hosted-attempt-2/development/quality-secrets-handoff.json",
+      "sha256": "26d4753e2a7d2af2f436e594d8a20f40c2835b93ead3190d5f33f6e52160c4a5",
+      "bytes": 3157
+    }
+  ],
+  "prior_public_evidence_preserved": [
+    {
+      "path": "docs/verification/authority-hosted-attempt-1.json",
+      "sha256": "8ae42b56b0fdcc92b756becd7c34b157da7e165ab82de9da240b71b3d5742228",
+      "bytes": 88579
+    }
+  ],
+  "public_originals": [
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/actions/actions-summary.json",
+      "sha256": "4260950b1c2655ffcd164750d218953cf57abde84bb606f8ada54540985af9f0",
+      "bytes": 4150,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/actions/actions-summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/actions/actions.sarif",
+      "sha256": "7a3e786d941a57f02b13e548985fd45b8c9c0022d7f7a089dc8922c6637c43bc",
+      "bytes": 237708,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/actions/actions.sarif",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/actions/source-manifest.json",
+      "sha256": "e4164f1169ced020218e6654b5995955f54107876c6f7d07ccd415b779a3a020",
+      "bytes": 177148,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/actions/source-manifest.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/actions/summary.json",
+      "sha256": "3638d6691054d4407229bdd2ff9be0805ff9c2a19dc5c3d4e2e6271eaee386b9",
+      "bytes": 6253,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/actions/summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/actions/upload-status.json",
+      "sha256": "1301ed4bac76acd1cfc431a1843e04997269d84992e467d4363f81dff2c32b08",
+      "bytes": 290,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/actions/upload-status.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/python/python-summary.json",
+      "sha256": "297b09cd2c8e1824df713c65c38caeb14adf654becf0d2535f4422084d55542a",
+      "bytes": 4621,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/python/python-summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/python/python.sarif",
+      "sha256": "e8e92f98a493cb121a5920c3f1559f36b2a8e8cc1ec2cbc0659214f10c5c5dac",
+      "bytes": 312393,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/python/python.sarif",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/python/source-manifest.json",
+      "sha256": "e4164f1169ced020218e6654b5995955f54107876c6f7d07ccd415b779a3a020",
+      "bytes": 177148,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/python/source-manifest.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/python/summary.json",
+      "sha256": "ddc8aa4d5d94dc9c244131e5e0ede5cd918c6f5e38b56be03dfbbee718746ccd",
+      "bytes": 6786,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/python/summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/python/upload-status.json",
+      "sha256": "fbacfc8a96edc28c629576432e18f6a5b99f5cf7c03c559ada7bd20790593b30",
+      "bytes": 289,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/python/upload-status.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/javascript-typescript/javascript-typescript-summary.json",
+      "sha256": "5d758e356bad9081da88a4a7b55c0fb409ff5be9b1efc0b27ce1596b744ee366",
+      "bytes": 4645,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/javascript-typescript/javascript-typescript-summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/javascript-typescript/javascript-typescript.sarif",
+      "sha256": "d4e0a7896382162221828b1f1332a1528a134a72f7d83499c1a9cbc8aebe3766",
+      "bytes": 501009,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/javascript-typescript/javascript-typescript.sarif",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/javascript-typescript/source-manifest.json",
+      "sha256": "e4164f1169ced020218e6654b5995955f54107876c6f7d07ccd415b779a3a020",
+      "bytes": 177148,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/javascript-typescript/source-manifest.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/javascript-typescript/summary.json",
+      "sha256": "072c96c34388087aa00a5aa1b1bfa072ba1526772b5954b1dc887a48cb0c5a79",
+      "bytes": 6840,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/javascript-typescript/summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/source/javascript-typescript/upload-status.json",
+      "sha256": "4bbd154d681e3b0d4f30aac10ee12a3090098723f0a2b3756da13c6d03e7da23",
+      "bytes": 304,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/source/javascript-typescript/upload-status.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/dependency/dependency-inventory.json",
+      "sha256": "f69a7881dac6f18a70ab9054c51b1ff11361ec251011eae042fd0225d925d14d",
+      "bytes": 196104,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/dependency/dependency-inventory.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/secrets/secret-scan.json",
+      "sha256": "520aa01a5bde215d093bbc0f768cc0edaa26ab158ec9b9971b2f57fefdfaf13c",
+      "bytes": 1381,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/secrets/secret-scan.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/behavior/behavior-summary.json",
+      "sha256": "2c1b1f638e68bd9dd08bf82da1ff4a8eb2952abe5a131326cb94b247af63e7ca",
+      "bytes": 5041,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/behavior/behavior-summary.json",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-ar-dark-1440.png",
+      "sha256": "e5440d4ef7176ebe9ce5fb981b1aa98fc8a79ebb9ec67a5f321a46877ad98b86",
+      "bytes": 146224,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/behavior/catalog-ar-dark-1440.png",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-ar-dark-390.png",
+      "sha256": "4bd42ab890abca019d1d2e9c4e5c96b9115556d210d8ee5152afa5ae19305989",
+      "bytes": 69177,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/behavior/catalog-ar-dark-390.png",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-ar-dark-768.png",
+      "sha256": "41ac4b4115f917c0459ce15cf0803de236728c12f41505256b9b972575849c59",
+      "bytes": 105282,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/behavior/catalog-ar-dark-768.png",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-en-dark-1440.png",
+      "sha256": "9613cc8bb2094992dba66117a18c490964d3d63ef1f3f4e96e377ff45b2d52f4",
+      "bytes": 164532,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/behavior/catalog-en-dark-1440.png",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-en-light-1024.png",
+      "sha256": "a94f508fc8870716e743fe2dd50429f83fc4d34335df0f377f5dcf110e15877d",
+      "bytes": 146564,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/behavior/catalog-en-light-1024.png",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-en-light-1280.png",
+      "sha256": "502abb6c46feeaa0d9d72bdd49dba6624914dda1703b83ca2e9bbc3882126deb",
+      "bytes": 155373,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/behavior/catalog-en-light-1280.png",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-en-light-1440.png",
+      "sha256": "42b30b4eb59bd722c1f5f34ccc7306ed79a88ccc6e25ad39f8736b47e2f6ec8e",
+      "bytes": 163287,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/behavior/catalog-en-light-1440.png",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-en-light-390.png",
+      "sha256": "c9ac6d640ca67bc2db37341d7c8b820208fedc36d9ceecdd02fec3bd40a63355",
+      "bytes": 73882,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/behavior/catalog-en-light-390.png",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-en-light-768.png",
+      "sha256": "6381e98be445c661403e0546c3674c0f2265b4c8a5db7ab4647753c2cf406330",
+      "bytes": 111879,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/behavior/catalog-en-light-768.png",
+      "byte_identical": true
+    },
+    {
+      "path": "docs/verification/hosted-authority-attempt-2/development/behavior/catalog-history.png",
+      "sha256": "369b43fd06009d8190b392b8c8a95f0b717455196b1a5f243253e148755df4c4",
+      "bytes": 79814,
+      "original_private_path": ".local/evidence/authority-hosted-attempt-2/development/behavior/catalog-history.png",
+      "byte_identical": true
+    }
+  ],
+  "publication": {
+    "candidate_original_count": 29,
+    "published_original_count": 28,
+    "omitted_originals": [
+      {
+        "private_original": {
+          "path": ".local/evidence/authority-hosted-attempt-2/development/behavior/api-summary.json",
+          "sha256": "7301b2e6d29d9f5edb7f959970916987ffc0b6acac5c6da92eec24819e3ba712",
+          "bytes": 26692
+        },
+        "reason": "Pinned generic-api-key detector matched five source-file SHA256 map entries, each verified against the exact immutable Git blob. Original remains byte-identical privately; no scanner rule or original artifact was changed. This report retains all154 actual results and20 test-source hashes as path/SHA arrays.",
+        "confirmed_digest_matches": [
+          {
+            "source_path": "tests/integration/asset-type-api-limits.test.ts",
+            "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4",
+            "original_line": 950,
+            "immutable_git_blob_match": true
+          },
+          {
+            "source_path": "tests/integration/business-domains-api.test.ts",
+            "sha256": "2ea88c68f5d96fffeecb80ed889b03ce7d0c40ffc30cb685d5aa9f1932dbc9a5",
+            "original_line": 957,
+            "immutable_git_blob_match": true
+          },
+          {
+            "source_path": "tests/integration/model-api.test.ts",
+            "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7",
+            "original_line": 960,
+            "immutable_git_blob_match": true
+          },
+          {
+            "source_path": "tests/integration/model-migration-api.test.ts",
+            "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb",
+            "original_line": 961,
+            "immutable_git_blob_match": true
+          },
+          {
+            "source_path": "tests/integration/relation-migration-api.test.ts",
+            "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db",
+            "original_line": 966,
+            "immutable_git_blob_match": true
+          }
+        ]
+      }
+    ],
+    "initial_failed_scan": {
+      "path": ".local/evidence/authority-hosted-attempt-2-publication/candidate-1-scan.json",
+      "sha256": "f64a4cfecc861eb86b5e3a0d8a3aeb180611c29e26b55e61cf94d05df7dfa4fb",
+      "bytes": 10884
+    },
+    "scoped_secret_scan": {
+      "status": "PASS",
+      "tool": "gitleaks",
+      "version": "8.30.1",
+      "scope": "This report plus28 byte-identical allowlisted original artifacts,29 files total",
+      "finding_count": 0,
+      "limitations": [
+        "Exact local publication candidate only; no reachable-history or full-worktree scan in this check.",
+        "Detector pass is not proof that every possible secret is absent."
+      ],
+      "private_evidence": ".local/evidence/authority-hosted-attempt-2-publication/candidate-2-scan.json"
+    }
+  },
+  "limitations": [
+    "Qualification belongs to exact tested mergefa3e997d/head0fa61c. Later admission/decision code, postmerge execution, production runtime health and full-programme/release qualification are not established.",
+    "Raw TAP and Playwright reports were intentionally not exported. Safe summaries were reconciled to154 exact API and19 browser declarations; private raw bytes and individual upgrade/connector/seed/object-store subtest counts were not independently inspected.",
+    "Fourteen mandatory stages report runner-step success at this exact workflow. No subtest counts are inferred from those outcomes.",
+    "API runtime source comparison covers20 executed test files only. The821 source-scan blobs and workflow provenance do not independently prove application-image equivalence.",
+    "Ten explicit synthetic catalog PNGs are retained with hashes and dimensions. No new visual or accessibility review was performed; the26 domain captures belong to separate local evidence.",
+    "ZIP digests were observed by root in public UI. Extracted files were retained and independently hashed; ZIP bytes were not retained or independently rehashed.",
+    "Stored CodeQL analyses and all-state ref-scoped alerts are point-in-time readbacks. Published SARIF is byte-identical; stored SARIF bytes were not downloaded.",
+    "Expected extraction sets, policy and query source hashes were verified. Raw BQRS/decoded extraction tables and resolved query lists were not exported, so their digests were not independently recomputed.",
+    "Dependency inventory covers316 installed development-host packages:311 ALLOW,5 REVIEWED_EXCEPTION, zero unresolved. It is not a finished-artifact SBOM or complete image/Python/driver licensing qualification.",
+    "Pinned hosted Gitleaks reports zero worktree/history findings. Raw remote scanner logs and complete remote history snapshots were not exported; a detector pass is not proof that every secret is absent.",
+    "All prior evidence and private originals remain unchanged. No source/runtime/test/scanner rerun, Actions metadata/log/check API fallback or independent human sign-off is claimed. Local publication scanning is separate from hosted security qualification."
+  ]
+}
