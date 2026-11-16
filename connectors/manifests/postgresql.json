@@ -62,13 +62,19 @@
       ]
     },
     "table_lineage": {
-      "implemented": false,
-      "tested_source_versions": [],
-      "verification_level": null,
-      "limitations": [
-        "No implementation or verification for this connector feature."
+      "implemented": true,
+      "tested_source_versions": [
+        "PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2)"
       ],
-      "test_evidence": []
+      "verification_level": "V2",
+      "limitations": [
+        "Bounded native pg_rewrite/pg_depend table/view dependencies within one successful registered-source scan.",
+        "Routine bodies, out-of-scope relations and unsupported relation kinds are explicit gaps. No SQL bodies, output-column mappings or cross-system stitching are inferred.",
+        "Local synthetic Linux arm64 source only; other versions and external deployments remain unqualified."
+      ],
+      "test_evidence": [
+        "docs/verification/postgresql-lineage-source-local.json"
+      ]
     },
     "column_lineage": {
       "implemented": false,
@@ -107,13 +113,18 @@
       "test_evidence": []
     },
     "dq_pushdown": {
-      "implemented": false,
-      "tested_source_versions": [],
-      "verification_level": null,
-      "limitations": [
-        "No implementation or verification for this connector feature."
+      "implemented": true,
+      "tested_source_versions": [
+        "PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2)"
       ],
-      "test_evidence": []
+      "verification_level": "V2",
+      "limitations": [
+        "Bounded exact completeness/null-count execution on a single PostgreSQL column, with immutable thresholds and aggregate-only results.",
+        "No source-row samples or source writes. Other quality rule families, broad profiling and external deployments remain unqualified."
+      ],
+      "test_evidence": [
+        "docs/verification/product-quality-local.json"
+      ]
     },
     "classification": {
       "implemented": false,
@@ -211,10 +222,10 @@
   "configuration_status": "deployment-specific",
   "runtime_health": "deployment-specific",
   "limitations": [
-    "Required PostgreSQL lineage, profiling, DQ and scoped native grant capabilities remain unimplemented; metadata-only flag is not full CX-001 completion.",
+    "PostgreSQL coverage remains partial: SQL/column/cross-system lineage, broad profiling, other DQ rule families and scoped native grant capabilities remain required.",
     "No deletion occurs on failed or incomplete scans.",
     "Database/cluster recreation and recycled OID detection are not implemented; source-epoch reconciliation remains required and unverified."
   ],
   "manifest_version": "1.0",
-  "verification_scope": "metadata flag only; overall PostgreSQL requirement remains partial"
+  "verification_scope": "Metadata, bounded native table/view dependencies and aggregate completeness execution on the exact local source; overall PostgreSQL requirement remains partial"
 }

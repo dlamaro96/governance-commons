@@ -60,6 +60,9 @@ test('LIN-001/004/006: real PostgreSQL view dependencies, evidence, paged explor
  await panel.getByRole('combobox',{name:'Direction',exact:true}).selectOption('upstream');expect(await observedBody(await upstreamResponse)).toEqual(observed);
  await expect(panel.getByRole('region',{name:'Dependency graph',exact:true})).toBeVisible();await expect(panel.locator('.react-flow__node')).toHaveCount(3);await expect(panel.locator('.react-flow__edge')).toHaveCount(2);
  await expect(panel.getByText('Column mappings have not been collected.',{exact:true})).toBeVisible();await expect(panel.getByText('SQL bodies have not been analyzed.',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Colour theme: Dark',exact:true}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
+ expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations).toEqual([]);
+ await page.getByRole('button',{name:'Colour theme: Light',exact:true}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','light');
  await panel.scrollIntoViewIfNeeded();await capture(page,info,'graph-en',1440);
  await panel.getByRole('button',{name:'Dependency table',exact:true}).click();await expect(panel.getByRole('table',{name:'Dependency table',exact:true}).locator('tbody tr')).toHaveCount(2);
  const inspect=panel.getByRole('button',{name:'Inspect evidence: customers → customer_order_summary',exact:true});
