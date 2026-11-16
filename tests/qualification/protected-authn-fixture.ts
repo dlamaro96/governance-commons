@@ -83,9 +83,9 @@ export async function provider(t:TestContext,f:ProbeFixture){
  return {oidc,setSubject(value:string){subject=value;},setMode(value:TokenMode){mode=value;},onExchange(fn:()=>Promise<void>){beforeToken=fn;},bind(url:string,cookie:string){const u=new URL(url);nonce=u.searchParams.get('nonce')!;verifierChallenge=u.searchParams.get('code_challenge')!;attemptId=cookie.split('=')[1]!.split('.')[0]!;},stats:()=>({exchanges,observedCommitted})};
 }
 export async function broker(t:TestContext,f:ProbeFixture,oidc:OidcClient,authentication:BrokerAuthentication=createAuthenticationClient(f.loginPool)){
- const app=buildLoginBroker({config:f.config,authentication,oidc,readiness:async()=>{}});return serve(t,app);
+ const app=await buildLoginBroker({config:f.config,authentication,oidc,readiness:async()=>{}});return serve(t,app);
 }
-export async function sessionApp(t:TestContext,f:ProbeFixture){return serve(t,createSessionApp(f.config,createAuthenticationClient(f.apiPool),async()=>{}));}
+export async function sessionApp(t:TestContext,f:ProbeFixture){return serve(t,await createSessionApp(f.config,createAuthenticationClient(f.apiPool),async()=>{}));}
 export async function serve(t:TestContext,app:FastifyInstance){const url=await app.listen({port:0,host:'127.0.0.1'});t.after(()=>app.close());return {app,url};}
 export async function request(url:string,path:string,init:RequestInit={}):Promise<Response>{
  const target=new URL(url+path),base=new URL(url);

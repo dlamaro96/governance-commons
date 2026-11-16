@@ -37,9 +37,9 @@ test('protected config and native pools reject origin/credential fallback and pi
  for(const url of ['', 'postgres://gc_app:synthetic@postgres/governance','postgres://gc_owner:synthetic@postgres/governance','postgres://gc_authn_api:synthetic@postgres/governance?options=-crole%3Dgc_owner','postgres://gc_authn_api@postgres/governance','postgres://gc_authn_api:synthetic@postgres/','file:///tmp/socket']) assert.throws(()=>nativePoolOptions('api',url,'isolated-test'));
 });
 test('real Fastify transport enforces host, duplicate headers, raw body and safe failure redaction', async () => {
- const app=createAuthnApp(config);let calls=0;app.post('/authn/probe',async request=>{calls++;return request.body;});app.get('/authn/error',async()=>{throw Error('private credential must not appear');});
+ const app=await createAuthnApp(config);let calls=0;app.post('/authn/probe',async(request,reply)=>{calls++;return reply.type('application/json').send({body:request.body});});app.get('/authn/error',async()=>{throw Error('private credential must not appear');});
  try {
-  const valid=await app.inject({method:'POST',url:'/authn/probe',headers:{...host,'content-type':'application/json'},payload:'{"n":1}'});assert.equal(valid.statusCode,200);assert.deepEqual(valid.json(),{n:1});
+  const valid=await app.inject({method:'POST',url:'/authn/probe',headers:{...host,'content-type':'application/json'},payload:'{"n":1}'});assert.equal(valid.statusCode,200);assert.deepEqual(valid.json(),{body:{n:1}});
   for(const payload of ['{"x":1,"x":2}','{"x":1,"\\u0078":2}','x'.repeat(2049)]) {const response=await app.inject({method:'POST',url:'/authn/probe',headers:{...host,'content-type':'application/json'},payload});assert.equal(response.statusCode,400);}
   for(const headers of [{host:'wrong.invalid'},{...host,origin:['https://one.invalid','https://two.invalid']},{...host,'x-csrf-token':['a','b']},{...host,cookie:['a=b','c=d']}]) {const response=await app.inject({method:'POST',url:'/authn/probe',headers:{...headers,'content-type':'application/json'} as unknown as IncomingHttpHeaders,payload:'{}'});assert.equal(response.statusCode,400);}
   assert.equal(calls,1);
@@ -49,25 +49,70 @@ test('real Fastify transport enforces host, duplicate headers, raw body and safe
 });
 test('cookie families reject duplicates and serialize matching secure clear attributes',async()=>{
  for(const selected of [config,{publicOrigin:'https://app.example',environment:'production' as const}]){
-  const app=createAuthnApp(selected);const names=cookieNames(selected);const value=randomSecret();app.get('/authn/cookies',async(request,reply)=>{const jar=cookies(request,selected);setAuthnCookie(reply,selected,'session',value,new Date(Date.now()+100_000).toISOString());clearAuthnCookies(reply,selected,['csrf','attempt']);return jar;});
+  const app=await createAuthnApp(selected);const names=cookieNames(selected);const value=randomSecret();app.get('/authn/cookies',async(request,reply)=>{const jar=cookies(request,selected);setAuthnCookie(reply,selected,'session',value,new Date(Date.now()+100_000).toISOString());clearAuthnCookies(reply,selected,['csrf','attempt']);return jar;});
   try {const h={host:new URL(selected.publicOrigin).host};const response=await app.inject({url:'/authn/cookies',headers:{...h,cookie:names.session+'='+value}});assert.equal(response.statusCode,200);const set=response.headers['set-cookie']as string[];assert.equal(set.length,3);assert.ok(set.every(x=>x.includes('HttpOnly')&&x.includes('SameSite=Lax')&&!x.includes('Domain=')));assert.ok(set.every(x=>x.includes(selected.environment==='production'?'Path=/;':'Path=/authn;')));assert.equal(set[0]!.includes('; Secure'),selected.environment==='production');assert.ok(set[1]!.includes('Max-Age=0'));assert.equal(response.json().session,value);
    for(const cookie of [names.session+'='+value+'; '+names.session+'='+value,names.session+'=percent%2Dvalue','__Host-gc_authn_session='+value+'; gc_authn_session='+value]) assert.equal((await app.inject({url:'/authn/cookies',headers:{...h,cookie}})).statusCode,400);
   }finally{await app.close();}
  }
 });
 test('real process admission retains16 occupied handlers and refuses excess',async()=>{
- const app=createAuthnApp(config);let started=0;const releases:(()=>void)[]=[];app.get('/authn/wait',async request=>{started++;await new Promise<void>(resolve=>releases.push(resolve));assert.equal(requestAbortSignal(request).aborted,false);return {done:true};});
+ const app=await createAuthnApp(config);let started=0;const releases:(()=>void)[]=[];app.get('/authn/wait',async request=>{started++;await new Promise<void>(resolve=>releases.push(resolve));assert.equal(requestAbortSignal(request).aborted,false);return {done:true};});
  const pending=Array.from({length:16},()=>app.inject({url:'/authn/wait',headers:host}));
  try{while(started!==16)await new Promise(resolve=>setImmediate(resolve));assert.equal((await app.inject({url:'/authn/wait',headers:host})).statusCode,503);assert.equal(started,16);releases.forEach(resolve=>resolve());assert.ok((await Promise.all(pending)).every(x=>x.statusCode===200));}finally{releases.forEach(resolve=>resolve());await app.close();}
 });
 test('login rate identity ignores forged forwarding headers and request IDs',async()=>{
- const app=createAuthnApp(config,{loginRateLimit:true});app.get('/authn/login',async()=>({ready:true}));app.get('/health/ready',async()=>({ready:true}));try{for(let i=0;i<35;i++)assert.equal((await app.inject({url:'/health/ready',headers:host})).statusCode,200);for(let i=0;i<30;i++){const response=await app.inject({url:'/authn/login',headers:{...host,'x-forwarded-for':'203.0.113.'+i,'x-request-id':'attacker'}});assert.equal(response.statusCode,200);assert.notEqual(response.headers['x-correlation-id'],'attacker');}assert.equal((await app.inject({url:'/authn/login',headers:{...host,'x-forwarded-for':'different'}})).statusCode,429);}finally{await app.close();}
+ const app=await createAuthnApp(config,{loginRateLimit:true});app.get('/authn/login',async()=>({ready:true}));app.get('/health/ready',async()=>({ready:true}));try{for(let i=0;i<35;i++)assert.equal((await app.inject({url:'/health/ready',headers:host})).statusCode,200);for(let i=0;i<30;i++){const response=await app.inject({url:'/authn/login',headers:{...host,'x-forwarded-for':'203.0.113.'+i,'x-request-id':'attacker'}});assert.equal(response.statusCode,200);assert.notEqual(response.headers['x-correlation-id'],'attacker');}assert.equal((await app.inject({url:'/authn/login',headers:{...host,'x-forwarded-for':'different'}})).statusCode,429);}finally{await app.close();}
 });
 test('transport secrets are independent32byte values with exact constant-time equality',()=>{
  const a=randomSecret(),b=randomSecret();assert.match(a,/^[A-Za-z0-9_-]{43}$/);assert.notEqual(a,b);assert.equal(Buffer.from(a,'base64url').length,32);assert.equal(equalSecret(a,a),true);assert.equal(equalSecret(a,b),false);assert.equal(equalSecret(a,a+'x'),false);assert.match(sha256(a),/^[0-9a-f]{64}$/);
 });
 
 test('actual HTTP parser oversizedheaders failclosed withsafeJSON correlation andnoprivateecho',async()=>{
- const app=createAuthnApp(config);let calls=0;app.get('/authn/session',async()=>{calls++;return {unsafe:true};});
+ const app=await createAuthnApp(config);let calls=0;app.get('/authn/session',async()=>{calls++;return {unsafe:true};});
  try{const address=await app.listen({host:'127.0.0.1',port:0});const result=await new Promise<{status:number|undefined;headers:IncomingHttpHeaders;body:string}>((resolve,reject)=>{const req=httpRequest(address+'/authn/session',{headers:{...host,'x-private-probe':'do-not-echo-'+ 'x'.repeat(17_000)}},response=>{let body='';response.setEncoding('utf8');response.on('data',part=>{body+=part;});response.on('end',()=>resolve({status:response.statusCode,headers:response.headers,body}));});req.on('error',reject);req.end();});assert.equal(result.status,400);assert.equal(result.headers['content-type'],'application/problem+json');assert.equal(result.headers['cache-control'],'no-store');assert.equal(result.body.includes('do-not-echo'),false);const body=JSON.parse(result.body);assert.equal(body.code,'AUTHN_REQUEST_INVALID');assert.match(body.correlationId,/^[0-9a-f-]{36}$/);assert.equal(result.headers['x-correlation-id'],body.correlationId);assert.equal(calls,0);}finally{await app.close();}
+});
+
+
+test('shared rate budget covers all routes and refuses before handler work with safe errors', async () => {
+ const app = await createAuthnApp(config);
+ let calls = 0;
+ app.get('/authn/one', async () => { calls++; return { ready: true }; });
+ app.post('/authn/two', async () => { calls++; return { ready: true }; });
+ try {
+  for (let index = 0; index < AUTHN_LIMITS.requestsPerMinute; index++) {
+   const response = await app.inject({ method: index % 2 ? 'POST' : 'GET', url: index % 2 ? '/authn/two' : '/authn/one',
+    remoteAddress: '192.0.2.1', headers: { ...host, 'x-forwarded-for': `203.0.113.${index}`, 'x-request-id': 'forged' } });
+   assert.equal(response.statusCode, 200);
+  }
+  for (const url of ['/authn/one', '/authn/two']) {
+   const response = await app.inject({ method: url.endsWith('two') ? 'POST' : 'GET', url, remoteAddress: '192.0.2.1',
+    headers: { ...host, 'x-forwarded-for': '198.51.100.2', forwarded: 'for=198.51.100.3' } });
+   assert.equal(response.statusCode, 429);
+   assert.equal(response.json().code, 'AUTHN_RATE_LIMITED');
+   assert.equal(response.json().status, 429);
+   assert.equal(response.headers['cache-control'], 'no-store');
+   assert.equal(response.headers['content-type'], 'application/problem+json; charset=utf-8');
+   assert.equal(response.headers['x-content-type-options'], 'nosniff');
+   assert.match(response.json().correlationId, /^[0-9a-f-]{36}$/);
+   assert.equal(response.headers['x-correlation-id'], response.json().correlationId);
+   assert.ok(Number(response.headers['retry-after']) > 0);
+   assert.equal(response.headers['set-cookie'], undefined);
+  }
+  assert.equal(calls, AUTHN_LIMITS.requestsPerMinute);
+  assert.equal((await app.inject({ url: '/authn/one', remoteAddress: '192.0.2.2', headers: host })).statusCode, 200);
+  assert.equal(calls, AUTHN_LIMITS.requestsPerMinute + 1);
+ } finally { await app.close(); }
+});
+
+test('JSON transport fixture cannot reflect a submitted HTML string as an HTML document', async () => {
+ const app = await createAuthnApp(config);
+ app.post('/authn/probe', async (request, reply) => reply.type('application/json').send({ body: request.body }));
+ try {
+  const value = '<script>syntheticProbe()</script>';
+  const response = await app.inject({ method: 'POST', url: '/authn/probe', headers: { ...host, 'content-type': 'application/json' }, payload: JSON.stringify(value) });
+  assert.equal(response.statusCode, 200);
+  assert.equal(response.headers['content-type'], 'application/json; charset=utf-8');
+  assert.equal(response.headers['x-content-type-options'], 'nosniff');
+  assert.deepEqual(response.json(), { body: value });
+ } finally { await app.close(); }
 });

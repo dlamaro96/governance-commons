@@ -11,7 +11,7 @@ async function start(): Promise<void> {
  try {
   await verifyNativeAuthenticationPool(pool, 'api');
   const client = createAuthenticationClient(pool);
-  const app = createSessionApp(config, { sessionInspect: client.sessionInspect, sessionSelect: client.sessionSelect, sessionRevoke: client.sessionRevoke }, () => verifyNativeAuthenticationPool(pool, 'api'));
+  const app = await createSessionApp(config, { sessionInspect: client.sessionInspect, sessionSelect: client.sessionSelect, sessionRevoke: client.sessionRevoke }, () => verifyNativeAuthenticationPool(pool, 'api'));
   app.addHook('onClose', async () => { await pool.end(); });
   for (const signal of ['SIGINT', 'SIGTERM'] as const) process.once(signal, () => { void app.close(); });
   await app.listen({ host: '0.0.0.0', port: 4313 });

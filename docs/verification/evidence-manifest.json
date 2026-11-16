@@ -1376,6 +1376,30 @@
       },
       "runtime_authority_activated": false,
       "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-hosted-source-attempt-1.json",
+      "scope": "PR22 protected authentication source finding and correction evidence; no new runtime or release qualification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "FAIL_HOSTED_SOURCE_FINDINGS",
+      "source_binding": {
+        "base_revision": "74b2acbf5a579261c070e0671fb05176e408b726",
+        "evidence_sha256": "a53f2d69e27d4068d77f75503e35211f27a72562e618bc115b646e6646da6cc8"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-rate-limit-host.json",
+      "scope": "PR22 protected authentication source finding and correction evidence; no new runtime or release qualification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_HOST_REGRESSION_ONLY",
+      "source_binding": {
+        "base_revision": "74b2acbf5a579261c070e0671fb05176e408b726",
+        "evidence_sha256": "4b18473b6428674408252972e92cdd66a808792215e67e38d4f47ab0af8bae7b"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
     }
   ],
   "limitations": [

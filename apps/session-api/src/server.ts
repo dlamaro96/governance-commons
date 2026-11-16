@@ -5,9 +5,9 @@ import type { PublicAuthnConfig, SessionAuthentication, ProtectedSessionResponse
 import { AuthnHttpError, createAuthnApp, noQuery, cookies, requireMutation, sha256, randomSecret,
  clearAuthnCookies, setAuthnCookie, mapAuthenticationError, sendAuthnError, requestAbortSignal, markLogoutAdmitted } from '../../../packages/authn/src/transport.ts';
 import { PAGE, SCRIPT, STYLE } from './ui.ts';
-export function createSessionApp(config: PublicAuthnConfig, authentication: SessionAuthentication,
- readiness: () => Promise<void>): FastifyInstance {
- const app = createAuthnApp(config);
+export async function createSessionApp(config: PublicAuthnConfig, authentication: SessionAuthentication,
+ readiness: () => Promise<void>): Promise<FastifyInstance> {
+ const app = await createAuthnApp(config);
  app.get('/health/ready', async (request, reply) => {
   noQuery(request);
   try { await readiness(); if (requestAbortSignal(request).aborted) return reply; return { ready: true }; }

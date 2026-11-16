@@ -36,5 +36,5 @@ export const AUTHN_LIMITS = Object.freeze({
  requestTimeoutMs: 20_000, connectTimeoutMs: 5_000, statementTimeoutMs: 5_000,
  lockTimeoutMs: 2_000, idleTransactionTimeoutMs: 5_000,
  metadataTimeoutMs: 5_000, tokenTimeoutMs: 10_000, jwksCacheMs: 300_000,
- jwksCooldownMs: 30_000, loginRequestsPerMinute: 30,
+ jwksCooldownMs: 30_000, loginRequestsPerMinute: 30, requestsPerMinute: 300,
 });

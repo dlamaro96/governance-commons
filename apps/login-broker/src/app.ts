@@ -23,8 +23,8 @@ function callbackQuery(rawUrl:string,issuer:string):Readonly<{state:string;code?
  return isError?{state,error:bounded(query.error,256)}:{state,code:bounded(query.code,L.codeBytes)};
 }
 /** The injected client is the committed native login-only protocol; no legacy principal exists here. */
-export function buildLoginBroker({config:input,authentication,oidc,readiness}:{config:BrokerOidcConfig;authentication:BrokerAuthentication;oidc:OidcClient;readiness:()=>Promise<void>}):FastifyInstance {
- const config=validateBrokerOidcConfig(input),app=createAuthnApp(config,{loginRateLimit:true});
+export async function buildLoginBroker({config:input,authentication,oidc,readiness}:{config:BrokerOidcConfig;authentication:BrokerAuthentication;oidc:OidcClient;readiness:()=>Promise<void>}):Promise<FastifyInstance> {
+ const config=validateBrokerOidcConfig(input),app=await createAuthnApp(config,{loginRateLimit:true});
  app.get('/health/ready',async(request,reply)=>{
   try{noQuery(request);await oidc.initialize();await readiness();if(requestAbortSignal(request).aborted)return reply;return {ready:true};}
   catch(error){return sendAuthnError(reply,error instanceof AuthnHttpError&&error.code==='AUTHN_REQUEST_INVALID'?'AUTHN_REQUEST_INVALID':'AUTHN_UNAVAILABLE');}

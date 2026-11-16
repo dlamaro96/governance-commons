@@ -1,5 +1,12 @@
 # Current state — 2026-11-16
 
+## Protected hosted source finding and correction — 2026-11-16T10:43Z
+
+PR22 source run43849455765 on74b2acb/tested8dc61b8 completes all three analyses and exact coverage(237 JavaScript/TypeScript,43 Python,2 Actions), then correctly fails on9 high missing-rate-limiting findings and1 reflected-XSS test response. All15 original artifacts are preserved; independent immutable1050-file/tree/source/policy checks and stored3-analysis/all-state10-open-alert readback agree. Python, Actions and policy pass; aggregateFAIL. Development43849455714 remains running at this checkpoint; quality/secrets pass in UI. No failure is relabeled.
+
+The correction registers standard @fastify/rate-limit before route declaration, sharing300/minute per direct socket address across each protected service while retaining30/minute login+callback and16-inflight caps. Factory/call sites await registration; the test echo now returns an explicit JSON envelope. All487 host units and root/webtypes pass on241 before/after-stable sources. Three new regressions cover global mixed-route quota, spoofed forwarding headers, safe429, JSON HTML-string transport and session mutations refusing before database/cookie effects. Independent automated read-only review found no blocker. Real SQL/OIDC/browser rerun, corrected-source hosted scanning and baked-image execution remain required. Runtime endsSQL012 and content authority remains inactive. See protected-authentication-hosted-source-attempt-1.json and protected-authentication-rate-limit-host.json.
+
+
 ## Current checkpoint — 2026-11-16T10:20Z
 
 Protected launch9 passes on committed source d5c7d8aa9f3cd592fd13117c2c267ced6767270b:15 native HTTP/SQL cases,2 real Keycloak browser journeys,131 unchanged source files and all8 fresh original-frame reviews. The owned-browser supervisor records1 registered browser group,31 tracked processes and zero remaining/conflicted/unresolved processes; exact Docker before/after inventories match. Its14 real host subprocess regressions and65 publisher cases pass with independent source review. Prior launch8 and all failed attempts remain unchanged; a643873 preserves every129 executed launch8 source byte. New evidence is in protected-authentication-local-attempt-9.json, visual-review-attempt-9.json and cleanup-qualification.json. Local execution is mounted-source only; fresh hosted immutable-image qualification remains pending.

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import { createServer } from 'node:http';
+import rateLimit from '@fastify/rate-limit';
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
 import { parseAuthorityInputFile } from '../../authority/src/admission.ts';
 import { safeAuthenticationError } from '../../authority/src/authentication.ts';
@@ -146,7 +147,7 @@ export function requestAbortSignal(request: FastifyRequest): AbortSignal {
  if (!state) throw new AuthnHttpError('AUTHN_UNAVAILABLE');
  return state.controller.signal;
 }
-export function createAuthnApp(config: PublicAuthnConfig, options: { loginRateLimit?: boolean } = {}): FastifyInstance {
+export async function createAuthnApp(config: PublicAuthnConfig, options: { loginRateLimit?: boolean } = {}): Promise<FastifyInstance> {
  const admitted = validatePublicAuthnConfig(config), host = new URL(admitted.publicOrigin).host;
  const app = Fastify({ exposeHeadRoutes: false, logger: false, trustProxy: false, bodyLimit: AUTHN_LIMITS.bodyBytes,
   requestTimeout: AUTHN_LIMITS.requestTimeoutMs, connectionTimeout: AUTHN_LIMITS.requestTimeoutMs,
@@ -158,6 +159,12 @@ export function createAuthnApp(config: PublicAuthnConfig, options: { loginRateLi
    const body = JSON.stringify({ type: 'about:blank', title: 'AUTHN_REQUEST_INVALID', status: 400, code: 'AUTHN_REQUEST_INVALID', correlationId });
    socket.end('HTTP/1.1 400 Bad Request\r\nConnection: close\r\nContent-Type: application/problem+json\r\nCache-Control: no-store\r\nReferrer-Policy: no-referrer\r\nX-Content-Type-Options: nosniff\r\nContent-Security-Policy: default-src \'none\'; frame-ancestors \'none\'\r\nX-Correlation-Id: ' + correlationId + '\r\nContent-Length: ' + Buffer.byteLength(body) + '\r\n\r\n' + body);
   },
+ });
+ // Complete registration before callers add any route. The shared per-socket
+ // budget covers readiness, reads and mutations, with no forwarding-header trust.
+ await app.register(rateLimit, { max: AUTHN_LIMITS.requestsPerMinute, timeWindow: 60_000, cache: 1024,
+  keyGenerator: request => request.raw.socket.remoteAddress ?? 'unknown',
+  errorResponseBuilder: () => new AuthnHttpError('AUTHN_RATE_LIMITED'), skipOnError: false,
  });
  app.removeAllContentTypeParsers();
  app.addContentTypeParser('application/json', { parseAs: 'buffer', bodyLimit: AUTHN_LIMITS.bodyBytes }, (_request, body, done) => {

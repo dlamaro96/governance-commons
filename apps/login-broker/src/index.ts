@@ -18,7 +18,7 @@ async function main():Promise<void>{
  try{
   await verifyNativeAuthenticationPool(pool,'login');
   const oidc=createOidcClient(config);await oidc.initialize();
-  const app=buildLoginBroker({config,authentication:createAuthenticationClient(pool),oidc,readiness:()=>verifyNativeAuthenticationPool(pool,'login')});
+  const app=await buildLoginBroker({config,authentication:createAuthenticationClient(pool),oidc,readiness:()=>verifyNativeAuthenticationPool(pool,'login')});
   app.addHook('onClose',async()=>{await pool.end();});
   const port=Number(process.env.PORT??4312),host=process.env.HOST??'0.0.0.0';
   if(!Number.isSafeInteger(port)||port<1||port>65535||!['0.0.0.0','127.0.0.1','::1'].includes(host))throw new Error('AUTHN_CONFIGURATION_INVALID');
