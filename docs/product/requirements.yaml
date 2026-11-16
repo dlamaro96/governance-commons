@@ -53648,7 +53648,11 @@
         "packages/domain/src/graph-asset-persistence.ts",
         "apps/api/src/relation-migrations.ts",
         "apps/web/src/pages/RelationMigrations.tsx",
-        "docs/runbooks/relation-participation.md"
+        "docs/runbooks/relation-participation.md",
+        "packages/authority/src/actions.ts",
+        "packages/authority/src/policy.ts",
+        "packages/authority/src/types.ts",
+        "packages/authority/src/expressions.ts"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -53664,7 +53668,10 @@
         "tests/integration/relation-participation-storage.test.ts",
         "tests/qualification/relation-participation-concurrency.test.ts",
         "tests/qualification/relation-preparation-expiry.test.ts",
-        "tests/e2e/relation-migrations.spec.ts"
+        "tests/e2e/relation-migrations.spec.ts",
+        "tests/unit/authority-policy.test.ts",
+        "tests/unit/authority-compatibility.test.ts",
+        "tests/unit/authority-expressions.test.ts"
       ],
       "verification": {
         "fixture": {
@@ -53697,7 +53704,9 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
         "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five independently spot-checked by the root agent, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
         "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Pure authority contribution only: the strict typed policy parser, declared-set normalization/canonical hashing and literal legacy-action compatibility mapping are implemented. The independent oracle covers all 1,024 subsets of ten permissions against 103 actions; no administration, field or service grant is installed. The historical report passes 22 focused and 232 full unit tests plus root/web types; the separate integrated-domain report passes 279 full unit tests including those 22 cases and root/web types. External documents must enter through raw 65,536-byte parsePolicyFile admission; object/catalog/permission APIs require trusted caller admission, because own-key reflection over arbitrary preexisting object metadata is not globally bounded. These are pure/local source-bound results only. Runtime evaluation, PostgreSQL/OpenSearch compilation and equivalence, policy administration, simulator, trusted fact/field adapters, scoped grants, revocation and all-ingress activation remain unimplemented by this increment; verification and release outcomes are unchanged.",
+        "Pure predicate interpreter increment only: evaluatePolicyExpression implements all admitted AST operators with match/no-match/indeterminate, complete-child fail-closed evaluation, exact request-role tuple checks, canonical supplied UTC and explicit unavailable facts. It passes 16 focused tests and, after domain test-repair integration, 295 full unit tests with root/web types and 206 stable source/config/contract hashes (42 TSX). The producer must still prove current canonical membership, grants, delegation, field/fact provenance and bounded admission. This module does not authorize a request, aggregate policy effects, load facts, compile PostgreSQL/OpenSearch filters, administer policy, simulate access or activate runtime authority. Existing historical reports remain unchanged; full verification and release outcomes remain NOT_RUN."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -53719,7 +53728,10 @@
         "docs/verification/relation-participation-graph-copy-pure.json",
         "docs/verification/relation-participation-graph-copy-upgrade.json",
         "docs/verification/m2-relation-participation-api-graph-copy.json",
-        "docs/verification/m2-relation-participation-ui.json"
+        "docs/verification/m2-relation-participation-ui.json",
+        "docs/verification/authority-pure.json",
+        "docs/verification/authority-pure-domain-integration.json",
+        "docs/verification/authority-expressions.json"
       ]
     },
     {
@@ -53862,9 +53874,18 @@
         "Use a typed, bounded policy AST/DSL, not JavaScript/Python/SQL supplied by users. Allowed predicates are schema-validated and include subject/group/role, action, resource type/domain/classification, approved tags, purpose, environment and time bounds. Explicitly define deny precedence, inheritance conflicts, missing attributes and evaluation errors. Unknown or invalid conditions fail closed. Compile supported read predicates into safe parameterized PostgreSQL and OpenSearch filters; test semantic equivalence between compiled filters and the reference evaluator. Disallow unsupported predicates from search/aggregation paths until a correct execution plan exists. A policy simulator explains the decision, matching rules and effective permissions without leaking attributes the caller cannot see."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/authority/src/actions.ts",
+        "packages/authority/src/policy.ts",
+        "packages/authority/src/types.ts",
+        "packages/authority/src/expressions.ts"
+      ],
+      "test_ids": [
+        "tests/unit/authority-policy.test.ts",
+        "tests/unit/authority-compatibility.test.ts",
+        "tests/unit/authority-expressions.test.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -53892,9 +53913,17 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Pure authority contribution only: the strict typed policy parser, declared-set normalization/canonical hashing and literal legacy-action compatibility mapping are implemented. The independent oracle covers all 1,024 subsets of ten permissions against 103 actions; no administration, field or service grant is installed. The historical report passes 22 focused and 232 full unit tests plus root/web types; the separate integrated-domain report passes 279 full unit tests including those 22 cases and root/web types. External documents must enter through raw 65,536-byte parsePolicyFile admission; object/catalog/permission APIs require trusted caller admission, because own-key reflection over arbitrary preexisting object metadata is not globally bounded. These are pure/local source-bound results only. Runtime evaluation, PostgreSQL/OpenSearch compilation and equivalence, policy administration, simulator, trusted fact/field adapters, scoped grants, revocation and all-ingress activation remain unimplemented by this increment; verification and release outcomes are unchanged.",
+        "Pure predicate interpreter increment only: evaluatePolicyExpression implements all admitted AST operators with match/no-match/indeterminate, complete-child fail-closed evaluation, exact request-role tuple checks, canonical supplied UTC and explicit unavailable facts. It passes 16 focused tests and, after domain test-repair integration, 295 full unit tests with root/web types and 206 stable source/config/contract hashes (42 TSX). The producer must still prove current canonical membership, grants, delegation, field/fact provenance and bounded admission. This module does not authorize a request, aggregate policy effects, load facts, compile PostgreSQL/OpenSearch filters, administer policy, simulate access or activate runtime authority. Existing historical reports remain unchanged; full verification and release outcomes remain NOT_RUN."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/authority-pure.json",
+        "docs/verification/authority-pure-domain-integration.json",
+        "docs/verification/authority-expressions.json"
+      ]
     },
     {
       "id": "SYS-SEC-002.04",

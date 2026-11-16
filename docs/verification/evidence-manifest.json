@@ -1033,6 +1033,34 @@
       }
     },
     {
+      "path": "docs/verification/authority-pure.json",
+      "scope": "Strict pure policy parsing/normalization/hash and closed compatibility mapping only: 22 focused and 232 full unit tests, root/web types, independent 1,024-subset/103-action oracle; no evaluator, SQL or runtime authority qualification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_RECORDED_PURE_AND_TYPECHECK_SCOPE",
+      "source_binding": {
+        "base_commit": "b58d36ade127407750d1c51e37c2c4000baa883a",
+        "verified_source_files": 162,
+        "method": "Exact before/after file hashes include the untracked pure additions; the base commit alone does not contain them. Original execution, input-admission limitations and failed attempts remain in the unchanged report.",
+        "evidence_sha256": "4abadab5822e48c02dd6be330e22996b490619e44d2a09f21035e10525fcfa02"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
+    },
+    {
+      "path": "docs/verification/authority-pure-domain-integration.json",
+      "scope": "Separate actual combined domain/authority host regression: 279 full unit tests including 22 authority cases and root/web types; five authority source/test files equal the historical report. No domain runtime rerun or authority activation.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_COMBINED_DOMAIN_UNIT_AND_TYPECHECK_SCOPE",
+      "source_binding": {
+        "base_commit": "c6c27bcf2fcf68fc48a5ce37550afbf024fcfbca",
+        "verified_source_files": 192,
+        "method": "Exact before/after file hashes include the untracked pure additions; the base commit alone does not contain them. Original execution, input-admission limitations and failed attempts remain in the unchanged report.",
+        "evidence_sha256": "24a6b624cfb0c4f09ee68911af4392f3e4c98a8e12e31e31c802455141ecbe90"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
+    },
+    {
       "path": "docs/verification/business-domains-hosted-attempt-1.json",
       "scope": "business-domains-hosted-failed-attempt-1",
       "source_binding": {
@@ -1047,6 +1075,20 @@
         "method": "Exact original report and source hashes retained; historical failures are not relabeled and no hosted repair pass is inferred.",
         "evidence_sha256": "25751c98f005838ecf62f44d7bc29b578e6caf87e3f200f6307e6015957d37c7"
       }
+    },
+    {
+      "path": "docs/verification/authority-expressions.json",
+      "scope": "Pure three-way predicate interpreter only;16 focused and295 combined host unit cases plus root/web types. No full authorization decision, loader, compiler, SQL, UI or runtime activation.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOCUSED_AND_COMBINED_HOST_UNIT_AND_TYPECHECK_SCOPE",
+      "source_binding": {
+        "base_commit": "363b4346d607aa108b2eef1bd194b36bb0837e2b",
+        "verified_source_files": 206,
+        "method": "Exact before/after hashes identify203 tracked files at base plus3 untracked expression additions. Includes42 TSX source bindings without claiming browser execution; historical evidence remains unchanged.",
+        "evidence_sha256": "830db437b8282dfa9ac2169530efdd12061ff590b9e2a9816c89eeb197301ccf"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
     }
   ],
   "limitations": [
