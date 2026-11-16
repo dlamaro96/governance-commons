@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 """One isolated Python execution process with an authenticated bounded HTTP boundary."""
+from contextlib import ExitStack
 import hmac
 import json
 import math
@@ -8,6 +9,7 @@ import re
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from .deadline import deadline
 from .dispatch import scan
+from .quality import execute as execute_quality, validate_execution
 from .postgresql import ScanFailure
 from .secrets import resolve
 
@@ -15,7 +17,7 @@ MAX_REQUEST_BYTES = 16384
 REQUEST_SECONDS = 30
 
 
-def request_payload(raw):
+def request_payload(raw, operation="scan"):
     """Bound and reject ambiguous JSON before selecting any credential."""
     def unique(pairs):
         result = {}
@@ -28,6 +30,8 @@ def request_payload(raw):
     def invalid_constant(_value):
         raise ValueError("nonfinite constant")
 
+    if operation not in ("scan", "quality"):
+        raise ValueError("request operation")
     if not 0 < len(raw) <= MAX_REQUEST_BYTES:
         raise ValueError("request size")
     depth, quoted, escaped = 0, False, False
@@ -65,7 +69,7 @@ def request_payload(raw):
                 raise ValueError("NUL string")
         elif isinstance(item, float) and not math.isfinite(item):
             raise ValueError("nonfinite number")
-    if (not isinstance(value, dict) or set(value) != {"tenantId", "source"}
+    if (not isinstance(value, dict) or set(value) != ({"tenantId", "source"} if operation == "scan" else {"tenantId", "source", "execution"})
             or not isinstance(value["tenantId"], str) or not 1 <= len(value["tenantId"]) <= 128
             or not isinstance(value["source"], dict)):
         raise ValueError("request shape")
@@ -74,6 +78,10 @@ def request_payload(raw):
     if (not isinstance(ref, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", ref)
             or source.get("connectorId", "postgresql") not in ("postgresql", "unity-catalog")):
         raise ValueError("source shape")
+    if operation == "quality":
+        if set(source) != {"connectorId", "host", "port", "database", "schema", "secretRef"} or source.get("connectorId") != "postgresql":
+            raise ValueError("quality source shape")
+        validate_execution(source, value["execution"])
     return value
 
 
@@ -86,6 +94,22 @@ class WorkerServer(HTTPServer):
         super().__init__(address, Handler)
 
 class Handler(BaseHTTPRequestHandler):
+    def handle_one_request(self):
+        # One absolute admission budget starts before the first request byte;
+        # fresh bytes cannot extend it. The synchronous worker owns no timer
+        # threads, and all EOF/error paths restore the process signal state.
+        self.connection.settimeout(REQUEST_SECONDS)
+        try:
+            with ExitStack() as admission:
+                self._admission = admission
+                admission.enter_context(deadline(REQUEST_SECONDS))
+                super().handle_one_request()
+        except (ScanFailure, TimeoutError, ConnectionError):
+            # Incomplete request lines/headers need not have response state yet.
+            self.close_connection = True
+        finally:
+            self._admission = None
+
     def log_message(self, *_args):
         pass
 
@@ -101,9 +125,8 @@ class Handler(BaseHTTPRequestHandler):
         self.reply(200 if self.path == "/health" else 404, {"status": "ready"} if self.path == "/health" else {"code": "NOT_FOUND"})
 
     def do_POST(self):
-        self.connection.settimeout(REQUEST_SECONDS)
         self.close_connection = True
-        if self.path != "/scan":
+        if self.path not in ("/scan", "/quality"):
             return self.reply(404, {"code": "NOT_FOUND"})
         authorization = self.headers.get_all("Authorization", [])
         if (len(authorization) != 1 or not authorization[0].isascii()
@@ -124,20 +147,26 @@ class Handler(BaseHTTPRequestHandler):
             if not 0 < size <= MAX_REQUEST_BYTES:
                 return self.reply(413, {"code": "REQUEST_SIZE"})
             try:
-                # End this body-read deadline before the adapter installs its
-                # own scan deadline; slow partial requests cannot extend it.
-                with deadline(REQUEST_SECONDS):
-                    raw = self.rfile.read(size)
+                # The request line and headers already consumed part of this
+                # same admission budget; do not restart it for the body.
+                raw = self.rfile.read(size)
             except (TimeoutError, ScanFailure):
                 return self.reply(408, {"code": "REQUEST_TIMEOUT"})
             if len(raw) != size:
                 raise ValueError("short request")
-            payload = request_payload(raw)
+            payload = request_payload(raw, "quality" if self.path == "/quality" else "scan")
             source = payload["source"]
+            # Credential/provider access and adapters have their own deadlines.
+            # Close admission first so the adapter keeps its full scan budget.
+            self._admission.close()
+            self._admission = None
             secret = resolve(self.server.secrets_path, source["secretRef"], payload["tenantId"], source.get("connectorId", "postgresql"))
-            result = (200, scan(source, secret, payload["tenantId"]))
+            result = (200, {"measurement": execute_quality(source, secret, payload["tenantId"], payload["execution"])}) if self.path == "/quality" else (200, scan(source, secret, payload["tenantId"]))
         except ScanFailure as error:
-            result = (422, {"code": error.code})
+            if self._admission is not None and error.code == "SOURCE_DEADLINE_EXCEEDED":
+                result = (408, {"code": "REQUEST_TIMEOUT"})
+            else:
+                result = (400 if error.code == "QUALITY_INPUT_INVALID" else 422, {"code": error.code})
         except (ValueError, KeyError, TypeError, RecursionError):
             result = (400, {"code": "INVALID_REQUEST"})
         except Exception:

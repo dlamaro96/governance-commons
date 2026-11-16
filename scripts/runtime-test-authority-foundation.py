@@ -14,12 +14,15 @@ from pathlib import Path
 import re
 import secrets
 import shutil
+import sys
 import time
 import uuid
 
 ROOT=Path(__file__).resolve().parents[1]
 LOCAL=ROOT/'.local/evidence'
 REPORT=LOCAL/'authority-foundation.json'
+sys.path.insert(0,str(ROOT/'policies'))
+import authority_diagnostics as diagnostics
 
 def module(path,name):
     spec=importlib.util.spec_from_file_location(name,path)
@@ -33,14 +36,7 @@ SUITES=[('storage','tests/qualification/authority-foundation-storage.test.ts',12
         ('concurrency','tests/qualification/authority-foundation-concurrency.test.ts',192)]
 
 def sources():
-    paths={row['path'] for row in base.source_hashes()}
-    paths.update(['scripts/runtime-test-authority-foundation.py','packages/db/migrations/'+MIGRATION,
-        'docs/execution/CANONICAL_AUTHORITY_FOUNDATION_CONTRACT.md','docs/execution/CANONICAL_AUTHORITY_FOUNDATION_CANDIDATE.md',
-        'docs/adr/0014-inactive-canonical-authority-foundation.md','tests/fixtures/authority-foundation.ts'])
-    paths.update(path for _,path,_ in SUITES)
-    for folder in ('packages/authority-storage','tests/unit/fixtures'):
-        paths.update(str(p.relative_to(ROOT)) for p in (ROOT/folder).rglob('*.ts'))
-    return [{'path':name,'sha256':sha((ROOT/name).read_bytes())} for name in sorted(paths)]
+    return diagnostics.source_inventory(ROOT)
 
 class Harness(base.Harness):
     def __init__(self):
@@ -50,15 +46,62 @@ class Harness(base.Harness):
         self.phase,self.serial,self.owned,self.created='admission',0,[],False
         self.deadline,self.cleanup_deadline=time.monotonic()+1680,None
         self.output_bytes,self.resources_before,self.private_values=0,None,[]
+        self.last_command,self.command_failure=None,None
         self.secret_path=self.folder/'private-config.json';self.started=datetime.now(timezone.utc).isoformat()
         self.report={'schema_version':1,'result':'RUNNING','started_at':self.started,'command':'./dev test --suite authority-foundation',
             'profile':'isolated-inactive-authority-foundation','checks':[]}
+        if re.fullmatch(r'[a-f0-9]{40}',os.environ.get('GITHUB_SHA','')):self.report['commit']=os.environ['GITHUB_SHA']
         if REPORT.exists():(self.folder/'previous-report.json').write_bytes(REPORT.read_bytes())
-        self.save()
+        # Admission still precedes runtime work; retain its failure even when the
+        # disk floor prevents the first command from starting.
+        self.save(final=True)
 
     def save(self,*,final=False):
         if not final:self.admission()
         data=(json.dumps(self.report,indent=2)+'\n').encode();(self.folder/'report.json').write_bytes(data);REPORT.write_bytes(data);REPORT.chmod(0o600)
+
+    def command(self,args,**kwargs):
+        phase,serial=self.phase,self.serial
+        self.last_command=None
+        error=None
+        try:return super().command(args,**kwargs)
+        except BaseException as caught:
+            error=caught
+            raise
+        finally:
+            log=self.folder/f'{self.serial:03d}-{phase}.log'
+            if self.serial>serial and log.is_file():
+                self.last_command={'phase':phase,'path':str(log.relative_to(ROOT)),'sha256':sha(log.read_bytes())}
+            if error is not None and self.command_failure is None:
+                category=('interrupted' if isinstance(error,KeyboardInterrupt) else 'command_timeout'
+                    if str(error)=='Bounded qualification command timed out' else 'command_failed')
+                self.command_failure=self.failure_record(phase,category,self.last_command)
+
+    def failure_record(self,phase,category,command=None):
+        if command is None or command['phase']!=phase:
+            return {'phase':phase,'category':'interrupted' if category=='interrupted' else 'unknown','commandLog':None}
+        path=ROOT/command['path'];data=path.read_bytes()
+        # A command may fail admission before a usable exit record exists.
+        header=re.match(rb'phase=[a-z_-]+\nexit=(-?[0-9]+)\n',data)
+        if header is None or (category in ('command_failed','suite_failed') and int(header[1])==0):
+            return {'phase':phase,'category':'unknown','commandLog':None}
+        marker=('\n'+diagnostics.MARKER+category+'\n').encode()
+        path.write_bytes(data+marker);self.output_bytes+=len(marker)
+        row={'path':command['path'],'sha256':sha(data+marker)}
+        for key,old in self.report.get('test_logs',{}).items():
+            if old.get('path')==row['path']:self.report['test_logs'][key]=row
+        return {'phase':phase,'category':category,'commandLog':row}
+
+    def remember_failure(self,error):
+        if 'failure_diagnostic' in self.report:return
+        if self.command_failure is not None:failure=self.command_failure
+        elif self.phase in diagnostics.SUITES and self.last_command is not None and self.last_command['phase']==self.phase:
+            data=(ROOT/self.last_command['path']).read_bytes()
+            code=re.match(rb'phase=[a-z_-]+\nexit=(-?[0-9]+)\n',data)
+            failure=(self.failure_record(self.phase,'suite_failed',self.last_command) if code and int(code[1])!=0
+                else {'phase':self.phase,'category':'invariant_failed','commandLog':None})
+        else:failure={'phase':self.phase,'category':'interrupted' if isinstance(error,KeyboardInterrupt) else 'invariant_failed','commandLog':None}
+        self.report['failure_diagnostic']=failure;self.report['failed_phase']=failure['phase']
 
     def helper(self,args,*,mounts=(),**kwargs):
         # Qualify the cached dependency environment before overlaying this
@@ -95,6 +138,9 @@ class Harness(base.Harness):
 
 def execute(h):
     full_sources=sources()
+    # The predecessor replaces its own source list. Keep the complete source
+    # binding even when it fails before SQL013 or a native suite is reached.
+    h.report['diagnostic_sources']=full_sources
     # This is real prerequisite execution, not copied totals from a historical run.
     base.execute(h)
     h.report['predecessor']={key:h.report[key] for key in ('tests','concurrency_tests','migrations','baseline','sources')}
@@ -177,7 +223,7 @@ def main():
     h=Harness();failed=False
     try:execute(h)
     except BaseException as error:
-        failed=True;h.report.update(result='FAIL',failed_phase=h.phase,error_type=type(error).__name__,error='Native authority qualification failed; inspect bounded private evidence')
+        failed=True;h.remember_failure(error);h.report.update(result='FAIL',error_type=type(error).__name__,error='Native authority qualification failed; inspect bounded private evidence')
     finally:
         try:
             h.phase='cleanup';h.cleanup()
@@ -188,7 +234,7 @@ def main():
                 h.report['cleanup']['resourceInventoryPreserved']=True
                 h.report['resourceInventories']=[{'path':str((h.folder/name).relative_to(ROOT)),'sha256':sha((h.folder/name).read_bytes())} for name in ('resources-before.json','resources-after.json') if (h.folder/name).exists()]
         except BaseException as error:
-            failed=True;h.report.update(result='FAIL',cleanupFailure='Owned cleanup or resource preservation was not confirmed',cleanupErrorType=type(error).__name__)
+            failed=True;h.remember_failure(error);h.report.update(result='FAIL',cleanupFailure='Owned cleanup or resource preservation was not confirmed',cleanupErrorType=type(error).__name__)
         h.report['result']='FAIL' if failed else 'PASS';h.report['recorded_at']=datetime.now(timezone.utc).isoformat();h.report['evidence_directory']=str(h.folder.relative_to(ROOT))
         h.report['private_logs']=[{'path':str(p.relative_to(ROOT)),'sha256':sha(p.read_bytes())} for p in sorted(h.folder.glob('*.log'))];h.save(final=True)
     print(json.dumps({'result':h.report['result'],'report':str(REPORT.relative_to(ROOT))}));return int(failed)

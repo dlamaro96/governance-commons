@@ -34,7 +34,7 @@ class CurrentSchemaAdmissionTests(unittest.TestCase):
     def test_exact_minimum_and_later_schema_bind_every_file(self):
         expected = self.migrations(12)
         self.assertEqual(seed.migration_inventory(self.directory), expected)
-        for index in (13, 14, 15, 16):
+        for index in (13, 14, 15, 16, 17, 18):
             name, body = f'{index:03d}_synthetic.sql', f'-- Later {index}\n'.encode()
             (self.directory / name).write_bytes(body)
             expected.append({'name': name, 'checksum': hashlib.sha256(body).hexdigest()})
@@ -148,6 +148,150 @@ class GlossaryDefinitionReadbackTests(unittest.TestCase):
             with self.subTest(case=index):
                 with self.assertRaises(RuntimeError):
                     self.read(value)
+
+
+class QualitySeedPreservationTests(unittest.TestCase):
+    """Host-only admission/SQL shape tests; native reseeding remains the real gate."""
+    def read(self, method, result):
+        harness = seed.Harness(Path('/synthetic-unused-attempt'))
+        with patch.object(harness, 'query', return_value=json.dumps(result)) as query:
+            actual = getattr(harness, method)()
+        return actual, query.call_args.args
+
+    def markers(self):
+        return [{'tenant_id': tenant, 'actor_id': actor, 'operation': operation,
+                 'key': 'harbor-demo', 'request_hash': value,
+                 'response': {'dataset': 'harbor-demo', 'version': 1, 'applied': True},
+                 'created_at': '2026-11-16T00:00:00+00:00'}
+                for (tenant, actor, operation), value in sorted(seed.expected_permission_markers().items())]
+
+    def permissions(self):
+        return [{'tenant_id': tenant, 'identity_id': '10000000-0000-4000-8000-' + str(index).zfill(12),
+                 'role': role, 'active': True,
+                 'permissions': ['catalog:read', 'operator:preserved'] +
+                    (['quality:read'] if role in ('consumer', 'auditor') else ['quality:read', 'quality:write', 'quality:execute'])}
+                for index, (role, tenant, _) in enumerate(seed.PERSONA_GRANTS, 1)]
+
+    def snapshot(self):
+        return {name: {'rows': 0, 'serialized_bytes': 0, 'sha256': hashlib.sha256(b'').hexdigest()}
+                for name in (*seed.QUALITY_TABLES, 'audit', 'outbox', 'idempotency')}
+
+    def test_independent_hashes_preserve_legacy_and_new_receipt_contracts(self):
+        # Fixed vectors cross-checked with the real TypeScript typeHash codec;
+        # changing writer+oracle together cannot silently change these old pins.
+        expected = seed.expected_permission_markers()
+        self.assertEqual(len(expected), 11)
+        self.assertEqual(expected[(seed.HARBOR, seed.ENGINEER, 'bootstrap.domain-permissions.v1')],
+                         '7d75f8ff5bdc1f51e4020e4b3323a8dfbdd73c3e8e6cbe270407ba98086e5bdb')
+        self.assertEqual(expected[(seed.HARBOR, '10000000-0000-4000-8000-000000000004', 'bootstrap.domain-permissions.v1')],
+                         'f48398bc96498f9b3d76e0ae0b4488c9b527a001f7c740012a425d33462c47fe')
+        self.assertEqual(expected[(seed.HARBOR, seed.ENGINEER, 'bootstrap.quality-permissions.v1')],
+                         '589cb1c2678511630c038bee731bf7f8a6504815ac7b0a6c801b9fdc470b280b')
+        self.assertEqual(expected[(seed.HARBOR, seed.CONSUMER, 'bootstrap.quality-permissions.v1')],
+                         'db5b0c4a3bedca374e064ac21652abecf0782d28672348793b1bb45e15443239')
+        markers = self.markers()
+        markers[-1]['response']['applied'] = False  # Refusal receipts are retained, never rewritten.
+        actual, (statement, label) = self.read('permission_markers', markers)
+        self.assertEqual(actual, markers)
+        self.assertEqual(label, 'permission-marker-readback')
+        self.assertIn('LIMIT 12', statement)
+        self.assertIn('to_jsonb(r)', statement)  # Creation time and every receipt column stay in equality.
+        self.assertTrue(statement.startswith('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY;'))
+
+    def test_missing_duplicate_transplanted_changed_or_malformed_markers_refuse(self):
+        cases = [[], self.markers()[:-1], self.markers() + self.markers()[:1]]
+        for field, value in (('tenant_id', seed.SUMMIT), ('actor_id', seed.CONSUMER),
+                             ('request_hash', '0' * 64), ('request_hash', []),
+                             ('key', 'another-dataset'), ('created_at', ''),
+                             ('response', {'dataset': 'harbor-demo', 'version': True, 'applied': True}),
+                             ('response', {'dataset': 'harbor-demo', 'version': 1, 'applied': 1}),
+                             ('response', {'dataset': 'harbor-demo', 'version': 1, 'applied': True, 'extra': True})):
+            changed = self.markers()
+            changed[0][field] = value
+            cases.append(changed)
+        duplicate = self.markers()
+        duplicate[-1] = duplicate[0]
+        cases.append(duplicate)
+        for index, value in enumerate(cases):
+            with self.subTest(case=index):
+                with self.assertRaises(RuntimeError): self.read('permission_markers', value)
+
+    def test_all_personas_have_exact_quality_grants_without_changing_other_permissions(self):
+        expected = self.permissions()
+        actual, (statement, _) = self.read('quality_permissions', expected)
+        self.assertEqual(actual, expected)
+        self.assertEqual(statement.count(' AND identity_id='), 6)
+        self.assertNotIn('UPDATE', statement)
+        self.assertIn('operator:preserved', actual[0]['permissions'])
+
+    def test_missing_inactive_wrong_tenant_or_widened_quality_authority_refuses(self):
+        cases = [self.permissions()[:-1]]
+        for index, field, value in ((2, 'permissions', ['quality:read', 'quality:execute']),
+                                    (3, 'permissions', ['quality:read', 'quality:write']),
+                                    (5, 'permissions', ['quality:read', 'quality:write']),
+                                    (2, 'permissions', ['quality:read', 'quality:read']),
+                                    (0, 'permissions', ['quality:read', None]),
+                                    (4, 'tenant_id', seed.HARBOR), (1, 'active', False)):
+            changed = self.permissions()
+            changed[index][field] = value
+            cases.append(changed)
+        for index, value in enumerate(cases):
+            with self.subTest(case=index):
+                with self.assertRaises(RuntimeError): self.read('quality_permissions', value)
+
+    def test_quality_snapshot_preserves_empty_or_existing_rows_and_all_columns(self):
+        expected = self.snapshot()
+        expected['quality_rule_versions'] = {'rows': 9, 'serialized_bytes': 8192, 'sha256': 'b' * 64}
+        actual, (statement, label) = self.read('quality_snapshot', expected)
+        self.assertEqual(actual, expected)
+        self.assertEqual(label, 'quality-row-digests')
+        tenant = "tenant_id IN ('" + seed.HARBOR + "','" + seed.SUMMIT + "')"
+        self.assertEqual(statement.count(tenant), 6)
+        for table in seed.QUALITY_TABLES:
+            self.assertIn('FROM public.' + table + ' r WHERE ' + tenant, statement)
+        self.assertEqual(statement.count('to_jsonb(r)::text payload'), 6)
+        self.assertIn("action LIKE 'quality.%'", statement)
+        self.assertIn("event_type LIKE 'quality.%'", statement)
+        self.assertIn("operation LIKE 'quality.%'", statement)
+        self.assertTrue(statement.startswith('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY;'))
+        for forbidden in ('UPDATE ', 'INSERT ', 'DELETE ', "-'processed_at'", "-'attempts'", 'bootstrap.domain'):
+            self.assertNotIn(forbidden, statement)
+
+    def test_quality_snapshot_missing_extra_overflow_or_unhashable_refuses(self):
+        cases = [{}, [], self.snapshot() | {'unexpected': self.snapshot()['audit']}]
+        for field, value in (('rows', True), ('rows', -1), ('rows', 20001),
+                             ('serialized_bytes', 67108865), ('serialized_bytes', -1),
+                             ('sha256', None), ('sha256', 'bad')):
+            changed = self.snapshot()
+            changed['quality_runs'][field] = value
+            cases.append(changed)
+        for index, value in enumerate(cases):
+            with self.subTest(case=index):
+                with self.assertRaises(RuntimeError): self.read('quality_snapshot', value)
+
+    def test_revocation_removes_both_actions_only_and_restoration_keeps_original_fields(self):
+        engineer = self.permissions()[-1] | {'permissions': ['catalog:read', 'domains:write', 'quality:read', 'quality:execute', 'custom:retained']}
+        original = copy.deepcopy(engineer)
+        revoked = seed.revoked_engineer(engineer)
+        self.assertEqual(engineer, original)
+        self.assertEqual(revoked['permissions'], ['catalog:read', 'quality:read', 'custom:retained'])
+        harness = seed.Harness(Path('/synthetic-unused-attempt'))
+        consumer = self.permissions()[2]
+        with patch.object(harness, 'query') as query:
+            harness.mutate([consumer, engineer], revoked)
+        mutation = query.call_args.args[0]
+        restoration = harness.restore_sql([consumer, engineer])
+        self.assertIn('SET permissions=' + seed.json_sql(revoked['permissions']), mutation)
+        self.assertIn('SET permissions=' + seed.json_sql(engineer['permissions']), restoration)
+        self.assertIn('jsonb_populate_record(NULL::memberships,' + seed.json_sql(consumer), restoration)
+        for statement in (mutation, restoration):
+            self.assertLess(statement.index('pg_advisory_xact_lock'), statement.index('FROM identities'))
+            self.assertLess(statement.index('FROM identities'), statement.index('FROM memberships'))
+            self.assertIn('ORDER BY id FOR UPDATE', statement)
+            self.assertIn('ORDER BY identity_id FOR UPDATE', statement)
+        for missing in ('domains:write', 'quality:execute'):
+            with self.assertRaises(RuntimeError):
+                seed.revoked_engineer(engineer | {'permissions': [v for v in engineer['permissions'] if v != missing]})
 
 
 if __name__ == '__main__':

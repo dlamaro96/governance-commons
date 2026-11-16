@@ -2,6 +2,7 @@
 import { createServer } from 'node:http';
 import { NativeConnection, Worker } from '@temporalio/worker';
 import { ApplicationFailure } from '@temporalio/activity';
+import {createQualityActivity} from './quality-activity.ts';
 const api = process.env.API_URL ?? 'http://api:4310';
 const token = process.env.SITE_TOKEN;
 const workerToken = process.env.WORKER_TOKEN;
@@ -31,9 +32,11 @@ async function executeScan({ tenantId, jobId }: { tenantId: string; jobId: strin
   const completed = await apiRequest(tenantId, `/internal/jobs/${jobId}/complete`, payload);
   return { status: completed.job.status, assetCount: completed.job.assetCount };
 }
+const qualityActivity=createQualityActivity({apiUrl:api,apiToken:token,workerUrl:process.env.PYTHON_WORKER_URL??'http://python-worker:8080',workerToken,tenants});
+async function executeQuality(input:Parameters<typeof qualityActivity>[0]){try{return await qualityActivity(input);}catch{throw ApplicationFailure.retryable('QUALITY_SITE_UNAVAILABLE','QUALITY_SITE_UNAVAILABLE');}}
 const connection = await NativeConnection.connect({ address: process.env.TEMPORAL_ADDRESS ?? 'temporal:7233' });
 const worker = await Worker.create({ connection, namespace: process.env.TEMPORAL_NAMESPACE ?? 'default', taskQueue: 'gc-site',
-  activities: { executeScan }, maxConcurrentActivityTaskExecutions: 1 });
+  activities: { executeScan,executeQuality }, maxConcurrentActivityTaskExecutions: 1 });
 const health = createServer((request, response) => {
   const ready = request.url === '/health' && worker.getState() === 'RUNNING';
   response.writeHead(ready ? 200 : 503, { 'Content-Type': 'application/json' });

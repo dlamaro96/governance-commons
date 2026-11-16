@@ -242,6 +242,8 @@ def run(root: Path) -> int:
     latest.unlink(missing_ok=True)
     files, _, source_flags = source_inventory(root)
     hashes = {name: source["sha256"] for name, source in files.items()}
+    git = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True)
+    commit = git.stdout.strip() if git.returncode == 0 else None
     directory = root / ".local/evidence/api-runs" / (datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "-" + uuid.uuid4().hex)
     directory.mkdir(parents=True, mode=0o700)
     raw_path = directory / "output.tap"
@@ -258,20 +260,20 @@ def run(root: Path) -> int:
     with raw_path.open("xb") as output:
         raw_path.chmod(0o600)
         if before:
-            command = [*compose, "node", "--import", "tsx", "--test", "--test-concurrency=1", "--test-reporter=tap", *hashes]
+            command = [*compose, "timeout", "--signal=TERM", "--kill-after=10s", "1740s", "node", "--import", "tsx", "--test", "--test-concurrency=1", "--test-reporter=tap", *hashes]
             try:
                 process = subprocess.Popen(command, cwd=root, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 def drain() -> None:
                     retained = 0
                     assert process.stdout is not None
-                    while chunk := process.stdout.read(65536):
+                    while chunk := process.stdout.read1(65536):
                         available = max(0, MAX_OUTPUT - retained)
-                        output.write(chunk[:available]); retained += min(len(chunk), available)
+                        output.write(chunk[:available]); output.flush(); retained += min(len(chunk), available)
                         if len(chunk) > available:
                             truncated[0] = True
                 reader = threading.Thread(target=drain, daemon=True); reader.start()
                 try:
-                    exit_code = process.wait(timeout=840)
+                    exit_code = process.wait(timeout=1800)
                 except subprocess.TimeoutExpired:
                     process.kill(); process.wait(); exit_code = 124
                 reader.join(timeout=5)
@@ -282,8 +284,6 @@ def run(root: Path) -> int:
     current_files, _, current_flags = source_inventory(root)
     after = (before and matching_sources() and not current_flags
              and {name: source["sha256"] for name, source in current_files.items()} == hashes)
-    git = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True)
-    commit = git.stdout.strip() if git.returncode == 0 else None
     report = collect(root, raw_path.read_bytes(), exit_code, commit, after, truncated[0])
     report_path = directory / "summary.json"
     report_path.write_text(json.dumps(report, indent=2) + "\n"); report_path.chmod(0o600)

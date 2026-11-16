@@ -1467,7 +1467,16 @@
         "implementation_commit": "64a13ed44dfc091193514e289f067e2574c7e07e",
         "method": "Working-source hashes and private original execution records; base commit plus explicitly hashed repair. Hosted qualification remains separate.",
         "verified_files": 8,
-        "evidence_sha256": "f86cacb6c5a9afd7c32a02936ee0605bc99b2b597b89a8a4226dde173d3a6b26"
+        "evidence_sha256": "99d26aca20f172a1ba981d19327481120f56ad4cace85017e162d13623fa42dd"
+      }
+    },
+    {
+      "path": "docs/verification/product-quality-local.json",
+      "scope": "local-postgresql-completeness",
+      "source_binding": {
+        "base_commit": "3ee86ab42fd40a7e337f6efdccd101d62ea34cab",
+        "method": "Executed dirty-tree source hashes, real native/worker/seed/browser evidence; not whole release qualification.",
+        "evidence_sha256": "0b7251c927a6f7ce62ca983e22cbb44b7c7bd26987b2ee08b217156bdca69d89"
       }
     }
   ],

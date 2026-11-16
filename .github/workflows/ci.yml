@@ -65,6 +65,8 @@ jobs:
         run: python3 scripts/test_runtime_routing.py
       - name: Current-schema seed admission
         run: python3 scripts/test_business_domain_seed.py
+      - name: Immutable predecessor qualification binding
+        run: python3 scripts/test_qualification_repository.py
       - name: Owned browser process lifecycle
         run: python3 scripts/test_protected_browser_process.py
       - name: build
@@ -117,7 +119,7 @@ jobs:
   behavior:
     name: behavior
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -188,9 +190,24 @@ jobs:
       - name: Verify approved PostgreSQL targets with real TLS
         id: postgres_targets
         run: ./dev test --suite postgres-targets
+      - name: Verify approval storage and atomic glossary publication upgrade
+        id: glossary_upgrade
+        run: ./dev test --suite glossary-upgrade
+      - name: Verify complete graph scope and populated catalog publication
+        id: relation_scope_upgrade
+        run: ./dev test --suite relation-scope-upgrade
+      - name: Verify multi-policy glossary publication on populated catalogs
+        id: glossary_population_upgrade
+        run: ./dev test --suite glossary-population-upgrade
+      - name: Verify completeness storage upgrade and current authorization
+        id: quality_upgrade
+        run: ./dev test --suite quality-upgrade
+      - name: Verify completeness execution against the live synthetic source
+        id: quality_worker
+        run: ./dev test --suite quality-worker
       - name: Verify browser acceptance and accessibility
         id: browser
-        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts tests/e2e/source-connectors.spec.ts tests/e2e/postgres-configuration.spec.ts
+        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts tests/e2e/source-connectors.spec.ts tests/e2e/postgres-configuration.spec.ts tests/e2e/approvals.spec.ts tests/e2e/glossary.spec.ts tests/e2e/quality.spec.ts
       - name: Verify protected OIDC and session lifecycle on the exact built image
         id: protected_authn
         run: python3 scripts/runtime-protected-ci.py
@@ -214,6 +231,11 @@ jobs:
           GC_AUTHORITY_FOUNDATION_RESULT: ${{ steps.authority_foundation.outcome }}
           GC_SOURCE_CONNECTORS_UPGRADE_RESULT: ${{ steps.source_connectors_upgrade.outcome }}
           GC_POSTGRES_TARGETS_RESULT: ${{ steps.postgres_targets.outcome }}
+          GC_GLOSSARY_UPGRADE_RESULT: ${{ steps.glossary_upgrade.outcome }}
+          GC_RELATION_SCOPE_UPGRADE_RESULT: ${{ steps.relation_scope_upgrade.outcome }}
+          GC_GLOSSARY_POPULATION_UPGRADE_RESULT: ${{ steps.glossary_population_upgrade.outcome }}
+          GC_QUALITY_UPGRADE_RESULT: ${{ steps.quality_upgrade.outcome }}
+          GC_QUALITY_WORKER_RESULT: ${{ steps.quality_worker.outcome }}
           GC_BROWSER_RESULT: ${{ steps.browser.outcome }}
           GC_PROTECTED_AUTHN_RESULT: ${{ steps.protected_authn.outcome }}
         run: python3 policies/ci_evidence.py

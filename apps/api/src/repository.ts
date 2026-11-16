@@ -16,7 +16,8 @@ export function visibleAssets(tx:Tx,p:Principal){return tx.selectFrom('assets').
 export function visibleAudit(tx:Tx,p:Principal){return tx.selectFrom('audit').selectAll().where('audit.tenant_id','=',p.tenantId).where(eb=>eb.or([
  sql<boolean>`${p.permissions.includes('models:read')} AND audit.action LIKE 'workflow.%' AND EXISTS(SELECT 1 FROM workflow_definitions w WHERE w.tenant_id=audit.tenant_id AND w.id=audit.resource_id)`,
  sql<boolean>`${p.permissions.includes('catalog:read')&&p.permissions.includes('catalog:write')} AND audit.action LIKE 'approval.%' AND EXISTS(SELECT 1 FROM approval_requests r WHERE r.tenant_id=audit.tenant_id AND r.id::text=audit.resource_id AND (${visibleApprovalRequest(p)}))`,
- eb.and(['approval.%','workflow.%','glossary.%','asset.%','relation.%','relation_participation.%','participation.%','relation_migration.%','relation_preparation.%','domain_type.%','domain.%','asset_domain_placement.%','domain_type_migration.%'].map(pattern=>eb('audit.action','not like',pattern))),
+ sql<boolean>`audit.action LIKE 'quality.%' AND EXISTS(SELECT 1 FROM assets quality_target WHERE quality_target.tenant_id=audit.tenant_id AND quality_target.id::text=audit.resource_id AND public.gc_quality_visible(quality_target.id,${p.id}::uuid))`,
+ eb.and(['quality.%','approval.%','workflow.%','glossary.%','asset.%','relation.%','relation_participation.%','participation.%','relation_migration.%','relation_preparation.%','domain_type.%','domain.%','asset_domain_placement.%','domain_type_migration.%'].map(pattern=>eb('audit.action','not like',pattern))),
  sql<boolean>`${p.permissions.includes('models:read')} AND audit.action LIKE 'domain_type.%' AND audit.changes->>'resourceKind'='domain-type'
   AND EXISTS(SELECT 1 FROM domain_types d WHERE d.tenant_id=audit.tenant_id AND d.id::text=audit.resource_id)`,
  sql<boolean>`${p.permissions.includes('domains:read')} AND audit.action LIKE 'domain.%' AND audit.changes->>'resourceKind'='domain'

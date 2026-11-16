@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import { ApplicationFailure, condition, continueAsNew, defineSignal, isCancellation, proxyActivities, setHandler, workflowInfo } from '@temporalio/workflow';
+import { ApplicationFailure, condition, continueAsNew, defineSignal, isCancellation, proxyActivities, setHandler, sleep, workflowInfo } from '@temporalio/workflow';
 import type {ApprovalInput,ApprovalTick} from './approval-activities.ts';
 export interface ScanInput { tenantId: string; jobId: string }
 const { executeScan } = proxyActivities<{ executeScan(input: ScanInput): Promise<{ status: string; assetCount?: number }> }>({
@@ -40,4 +40,28 @@ export async function approvalWorkflow(input:ApprovalInput):Promise<ApprovalTick
       return continueAsNew<typeof approvalWorkflow>({tenantId:input.tenantId,requestId:input.requestId});
     await condition(()=>changed,wait);
   }
+}
+
+
+import type {QualityWorkflowInput} from '../../../packages/domain/src/quality-contracts.ts';
+import type {QualityActivityResult} from './quality-activities.ts';
+const {executeQuality}=proxyActivities<{executeQuality(input:QualityWorkflowInput):Promise<QualityActivityResult>}>({
+ taskQueue:'gc-site',startToCloseTimeout:'115 seconds',scheduleToCloseTimeout:'3 minutes',retry:{maximumAttempts:1},
+});
+export async function qualityWorkflow(input:QualityWorkflowInput):Promise<QualityActivityResult>{
+ if(!input||Object.keys(input).length!==2||typeof input.tenantId!=='string'||typeof input.runId!=='string'||!approvalIds.test(input.tenantId)||!approvalIds.test(input.runId))
+  throw ApplicationFailure.nonRetryable('QUALITY_INPUT_INVALID');
+ let checks=0;
+ for(;;){
+  let wait=5000;
+  try{const result=await executeQuality({tenantId:input.tenantId,runId:input.runId});
+   if(result.status==='succeeded'||result.status==='failed'||result.status==='cancelled')return result;
+   if(result.status==='busy'&&result.retryAt!==null)wait=Math.max(1000,Math.min(10000,Date.parse(result.retryAt)-Date.now()));
+  }catch(error){if(isCancellation(error))throw error;}
+  // Canonical storage owns the 600-second lifetime and attempt ceiling. A
+  // transport outage cannot be translated into a false canonical completion.
+  if(++checks>=128||workflowInfo().continueAsNewSuggested||workflowInfo().historyLength>=1024)
+   return continueAsNew<typeof qualityWorkflow>({tenantId:input.tenantId,runId:input.runId});
+  await sleep(wait);
+ }
 }
