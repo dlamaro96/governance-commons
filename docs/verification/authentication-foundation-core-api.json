@@ -1,0 +1,1237 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-16T08:04:47.487371+00:00",
+  "implementation_status": "IMPLEMENTED_INACTIVE_AUTHENTICATION_FOUNDATION_ONLY",
+  "verification_status": "PASS_SHARED_CORE_SEED_AND_EXISTING_154_API_REGRESSIONS_AFTER_SQL012",
+  "runtime_authority_activated": false,
+  "release_qualified": false,
+  "scope": "The existing core API/security suite continues to pass with SQL012 installed and finite executor roles provisioned. This qualifies compatibility of existing application behavior; it does not qualify an activated protected-session HTTP broker or scoped content authority.",
+  "source_revision": {
+    "commit": "e57cb2cfae7b3ec161b87cfa97c4c70edb1045cb",
+    "startup_base_commit": "94efe7f8bec0fe054ed003521b832f9a02239910",
+    "exact_committed_blob_matches": 263,
+    "interpretation": "Startup initially used the exact uncommitted262-file snapshot. API execution recorded the subsequent e57cb2c commit, and independent readback proves all262 snapshot files plus the API evidence collector equal that commit and every running application container."
+  },
+  "profile": "local Docker Compose core with real PostgreSQL, API, Temporal/site/Python workers, synthetic harbor-demo data and the existing authentication path",
+  "executed_steps": [
+    {
+      "name": "seed",
+      "command": [
+        "./dev",
+        "seed",
+        "--dataset",
+        "harbor-demo"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-16T07:49:33.804183+00:00",
+      "finished_at": "2026-11-16T07:49:36.833626+00:00",
+      "log_sha256": "c73c21ab57f73d564a5186cd7ecfe5f2fedd339b0c308429a7e122ca32ca29c6"
+    },
+    {
+      "name": "api",
+      "command": [
+        "./dev",
+        "test",
+        "--suite",
+        "security"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-16T07:49:36.833863+00:00",
+      "finished_at": "2026-11-16T07:59:53.673471+00:00",
+      "log_sha256": "603e60266b9d2a3c032b888993f76e2e2520c0ab6f19b7760561ba5376f16e97"
+    }
+  ],
+  "api": {
+    "command": "./dev test --suite security",
+    "timestamp": "2026-11-16T07:59:53.609326+00:00",
+    "outcome": "PASS",
+    "counts": {
+      "tests": 154,
+      "suites": 0,
+      "pass": 154,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "expected_tests": 154,
+    "observed_results": 154,
+    "distinct_source_coordinates": 154,
+    "source_file_count": 20,
+    "duration_ms": 616343.17549,
+    "runtime_test_sources_match_before_and_after": true,
+    "flags": [],
+    "test_counts_by_file": {
+      "tests/integration/asset-type-api-limits.test.ts": 2,
+      "tests/integration/asset-type-migration-storage.test.ts": 9,
+      "tests/integration/asset-type-migrations.test.ts": 5,
+      "tests/integration/asset-type-storage.test.ts": 9,
+      "tests/integration/asset-types.test.ts": 9,
+      "tests/integration/audit-integrity.test.ts": 2,
+      "tests/integration/business-domain-asset-scope.test.ts": 1,
+      "tests/integration/business-domains-api.test.ts": 9,
+      "tests/integration/business-domains-storage.test.ts": 18,
+      "tests/integration/foundation.test.ts": 5,
+      "tests/integration/model-api.test.ts": 3,
+      "tests/integration/model-migration-api.test.ts": 3,
+      "tests/integration/model-migration-storage.test.ts": 6,
+      "tests/integration/model-migrations.test.ts": 8,
+      "tests/integration/model-pagination.test.ts": 2,
+      "tests/integration/models.test.ts": 8,
+      "tests/integration/relation-migration-api.test.ts": 6,
+      "tests/integration/relation-participation-storage.test.ts": 20,
+      "tests/integration/relation-storage.test.ts": 12,
+      "tests/integration/relations.test.ts": 17
+    },
+    "tests": [
+      {
+        "file": "tests/integration/asset-type-api-limits.test.ts",
+        "line": 38,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-api-limits.test.ts",
+        "line": 60,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migration-storage.test.ts",
+        "line": 84,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migration-storage.test.ts",
+        "line": 102,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migration-storage.test.ts",
+        "line": 108,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migration-storage.test.ts",
+        "line": 128,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migration-storage.test.ts",
+        "line": 156,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migration-storage.test.ts",
+        "line": 167,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migration-storage.test.ts",
+        "line": 177,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migration-storage.test.ts",
+        "line": 191,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migration-storage.test.ts",
+        "line": 206,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migrations.test.ts",
+        "line": 71,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migrations.test.ts",
+        "line": 99,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migrations.test.ts",
+        "line": 117,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migrations.test.ts",
+        "line": 143,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-migrations.test.ts",
+        "line": 153,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-storage.test.ts",
+        "line": 64,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-storage.test.ts",
+        "line": 73,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-storage.test.ts",
+        "line": 80,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-storage.test.ts",
+        "line": 88,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-storage.test.ts",
+        "line": 93,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-storage.test.ts",
+        "line": 101,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-storage.test.ts",
+        "line": 131,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-storage.test.ts",
+        "line": 140,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-type-storage.test.ts",
+        "line": 164,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-types.test.ts",
+        "line": 97,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-types.test.ts",
+        "line": 136,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-types.test.ts",
+        "line": 171,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-types.test.ts",
+        "line": 182,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-types.test.ts",
+        "line": 206,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-types.test.ts",
+        "line": 224,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-types.test.ts",
+        "line": 241,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-types.test.ts",
+        "line": 286,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/asset-types.test.ts",
+        "line": 314,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/audit-integrity.test.ts",
+        "line": 46,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/audit-integrity.test.ts",
+        "line": 92,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domain-asset-scope.test.ts",
+        "line": 40,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 137,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 161,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 245,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 266,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 295,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 315,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 342,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 370,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-api.test.ts",
+        "line": 399,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 17,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 31,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 42,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 53,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 68,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 77,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 86,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 99,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 112,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 123,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 136,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 156,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 164,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 174,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 183,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 193,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 202,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/business-domains-storage.test.ts",
+        "line": 216,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/foundation.test.ts",
+        "line": 12,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/foundation.test.ts",
+        "line": 22,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/foundation.test.ts",
+        "line": 30,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/foundation.test.ts",
+        "line": 39,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/foundation.test.ts",
+        "line": 51,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-api.test.ts",
+        "line": 20,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-api.test.ts",
+        "line": 37,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-api.test.ts",
+        "line": 52,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migration-api.test.ts",
+        "line": 37,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migration-api.test.ts",
+        "line": 55,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migration-api.test.ts",
+        "line": 89,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migration-storage.test.ts",
+        "line": 61,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migration-storage.test.ts",
+        "line": 77,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migration-storage.test.ts",
+        "line": 98,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migration-storage.test.ts",
+        "line": 110,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migration-storage.test.ts",
+        "line": 124,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migration-storage.test.ts",
+        "line": 135,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migrations.test.ts",
+        "line": 72,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migrations.test.ts",
+        "line": 119,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migrations.test.ts",
+        "line": 139,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migrations.test.ts",
+        "line": 168,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migrations.test.ts",
+        "line": 188,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migrations.test.ts",
+        "line": 208,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migrations.test.ts",
+        "line": 221,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-migrations.test.ts",
+        "line": 234,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-pagination.test.ts",
+        "line": 22,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/model-pagination.test.ts",
+        "line": 56,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/models.test.ts",
+        "line": 67,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/models.test.ts",
+        "line": 76,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/models.test.ts",
+        "line": 88,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/models.test.ts",
+        "line": 100,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/models.test.ts",
+        "line": 110,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/models.test.ts",
+        "line": 123,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/models.test.ts",
+        "line": 130,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/models.test.ts",
+        "line": 176,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-migration-api.test.ts",
+        "line": 97,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-migration-api.test.ts",
+        "line": 158,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-migration-api.test.ts",
+        "line": 182,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-migration-api.test.ts",
+        "line": 216,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-migration-api.test.ts",
+        "line": 245,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-migration-api.test.ts",
+        "line": 280,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 46,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 60,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 83,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 103,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 121,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 133,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 149,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 162,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 173,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 186,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 206,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 216,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 227,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 240,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 263,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 281,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 310,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 321,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 339,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-participation-storage.test.ts",
+        "line": 374,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-storage.test.ts",
+        "line": 98,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-storage.test.ts",
+        "line": 116,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-storage.test.ts",
+        "line": 131,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-storage.test.ts",
+        "line": 151,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-storage.test.ts",
+        "line": 163,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-storage.test.ts",
+        "line": 173,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-storage.test.ts",
+        "line": 184,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-storage.test.ts",
+        "line": 203,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-storage.test.ts",
+        "line": 220,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-storage.test.ts",
+        "line": 235,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-storage.test.ts",
+        "line": 267,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relation-storage.test.ts",
+        "line": 278,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 143,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 165,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 192,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 215,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 238,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 254,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 274,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 293,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 306,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 343,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 362,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 383,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 398,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 420,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 457,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 494,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 524,
+        "status": "passed",
+        "failure_locations": []
+      }
+    ]
+  },
+  "independent_evidence_checks": {
+    "safe_report_closed_schema_revalidation": "PASS",
+    "raw_TAP_recollected_against_exact_static_declarations": "PASS_ALL_FIELDS_EQUAL_EXCEPT_FRESH_VALIDATION_TIMESTAMP",
+    "one_TAP_envelope_and_plan": "PASS_154",
+    "raw_output_hash_matches_original_summary": true,
+    "archived_runner_and_latest_summary_bytes_identical": true,
+    "original_execution_log_hashes_match": true,
+    "no_raw_titles_errors_or_payloads_published": true,
+    "no_API_tests_reexecuted_by_reviewer": true
+  },
+  "source_binding": {
+    "startup_report": {
+      "path": "docs/verification/authentication-foundation-core-startup.json",
+      "sha256": "05c45ff1f8d5c883abef56a5d7f89b60d4d411effadbdd022f6cb5636e6a7d0e",
+      "source_inventory_pointer": "/sources",
+      "source_count": 262
+    },
+    "additional_collector": {
+      "path": "policies/api_evidence.py",
+      "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2"
+    },
+    "executed_test_sources": [
+      {
+        "path": "tests/integration/asset-type-api-limits.test.ts",
+        "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4"
+      },
+      {
+        "path": "tests/integration/asset-type-migration-storage.test.ts",
+        "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+      },
+      {
+        "path": "tests/integration/asset-type-migrations.test.ts",
+        "sha256": "c5ad40c323b3405243e95c9b33b62d81e86ab596bca361779219c489fb7aa407"
+      },
+      {
+        "path": "tests/integration/asset-type-storage.test.ts",
+        "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+      },
+      {
+        "path": "tests/integration/asset-types.test.ts",
+        "sha256": "08c5b7fd9aebea55d498b97b4c524e6e83eefb4c7e604b519996ec1932a2145e"
+      },
+      {
+        "path": "tests/integration/audit-integrity.test.ts",
+        "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad"
+      },
+      {
+        "path": "tests/integration/business-domain-asset-scope.test.ts",
+        "sha256": "d93449ab4014ee5feb45ab1fc30ce28c061675868139bf7595f79b815f5939a1"
+      },
+      {
+        "path": "tests/integration/business-domains-api.test.ts",
+        "sha256": "2ea88c68f5d96fffeecb80ed889b03ce7d0c40ffc30cb685d5aa9f1932dbc9a5"
+      },
+      {
+        "path": "tests/integration/business-domains-storage.test.ts",
+        "sha256": "1e1b0712c63bf957e33328285a42baad55adc07f1047cc53e7cdc608e8aff8f0"
+      },
+      {
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "eb1159e5c2f3004c3d90a82b2361c2665efff90d20b3eb18f8e58a7929ebd579"
+      },
+      {
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7"
+      },
+      {
+        "path": "tests/integration/model-migration-api.test.ts",
+        "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb"
+      },
+      {
+        "path": "tests/integration/model-migration-storage.test.ts",
+        "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+      },
+      {
+        "path": "tests/integration/model-migrations.test.ts",
+        "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+      },
+      {
+        "path": "tests/integration/model-pagination.test.ts",
+        "sha256": "0809f4e7711f3fea796edc1f87a82fc6ece9684c0c6483e4d506a233c4d0d0d2"
+      },
+      {
+        "path": "tests/integration/models.test.ts",
+        "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1"
+      },
+      {
+        "path": "tests/integration/relation-migration-api.test.ts",
+        "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db"
+      },
+      {
+        "path": "tests/integration/relation-participation-storage.test.ts",
+        "sha256": "3e85a9ead572f743fec618c0fe2cca042cf0005f79c63cac08cb4ddddf3c6765"
+      },
+      {
+        "path": "tests/integration/relation-storage.test.ts",
+        "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619"
+      },
+      {
+        "path": "tests/integration/relations.test.ts",
+        "sha256": "eef1490ff12eae279018027edfdbbbd9dee2bae739cf925e82f16fd81ecba760"
+      }
+    ],
+    "executed_test_source_manifest_sha256": "d3fb257a0827f96b403e69a873641a5d2e217dec9e83a7cb12ea60bca2fd727c",
+    "host_and_committed_source_matches": 263,
+    "services": [
+      {
+        "service": "api",
+        "container_id": "875c1a4ce738ac93b55cca925018825d78b0ba4dad6c189237cbe6d24a985599",
+        "image": "sha256:b82f4d0b692cf9c7dbf338068eec5cded03909e76f1ffbb89f4187edc9d1d6b1",
+        "container_matches_before": true,
+        "image_matches_before": true,
+        "started_at": "2026-11-16T07:45:08.733098054Z",
+        "restart_count": 0,
+        "status": "running",
+        "health": "healthy",
+        "source_count": 263,
+        "mismatches": []
+      },
+      {
+        "service": "site-runner",
+        "container_id": "1275f358eba3a521f5f4c264da2b5230b09fe99e7879b4f6510accd194eebb79",
+        "image": "sha256:b82f4d0b692cf9c7dbf338068eec5cded03909e76f1ffbb89f4187edc9d1d6b1",
+        "container_matches_before": true,
+        "image_matches_before": true,
+        "started_at": "2026-11-16T07:45:14.330392793Z",
+        "restart_count": 0,
+        "status": "running",
+        "health": "healthy",
+        "source_count": 263,
+        "mismatches": []
+      },
+      {
+        "service": "workflow-worker",
+        "container_id": "0da08ad049a15b52c8938080403f07f8490bc8f8b6e79446112d68924d12f655",
+        "image": "sha256:b82f4d0b692cf9c7dbf338068eec5cded03909e76f1ffbb89f4187edc9d1d6b1",
+        "container_matches_before": true,
+        "image_matches_before": true,
+        "started_at": "2026-11-16T07:45:14.332319084Z",
+        "restart_count": 0,
+        "status": "running",
+        "health": "healthy",
+        "source_count": 263,
+        "mismatches": []
+      }
+    ],
+    "matching_application_image": "sha256:b82f4d0b692cf9c7dbf338068eec5cded03909e76f1ffbb89f4187edc9d1d6b1",
+    "post_execution_readback": {
+      "path": ".local/evidence/authn-core-transition/api-after-source-readback.json",
+      "recorded_at": "2026-11-16T08:03:32.603195+00:00",
+      "sha256": "38f793599563f3bd1f17f44afa003a52834f1f17ceb8b3612d76dbcf8a94a352"
+    }
+  },
+  "schema_prerequisite": {
+    "migration": "012_authentication_foundation.sql",
+    "sha256": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77",
+    "applied_at": "2026-11-16T07:44:35.889418+00:00",
+    "all12_migration_checksums_match": true,
+    "source": "Startup report and independent33-check readback; all13 private tables were empty except installation_root at the pre-API snapshot."
+  },
+  "private_originals": [
+    {
+      "path": ".local/evidence/authn-core-transition/api-execution.json",
+      "sha256": "e7aa9f971f9606bfb780c37ba0ae655d3f61672d6e4a8825c87d4350aa2715d8",
+      "bytes": 756,
+      "visibility": "PRIVATE_ORIGINAL_UNMODIFIED"
+    },
+    {
+      "path": ".local/evidence/authn-core-transition/api-summary.json",
+      "sha256": "bf97237785bd5b887b5aa94d40b1d6a33de4704385bef0ec0b573112ab9d90ba",
+      "bytes": 26692,
+      "visibility": "PRIVATE_ORIGINAL_UNMODIFIED"
+    },
+    {
+      "path": ".local/evidence/authn-core-transition/seed.log",
+      "sha256": "c73c21ab57f73d564a5186cd7ecfe5f2fedd339b0c308429a7e122ca32ca29c6",
+      "bytes": 843,
+      "visibility": "PRIVATE_ORIGINAL_UNMODIFIED"
+    },
+    {
+      "path": ".local/evidence/authn-core-transition/api.log",
+      "sha256": "603e60266b9d2a3c032b888993f76e2e2520c0ab6f19b7760561ba5376f16e97",
+      "bytes": 237,
+      "visibility": "PRIVATE_ORIGINAL_UNMODIFIED"
+    },
+    {
+      "path": ".local/evidence/api-runs/20261116T074936Z-8eccdc33562d4550852e28c0c6f3adb7/output.tap",
+      "sha256": "82c2201ac5056462ecf3a5407cc13e3c7c51115a785d687eb76e80c87d9e648e",
+      "bytes": 44963,
+      "visibility": "PRIVATE_ORIGINAL_UNMODIFIED"
+    },
+    {
+      "path": ".local/evidence/api-runs/20261116T074936Z-8eccdc33562d4550852e28c0c6f3adb7/summary.json",
+      "sha256": "bf97237785bd5b887b5aa94d40b1d6a33de4704385bef0ec0b573112ab9d90ba",
+      "bytes": 26692,
+      "visibility": "PRIVATE_ORIGINAL_UNMODIFIED"
+    },
+    {
+      "path": ".local/evidence/authn-core-transition/api-after-source-readback.json",
+      "sha256": "38f793599563f3bd1f17f44afa003a52834f1f17ceb8b3612d76dbcf8a94a352",
+      "bytes": 124243,
+      "visibility": "PRIVATE_ORIGINAL_UNMODIFIED"
+    },
+    {
+      "path": ".local/evidence/authn-core-transition/readback.json",
+      "sha256": "40d78c035cb5d4d135e6e6881b0c1647b4fd02080fe7e85622812f014a38adcf",
+      "bytes": 230659,
+      "visibility": "PRIVATE_ORIGINAL_UNMODIFIED"
+    }
+  ],
+  "later_gates": {
+    "browser": "UNQUALIFIED_SEPARATE_GATE",
+    "hosted_CI": "NOT_QUALIFIED_BY_THIS_REPORT",
+    "production": "NOT_RUN"
+  },
+  "limitations": [
+    "The154 cases are the complete current existing API integration inventory, not154 newly added authentication-foundation cases. SQL012 native storage/concurrency qualification is separate.",
+    "The seed command exited0 after running the real harbor-demo seed. This report does not independently requery all seeded rows or infer connector scans, placements or seed-recovery qualification.",
+    "The application remains on its existing authentication and authorization path. Protected OIDC broker/cookie/CSRF wiring, canonical authority loaders, administration, service leases, SQL/OpenSearch parity and atomic all-ingress cutover remain required.",
+    "Source and image checks identify actual local running files and container/image IDs, not an external signed image attestation or every unlisted build dependency.",
+    "Container metadata/source readbacks are point-in-time. No runtime mutation, API request or test invocation was performed during independent review; the separate browser run was left untouched.",
+    "Raw TAP and execution logs remain private and unchanged. Public coordinates and digests do not expose synthetic fixture values, authentication data, SQL errors or raw output.",
+    "No browser, hosted, deployment, production, complete-programme or release-readiness PASS is claimed."
+  ]
+}

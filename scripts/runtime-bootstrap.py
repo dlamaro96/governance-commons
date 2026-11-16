@@ -26,8 +26,16 @@ else:
     values["personas"] = {username: secrets.token_urlsafe(18) for username in ("steward", "owner", "consumer", "auditor", "summit", "engineer")}
     write(STATE, json.dumps(values, indent=2) + "\n")
 
+# Inactive foundation executors have separate native credentials. Preserve
+# existing values and never reactivate/rotate an already provisioned role.
+for key in ('GC_AUTHN_LOGIN_PASSWORD', 'GC_AUTHN_API_PASSWORD'):
+    if key not in values:
+        values[key] = secrets.token_urlsafe(36)
+write(STATE, json.dumps(values, indent=2) + "\n")
+
 tenants = ["aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb"]
-env = {key: value for key, value in values.items() if key != "personas"}
+env = {key: value for key, value in values.items()
+       if key not in ('personas', 'GC_AUTHN_LOGIN_PASSWORD', 'GC_AUTHN_API_PASSWORD')}
 env.update({"LOCAL_UID": str(os.getuid()), "LOCAL_GID": str(os.getgid()), "SITE_TENANTS": ",".join(tenants)})
 write(LOCAL / "runtime.env", "".join(f"{key}={value}\n" for key, value in env.items()))
 write(LOCAL / "source-secrets.json", json.dumps({"demo-postgres": {

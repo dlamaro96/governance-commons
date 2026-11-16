@@ -65,19 +65,42 @@ test('E2E-02/03: real OIDC, UI source registration, scan, discovery, ownership a
   await search.fill('orders');
   await search.press('Enter');
   await expect(page).toHaveURL(/q=orders/);
-  await page.getByRole('radio', { name: /^Table/ }).check();
+  async function renderedCatalogPage(cursor: string, navigate: () => Promise<void>) {
+    const origin = new URL(page.url()).origin;
+    const loaded = page.waitForResponse(response => {
+      const url = new URL(response.url());
+      return response.request().method() === 'GET' && url.origin === origin && url.pathname === '/api/v1/assets'
+        && url.searchParams.get('q') === 'orders' && url.searchParams.get('type') === 'table'
+        && url.searchParams.get('cursor') === cursor && url.searchParams.get('limit') === '50';
+    });
+    await navigate();
+    const response = await loaded;
+    expect(response.ok()).toBeTruthy();
+    const result: { items: { id: string }[]; nextCursor: string | null } = await response.json();
+    await expect(page).toHaveURL(url => url.pathname === '/catalog' && url.searchParams.get('q') === 'orders'
+      && url.searchParams.get('type') === 'table' && (url.searchParams.get('cursor') || '') === cursor);
+    // A response can finish before React commits its rows. Match the complete
+    // returned page, not an already-enabled pager or the previous page's row.
+    const expectedLinks = result.items.map(asset => `/catalog/${asset.id}`).sort();
+    await expect.poll(() => page.locator('.catalog-results tbody tr a.asset-link')
+      .evaluateAll(links => links.map(link => link.getAttribute('href')).sort())).toEqual(expectedLinks);
+    return result;
+  }
+  let catalogPage = await renderedCatalogPage('', () => page.getByRole('radio', { name: /^Table/ }).check());
   const assetRow = page.locator('tbody tr').filter({ hasText: sourceName }).filter({ has: page.getByRole('link', { name: 'orders', exact: true }) });
   // Repeated real scans retain independent sources. Exercise the actual catalog
   // pagination instead of assuming this source sorts into the first fifty rows.
+  const visitedCursors = new Set<string>();
   for (let visited = 0; await assetRow.count() === 0; visited += 1) {
     expect(visited).toBeLessThan(199);
+    expect(catalogPage.nextCursor).not.toBeNull();
+    const cursor = catalogPage.nextCursor!;
+    expect(visitedCursors.has(cursor)).toBe(false);
+    visitedCursors.add(cursor);
     const more = page.locator('.pagination').getByRole('button').last();
     await expect(more).toBeEnabled();
-    const loaded = page.waitForResponse(response => response.url().includes('/api/v1/assets?') && response.request().method() === 'GET');
-    await more.click();
-    expect((await loaded).ok()).toBeTruthy();
+    catalogPage = await renderedCatalogPage(cursor, () => more.click());
     await expect(page.locator('.pagination').getByRole('button').first()).toBeEnabled();
-    await expect(page.locator('.catalog-results [aria-busy="true"]')).toHaveCount(0);
   }
   await assetRow.getByRole('link', { name: 'orders', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'orders', exact: true })).toBeVisible();

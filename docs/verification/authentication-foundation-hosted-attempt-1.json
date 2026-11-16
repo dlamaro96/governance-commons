@@ -1,0 +1,798 @@
+{
+  "schema_version": 1,
+  "status": "NOT_PASSED",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "recorded_at": "2026-11-16T08:44:25.646286+00:00",
+  "repository": "dlamaro96/governance-commons",
+  "pull_request": 21,
+  "qualification_attempt": 1,
+  "workflow_attempt": 1,
+  "scope": "First hosted authentication-foundation attempt at exact e57cb2c head and tested merge7c55a80. Source security, dependency metadata, secret scopes and154 real API outcomes are verified. Development failed at business-domain seed qualification; the isolated authentication-foundation gate and browser stage did not run. This report preserves that failure and does not substitute later local or hosted evidence.",
+  "workflow_observations": {
+    "source": {
+      "run_id": 43827530779,
+      "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43827530779",
+      "outcome": "SUCCESS_UI_OBSERVED",
+      "stored_source_qualification": "PASS"
+    },
+    "development": {
+      "run_id": 43827530850,
+      "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43827530850",
+      "outcome": "FAILURE_UI_OBSERVED",
+      "safe_collector_outcome": "NOT_PASSED",
+      "behavior_job_id": 133164801748,
+      "ui_failed_step_numbers": [
+        20,
+        23
+      ]
+    },
+    "provenance": "Root inspected the GitHub UI at2026-11-16T08:11Z and downloaded the exact named artifacts. This independent review used original extracted files, immutable Git blobs/commit metadata and stored CodeQL analyses/alerts only; no Actions metadata/log/check APIs.",
+    "original": {
+      "path": ".local/evidence/foundation-hosted-attempt-1/ui-observation.json",
+      "bytes": 1402,
+      "sha256": "2200af18de1f22f2bb2fab07b857be75ba71c0160e88a94304bdfdbb3354a931"
+    }
+  },
+  "source_binding": {
+    "head_commit": "e57cb2cfae7b3ec161b87cfa97c4c70edb1045cb",
+    "tested_merge": "7c55a80ff43afecc6e81cc938528e9900ecc9a14",
+    "ref": "refs/pull/21/merge",
+    "identical_tree": "90ed87130864935f9648bf696fd597f752d63028",
+    "immutable_git_blobs": 987,
+    "source_bytes": 45467485,
+    "source_digest": "409dea5223397e95b87b1b65e04d0c11bd8ce4141269ef00880ab31eb535745b",
+    "method": "Exact commit metadata proves identical tested-merge/head tree and parent pair. All987 immutable head blobs were re-read and reconciled with all three byte-identical source manifests, including path, byte length, SHA256, language and canonical source digest. No mutable source or later repair was substituted.",
+    "private_binding": {
+      "path": ".local/evidence/foundation-hosted-attempt-1/review/attempt-2/source-binding.json",
+      "bytes": 204539,
+      "sha256": "8345fa6477c8349e2352ba20636b90e7982b87baa84e011dfcb5047d6ba35650"
+    },
+    "runtime_limit": "Safe API evidence binds20 executed integration test files. No running application-image digest/source readback or rebuilt-image attestation was exported."
+  },
+  "source_security": {
+    "status": "PASS",
+    "zero_sarif_findings": true,
+    "complete_ref_scoped_alert_count": 0,
+    "stored_analysis_count": 3,
+    "languages": [
+      {
+        "language": "actions",
+        "status": "PASS",
+        "coverage": {
+          "databaseFiles": 2,
+          "expectedFiles": 2,
+          "extractedExpectedFiles": 2,
+          "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+        },
+        "resolved_queries": 24,
+        "sarif_rules": 23,
+        "findings": 0,
+        "tool_version": "2.27.4",
+        "query_pack": "codeql/actions-queries",
+        "query_version": "0.6.39",
+        "library_version": "0.7.1",
+        "started_at": "2026-11-16T07:58:37.383552+00:00",
+        "finished_at": "2026-11-16T07:59:18.113822+00:00",
+        "analysis_id": 2174689121,
+        "sarif_id": "a0b69064-e193-11f1-8895-b971e2ec239d",
+        "stored_analysis": {
+          "ref": "refs/pull/21/merge",
+          "commit_sha": "7c55a80ff43afecc6e81cc938528e9900ecc9a14",
+          "analysis_key": ".github/workflows/security.yml:sast-actions",
+          "environment": "{}",
+          "category": "governance-commons/actions",
+          "error": "",
+          "created_at": "2026-11-16T07:59:21Z",
+          "results_count": 0,
+          "rules_count": 23,
+          "id": 2174689121,
+          "url": "https://api.github.com/repos/dlamaro96/governance-commons/code-scanning/analyses/2174689121",
+          "sarif_id": "a0b69064-e193-11f1-8895-b971e2ec239d",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": true,
+          "warning": ""
+        },
+        "sarif_original": {
+          "path": ".local/evidence/foundation-hosted-attempt-1/source-actions/actions.sarif",
+          "bytes": 268073,
+          "sha256": "fac8c87b27a85e415c0c25f85827adb62245df2bbed8574b487ab7f01f308959"
+        }
+      },
+      {
+        "language": "javascript-typescript",
+        "status": "PASS",
+        "coverage": {
+          "databaseFiles": 240,
+          "expectedFiles": 215,
+          "extractedExpectedFiles": 215,
+          "extractedPathsDigest": "59e7acf1000649194bd13c8422f3a5dcd1b51cb1a739a397398b896faa561980"
+        },
+        "resolved_queries": 105,
+        "sarif_rules": 103,
+        "findings": 0,
+        "tool_version": "2.27.4",
+        "query_pack": "codeql/javascript-queries",
+        "query_version": "2.5.0",
+        "library_version": "3.0.0",
+        "started_at": "2026-11-16T07:58:42.573396+00:00",
+        "finished_at": "2026-11-16T08:01:02.215678+00:00",
+        "analysis_id": 2174697569,
+        "sarif_id": "def7d3ce-e193-11f1-9080-908cdf6535ad",
+        "stored_analysis": {
+          "ref": "refs/pull/21/merge",
+          "commit_sha": "7c55a80ff43afecc6e81cc938528e9900ecc9a14",
+          "analysis_key": ".github/workflows/security.yml:sast-javascript-typescript",
+          "environment": "{}",
+          "category": "governance-commons/javascript-typescript",
+          "error": "",
+          "created_at": "2026-11-16T08:01:05Z",
+          "results_count": 0,
+          "rules_count": 103,
+          "id": 2174697569,
+          "url": "https://api.github.com/repos/dlamaro96/governance-commons/code-scanning/analyses/2174697569",
+          "sarif_id": "def7d3ce-e193-11f1-9080-908cdf6535ad",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": true,
+          "warning": ""
+        },
+        "sarif_original": {
+          "path": ".local/evidence/foundation-hosted-attempt-1/source-js/javascript-typescript.sarif",
+          "bytes": 552180,
+          "sha256": "fe6bbdbbfae442ec5ad0466bc79f292dee5f302991d383289cef4a906d7d08a1"
+        }
+      },
+      {
+        "language": "python",
+        "status": "PASS",
+        "coverage": {
+          "databaseFiles": 54,
+          "expectedFiles": 35,
+          "extractedExpectedFiles": 35,
+          "extractedPathsDigest": "bac2dd000e409d4add5c18984afe373065b392062f5a2d0df711550aea53ed21"
+        },
+        "resolved_queries": 52,
+        "sarif_rules": 50,
+        "findings": 0,
+        "tool_version": "2.27.4",
+        "query_pack": "codeql/python-queries",
+        "query_version": "1.9.0",
+        "library_version": "7.2.9",
+        "started_at": "2026-11-16T07:58:48.237528+00:00",
+        "finished_at": "2026-11-16T07:59:55.345239+00:00",
+        "analysis_id": 2174692190,
+        "sarif_id": "b706b2e0-e193-11f1-996e-dfac30cd951e",
+        "stored_analysis": {
+          "ref": "refs/pull/21/merge",
+          "commit_sha": "7c55a80ff43afecc6e81cc938528e9900ecc9a14",
+          "analysis_key": ".github/workflows/security.yml:sast-python",
+          "environment": "{}",
+          "category": "governance-commons/python",
+          "error": "",
+          "created_at": "2026-11-16T07:59:58Z",
+          "results_count": 0,
+          "rules_count": 50,
+          "id": 2174692190,
+          "url": "https://api.github.com/repos/dlamaro96/governance-commons/code-scanning/analyses/2174692190",
+          "sarif_id": "b706b2e0-e193-11f1-996e-dfac30cd951e",
+          "tool": {
+            "name": "CodeQL",
+            "guid": null,
+            "version": "2.27.4"
+          },
+          "deletable": true,
+          "warning": ""
+        },
+        "sarif_original": {
+          "path": ".local/evidence/foundation-hosted-attempt-1/source-python/python.sarif",
+          "bytes": 346583,
+          "sha256": "8d4fdcca156dd35dfa12d1609ac8487b4f6564bc5264439b112a25fffa1b4ee4"
+        }
+      }
+    ],
+    "limitations": [
+      "Expected coverage paths and source/policy/query digests are verified. Raw extracted-path BQRS tables and resolved query lists were not exported, so their supplied digests are not independently reproduced.",
+      "Stored analysis records match exact commit/ref/category/SARIF ID/tool/rule/result counts; complete ref-scoped all-state alert inventory is empty at readback time. Later analyses are outside scope.",
+      "Source analysis covers Actions, JavaScript/TypeScript and Python only. SQL/RLS, runtime security, images, general infrastructure and release qualification are not established."
+    ]
+  },
+  "api": {
+    "status": "PASS_SAFE_ARTIFACT_RECONCILED",
+    "executed_at": "2026-11-16T08:06:05.268977+00:00",
+    "command": "./dev test --suite security",
+    "expected_tests": 154,
+    "observed_results": 154,
+    "counts": {
+      "tests": 154,
+      "suites": 0,
+      "pass": 154,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "static_declarations": 154,
+    "test_source_files": 20,
+    "test_sources_match_reported": true,
+    "source_manifest": {
+      "sha256": "d3fb257a0827f96b403e69a873641a5d2e217dec9e83a7cb12ea60bca2fd727c"
+    },
+    "private_tap": {
+      "sha256": "d07f5cdaf52fab8f6c5c3b49b392f839d3e3518892b4ab6377b142d5b8c32d94",
+      "status": "DIGEST_REPORTED_RAW_BYTES_NOT_EXPORTED"
+    },
+    "method": "All154 distinct passed safe coordinates match exact immutable static test declarations. All20 source hashes and the canonical test-source digest were independently recomputed. The safe report has no flags/failures/skips/cancellations/todos.",
+    "original": {
+      "path": ".local/evidence/foundation-hosted-attempt-1/behavior/api-summary.json",
+      "bytes": 26692,
+      "sha256": "2a47940aa6bf3ee72449c85745158ce2aab655c0eaa29318f3a691f735ac552d"
+    }
+  },
+  "development_behavior": {
+    "status": "NOT_PASSED",
+    "recorded_at": "2026-11-16T08:11:10.470799+00:00",
+    "required_stages": 15,
+    "successful_stages": 12,
+    "failed_stages": 1,
+    "skipped_stages": 2,
+    "stages": [
+      {
+        "id": "bootstrap",
+        "command": "./dev bootstrap",
+        "outcome": "success"
+      },
+      {
+        "id": "services",
+        "command": "./dev up --profile core",
+        "outcome": "success"
+      },
+      {
+        "id": "object_store",
+        "command": "./dev test --suite object-store",
+        "outcome": "success"
+      },
+      {
+        "id": "seed",
+        "command": "./dev seed --dataset harbor-demo",
+        "outcome": "success"
+      },
+      {
+        "id": "connectors",
+        "command": "./dev test --suite connectors",
+        "outcome": "success"
+      },
+      {
+        "id": "security",
+        "command": "./dev test --suite security",
+        "outcome": "success"
+      },
+      {
+        "id": "model_upgrade",
+        "command": "./dev test --suite model-upgrade",
+        "outcome": "success"
+      },
+      {
+        "id": "asset_type_upgrade",
+        "command": "./dev test --suite asset-type-upgrade",
+        "outcome": "success"
+      },
+      {
+        "id": "type_migration_upgrade",
+        "command": "./dev test --suite type-migration-upgrade",
+        "outcome": "success"
+      },
+      {
+        "id": "relations_upgrade",
+        "command": "./dev test --suite relations-upgrade",
+        "outcome": "success"
+      },
+      {
+        "id": "relation_participation_upgrade",
+        "command": "./dev test --suite relation-participation-upgrade",
+        "outcome": "success"
+      },
+      {
+        "id": "business_domains_upgrade",
+        "command": "./dev test --suite business-domains-upgrade",
+        "outcome": "success"
+      },
+      {
+        "id": "business_domain_seed",
+        "command": "./dev test --suite business-domain-seed",
+        "outcome": "failure"
+      },
+      {
+        "id": "authority_authn_foundation",
+        "command": "./dev test --suite authority-authn-foundation",
+        "outcome": "skipped"
+      },
+      {
+        "id": "browser",
+        "command": "pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts",
+        "outcome": "skipped"
+      }
+    ],
+    "browser": {
+      "status": "SKIPPED",
+      "reported_test_rows": 0,
+      "reported_screenshots": 0,
+      "qualified_journeys": 0
+    },
+    "authentication_foundation": {
+      "status": "SKIPPED",
+      "safe_collector_authentication_evidence": "UNAVAILABLE_OR_INVALID",
+      "qualified_native_cases": "NOT_RUN_IN_THIS_HOSTED_ATTEMPT"
+    },
+    "original": {
+      "path": ".local/evidence/foundation-hosted-attempt-1/behavior/behavior-summary.json",
+      "bytes": 1247,
+      "sha256": "56726654a5a7d81d255f92652b1f80c278469f8040ffb39705f60be19a8995b7"
+    },
+    "limits": [
+      "Success records for the preceding12 stages are exact runner outcomes. Raw connector, storage, upgrade, seed and isolation logs/private reports were not exported; no subtest counts are invented.",
+      "Hosted unit/type/build results and exact unit counts are not separately exported by these artifacts. No local unit count is relabeled as hosted execution.",
+      "The failure remains unresolved by this historical report. Later repairs and gates require separate evidence."
+    ]
+  },
+  "failure_diagnosis": {
+    "status": "INFERENCE_ONLY",
+    "observed": "The safe behavior summary records business_domain_seed=failure, followed by authentication-foundation and browser skipped. The UI observed failed steps20 and23.",
+    "source_evidence": {
+      "path": "scripts/runtime-test-business-domain-seed.py",
+      "line": 358,
+      "sha256": "ef734f3100df73c278554927862e225952d38bca0c736fca750498b4e13dea6d",
+      "condition": "The tested harness requires exactly11 migration source files ending in011_business_domains.sql; the same tested tree contains012_authentication_foundation.sql."
+    },
+    "inference": "The stale source-migration admission check can reject this tree before seed qualification. Other earlier prerequisites also exist, so this cannot establish the exact hosted error without its raw diagnostic.",
+    "remote_raw_error": "NOT_EXPORTED_OR_OBSERVED",
+    "qualification_change": "NONE"
+  },
+  "dependencies": {
+    "status": "PASS_METADATA_RECONCILIATION",
+    "command": "python3 policies/check_dependencies.py --write",
+    "packages": 316,
+    "decision_counts": {
+      "REVIEWED_EXCEPTION": 5,
+      "ALLOW": 311
+    },
+    "metadata_decisions_recomputed": 316,
+    "license_evidence_companions": 1,
+    "lock_sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829",
+    "unresolved": 0,
+    "original": {
+      "path": ".local/evidence/foundation-hosted-attempt-1/dependencies/dependency-inventory.json",
+      "bytes": 196104,
+      "sha256": "f69a7881dac6f18a70ab9054c51b1ff11361ec251011eae042fd0225d925d14d"
+    },
+    "method": "All316 package/version pairs occur in the exact lock; every declared-license decision, reviewed exception and provenance companion was recomputed using immutable policy inputs.",
+    "limits": [
+      "Installed Linux pnpm development-host profile only; not a distribution SBOM or image/Python/vendor inventory.",
+      "Actual remote installed package and license-file bytes were not exported; metadata/provenance checks do not claim remote filesystem readback.",
+      "Required upstream licenses, notices and distribution obligations remain applicable."
+    ]
+  },
+  "secrets": {
+    "status": "PASS_REPORTED_SCOPES_RECONCILED",
+    "tool_version": "8.30.1",
+    "timestamp": "2026-11-16T07:58:22.620124+00:00",
+    "manifest_sha256": "00ea1ad2202b8f883702c894d2700de3b5580c98ef22450fd5f7a843f4456558",
+    "publishable_files": 987,
+    "results": [
+      {
+        "scope": "publishable_worktree",
+        "outcome": "PASS",
+        "exit_code": 0,
+        "finding_count": 0,
+        "findings": []
+      },
+      {
+        "scope": "reachable_git_history",
+        "outcome": "PASS",
+        "exit_code": 0,
+        "finding_count": 0,
+        "findings": []
+      }
+    ],
+    "original": {
+      "path": ".local/evidence/foundation-hosted-attempt-1/secrets/secret-scan.json",
+      "bytes": 1381,
+      "sha256": "b5fb6aca6bc8250a52c192ebd0a1b082387c25dc389fa48e6c3d7eb1b17418a2"
+    },
+    "method": "Recomputed the exact987-file worktree fingerprint from immutable bytes and verified pinned gitleaks8.30.1, clean worktree, two complete successful zero-finding scopes and exact workflow command.",
+    "command": "python3 policies/scan_secrets.py --install --output .local/evidence/secret-scan.json",
+    "command_summary_limit": "The original summary omits its relative --output argument; immutable workflow and artifact path establish the output destination.",
+    "limits": [
+      "Raw remote scanner logs/binary/archive and complete reachable-history snapshot were not exported. The all-reachable-history result is the original scanner report, not a new remote history scan.",
+      "Pinned-rule detection does not prove every possible secret is absent."
+    ]
+  },
+  "artifacts": {
+    "ui_observed_archives": [
+      {
+        "name": "sast-actions-43827530779-1",
+        "digest": "d70fd81b9a1095f7d867169e61614d5b630b2f0d0f5d41464d97dab2c16265f5"
+      },
+      {
+        "name": "sast-javascript-typescript-43827530779-1",
+        "digest": "d2c9c562f135b8150c2a4f3fc084f898833469ac356c5d57e4e5154e343878a3"
+      },
+      {
+        "name": "sast-python-43827530779-1",
+        "digest": "86448fac63b787d3e5786f4cec8ab78722b87e9b804c48ebfb70e5986535d43e"
+      },
+      {
+        "name": "behavior-7c55a80ff43afecc6e81cc938528e9900ecc9a14",
+        "digest": "7597dfb0925d00aa7bc6f6cba1dac6b459255f51ace897d25bf421aafd813dd3"
+      },
+      {
+        "name": "dependency-inventory-7c55a80ff43afecc6e81cc938528e9900ecc9a14",
+        "digest": "8f32c63f73a27cdabddf04a8a5002ef644f32b7231540909a56a0cf25c225ca6"
+      },
+      {
+        "name": "secret-scan-7c55a80ff43afecc6e81cc938528e9900ecc9a14",
+        "digest": "3e4fb27e33cdd9501de93b35cd32b11d2974b7eef9cedc04b80b6a73c03d8289"
+      }
+    ],
+    "digest_provenance": "ZIP digests are root UI observations. gh download retained extracted originals; ZIP bytes were not independently rehashed.",
+    "extracted_originals": [
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/behavior/api-summary.json",
+        "bytes": 26692,
+        "sha256": "2a47940aa6bf3ee72449c85745158ce2aab655c0eaa29318f3a691f735ac552d"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/behavior/behavior-summary.json",
+        "bytes": 1247,
+        "sha256": "56726654a5a7d81d255f92652b1f80c278469f8040ffb39705f60be19a8995b7"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/dependencies/dependency-inventory.json",
+        "bytes": 196104,
+        "sha256": "f69a7881dac6f18a70ab9054c51b1ff11361ec251011eae042fd0225d925d14d"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/secrets/secret-scan.json",
+        "bytes": 1381,
+        "sha256": "b5fb6aca6bc8250a52c192ebd0a1b082387c25dc389fa48e6c3d7eb1b17418a2"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-actions/actions-summary.json",
+        "bytes": 4153,
+        "sha256": "a09424aa3303aef4e34171014089e71a1b7d29deef795e54494fe267912c113f"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-actions/actions.sarif",
+        "bytes": 268073,
+        "sha256": "fac8c87b27a85e415c0c25f85827adb62245df2bbed8574b487ab7f01f308959"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-actions/source-manifest.json",
+        "bytes": 216225,
+        "sha256": "33028a65e03af6678fc95fceaf3a45f1d0191ffc7b5718ff6cd82431c82a9bfb"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-actions/summary.json",
+        "bytes": 6255,
+        "sha256": "58ab1b4b1dc2cd86639ebb972671cacbcb4e2bd5e7c5f79524bc77946b483165"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-actions/upload-status.json",
+        "bytes": 290,
+        "sha256": "43e80149e44f5d0f9a2ad9f8dc998e00e06a1ba0fdb1651a5f6a1d4bffe464ae"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-js/javascript-typescript-summary.json",
+        "bytes": 4645,
+        "sha256": "42dc6cb5d495cb33dbc20e049f9b67fac383cc7413a887e704d7dca4248c115d"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-js/javascript-typescript.sarif",
+        "bytes": 552180,
+        "sha256": "fe6bbdbbfae442ec5ad0466bc79f292dee5f302991d383289cef4a906d7d08a1"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-js/source-manifest.json",
+        "bytes": 216225,
+        "sha256": "33028a65e03af6678fc95fceaf3a45f1d0191ffc7b5718ff6cd82431c82a9bfb"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-js/summary.json",
+        "bytes": 6841,
+        "sha256": "6621befc848a4faaaabd9e7e161454fea87e7763a68f85f25ae3ab8a12226e0c"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-js/upload-status.json",
+        "bytes": 304,
+        "sha256": "037879bb30d69d21a6e503e17c760020f11d46c0e72d770dfbd9686c62ad3678"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-python/python-summary.json",
+        "bytes": 4623,
+        "sha256": "d54bfc9352321f431cd9e0222cbed217e4536509cdd632820804d43eee10a537"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-python/python.sarif",
+        "bytes": 346583,
+        "sha256": "8d4fdcca156dd35dfa12d1609ac8487b4f6564bc5264439b112a25fffa1b4ee4"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-python/source-manifest.json",
+        "bytes": 216225,
+        "sha256": "33028a65e03af6678fc95fceaf3a45f1d0191ffc7b5718ff6cd82431c82a9bfb"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-python/summary.json",
+        "bytes": 6788,
+        "sha256": "28e75b8a5ed8d7930e7d3b44e297efd48b618f4638890e1e4387e5e4275f178e"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/source-python/upload-status.json",
+        "bytes": 289,
+        "sha256": "b0a938a716e55bd22ebc8e01f0934138c5ebc73cc3ffd5cafc6dad17902d91ef"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/ui-observation.json",
+        "bytes": 1402,
+        "sha256": "2200af18de1f22f2bb2fab07b857be75ba71c0160e88a94304bdfdbb3354a931"
+      }
+    ],
+    "original_count": 20,
+    "originals_unchanged": true,
+    "prior_public_hosted_reports_preserved": 15
+  },
+  "independent_readback": {
+    "checks_passed": 2599,
+    "private_report": {
+      "path": ".local/evidence/foundation-hosted-attempt-1/review/attempt-2/verification.json",
+      "bytes": 334022,
+      "sha256": "b09d756041779c4b8827fa4c05c194a3f38cc24b811806b0c2a230efe1eb4758"
+    },
+    "verification_script": {
+      "path": ".local/evidence/foundation-hosted-attempt-1/review/verify-attempt-2.py",
+      "bytes": 16453,
+      "sha256": "7a56f35b0413d286b377836510429ac93ea0f12408968f357bf7ac190d41092b"
+    },
+    "readbacks": [
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/review/alerts.json",
+        "bytes": 2,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/review/analyses.json",
+        "bytes": 1645,
+        "sha256": "95ef376444d0719f885d5ea81708ea8cc4b30e63a514cf18a28878e90eddf77f"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/review/analysis-2174689121.json",
+        "bytes": 538,
+        "sha256": "06209738ee0d0da6a1fdf5de936c4f97f33c8249a96e7b92ee0ae576b4c7d44f"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/review/analysis-2174692190.json",
+        "bytes": 536,
+        "sha256": "b491ef753ac13a5acacd35338ffd4eff299630fa773946bc0dae0c9cf904ba2a"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/review/analysis-2174697569.json",
+        "bytes": 567,
+        "sha256": "e85c795060bd47544336d487c1723360944007a01ac66f67aeb066677a831c87"
+      },
+      {
+        "path": ".local/evidence/foundation-hosted-attempt-1/review/tested-merge-commit.json",
+        "bytes": 875643,
+        "sha256": "b68a6eb42305eb64491320ead43cc45a549ade478d5228a6ed8937a409ffb169"
+      }
+    ],
+    "relevant_immutable_source_pins": [
+      {
+        "path": ".github/codeql/codeql-config.yml",
+        "sha256": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+        "bytes": 230
+      },
+      {
+        "path": ".github/workflows/ci.yml",
+        "sha256": "a5a7bae5f7c980f46be4a85589fd4ca4b9eeeb976aa3c5f83bbc06ffcae8862a",
+        "bytes": 8719
+      },
+      {
+        "path": "packages/db/migrations/012_authentication_foundation.sql",
+        "sha256": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77",
+        "bytes": 122295
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829",
+        "bytes": 135054
+      },
+      {
+        "path": "policies/api_evidence.py",
+        "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2",
+        "bytes": 17367
+      },
+      {
+        "path": "policies/check_dependencies.py",
+        "sha256": "91bc1badc641f19936016689c9e9634152137ed4781e9ba975f89c48b32dc6fe",
+        "bytes": 9494
+      },
+      {
+        "path": "policies/ci_evidence.py",
+        "sha256": "a4391041cba1ac482605806d9ea2552f9b4e7b229f139dd08fd6e76d9793d4b9",
+        "bytes": 8331
+      },
+      {
+        "path": "policies/dependencies.yml",
+        "sha256": "358f1af7ddb4f8202348e846f27042c176ea920de01a2bd649e95c4cae82211d",
+        "bytes": 1990
+      },
+      {
+        "path": "policies/license-evidence.json",
+        "sha256": "5ab76dc9dc2a8f278be0acdd2b1a11e4b6e3635190805339f644f68d66b24a4c",
+        "bytes": 625
+      },
+      {
+        "path": "policies/license-exceptions.yml",
+        "sha256": "9f2f08c972580b15a1ea4933f980dd9e6db8a0df1c7b428dfe83463be77c8b49",
+        "bytes": 8079
+      },
+      {
+        "path": "policies/sast-policy.json",
+        "sha256": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+        "bytes": 2356
+      },
+      {
+        "path": "policies/sast-triage.json",
+        "sha256": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+        "bytes": 44
+      },
+      {
+        "path": "policies/sast.py",
+        "sha256": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7",
+        "bytes": 57604
+      },
+      {
+        "path": "policies/scan_secrets.py",
+        "sha256": "dbc99431f3cf231057e55e20388e3fcf99e343656030db484ddbbdf2a11e695e",
+        "bytes": 9384
+      },
+      {
+        "path": "policies/security-tools.json",
+        "sha256": "80c290e388da16f1a0642597104453690815a9bf784746d0502ab9e476b645bd",
+        "bytes": 844
+      },
+      {
+        "path": "scripts/runtime-test-business-domain-seed.py",
+        "sha256": "ef734f3100df73c278554927862e225952d38bca0c736fca750498b4e13dea6d",
+        "bytes": 35103
+      },
+      {
+        "path": "tests/integration/asset-type-api-limits.test.ts",
+        "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4",
+        "bytes": 7413
+      },
+      {
+        "path": "tests/integration/asset-type-migration-storage.test.ts",
+        "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93",
+        "bytes": 18757
+      },
+      {
+        "path": "tests/integration/asset-type-migrations.test.ts",
+        "sha256": "c5ad40c323b3405243e95c9b33b62d81e86ab596bca361779219c489fb7aa407",
+        "bytes": 16520
+      },
+      {
+        "path": "tests/integration/asset-type-storage.test.ts",
+        "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123",
+        "bytes": 12504
+      },
+      {
+        "path": "tests/integration/asset-types.test.ts",
+        "sha256": "08c5b7fd9aebea55d498b97b4c524e6e83eefb4c7e604b519996ec1932a2145e",
+        "bytes": 27847
+      },
+      {
+        "path": "tests/integration/audit-integrity.test.ts",
+        "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad",
+        "bytes": 7798
+      },
+      {
+        "path": "tests/integration/business-domain-asset-scope.test.ts",
+        "sha256": "d93449ab4014ee5feb45ab1fc30ce28c061675868139bf7595f79b815f5939a1",
+        "bytes": 6000
+      },
+      {
+        "path": "tests/integration/business-domains-api.test.ts",
+        "sha256": "2ea88c68f5d96fffeecb80ed889b03ce7d0c40ffc30cb685d5aa9f1932dbc9a5",
+        "bytes": 43876
+      },
+      {
+        "path": "tests/integration/business-domains-storage.test.ts",
+        "sha256": "1e1b0712c63bf957e33328285a42baad55adc07f1047cc53e7cdc608e8aff8f0",
+        "bytes": 23330
+      },
+      {
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "eb1159e5c2f3004c3d90a82b2361c2665efff90d20b3eb18f8e58a7929ebd579",
+        "bytes": 8505
+      },
+      {
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7",
+        "bytes": 7853
+      },
+      {
+        "path": "tests/integration/model-migration-api.test.ts",
+        "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb",
+        "bytes": 9390
+      },
+      {
+        "path": "tests/integration/model-migration-storage.test.ts",
+        "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c",
+        "bytes": 12873
+      },
+      {
+        "path": "tests/integration/model-migrations.test.ts",
+        "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064",
+        "bytes": 22229
+      },
+      {
+        "path": "tests/integration/model-pagination.test.ts",
+        "sha256": "0809f4e7711f3fea796edc1f87a82fc6ece9684c0c6483e4d506a233c4d0d0d2",
+        "bytes": 8372
+      },
+      {
+        "path": "tests/integration/models.test.ts",
+        "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1",
+        "bytes": 12559
+      },
+      {
+        "path": "tests/integration/relation-migration-api.test.ts",
+        "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db",
+        "bytes": 29866
+      },
+      {
+        "path": "tests/integration/relation-participation-storage.test.ts",
+        "sha256": "3e85a9ead572f743fec618c0fe2cca042cf0005f79c63cac08cb4ddddf3c6765",
+        "bytes": 37926
+      },
+      {
+        "path": "tests/integration/relation-storage.test.ts",
+        "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619",
+        "bytes": 29130
+      },
+      {
+        "path": "tests/integration/relations.test.ts",
+        "sha256": "eef1490ff12eae279018027edfdbbbd9dee2bae739cf925e82f16fd81ecba760",
+        "bytes": 55982
+      }
+    ],
+    "prior_verifier_attempt": {
+      "status": "PRESERVED_ASSERTION_FAILURE_IN_REVIEW_SCRIPT_ONLY",
+      "reason": "The first review script looked for len(applied) rather than the actual len(migrations) condition. The corrected independent check reads the exact source condition; no hosted artifact or product source was modified.",
+      "script": {
+        "path": ".local/evidence/foundation-hosted-attempt-1/review/verify.py",
+        "bytes": 16379,
+        "sha256": "5c928a0ff59d322d86954fd28db08af2df652c774c6dc8da8a5a990e19757aa9"
+      },
+      "checks": {
+        "path": ".local/evidence/foundation-hosted-attempt-1/review/failed-checks.json",
+        "bytes": 149895,
+        "sha256": "b1f65a8f0ee2310de5d40e191bf7389f03d46f36460273aa2da49391e02c0c70"
+      }
+    }
+  },
+  "limitations": [
+    "This is an accurately preserved failed hosted Development attempt, not overall success, release readiness or current runtime health.",
+    "The isolated protected broker/session/edge work and later local foundation/browser gates are outside this immutable source and report.",
+    "No application, SQL, Git, scanner policy, shared runtime or external service was mutated by this review. No tests or hosted scanners were rerun.",
+    "The complete product specification, every remaining scoped-authority activation gate and every M0\u2013M10/profile/release obligation remain required."
+  ]
+}

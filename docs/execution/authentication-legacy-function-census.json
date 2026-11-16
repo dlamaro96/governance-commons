@@ -1,0 +1,1449 @@
+{
+  "database": "governance",
+  "server_version": "17.11 (Debian 17.11-1.pgdg12+2)",
+  "functions": [
+    {
+      "signature": "gc_actor()",
+      "identity_arguments": "",
+      "name": "gc_actor",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_asset_type_constraints()",
+      "identity_arguments": "",
+      "name": "gc_asset_type_constraints",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_domain_adapt(domain_type_versions)",
+      "identity_arguments": "v domain_type_versions",
+      "name": "gc_domain_adapt",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_authorize(text[])",
+      "identity_arguments": "actions text[]",
+      "name": "gc_domain_authorize",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_begin(uuid,text,jsonb,text,boolean)",
+      "identity_arguments": "operation_id uuid, idempotency_key text, request_body jsonb, correlation_id text, migration boolean",
+      "name": "gc_domain_begin",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_bind(text)",
+      "identity_arguments": "family text",
+      "name": "gc_domain_bind",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_charge_legacy_revision(uuid,jsonb)",
+      "identity_arguments": "operation_id uuid, value jsonb",
+      "name": "gc_domain_charge_legacy_revision",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_charge(uuid,jsonb)",
+      "identity_arguments": "operation_id uuid, value jsonb",
+      "name": "gc_domain_charge",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_charge_value(uuid,jsonb,boolean)",
+      "identity_arguments": "operation_id uuid, value jsonb, canonical boolean",
+      "name": "gc_domain_charge_value",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_claim_changed(uuid,jsonb,jsonb,text,uuid)",
+      "identity_arguments": "operation_id uuid, before_value jsonb, after_value jsonb, action_name text, migration_id uuid",
+      "name": "gc_domain_claim_changed",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_current(boolean)",
+      "identity_arguments": "require_open boolean",
+      "name": "gc_domain_current",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_deadline()",
+      "identity_arguments": "",
+      "name": "gc_domain_deadline",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_definition_valid(jsonb)",
+      "identity_arguments": "v jsonb",
+      "name": "gc_domain_definition_valid",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_epoch_advance(uuid)",
+      "identity_arguments": "operation_id uuid",
+      "name": "gc_domain_epoch_advance",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_finalize()",
+      "identity_arguments": "",
+      "name": "gc_domain_finalize",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_idempotency_guard()",
+      "identity_arguments": "",
+      "name": "gc_domain_idempotency_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_install_dependencies()",
+      "identity_arguments": "",
+      "name": "gc_domain_install_dependencies",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_journal_claim(uuid,text,text,uuid,integer,jsonb)",
+      "identity_arguments": "operation_id uuid, action_name text, resource_kind text, resource_id uuid, resource_version integer, data jsonb",
+      "name": "gc_domain_journal_claim",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_journal_guard()",
+      "identity_arguments": "",
+      "name": "gc_domain_journal_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_legacy_guard()",
+      "identity_arguments": "",
+      "name": "gc_domain_legacy_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_owner_active(uuid)",
+      "identity_arguments": "owner_identity uuid",
+      "name": "gc_domain_owner_active",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_placement_view(asset_domain_placements)",
+      "identity_arguments": "row_value asset_domain_placements",
+      "name": "gc_domain_placement_view",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_policy(uuid,uuid,integer)",
+      "identity_arguments": "operation_id uuid, type_identity uuid, version_number integer",
+      "name": "gc_domain_policy",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_replay_authorize(text,text)",
+      "identity_arguments": "operation text, key text",
+      "name": "gc_domain_replay_authorize",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_resolve(uuid,uuid,jsonb)",
+      "identity_arguments": "operation_id uuid, root_id uuid, definition jsonb",
+      "name": "gc_domain_resolve",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_revision_guard()",
+      "identity_arguments": "",
+      "name": "gc_domain_revision_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_row_guard()",
+      "identity_arguments": "",
+      "name": "gc_domain_row_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_scope_epoch()",
+      "identity_arguments": "",
+      "name": "gc_domain_scope_epoch",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_seal(uuid,boolean)",
+      "identity_arguments": "operation_id uuid, migration boolean",
+      "name": "gc_domain_seal",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_statement_guard()",
+      "identity_arguments": "",
+      "name": "gc_domain_statement_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_text(jsonb,integer,boolean)",
+      "identity_arguments": "v jsonb, maximum integer, required boolean",
+      "name": "gc_domain_text",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_tuple(jsonb)",
+      "identity_arguments": "view_value jsonb",
+      "name": "gc_domain_tuple",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_tuple_valid(jsonb,jsonb,boolean)",
+      "identity_arguments": "v jsonb, policy jsonb, require_owner_activity boolean",
+      "name": "gc_domain_tuple_valid",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_type_migration_begin(uuid,text,jsonb,text)",
+      "identity_arguments": "operation_id uuid, idempotency_key text, request_body jsonb, correlation_id text",
+      "name": "gc_domain_type_migration_begin",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_type_migration_seal(uuid)",
+      "identity_arguments": "operation_id uuid",
+      "name": "gc_domain_type_migration_seal",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_type_view(domain_type_versions,integer)",
+      "identity_arguments": "row_value domain_type_versions, head integer",
+      "name": "gc_domain_type_view",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_uuid(jsonb,boolean)",
+      "identity_arguments": "v jsonb, nullable boolean",
+      "name": "gc_domain_uuid",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_verify(uuid)",
+      "identity_arguments": "operation_id uuid",
+      "name": "gc_domain_verify",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_version_guard()",
+      "identity_arguments": "",
+      "name": "gc_domain_version_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_view(domains)",
+      "identity_arguments": "row_value domains",
+      "name": "gc_domain_view",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_write_begin(uuid,text,jsonb,text)",
+      "identity_arguments": "operation_id uuid, idempotency_key text, request_body jsonb, correlation_id text",
+      "name": "gc_domain_write_begin",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_domain_write_seal(uuid)",
+      "identity_arguments": "operation_id uuid",
+      "name": "gc_domain_write_seal",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_guard_model_migration_asset()",
+      "identity_arguments": "",
+      "name": "gc_guard_model_migration_asset",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_guard_type_migration_asset()",
+      "identity_arguments": "",
+      "name": "gc_guard_type_migration_asset",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_immutable_audit()",
+      "identity_arguments": "",
+      "name": "gc_immutable_audit",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_lock_type_migration_principals(uuid[])",
+      "identity_arguments": "requested uuid[]",
+      "name": "gc_lock_type_migration_principals",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_model_migration_shape(jsonb,jsonb,text,integer,integer,integer)",
+      "identity_arguments": "p_plan jsonb, p_assets jsonb, p_model_id text, p_from integer, p_to integer, p_count integer",
+      "name": "gc_model_migration_shape",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_normalize_model_migration_assets()",
+      "identity_arguments": "",
+      "name": "gc_normalize_model_migration_assets",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_normalize_type_migration_assets()",
+      "identity_arguments": "",
+      "name": "gc_normalize_type_migration_assets",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_acl_project()",
+      "identity_arguments": "",
+      "name": "gc_relation_acl_project",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_acl_projection_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_acl_projection_guard",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_asset_tuple(assets)",
+      "identity_arguments": "row_value assets",
+      "name": "gc_relation_asset_tuple",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_attribute_transform(jsonb,jsonb,jsonb,jsonb,jsonb,boolean)",
+      "identity_arguments": "head jsonb, source jsonb, target jsonb, plan jsonb, attributes jsonb, validate_only boolean",
+      "name": "gc_relation_attribute_transform",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_authorize(text[])",
+      "identity_arguments": "actions text[]",
+      "name": "gc_relation_authorize",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_binding_snapshot(relation_participations)",
+      "identity_arguments": "row_value relation_participations",
+      "name": "gc_relation_binding_snapshot",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_check_type(uuid,uuid)",
+      "identity_arguments": "tenant uuid, type_identity uuid",
+      "name": "gc_relation_check_type",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_decimal(text)",
+      "identity_arguments": "value text",
+      "name": "gc_relation_decimal",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_definition_valid(jsonb)",
+      "identity_arguments": "value jsonb",
+      "name": "gc_relation_definition_valid",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_endpoint_eligible(uuid,uuid,jsonb,text)",
+      "identity_arguments": "tenant uuid, asset uuid, definition jsonb, side text",
+      "name": "gc_relation_endpoint_eligible",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_endpoint_projection_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_endpoint_projection_guard",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_endpoint_rules(jsonb)",
+      "identity_arguments": "value jsonb",
+      "name": "gc_relation_endpoint_rules",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_endpoint_snapshot(uuid,uuid,integer)",
+      "identity_arguments": "tenant uuid, asset uuid, revision integer",
+      "name": "gc_relation_endpoint_snapshot",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_enqueue()",
+      "identity_arguments": "",
+      "name": "gc_relation_enqueue",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_asset_delete_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_graph_asset_delete_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_asset_evidence(text,integer,jsonb)",
+      "identity_arguments": "model_key text, model_version integer, request jsonb",
+      "name": "gc_relation_graph_asset_evidence",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_graph_asset_policy(text,integer,jsonb)",
+      "identity_arguments": "model_key text, model_version integer, request_body jsonb",
+      "name": "gc_relation_graph_asset_policy",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_graph_asset_preparation(uuid)",
+      "identity_arguments": "selected_operation uuid",
+      "name": "gc_relation_graph_asset_preparation",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_asset_revision_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_graph_asset_revision_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_asset_row(assets)",
+      "identity_arguments": "row_value assets",
+      "name": "gc_relation_graph_asset_row",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_graph_asset_write_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_graph_asset_write_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_begin(uuid,text,text,jsonb,text)",
+      "identity_arguments": "operation_id uuid, idempotency_operation text, idempotency_key text, request_body jsonb, correlation_id text",
+      "name": "gc_relation_graph_begin",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_budget(timestamp with time zone)",
+      "identity_arguments": "started_at timestamp with time zone",
+      "name": "gc_relation_graph_budget",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_candidate_assets(uuid)",
+      "identity_arguments": "selected_operation uuid",
+      "name": "gc_relation_graph_candidate_assets",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_candidate_types(uuid)",
+      "identity_arguments": "selected_operation uuid",
+      "name": "gc_relation_graph_candidate_types",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_capture_scope(uuid)",
+      "identity_arguments": "selected_operation uuid",
+      "name": "gc_relation_graph_capture_scope",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_charge(uuid,jsonb)",
+      "identity_arguments": "selected_operation uuid, value jsonb",
+      "name": "gc_relation_graph_charge",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_current()",
+      "identity_arguments": "",
+      "name": "gc_relation_graph_current",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_endpoint(uuid,integer,jsonb,jsonb)",
+      "identity_arguments": "asset_id uuid, asset_version integer, tuple jsonb, request_body jsonb",
+      "name": "gc_relation_graph_endpoint",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_graph_finalize()",
+      "identity_arguments": "",
+      "name": "gc_relation_graph_finalize",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_install_bindings(uuid,relation_graph_operation_type_claims)",
+      "identity_arguments": "selected_operation uuid, type_claim relation_graph_operation_type_claims",
+      "name": "gc_relation_graph_install_bindings",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_install_edges(uuid,relation_graph_operation_type_claims)",
+      "identity_arguments": "p_operation_id uuid, type_claim relation_graph_operation_type_claims",
+      "name": "gc_relation_graph_install_edges",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_journal_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_graph_journal_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_journal(text,text,integer,uuid,text)",
+      "identity_arguments": "action_name text, resource text, resource_version integer, actor uuid, correlation text",
+      "name": "gc_relation_graph_journal",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_graph_model_write_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_graph_model_write_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_nested_receipt_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_graph_nested_receipt_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_normalize_change_set(jsonb)",
+      "identity_arguments": "value jsonb",
+      "name": "gc_relation_graph_normalize_change_set",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_normalize_definition(jsonb)",
+      "identity_arguments": "value jsonb",
+      "name": "gc_relation_graph_normalize_definition",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_normalize_transform(jsonb,text)",
+      "identity_arguments": "value jsonb, owner_key text",
+      "name": "gc_relation_graph_normalize_transform",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_normalize_values(jsonb)",
+      "identity_arguments": "value jsonb",
+      "name": "gc_relation_graph_normalize_values",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_plan_shape(jsonb,text)",
+      "identity_arguments": "plan jsonb, mode text",
+      "name": "gc_relation_graph_plan_shape",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_graph_prepare(text,jsonb,text)",
+      "identity_arguments": "idempotency_key text, request_body jsonb, correlation_id text",
+      "name": "gc_relation_graph_prepare",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_project_asset(assets,jsonb)",
+      "identity_arguments": "row_value assets, request_body jsonb",
+      "name": "gc_relation_graph_project_asset",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_graph_project_endpoint(assets,jsonb)",
+      "identity_arguments": "row_value assets, request_body jsonb",
+      "name": "gc_relation_graph_project_endpoint",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_graph_receipt_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_graph_receipt_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_repair_authorize(uuid)",
+      "identity_arguments": "receipt_id uuid",
+      "name": "gc_relation_graph_repair_authorize",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_resolve_asset(jsonb,boolean)",
+      "identity_arguments": "definition jsonb, verify_ancestry boolean",
+      "name": "gc_relation_graph_resolve_asset",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_graph_scope_eligible(uuid,uuid,jsonb,text,timestamp with time zone)",
+      "identity_arguments": "tenant uuid, asset uuid, definition jsonb, side text, started_at timestamp with time zone",
+      "name": "gc_relation_graph_scope_eligible",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_scope_project(uuid,integer,text,integer,text,jsonb,timestamp with time zone)",
+      "identity_arguments": "asset uuid, asset_version integer, model_key text, model_version integer, state text, request_body jsonb, started_at timestamp with time zone",
+      "name": "gc_relation_graph_scope_project",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_scope_tick(timestamp with time zone,uuid)",
+      "identity_arguments": "started_at timestamp with time zone, subject uuid",
+      "name": "gc_relation_graph_scope_tick",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_seal(uuid)",
+      "identity_arguments": "operation_id uuid",
+      "name": "gc_relation_graph_seal",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_snapshot(uuid,boolean)",
+      "identity_arguments": "selected_operation uuid, after_state boolean",
+      "name": "gc_relation_graph_snapshot",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_sort(jsonb,text[],boolean,text[])",
+      "identity_arguments": "value jsonb, sort_path text[], numeric_key boolean, second_path text[]",
+      "name": "gc_relation_graph_sort",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_source_history_valid(relations)",
+      "identity_arguments": "row_value relations",
+      "name": "gc_relation_graph_source_history_valid",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_transform_intent(jsonb,text,jsonb,jsonb,jsonb,uuid)",
+      "identity_arguments": "transform jsonb, owner_key text, cohort jsonb, head_policy jsonb, target_policy jsonb, relation_identity uuid",
+      "name": "gc_relation_graph_transform_intent",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_graph_validate_intents(uuid)",
+      "identity_arguments": "selected_operation uuid",
+      "name": "gc_relation_graph_validate_intents",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_graph_values_valid(jsonb,jsonb,boolean)",
+      "identity_arguments": "value jsonb, definition jsonb, require_active_owner boolean",
+      "name": "gc_relation_graph_values_valid",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_json_bounded(jsonb,integer,integer,integer)",
+      "identity_arguments": "value jsonb, maximum_nodes integer, maximum_depth integer, maximum_bytes integer",
+      "name": "gc_relation_json_bounded",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_keys(jsonb,text[])",
+      "identity_arguments": "value jsonb, keys text[]",
+      "name": "gc_relation_keys",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_lifecycle_valid(jsonb)",
+      "identity_arguments": "value jsonb",
+      "name": "gc_relation_lifecycle_valid",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_model(jsonb)",
+      "identity_arguments": "definition jsonb",
+      "name": "gc_relation_model",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_mutation_complete()",
+      "identity_arguments": "",
+      "name": "gc_relation_mutation_complete",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_mutation_fence()",
+      "identity_arguments": "",
+      "name": "gc_relation_mutation_fence",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_participation_complete()",
+      "identity_arguments": "",
+      "name": "gc_relation_participation_complete",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_participation_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_participation_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_participation_revision_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_participation_revision_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_path(jsonb)",
+      "identity_arguments": "value jsonb",
+      "name": "gc_relation_path",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_policy_changes(jsonb,jsonb)",
+      "identity_arguments": "before_definition jsonb, after_definition jsonb",
+      "name": "gc_relation_policy_changes",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_positive_integer(jsonb)",
+      "identity_arguments": "value jsonb",
+      "name": "gc_relation_positive_integer",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_preparation_complete()",
+      "identity_arguments": "",
+      "name": "gc_relation_preparation_complete",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_preparation_view(relation_type_preparations)",
+      "identity_arguments": "row_value relation_type_preparations",
+      "name": "gc_relation_preparation_view",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_projected_eligible(jsonb,jsonb,text)",
+      "identity_arguments": "endpoint jsonb, definition jsonb, side text",
+      "name": "gc_relation_projected_eligible",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_publication_complete()",
+      "identity_arguments": "",
+      "name": "gc_relation_publication_complete",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_publication_principals(uuid)",
+      "identity_arguments": "type_identity uuid",
+      "name": "gc_relation_publication_principals",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_reserved_idempotency_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_reserved_idempotency_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_revision_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_revision_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_row_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_row_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_safe_id(text)",
+      "identity_arguments": "value text",
+      "name": "gc_relation_safe_id",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_schema_at(jsonb,text[])",
+      "identity_arguments": "model jsonb, path text[]",
+      "name": "gc_relation_schema_at",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_schema_changes(jsonb,jsonb,text,integer)",
+      "identity_arguments": "before_schema jsonb, after_schema jsonb, path text, depth integer",
+      "name": "gc_relation_schema_changes",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_schema_compatible(jsonb,jsonb)",
+      "identity_arguments": "before_schema jsonb, after_schema jsonb",
+      "name": "gc_relation_schema_compatible",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_schema_valid(jsonb,integer,boolean)",
+      "identity_arguments": "schema jsonb, depth integer, metadata boolean",
+      "name": "gc_relation_schema_valid",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_snapshot_base(relations)",
+      "identity_arguments": "row_value relations",
+      "name": "gc_relation_snapshot_base",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_sorted_pins(jsonb)",
+      "identity_arguments": "value jsonb",
+      "name": "gc_relation_sorted_pins",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_state_list(jsonb,boolean)",
+      "identity_arguments": "value jsonb, nullable boolean",
+      "name": "gc_relation_state_list",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_structural_policy(jsonb)",
+      "identity_arguments": "definition jsonb",
+      "name": "gc_relation_structural_policy",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_type_head_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_type_head_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_type_project()",
+      "identity_arguments": "",
+      "name": "gc_relation_type_project",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_type_version_guard()",
+      "identity_arguments": "",
+      "name": "gc_relation_type_version_guard",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_utc(timestamp with time zone)",
+      "identity_arguments": "value timestamp with time zone",
+      "name": "gc_relation_utc",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_utf16_length(text)",
+      "identity_arguments": "value text",
+      "name": "gc_relation_utf16_length",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_uuid_list(jsonb,integer)",
+      "identity_arguments": "value jsonb, maximum integer",
+      "name": "gc_relation_uuid_list",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_validate_final()",
+      "identity_arguments": "",
+      "name": "gc_relation_validate_final",
+      "security_definer": true,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": false,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_relation_values(relations)",
+      "identity_arguments": "row_value relations",
+      "name": "gc_relation_values",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_relation_value_valid(jsonb,jsonb,integer)",
+      "identity_arguments": "schema jsonb, value jsonb, depth integer",
+      "name": "gc_relation_value_valid",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_tenant()",
+      "identity_arguments": "",
+      "name": "gc_tenant",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_type_dependencies_insert()",
+      "identity_arguments": "",
+      "name": "gc_type_dependencies_insert",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_type_dependency_guard()",
+      "identity_arguments": "",
+      "name": "gc_type_dependency_guard",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_typed_model_version_required()",
+      "identity_arguments": "",
+      "name": "gc_typed_model_version_required",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_type_identity_immutable()",
+      "identity_arguments": "",
+      "name": "gc_type_identity_immutable",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_type_migration_canonical(jsonb,integer)",
+      "identity_arguments": "value jsonb, depth integer",
+      "name": "gc_type_migration_canonical",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_type_migration_complete()",
+      "identity_arguments": "",
+      "name": "gc_type_migration_complete",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_type_migration_consistent()",
+      "identity_arguments": "",
+      "name": "gc_type_migration_consistent",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_type_migration_hash(jsonb)",
+      "identity_arguments": "value jsonb",
+      "name": "gc_type_migration_hash",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": false
+    },
+    {
+      "signature": "gc_type_pins_valid(jsonb,integer)",
+      "identity_arguments": "pins jsonb, maximum integer",
+      "name": "gc_type_pins_valid",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    },
+    {
+      "signature": "gc_type_version_consistent()",
+      "identity_arguments": "",
+      "name": "gc_type_version_consistent",
+      "security_definer": false,
+      "owner": "gc_owner",
+      "legacy_runtime_execute": true,
+      "public_execute": true
+    }
+  ],
+  "recordedAt": "2026-11-16T06:43:28.299213+00:00",
+  "scope": "Read-only live SQL001\u2013011 function privilege census; no runtime mutation or new foundation qualification.",
+  "migrationSources": [
+    {
+      "path": "packages/db/migrations/001_foundation.sql",
+      "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+    },
+    {
+      "path": "packages/db/migrations/002_audit_envelopes.sql",
+      "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+    },
+    {
+      "path": "packages/db/migrations/003_governance_models.sql",
+      "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+    },
+    {
+      "path": "packages/db/migrations/004_model_migrations.sql",
+      "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+    },
+    {
+      "path": "packages/db/migrations/005_model_migration_integrity.sql",
+      "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+    },
+    {
+      "path": "packages/db/migrations/006_inherited_asset_types.sql",
+      "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+    },
+    {
+      "path": "packages/db/migrations/007_asset_type_migrations.sql",
+      "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+    },
+    {
+      "path": "packages/db/migrations/008_constrained_relations.sql",
+      "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+    },
+    {
+      "path": "packages/db/migrations/009_relation_participation.sql",
+      "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+    },
+    {
+      "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+      "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+    },
+    {
+      "path": "packages/db/migrations/011_business_domains.sql",
+      "sha256": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+    }
+  ]
+}

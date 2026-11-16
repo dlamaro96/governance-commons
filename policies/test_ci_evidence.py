@@ -11,14 +11,16 @@ import tempfile
 import unittest
 from api_evidence import collect as collect_api
 import test_api_evidence
+import test_authentication_evidence
+from test_authentication_evidence import fixture as authentication_fixture
 
 COLLECTOR = Path(__file__).with_name("ci_evidence.py")
 FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations", "business-domains")
-STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "browser")
+STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "browser")
 
 
 class EvidenceGateTests(unittest.TestCase):
-    def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False, omitted_step=None):
+    def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False, omitted_step=None, authn_mutation=None, omit_authn=False):
         specs = [{"file": f"{name}.spec.ts", "line": line, "title": "PRIVATE_SYNTHETIC_TITLE",
                   "tests": [{"status": "expected", "results": [{"status": "passed", "duration": 1, "stdout": ["PRIVATE_SYNTHETIC_OUTPUT"]}]}]}
                  for name in FILES for line in ((10, 20, 30) if name == "business-domains" else (10, 20))]
@@ -29,6 +31,7 @@ class EvidenceGateTests(unittest.TestCase):
             (root / "policies").mkdir()
             shutil.copyfile(COLLECTOR, root / "policies/ci_evidence.py")
             shutil.copyfile(COLLECTOR.with_name("api_evidence.py"), root / "policies/api_evidence.py")
+            shutil.copyfile(COLLECTOR.with_name("authentication_evidence.py"), root / "policies/authentication_evidence.py")
             api_file = root / "tests/integration/example.test.ts"
             api_file.parent.mkdir(parents=True)
             api_file.write_text("test('synthetic API test', async () => {});\n")
@@ -40,6 +43,11 @@ class EvidenceGateTests(unittest.TestCase):
                 api_mutation(api)
             if not omit_api:
                 (source / "api-summary.json").write_text(json.dumps(api))
+            authn = authentication_fixture(root)
+            if authn_mutation:
+                authn_mutation(authn)
+            if not omit_authn:
+                (source / "authority-authn-foundation.json").write_text(json.dumps(authn))
             env = {**os.environ, **{f"GC_{step.upper()}_RESULT": "success" for step in STEPS},
                    "GITHUB_SHA": "a" * 40, "GITHUB_REPOSITORY": "example/fixture", "GITHUB_RUN_ID": "1"}
             if failed_step:
@@ -79,7 +87,7 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_missing_business_domain_qualification_steps_fail_closed(self):
-        for step in ("business_domains_upgrade", "business_domain_seed"):
+        for step in ("business_domains_upgrade", "business_domain_seed", "authority_authn_foundation"):
             with self.subTest(step=step):
                 code, report = self.collect(omitted_step=step)
                 self.assertEqual(code, 1)
@@ -97,7 +105,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
 
     def test_real_service_failure_cannot_be_overridden_by_successful_browser_results(self):
-        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed"):
+        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation"):
             with self.subTest(step=step):
                 code, report = self.collect(failed_step=step)
                 self.assertEqual(code, 1)
@@ -150,11 +158,37 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(report["outcome"], "NOT_PASSED")
         self.assertEqual(report["api_evidence"], "STEP_RESULT_MISMATCH")
 
+    def test_authentication_native_gate_and_evidence_are_required(self):
+        self.assertEqual(len(STEPS), 15)
+        code, report = self.collect(omit_authn=True)
+        self.assertEqual(code, 1)
+        self.assertEqual(report["authentication_evidence"], "UNAVAILABLE_OR_INVALID")
+        for mutation in (lambda report: report.update(commit="b"*40),
+                         lambda report: report.update(secret="PRIVATE_SYNTHETIC"),
+                         lambda report: report["cleanup"].update(ownedRemoved=False),
+                         lambda report: report["tests"].update(skipped=1)):
+            code, report = self.collect(authn_mutation=mutation)
+            self.assertEqual(code, 1)
+            self.assertEqual(report["authentication_evidence"], "UNAVAILABLE_OR_INVALID")
+        for option in ("failed_step", "omitted_step"):
+            code, report = self.collect(**{option: "authority_authn_foundation"})
+            self.assertEqual(code, 1)
+            self.assertEqual(report["authentication_evidence"], "STEP_RESULT_MISMATCH")
+
+    def test_workflow_executes_and_collects_all_fifteen_steps_before_browser(self):
+        workflow = (COLLECTOR.parent.parent / ".github/workflows/ci.yml").read_text()
+        self.assertIn("id: authority_authn_foundation\n        run: ./dev test --suite authority-authn-foundation", workflow)
+        self.assertLess(workflow.index("id: authority_authn_foundation"), workflow.index("id: browser"))
+        for step in STEPS:
+            self.assertEqual(workflow.count("id: " + step + "\n"), 1)
+            self.assertIn("GC_" + step.upper() + "_RESULT: ${{ steps." + step + ".outcome }}", workflow)
+
 
 def load_tests(loader, tests, pattern):
     # The existing hosted quality command also exercises the new API evidence
     # boundary; no new workflow privilege or artifact path is required.
     tests.addTests(loader.loadTestsFromModule(test_api_evidence))
+    tests.addTests(loader.loadTestsFromModule(test_authentication_evidence))
     return tests
 
 

@@ -1,0 +1,1994 @@
+{
+  "schema_version": 1,
+  "status": "PASS_EXACT_HOSTED_SOURCE_AND_DEVELOPMENT_SCOPE",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "runtime_authority_activated": false,
+  "recorded_at": "2026-11-16T07:14:35.600272+00:00",
+  "repository": "dlamaro96/governance-commons",
+  "pull_request": 20,
+  "attempt": 2,
+  "workflow_attempt": 1,
+  "scope": "Exact premerge reference-authority decision source and synthetic core regression; protected authentication foundation, postmerge execution and full programme/release remain separate.",
+  "source_binding": {
+    "head_commit": "cdec87664c0d6e06c08bcd38eb1a697ad66bd72c",
+    "tested_merge": "5e0234d312ef8a377cb897fa12eee2968692d74b",
+    "identical_tree": "e985b58b10a21a41ca2c7941a944a5693ac62f4f",
+    "ref": "refs/pull/20/merge",
+    "immutable_git_blobs": 935,
+    "source_bytes": 41587812,
+    "source_digest": "9eab6fd13b30b890b79c10667c31f5b6b995facced7b4dd401c15251e7f8cb27",
+    "private_binding": {
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/source-binding.json",
+      "sha256": "b555f2134078e5ed386a8770bda6a1f63bf82867f314b61d21688854ebe89f4a",
+      "bytes": 193304
+    }
+  },
+  "workflow_observations": {
+    "source": {
+      "run_id": 43817616108,
+      "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43817616108",
+      "outcome": "SUCCESS"
+    },
+    "development": {
+      "run_id": 43817616265,
+      "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43817616265",
+      "behaviorDuration": "25m46s",
+      "jobsPassed": 4,
+      "provenance": "Root directly inspected GitHub UI; this audit did not query Actions metadata, logs or checks.",
+      "qualityDuration": "57s",
+      "requiredDuration": "3s",
+      "secretsDuration": "21s",
+      "workflowConclusion": "SUCCESS"
+    }
+  },
+  "source_security": {
+    "languages": [
+      {
+        "analysis": "PASS",
+        "analysisId": 2174270491,
+        "category": "governance-commons/actions",
+        "coverage": {
+          "databaseFiles": 2,
+          "expectedFiles": 2,
+          "extractedExpectedFiles": 2,
+          "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+        },
+        "coverageQuerySha256": "aad6da298334a842bea221711b0e7c8b1c4864ce2c66632e4d93c846742a4505",
+        "expectedPathsVerifiedAgainstImmutableSource": 2,
+        "extractorRuntime": null,
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-16T06:35:04.059237+00:00",
+        "language": "actions",
+        "libraryVersion": "0.7.1",
+        "outcome": "PASS",
+        "publishedSarifSha256": "424410737bfef2990ebc4f2f092bdb493ba2ab49a0e57eaeb31e3f14a8f66f59",
+        "queryPack": "codeql/actions-queries",
+        "queryVersion": "0.6.39",
+        "resolvedQueryCount": 24,
+        "results": 0,
+        "sarifId": "dc4255d4-e187-11f1-9dfc-5ed771fa5520",
+        "sarifRules": 23,
+        "scanDurationSeconds": 27.758,
+        "startedAt": "2026-11-16T06:34:36.301055+00:00",
+        "storedAnalysis": {
+          "analysis_key": ".github/workflows/security.yml:sast-actions",
+          "category": "governance-commons/actions",
+          "commit_sha": "5e0234d312ef8a377cb897fa12eee2968692d74b",
+          "created_at": "2026-11-16T06:35:06Z",
+          "deletable": true,
+          "environment": "{}",
+          "error": "",
+          "id": 2174270491,
+          "ref": "refs/pull/20/merge",
+          "results_count": 0,
+          "rules_count": 23,
+          "sarif_id": "dc4255d4-e187-11f1-9dfc-5ed771fa5520",
+          "tool": {
+            "guid": null,
+            "name": "CodeQL",
+            "version": "2.27.4"
+          },
+          "url": "https://api.github.com/repos/dlamaro96/governance-commons/code-scanning/analyses/2174270491",
+          "warning": ""
+        },
+        "toolVersion": "2.27.4",
+        "uiObservedArchive": {
+          "name": "sast-actions-43817616108-1",
+          "sha256": "c6aa384c33fcb140290246914dc86943c2238331625f6004e26cf3698b3e2754"
+        }
+      },
+      {
+        "analysis": "PASS",
+        "analysisId": 2174273111,
+        "category": "governance-commons/python",
+        "coverage": {
+          "databaseFiles": 49,
+          "expectedFiles": 30,
+          "extractedExpectedFiles": 30,
+          "extractedPathsDigest": "33afb6b7321d50567ce32ad2dfbc3e8c3e2d30864315adf10f09c4153057f455"
+        },
+        "coverageQuerySha256": "e3c2c759bc1eda89b0ea538c161831cc41422adfbacdc43a1a5af3bbe4148f15",
+        "expectedPathsVerifiedAgainstImmutableSource": 30,
+        "extractorRuntime": "Python 3.14.5",
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-16T06:35:28.585044+00:00",
+        "language": "python",
+        "libraryVersion": "7.2.9",
+        "outcome": "PASS",
+        "publishedSarifSha256": "1e35a46e9aae4e2def925edd33d52c0b24d6d4087cb77f6b8a363dbf0701d673",
+        "queryPack": "codeql/python-queries",
+        "queryVersion": "1.9.0",
+        "resolvedQueryCount": 52,
+        "results": 0,
+        "sarifId": "eaf7598a-e187-11f1-87bd-edea9023c527",
+        "sarifRules": 50,
+        "scanDurationSeconds": 45.762,
+        "startedAt": "2026-11-16T06:34:42.823431+00:00",
+        "storedAnalysis": {
+          "analysis_key": ".github/workflows/security.yml:sast-python",
+          "category": "governance-commons/python",
+          "commit_sha": "5e0234d312ef8a377cb897fa12eee2968692d74b",
+          "created_at": "2026-11-16T06:35:31Z",
+          "deletable": true,
+          "environment": "{}",
+          "error": "",
+          "id": 2174273111,
+          "ref": "refs/pull/20/merge",
+          "results_count": 0,
+          "rules_count": 50,
+          "sarif_id": "eaf7598a-e187-11f1-87bd-edea9023c527",
+          "tool": {
+            "guid": null,
+            "name": "CodeQL",
+            "version": "2.27.4"
+          },
+          "url": "https://api.github.com/repos/dlamaro96/governance-commons/code-scanning/analyses/2174273111",
+          "warning": ""
+        },
+        "toolVersion": "2.27.4",
+        "uiObservedArchive": {
+          "name": "sast-python-43817616108-1",
+          "sha256": "726854318c19df38cd0a7ad2489dc393c8ebd15f791fe2f7304352c7b66b0dc4"
+        }
+      },
+      {
+        "analysis": "PASS",
+        "analysisId": 2174277104,
+        "category": "governance-commons/javascript-typescript",
+        "coverage": {
+          "databaseFiles": 232,
+          "expectedFiles": 207,
+          "extractedExpectedFiles": 207,
+          "extractedPathsDigest": "ffa8d9becf50c34c5b0cce5bbfe8e554887e900907e58df88054d20a4e4115bb"
+        },
+        "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+        "expectedPathsVerifiedAgainstImmutableSource": 207,
+        "extractorRuntime": "v24.22.3",
+        "findingsGate": "PASS",
+        "finishedAt": "2026-11-16T06:36:18.463310+00:00",
+        "language": "javascript-typescript",
+        "libraryVersion": "3.0.0",
+        "outcome": "PASS",
+        "publishedSarifSha256": "c3d5e80b9a585b1485ba47b9cb69400bc66ad4eb5b96a262bcc6c43b147030a9",
+        "queryPack": "codeql/javascript-queries",
+        "queryVersion": "2.5.0",
+        "resolvedQueryCount": 105,
+        "results": 0,
+        "sarifId": "08a1504e-e188-11f1-87b9-754b0b66bb66",
+        "sarifRules": 103,
+        "scanDurationSeconds": 98.175,
+        "startedAt": "2026-11-16T06:34:40.288650+00:00",
+        "storedAnalysis": {
+          "analysis_key": ".github/workflows/security.yml:sast-javascript-typescript",
+          "category": "governance-commons/javascript-typescript",
+          "commit_sha": "5e0234d312ef8a377cb897fa12eee2968692d74b",
+          "created_at": "2026-11-16T06:36:20Z",
+          "deletable": true,
+          "environment": "{}",
+          "error": "",
+          "id": 2174277104,
+          "ref": "refs/pull/20/merge",
+          "results_count": 0,
+          "rules_count": 103,
+          "sarif_id": "08a1504e-e188-11f1-87b9-754b0b66bb66",
+          "tool": {
+            "guid": null,
+            "name": "CodeQL",
+            "version": "2.27.4"
+          },
+          "url": "https://api.github.com/repos/dlamaro96/governance-commons/code-scanning/analyses/2174277104",
+          "warning": ""
+        },
+        "toolVersion": "2.27.4",
+        "uiObservedArchive": {
+          "name": "sast-javascript-typescript-43817616108-1",
+          "sha256": "c469169cd58dbf4aa2f693ecf460a7417455ecf402899718c2611ae436e8fa4f"
+        }
+      }
+    ],
+    "current_analysis_count": 3,
+    "analysis_inventory_complete": true,
+    "alert_inventory_complete": true,
+    "alerts": [],
+    "findings": []
+  },
+  "development": {
+    "mandatory_stages": [
+      {
+        "command": "./dev bootstrap",
+        "id": "bootstrap",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev up --profile core",
+        "id": "services",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite object-store",
+        "id": "object_store",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev seed --dataset harbor-demo",
+        "id": "seed",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite connectors",
+        "id": "connectors",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite security",
+        "id": "security",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite model-upgrade",
+        "id": "model_upgrade",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite asset-type-upgrade",
+        "id": "asset_type_upgrade",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite type-migration-upgrade",
+        "id": "type_migration_upgrade",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite relations-upgrade",
+        "id": "relations_upgrade",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite relation-participation-upgrade",
+        "id": "relation_participation_upgrade",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite business-domains-upgrade",
+        "id": "business_domains_upgrade",
+        "outcome": "success"
+      },
+      {
+        "command": "./dev test --suite business-domain-seed",
+        "id": "business_domain_seed",
+        "outcome": "success"
+      },
+      {
+        "command": "pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts",
+        "id": "browser",
+        "outcome": "success"
+      }
+    ],
+    "api": {
+      "counts": {
+        "cancelled": 0,
+        "fail": 0,
+        "pass": 154,
+        "skipped": 0,
+        "suites": 0,
+        "tests": 154,
+        "todo": 0
+      },
+      "expectedTests": 154,
+      "observedResults": 154,
+      "privateTapSha256Reported": "62c12c32682a72b58b2d1064a1c3367a77972675a66bb1037bdd6f8d5d4e5c2d",
+      "runtimeTestSourcesMatchReported": true,
+      "sourceManifestSha256": "d3fb257a0827f96b403e69a873641a5d2e217dec9e83a7cb12ea60bca2fd727c",
+      "staticDeclarations": 154,
+      "testSourceFiles": 20,
+      "tests": [
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-api-limits.test.ts",
+          "line": 38,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-api-limits.test.ts",
+          "line": 60,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 84,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 102,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 108,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 128,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 156,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 167,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 177,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 191,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migration-storage.test.ts",
+          "line": 206,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migrations.test.ts",
+          "line": 71,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migrations.test.ts",
+          "line": 99,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migrations.test.ts",
+          "line": 117,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migrations.test.ts",
+          "line": 143,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-migrations.test.ts",
+          "line": 153,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 64,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 73,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 80,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 88,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 93,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 101,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 131,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 140,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-type-storage.test.ts",
+          "line": 164,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 97,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 136,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 171,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 182,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 206,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 224,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 241,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 286,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/asset-types.test.ts",
+          "line": 314,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/audit-integrity.test.ts",
+          "line": 46,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/audit-integrity.test.ts",
+          "line": 92,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domain-asset-scope.test.ts",
+          "line": 40,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 137,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 161,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 245,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 266,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 295,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 315,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 342,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 370,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-api.test.ts",
+          "line": 399,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 17,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 31,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 42,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 53,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 68,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 77,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 86,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 99,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 112,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 123,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 136,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 156,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 164,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 174,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 183,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 193,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 202,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/business-domains-storage.test.ts",
+          "line": 216,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/foundation.test.ts",
+          "line": 12,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/foundation.test.ts",
+          "line": 22,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/foundation.test.ts",
+          "line": 30,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/foundation.test.ts",
+          "line": 39,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/foundation.test.ts",
+          "line": 51,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-api.test.ts",
+          "line": 20,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-api.test.ts",
+          "line": 37,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-api.test.ts",
+          "line": 52,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-api.test.ts",
+          "line": 37,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-api.test.ts",
+          "line": 55,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-api.test.ts",
+          "line": 89,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-storage.test.ts",
+          "line": 61,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-storage.test.ts",
+          "line": 77,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-storage.test.ts",
+          "line": 98,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-storage.test.ts",
+          "line": 110,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-storage.test.ts",
+          "line": 124,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migration-storage.test.ts",
+          "line": 135,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 72,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 119,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 139,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 168,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 188,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 208,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 221,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-migrations.test.ts",
+          "line": 234,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-pagination.test.ts",
+          "line": 22,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/model-pagination.test.ts",
+          "line": 56,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 67,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 76,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 88,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 100,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 110,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 123,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 130,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/models.test.ts",
+          "line": 176,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-migration-api.test.ts",
+          "line": 97,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-migration-api.test.ts",
+          "line": 158,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-migration-api.test.ts",
+          "line": 182,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-migration-api.test.ts",
+          "line": 216,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-migration-api.test.ts",
+          "line": 245,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-migration-api.test.ts",
+          "line": 280,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 46,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 60,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 83,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 103,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 121,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 133,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 149,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 162,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 173,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 186,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 206,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 216,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 227,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 240,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 263,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 281,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 310,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 321,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 339,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-participation-storage.test.ts",
+          "line": 374,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 98,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 116,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 131,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 151,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 163,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 173,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 184,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 203,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 220,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 235,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 267,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relation-storage.test.ts",
+          "line": 278,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 143,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 165,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 192,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 215,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 238,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 254,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 274,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 293,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 306,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 343,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 362,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 383,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 398,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 420,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 457,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 494,
+          "status": "passed"
+        },
+        {
+          "failure_locations": [],
+          "file": "tests/integration/relations.test.ts",
+          "line": 524,
+          "status": "passed"
+        }
+      ],
+      "timestamp": "2026-11-16T06:42:33.017813+00:00"
+    },
+    "browser": {
+      "attemptsPerJourney": 1,
+      "distinctJourneys": 19,
+      "durationSumMilliseconds": 487759,
+      "expected": 19,
+      "flaky": 0,
+      "screenshots": [
+        {
+          "bytes": 72825,
+          "height": 960,
+          "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-en-light-390.png",
+          "sha256": "71303eb2da7dc3d702265029a0b2186e511349da205eab9917f42d4dea2b6ec3",
+          "width": 390
+        },
+        {
+          "bytes": 110992,
+          "height": 960,
+          "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-en-light-768.png",
+          "sha256": "7fd6f4c40bee5f7bedf10e930535f31b102cee78a03f4ee30b8fa6c5600d76eb",
+          "width": 768
+        },
+        {
+          "bytes": 144852,
+          "height": 960,
+          "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-en-light-1024.png",
+          "sha256": "4644f7c15503819ce22eb54e9103e21026d502aea3abf9c5d8740bd70a40ab41",
+          "width": 1024
+        },
+        {
+          "bytes": 153345,
+          "height": 960,
+          "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-en-light-1280.png",
+          "sha256": "8912cc5a929a60d9b598f78f4879eb9ce9f00b1f55ac6f772bf74026fcab297a",
+          "width": 1280
+        },
+        {
+          "bytes": 161753,
+          "height": 960,
+          "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-en-light-1440.png",
+          "sha256": "bb10b1bf8da904d9637f69f81f2b3e44d94d4b7f32c509d304885958226b2744",
+          "width": 1440
+        },
+        {
+          "bytes": 163234,
+          "height": 960,
+          "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-en-dark-1440.png",
+          "sha256": "56426f6388c8ebc28253687e46eb32ecbd17d86c26dc87ea31e536cc5337a73b",
+          "width": 1440
+        },
+        {
+          "bytes": 79847,
+          "height": 960,
+          "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-history.png",
+          "sha256": "96a2aac002c8a7972d20bb76eaf3bf9765506baee734d992a4713d9c70493e6b",
+          "width": 1440
+        },
+        {
+          "bytes": 68500,
+          "height": 960,
+          "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-ar-dark-390.png",
+          "sha256": "01691dc3700286cd321d21534a8437c3e63852d06743aedf931c96e7b7e902b4",
+          "width": 390
+        },
+        {
+          "bytes": 104517,
+          "height": 960,
+          "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-ar-dark-768.png",
+          "sha256": "0acbfe7665cd386df3e2fc43f324ed74ad82577dffd77849ec93ab5b00fb5792",
+          "width": 768
+        },
+        {
+          "bytes": 145668,
+          "height": 960,
+          "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-ar-dark-1440.png",
+          "sha256": "e2d5f3ba43583237c9e2c2319caca62eb965e3fa6746eef1277afab397b3b7ad",
+          "width": 1440
+        }
+      ],
+      "skipped": 0,
+      "tests": [
+        {
+          "attempts": 1,
+          "duration_ms": 6863,
+          "failure_locations": [],
+          "file": "tests/e2e/vertical-slice.spec.ts",
+          "line": 17,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 1396,
+          "failure_locations": [],
+          "file": "tests/e2e/vertical-slice.spec.ts",
+          "line": 122,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 10049,
+          "failure_locations": [],
+          "file": "tests/e2e/ui-accessibility.spec.ts",
+          "line": 30,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 1326,
+          "failure_locations": [],
+          "file": "tests/e2e/ui-accessibility.spec.ts",
+          "line": 74,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 21049,
+          "failure_locations": [],
+          "file": "tests/e2e/models.spec.ts",
+          "line": 77,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 2943,
+          "failure_locations": [],
+          "file": "tests/e2e/models.spec.ts",
+          "line": 257,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 18384,
+          "failure_locations": [],
+          "file": "tests/e2e/model-migrations.spec.ts",
+          "line": 80,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 3058,
+          "failure_locations": [],
+          "file": "tests/e2e/model-migrations.spec.ts",
+          "line": 218,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 23774,
+          "failure_locations": [],
+          "file": "tests/e2e/asset-types.spec.ts",
+          "line": 97,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 48891,
+          "failure_locations": [],
+          "file": "tests/e2e/asset-types.spec.ts",
+          "line": 242,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 23499,
+          "failure_locations": [],
+          "file": "tests/e2e/asset-type-migrations.spec.ts",
+          "line": 97,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 42183,
+          "failure_locations": [],
+          "file": "tests/e2e/asset-type-migrations.spec.ts",
+          "line": 252,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 68533,
+          "failure_locations": [],
+          "file": "tests/e2e/relations.spec.ts",
+          "line": 145,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 7624,
+          "failure_locations": [],
+          "file": "tests/e2e/relations.spec.ts",
+          "line": 358,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 23839,
+          "failure_locations": [],
+          "file": "tests/e2e/relation-migrations.spec.ts",
+          "line": 124,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 56203,
+          "failure_locations": [],
+          "file": "tests/e2e/relation-migrations.spec.ts",
+          "line": 194,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 64410,
+          "failure_locations": [],
+          "file": "tests/e2e/business-domains.spec.ts",
+          "line": 25,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 9405,
+          "failure_locations": [],
+          "file": "tests/e2e/business-domains.spec.ts",
+          "line": 80,
+          "status": "expected"
+        },
+        {
+          "attempts": 1,
+          "duration_ms": 54330,
+          "failure_locations": [],
+          "file": "tests/e2e/business-domains.spec.ts",
+          "line": 92,
+          "status": "expected"
+        }
+      ],
+      "timestamp": "2026-11-16T07:00:08.285723+00:00",
+      "unexpected": 0
+    },
+    "quality_unit_evidence": {
+      "admissionDeclarationLines": [
+        44,
+        63,
+        77,
+        89,
+        106,
+        126,
+        132,
+        141,
+        153,
+        166,
+        176,
+        186,
+        196,
+        207,
+        218,
+        231,
+        243,
+        252
+      ],
+      "admissionStaticDeclarations": 18,
+      "decisionStaticDeclarations": {
+        "tests/unit/authority-decision-budget.test.ts": 8,
+        "tests/unit/authority-decision-chains.test.ts": 20,
+        "tests/unit/authority-decision-context.test.ts": 14,
+        "tests/unit/authority-decision-fields.test.ts": 6,
+        "tests/unit/authority-decision-schema.test.ts": 22,
+        "tests/unit/authority-decisions.test.ts": 21
+      },
+      "expandedUnitCommand": "node --import tsx --test tests/unit/*.test.ts",
+      "hostedExactUnitResultCount": "NOT_EXPORTED",
+      "immutableUnitFiles": 34,
+      "method": "Exact immutable workflow/package command and all34 unit sources verified, including six decision suites with91 literal declarations and18 admission declarations. No raw hosted unit TAP/count was exported; source declarations are not reported as executed test counts.",
+      "qualityJobOutcome": "SUCCESS_ROOT_UI_OBSERVED",
+      "relevantPins": [
+        {
+          "bytes": 26768,
+          "path": "tests/unit/asset-type-migration.test.ts",
+          "sha256": "1757639171aaea4eee56a020009cca3d20df193af4be026a4b52f58afef7c99d"
+        },
+        {
+          "bytes": 2357,
+          "path": "tests/unit/asset-type-policy.test.ts",
+          "sha256": "3a16e214f96bd105f73e26610244355aa9973f4a5f1d9c931606953a659685ee"
+        },
+        {
+          "bytes": 18810,
+          "path": "tests/unit/asset-type.test.ts",
+          "sha256": "bf88f0e64f5b038957837a4e8031efd2ef09a6149af37068fcdf21f71e479aff"
+        },
+        {
+          "bytes": 1549,
+          "path": "tests/unit/audit.test.ts",
+          "sha256": "5aa3b0ac05a755e7eebfee74d5ed9d0aa776e133315d5f235823b9c7a6349501"
+        },
+        {
+          "bytes": 16252,
+          "path": "tests/unit/authority-admission.test.ts",
+          "sha256": "d5265b1e64b55cafa5ceaee389b0ec8236304ac02b57b0e771daa23b7911c545"
+        },
+        {
+          "bytes": 7905,
+          "path": "tests/unit/authority-compatibility.test.ts",
+          "sha256": "e484f7ce578179b11579ac705e69226a7ac78dbfaced30bf4a02ef5f6ac477f7"
+        },
+        {
+          "bytes": 5981,
+          "path": "tests/unit/authority-decision-budget.test.ts",
+          "sha256": "798383fb8fdd44bc25e24f859f7787f18304f3daf5a923635e289161068a67bf"
+        },
+        {
+          "bytes": 32799,
+          "path": "tests/unit/authority-decision-chains.test.ts",
+          "sha256": "78a3b7e93c276c4f77a4dee4972ec549a7b019c96cc3dc78be10af13c88396c8"
+        },
+        {
+          "bytes": 20362,
+          "path": "tests/unit/authority-decision-context.test.ts",
+          "sha256": "137c9377ab8a562559972041bdd6ff33c72d65e1f28cbba38ecb8ad1106c5cde"
+        },
+        {
+          "bytes": 5132,
+          "path": "tests/unit/authority-decision-fields.test.ts",
+          "sha256": "27408e0064de57fb97a4f6277da0634c8e707e9534d3770ac2c7399ccdcf1196"
+        },
+        {
+          "bytes": 13242,
+          "path": "tests/unit/authority-decision-schema.test.ts",
+          "sha256": "155b7547cc92a9644e9604c286277ea77cb7a2cce6106f72d0451e16554a9b3a"
+        },
+        {
+          "bytes": 21764,
+          "path": "tests/unit/authority-decisions.test.ts",
+          "sha256": "49310945474956b6615a8207384f1e2a8371dbb4055a4f70f6a0b1a2e3fad93c"
+        },
+        {
+          "bytes": 18119,
+          "path": "tests/unit/authority-expressions.test.ts",
+          "sha256": "820769b76d9f0d3c02f7d6e87062e8d82025815418cc7f691892da662cbe5965"
+        },
+        {
+          "bytes": 21833,
+          "path": "tests/unit/authority-policy.test.ts",
+          "sha256": "fe14102afade73e1c65264cff02fc565f18befe48f340b2020177c4ae19860bf"
+        },
+        {
+          "bytes": 705,
+          "path": "tests/unit/authz.test.ts",
+          "sha256": "9f6bad0b18e4025df11f9f4dc61f13f6db47ac42aa6f0cf23d0cea359c8c6b7d"
+        },
+        {
+          "bytes": 7041,
+          "path": "tests/unit/business-domain-http-validation.test.ts",
+          "sha256": "33d220735258372cdd89925af31c7cc0ed04b318c8f2c73bd1d0c076bef70628"
+        },
+        {
+          "bytes": 7436,
+          "path": "tests/unit/business-domain-http.test.ts",
+          "sha256": "bb6c8095f21a96195d027906325c78abab2d649dd78a9ecd1f3d6613d7fcbb50"
+        },
+        {
+          "bytes": 20945,
+          "path": "tests/unit/business-domain-migration.test.ts",
+          "sha256": "481421685ecb27272980e3a29034b170d060bac808476314358c341706d2bede"
+        },
+        {
+          "bytes": 22367,
+          "path": "tests/unit/business-domain-type.test.ts",
+          "sha256": "10a686992de6eeb1e1f54d8890daf007b30dc62e6f6c1ddccc87bc189c00d472"
+        },
+        {
+          "bytes": 1909,
+          "path": "tests/unit/cursor.test.ts",
+          "sha256": "a4afac623ce94760dc7d9d654d61fb82e017655ec7dbf9ed9eb7fece19f9ca6b"
+        },
+        {
+          "bytes": 14767,
+          "path": "tests/unit/graph-asset-preparation.test.ts",
+          "sha256": "8ac01346fe84c66c3ab27bd5a4de2dc9d07a1c3614be3fe158a4d0605d7bae29"
+        },
+        {
+          "bytes": 6681,
+          "path": "tests/unit/http-budget.test.ts",
+          "sha256": "b1426f3bb0e4d49f807e2486744cc221450d40ce035f9385e9db34d737962695"
+        },
+        {
+          "bytes": 1144,
+          "path": "tests/unit/json-envelope.test.ts",
+          "sha256": "fe6eae3e6ba41a3922f70f6b480428ce6f08e428dc543d746fb02df2b7a8ab21"
+        },
+        {
+          "bytes": 2241,
+          "path": "tests/unit/model-migration-file.test.ts",
+          "sha256": "130db7830dfc09286dce285721747bfbe1ebf61c411630c92b77ee05e8ad0929"
+        },
+        {
+          "bytes": 32422,
+          "path": "tests/unit/model-migration.test.ts",
+          "sha256": "dc6c42b66be1d6ff5215e9ae096682376be0e41d999f73c86f3fc2250ba658b0"
+        },
+        {
+          "bytes": 18532,
+          "path": "tests/unit/model.test.ts",
+          "sha256": "bbdfc4842bd1c0496344f306ed7aea1dd9a371fe59e570d08c3d45eaa834118c"
+        },
+        {
+          "bytes": 3680,
+          "path": "tests/unit/relation-failure.test.ts",
+          "sha256": "52f7ca924c81e89ea748974a9be2091465f9a1ec49e8a4ea12d67fd4e33a194c"
+        },
+        {
+          "bytes": 5341,
+          "path": "tests/unit/relation-migration-preconditions.test.ts",
+          "sha256": "09be8172caf4e301fc398a373dbbe993b5f1a9d16b1f753baed8a346de3925c0"
+        },
+        {
+          "bytes": 10767,
+          "path": "tests/unit/relation-migration-ui.test.ts",
+          "sha256": "5e5ce0c298ca4b181198b0abe76bd126922d39871320b75c031b11ed8adf1fb3"
+        },
+        {
+          "bytes": 43635,
+          "path": "tests/unit/relation-migration.test.ts",
+          "sha256": "31aab099bb90d9795854bb264b8ee01cd2a4670ccd14fcb5d4a5be7882a5dc02"
+        },
+        {
+          "bytes": 20247,
+          "path": "tests/unit/relation-participation-read.test.ts",
+          "sha256": "b9d15989a5ad281772703282a9d71d2eb18e746ad41bffa7e1adfebc4bce08ed"
+        },
+        {
+          "bytes": 9041,
+          "path": "tests/unit/relation-participation.test.ts",
+          "sha256": "f8a36fffff339d7051f828cdd924738cade588833a941e829712b51d21b2bb3d"
+        },
+        {
+          "bytes": 6098,
+          "path": "tests/unit/relation-preparation-read.test.ts",
+          "sha256": "c2b6d11062618d1a8688bf66dac5eb91b11c7489682319a9bde372a21e1f0591"
+        },
+        {
+          "bytes": 32934,
+          "path": "tests/unit/relation.test.ts",
+          "sha256": "737b1f133fdd950ba0dd5a379ae257acd5046e3af35cb7a8672354e44d05f4af"
+        },
+        {
+          "bytes": 15176,
+          "path": "packages/authority/src/admission.ts",
+          "sha256": "1ef4989d22310cc902d7529c7ea55e4b1b0024b182501615ff84742187a67668"
+        },
+        {
+          "bytes": 3927,
+          "path": "docs/execution/SCOPED_AUTHORITY_ADMISSION_CONTRACT.md",
+          "sha256": "48ec9a813d9b35d5a0812dbf4202523c8302ff2cee8d2c900fc1622d441b1e32"
+        }
+      ],
+      "unitCommand": "pnpm test"
+    },
+    "dependency_inventory": {
+      "original_path": ".local/evidence/authority-engine-hosted-attempt-2/development/dependency/dependency-inventory.json",
+      "sha256": "f69a7881dac6f18a70ab9054c51b1ff11361ec251011eae042fd0225d925d14d",
+      "packages": 316,
+      "decision_counts": {
+        "REVIEWED_EXCEPTION": 5,
+        "ALLOW": 311
+      },
+      "metadata_decisions_recomputed": 316,
+      "license_evidence_companions_checked": 1,
+      "unresolved": 0,
+      "lock_sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829",
+      "method": "Fresh downloaded original equals prior qualified inventory. Re-evaluated every declared SPDX expression/exception and provenance companion with exact immutable policy/checker inputs; all316 name/version pairs occur in the frozen lock.",
+      "previous_byte_identical_original": {
+        "path": ".local/evidence/authority-admission-hosted-attempt-1/development/dependency/dependency-inventory.json",
+        "sha256": "f69a7881dac6f18a70ab9054c51b1ff11361ec251011eae042fd0225d925d14d",
+        "bytes": 196104
+      },
+      "policy_and_lock_bindings": [
+        {
+          "path": "policies/check_dependencies.py",
+          "sha256": "91bc1badc641f19936016689c9e9634152137ed4781e9ba975f89c48b32dc6fe"
+        },
+        {
+          "path": "policies/dependencies.yml",
+          "sha256": "358f1af7ddb4f8202348e846f27042c176ea920de01a2bd649e95c4cae82211d"
+        },
+        {
+          "path": "policies/license-evidence.json",
+          "sha256": "5ab76dc9dc2a8f278be0acdd2b1a11e4b6e3635190805339f644f68d66b24a4c"
+        },
+        {
+          "path": "policies/license-exceptions.yml",
+          "sha256": "9f2f08c972580b15a1ea4933f980dd9e6db8a0df1c7b428dfe83463be77c8b49"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+        }
+      ],
+      "limitations": [
+        "Installed pnpm development host profile only; platform-specific uninstalled optional packages are outside this inventory.",
+        "Not a finished-artifact SBOM. Image OS layers, Python distributions, external drivers and model weights require separate qualification.",
+        "ALLOW identifies a policy-compatible declared license; required notices must still be preserved in each distribution."
+      ]
+    },
+    "secret_scan": {
+      "original_path": ".local/evidence/authority-engine-hosted-attempt-2/development/secrets/secret-scan.json",
+      "sha256": "340331c30baefa846c12db5f914307f5cd14c60f36e89ca599f6a588c4c3f4be",
+      "timestamp": "2026-11-16T06:35:15.565778+00:00",
+      "publishable_files": 935,
+      "manifest_sha256": "6ca45f0a25e29fc57f905c3d3d2af4bae61bde249663dd35391b3bcfbee17a88",
+      "manifest_recomputed_from_exact_immutable_source": true,
+      "tool_version": "8.30.1",
+      "platform": {
+        "system": "Linux",
+        "architecture": "x86_64"
+      },
+      "reported_command": "python3 policies/scan_secrets.py --install",
+      "workflow_command": "python3 policies/scan_secrets.py --install --output .local/evidence/secret-scan.json",
+      "command_reporting_limit": "The summary omits the relative --output option because this scanner version reports it only for a path relative to its absolute ROOT. Exact workflow command and artifact upload path were independently read; this cosmetic omission is not evidence of another scan.",
+      "source_policy_bindings": [
+        {
+          "path": "policies/scan_secrets.py",
+          "sha256": "dbc99431f3cf231057e55e20388e3fcf99e343656030db484ddbbdf2a11e695e"
+        },
+        {
+          "path": "policies/security-tools.json",
+          "sha256": "80c290e388da16f1a0642597104453690815a9bf784746d0502ab9e476b645bd"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "5c1698bb61b7447f5574e65bbf586ddece9d71a53b83728ffd2bd37d5602aa55"
+        }
+      ],
+      "results": [
+        {
+          "scope": "publishable_worktree",
+          "outcome": "PASS",
+          "exit_code": 0,
+          "finding_count": 0,
+          "findings": []
+        },
+        {
+          "scope": "reachable_git_history",
+          "outcome": "PASS",
+          "exit_code": 0,
+          "finding_count": 0,
+          "findings": []
+        }
+      ]
+    },
+    "archive_ui_observations": [
+      {
+        "name": "dependency-inventory-5e0234d312ef8a377cb897fa12eee2968692d74b",
+        "ui_zip_sha256": "c4819a1c38a2e6ad76e2adfd08a8a99d64cd9c4f559d6ae97c254164cd35e304"
+      },
+      {
+        "name": "secret-scan-5e0234d312ef8a377cb897fa12eee2968692d74b",
+        "ui_zip_sha256": "2bbdf27624e4076488f933e950ba095698ae7faf1028bc61015285748e77d439"
+      },
+      {
+        "archiveDigestProvenance": "Root UI observation; gh extracted files only, ZIP bytes were not independently rehashed.",
+        "archiveName": "behavior-5e0234d312ef8a377cb897fa12eee2968692d74b",
+        "command": "gh run download 43817616265 --repo dlamaro96/governance-commons --name behavior-5e0234d312ef8a377cb897fa12eee2968692d74b --dir .local/evidence/authority-engine-hosted-attempt-2/development/behavior",
+        "exitCode": 0,
+        "uiObservedArchiveSha256": "07e8046fd82cdba1e449b24a81e51329eb84c45e8c9d8f9e9a999456b7e502f4"
+      }
+    ]
+  },
+  "merge_metadata": {
+    "state": "MERGED",
+    "merge_commit": "94efe7f8bec0fe054ed003521b832f9a02239910",
+    "merged_at": "2026-11-16T07:11:43Z",
+    "exact_head": "cdec87664c0d6e06c08bcd38eb1a697ad66bd72c",
+    "protected_merge": true,
+    "postmerge_execution_qualified": false
+  },
+  "independent_audits": [
+    {
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/source-qualification-handoff.json",
+      "sha256": "5e315d9881e5f4d9a148cb6ab28cf0847d146baa1f6b706c6f9a93e4279ed42a",
+      "bytes": 63930
+    },
+    {
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/quality-secrets-handoff.json",
+      "sha256": "a2ccbcc6baf33adfb49b11b0f714aa807482fd09b664f9bff143ab0a080837d1",
+      "bytes": 381486
+    },
+    {
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior-qualification-handoff.json",
+      "sha256": "9a852551a85fe4bc1ffe532da72859a5bc463ef0ee5a9edea2014ffbb53079d6",
+      "bytes": 253357
+    }
+  ],
+  "behavior_audit_checks": 1325,
+  "private_extracted_originals": [
+    {
+      "bytes": 4152,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/actions/actions-summary.json",
+      "sha256": "d339cbb9beb654c1c3a51e475ab0e41bb087204538e49c3280f6f214886252ce"
+    },
+    {
+      "bytes": 255668,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/actions/actions.sarif",
+      "sha256": "424410737bfef2990ebc4f2f092bdb493ba2ab49a0e57eaeb31e3f14a8f66f59"
+    },
+    {
+      "bytes": 203874,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/actions/source-manifest.json",
+      "sha256": "c0a4d18cda433c1f25dffc50a4f857ad4189ddffc742f3b2f2745178796db334"
+    },
+    {
+      "bytes": 6255,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/actions/summary.json",
+      "sha256": "2ba65f8669e16e82e624c8c667e151405df48c9e12457cac2c0a68b6bc0b6300"
+    },
+    {
+      "bytes": 290,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/actions/upload-status.json",
+      "sha256": "cba67c66b5a1f21865fa93b5a726110254ecd73869e05d4f91957fde4e1ce4df"
+    },
+    {
+      "bytes": 4623,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/python/python-summary.json",
+      "sha256": "8f8ec83f76809dcc7b8671c2b02eb6899e1180036483c1710a15c25b1de29885"
+    },
+    {
+      "bytes": 330351,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/python/python.sarif",
+      "sha256": "1e35a46e9aae4e2def925edd33d52c0b24d6d4087cb77f6b8a363dbf0701d673"
+    },
+    {
+      "bytes": 203874,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/python/source-manifest.json",
+      "sha256": "c0a4d18cda433c1f25dffc50a4f857ad4189ddffc742f3b2f2745178796db334"
+    },
+    {
+      "bytes": 6788,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/python/summary.json",
+      "sha256": "a137cce9fb9af8781bcf6a0daae4f0037a9f19601282f557c0143b6ab581f040"
+    },
+    {
+      "bytes": 289,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/python/upload-status.json",
+      "sha256": "035df26696ba9e63531bcbcdcfa1ff4922dc15a65f994370595dcb9002c5bd06"
+    },
+    {
+      "bytes": 4645,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/javascript-typescript/javascript-typescript-summary.json",
+      "sha256": "5627e0940221bdb43bdbe1fe25ac888e28c3226edb3b24eb813b97375f2640f0"
+    },
+    {
+      "bytes": 533562,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/javascript-typescript/javascript-typescript.sarif",
+      "sha256": "c3d5e80b9a585b1485ba47b9cb69400bc66ad4eb5b96a262bcc6c43b147030a9"
+    },
+    {
+      "bytes": 203874,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/javascript-typescript/source-manifest.json",
+      "sha256": "c0a4d18cda433c1f25dffc50a4f857ad4189ddffc742f3b2f2745178796db334"
+    },
+    {
+      "bytes": 6840,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/javascript-typescript/summary.json",
+      "sha256": "93c92c24386225cdeefa2338f115130150617ef75c84d5e859aff1c9dd0c8be3"
+    },
+    {
+      "bytes": 304,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/source/javascript-typescript/upload-status.json",
+      "sha256": "d52255b616ccb989cc7ab9afe070d38e3a170018808b99c739d69aafb830811b"
+    },
+    {
+      "bytes": 26692,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/api-summary.json",
+      "sha256": "d440d98e80f1c46e3373bedf8d0cd3fb8f3abe18585b69e3530ea54b1a9c392b"
+    },
+    {
+      "bytes": 5041,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/behavior-summary.json",
+      "sha256": "71127069bb087be223b62a43a1784c8b3a9c7c87bb5f4035b66422cdcdea4a36"
+    },
+    {
+      "bytes": 145668,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-ar-dark-1440.png",
+      "sha256": "e2d5f3ba43583237c9e2c2319caca62eb965e3fa6746eef1277afab397b3b7ad"
+    },
+    {
+      "bytes": 68500,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-ar-dark-390.png",
+      "sha256": "01691dc3700286cd321d21534a8437c3e63852d06743aedf931c96e7b7e902b4"
+    },
+    {
+      "bytes": 104517,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-ar-dark-768.png",
+      "sha256": "0acbfe7665cd386df3e2fc43f324ed74ad82577dffd77849ec93ab5b00fb5792"
+    },
+    {
+      "bytes": 163234,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-en-dark-1440.png",
+      "sha256": "56426f6388c8ebc28253687e46eb32ecbd17d86c26dc87ea31e536cc5337a73b"
+    },
+    {
+      "bytes": 144852,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-en-light-1024.png",
+      "sha256": "4644f7c15503819ce22eb54e9103e21026d502aea3abf9c5d8740bd70a40ab41"
+    },
+    {
+      "bytes": 153345,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-en-light-1280.png",
+      "sha256": "8912cc5a929a60d9b598f78f4879eb9ce9f00b1f55ac6f772bf74026fcab297a"
+    },
+    {
+      "bytes": 161753,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-en-light-1440.png",
+      "sha256": "bb10b1bf8da904d9637f69f81f2b3e44d94d4b7f32c509d304885958226b2744"
+    },
+    {
+      "bytes": 72825,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-en-light-390.png",
+      "sha256": "71303eb2da7dc3d702265029a0b2186e511349da205eab9917f42d4dea2b6ec3"
+    },
+    {
+      "bytes": 110992,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-en-light-768.png",
+      "sha256": "7fd6f4c40bee5f7bedf10e930535f31b102cee78a03f4ee30b8fa6c5600d76eb"
+    },
+    {
+      "bytes": 79847,
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/behavior/catalog-history.png",
+      "sha256": "96a2aac002c8a7972d20bb76eaf3bf9765506baee734d992a4713d9c70493e6b"
+    },
+    {
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/dependency/dependency-inventory.json",
+      "sha256": "f69a7881dac6f18a70ab9054c51b1ff11361ec251011eae042fd0225d925d14d",
+      "bytes": 196104
+    },
+    {
+      "path": ".local/evidence/authority-engine-hosted-attempt-2/development/secrets/secret-scan.json",
+      "sha256": "340331c30baefa846c12db5f914307f5cd14c60f36e89ca599f6a588c4c3f4be",
+      "bytes": 1381
+    }
+  ],
+  "audit_history": "Initial behavior audit incorrectly expected102 literal decision declarations. Exact source has91 literal declarations in six suites; dynamic expansion is distinct. That failed audit is retained, corrected independently, and does not imply a hosted test failure. Hosted raw unit result count was not exported.",
+  "limitations": [
+    "Actual safe API and browser summaries are independently reconciled to exact immutable test declarations and counts. Raw TAP and raw Playwright reports were intentionally not exported, so their private bytes were not replayed or independently inspected.",
+    "API runtime binding covers the executed integration test files; the artifact does not export an application image/source readback or rebuilt-image attestation. Commit/workflow/source provenance must not be described as independent running-image equivalence.",
+    "The 14 mandatory stage outcomes are runner-step success records at this exact workflow/source. Individual connector, storage, upgrade, seed-recovery, object-store and isolation raw logs/private reports were not exported; this audit does not invent their subtest counts or reconstruct their execution.",
+    "Screenshots are ten explicit synthetic catalog PNGs; hashes and dimensions were checked, but this audit performs no new visual or accessibility review and the artifact does not contain the 26 domain captures from the separate local visual qualification.",
+    "Archive ZIP digest is a root UI observation, not an independently hashed downloaded ZIP; gh retained extracted original artifact files.",
+    "Prior source, dependency and secret handoffs remain byte-identical. Hosted overall/job success is the separate root UI observation; no Actions metadata/log/check API fallback was used.",
+    "No source, runtime, Docker, test execution, Git mutation or public evidence edit occurred. This is exact synthetic hosted development qualification, not enterprise/vendor-live/full-accessibility or release qualification.",
+    "Hosted quality job success and source-bound18 admission declarations are distinct from actual hosted unit counts, which were not exported. No exact unit pass count is inferred from source enumeration.",
+    "This Source run passes all three language analysis/finding gates with zero SARIF results and zero ref-scoped stored alerts. This does not qualify Development, runtime health, full authority decisions/activation or release.",
+    "Original exported summaries record exact extraction coverage; their expected path sets, source hashes, policy and coverage query hashes were independently verified. Raw BQRS/decoded extraction-path tables and query-resolution lists are not exported artifacts, so their path digests and resolved query-set digests were not independently recomputed. No scanner rerun occurred.",
+    "ZIP SHA256 values were observed in public UI by root and supplied to this agent; gh run download retained extracted original bytes only. ZIP bytes were not retained or independently rehashed.",
+    "Stored analysis metadata and complete ref-scoped all-state CodeQL alert inventory were independently read. Stored SARIF bytes were not downloaded; published SARIF hashes were independently computed from original extracted artifact files.",
+    "All analysis and alert API reads are point-in-time observations; later commits or scans are not covered.",
+    "Source analysis covers only the recorded Actions, JavaScript/TypeScript and Python sources. SQL/RLS, dependencies, images, general IaC, behavior, runtime health, independent human review and programme/release qualification are outside this check.",
+    "Native 4096MiB requested memory plus 2048MiB admission reserve is an estimate, not a hard process memory cap.",
+    "No Actions metadata/log/checks REST/GraphQL reads, browser actions, source edits, tests, runtime or scanner executions were performed by this validation. Only exact observed artifact downloads, immutable Git metadata, local immutable Git blob reads and stored CodeQL analysis/alert endpoints were used.",
+    "No new images or raw artifacts are copied into this report. Exact extracted originals remain private at their recorded paths and digests; this limits public independent reproduction to the checked source, published metadata and still-retained GitHub artifacts.",
+    "Quality/secrets handoff predates behavior completion and remains byte-identical. The separate completed behavior audit supplies actual API/browser results.",
+    "This report qualifies only its exact premerge head/tested merge. The later SQL012 foundation is under implementation; no native authentication, authority activation, postmerge execution, complete profile or release claim follows."
+  ]
+}
