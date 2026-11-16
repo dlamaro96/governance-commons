@@ -10,6 +10,7 @@ import platform
 import re
 import shutil
 import socket
+import stat
 import subprocess
 import sys
 
@@ -87,9 +88,24 @@ def require_bootstrap():
     if not (LOCAL / "runtime.env").exists():
         raise SystemExit("Run ./dev bootstrap first. Credentials will be generated locally.")
 
+def authentication_bootstrap():
+    """Validate private executor prerequisites before any startup mutation."""
+    try:
+        path = LOCAL / "bootstrap.json"
+        info = path.lstat()
+        if not stat.S_ISREG(info.st_mode) or info.st_mode & 0o077 or info.st_size > 65536:
+            raise ValueError("Invalid private bootstrap")
+        values = json.loads(path.read_text())
+        for key in ("GC_AUTHN_LOGIN_PASSWORD", "GC_AUTHN_API_PASSWORD"):
+            if not isinstance(values.get(key), str) or not re.fullmatch(r"[A-Za-z0-9_-]{32,128}", values[key]):
+                raise ValueError("Missing generated executor credential")
+        return values
+    except (OSError, ValueError, AttributeError):
+        raise SystemExit("Private authentication credentials are missing or invalid. Run ./dev bootstrap before startup; existing credentials are preserved.")
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", nargs="?", default="help", choices=["help", "doctor", "bootstrap", "up", "seed", "status", "test", "benchmark", "k8s-smoke", "backup", "restore", "export-support-bundle", "down"])
+    parser.add_argument("command", nargs="?", default="help", choices=["help", "doctor", "bootstrap", "up", "seed", "status", "test", "authn-install", "benchmark", "k8s-smoke", "backup", "restore", "export-support-bundle", "down"])
     parser.add_argument("--profile", default="core")
     parser.add_argument("--dataset", default="harbor-demo")
     parser.add_argument("--suite", default="smoke")
@@ -115,6 +131,8 @@ def main():
   ./dev test --suite relation-participation-upgrade Verify complete graph operations and required participation
   ./dev test --suite business-domains-upgrade Verify typed domain storage, hierarchy, placement and concurrency
   ./dev test --suite business-domain-seed Verify domain seed recovery, provenance and repeatability
+  ./dev test --suite authority-authn-foundation Verify inactive authentication through native PostgreSQL roles
+  ./dev authn-install --input FILE    Apply one private, typed inactive installation manifest
   ./dev test --suite relation-preparation-expiry Verify the original fifteen-minute lease and committed retries
   ./dev test --suite connectors       Run Python contract/source tests
   ./dev test --suite recovery         Verify repeated seed and persistent restart
@@ -144,6 +162,7 @@ Never use docker compose config output in public logs: it expands secrets.""")
         run(command, timeout=5500); return
     require_bootstrap(); require_local()
     if args.command == "up":
+        authentication_bootstrap()
         if not doctor():
             raise SystemExit("Doctor failed; correct the reported prerequisite before startup.")
         run(COMPOSE + ["config", "--quiet"], timeout=30)
@@ -151,9 +170,31 @@ Never use docker compose config output in public logs: it expands secrets.""")
             if shutil.disk_usage(ROOT).free < 2 * 1024**3:
                 raise SystemExit("Build stopped: less than 2 GiB free disk. Preserve unrelated resources and recover space before retrying.")
             run(COMPOSE + ["build", service], timeout=1800, env={**os.environ, "COMPOSE_PARALLEL_LIMIT": "1"})
+        run(COMPOSE + ["up", "-d", "--no-build", "--wait", "--wait-timeout", "120", "postgres"], timeout=180)
+        try:
+            run([sys.executable, "scripts/runtime-authentication-roles.py", "prepare"], timeout=90)
+            run(COMPOSE + ["up", "--no-build", "--no-deps", "--force-recreate",
+                "--abort-on-container-exit", "--exit-code-from", "migrate", "migrate"], timeout=180)
+        finally:
+            # Remove the SET-only transfer grant even when migration fails.
+            run([sys.executable, "scripts/runtime-authentication-roles.py", "finish"], timeout=90)
+        run([sys.executable, "scripts/runtime-authentication-roles.py", "executors"], timeout=90)
         run(COMPOSE + ["up", "-d", "--no-build", "--wait", "--wait-timeout", "240", "api", "workflow-worker", "site-runner", "python-worker"], timeout=360)
         run([sys.executable, "scripts/runtime-test-object-store.py", "--readiness"], timeout=60)
         print("Core stack is ready at http://localhost:4310. Run ./dev seed --dataset harbor-demo.")
+    elif args.command == "authn-install":
+        if not args.input:
+            raise SystemExit('A private installation manifest is required: --input FILE')
+        path = Path(args.input)
+        metadata = path.lstat()
+        if not path.is_file() or path.is_symlink() or metadata.st_mode & 0o077 or metadata.st_size > 65536:
+            raise SystemExit('Manifest must be a private regular file (0600), at most 64KiB.')
+        with path.open('rb') as stream:
+            manifest = stream.read(65537)
+        if len(manifest) > 65536:
+            raise SystemExit('Installation manifest exceeds its 64KiB limit.')
+        run(COMPOSE + ['run', '--rm', '--no-deps', '-T', 'migrate', 'node', '--import', 'tsx',
+            'scripts/authentication-install.ts', '--stdin'], input=manifest, timeout=60)
     elif args.command == "seed":
         if args.dataset != "harbor-demo":
             raise SystemExit("Only the independently authored harbor-demo dataset is implemented.")
@@ -187,6 +228,8 @@ Never use docker compose config output in public logs: it expands secrets.""")
             run([sys.executable, "scripts/runtime-test-business-domains-upgrade.py"], timeout=900)
         elif args.suite == "business-domain-seed":
             run([sys.executable, "scripts/runtime-test-business-domain-seed.py", "--run-core"], timeout=900)
+        elif args.suite == "authority-authn-foundation":
+            run([sys.executable, "scripts/runtime-test-authority-authn-foundation.py"], timeout=900)
         elif args.suite == "relation-preparation-expiry":
             # The test observes the original database deadline; it never shortens
             # the lease. Its own 22-minute bound expires before this outer bound.

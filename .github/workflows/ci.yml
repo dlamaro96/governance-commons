@@ -160,6 +160,9 @@ jobs:
       - name: Verify business domain seed recovery and provenance
         id: business_domain_seed
         run: ./dev test --suite business-domain-seed
+      - name: Verify inactive authentication foundation and native role isolation
+        id: authority_authn_foundation
+        run: ./dev test --suite authority-authn-foundation
       - name: Verify browser acceptance and accessibility
         id: browser
         run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts
@@ -179,6 +182,7 @@ jobs:
           GC_RELATION_PARTICIPATION_UPGRADE_RESULT: ${{ steps.relation_participation_upgrade.outcome }}
           GC_BUSINESS_DOMAINS_UPGRADE_RESULT: ${{ steps.business_domains_upgrade.outcome }}
           GC_BUSINESS_DOMAIN_SEED_RESULT: ${{ steps.business_domain_seed.outcome }}
+          GC_AUTHORITY_AUTHN_FOUNDATION_RESULT: ${{ steps.authority_authn_foundation.outcome }}
           GC_BROWSER_RESULT: ${{ steps.browser.outcome }}
         run: python3 policies/ci_evidence.py
       - name: Preserve only safe behavior summary and catalog screenshots

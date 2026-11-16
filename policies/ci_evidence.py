@@ -9,6 +9,7 @@ from pathlib import Path
 import shutil
 import sys
 from api_evidence import safe_report
+from authentication_evidence import load_report as load_authentication_report
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / ".local/ci-artifacts"
@@ -17,7 +18,7 @@ if any(DEST.iterdir()):
     raise SystemExit("Artifact staging must be empty; refusing to publish a mixed or stale directory")
 allowed_outcomes = {"success", "failure", "cancelled", "skipped"}
 outcomes = {}
-for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "browser"):
+for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "browser"):
     value = os.environ.get(f"GC_{step.upper()}_RESULT", "skipped")
     outcomes[step] = value if value in allowed_outcomes else "unknown"
 report = {
@@ -51,6 +52,17 @@ report["api_evidence"] = "STEP_RESULT_MISMATCH" if api_mismatch else "VERIFIED_P
 if api_report:
     (DEST / "api-summary.json").write_text(json.dumps(api_report, indent=2) + "\n")
 if outcomes["security"] == "success" and (not api_report or api_report["outcome"] != "PASS"):
+    report["outcome"] = "NOT_PASSED"
+# A successful native foundation step requires exact source/log/cleanup evidence.
+# Only the closed coordinate projection is staged; failed originals stay private.
+authn_report = load_authentication_report(ROOT, os.environ.get("GITHUB_SHA"))
+authn_mismatch = bool(authn_report and outcomes["authority_authn_foundation"] != "success")
+if authn_mismatch:
+    authn_report = None
+report["authentication_evidence"] = "STEP_RESULT_MISMATCH" if authn_mismatch else "VERIFIED_PASS" if authn_report else "UNAVAILABLE_OR_INVALID"
+if authn_report:
+    (DEST / "authentication-summary.json").write_text(json.dumps(authn_report, indent=2) + "\n")
+if outcomes["authority_authn_foundation"] == "success" and not authn_report:
     report["outcome"] = "NOT_PASSED"
 def failure_locations(results, filename):
     """Only reviewed repository coordinates; never copy exception text/paths."""

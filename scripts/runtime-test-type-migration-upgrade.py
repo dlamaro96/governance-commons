@@ -14,6 +14,7 @@ import tempfile
 import time
 import traceback
 import uuid
+from authentication_roles import prepare_sql, finish_sql
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCAL = ROOT / ".local/evidence"
@@ -73,7 +74,7 @@ def literal(value):
 def source_hashes():
     paths = {Path(__file__).resolve(), TEST, CONCURRENCY_TEST, ROOT / "apps/api/src/repository.ts",
              ROOT / "package.json", ROOT / "pnpm-lock.yaml", ROOT / "Dockerfile", ROOT / "deploy/compose/compose.yaml",
-             ROOT / "dev", ROOT / "scripts/runtime.py"}
+             ROOT / "dev", ROOT / "scripts/runtime.py", ROOT / "scripts/authentication_roles.py"}
     for folder in ("packages/db/src", "packages/domain/src", "packages/authz/src"):
         paths.update((ROOT / folder).rglob("*.ts"))
     paths.update(MIGRATIONS.glob("*.sql"))
@@ -260,9 +261,10 @@ COMMIT;""", "gc_app"))
                     break
                 time.sleep(0.2)
             require(ready, "Isolated PostgreSQL did not become ready")
-            sql(f"CREATE ROLE gc_app LOGIN NOSUPERUSER NOBYPASSRLS; CREATE ROLE {OWNER} LOGIN NOSUPERUSER NOBYPASSRLS;", "postgres", "postgres")
+            sql(f"CREATE ROLE gc_app LOGIN NOSUPERUSER NOBYPASSRLS; CREATE ROLE {OWNER} LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS NOREPLICATION;", "postgres", "postgres")
             sql(f"CREATE DATABASE {DATABASE} OWNER {OWNER};", "postgres", "postgres")
             sql(f"REVOKE ALL ON DATABASE {DATABASE} FROM PUBLIC; GRANT CONNECT ON DATABASE {DATABASE} TO {OWNER},gc_app;", "postgres", "postgres")
+            sql(f"ALTER SCHEMA public OWNER TO {OWNER}; REVOKE CREATE ON SCHEMA public FROM PUBLIC;", "postgres")
             migrate(before)
             require(sql("SELECT count(*) FROM schema_migrations;") == "6", "Baseline did not apply exactly six migrations")
             sql(fixture_sql())
@@ -309,7 +311,14 @@ COMMIT;""", "gc_app"))
             for path in later_migrations:
                 shutil.copyfile(path, target / path.name)
             if later_migrations:
-                migrate(target)
+                authn_prerequisite = any(path.name == '012_authentication_foundation.sql' for path in later_migrations)
+                try:
+                    if authn_prerequisite:
+                        sql(prepare_sql(OWNER, DATABASE), 'postgres')
+                    migrate(target)
+                finally:
+                    if authn_prerequisite:
+                        sql(finish_sql(OWNER), 'postgres')
             concurrency_schema = json.loads(sql("SELECT json_agg(json_build_object('name',name,'sha256',checksum) ORDER BY name) FROM schema_migrations;"))
             concurrent = command([*runtime, "node", "--import", "tsx", "--test", "--test-reporter=tap", "tests/qualification/asset-type-migration-concurrency.test.ts"], timeout=180)
             concurrency_tests = tap_summary(concurrent.stdout, expected_concurrency)

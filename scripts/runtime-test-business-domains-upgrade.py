@@ -25,7 +25,12 @@ LOCAL = ROOT / '.local/evidence'
 REPORT = LOCAL / 'business-domains-upgrade.json'
 DIAGNOSTIC = LOCAL / 'business-domains-upgrade-private.log'
 MIGRATIONS = ROOT / 'packages/db/migrations'
-NAMES = [p.name for p in sorted(MIGRATIONS.glob('*.sql'))]
+# This historical gate proves the exact SQL010→011 boundary. New foundations
+# have their own gates and must not silently change this baseline or its count.
+NAMES = ['001_foundation.sql', '002_audit_envelopes.sql', '003_governance_models.sql',
+         '004_model_migrations.sql', '005_model_migration_integrity.sql', '006_inherited_asset_types.sql',
+         '007_asset_type_migrations.sql', '008_constrained_relations.sql', '009_relation_participation.sql',
+         '010_relation_scope_discovery.sql', '011_business_domains.sql']
 EXPECTED_LAST = '011_business_domains.sql'
 OWNER = 'gc_business_domains_upgrade_owner'
 DATABASE = 'business_domains_upgrade'

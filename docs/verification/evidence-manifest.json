@@ -1171,6 +1171,61 @@
       },
       "release_qualified": false,
       "runtime_authority_activated": false
+    },
+    {
+      "path": "docs/verification/authority-admission-hosted-attempt-1.json",
+      "scope": "Exact PR19 premerge admission regression:154 API,19 one-attempt browser journeys,14 stages; merge metadata separate. No engine/runtime/postmerge/release qualification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EXACT_HOSTED_SOURCE_AND_DEVELOPMENT_SCOPE",
+      "source_binding": {
+        "head_commit": "cc91658059d7d0b2bf646414824697866fabb7c9",
+        "tested_merge": "c3fff2cb316904f48121a0b51f69703bf2c7f19b",
+        "verified_source_files": 885,
+        "evidence_sha256": "63207b316d3a1a5fa3dd961bb383234cc5f05d632a9212ff93482f2e30ac1501"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
+    },
+    {
+      "path": "docs/verification/authority-engine-hosted-attempt-2.json",
+      "scope": "Exact PR20 premerge reference-authority engine regression:154 API,19 one-attempt browsers,14 stages and935 source blobs; protected foundation and postmerge execution separate.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EXACT_HOSTED_SOURCE_AND_DEVELOPMENT_SCOPE",
+      "source_binding": {
+        "head_commit": "cdec87664c0d6e06c08bcd38eb1a697ad66bd72c",
+        "tested_merge": "5e0234d312ef8a377cb897fa12eee2968692d74b",
+        "verified_source_files": 935,
+        "evidence_sha256": "ecefc97bbddbb98d9d4d34d8b3fd6c45b38f550d09b090c61c26febd84147c79"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
+    },
+    {
+      "path": "docs/verification/authentication-foundation.json",
+      "scope": "Inactive native PostgreSQL authentication:21storage/14concurrency/7checks and115 source bindings;435 host units/types/40publisher tests and269 inputs. Separate historical9+9 type migration regression.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_ISOLATED_NATIVE_POSTGRESQL_AND_HOST_UNIT_TYPECHECK_SCOPE",
+      "source_binding": {
+        "base_revision": "94efe7f8bec0fe054ed003521b832f9a02239910",
+        "verified_native_source_files": 115,
+        "verified_host_source_files": 269,
+        "evidence_sha256": "6005a6311280eea7bf1710a2a9db5b9bbefdb81cd63afc1e498fcfcd4a3272a4"
+      },
+      "release_qualified": false,
+      "runtime_authority_activated": false
+    },
+    {
+      "path": "docs/verification/authentication-foundation-core-startup.json",
+      "scope": "Existing-volume core startup, twelve migration checksums, exact native roles, inactive private tables,262 source bytes in each API/site/workflow image and preserved volumes. API/browser separate.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_SHARED_CORE_STARTUP_SCHEMA_PRIVILEGES_SOURCE_AND_PRESERVATION_SCOPE",
+      "source_binding": {
+        "base_revision": "94efe7f8bec0fe054ed003521b832f9a02239910",
+        "verified_source_files": 262,
+        "evidence_sha256": "05c45ff1f8d5c883abef56a5d7f89b60d4d411effadbdd022f6cb5636e6a7d0e"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
     }
   ],
   "limitations": [
@@ -1178,5 +1233,5 @@
     "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "bound_at": "2026-11-15T22:23:28.996008+00:00"
+  "bound_at": "2026-11-16T06:35:28.291653+00:00"
 }
