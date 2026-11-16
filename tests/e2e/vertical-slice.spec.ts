@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page, type APIResponse } from '@playwright/test';
 import { mkdirSync, readFileSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -47,8 +47,17 @@ test('E2E-02/03: real OIDC, UI source registration, scan, discovery, ownership a
   const jobRow = page.locator('#jobs tbody tr').filter({ hasText: sourceName });
   await expect(jobRow.getByText('Completed', { exact: true })).toBeVisible({ timeout: 10_000 });
   await expect.poll(async () => {
-    const response = await page.request.get('/api/v1/assets?q=orders&type=table');
-    return (await response.json()).items.some((asset: { sourceId: string }) => asset.sourceId === source.id);
+    let cursor: string | null = null;
+    const seen = new Set<string>();
+    do {
+      const response: APIResponse = await page.request.get(`/api/v1/assets?q=orders&type=table${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''}`);
+      expect(response.ok()).toBeTruthy();
+      const result: { items: { sourceId: string }[]; nextCursor: string | null } = await response.json();
+      if (result.items.some((asset: { sourceId: string }) => asset.sourceId === source.id)) return true;
+      cursor = result.nextCursor;
+      if (cursor) { expect(seen.has(cursor)).toBe(false); seen.add(cursor); expect(seen.size).toBeLessThan(200); }
+    } while (cursor);
+    return false;
   }, { timeout: 25_000 }).toBeTruthy();
   console.info('Browser step: search projection available');
   await page.getByRole('link', { name: 'Data catalog', exact: true }).click();
@@ -58,6 +67,18 @@ test('E2E-02/03: real OIDC, UI source registration, scan, discovery, ownership a
   await expect(page).toHaveURL(/q=orders/);
   await page.getByRole('radio', { name: /^Table/ }).check();
   const assetRow = page.locator('tbody tr').filter({ hasText: sourceName }).filter({ has: page.getByRole('link', { name: 'orders', exact: true }) });
+  // Repeated real scans retain independent sources. Exercise the actual catalog
+  // pagination instead of assuming this source sorts into the first fifty rows.
+  for (let visited = 0; await assetRow.count() === 0; visited += 1) {
+    expect(visited).toBeLessThan(199);
+    const more = page.locator('.pagination').getByRole('button').last();
+    await expect(more).toBeEnabled();
+    const loaded = page.waitForResponse(response => response.url().includes('/api/v1/assets?') && response.request().method() === 'GET');
+    await more.click();
+    expect((await loaded).ok()).toBeTruthy();
+    await expect(page.locator('.pagination').getByRole('button').first()).toBeEnabled();
+    await expect(page.locator('.catalog-results [aria-busy="true"]')).toHaveCount(0);
+  }
   await assetRow.getByRole('link', { name: 'orders', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'orders', exact: true })).toBeVisible();
   console.info('Browser step: discovered orders in catalog');

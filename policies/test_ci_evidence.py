@@ -9,6 +9,8 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from api_evidence import collect as collect_api
+import test_api_evidence
 
 COLLECTOR = Path(__file__).with_name("ci_evidence.py")
 FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations")
@@ -16,7 +18,7 @@ STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "securit
 
 
 class EvidenceGateTests(unittest.TestCase):
-    def collect(self, mutation=None, failed_step=None):
+    def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False):
         specs = [{"file": f"{name}.spec.ts", "line": line, "title": "PRIVATE_SYNTHETIC_TITLE",
                   "tests": [{"status": "expected", "results": [{"status": "passed", "duration": 1, "stdout": ["PRIVATE_SYNTHETIC_OUTPUT"]}]}]}
                  for name in FILES for line in (10, 20)]
@@ -26,11 +28,20 @@ class EvidenceGateTests(unittest.TestCase):
             root = Path(temporary)
             (root / "policies").mkdir()
             shutil.copyfile(COLLECTOR, root / "policies/ci_evidence.py")
+            shutil.copyfile(COLLECTOR.with_name("api_evidence.py"), root / "policies/api_evidence.py")
+            api_file = root / "tests/integration/example.test.ts"
+            api_file.parent.mkdir(parents=True)
+            api_file.write_text("test('synthetic API test', async () => {});\n")
             source = root / ".local/evidence"
             source.mkdir(parents=True)
             (source / "playwright-results.json").write_text(json.dumps({"suites": [{"specs": specs}]}))
+            api = collect_api(root, b"TAP version 13\nok 1 - synthetic API test\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n", 0, "a" * 40, True)
+            if api_mutation:
+                api_mutation(api)
+            if not omit_api:
+                (source / "api-summary.json").write_text(json.dumps(api))
             env = {**os.environ, **{f"GC_{step.upper()}_RESULT": "success" for step in STEPS},
-                   "GITHUB_SHA": "synthetic-fixture", "GITHUB_REPOSITORY": "example/fixture", "GITHUB_RUN_ID": "1"}
+                   "GITHUB_SHA": "a" * 40, "GITHUB_REPOSITORY": "example/fixture", "GITHUB_RUN_ID": "1"}
             if failed_step:
                 env[f"GC_{failed_step.upper()}_RESULT"] = "failure"
             result = subprocess.run([sys.executable, str(root / "policies/ci_evidence.py")],
@@ -38,6 +49,8 @@ class EvidenceGateTests(unittest.TestCase):
             report = json.loads((root / ".local/ci-artifacts/behavior-summary.json").read_text())
             serialized = json.dumps(report)
             self.assertNotIn("PRIVATE_SYNTHETIC", serialized)
+            for artifact in (root / ".local/ci-artifacts").glob("*.json"):
+                self.assertNotIn("PRIVATE_SYNTHETIC", artifact.read_text())
             return result.returncode, report
 
     def test_all_sixteen_required_journeys_are_accepted_and_private_payloads_omitted(self):
@@ -93,6 +106,29 @@ class EvidenceGateTests(unittest.TestCase):
             with self.subTest(results=results):
                 code, _ = self.collect(lambda specs: specs[-1]["tests"][0].update(results=results))
                 self.assertEqual(code, 1)
+
+    def test_missing_or_invalid_api_evidence_cannot_qualify_successful_security_step(self):
+        code, report = self.collect(omit_api=True)
+        self.assertEqual(code, 1)
+        self.assertEqual(report["api_evidence"], "UNAVAILABLE_OR_INVALID")
+        for mutate in (lambda value: value.update(commit="b" * 40), lambda value: value.update(error="PRIVATE_SYNTHETIC_ERROR"),
+                       lambda value: value["tests"][0].update(status="skipped")):
+            code, report = self.collect(api_mutation=mutate)
+            self.assertEqual(code, 1)
+            self.assertEqual(report["api_evidence"], "UNAVAILABLE_OR_INVALID")
+
+    def test_security_step_failure_remains_failed_with_a_valid_prior_api_pass(self):
+        code, report = self.collect(failed_step="security")
+        self.assertEqual(code, 1)
+        self.assertEqual(report["outcome"], "NOT_PASSED")
+        self.assertEqual(report["api_evidence"], "STEP_RESULT_MISMATCH")
+
+
+def load_tests(loader, tests, pattern):
+    # The existing hosted quality command also exercises the new API evidence
+    # boundary; no new workflow privilege or artifact path is required.
+    tests.addTests(loader.loadTestsFromModule(test_api_evidence))
+    return tests
 
 
 if __name__ == "__main__":

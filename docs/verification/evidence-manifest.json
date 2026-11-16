@@ -685,6 +685,12 @@
       "implementation_status": "IN_PROGRESS",
       "verification_status": "PASS_FOR_RECORDED_SCOPE",
       "evidence_sha256": "349286f4ea74736656441244ca1237bf9eba6286af2020734e85227ccf748f93"
+    },
+    {
+      "path": "docs/verification/participation-repair-reference.json",
+      "scope": "Unconditional repair-reference authorization, bounded private API diagnostics and repeatable source-specific catalog browser acceptance. Full required-participation/M2 and hosted requalification remain open.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_LOCAL_SCOPE"
     }
   ],
   "limitations": [

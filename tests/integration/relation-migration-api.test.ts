@@ -241,6 +241,41 @@ test('REST complete scope and receipt/history replay are reauthorized after an o
   await failure(await request(`/relation-migrations/${first.receipt.id}`, foreignHeaders), 404, ['RELATION_MIGRATION_NOT_FOUND']);
 });
 
+test('REST optional predecessor always authorizes current actions and any supplied complete receipt scope', async () => {
+  const f = await fixture(), first = await execute(f.headers, f.change);
+  const engineerHeaders = await session(engineer), readHeaders = await session(analyst);
+  const captured = await existingContext(f, null, engineerHeaders);
+  assert.equal(captured.request.repairsReceiptId, null);
+  const linked = await existingContext(f, first.receipt.id, engineerHeaders);
+  assert.equal(linked.request.repairsReceiptId, first.receipt.id);
+  assert.deepEqual(linked.before, captured.before);
+  const change = repairValues(captured, f.preparation.relationTypeId, 'Synthetic optional predecessor authorization');
+  const unlinked = await preview(engineerHeaders, change); assert.equal(unlinked.ready, true);
+  await failure(await request('/relation-migrations/context', readHeaders, 'POST', contextRequest(change)), 403, ['FORBIDDEN']);
+  await failure(await request('/relation-migrations/previews', readHeaders, 'POST', { changeSet: change }), 403, ['FORBIDDEN']);
+  const { repairsReceiptId: _omitted, ...withoutReferenceField } = contextRequest(change);
+  await failure(await request('/relation-migrations/context', engineerHeaders, 'POST', withoutReferenceField), 422, ['RELATION_MIGRATION_INVALID']);
+  await failure(await request('/relation-migrations/context', engineerHeaders, 'POST', { ...contextRequest(change), repairsReceiptId: randomUUID() }), 404, ['RELATION_MIGRATION_NOT_FOUND']);
+  await failure(await request('/relation-migrations/context', await session(summit, foreign), 'POST', { ...contextRequest(change), repairsReceiptId: first.receipt.id }), 404, ['RELATION_MIGRATION_NOT_FOUND']);
+
+  const separate = await fixture(), unrelated = await execute(separate.headers, separate.change);
+  const unrelatedChange = { ...change, repairsReceiptId: unrelated.receipt.id };
+  await failure(await request('/relation-migrations/context', engineerHeaders, 'POST', contextRequest(unrelatedChange)), 422, ['RELATION_REPAIR_UNRELATED']);
+  const edgeId = unrelated.receipt.creations[0].relationId;
+  const edge = (await response(await request(`/relations/${edgeId}`, separate.headers), 200)).relation as RelationView;
+  await response(await request(`/relations/${edgeId}`, mutation(separate.headers, edge.version), 'PATCH', {
+    attributes: edge.attributes, ownerId: edge.ownerId, validFrom: edge.validFrom, validTo: edge.validTo,
+    visibility: 'restricted', allowedIdentityIds: [steward], sourceAssetVersion: edge.source.assetVersion, targetAssetVersion: edge.target.assetVersion,
+  }), 200);
+  // The current graph remains visible, but an explicit predecessor cannot
+  // conceal its independently protected original edge through an unrelated plan.
+  await failure(await request('/relation-migrations/context', engineerHeaders, 'POST', contextRequest(unrelatedChange)), 404, ['RELATION_MIGRATION_NOT_FOUND']);
+  await failure(await request('/relation-migrations/previews', engineerHeaders, 'POST', { changeSet: unrelatedChange }), 404, ['RELATION_MIGRATION_NOT_FOUND']);
+  const result = await execute(engineerHeaders, change);
+  assert.equal(result.receipt.repairsReceiptId, null);
+  assert.equal(result.receipt.changeSet.repairsReceiptId, null);
+});
+
 test('REST stale preview and concurrent identical expected revisions refuse partial writes and preserve exact successful replay', async () => {
   const f = await fixture(), first = await execute(f.headers, f.change), captured = await existingContext(f);
   const change = repairValues(captured, f.preparation.relationTypeId, 'Synthetic reviewed repair', first.receipt.id), checked = await preview(f.headers, change);

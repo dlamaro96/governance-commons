@@ -42,8 +42,19 @@ export function visibleRelationOperation(p: Principal, operationId: ReturnType<t
  * actor, supplied receipt, or a hash as current authorization. */
 export async function authorizeRelationOperation(tx: Tx, p: Principal, id: string): Promise<void> {
   if (!uuid(id)) throw receiptMissing();
+  await authorizeRelationRepairReference(tx, p, id);
+}
+
+/** An optional predecessor is data, never a switch around authorization. Every
+ * request rechecks current membership/actions and evaluates the same protected
+ * receipt-scope predicate. Null explicitly means no predecessor; a supplied
+ * reference must resolve to a currently visible complete original operation.
+ * The caller still authorizes the full graph it is proposing to change. */
+export async function authorizeRelationRepairReference(tx: Tx, p: Principal, id: string | null): Promise<void> {
+  if (id !== null && !uuid(id)) throw receiptMissing();
   await relationQuery(tx, () => modelPersistence.authorize(tx, p, RELATION_READ));
-  const allowed = await relationQuery(tx, () => sql<{ allowed: boolean }>`select (${visibleRelationOperation(p, sql`${id}`)}) as allowed`.execute(tx));
+  const allowed = await relationQuery(tx, () => sql<{ allowed: boolean }>`select
+    (${id}::uuid IS NULL OR (${visibleRelationOperation(p, sql`${id}`)})) as allowed`.execute(tx));
   if (!allowed.rows[0]?.allowed) throw receiptMissing();
 }
 

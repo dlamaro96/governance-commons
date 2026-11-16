@@ -8,7 +8,7 @@ import { discoverTypeMigration } from './asset-type-migration-service.ts';
 import { projectGraphAssetChanges } from './graph-asset-preparation.ts';
 import { relationPolicyChanges } from './relation-migration.ts';
 import { structuralProjection, validateFinalRelationGraphConstraints, policyKey } from './relation-participation.ts';
-import { authorizeRelationOperation, getRelationPreparation } from './relation-migration-read.ts';
+import { authorizeRelationRepairReference, getRelationPreparation } from './relation-migration-read.ts';
 import { relationDefinition, relationQuery, lockRelationScope, lockRelationPrincipals, endpointState,
   storedRelationType, relationTypeVersion, endpointTypeIdentities, hiddenScope, profileLimit,
   unavailable, iso, type Row } from './relation-store.ts';
@@ -99,7 +99,7 @@ export async function captureRelationMigration(tx: Tx, p: Principal, request: Re
     if (absent.rows.length) throw unavailable();
   }
   for (const target of request.assetTypeMigrations) await relationQuery(tx, () => models.authorizeModelCohort(tx, p, target.definition.id));
-  if (request.repairsReceiptId) await authorizeRelationOperation(tx, p, request.repairsReceiptId);
+  await authorizeRelationRepairReference(tx, p, request.repairsReceiptId);
   const preparations: RelationMigrationContext['preparations'][number][] = [];
   for (const target of request.relationTargets) {
     if (target.kind === 'create') {
