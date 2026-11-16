@@ -89,6 +89,10 @@ class Harness(base.Harness):
         super().__init__()
         self.report.update(command='./dev test --suite reference-upgrade', profile='isolated-postgresql-reference')
 
+    def reference_native_source_expectations(self, measured):
+        # A later isolated forward gate may declare exact predecessor bytes.
+        return measured
+
     def classification_native_source_expectations(self, measured):
         require(self.reference_predecessor is not None and self.reference_current is None
                 and self.classification_predecessor is None and self.classification_current is not None
@@ -116,12 +120,23 @@ class Harness(base.Harness):
         require(self.phase == ('classification-native-tests' if stage is not None else 'reference-native-tests'),
                 'Unexpected reference source phase')
         mounts = list(mounts)
-        targets = ['/app/' + row['path'] for row in PREDECESSORS] + [PROBE]
-        require(all(not (target == fixed or target.startswith(fixed + '/') or fixed.startswith(target.rstrip('/') + '/'))
-                    for _, target in mounts for fixed in targets), 'Conflicting reference predecessor mount')
         fixtures()
         original = stage or current
         effective = effective_sources(original['sources']) if stage is not None else [dict(row) for row in original['sources']]
+        if current is not None:
+            native = self.reference_native_source_expectations([row for row in effective if row['path'].endswith('.ts')])
+            require([row['path'] for row in native] == [row['path'] for row in effective if row['path'].endswith('.ts')],
+                    'Reference effective source paths differ')
+            expected = {row['path']: row['sha256'] for row in native}
+            effective = [{**row, 'sha256': expected.get(row['path'], row['sha256'])} for row in effective]
+        targets = ['/app/' + row['path'] for row in PREDECESSORS] + [PROBE]
+        declared = {('/app/' + row['path']): row['sha256'] for row in effective
+                    if current is not None and row['sha256'] != next(item['sha256'] for item in original['sources'] if item['path'] == row['path'])}
+        for file, target in mounts:
+            for fixed in targets:
+                if target == fixed or target.startswith(fixed + '/') or fixed.startswith(target.rstrip('/') + '/'):
+                    require(target == fixed and target in declared, 'Conflicting reference predecessor mount')
+                    base.read_exact(file, declared[target])
         selected = []
         if stage is not None:
             for row in PREDECESSORS:
@@ -198,8 +213,9 @@ def execute(h):
         measured = [row for row in frozen if row['path'].endswith('.ts')]
         probe = "const fs=require('node:fs'),crypto=require('node:crypto');console.log(JSON.stringify(" + json.dumps([row['path'] for row in measured]) + ".map(path=>({path,sha256:crypto.createHash('sha256').update(fs.readFileSync(path)).digest('hex')}))));"
         observed = json.loads(h.helper(['node', '-e', probe]).stdout)
-        require(observed == measured, 'Actual reference native source bytes differ')
-        h.report['referenceNativeSourceReadback'] = {'result': 'PASS', 'files': len(measured), 'manifestSha256': sha(json.dumps(observed, sort_keys=True).encode())}
+        expected_sources = h.reference_native_source_expectations(measured)
+        require(observed == expected_sources, 'Actual reference native source bytes differ')
+        h.report['referenceNativeSourceReadback'] = {'result': 'PASS', 'files': len(measured), 'checkoutManifestSha256': sha(json.dumps(measured, sort_keys=True).encode()), 'manifestSha256': sha(json.dumps(observed, sort_keys=True).encode())}
         expected = sum(len(re.findall(r'^test\(', (ROOT / name).read_text(), re.MULTILINE)) for name in TESTS)
         require(expected == 18, 'Expected eighteen native reference cases')
         tested = h.helper(['node', '--import', 'tsx', '--test', '--test-reporter=tap', '--test-concurrency=1', *TESTS], timeout=240, allow_failure=True)

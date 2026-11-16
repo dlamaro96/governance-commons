@@ -15,25 +15,29 @@ const nullable=(schema:TSchema)=>Type.Union([schema,Type.Null()]);
 const integer=(minimum=1,maximum=2147483647)=>Type.Integer({minimum,maximum});
 const uuid=Type.String({pattern:'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$'}),digest=Type.String({pattern:'^[a-f0-9]{64}$'});
 const stamp=Type.String({pattern:'^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$'});
-const definition=object({formatVersion:Type.Literal(1),kind:Type.Literal('completeness'),target:object({tableAssetId:uuid,columnAssetId:uuid}),
- name:Type.String({minLength:1,maxLength:240}),purpose:Type.String({minLength:1,maxLength:4096}),ownerId:uuid,severity:choices('info','warning','critical'),maximumNullBasisPoints:integer(0,10000)});
-const rule=object({id:uuid,version:integer(),currentVersion:integer(),definition,definitionHash:digest,createdAt:stamp,createdBy:uuid});
-const measurement=object({formatVersion:Type.Literal(1),kind:Type.Literal('completeness'),strategy:Type.Literal('exact-bounded-role-scope'),rowCount:integer(0,QUALITY_BUDGET.maximumRows),nullCount:integer(0,QUALITY_BUDGET.maximumRows),
- observedStartedAt:stamp,observedFinishedAt:stamp,elapsedMs:integer(0,30000),sourceVersion:Type.String({pattern:'^\\d{5,16}$'}),adapterVersion:Type.Literal('1'),queryTemplate:Type.Literal('postgresql-completeness-v1'),
- estimatedCost:Type.Number({minimum:0,maximum:QUALITY_BUDGET.maximumEstimatedCost}),estimatedBytes:Type.Number({minimum:0,maximum:QUALITY_BUDGET.maximumEstimatedBytes})});
-const run=object({id:uuid,ruleId:uuid,ruleVersion:integer(),ruleHash:digest,requesterId:uuid,columnAssetId:uuid,tableAssetId:uuid,status:choices('queued','running','succeeded','failed','cancelled'),
- version:integer(),attempt:integer(0,3),createdAt:stamp,startedAt:nullable(stamp),finishedAt:nullable(stamp),expiresAt:stamp,measurement:nullable(measurement),verdict:nullable(choices('PASS','FAIL','NO_DATA')),errorCode:nullable(choices(...QUALITY_ERRORS))});
+const definitionFields={formatVersion:Type.Literal(1),target:object({tableAssetId:uuid,columnAssetId:uuid}),name:Type.String({minLength:1,maxLength:240}),purpose:Type.String({minLength:1,maxLength:4096}),ownerId:uuid,severity:choices('info','warning','critical')};
+const definition=Type.Union([
+ object({...definitionFields,kind:Type.Literal('completeness'),maximumNullBasisPoints:integer(0,10000)}),
+ object({...definitionFields,kind:Type.Literal('reference-allowed-values'),maximumInvalidBasisPoints:integer(0,10000),reference:object({setId:uuid,selection:Type.Literal('effective-at-run'),codeStatus:Type.Literal('active')}),comparison:Type.Literal('utf8-exact'),nullPolicy:Type.Literal('exclude')})]);
+const rule=object({id:uuid,version:integer(),currentVersion:nullable(integer()),definition,definitionHash:digest,createdAt:stamp,createdBy:uuid});
+const referenceFields={setId:uuid,version:integer(),publicationHash:digest,asOf:stamp,codeStatus:Type.Literal('active'),bindingHash:digest};
+const referenceMetadata=object(referenceFields),referenceBinding=object({...referenceFields,codes:Type.Array(Type.String({pattern:'^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$'}),{maxItems:256,uniqueItems:true})});
+const measurementFields={formatVersion:Type.Literal(1),strategy:Type.Literal('exact-bounded-role-scope'),rowCount:integer(0,QUALITY_BUDGET.maximumRows),nullCount:integer(0,QUALITY_BUDGET.maximumRows),observedStartedAt:stamp,observedFinishedAt:stamp,elapsedMs:integer(0,30000),sourceVersion:Type.String({pattern:'^\\d{5,16}$'}),adapterVersion:Type.Literal('1'),estimatedCost:Type.Number({minimum:0,maximum:QUALITY_BUDGET.maximumEstimatedCost}),estimatedBytes:Type.Number({minimum:0,maximum:QUALITY_BUDGET.maximumEstimatedBytes})};
+const completenessMeasurement=object({...measurementFields,kind:Type.Literal('completeness'),queryTemplate:Type.Literal('postgresql-completeness-v1')});
+const referenceMeasurement=object({...measurementFields,kind:Type.Literal('reference-allowed-values'),queryTemplate:Type.Literal('postgresql-reference-allowed-values-v1'),invalidCount:integer(0,QUALITY_BUDGET.maximumRows),referenceBindingHash:digest});
+const measurement=Type.Union([completenessMeasurement,referenceMeasurement]);
+const runFields={id:uuid,ruleId:uuid,ruleVersion:integer(),ruleHash:digest,requesterId:uuid,columnAssetId:uuid,tableAssetId:uuid,status:choices('queued','running','succeeded','failed','cancelled'),version:integer(),attempt:integer(0,3),createdAt:stamp,startedAt:nullable(stamp),finishedAt:nullable(stamp),expiresAt:stamp,verdict:nullable(choices('PASS','FAIL','NO_DATA')),errorCode:nullable(choices(...QUALITY_ERRORS))};
+const run=Type.Union([object({...runFields,measurement:nullable(completenessMeasurement)}),object({...runFields,kind:Type.Literal('reference-allowed-values'),reference:referenceMetadata,measurement:nullable(referenceMeasurement)})]);
 const page=(schema:TSchema)=>object({items:Type.Array(schema,{maxItems:100}),nextCursor:nullable(Type.String({maxLength:1024}))});
 const eligibility=object({supported:Type.Boolean(),reason:nullable(Type.String({maxLength:120})),tableAssetId:nullable(uuid),columnAssetId:nullable(uuid)});
-const execution=object({formatVersion:Type.Literal(1),kind:Type.Literal('completeness'),target:object({databaseOid:Type.String({pattern:'^[1-9]\\d{0,9}$'}),schemaOid:Type.String({pattern:'^[1-9]\\d{0,9}$'}),relationOid:Type.String({pattern:'^[1-9]\\d{0,9}$'}),attributeNumber:integer(1,32767),
- schemaName:Type.String({minLength:1,maxLength:255}),tableName:Type.String({minLength:1,maxLength:255}),columnName:Type.String({minLength:1,maxLength:255}),dataType:Type.String({minLength:1,maxLength:256})}),
- budget:object(Object.fromEntries(Object.entries(QUALITY_BUDGET).map(([k,v])=>[k,Type.Literal(v)])))});
+const executionFields={formatVersion:Type.Literal(1),target:object({databaseOid:Type.String({pattern:'^[1-9]\\d{0,9}$'}),schemaOid:Type.String({pattern:'^[1-9]\\d{0,9}$'}),relationOid:Type.String({pattern:'^[1-9]\\d{0,9}$'}),attributeNumber:integer(1,32767),schemaName:Type.String({minLength:1,maxLength:255}),tableName:Type.String({minLength:1,maxLength:255}),columnName:Type.String({minLength:1,maxLength:255}),dataType:Type.String({minLength:1,maxLength:256})}),budget:object(Object.fromEntries(Object.entries(QUALITY_BUDGET).map(([k,v])=>[k,Type.Literal(v)])))};
+const execution=Type.Union([object({...executionFields,kind:Type.Literal('completeness')}),object({...executionFields,kind:Type.Literal('reference-allowed-values'),reference:referenceBinding})]);
 const claim=Type.Union([object({status:Type.Literal('busy'),retryAt:stamp}),object({status:Type.Literal('terminal'),run}),object({status:Type.Literal('claimed'),runId:uuid,claimId:uuid,attempt:integer(1,3),leaseExpiresAt:stamp,
  source:object({connectorId:Type.Literal('postgresql'),host:Type.String({minLength:1,maxLength:1024}),port:integer(1,65535),database:Type.String({minLength:1,maxLength:1024}),schema:Type.String({minLength:1,maxLength:1024}),secretRef:Type.String({minLength:1,maxLength:1024})}),execution})]);
 const completion=Type.Union([object({claimId:uuid,attempt:integer(1,3),measurement}),object({claimId:uuid,attempt:integer(1,3),errorCode:choices(...QUALITY_ERRORS)})]);
 const publish=object({id:uuid,expectedVersion:integer(0,2147483646),definition});
 const problem=object({type:Type.String(),title:Type.String(),status:Type.Integer(),code:Type.String(),detail:Type.String(),correlationId:Type.String()});
-export const qualityHttp={definition,rule,measurement,run,eligibility,execution,claim,completion,publish,problem};
+export const qualityHttp={definition,rule,measurement,run,eligibility,execution,claim,completion,publish,problem,referenceMetadata,referenceBinding};
 export function qualityRawQuery(url:string,allowed:readonly string[]):Record<string,string|number>{
  const out:Record<string,string|number>=Object.create(null),raw=url.split('?').slice(1).join('?');if(!raw)return out;
  for(const pair of raw.split('&')){const equal=pair.indexOf('=');let key:string,value:string;
@@ -73,7 +77,7 @@ export async function installQuality(app:FastifyInstance):Promise<void>{
   route('POST','/api/v1/quality/rules',{body:publish,response:object({rule}),mutation:true,status:201},(r,tx,s)=>{if((r.body as {expectedVersion:number}).expectedVersion!==0)throw qualityInvalid();return publishQualityRule(tx,s.principal!,r.body,s.key!,r.id);});
   route('GET','/api/v1/quality/rules/:id',{params:{id:uuid},query:['version'],response:object({rule})},async(r,tx,s)=>({rule:await getQualityRule(tx,s.principal!,id(r),s.query.version as number|undefined)}));
   route('POST','/api/v1/quality/rules/:id/versions',{params:{id:uuid},body:publish,response:object({rule}),mutation:true,status:201},(r,tx,s)=>{const b=r.body as {id:string;expectedVersion:number};if(b.id!==id(r)||b.expectedVersion<1)throw qualityInvalid();return publishQualityRule(tx,s.principal!,r.body,s.key!,r.id);});
-  route('POST','/api/v1/quality/rules/:id/runs',{params:{id:uuid},body:object({id:uuid,ruleVersion:integer(),ruleHash:digest}),response:object({run}),mutation:true,status:202},(r,tx,s)=>requestQualityRun(tx,s.principal!,id(r),r.body,s.key!,r.id));
+  route('POST','/api/v1/quality/rules/:id/runs',{params:{id:uuid},body:object({id:uuid,ruleVersion:integer(),ruleHash:digest,referenceAsOf:Type.Optional(stamp)}),response:object({run}),mutation:true,status:202},(r,tx,s)=>requestQualityRun(tx,s.principal!,id(r),r.body,s.key!,r.id));
   route('GET','/api/v1/quality/rules/:id/runs',{params:{id:uuid},query:['limit','cursor'],response:page(run)},(r,tx,s)=>listQualityRuns(tx,s.principal!,id(r),s.query as QualityPageQuery));
   route('GET','/api/v1/quality/runs/:id',{params:{id:uuid},response:object({run})},async(r,tx,s)=>({run:await getQualityRun(tx,s.principal!,id(r))}));
   route('POST','/api/v1/quality/runs/:id/cancel',{params:{id:uuid},body:object({expectedVersion:integer(),reason:Type.String({minLength:1,maxLength:4096})}),response:object({run}),mutation:true},(r,tx,s)=>cancelQualityRun(tx,s.principal!,id(r),r.body,s.key!,r.id));

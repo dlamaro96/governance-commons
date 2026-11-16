@@ -15,7 +15,7 @@ export function createQualityActivity(config:{apiUrl:string;apiToken:string;work
   try{
    const input=parseQualityWorkflowInput(raw);if(!config.tenants.has(input.tenantId))throw 0;
    const claimId=(config.claimId??randomUUID)();
-   const response=await api(`/internal/quality-runs/${input.runId}/claim`,{tenantId:input.tenantId,body:{claimId},timeoutMs:35000,maximum:16384});
+   const response=await api(`/internal/quality-runs/${input.runId}/claim`,{tenantId:input.tenantId,body:{claimId},timeoutMs:35000,maximum:65536});
    if(response.status!==200)throw 0;const claim=parseQualityClaim(response.body);
    if(claim.status==='terminal'){if(claim.run.id!==input.runId)throw 0;return terminal(claim.run);}
    if(claim.status==='busy')return {runId:input.runId,status:'busy',version:null,retryAt:claim.retryAt};
@@ -27,7 +27,9 @@ export function createQualityActivity(config:{apiUrl:string;apiToken:string;work
    else{
     try{
      const result=await worker('/quality',{body:{tenantId:input.tenantId,source:claim.source,execution:claim.execution},timeoutMs:40000,maximum:32768});
-     if(result.status===200){const body=qualityObject(result.body,['measurement']);completion={claimId,attempt:claim.attempt,measurement:parseQualityMeasurement(body.measurement)};}
+     if(result.status===200){const body=qualityObject(result.body,['measurement']),measurement=parseQualityMeasurement(body.measurement);
+      if(measurement.kind!==claim.execution.kind||measurement.kind==='reference-allowed-values'&&(claim.execution.kind!=='reference-allowed-values'||measurement.referenceBindingHash!==claim.execution.reference.bindingHash))throw 0;
+      completion={claimId,attempt:claim.attempt,measurement};}
      else {const body=qualityObject(result.body,['code']);let code:QualityError='QUALITY_SOURCE_FAILED';
       if(['QUALITY_RESOURCE_LIMIT','QUALITY_TARGET_STALE','QUALITY_TARGET_UNSUPPORTED','QUALITY_DEADLINE_EXCEEDED'].includes(body.code as string))code=body.code as QualityError;
       else if(body.code==='SOURCE_DEADLINE_EXCEEDED'||body.code==='SOURCE_TIMEOUT')code='QUALITY_DEADLINE_EXCEEDED';
@@ -35,7 +37,7 @@ export function createQualityActivity(config:{apiUrl:string;apiToken:string;work
     }catch{completion={claimId,attempt:claim.attempt,errorCode:'QUALITY_SOURCE_FAILED'};}
    }
    const finished=await api(`/internal/quality-runs/${input.runId}/finish`,{tenantId:input.tenantId,body:completion,timeoutMs:35000,maximum:16384});
-   if(finished.status!==200)throw 0;const run=parseQualityRunView(qualityObject(finished.body,['run']).run);if(run.id!==input.runId)throw 0;return terminal(run);
+   if(finished.status!==200)throw 0;const run=parseQualityRunView(qualityObject(finished.body,['run']).run);if(run.id!==input.runId||(claim.execution.kind==='reference-allowed-values'?run.kind!=='reference-allowed-values'||run.reference.bindingHash!==claim.execution.reference.bindingHash:run.kind!==undefined))throw 0;return terminal(run);
   }catch{
    // No private source, measurements, secrets, remote response or exception can
    // enter the durable history. Retry obtains a fresh canonical claim or busy.

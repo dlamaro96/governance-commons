@@ -26,9 +26,10 @@ export default defineConfig({
     { name: 'postgres-configuration', testMatch: /postgres-configuration\.spec\.ts/, dependencies: ['source-connectors'] },
     { name: 'approvals', testMatch: /approvals\.spec\.ts/, dependencies: ['postgres-configuration'] },
     { name: 'glossary', testMatch: /glossary\.spec\.ts/, dependencies: ['approvals'] },
-    { name: 'quality', testMatch: /quality\.spec\.ts/, dependencies: ['glossary'] },
+    { name: 'quality', testMatch: /(^|[/\\])quality\.spec\.ts$/, dependencies: ['glossary'] },
     { name: 'lineage', testMatch: /lineage\.spec\.ts/, dependencies: ['quality'] },
     { name: 'classification', testMatch: /classification\.spec\.ts/, dependencies: ['lineage'] },
     { name: 'reference-data', testMatch: /reference-data\.spec\.ts/, dependencies: ['classification'] },
+    { name: 'reference-quality', testMatch: /reference-quality\.spec\.ts/, dependencies: ['reference-data'] },
   ],
 });

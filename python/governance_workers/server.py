@@ -9,12 +9,17 @@ import re
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from .deadline import deadline
 from .dispatch import scan
-from .quality import execute as execute_quality, validate_execution
+from .quality import REFERENCE_KIND, execute as execute_quality, validate_execution
 from .postgresql import ScanFailure
 from .secrets import resolve
 
 MAX_REQUEST_BYTES = 16384
+MAX_REFERENCE_REQUEST_BYTES = 65536
 REQUEST_SECONDS = 30
+
+
+class RequestSizeError(ValueError):
+    """A bounded envelope exceeded its admitted family's byte limit."""
 
 
 def request_payload(raw, operation="scan"):
@@ -32,8 +37,9 @@ def request_payload(raw, operation="scan"):
 
     if operation not in ("scan", "quality"):
         raise ValueError("request operation")
-    if not 0 < len(raw) <= MAX_REQUEST_BYTES:
-        raise ValueError("request size")
+    maximum = MAX_REFERENCE_REQUEST_BYTES if operation == 'quality' else MAX_REQUEST_BYTES
+    if not 0 < len(raw) <= maximum:
+        raise RequestSizeError("request size")
     depth, quoted, escaped = 0, False, False
     for byte in raw:
         if quoted:
@@ -79,6 +85,12 @@ def request_payload(raw, operation="scan"):
             or source.get("connectorId", "postgresql") not in ("postgresql", "unity-catalog")):
         raise ValueError("source shape")
     if operation == "quality":
+        # The family is inside duplicate-aware JSON. Large quality framing is
+        # not admission for completeness, unknown families or loose envelopes.
+        execution = value['execution']
+        if (len(raw) > MAX_REQUEST_BYTES and
+                (type(execution) is not dict or execution.get('kind') != REFERENCE_KIND)):
+            raise RequestSizeError("request size")
         if set(source) != {"connectorId", "host", "port", "database", "schema", "secretRef"} or source.get("connectorId") != "postgresql":
             raise ValueError("quality source shape")
         validate_execution(source, value["execution"])
@@ -144,7 +156,8 @@ class Handler(BaseHTTPRequestHandler):
             if not length.isascii() or not length.isdigit() or len(length) > 8:
                 raise ValueError("request length")
             size = int(length)
-            if not 0 < size <= MAX_REQUEST_BYTES:
+            maximum = MAX_REFERENCE_REQUEST_BYTES if self.path == '/quality' else MAX_REQUEST_BYTES
+            if not 0 < size <= maximum:
                 return self.reply(413, {"code": "REQUEST_SIZE"})
             try:
                 # The request line and headers already consumed part of this
@@ -167,6 +180,8 @@ class Handler(BaseHTTPRequestHandler):
                 result = (408, {"code": "REQUEST_TIMEOUT"})
             else:
                 result = (400 if error.code == "QUALITY_INPUT_INVALID" else 422, {"code": error.code})
+        except RequestSizeError:
+            result = (413, {"code": "REQUEST_SIZE"})
         except (ValueError, KeyError, TypeError, RecursionError):
             result = (400, {"code": "INVALID_REQUEST"})
         except Exception:
