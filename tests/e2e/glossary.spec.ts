@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 /** Real OIDC, canonical approval commands, Temporal publication and search.
- * This journey covers metadata-only terms; it does not qualify glossary links. */
+ * The original metadata journey and linked physical-context journey are separate. */
 import {test,expect,type Browser,type Page,type TestInfo} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {randomUUID} from 'node:crypto';
@@ -12,6 +12,10 @@ import type {ApprovalDefinition} from '../../packages/domain/src/approval-contra
 import type {ApprovalDefinitionView,ApprovalRequestView} from '../../packages/domain/src/approval-service.ts';
 import type {getAssetType} from '../../packages/domain/src/asset-type-service.ts';
 import type {AssetList,Session} from '../../apps/web/src/types.ts';
+import type {Asset} from '../../apps/web/src/types.ts';
+import type {AssetTypeDefinition} from '../../packages/domain/src/asset-type.ts';
+import type {RelationTypeDefinition,RelationTypeView} from '../../packages/domain/src/relation-contracts.ts';
+import type {AssetGlossaryContextPage} from '../../packages/domain/src/glossary-context-contracts.ts';
 
 const reviewerId='10000000-0000-4000-8000-000000000002';
 type PublishedAssetType=Awaited<ReturnType<typeof getAssetType>>['type'];
@@ -176,4 +180,158 @@ test('GLS: real proposal, independent review, publication, amendment and restric
   const forbidden=await consumer.request.post('/api/v1/glossary/proposals',{headers:await domainHeaders(consumer),data:{...second.body,requestId:randomUUID()}});expect(forbidden.status()).toBe(403);expect((await forbidden.json()).code).toBe('FORBIDDEN');
   expect(await readTerm(page,republished.term.resourceId)).toEqual(republished.term);
  }finally{await reviewerContext.close();await consumerContext.close();}
+});
+
+async function contextBudget(page:Page){
+ const response=await page.request.get('/api/v1/me');expect([200,429]).toContain(response.status());
+ const remaining=Number(response.headers()['x-ratelimit-remaining']),reset=Number(response.headers()['x-ratelimit-reset']);
+ expect(Number.isFinite(remaining)&&remaining>=0&&Number.isFinite(reset)&&reset>=0&&reset<=60).toBe(true);
+ if(remaining<180)await new Promise(resolve=>setTimeout(resolve,(reset+1)*1000));
+}
+async function physicalGlossaryTarget(page:Page,token:string){
+ const definition:AssetTypeDefinition={formatVersion:1,id:`gls_target_${token}`,version:1,parents:[],attributes:{},overrideAttributes:[],requiredOwner:false,
+  lifecycle:{initial:'active',states:['active','retired'],transitions:[{from:'active',to:'retired'}]}};
+ const type=(await domainBody<{type:PublishedAssetType}>(await page.request.post('/api/v1/asset-types',{headers:await domainHeaders(page),data:{definition}}),201)).type;
+ const source=(await domainBody<{source:{id:string}}>(await page.request.post('/api/v1/sources',{headers:await domainHeaders(page),
+  data:{name:`Synthetic glossary context ${token}`,host:'source-postgres',port:5432,database:'harbor',schema:'public',secretRef:'demo-postgres'}}),201)).source;
+ const job=(await domainBody<{job:{id:string}}>(await page.request.post(`/api/v1/sources/${source.id}/scans`,{headers:await domainHeaders(page),data:{}}),202)).job;
+ await expect.poll(async()=>(await domainBody<{job:{status:string}}>(await page.request.get(`/api/v1/jobs/${job.id}`))).job.status,{timeout:100_000,intervals:[1000,2000,4000]}).toBe('succeeded');
+ let targetId:string|null=null;
+ await expect.poll(async()=>{
+  let cursor:string|null=null;
+  for(let i=0;i<30;i++){
+   const result:AssetList=await domainBody<AssetList>(await page.request.get(`/api/v1/assets?${new URLSearchParams({q:'orders',type:'table',limit:'100',...cursor?{cursor}:{}})}`));
+   targetId=result.items.find(item=>item.sourceId===source.id&&item.name==='orders')?.id??null;
+   cursor=result.nextCursor;if(targetId||!cursor)break;
+  }return targetId!==null;
+ },{timeout:35_000,intervals:[1000,2000]}).toBe(true);
+ const id=targetId!,before=(await domainBody<{asset:Asset}>(await page.request.get(`/api/v1/assets/${id}`))).asset;
+ await domainBody(await page.request.put(`/api/v1/assets/${id}/attributes`,{headers:{...await domainHeaders(page),'If-Match':String(before.version)},data:{modelId:type.id,modelVersion:type.version,attributes:{}}}));
+ const typed=(await domainBody<{asset:Asset}>(await page.request.get(`/api/v1/assets/${id}`))).asset;
+ const asset=(await domainBody<{asset:Asset}>(await page.request.patch(`/api/v1/assets/${id}`,{headers:{...await domainHeaders(page),'If-Match':String(typed.version)},data:{description:`Synthetic glossary physical target ${token}`}}))).asset;
+ await expect.poll(async()=>(await domainBody<AssetList>(await page.request.get(`/api/v1/assets?${new URLSearchParams({q:token,limit:'25'})}`))).items.map(item=>item.id),{timeout:35_000,intervals:[1000,2000]}).toContain(id);
+ expect(asset.sourceId).toBe(source.id);expect(asset.type).toBe('table');expect(asset.status).toBe('active');
+ return {asset,type,token};
+}
+async function definesPolicy(page:Page,token:string,termType:PublishedAssetType,targetType:PublishedAssetType,required:boolean){
+ const definition:RelationTypeDefinition={formatVersion:1,id:`gls_defines_${token}${required?'_attr':''}`,version:1,label:`Synthetic defines ${token}${required?' required':''}`,inverseLabel:'Defined by',direction:'directed',
+  sourceTypes:[{typeId:termType.typeId,includeDescendants:false}],targetTypes:[{typeId:targetType.typeId,includeDescendants:false}],
+  sourceStates:null,targetStates:null,cardinality:{outgoing:{min:0,max:null},incoming:{min:0,max:null}},allowSelf:false,cycles:'allow',
+  attributes:required?{explanation:{type:'text',required:true,maxLength:200}}:{},requiredOwner:false,
+  lifecycle:{initial:'active',states:['active','retired'],transitions:[{from:'active',to:'retired'}]}};
+ return (await domainBody<{type:RelationTypeView}>(await page.request.post('/api/v1/relation-types',{headers:await domainHeaders(page),data:{definition}}),201)).type;
+}
+async function pickContextLink(page:Page,target:Awaited<ReturnType<typeof physicalGlossaryTarget>>,bad:RelationTypeView,good:RelationTypeView){
+ const targetPicker=page.getByRole('region',{name:'Target resource',exact:true});
+ await targetPicker.getByLabel('Search: Target resource',{exact:true}).fill(target.token);
+ const result=page.waitForResponse(response=>{const url=new URL(response.url());return url.pathname==='/api/v1/assets'&&url.searchParams.get('q')===target.token&&response.request().method()==='GET';});
+ await targetPicker.getByRole('button',{name:'Search',exact:true}).click();expect((await result).status()).toBe(200);
+ await targetPicker.getByRole('combobox',{name:'Target resource',exact:true}).selectOption(target.asset.id);
+ await expect(page.getByText(`${target.asset.name} · Target version ${target.asset.version}`,{exact:true})).toBeVisible();
+ const relationPicker=page.getByRole('region',{name:'Relation definition',exact:true});
+ async function select(policy:RelationTypeView){
+  await relationPicker.getByLabel('Search: Relation definition',{exact:true}).fill(policy.id);
+  const searched=page.waitForResponse(response=>{const url=new URL(response.url());return url.pathname==='/api/v1/relation-types'&&url.searchParams.get('q')===policy.id&&response.request().method()==='GET';});
+  await relationPicker.getByRole('button',{name:'Search',exact:true}).click();expect((await searched).status()).toBe(200);
+  const loaded=responseFor(page,`/api/v1/relation-types/${policy.id}`,'GET');
+  await relationPicker.getByRole('combobox',{name:'Relation definition',exact:true}).selectOption(policy.id);expect((await loaded).status()).toBe(200);
+  await expect(page.getByText(`${policy.label} · Version ${policy.version}`,{exact:true})).toBeVisible();
+ }
+ await select(bad);await expect(page.getByRole('button',{name:'Add link',exact:true})).toBeDisabled();
+ await expect(page.getByText('This relation requires attributes that the glossary link form cannot supply. Choose a relation with no required attributes.',{exact:true})).toBeVisible();
+ await select(good);await expect(page.getByRole('button',{name:'Add link',exact:true})).toBeEnabled();
+ await page.getByRole('button',{name:'Add link',exact:true}).click();await expect(page.getByRole('button',{name:'Remove link',exact:true})).toHaveCount(1);
+}
+async function readContext(page:Page,id:string,locale:'en'|'ar'='en'){
+ return domainBody<AssetGlossaryContextPage>(await page.request.get(`/api/v1/assets/${id}/glossary-context?${new URLSearchParams({locale,limit:'10'})}`));
+}
+async function contextCapture(page:Page,info:TestInfo,locale:'en'|'ar',width:number){
+ await page.setViewportSize({width,height:960});await language(page,locale);
+ const panel=page.getByRole('region',{name:locale==='ar'?'المعنى التجاري':'Business meaning',exact:true});
+ await expect(panel.locator('li')).toHaveCount(1);await panel.scrollIntoViewIfNeeded();
+ await expect.poll(()=>page.evaluate(()=>document.getAnimations().filter(animation=>animation.playState==='running'&&animation.playbackRate!==0&&Number.isFinite(animation.effect?.getComputedTiming().endTime)).length)).toBe(0);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations).toEqual([]);
+ await page.screenshot({path:info.outputPath(`glossary-linked-context-${locale}-${width}.png`),fullPage:false});
+}
+
+// Separate from the original metadata-only journey: actual scanned and typed
+// physical target, canonical defines edge, real approvals and worker publication.
+test('GLS: approved definitions reach the linked asset and respect amendments, removal and visibility',async({page,browser},info)=>{
+ test.setTimeout(720_000);await page.setViewportSize({width:1440,height:960});await domainLogin(page);await contextBudget(page);
+ const token=randomUUID().replaceAll('-',''),termType=await starter(page),target=await physicalGlossaryTarget(page,token);
+ const bad=await definesPolicy(page,token,termType,target.type,true),relation=await definesPolicy(page,token,termType,target.type,false);
+ const contextViewer=await page.context().newPage();
+ const definition:ApprovalDefinition={formatVersion:1,id:`gls_context_${token}`,version:1,name:`Synthetic linked term review ${token}`,separationOfDuties:true,
+  stages:[{id:'review',name:'Linked meaning review',assignments:['reviewer'],quorum:1,deadlineSeconds:3600,rejection:'any'}]};
+ const workflow=(await domainBody<{workflow:ApprovalDefinitionView}>(await page.request.post('/api/v1/workflow-definitions',{headers:await domainHeaders(page),data:{definition}}),201)).workflow;
+ const reviewerContext=await browser.newContext({viewport:{width:1440,height:960}}),consumerContext=await browser.newContext({viewport:{width:390,height:960}});
+ try{
+  const reviewer=await reviewerContext.newPage();await domainLogin(reviewer,'owner');
+  const consumer=await consumerContext.newPage();await domainLogin(consumer,'consumer');
+  expect((await domainBody<{asset:Asset}>(await consumer.request.get(`/api/v1/assets/${target.asset.id}`))).asset.id).toBe(target.asset.id);
+  expect(await readContext(page,target.asset.id)).toEqual({assetId:target.asset.id,items:[],nextCursor:null});
+  await contextBudget(page);await page.goto('/glossary/new');await expect(page.getByLabel('Term type',{exact:true})).toHaveValue('business_term');
+  await page.getByLabel('Owner',{exact:true}).selectOption(reviewerId);await page.getByLabel('Visibility',{exact:true}).selectOption('restricted');
+  const audience=page.getByRole('group',{name:'Allowed members',exact:true});await audience.getByRole('checkbox',{name:'Harbor Steward',exact:true}).check();await audience.getByRole('checkbox',{name:'Harbor Owner',exact:true}).check();
+  const english:GlossaryTranslation={locale:'en',name:`Accepted order ${token}`,definition:'An order approved for synthetic fulfilment.',synonyms:[],abbreviations:[],examples:[]};
+  const arabic:GlossaryTranslation={locale:'ar',name:'طلب معتمد للتنفيذ',definition:'طلب اصطناعي اجتاز مراجعة التنفيذ.',synonyms:[],abbreviations:[],examples:[]};
+  await page.getByLabel('Term name 1',{exact:true}).fill(english.name);await page.getByLabel('Definition 1',{exact:true}).fill(english.definition);
+  await page.getByRole('button',{name:'Add translation',exact:true}).click();await page.getByLabel('Language tag 2',{exact:true}).fill('ar');await page.getByLabel('Term name 2',{exact:true}).fill(arabic.name);await page.getByLabel('Definition 2',{exact:true}).fill(arabic.definition);
+  await pickContextLink(page,target,bad,relation);await chooseWorkflow(page,workflow);
+  const publication:GlossaryPublicationInput={typePin:{typeId:termType.typeId,modelId:termType.id,version:termType.version,definitionHash:termType.definitionHash,resolutionHash:termType.resolutionHash},
+   primaryLocale:'en',ownerId:reviewerId,visibility:'restricted',allowedIdentityIds:[stewardIdentity,reviewerId].sort(),state:'active',attributes:{translations:[{...english},{...arabic}]},
+   links:[{kind:'defines',typePin:{relationTypeId:relation.relationTypeId,version:relation.version,definitionHash:relation.definitionHash},targetAssetId:target.asset.id,targetAssetVersion:target.asset.version}]};
+  const first=await submit(page,publication,workflow,null);
+  expect(await readContext(page,target.asset.id)).toEqual({assetId:target.asset.id,items:[],nextCursor:null});
+  const published=await approveAndPublish(reviewer,page,first.request,1);
+  expect((published.completed.result as Receipt).graphReceiptId).toMatch(/^[a-f0-9-]{36}$/);
+  const context=await readContext(page,target.asset.id);
+  expect(context.assetId).toBe(target.asset.id);expect(context.nextCursor).toBeNull();expect(context.items).toHaveLength(1);
+  const link=context.items[0];expect(link.relationId).toMatch(/^[a-f0-9-]{36}$/);
+  expect(link).toEqual({termId:published.term.resourceId,termVersion:1,relationId:link.relationId,locale:'en',name:english.name,definition:english.definition,state:'active'});
+  expect(await readContext(page,target.asset.id,'ar')).toEqual({assetId:target.asset.id,items:[{...link,locale:'ar',name:arabic.name,definition:arabic.definition}],nextCursor:null});
+  // A reader of the physical target receives no summary or count for the
+  // independently restricted term. No full publication is needed by this view.
+  expect(await readContext(consumer,target.asset.id)).toEqual({assetId:target.asset.id,items:[],nextCursor:null});
+  const denied=await consumer.request.get(`/api/v1/glossary/terms/${published.term.resourceId}`);expect(denied.status()).toBe(404);expect(await denied.text()).not.toContain(token);
+  await consumer.goto(`/catalog/${target.asset.id}`);const hiddenPanel=consumer.getByRole('region',{name:'Business meaning',exact:true});
+  await expect(hiddenPanel.getByRole('heading',{name:'No glossary definitions available',exact:true})).toBeVisible();await expect(hiddenPanel.getByRole('link')).toHaveCount(0);await expect(hiddenPanel).not.toContainText(english.name);
+  await page.goto(`/catalog/${target.asset.id}`);let panel=page.getByRole('region',{name:'Business meaning',exact:true});
+  await expect(panel.getByRole('link',{name:english.name,exact:true})).toHaveAttribute('href',`/catalog/${published.term.resourceId}`);await expect(panel.getByText(english.definition,{exact:true})).toBeVisible();
+  await expect(panel.getByRole('button',{name:'First page',exact:true})).toBeDisabled();await expect(panel.getByRole('button',{name:'Next page',exact:true})).toBeDisabled();
+  await contextCapture(page,info,'en',1440);await contextCapture(page,info,'ar',390);
+  panel=page.getByRole('region',{name:'المعنى التجاري',exact:true});await expect(panel.getByRole('link',{name:arabic.name,exact:true})).toBeVisible();await expect(panel.getByText(arabic.definition,{exact:true})).toBeVisible();await expect(panel).not.toContainText(english.definition);
+  await language(page,'en');await page.setViewportSize({width:1440,height:960});
+  await page.goto(`/glossary/${published.term.resourceId}`);await expect(page.locator('.glossary-publication-summary').getByText('Harbor Owner',{exact:true})).toBeVisible();
+  const technical=page.locator('details').filter({has:page.locator('summary').filter({hasText:'Technical details'})});await expect(technical).not.toHaveAttribute('open');
+  await expect(page.getByText(english.definition,{exact:true})).toBeVisible();await expect(technical.getByText(termType.typeId,{exact:false})).toBeHidden();
+
+  await contextViewer.goto(`/catalog/${target.asset.id}`);let livePanel=contextViewer.getByRole('region',{name:'Business meaning',exact:true});
+  await expect(livePanel.getByText(english.definition,{exact:true})).toBeVisible();
+  await contextBudget(page);await page.goto(`/glossary/${published.term.resourceId}/edit`);
+  const amendedEnglish={...english,definition:'An order approved after the current synthetic quality checks.'},amendedArabic={...arabic,definition:'طلب اجتاز فحوص الجودة الاصطناعية الحالية.'};
+  await expect(page.getByRole('button',{name:'Remove link',exact:true})).toHaveCount(1);await page.getByLabel('Definition 1',{exact:true}).fill(amendedEnglish.definition);await page.getByLabel('Definition 2',{exact:true}).fill(amendedArabic.definition);await chooseWorkflow(page,workflow);
+  const amended={...publication,attributes:{translations:[amendedEnglish,amendedArabic]}},second=await submit(page,amended,workflow,published.term);
+  expect(await readContext(page,target.asset.id)).toEqual(context);
+  const republished=await approveAndPublish(reviewer,page,second.request,2);
+  await expect(livePanel.getByText(english.definition,{exact:true})).toBeVisible();
+  await livePanel.getByRole('button',{name:'Refresh definitions',exact:true}).click();
+  await expect(livePanel.getByText(amendedEnglish.definition,{exact:true})).toBeVisible();await expect(livePanel).not.toContainText(english.definition);
+  const amendedContext=await readContext(page,target.asset.id),amendedRelationId=amendedContext.items[0]?.relationId;
+  expect(amendedRelationId).toMatch(/^[a-f0-9-]{36}$/);expect(amendedRelationId).not.toBe(link.relationId);
+  expect(amendedContext).toEqual({assetId:target.asset.id,items:[{...link,relationId:amendedRelationId,termVersion:2,definition:amendedEnglish.definition}],nextCursor:null});
+  await language(contextViewer,'ar');await expect(contextViewer.getByRole('region',{name:'المعنى التجاري',exact:true}).getByText(amendedArabic.definition,{exact:true})).toBeVisible();await language(contextViewer,'en');
+  livePanel=contextViewer.getByRole('region',{name:'Business meaning',exact:true});await expect(livePanel.getByText(amendedEnglish.definition,{exact:true})).toBeVisible();
+  await contextBudget(page);await page.goto(`/glossary/${published.term.resourceId}/edit`);
+  await page.getByRole('button',{name:'Remove link',exact:true}).click();await expect(page.getByText('No links proposed.',{exact:true})).toBeVisible();await chooseWorkflow(page,workflow);
+  const third=await submit(page,{...amended,links:[]},workflow,republished.term);
+  expect(await readContext(page,target.asset.id)).toEqual(amendedContext);
+  await approveAndPublish(reviewer,page,third.request,3);
+  expect(await readContext(page,target.asset.id)).toEqual({assetId:target.asset.id,items:[],nextCursor:null});expect(await readContext(consumer,target.asset.id)).toEqual({assetId:target.asset.id,items:[],nextCursor:null});
+  await expect(livePanel.getByText(amendedEnglish.definition,{exact:true})).toBeVisible();await livePanel.getByRole('button',{name:'Refresh definitions',exact:true}).click();
+  await expect(livePanel.getByRole('heading',{name:'No glossary definitions available',exact:true})).toBeVisible();await expect(livePanel.getByRole('link')).toHaveCount(0);
+  expect((await domainBody<{asset:Asset}>(await page.request.get(`/api/v1/assets/${target.asset.id}`))).asset).toEqual(target.asset);
+  const retained=await readRequest(page,first.request.id);expect(retained.result).toEqual(published.completed.result);expect(retained.payload).toEqual(publication);
+ }finally{await contextViewer.close();await reviewerContext.close();await consumerContext.close();}
 });

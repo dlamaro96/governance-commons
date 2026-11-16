@@ -271,6 +271,39 @@ class Harness:
         require(all(v['sha256'] is not None for v in result.values()), 'Domain digest profile exceeded its bounded snapshot size')
         return result
 
+    def glossary_definition_snapshot(self):
+        # These six definition families are separate from the historical domain
+        # snapshot. Existing operator revisions are preserved, never reset to v1.
+        tenant = "tenant_id IN ('" + HARBOR + "','" + SUMMIT + "')"
+        families = (
+            ('governance_models', 'id'), ('governance_model_versions', 'model_id'),
+            ('asset_type_versions', 'model_id'), ('asset_type_dependencies', 'model_id'),
+            ('workflow_definitions', 'id'), ('workflow_definition_versions', 'workflow_id'),
+        )
+        values = []
+        for table, key in families:
+            identifier = 'glossary_review' if table.startswith('workflow_') else 'business_term'
+            values.append(literal(table) + ", (SELECT jsonb_build_object('rows',count(*),'serialized_bytes',coalesce(sum(octet_length(payload)),0),"
+                          "'sha256',CASE WHEN count(*)<=20000 AND coalesce(sum(octet_length(payload)),0)<=67108864 THEN "
+                          "encode(sha256(convert_to(coalesce(string_agg(encode(sha256(convert_to(payload,'UTF8')),'hex'),'' ORDER BY "
+                          "encode(sha256(convert_to(payload,'UTF8')),'hex')),''),'UTF8')),'hex') ELSE NULL END) "
+                          'FROM (SELECT to_jsonb(r)::text payload FROM public.' + table + ' r WHERE ' + tenant
+                          + ' AND ' + key + '=' + literal(identifier) + ') s)')
+        result = json.loads(self.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY; SELECT jsonb_build_object('
+                                     + ','.join(values) + '); COMMIT;', 'glossary-definition-row-digests'))
+        require(isinstance(result, dict) and set(result) == {table for table, _ in families}
+                and all(isinstance(row, dict) and set(row) == {'rows', 'serialized_bytes', 'sha256'}
+                        and type(row['rows']) is int and 0 <= row['rows'] <= 20000
+                        and type(row['serialized_bytes']) is int and 0 <= row['serialized_bytes'] <= 67108864
+                        and isinstance(row['sha256'], str) and re.fullmatch('[a-f0-9]{64}', row['sha256'])
+                        for row in result.values()),
+                'Glossary definition digest profile exceeded its bounded snapshot size or shape')
+        require(result['governance_models']['rows'] == 2 and result['workflow_definitions']['rows'] == 2
+                and all(result[table]['rows'] >= 2 for table in
+                        ('governance_model_versions', 'asset_type_versions', 'workflow_definition_versions')),
+                'Initial business_term and glossary_review definitions in both synthetic tenants are required')
+        return result
+
     def memberships(self):
         return json.loads(self.query("BEGIN READ ONLY; SELECT coalesce(jsonb_agg(to_jsonb(m) ORDER BY identity_id),'[]') FROM memberships m WHERE tenant_id="
                                      + literal(HARBOR) + ' AND identity_id IN (' + literal(CONSUMER) + ',' + literal(ENGINEER) + '); COMMIT;', 'synthetic-membership-readback'))
@@ -346,6 +379,7 @@ def main():
               'limitations': ['Existing initialized local synthetic core only; no clean-install or general source/seed qualification.',
                               'No concurrent mutating API/browser/seed tests; local lock excludes only this harness.',
                               'All columns of domain rows/journals are hashed; unrelated non-domain fixtures and legacy transaction bindings are excluded.',
+                              'Glossary definition equality covers only business_term and glossary_review in the two synthetic tenants; glossary journals and resource effects are excluded.',
                               'Outbox delivery must drain before baseline; no projector or service is stopped.',
                               'Privileged local PostgreSQL inspection/restoration is separate from the real seed runtime gc_owner/gc_app paths.',
                               'SIGINT/SIGTERM trigger finally restoration; SIGKILL or host failure requires the private recovery SQL before other tests.']}
@@ -412,6 +446,8 @@ def main():
         before = harness.snapshot()
         require(before['domain_types']['rows'] >= 2 and before['domains']['rows'] >= 6 and before['domain_revisions']['rows'] >= 6 and before['audit']['rows'] >= 8 and before['outbox']['rows'] >= 8, 'Actual typed domain/revision/journal baseline is incomplete')
         report['before'] = before
+        glossary_definitions = harness.glossary_definition_snapshot()
+        report['glossaryDefinitionSnapshot'] = {'before': glossary_definitions}
         def run_seed(phase):
             entry = {'phase': phase, 'started_at': now(), 'result': 'RUNNING'}
             report['seed_invocations'].append(entry)
@@ -431,7 +467,8 @@ def main():
             after = harness.snapshot()
             require(after == before, 'Repeated real seed changed domain canonical/history/journal/idempotency bytes')
             require(harness.all_personas_digest() == persona_digest, 'Repeated real seed changed existing persona memberships')
-            entry.update({'domain_snapshot_equal': True, 'persona_memberships_equal': True})
+            require(harness.glossary_definition_snapshot() == glossary_definitions, 'Repeated real seed changed existing glossary definition rows')
+            entry.update({'domain_snapshot_equal': True, 'persona_memberships_equal': True, 'glossary_definitions_equal': True})
         report['checks'].append('two real seed replays preserve exact domain and persona membership row digests')
         revoked = {**engineer, 'permissions': [v for v in engineer['permissions'] if v != REVOKED]}
         mutation_attempted = True  # Even uncertain command outcome requires restore.
@@ -442,8 +479,10 @@ def main():
         entry = run_seed('revoked-engineer-and-deleted-consumer')
         require(harness.memberships() == [revoked], 'Real seed restored revoked permission or recreated deleted consumer membership')
         require(harness.snapshot() == before, 'Seed after revocation/deletion changed domain data or journals')
-        entry.update({'domain_snapshot_equal': True, 'permission_still_revoked': True, 'consumer_membership_still_absent': True})
-        report['checks'] += ['later engineer domains:write revocation survives real seed', 'deleted synthetic consumer membership is not recreated']
+        require(harness.glossary_definition_snapshot() == glossary_definitions, 'Seed after revocation/deletion changed glossary definition rows')
+        entry.update({'domain_snapshot_equal': True, 'permission_still_revoked': True, 'consumer_membership_still_absent': True, 'glossary_definitions_equal': True})
+        report['checks'] += ['later engineer domains:write revocation survives real seed', 'deleted synthetic consumer membership is not recreated',
+                             'three real seed replays preserve exact existing business_term and glossary_review definition rows']
         report['result'] = 'PASS'
     except BaseException as error:
         report['result'] = 'FAIL'
@@ -498,6 +537,10 @@ def main():
             if 'before' in report:
                 report['after_restoration'] = harness.snapshot()
                 require(report['after_restoration'] == report['before'], 'Domain rows changed before final readback')
+            if 'glossaryDefinitionSnapshot' in report:
+                report['glossaryDefinitionSnapshot']['after_restoration'] = harness.glossary_definition_snapshot()
+                require(report['glossaryDefinitionSnapshot']['after_restoration'] == report['glossaryDefinitionSnapshot']['before'],
+                        'Glossary definition rows changed before final readback')
         except Exception as error:
             report['result'] = 'FAIL'
             report['final_readback_failure'] = str(error) if isinstance(error, RuntimeError) else type(error).__name__

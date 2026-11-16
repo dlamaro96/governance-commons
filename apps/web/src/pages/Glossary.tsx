@@ -64,10 +64,17 @@ export function GlossaryPage(){const c=useCopy(),rights=useRights(),{search,go}=
   <form className="glossary-toolbar" onSubmit={event=>{event.preventDefault();go('/glossary'+(draft?'?'+new URLSearchParams({q:draft}):''));}}><Field title={c.searchTerms}>{label=><input type="search" maxLength={200} aria-labelledby={label} value={draft} onChange={event=>setDraft(event.target.value)}/>}</Field><button className="button secondary">{c.search}</button>{q&&<Link className="button secondary" href="/glossary">{c.clear}</Link>}</form>
   {resource.error?<RequestError error={resource.error} retry={resource.reload}/>:!resource.data?<LoadingState label={c.loading}/>:resource.data.items.length?<><ul className="glossary-list">{resource.data.items.map(term=><li key={term.id}><h2><Link href={`/glossary/${term.id}`}>{term.name}</Link></h2><p>{term.description}</p><span>{c.version}: {term.version}</span></li>)}</ul><nav className="glossary-page-controls" aria-label={c.glossary}><Link className="button secondary" href={href()}>{c.first}</Link>{resource.data.nextCursor&&<Link className="button secondary" href={href(resource.data.nextCursor)}>{c.next}</Link>}</nav></>:<EmptyState title={c.empty} description={c.emptyBody}/>}</>;
 }
-function Publication({value}:{value:GlossaryPublicationInput}){const c=useCopy(),parsed=parseGlossaryPublication(value);if(!parsed.ok)return <Notice tone="error">{c.sourceUnavailable}</Notice>;
- return <><dl className="detail-list"><div><dt>{c.owner}</dt><dd className="mono break-all">{value.ownerId}</dd></div><div><dt>{c.visibility}</dt><dd>{c[value.visibility]}</dd></div>{value.visibility==='restricted'&&<div><dt>{c.allowed}</dt><dd className="glossary-pins">{value.allowedIdentityIds.map(id=><div key={id}><bdi>{id}</bdi></div>)}</dd></div>}<div><dt>{c.primary}</dt><dd><bdi>{value.primaryLocale}</bdi></dd></div><div><dt>{c.state}</dt><dd>{c[value.state]}</dd></div><div><dt>{c.typePin}</dt><dd className="glossary-pins">{value.typePin.modelId} · {c.version} {value.typePin.version}<br/>{value.typePin.typeId}</dd></div></dl>
+function Publication({value}:{value:GlossaryPublicationInput}){
+ const c=useCopy(),canListMembers=useSession().permissions.includes('catalog:write');
+ const members=useResource<{items:Member[]}>(canListMembers?'/members':null),parsed=parseGlossaryPublication(value);
+ if(!parsed.ok)return <Notice tone="error">{c.sourceUnavailable}</Notice>;
+ const names=new Map(members.data?.items.map(member=>[member.id,member.name])??[]);
+ const memberName=(id:string)=>names.get(id)??(canListMembers&&members.loading?c.loading:c.memberUnavailable);
+ return <><dl className="glossary-publication-summary"><div><dt>{c.owner}</dt><dd><bdi>{memberName(value.ownerId)}</bdi></dd></div><div><dt>{c.visibility}</dt><dd>{c[value.visibility]}</dd></div><div><dt>{c.state}</dt><dd>{c[value.state]}</dd></div></dl>
   {parsed.value.translations.map(translation=><section key={translation.locale} className="glossary-translation" lang={translation.locale} dir="auto"><h2>{translation.name} <small>({translation.locale})</small></h2><p className="glossary-value">{translation.definition}</p><dl className="detail-list"><div><dt>{c.synonyms}</dt><dd>{translation.synonyms.join(', ')}</dd></div><div><dt>{c.abbreviations}</dt><dd>{translation.abbreviations.join(', ')}</dd></div></dl>{translation.examples.map((example,index)=><p className="glossary-value" key={index}>{example}</p>)}</section>)}
+  {value.visibility==='restricted'&&<section><h2>{c.allowed}</h2><ul>{value.allowedIdentityIds.map(id=><li key={id}><bdi>{memberName(id)}</bdi></li>)}</ul></section>}
   <h2>{c.links}</h2>{value.links.length?<ul className="glossary-link-list">{value.links.map(link=><li key={`${link.kind}:${link.targetAssetId}`}><strong>{c[link.kind]}</strong> · <Link href={`/catalog/${link.targetAssetId}`}>{link.targetAssetId}</Link> · {c.version} {link.targetAssetVersion}<p className="glossary-pins">{link.typePin.relationTypeId} · {c.version} {link.typePin.version}</p></li>)}</ul>:<p>{c.noLinks}</p>}
+  <details className="glossary-publication-details"><summary>{c.technicalDetails}</summary><dl className="detail-list"><div><dt>{c.owner}</dt><dd className="mono break-all"><bdi>{value.ownerId}</bdi></dd></div>{value.visibility==='restricted'&&<div><dt>{c.allowed}</dt><dd className="glossary-pins">{value.allowedIdentityIds.map(id=><div key={id}><bdi>{id}</bdi></div>)}</dd></div>}<div><dt>{c.primary}</dt><dd><bdi>{value.primaryLocale}</bdi></dd></div><div><dt>{c.typePin}</dt><dd className="glossary-pins">{value.typePin.modelId} · {c.version} {value.typePin.version}<br/>{value.typePin.typeId}</dd></div></dl></details>
   <details><summary>{c.attributes}</summary><pre className="glossary-json" tabIndex={0}>{JSON.stringify(value.attributes,null,2)}</pre></details></>;
 }
 export function GlossaryTermPage({id}:{id:string}){const c=useCopy(),rights=useRights(),resource=useResource<GlossaryTermContext>(rights.read?`/glossary/terms/${id}`:null);
@@ -185,10 +192,11 @@ function LinkBuilder({root,source,resourceId,resourceVersion,state,existing,add}
   catch(caught){if(request===sequence.current)setError(caught instanceof Error?caught:new Error(c.linkInvalid));}finally{if(request===sequence.current)setBusy(false);}
  }
  useEffect(()=>()=>{sequence.current++;},[]);
- let eligible=false;
+ let eligible=false,requiresAttributes=false;
  if(target&&relation){const resolved=resolveRelationDefinition(relation.definition),definition=relation.definition;
   const semantic=kind==='defines'||target.asset.sourceId===null&&target.asset.type==='business_term'&&termType(target.type,root);
-  if(resolved.ok&&semantic&&(kind!=='broader'||definition.direction==='directed'&&definition.cycles==='acyclic'&&definition.cardinality.outgoing.max===1)){
+  requiresAttributes=resolved.ok&&!validateAttributes(resolved.value.model,{}).ok;
+  if(resolved.ok&&!requiresAttributes&&semantic&&(kind!=='broader'||definition.direction==='directed'&&definition.cycles==='acyclic'&&definition.cardinality.outgoing.max===1)){
    const checked=validateRelationEndpoints({edge:{id:resourceId,version:1,relationTypeId:relation.relationTypeId,relationTypeVersion:relation.version,sourceAssetId:resourceId,targetAssetId:target.asset.id},policies:[{relationTypeId:relation.relationTypeId,policy:resolved.value}],
     source:{assetId:resourceId,assetVersion:resourceVersion,modelId:source.view.id,modelVersion:source.view.version,state,typeId:source.view.typeId,policy:policy(source),ancestorTypes:source.ancestors},
     target:{assetId:target.asset.id,assetVersion:target.asset.version,modelId:target.state.modelId,modelVersion:target.state.modelVersion,state:target.state.state,typeId:target.type.view.typeId,policy:policy(target.type),ancestorTypes:target.type.ancestors}});
@@ -199,7 +207,7 @@ function LinkBuilder({root,source,resourceId,resourceVersion,state,existing,add}
   <div className="glossary-columns"><Picker<Asset> key={kind} path={kind==='defines'?'/assets':'/assets?type=business_term'} title={c.target} maxQuery={200} selected={target?{id:target.asset.id,label:target.asset.name}:undefined} idOf={row=>row.id} labelOf={row=>`${row.name} · ${row.type}`} onSelect={row=>void chooseTarget(row)}/>
    <Picker<RelationTypeSummary> path="/relation-types" title={c.relation} selected={relation?{id:relation.id,label:relation.label}:undefined} idOf={row=>row.id} labelOf={row=>`${row.label} · ${c.version} ${row.currentVersion}`} onSelect={row=>void chooseRelation(row)}/></div>
   {busy&&<LoadingState label={c.loadingSelection}/>}<Errors error={error}/><p>{c.relationHint}</p>{target&&<p>{target.asset.name} · {c.targetVersion} {target.asset.version}</p>}{relation&&<p>{relation.label} · {c.version} {relation.version}</p>}
-  {target&&relation&&!eligible&&<Notice tone="error">{c.linkInvalid}</Notice>}
+  {target&&relation&&!eligible&&<Notice tone="error">{requiresAttributes?c.relationAttributesRequired:c.linkInvalid}</Notice>}
   <button type="button" className="button secondary" disabled={!eligible} onClick={()=>{if(!eligible||!target||!relation)return;add({kind,typePin:{relationTypeId:relation.relationTypeId,version:relation.version,definitionHash:relation.definitionHash},targetAssetId:target.asset.id,targetAssetVersion:target.asset.version});setTarget(null);setRelation(null);}}>{c.addLink}</button>
  </fieldset>;
 }

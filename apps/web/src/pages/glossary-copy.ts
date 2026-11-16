@@ -13,6 +13,8 @@ const en={
  sourceUnavailable:'This term or its publication context is unavailable.',selected:'Selected',remove:'Remove',refresh:'Refresh',loadingSelection:'Loading the exact selection…',
  staleLinks:'Existing link pins are preserved. Remove and reselect a link explicitly if you intend to adopt a new target or relation version.',
  invalidCustom:'The additional attributes do not satisfy the selected pinned model.',
+ context:'Business meaning',contextHint:'Approved glossary terms that define this resource.',contextEmpty:'No glossary definitions available',contextEmptyBody:'No approved definitions are available to you for this resource.',contextPermission:'Reading linked glossary definitions requires catalog and model read permission.',contextPages:'Glossary definitions pages',contextFallback:'Primary language',refreshContext:'Refresh definitions',
+ memberUnavailable:'Member unavailable',technicalDetails:'Technical details',relationAttributesRequired:'This relation requires attributes that the glossary link form cannot supply. Choose a relation with no required attributes.',
 };
 const ar:Record<keyof typeof en,string>={
  glossary:'مسرد الأعمال',intro:'عرّف المعاني المشتركة للأعمال وأرسل التغييرات للمراجعة.',newTerm:'اقتراح مصطلح',edit:'اقتراح تغييرات',back:'العودة إلى المسرد',
@@ -27,5 +29,7 @@ const ar:Record<keyof typeof en,string>={
  pinNotice:'تُفحص الإصدارات مجدداً عند الإرسال. يلزم مراجعة المرجع الذي تغير قبل إرسال طلب جديد.',request:'فتح طلب الموافقة',attributes:'السمات',identity:'هوية المصطلح',noPublication:'لم يتم النشر.',readOnly:'يمكنك قراءة المصطلحات. يتطلب اقتراح التغييرات صلاحية كتابة الفهرس والنماذج.',
  sourceUnavailable:'المصطلح أو سياق نشره غير متاح.',selected:'المحدد',remove:'حذف',refresh:'تحديث',loadingSelection:'جارٍ تحميل الاختيار المحدد…',
  staleLinks:'تُحفظ إصدارات الروابط الحالية. احذف الرابط واختره مجدداً إذا أردت اعتماد إصدار جديد للهدف أو العلاقة.',invalidCustom:'لا تتوافق السمات الإضافية مع النموذج المحدد.',
+ context:'المعنى التجاري',contextHint:'مصطلحات مسرد معتمدة تعرّف هذا المورد.',contextEmpty:'لا تتوفر تعريفات من المسرد',contextEmptyBody:'لا تتوفر لك تعريفات معتمدة لهذا المورد.',contextPermission:'تتطلب قراءة تعريفات المسرد المرتبطة صلاحية قراءة الفهرس والنماذج.',contextPages:'صفحات تعريفات المسرد',contextFallback:'اللغة الأساسية',refreshContext:'تحديث التعريفات',
+ memberUnavailable:'العضو غير متاح',technicalDetails:'تفاصيل تقنية',relationAttributesRequired:'تتطلب هذه العلاقة سمات لا يوفرها نموذج رابط المسرد. اختر علاقة لا تتطلب سمات إلزامية.',
 };
 export const glossaryCopy={en,ar};

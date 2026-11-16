@@ -14,7 +14,7 @@ base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
 REPORT=ROOT/'.local/evidence/glossary-upgrade.json'
 MIGRATION='016_glossary_publication.sql'
 NAMES=[*base.base.NAMES,base.MIGRATION]
-TESTS=['tests/qualification/glossary-publication.test.ts','tests/qualification/glossary-publication-boundaries.test.ts']
+TESTS=['tests/qualification/glossary-publication.test.ts','tests/qualification/glossary-publication-boundaries.test.ts','tests/qualification/glossary-context.test.ts']
 require,sha=base.require,base.sha
 
 def sources():

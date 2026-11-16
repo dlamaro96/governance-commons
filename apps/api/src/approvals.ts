@@ -12,6 +12,7 @@ import {approvalFailure,approvalQuery,listApprovalDefinitions,getApprovalDefinit
 import {submitGlossaryProposal,type GlossaryProposalInput} from '../../../packages/domain/src/glossary-service.ts';
 import {GLOSSARY_LIMITS} from '../../../packages/domain/src/glossary-contracts.ts';
 import {MODEL_LIMITS} from '../../../packages/domain/src/model.ts';
+import {getAssetGlossaryContext,type GlossaryContextQuery} from '../../../packages/domain/src/glossary-context.ts';
 import {getGlossaryTerm} from '../../../packages/domain/src/glossary-publication-service.ts';
 import {publishGlossaryFromSite} from './glossary-publication.ts';
 
@@ -122,6 +123,10 @@ export async function installApprovals(app:FastifyInstance):Promise<void>{
     }});
   }
   const params=(req:FastifyRequest)=>req.params as Record<string,string>;
+  route('GET','/api/v1/assets/:id/glossary-context',{params:{id:Type.String({maxLength:128})},query:['locale','limit','cursor'],response:object({assetId:uuid,
+   items:Type.Array(object({termId:uuid,termVersion:positive,relationId:uuid,locale:Type.String({minLength:1,maxLength:MODEL_LIMITS.stringLength}),
+    name:Type.String({minLength:1,maxLength:GLOSSARY_LIMITS.name}),definition:Type.String({minLength:1,maxLength:GLOSSARY_LIMITS.definition}),state:choices('active','deprecated')}),{maxItems:25}),
+   nextCursor:nullable(Type.String({maxLength:1024}))})},(req,tx,s)=>getAssetGlossaryContext(tx,s.principal!,params(req).id,s.query as GlossaryContextQuery));
   route('GET','/api/v1/glossary/terms/:id',{params:{id:uuid},response:object({resourceId:uuid,resourceVersion:positive,publication})},(req,tx,s)=>getGlossaryTerm(tx,s.principal!,params(req).id));
   route('POST','/api/v1/glossary/proposals',{body:glossaryProposal,response:object({request:requestView}),mutation:true,created:true,bodyLimit:GLOSSARY_BODY_BYTES},
    (req,tx,s)=>submitGlossaryProposal(tx,s.principal!,req.id,s.commandKey!,req.body as GlossaryProposalInput));
