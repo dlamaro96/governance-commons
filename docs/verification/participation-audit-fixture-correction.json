@@ -1,0 +1,989 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-16T02:07:37.483133+00:00",
+  "implementation_status": "IMPLEMENTED_SCOPED_CORRECTIONS",
+  "verification_status": "PASS_LOCAL_API_AND_PURE_GATES",
+  "release_qualified": false,
+  "scope": "Audit integrity disclosure ordering and consistent current-session snapshot; deterministic controlled-input scan fixtures; test-only HTTP admission pacing and bounded static test declaration parsing.",
+  "revision": {
+    "source_commit": "bea1d356ced6d7297e40e5692d098c7833ff8563",
+    "binding_method": "After the original execution, each recorded source hash was compared with the exact committed Git blob. This is source binding, not a test rerun.",
+    "collector_inherited_head": "96ba3503ff2af2bfcd23ce2d551bf127ec19cdc1",
+    "collector_inherited_head_is_exact_tested_source": false,
+    "api_image_source_files": 81,
+    "api_image_source_files_match_commit": true,
+    "pipeline_host_source_files": 121,
+    "pipeline_host_source_files_match_commit": true,
+    "source_binding_limitations": [
+      "The collector inherited the earlier checked-out HEAD while corrections were uncommitted. The 81 exact image file hashes, not that inherited HEAD field, bind this run to the later product source commit.",
+      "The image snapshot explicitly covers the recorded 81 files; the separate 121-file host snapshot is not proof that every host file was independently read from the image."
+    ]
+  },
+  "api": {
+    "command": [
+      "./dev",
+      "test",
+      "--suite",
+      "security"
+    ],
+    "profile": "core; real runtime-role PostgreSQL, API and Temporal; synthetic fixtures",
+    "result": "PASS",
+    "exit_status": 0,
+    "started_at": "2026-11-16T01:57:40.629536+00:00",
+    "recorded_at": "2026-11-16T02:03:18.748752+00:00",
+    "counts": {
+      "tests": 126,
+      "suites": 0,
+      "pass": 126,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 337668.204696
+    },
+    "expected_tests": 126,
+    "complete_counts": true,
+    "images": [
+      {
+        "service": "api",
+        "image": "sha256:8c47ac62fd3061bc45e971addc8ec38d0dd7cd0eeec803108f322c6df2d3661a"
+      },
+      {
+        "service": "site-runner",
+        "image": "sha256:8c47ac62fd3061bc45e971addc8ec38d0dd7cd0eeec803108f322c6df2d3661a"
+      },
+      {
+        "service": "workflow-worker",
+        "image": "sha256:8c47ac62fd3061bc45e971addc8ec38d0dd7cd0eeec803108f322c6df2d3661a"
+      }
+    ],
+    "source_verification": {
+      "recorded_image_and_workspace_source_matches_before_and_after": true,
+      "wrapper_asserted_images_unchanged_before_and_after": true,
+      "recorded_files": 81,
+      "safe_test_source_files": 17,
+      "safe_runtime_test_sources_match": true,
+      "all_safe_test_hashes_equal_recorded_image_sources": true,
+      "flags": []
+    },
+    "sources": [
+      {
+        "path": "Dockerfile",
+        "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+      },
+      {
+        "path": "apps/api/src/asset-type-migrations.ts",
+        "sha256": "02f530c3715801c222f4f98d65807f06d0b58d0193b05c6c4e9f3f0b78a00c92"
+      },
+      {
+        "path": "apps/api/src/asset-types.ts",
+        "sha256": "847e1a9492b79d45de5143aa80ff6e9f3e04fd898d934a2b15b8a46637902ac3"
+      },
+      {
+        "path": "apps/api/src/audit-reader.ts",
+        "sha256": "27f13130b1902bc7c9aa9656a1eebc9e680c906b977ac9e002f74c57355aea8e"
+      },
+      {
+        "path": "apps/api/src/audit.ts",
+        "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+      },
+      {
+        "path": "apps/api/src/index.ts",
+        "sha256": "5354cc8b217923585aa1bdf32362488b6d660d3a4a65d6ffe1e56b3fd58fdfde"
+      },
+      {
+        "path": "apps/api/src/model-http.ts",
+        "sha256": "78d176145b8713c5aca2797fad741653698c6f2439817fbf069d4842afcc5938"
+      },
+      {
+        "path": "apps/api/src/model-migrations.ts",
+        "sha256": "3d116bf6bc64ac3723f5aadef63d414f7920c584824a114e8bb6c2708d7129ad"
+      },
+      {
+        "path": "apps/api/src/models.ts",
+        "sha256": "d6212e6723236030f672cd67ce2f2de43b1e8f67216309f1a16c18dd257a0387"
+      },
+      {
+        "path": "apps/api/src/relation-migrations.ts",
+        "sha256": "f30df94c238f409afd303ea9e9dbd55a863e19702dc244798861dfc2b9aaa224"
+      },
+      {
+        "path": "apps/api/src/relations.ts",
+        "sha256": "0124c9190396dbcddf14ebb3fae67128ebaa97865aba97dc6b46000654f2b974"
+      },
+      {
+        "path": "apps/api/src/repository.ts",
+        "sha256": "0bbb03ae711f9bcac7c04b15e85871c27016b575c50514f2076ec7793dae6cdb"
+      },
+      {
+        "path": "apps/api/src/search.ts",
+        "sha256": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d"
+      },
+      {
+        "path": "apps/api/src/security.ts",
+        "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+      },
+      {
+        "path": "deploy/compose/compose.yaml",
+        "sha256": "bd44925508957bbc9f383c56b9561c1ef39e3730299eec4f8fa695276a521ac9"
+      },
+      {
+        "path": "package.json",
+        "sha256": "a6cb7bc574b7c47acf81981f8e428218fa20fef3781a9e97e8d0e73adf9c76d7"
+      },
+      {
+        "path": "packages/authz/src/index.ts",
+        "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "sha256": "8d23a38cad9af4c69471b6369d1106382e34518f1b13a00be6590ee6e28bb453"
+      },
+      {
+        "path": "packages/db/migrations/001_foundation.sql",
+        "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "path": "packages/db/migrations/002_audit_envelopes.sql",
+        "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "path": "packages/db/migrations/003_governance_models.sql",
+        "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "path": "packages/db/migrations/004_model_migrations.sql",
+        "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "path": "packages/db/migrations/005_model_migration_integrity.sql",
+        "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "path": "packages/db/migrations/006_inherited_asset_types.sql",
+        "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "path": "packages/db/migrations/007_asset_type_migrations.sql",
+        "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "path": "packages/db/migrations/008_constrained_relations.sql",
+        "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "path": "packages/db/migrations/009_relation_participation.sql",
+        "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+        "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "path": "packages/db/src/index.ts",
+        "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+      },
+      {
+        "path": "packages/db/src/migrate.ts",
+        "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+      },
+      {
+        "path": "packages/db/src/seed.ts",
+        "sha256": "f871502f2215b538199df0a4aef501954a7f558b249311d6cb3b1129c763c151"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-contracts.ts",
+        "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-service.ts",
+        "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration.ts",
+        "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+      },
+      {
+        "path": "packages/domain/src/asset-type-policy.ts",
+        "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+      },
+      {
+        "path": "packages/domain/src/asset-type-service.ts",
+        "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/cursor.ts",
+        "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-persistence.ts",
+        "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-preparation.ts",
+        "sha256": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49"
+      },
+      {
+        "path": "packages/domain/src/model-migration-service.ts",
+        "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+      },
+      {
+        "path": "packages/domain/src/model-service.ts",
+        "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "57fde5df7d27d3b63e645ead707cd131290378ebe924dbb328d1db5b45bb254a"
+      },
+      {
+        "path": "packages/domain/src/relation-contracts.ts",
+        "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+      },
+      {
+        "path": "packages/domain/src/relation-endpoint-guard.ts",
+        "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+      },
+      {
+        "path": "packages/domain/src/relation-graph.ts",
+        "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-contracts.ts",
+        "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-read.ts",
+        "sha256": "bf5dc16ff794343dbc68d2992644e840e07846f791f6c119a8a168bc53142ff7"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-service.ts",
+        "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-store.ts",
+        "sha256": "7fc1ffadfc3465f6c329f334d1910fb60093fafa3d1dc770341cb75d77988287"
+      },
+      {
+        "path": "packages/domain/src/relation-migration.ts",
+        "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+      },
+      {
+        "path": "packages/domain/src/relation-participation-read.ts",
+        "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+      },
+      {
+        "path": "packages/domain/src/relation-participation.ts",
+        "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+      },
+      {
+        "path": "packages/domain/src/relation-service.ts",
+        "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+      },
+      {
+        "path": "packages/domain/src/relation-store.ts",
+        "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+      },
+      {
+        "path": "packages/domain/src/relation.ts",
+        "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+      },
+      {
+        "path": "policies/api_evidence.py",
+        "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2"
+      },
+      {
+        "path": "scripts/test-security.sh",
+        "sha256": "7fdb26f6aa1f66d9cc202a6e1551d77c9f88294d11f0fb99293bd6cd9fa8d421"
+      },
+      {
+        "path": "tests/fixtures/http-budget.ts",
+        "sha256": "d0d772ca40196ef90b7f570bcf19123c8f53543ed664e716139e30a4f4682e95"
+      },
+      {
+        "path": "tests/fixtures/manual-scan.ts",
+        "sha256": "23b28b2cbf33bcc6c779ed16e940287d3918d9e2153deace925021edfb726979"
+      },
+      {
+        "path": "tests/fixtures/relation-migration-api.ts",
+        "sha256": "e68e89aff887339a035364f124f1ae8888d740b92cf55ff8466c687324a2e65f"
+      },
+      {
+        "path": "tests/fixtures/relation-participation.ts",
+        "sha256": "209132979d10001c59e464c5b9a43e63ea82135962a46bfe0b6329a1b243f6e8"
+      },
+      {
+        "path": "tests/integration/asset-type-api-limits.test.ts",
+        "sha256": "de798b2d3f0afa43844870a81eb4a886f343c1fc53f76a22c9ee3fd5e39281a4"
+      },
+      {
+        "path": "tests/integration/asset-type-migration-storage.test.ts",
+        "sha256": "12984b97878a17c8c7852cffbc4da4d31c1874965aa8b9234eb96d4e2afe8e93"
+      },
+      {
+        "path": "tests/integration/asset-type-migrations.test.ts",
+        "sha256": "c5ad40c323b3405243e95c9b33b62d81e86ab596bca361779219c489fb7aa407"
+      },
+      {
+        "path": "tests/integration/asset-type-storage.test.ts",
+        "sha256": "474963247d52aee0fe3bbb5a6e4118e18d5fe31c90ef7ca65e1138804414f123"
+      },
+      {
+        "path": "tests/integration/asset-types.test.ts",
+        "sha256": "08c5b7fd9aebea55d498b97b4c524e6e83eefb4c7e604b519996ec1932a2145e"
+      },
+      {
+        "path": "tests/integration/audit-integrity.test.ts",
+        "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad"
+      },
+      {
+        "path": "tests/integration/foundation.test.ts",
+        "sha256": "eb1159e5c2f3004c3d90a82b2361c2665efff90d20b3eb18f8e58a7929ebd579"
+      },
+      {
+        "path": "tests/integration/model-api.test.ts",
+        "sha256": "be1518f23235a42790b305861d34b8399d3c5793f70f2c299def8884a8153ab7"
+      },
+      {
+        "path": "tests/integration/model-migration-api.test.ts",
+        "sha256": "dab5088f4fa1accdc17ffc24b1a15f40bb7a355d0e9d60727c54ff15ae66abcb"
+      },
+      {
+        "path": "tests/integration/model-migration-storage.test.ts",
+        "sha256": "1b58df5fdbb8a67456f50a5315bb82f4b68c24152944c21d9f80420b81d8380c"
+      },
+      {
+        "path": "tests/integration/model-migrations.test.ts",
+        "sha256": "29e89efd29d2ba6cd68c1774c8ca274fa306c298090a510834b89a781dbe9064"
+      },
+      {
+        "path": "tests/integration/model-pagination.test.ts",
+        "sha256": "0809f4e7711f3fea796edc1f87a82fc6ece9684c0c6483e4d506a233c4d0d0d2"
+      },
+      {
+        "path": "tests/integration/models.test.ts",
+        "sha256": "64deaeb35fb2a08162b6f302900e9b0b779dc97baed4702814015302eadcd8d1"
+      },
+      {
+        "path": "tests/integration/relation-migration-api.test.ts",
+        "sha256": "700fe72a11c42187c9eb1382fee7afc36a6ec9e67269f7b43dc3770cf77a76db"
+      },
+      {
+        "path": "tests/integration/relation-participation-storage.test.ts",
+        "sha256": "17fcf6a093e501e0743d9ec5a6b50046b00b3cb59e7be86f802003699d27830e"
+      },
+      {
+        "path": "tests/integration/relation-storage.test.ts",
+        "sha256": "1205a159e46ad585ada22318351a1b10b424645b7e03586eef6d1321b9a20619"
+      },
+      {
+        "path": "tests/integration/relations.test.ts",
+        "sha256": "eef1490ff12eae279018027edfdbbbd9dee2bae739cf925e82f16fd81ecba760"
+      }
+    ],
+    "runner_and_changed_ingress_sources": [
+      {
+        "path": "policies/api_evidence.py",
+        "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2"
+      },
+      {
+        "path": "scripts/test-security.sh",
+        "sha256": "7fdb26f6aa1f66d9cc202a6e1551d77c9f88294d11f0fb99293bd6cd9fa8d421"
+      },
+      {
+        "path": "tests/fixtures/http-budget.ts",
+        "sha256": "d0d772ca40196ef90b7f570bcf19123c8f53543ed664e716139e30a4f4682e95"
+      },
+      {
+        "path": "tests/fixtures/manual-scan.ts",
+        "sha256": "23b28b2cbf33bcc6c779ed16e940287d3918d9e2153deace925021edfb726979"
+      },
+      {
+        "path": "apps/api/src/audit-reader.ts",
+        "sha256": "27f13130b1902bc7c9aa9656a1eebc9e680c906b977ac9e002f74c57355aea8e"
+      },
+      {
+        "path": "tests/integration/audit-integrity.test.ts",
+        "sha256": "e26cb88df2bd9de755757694502f1810c7ab58fa30be9d30272c9fbc236d1cad"
+      }
+    ],
+    "original_evidence": [
+      {
+        "path": ".local/evidence/participation-api-attempt-10/participation-api-execution.json",
+        "sha256": "d3d4cabd516d4d73aae60a9a2414df5a6bedfa7112670dac8bb67fbdd9444cf7"
+      },
+      {
+        "path": ".local/evidence/participation-api-attempt-10/api-summary.json",
+        "sha256": "03fd9211cec636c92077676346cd66b955cb4b1e352d950a73e34e61192e3cf7"
+      },
+      {
+        "path": ".local/evidence/participation-api-attempt-10/qualify-participation-api.py",
+        "sha256": "27f0430ee5a3c741694fda8cf744e9291ce551dc7f9f3cfd4d1927da0329b0fa"
+      },
+      {
+        "path": ".local/evidence/participation-api-attempt-10/manifest.json",
+        "sha256": "5790cffc92ca7ef4cf4096e36b80d4069b0861c93228cd7ae2022628893231a2"
+      }
+    ],
+    "private_output_evidence": [
+      {
+        "path": ".local/evidence/api-runs/20261116T015740Z-85998a78204546ffb1aa6705ccb82888/output.tap",
+        "sha256": "1488b63da9fae50650506684c83bb81528cc2a7f52527131d5fc61b9fde0b933"
+      },
+      {
+        "path": ".local/evidence/participation-api-attempt-10/participation-security.log",
+        "sha256": "7eee067fcfb01bf000b0eb0cb72d6d8a4d5207ff1f4f163079e64652dbc900c9"
+      }
+    ],
+    "publication": "Only numeric counts, declared test coordinates, fixed statuses and explicit path/SHA256 records are reproduced. Original safe summary and raw TAP remain in the private invocation/archive; no raw error, response body, arbitrary title or credential is published."
+  },
+  "audit_correction": {
+    "behavior": [
+      "The production integrity reader uses a read-only repeatable-read transaction. Exact session identity, tenant, expiry, active identity, active membership and current audit permission are reloaded inside the same snapshot as resource visibility and the bounded chain.",
+      "A complete hidden-scope existence predicate runs before journal payload materialization or the 10000-row size response. Unavailable history returns generic 403 without checked/head/failedId/count/total fields.",
+      "The existing 10000-row profile limit and hash-chain verifier are unchanged; this correction does not claim larger-ledger verification or external signed checkpoints."
+    ],
+    "new_real_regressions": [
+      {
+        "file": "tests/integration/audit-integrity.test.ts",
+        "line": 46,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/audit-integrity.test.ts",
+        "line": 92,
+        "status": "passed",
+        "failure_locations": []
+      }
+    ],
+    "assertions": [
+      "Real nonowner gc_app role is checked for superuser=false and bypassrls=false.",
+      "One synthetic repeatable-read transaction appends 10001 hash-valid ordinary events plus one hidden-asset event and verifies its own 10002-row scope, then requires generic scope denial before the size limit.",
+      "The complete synthetic transaction rolls back; subsequent reads find no fixture audit, asset, asset revision, outbox or session rows.",
+      "A supplied stale principal cannot add audit authority absent from the real current membership. Mismatched actor/session, mismatched tenant/session and expired session are refused.",
+      "The existing foundation HTTP journey also exercises the production integrity endpoint and checks generic hidden-scope refusal."
+    ],
+    "limitations": [
+      "PostgreSQL identity sequences are not transactional. Rollback removes fixture rows and effects but may leave sequence gaps; no sequence rollback or gap-free sequence claim is made.",
+      "The two new reader regressions execute the real helper within controlled repeatable-read SQL transactions; they are not mocks and are not two additional browser journeys.",
+      "The stale-principal test uses an actual current consumer membership without audit authority. It does not claim a separately executed concurrent global-identity or membership-revocation race."
+    ]
+  },
+  "controlled_scan_fixture": {
+    "implementation": "Real Temporal workflow ID reservation on a unique unconsumed queue before inserting each manually completed running job.",
+    "executed_http_test_coordinates": [
+      {
+        "file": "tests/integration/foundation.test.ts",
+        "line": 51,
+        "status": "passed",
+        "failure_locations": []
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 457,
+        "status": "passed",
+        "failure_locations": []
+      }
+    ],
+    "assertions": [
+      "Reserve the production scan:tenant:job workflow ID with a unique ownership marker, reject duplicate/conflicting workflow starts and record the exact run ID.",
+      "Before manual source input and during cleanup, read real Temporal history and reject any workflow-task execution. Started/scheduled events only are permitted until deliberate termination.",
+      "Use real internal completion/failure handlers and PostgreSQL state for revoked requester, rename, empty/partial/duplicate, failure, permission reduction and unavailable-source observation cases; preserve existing HTTP assertions.",
+      "Cleanup proves the actual database job terminal or never inserted before releasing the exact owned workflow run. A nonterminal job retains its reservation and reports failure. Cleanup failures are not swallowed."
+    ],
+    "qualification": "PASS_REAL_TEMPORAL_RESERVATION_AND_CONTROLLED_HANDLER_INPUT",
+    "connector_qualification": "NOT_A_REAL_POSTGRESQL_CONNECTOR_EXECUTION_TEST",
+    "limitations": [
+      "The supplied observations are synthetic controlled inputs. Separate source/browser acceptance runs the real connector; those browser tests were not rerun for this correction.",
+      "An abruptly killed runner may leave an open reservation. Recovery must terminalize the exact job before terminating its exact owned run; reservations have a 30-minute execution timeout.",
+      "Production dispatcher, site worker behavior, source permissions and application rate limits are not disabled or weakened by this fixture."
+    ]
+  },
+  "test_http_pacing": {
+    "interval_ms": 500,
+    "explicit_http_test_imports": 9,
+    "scheduler_unit_tests": 6,
+    "qualification": "PASS_IN_210_PURE_TESTS_AND_126_REAL_API_TESTS",
+    "semantics": [
+      "Monotonic admission per test file worker; integration runner enforces --test-concurrency=1.",
+      "Serializes request starts, not completion of in-flight responses.",
+      "No automatic retries, status swaps, response/error replacement, credential changes or global/production fetch patch.",
+      "Unit tests cover concurrent starts, unresolved responses, early timer wake, abort phases, Request/init signal precedence and transport rejection recovery."
+    ],
+    "production_limit_requests_per_minute": 300,
+    "prior_real_reproduction": {
+      "evidence": {
+        "path": ".local/evidence/participation-hosted-attempt-2/rate-limit-reproduction.json",
+        "sha256": "6475a7cf8a80ff3f08568861d07d10ea7d54e341bc87a25c4a6cde27d09224fb"
+      },
+      "request_count": 301,
+      "status_counts": [
+        {
+          "status": 401,
+          "count": 300
+        },
+        {
+          "status": 429,
+          "count": 1
+        }
+      ],
+      "sql_writes": false,
+      "retained_response_bodies": false,
+      "retained_raw_headers": false,
+      "historical_hosted_failure_cause": "UNPROVEN_HTTP_STATUSES_NOT_AVAILABLE"
+    }
+  },
+  "parser_collector": {
+    "implementation": "Single forward scan of an exact quoted static test title; no ambiguous regex backtracking.",
+    "source_evidence": [
+      {
+        "path": "policies/api_evidence.py",
+        "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2"
+      },
+      {
+        "path": "policies/test_api_evidence.py",
+        "sha256": "bf6621eb60ae71bc2e9055af7c01b08d9fb732925263bf1b98ca93af7eb66280"
+      }
+    ],
+    "prior_collector_regression": {
+      "executions": 40,
+      "result": "PASS",
+      "recorded_python_version": "3.14.5",
+      "source_report": {
+        "path": "docs/verification/participation-hosted-attempt-2.json",
+        "sha256": "d62e2a2df056163ff0ad1ac89492a47f3cc41521500580670e2f8222b31e02f3"
+      },
+      "rerun_during_latest_api_pipeline": false
+    },
+    "prior_adversarial_regression": {
+      "recorded_at": "2026-11-16T01:26:48.083339+00:00",
+      "prior_malformed_backslashes": 64,
+      "prior_timeout_seconds": 1,
+      "prior_timed_out": true,
+      "corrected_malformed_backslashes": 131072,
+      "corrected_rejected": true,
+      "corrected_duration_seconds": 0.002516,
+      "qualification_scope": "BOUNDED_LOCAL_DECLARATION_PARSER_ONLY_NOT_CODEQL_OR_API_EXECUTION"
+    },
+    "latest_real_api_runner": "EXECUTED_PASS_ON_THE_EXACT_CORRECTED_RUNNER",
+    "latest_declared_test_inventory": {
+      "files": 17,
+      "tests": 126,
+      "flags": []
+    },
+    "new_codeql_or_hosted_qualification": "NOT_RUN_FOR_THIS_COMMIT"
+  },
+  "pipeline": {
+    "started_at": "2026-11-16T01:57:04.872763+00:00",
+    "finished_at": "2026-11-16T02:03:19.156307+00:00",
+    "result": "PASS",
+    "pure_counts": {
+      "tests": 210,
+      "suites": 0,
+      "pass": 210,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 1874.90775
+    },
+    "checks": [
+      {
+        "stage": "unit",
+        "command": [
+          "pnpm",
+          "test"
+        ],
+        "exit_status": 0,
+        "recorded_at": "2026-11-16T01:57:07.118768+00:00",
+        "private_log": {
+          "path": ".local/evidence/participation-parser-pacing-20261116T015704/unit.log",
+          "sha256": "5e43ddc28c16ef9a3f750bdd35fa61eb2d84615c5a98a8992ff4fa18df65b410"
+        }
+      },
+      {
+        "stage": "types",
+        "command": [
+          "pnpm",
+          "typecheck"
+        ],
+        "exit_status": 0,
+        "recorded_at": "2026-11-16T01:57:08.252996+00:00",
+        "private_log": {
+          "path": ".local/evidence/participation-parser-pacing-20261116T015704/types.log",
+          "sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+        }
+      },
+      {
+        "stage": "web-build",
+        "command": [
+          "pnpm",
+          "build"
+        ],
+        "exit_status": 0,
+        "recorded_at": "2026-11-16T01:57:09.357397+00:00",
+        "private_log": {
+          "path": ".local/evidence/participation-parser-pacing-20261116T015704/web-build.log",
+          "sha256": "ff5b65333f2e0d7c543d59c34ab749d39043d72a3623274093e0f05cd49c380a"
+        }
+      },
+      {
+        "stage": "core",
+        "command": [
+          "./dev",
+          "up",
+          "--profile",
+          "core"
+        ],
+        "exit_status": 0,
+        "recorded_at": "2026-11-16T01:57:40.249176+00:00",
+        "private_log": {
+          "path": ".local/evidence/participation-parser-pacing-20261116T015704/core.log",
+          "sha256": "296e5eafdd2671e4ff10c7a99111f4f3de2f935554b1d4c4f89bb47190879310"
+        }
+      },
+      {
+        "stage": "api",
+        "command": [
+          "python3",
+          ".local/evidence/qualify-participation-api.py"
+        ],
+        "exit_status": 0,
+        "recorded_at": "2026-11-16T02:03:19.156307+00:00",
+        "private_log": {
+          "path": ".local/evidence/participation-parser-pacing-20261116T015704/api.log",
+          "sha256": "fe8d3756c875008c901a8a03f8c8b4d64722c4b32ff0703a2577d54588425948"
+        }
+      }
+    ],
+    "source_snapshot": {
+      "path": ".local/evidence/participation-parser-pacing-20261116T015704/sources.json",
+      "sha256": "6e11f5065d6fcd2a354e9062b31716e56bb1392fed2d0b6edaeae0ff1c053ef8"
+    },
+    "host_source_count": 121,
+    "original_pipeline": {
+      "path": ".local/evidence/participation-parser-pacing-20261116T015704/pipeline.json",
+      "sha256": "f59aae82b612a1b5dea44f99f69dc6958cc0cab6f85c3eb674973c3d2d5476b1"
+    },
+    "wrapper": {
+      "path": ".local/evidence/qualify-participation-parser-pacing.py",
+      "sha256": "666664100b4101703594438e69121a32cbc2cbb99b0814300fc2d82a7e45ab0f"
+    }
+  },
+  "previous_local_api_attempts": [
+    {
+      "attempt": 1,
+      "result": "FAIL",
+      "started_at": "2026-11-15T22:45:21.779675+00:00",
+      "recorded_at": "2026-11-15T22:49:54.798901+00:00",
+      "counts": {
+        "tests": 78,
+        "pass": 70,
+        "fail": 5,
+        "cancelled": 3,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 272552.173082
+      },
+      "api_image": "sha256:9fb71c7b451212a639d080c9f07c419f342a7938e3ac76a384cf5fc10868dfd3",
+      "original_record": {
+        "path": ".local/evidence/participation-api-attempt-1/participation-api-execution.json",
+        "sha256": "c86bbb31d93a3d9c1e2292cfd97a8929e40421cf6f6110b80a225883132171b5"
+      },
+      "qualification_scope": "HISTORICAL_SOURCE_ONLY_NOT_A_RERUN_OF_THIS_CORRECTION"
+    },
+    {
+      "attempt": 2,
+      "result": "FAIL",
+      "started_at": "2026-11-15T23:09:47.835907+00:00",
+      "recorded_at": "2026-11-15T23:11:15.179810+00:00",
+      "counts": {
+        "tests": 123,
+        "pass": 120,
+        "fail": 3,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 86875.590873
+      },
+      "api_image": "sha256:30d7bc1f6698a4468471b0b8a33cb3006cef2baac24a6a7277bd2229e6388280",
+      "original_record": {
+        "path": ".local/evidence/participation-api-attempt-2/participation-api-execution.json",
+        "sha256": "f862d30123b646623a4e66bd677b761ce4cb8a5ecfb6f697444379514d9b2c5b"
+      },
+      "qualification_scope": "HISTORICAL_SOURCE_ONLY_NOT_A_RERUN_OF_THIS_CORRECTION"
+    },
+    {
+      "attempt": 3,
+      "result": "PASS",
+      "started_at": "2026-11-15T23:16:27.510714+00:00",
+      "recorded_at": "2026-11-15T23:18:08.085763+00:00",
+      "counts": {
+        "tests": 123,
+        "pass": 123,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 100137.967837
+      },
+      "api_image": "sha256:a46ee55375ce71f7f0c15d6da0504a835247fe2370077ea54b764e8a778066c4",
+      "original_record": {
+        "path": ".local/evidence/participation-api-attempt-3/participation-api-execution.json",
+        "sha256": "7f9e8070938e4045628d8ac33e66280ea05b72389117660376595911755bea0c"
+      },
+      "qualification_scope": "HISTORICAL_SOURCE_ONLY_NOT_A_RERUN_OF_THIS_CORRECTION"
+    },
+    {
+      "attempt": 4,
+      "result": "PASS",
+      "started_at": "2026-11-15T23:40:57.966906+00:00",
+      "recorded_at": "2026-11-15T23:42:54.210347+00:00",
+      "counts": {
+        "tests": 123,
+        "pass": 123,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 115800.555927
+      },
+      "api_image": "sha256:6594d66cf5bcf29fce05cade7fc1924d26994c9ca604cde76e8a777ff4ac0c24",
+      "original_record": {
+        "path": ".local/evidence/participation-api-attempt-4/participation-api-execution.json",
+        "sha256": "ee4bc59694cd63f5f7b93e737b63fa360c7bb5b3635475da022a8acd281fd98a"
+      },
+      "qualification_scope": "HISTORICAL_SOURCE_ONLY_NOT_A_RERUN_OF_THIS_CORRECTION"
+    },
+    {
+      "attempt": 5,
+      "result": "PASS",
+      "started_at": "2026-11-15T23:50:34.660147+00:00",
+      "recorded_at": "2026-11-15T23:52:41.131024+00:00",
+      "counts": {
+        "tests": 123,
+        "pass": 123,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 125991.887516
+      },
+      "api_image": "sha256:5d5d32c6f59f291492c1d93f2adf33304d441112855163afebf4732619826a36",
+      "original_record": {
+        "path": ".local/evidence/participation-api-attempt-5/participation-api-execution.json",
+        "sha256": "b43e3cf884ca59d812b235859408d14c2d4c8826d844b1b0f9ce322cc566731e"
+      },
+      "qualification_scope": "HISTORICAL_SOURCE_ONLY_NOT_A_RERUN_OF_THIS_CORRECTION"
+    },
+    {
+      "attempt": 6,
+      "result": "PASS",
+      "started_at": "2026-11-16T00:11:11.871340+00:00",
+      "recorded_at": "2026-11-16T00:13:24.166664+00:00",
+      "counts": {
+        "tests": 123,
+        "pass": 123,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 131897.250185
+      },
+      "api_image": "sha256:2522b4c06fb2c1725f717d59134907bd74b020cbc15d56d8340daf14dbc7eae5",
+      "original_record": {
+        "path": ".local/evidence/participation-api-attempt-6/participation-api-execution.json",
+        "sha256": "3aaa71911f0820d68ac75a8aad96f27e72fc96e8bb0eb70c9f71a33518e8b977"
+      },
+      "qualification_scope": "HISTORICAL_SOURCE_ONLY_NOT_A_RERUN_OF_THIS_CORRECTION"
+    },
+    {
+      "attempt": 7,
+      "result": "PASS",
+      "started_at": "2026-11-16T00:41:58.866157+00:00",
+      "recorded_at": "2026-11-16T00:44:34.493357+00:00",
+      "counts": {
+        "tests": 124,
+        "pass": 124,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 155204.988695
+      },
+      "api_image": "sha256:ca13ad25881b8f317db436c42313ad31f7e09a9bc9f85e28034b229e71fd66eb",
+      "original_record": {
+        "path": ".local/evidence/participation-api-attempt-7/participation-api-execution.json",
+        "sha256": "717359ccf3cad86cc9d8f0ff5d125481513666d7fa67aa38e3faa0b601b42e81"
+      },
+      "qualification_scope": "HISTORICAL_SOURCE_ONLY_NOT_A_RERUN_OF_THIS_CORRECTION"
+    },
+    {
+      "attempt": 8,
+      "result": "PASS",
+      "started_at": "2026-11-16T01:00:44.862892+00:00",
+      "recorded_at": "2026-11-16T01:03:28.600589+00:00",
+      "counts": {
+        "tests": 124,
+        "suites": 0,
+        "pass": 124,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 163246.285699
+      },
+      "api_image": "sha256:bc4f15cee7c53e9dbaa8ed69c93d54d222d20967d8129e0d61b2f57527d0a46e",
+      "original_record": {
+        "path": ".local/evidence/participation-api-attempt-8/participation-api-execution.json",
+        "sha256": "6faafff268849947f62814825fc4cec45bdda512f9b73b754b476fc07cb10679"
+      },
+      "qualification_scope": "HISTORICAL_SOURCE_ONLY_NOT_A_RERUN_OF_THIS_CORRECTION"
+    },
+    {
+      "attempt": 9,
+      "result": "FAIL",
+      "started_at": "2026-11-16T01:38:11.956675+00:00",
+      "recorded_at": "2026-11-16T01:43:38.623948+00:00",
+      "counts": {
+        "tests": 124,
+        "suites": 0,
+        "pass": 122,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 326227.63569
+      },
+      "api_image": "sha256:9fcdca0915361d4aa3bbbc6bc33318a13eedc4a1ecb3e69e32b8c8e5a0d8506d",
+      "original_record": {
+        "path": ".local/evidence/participation-api-attempt-9/participation-api-execution.json",
+        "sha256": "7670b8daf64c3041b2a56d51ccd039d3925c3c3aa05452387ffa04d942f655ef"
+      },
+      "qualification_scope": "HISTORICAL_SOURCE_ONLY_NOT_A_RERUN_OF_THIS_CORRECTION"
+    }
+  ],
+  "preceding_local_failure": {
+    "attempt": 9,
+    "result": "FAIL",
+    "counts": {
+      "tests": 124,
+      "suites": 0,
+      "pass": 122,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "failed_test_coordinates": [
+      {
+        "file": "tests/integration/foundation.test.ts",
+        "line": 50,
+        "status": "failed",
+        "failure_locations": [
+          {
+            "file": "tests/integration/foundation.test.ts",
+            "line": 59,
+            "column": 79
+          }
+        ]
+      },
+      {
+        "file": "tests/integration/relations.test.ts",
+        "line": 456,
+        "status": "failed",
+        "failure_locations": [
+          {
+            "file": "tests/integration/relations.test.ts",
+            "line": 48,
+            "column": 44
+          },
+          {
+            "file": "tests/integration/relations.test.ts",
+            "line": 484,
+            "column": 3
+          }
+        ]
+      }
+    ],
+    "original_archive_manifest": {
+      "path": ".local/evidence/participation-api-attempt-9/manifest.json",
+      "sha256": "6c61fbca1a375075e8c5e93d1957e45d5ba42fbf3815570e45ecea151ec4ea2a"
+    },
+    "diagnosis": [
+      "The real local tenant audit ledger exceeds10000 rows; audit integrity reports the size limit before denying unavailable history.",
+      "A running controlled-input job is eligible for the real dispatcher. Its scanner can finish it before the direct-handler duplicate-record assertion, causing a cached200 instead of expected422."
+    ],
+    "scope": "Preserved local failure on its earlier image. The observed local ledger/profile and dispatcher race do not establish the unavailable historical hosted HTTP cause."
+  },
+  "previous_hosted_attempts": [
+    {
+      "attempt": 1,
+      "source_report": {
+        "path": "docs/verification/participation-repair-reference.json",
+        "sha256": "e2e2622b6ae761de3cca6a9cd0c8eba9e5fec9d72e919d05e9622c23c8b319d9"
+      },
+      "source_security_result": "FAIL_HIGH_JS_USER_CONTROLLED_BYPASS",
+      "development_result": "FAIL_SECURITY_STEP_WITHOUT_ASSERTION_COORDINATES",
+      "qualification_scope": "HISTORICAL_SOURCE_ONLY"
+    },
+    {
+      "attempt": 2,
+      "source_report": {
+        "path": "docs/verification/participation-hosted-attempt-2.json",
+        "sha256": "d62e2a2df056163ff0ad1ac89492a47f3cc41521500580670e2f8222b31e02f3"
+      },
+      "source_run_id": 43785726080,
+      "development_run_id": 43785726232,
+      "source_security_result": "FAIL_HIGH_PY_REDOS",
+      "development_result": "FAIL_117_OF_124_API_PASS_7_FAIL",
+      "js_and_actions_findings": 0,
+      "python_blocking_findings": 1,
+      "qualification_scope": "HISTORICAL_SOURCE_ONLY_NO_HOSTED_CORRECTION_PASS_INFERRED"
+    }
+  ],
+  "browser": {
+    "current_correction": "NOT_RERUN",
+    "source_report": {
+      "path": "docs/verification/participation-repair-reference.json",
+      "sha256": "e2e2622b6ae761de3cca6a9cd0c8eba9e5fec9d72e919d05e9622c23c8b319d9"
+    },
+    "prior_result": "PASS",
+    "prior_started_at": "2026-11-16T01:03:29.502171+00:00",
+    "prior_recorded_at": "2026-11-16T01:14:52.403161+00:00",
+    "prior_stats": {
+      "startTime": "2026-11-16T01:03:29.972Z",
+      "duration": 681739.6510000001,
+      "expected": 16,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "prior_api_image": "sha256:bc4f15cee7c53e9dbaa8ed69c93d54d222d20967d8129e0d61b2f57527d0a46e",
+    "qualification_scope": "16_BROWSER_JOURNEYS_ON_PRIOR_SOURCE_ONLY_NOT_THE_CURRENT_AUDIT_FIXTURE_CORRECTION"
+  },
+  "review": {
+    "kind": "MODEL_SOURCE_AND_EVIDENCE_REVIEW",
+    "independent_human_review": false,
+    "scope": "Bounded source inspection and exact artifact/Git-blob matching; report assembly did not independently rerun the API or browser."
+  },
+  "limitations": [
+    "No local or hosted Source security pass is claimed for this commit. The prior hosted Python finding remains historical blocking evidence until a new exact-source scan and stored-analysis readback pass.",
+    "No browser rerun or new real PostgreSQL connector/browser acceptance is claimed for this correction.",
+    "This report qualifies only the listed corrections and tests, not full participation, business domains, scoped authority, the complete governing specification or release readiness.",
+    "All earlier failures, timestamps and image scopes are retained; later Git binding does not alter original execution records.",
+    "Raw TAP, API response/error values and credentials are not published. The original safe API summary is retained privately because its filename/digest map can trigger the generic secret pattern; no scanner policy is weakened."
+  ]
+}

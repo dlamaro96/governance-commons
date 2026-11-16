@@ -676,6 +676,27 @@
       "scope": "Unconditional repair-reference authorization, bounded private API diagnostics and repeatable source-specific catalog browser acceptance. Full required-participation/M2 and hosted requalification remain open.",
       "implementation_status": "IN_PROGRESS",
       "verification_status": "PASS_FOR_RECORDED_LOCAL_SCOPE"
+    },
+    {
+      "path": "docs/verification/participation-hosted-attempt-2.json",
+      "scope": "Original failed second PR16 hosted attempt, independently read-back analysis and bounded parser correction; no new runtime qualification",
+      "source_binding": {
+        "implementation_commit": "96ba3503ff2af2bfcd23ce2d551bf127ec19cdc1",
+        "method": "Original hosted files copied byte-for-byte; exact659-file scanned source binding. Parser correction is a separate unhosted source.",
+        "evidence_sha256": "d62e2a2df056163ff0ad1ac89492a47f3cc41521500580670e2f8222b31e02f3"
+      },
+      "evidence_sha256": "d62e2a2df056163ff0ad1ac89492a47f3cc41521500580670e2f8222b31e02f3"
+    },
+    {
+      "path": "docs/verification/participation-audit-fixture-correction.json",
+      "scope": "Checked audit RR/session/scope ordering, controlled-input Temporal reservations, test HTTP admission and deterministic declaration collection.126 real API and210 pure pass; prior browser binding retained, current hosted not run.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_FOR_RECORDED_LOCAL_SCOPE",
+      "source_binding": {
+        "implementation_commit": "bea1d356ced6d7297e40e5692d098c7833ff8563",
+        "method": "All81 actual-image and121 host pipeline source hashes equal committed Git blobs; original execution timestamps preserved.",
+        "evidence_sha256": "06c0ee7d231bf0a8048b49aa7b1bcb306b973fc2bf12467e92cd2b0029309fbd"
+      }
     }
   ],
   "limitations": [

@@ -5136,7 +5136,8 @@
         "docs/verification/relation-participation-graph-copy-pure.json",
         "docs/verification/relation-participation-graph-copy-upgrade.json",
         "docs/verification/m2-relation-participation-api-graph-copy.json",
-        "docs/verification/m2-relation-participation-ui.json"
+        "docs/verification/m2-relation-participation-ui.json",
+        "docs/verification/participation-audit-fixture-correction.json"
       ]
     },
     {
@@ -6129,7 +6130,10 @@
         "docs/verification/relation-participation-graph-copy-pure.json",
         "docs/verification/relation-participation-graph-copy-upgrade.json",
         "docs/verification/m2-relation-participation-api-graph-copy.json",
-        "docs/verification/m2-relation-participation-ui.json"
+        "docs/verification/m2-relation-participation-ui.json",
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json",
+        "docs/verification/participation-audit-fixture-correction.json"
       ]
     },
     {
@@ -42809,7 +42813,10 @@
         "docs/verification/relation-participation-graph-copy-pure.json",
         "docs/verification/relation-participation-graph-copy-upgrade.json",
         "docs/verification/m2-relation-participation-api-graph-copy.json",
-        "docs/verification/m2-relation-participation-ui.json"
+        "docs/verification/m2-relation-participation-ui.json",
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json",
+        "docs/verification/participation-audit-fixture-correction.json"
       ]
     },
     {
@@ -52699,7 +52706,8 @@
         "apps/web/src/pages/RelationTypes.tsx",
         "apps/web/src/pages/Relation.tsx",
         "apps/web/src/relations/RelationGraph.tsx",
-        "docs/runbooks/constrained-relations.md"
+        "docs/runbooks/constrained-relations.md",
+        "apps/api/src/audit-reader.ts"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -52707,7 +52715,8 @@
         "tests/integration/relations.test.ts",
         "tests/integration/relation-storage.test.ts",
         "tests/qualification/relation-concurrency.test.ts",
-        "tests/e2e/relations.spec.ts"
+        "tests/e2e/relations.spec.ts",
+        "tests/integration/audit-integrity.test.ts"
       ],
       "verification": {
         "fixture": {
@@ -52748,7 +52757,8 @@
         "docs/verification/relations-upgrade.json",
         "docs/verification/m2-relations-api.json",
         "docs/verification/m2-relations-ui.json",
-        "docs/verification/hosted-relations.json"
+        "docs/verification/hosted-relations.json",
+        "docs/verification/participation-audit-fixture-correction.json"
       ]
     },
     {
@@ -54051,7 +54061,11 @@
       },
       "limitations": [],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json"
+      ]
     },
     {
       "id": "SYS-SEC-005.01",
@@ -57268,9 +57282,14 @@
         "deploy/compose",
         "dev",
         "scripts/runtime.py",
-        "tests"
+        "tests",
+        "docs/runbooks/api-qualification.md",
+        "tests/fixtures/manual-scan.ts",
+        "tests/fixtures/http-budget.ts"
       ],
-      "test_ids": [],
+      "test_ids": [
+        "tests/unit/http-budget.test.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -57302,7 +57321,10 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
       ],
       "owner": "governance-commons maintainers",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/participation-audit-fixture-correction.json"
+      ]
     },
     {
       "id": "SYS-TEST-002.01",
@@ -66641,7 +66663,12 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
       ],
       "owner": "governance-commons maintainers",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json",
+        "docs/verification/participation-audit-fixture-correction.json"
+      ]
     },
     {
       "id": "OSS-006.01",
@@ -67465,7 +67492,10 @@
       "owner": "governance-commons maintainers",
       "milestone": "M0",
       "partial_evidence": [
-        "docs/verification/dependency-security-updates.json"
+        "docs/verification/dependency-security-updates.json",
+        "docs/verification/participation-repair-reference.json",
+        "docs/verification/participation-hosted-attempt-2.json",
+        "docs/verification/participation-audit-fixture-correction.json"
       ]
     },
     {
