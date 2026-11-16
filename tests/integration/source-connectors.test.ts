@@ -76,7 +76,12 @@ test('UC registration and scan boundaries reject read-only and foreign-tenant ca
 test('real UC completion persists canonical history and events while reduced, invalid and failed scans preserve assets',async t=>{
  assert.ok(process.env.SITE_TOKEN,'Controlled completions require the real internal-site credential');
  const f=await create(t),workerHeaders={Authorization:'Bearer '+process.env.SITE_TOKEN,'X-Tenant-Id':tenant,'Content-Type':'application/json'};
- const {job}=await createManualScanFixture(t,{tenantId:tenant,sourceId:f.source.id,actorId:steward,fetch});
+ const manual=await createManualScanFixture(t,{tenantId:tenant,sourceId:f.source.id,actorId:steward,fetch});
+ // The reserved workflow remains unexecuted, but every controlled observation
+ // must obtain its server-issued scan generation through the real claim route.
+ const job=async()=>{const id=await manual.job();const claimed=await response<{job:Job;source:Source}>(await fetch(base+'/internal/jobs/'+id+'/claim',{
+  method:'POST',headers:workerHeaders,body:'{}',signal:AbortSignal.timeout(15_000)}),200);
+  assert.equal(claimed.job.id,id);assert.equal(claimed.job.sourceId,f.source.id);assert.equal(claimed.job.status,'running');assert.equal(claimed.source.id,f.source.id);return id;};
  const rows=[{externalId:'synthetic-uc-orders',name:'Orders',qualifiedName:'harbor.commerce.orders',type:'table',metadata:{tableId:randomUUID()}},{externalId:'synthetic-uc-customers',name:'Customers',qualifiedName:'harbor.commerce.customers',type:'table',metadata:{tableId:randomUUID()}}];
  const complete=(id:string,records:typeof rows)=>fetch(base+'/internal/jobs/'+id+'/complete',{method:'POST',headers:workerHeaders,body:JSON.stringify({observedAt:new Date().toISOString(),sourceVersion:'synthetic-uc-real-handler',permissionFingerprint:'unchanged-uc-principal',complete:true,records}),signal:AbortSignal.timeout(15_000)});
  const fail=(id:string,code:string)=>fetch(base+'/internal/jobs/'+id+'/fail',{method:'POST',headers:workerHeaders,body:JSON.stringify({code}),signal:AbortSignal.timeout(15_000)});
