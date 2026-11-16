@@ -1,0 +1,74 @@
+{
+  "analysis": "NOT_PASSED",
+  "cliVersion": "2.27.4",
+  "containerImage": null,
+  "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+  "dirty": false,
+  "extractorRuntime": "v24.22.3",
+  "failure": "scanner-command-failed:analyze",
+  "failureDiagnostics": {
+    "schemaVersion": 1,
+    "scope": "FIXED_MARKERS_ONLY_NOT_A_CAUSE_DETERMINATION",
+    "streams": {
+      "stderr": {
+        "available": true,
+        "bytes": 21228,
+        "markers": [
+          "out_of_memory"
+        ],
+        "sample": "HEAD_AND_TAIL_UP_TO_64_KIB",
+        "sha256": "5ebae36e3a8b40c242e2a163f51d3bf52dcca99eb22caae94f4239afc063e002",
+        "subprocessExitCodes": [],
+        "subprocessExitCodesTruncated": false
+      },
+      "stdout": {
+        "available": true,
+        "bytes": 0,
+        "markers": [],
+        "sample": "HEAD_AND_TAIL_UP_TO_64_KIB",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "subprocessExitCodes": [],
+        "subprocessExitCodesTruncated": false
+      }
+    }
+  },
+  "findingsGate": "NOT_EVALUATED",
+  "head": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1",
+  "language": "javascript-typescript",
+  "library": "codeql/javascript-all",
+  "libraryVersion": "3.0.0",
+  "queryCount": 105,
+  "queryPack": "codeql/javascript-queries",
+  "querySetDigest": "213bda4e81b066a5b255ff54cd70bbac5caaafe63742af25eeb890308d3c28dd",
+  "queryVersion": "2.5.0",
+  "schemaVersion": 1,
+  "sourceDigest": "e70eb504e06494664ba853222592eedfa05fa757b3ec0e783319e251e38c7a68",
+  "steps": [
+    {
+      "durationSeconds": 0.251,
+      "exitCode": 0,
+      "step": "extractor-runtime"
+    },
+    {
+      "durationSeconds": 0.501,
+      "exitCode": 0,
+      "step": "version"
+    },
+    {
+      "durationSeconds": 1.251,
+      "exitCode": 0,
+      "step": "queries"
+    },
+    {
+      "durationSeconds": 15.27,
+      "exitCode": 0,
+      "step": "extract"
+    },
+    {
+      "durationSeconds": 25.288,
+      "exitCode": 99,
+      "step": "analyze"
+    }
+  ],
+  "upload": "NOT_ATTEMPTED"
+}

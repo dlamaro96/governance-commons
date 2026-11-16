@@ -81,18 +81,18 @@ function copyJSON(input: unknown, issues: Issues, maximumBytes: number = RELATIO
     if (!isArray && keys.length > MODEL_LIMITS.properties) { issues.add('limit', path, 'Object property count exceeds its bound.'); return; }
     const selected = isArray ? Array.from({ length: value.length }, (_, i) => String(i)) : keys;
     if (!charge(2 + Math.max(0, selected.length - 1), path)) return;
-    const output: Fields | unknown[] = isArray ? [] : {}; active.add(value);
+    const output = new Map<string, unknown>(); active.add(value);
     try {
       for (const key of selected) {
         if (typeof key !== 'string' || !isArray && (!identifier.test(key) || reserved.has(key))) { issues.add('invalid_json', path, 'Object keys must be safe named fields.'); continue; }
         if (!isArray && !charge(encoder.encode(JSON.stringify(key)).length + 1, path)) break;
         const descriptor = Object.getOwnPropertyDescriptor(value, key);
         if (!descriptor?.enumerable || !Object.hasOwn(descriptor, 'value')) issues.add('invalid_json', at(path, key), 'Only enumerable data properties are supported.');
-        else (output as Fields)[key] = copy(descriptor.value, at(path, key), depth + 1);
+        else output.set(key, copy(descriptor.value, at(path, key), depth + 1));
         if (exhausted || issues.overflow) break;
       }
+      return isArray ? Array.from(output.values()) : Object.fromEntries(output);
     } finally { active.delete(value); }
-    return output;
   };
   try { return copy(input, '', 0); } catch { issues.add('invalid_json', '', 'Data properties could not be inspected safely.'); return; }
 }

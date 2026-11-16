@@ -1,0 +1,165 @@
+{
+  "analysis": "PASS",
+  "cliVersion": "2.27.4",
+  "containerImage": null,
+  "coverage": {
+    "databaseFiles": 143,
+    "expectedFiles": 118,
+    "extractedExpectedFiles": 118,
+    "extractedPathsDigest": "3e7d33a3a11abe114f9706fc6df5b1cc764751e90d1ff38b29599eae7cc3a86c"
+  },
+  "coverageQuerySha256": "3068da921e666fc686d3be47b87c7c5d00f23d21c8f03c038892fc91980a2b44",
+  "dirty": false,
+  "extractorRuntime": "v24.22.3",
+  "findings": [
+    {
+      "blocking": true,
+      "disposition": "untriaged",
+      "fingerprint": "8eef7d20e673a8cb904b5374acc4420ebd9fa5309737bc984c3e55e9c24b0aad",
+      "line": 91,
+      "path": "packages/domain/src/relation.ts",
+      "ruleId": "js/remote-property-injection",
+      "severity": "high",
+      "sourceSuppressed": false
+    }
+  ],
+  "findingsGate": "BLOCKED",
+  "head": "45fa82d11f11ec23d28bdd7cafea080432c46c40",
+  "language": "javascript-typescript",
+  "lastMemoryAdmission": {
+    "availableBytes": 15501533184,
+    "finiteCgroupLimits": [],
+    "hostAvailableBytes": 15501533184,
+    "inheritedSoftLimitBytes": {},
+    "physicalBytes": 16760344576,
+    "requiredAvailableBytes": 6442450944,
+    "status": "ADMITTED",
+    "system": "Linux"
+  },
+  "library": "codeql/javascript-all",
+  "libraryVersion": "3.0.0",
+  "publishedSarifSha256": "7bf161b526a62e7e6a4f66b10dca8512d482a49a7fcb3713ec4eb72188f3923f",
+  "queryCount": 105,
+  "queryPack": "codeql/javascript-queries",
+  "querySetDigest": "213bda4e81b066a5b255ff54cd70bbac5caaafe63742af25eeb890308d3c28dd",
+  "queryVersion": "2.5.0",
+  "rawSarifSha256": "362ba85e2b98b28ec4def3df7deca2b3f6e6b0260c2ff963e6bba6ad3a62f8f3",
+  "resources": {
+    "hardMemoryLimitBytes": null,
+    "mode": "NATIVE",
+    "ramSemantics": "CodeQL evaluator/extractor request, not a hard process cap",
+    "requestedRamMiB": 4096,
+    "reserveMiB": 2048,
+    "threads": 2
+  },
+  "schemaVersion": 1,
+  "sourceDigest": "ea37d5aa145b25230a0fff49861067b1b0827d6b56b0349900e5cfe8eb0137a1",
+  "steps": [
+    {
+      "durationSeconds": 0.251,
+      "exitCode": 0,
+      "memoryAdmission": {
+        "availableBytes": 15611195392,
+        "finiteCgroupLimits": [],
+        "hostAvailableBytes": 15611195392,
+        "inheritedSoftLimitBytes": {},
+        "physicalBytes": 16760344576,
+        "requiredAvailableBytes": 6442450944,
+        "status": "ADMITTED",
+        "system": "Linux"
+      },
+      "step": "extractor-runtime"
+    },
+    {
+      "durationSeconds": 0.751,
+      "exitCode": 0,
+      "memoryAdmission": {
+        "availableBytes": 15611052032,
+        "finiteCgroupLimits": [],
+        "hostAvailableBytes": 15611052032,
+        "inheritedSoftLimitBytes": {},
+        "physicalBytes": 16760344576,
+        "requiredAvailableBytes": 6442450944,
+        "status": "ADMITTED",
+        "system": "Linux"
+      },
+      "step": "version"
+    },
+    {
+      "durationSeconds": 1.753,
+      "exitCode": 0,
+      "memoryAdmission": {
+        "availableBytes": 15574192128,
+        "finiteCgroupLimits": [],
+        "hostAvailableBytes": 15574192128,
+        "inheritedSoftLimitBytes": {},
+        "physicalBytes": 16760344576,
+        "requiredAvailableBytes": 6442450944,
+        "status": "ADMITTED",
+        "system": "Linux"
+      },
+      "step": "queries"
+    },
+    {
+      "durationSeconds": 20.275,
+      "exitCode": 0,
+      "memoryAdmission": {
+        "availableBytes": 15617200128,
+        "finiteCgroupLimits": [],
+        "hostAvailableBytes": 15617200128,
+        "inheritedSoftLimitBytes": {},
+        "physicalBytes": 16760344576,
+        "requiredAvailableBytes": 6442450944,
+        "status": "ADMITTED",
+        "system": "Linux"
+      },
+      "step": "extract"
+    },
+    {
+      "durationSeconds": 45.304,
+      "exitCode": 0,
+      "memoryAdmission": {
+        "availableBytes": 15211626496,
+        "finiteCgroupLimits": [],
+        "hostAvailableBytes": 15211626496,
+        "inheritedSoftLimitBytes": {},
+        "physicalBytes": 16760344576,
+        "requiredAvailableBytes": 6442450944,
+        "status": "ADMITTED",
+        "system": "Linux"
+      },
+      "step": "analyze"
+    },
+    {
+      "durationSeconds": 24.789,
+      "exitCode": 0,
+      "memoryAdmission": {
+        "availableBytes": 15547969536,
+        "finiteCgroupLimits": [],
+        "hostAvailableBytes": 15547969536,
+        "inheritedSoftLimitBytes": {},
+        "physicalBytes": 16760344576,
+        "requiredAvailableBytes": 6442450944,
+        "status": "ADMITTED",
+        "system": "Linux"
+      },
+      "step": "coverage-query"
+    },
+    {
+      "durationSeconds": 0.752,
+      "exitCode": 0,
+      "memoryAdmission": {
+        "availableBytes": 15501533184,
+        "finiteCgroupLimits": [],
+        "hostAvailableBytes": 15501533184,
+        "inheritedSoftLimitBytes": {},
+        "physicalBytes": 16760344576,
+        "requiredAvailableBytes": 6442450944,
+        "status": "ADMITTED",
+        "system": "Linux"
+      },
+      "step": "coverage-decode"
+    }
+  ],
+  "upload": "NOT_ATTEMPTED"
+}

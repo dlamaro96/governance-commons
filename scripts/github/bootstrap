@@ -68,6 +68,29 @@ def paginate(path: str, host: str) -> dict:
     return {"ok": False, "status": "blocked", "reason": "Pagination safety bound reached; inventory incomplete"}
 
 
+def publication_findings(label: str, content: bytes) -> list[dict]:
+    """Return fixed public rule IDs; never project a regex match or its input bytes."""
+    findings = []
+    for name, pattern in SECRET_RULES.items():
+        if not pattern.search(content):
+            continue
+        # Deliberately project literal public identifiers instead of returning data
+        # from the detection table. Unknown future rule IDs require this contract
+        # to be updated explicitly before their results can be published.
+        if name == "private-key":
+            public_rule = "private-key"
+        elif name == "github-token":
+            public_rule = "github-token"
+        elif name == "aws-access-key":
+            public_rule = "aws-access-key"
+        elif name == "personal-email":
+            public_rule = "personal-email"
+        else:
+            raise ValueError("Unrecognized publication finding rule")
+        findings.append({"path": label, "rule": public_rule})
+    return findings
+
+
 def check_local() -> dict:
     """Bounded deterministic baseline scan; not a comprehensive secret scanner."""
     findings = []
@@ -76,9 +99,7 @@ def check_local() -> dict:
     def scan(label: str, content: bytes) -> None:
         nonlocal scanned
         scanned += 1
-        for name, pattern in SECRET_RULES.items():
-            if pattern.search(content):
-                findings.append({"path": label, "rule": name})
+        findings.extend(publication_findings(label, content))
     for name in files:
         path = ROOT / name
         if not path.is_file() or path.is_symlink():

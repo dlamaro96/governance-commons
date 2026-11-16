@@ -1,0 +1,41 @@
+{
+  "alerts": [
+    {
+      "category": "governance-commons/javascript-typescript",
+      "htmlUrl": "https://github.com/dlamaro96/governance-commons/security/code-scanning/2",
+      "location": {
+        "end_line": 91,
+        "path": "packages/domain/src/relation.ts",
+        "start_line": 91
+      },
+      "mostRecentInstanceCommit": "a8443c4af88c9c77a37e9d4c7f9411262f6845fb",
+      "number": 2,
+      "ref": "refs/pull/15/merge",
+      "ruleId": "js/remote-property-injection",
+      "severity": "high",
+      "state": "open"
+    },
+    {
+      "category": "governance-commons/javascript-typescript",
+      "htmlUrl": "https://github.com/dlamaro96/governance-commons/security/code-scanning/1",
+      "location": {
+        "end_line": 91,
+        "path": "packages/domain/src/relation.ts",
+        "start_line": 91
+      },
+      "mostRecentInstanceCommit": "45fa82d11f11ec23d28bdd7cafea080432c46c40",
+      "number": 1,
+      "ref": "refs/pull/15/merge",
+      "ruleId": "js/remote-property-injection",
+      "severity": "high",
+      "state": "fixed"
+    }
+  ],
+  "completeAllStateRefInventory": true,
+  "limitations": [
+    "One historical alert is fixed and the current own-property result remains open; alert identity changes do not imply source qualification."
+  ],
+  "observedAt": "2026-11-15T23:46:53.819244+00:00",
+  "purpose": "BOUNDED_INDEPENDENT_ALERT_METADATA_NO_RAW_PAYLOAD",
+  "schemaVersion": 1
+}

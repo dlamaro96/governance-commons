@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "attempt": "negative-control-20261115T205833Z-03616b8d",
+      "report": "docs/security/sast-evidence/attempts/negative-control-20261115T205833Z-03616b8d.json",
+      "sha256": "26add215562e0d7427f98b6432af6a4f95503bc02a32e2ae3844dd05527c23d9",
+      "sourceDigest": "33863683059acc419a2687ef9af826c8f353de36eb15bab8fd18c5859c064902",
+      "analysis": "NOT_PASSED",
+      "findingsGate": "NOT_EVALUATED",
+      "outcome": "NOT_PASSED"
+    },
+    {
+      "attempt": "negative-control-20261115T210155Z-e8427afa",
+      "report": "docs/security/sast-evidence/attempts/negative-control-20261115T210155Z-e8427afa.json",
+      "sha256": "326e2933b33d08322adb087acb85ba8d582cbfb2a6bb705becdbd7ea819a76de",
+      "sourceDigest": "33863683059acc419a2687ef9af826c8f353de36eb15bab8fd18c5859c064902",
+      "analysis": "PASS",
+      "findingsGate": "BLOCKED",
+      "outcome": "NOT_PASSED"
+    },
+    {
+      "attempt": "negative-control-20261115T210547Z-51b2a46e",
+      "report": "docs/security/sast-evidence/attempts/negative-control-20261115T210547Z-51b2a46e.json",
+      "sha256": "6aa4ef6ddb37a347b4312dee5d644ea76e6685a7b03c279f9f801ebda0159d51",
+      "sourceDigest": "5823a440ff54431bc33fbf1f7e161a47d8832bc1528858ae84828f85c7e489d0",
+      "analysis": "PASS",
+      "findingsGate": "BLOCKED",
+      "outcome": "NOT_PASSED"
+    },
+    {
+      "attempt": "negative-control-20261115T212347Z-1bad1696",
+      "report": "docs/security/sast-evidence/attempts/negative-control-20261115T212347Z-1bad1696.json",
+      "sha256": "84b958231fd64630e251cd04e6fc0e7048d3556e5d999e078ed087c7e4d436cc",
+      "sourceDigest": "e6b3e6f6115ef40ff3c0edafbfe8e56b2846fc4b8d89fe581df84087f258677f",
+      "analysis": "PASS",
+      "findingsGate": "BLOCKED",
+      "outcome": "NOT_PASSED"
+    },
+    {
+      "attempt": "product-1",
+      "report": "docs/security/sast-evidence/attempts/product-1.json",
+      "sha256": "f641657da0ccca128cf35164d2b8ef2213ce1ee2c197e16c3f80ed9e0b0a5f84",
+      "sourceDigest": "f02c9daeb3d0cc1e966502838c5827c378c5e4f22dfa35b543fe0fd120a9716a",
+      "analysis": "PASS",
+      "findingsGate": "BLOCKED",
+      "outcome": "NOT_PASSED"
+    },
+    {
+      "attempt": "product-2",
+      "report": "docs/security/sast-evidence/attempts/product-2.json",
+      "sha256": "94602357afc1ef53e3edb54644f530ac87fa8a5ecd9b15e44a2ff518e9f4b79b",
+      "sourceDigest": "c5b1d43986aa95232576d55e22de46c21cef5f64d7b3d23e3f4603285940adf9",
+      "analysis": "PASS",
+      "findingsGate": "BLOCKED",
+      "outcome": "NOT_PASSED"
+    },
+    {
+      "attempt": "product-3",
+      "report": "docs/security/sast-evidence/attempts/product-3.json",
+      "sha256": "9b65e2f1af48a6f06755e8027be57bf37009483a6e23fe5c86445078d7b3816b",
+      "sourceDigest": "8d93400ac02e27dfabd828aefc9240e85d931020ee5cc70b7980dcf0873b90fb",
+      "analysis": "PASS",
+      "findingsGate": "BLOCKED",
+      "outcome": "NOT_PASSED"
+    },
+    {
+      "attempt": "product-4",
+      "report": "docs/security/sast-evidence/attempts/product-4.json",
+      "sha256": "977e60b18e9d048dd3abe5720ed89b619ed9c25fc077498e58f1cfaf2f11dc6c",
+      "sourceDigest": "69ae3b93308e71761b50781ae3446ef7bfef1e3de7b8d613fb7056e0c1142591",
+      "analysis": "PASS",
+      "findingsGate": "PASS",
+      "outcome": "PASS"
+    },
+    {
+      "attempt": "qualification-actions-1",
+      "report": "docs/security/sast-evidence/attempts/qualification-actions-1.json",
+      "sha256": "45d57af6f5a42fafd758f131fb59f89bad3cf5ddd1e40f7daaa8ea7dfd7f2f33",
+      "sourceDigest": "3cb5c125375391c39b46c1c49b23c38211500f0b7641cd02133e4870472e1fee",
+      "analysis": "NOT_PASSED",
+      "findingsGate": "BLOCKED",
+      "outcome": "NOT_PASSED"
+    },
+    {
+      "attempt": "qualification-actions-2",
+      "report": "docs/security/sast-evidence/attempts/qualification-actions-2.json",
+      "sha256": "c00ad606c4fa171e480ed2c38d68c98eb519863cb05e30f1cc070012bb1c4691",
+      "sourceDigest": "440526708deb299fe6d359ba328f70e5818d5c501c916a58cd542aa4a4b202f3",
+      "analysis": "NOT_PASSED",
+      "findingsGate": "NOT_EVALUATED",
+      "outcome": "NOT_PASSED"
+    },
+    {
+      "attempt": "qualification-actions-3",
+      "report": "docs/security/sast-evidence/attempts/qualification-actions-3.json",
+      "sha256": "fe3fbf4ad95b7398993bfcd4b2d41f3a45b0649090e55ec1d28ff2c1ad93da7e",
+      "sourceDigest": "7759d389f864676d7351e2c6e85bdef84a486d0776f71b7dfc4cd400a936d27c",
+      "analysis": "PASS",
+      "findingsGate": "PASS",
+      "outcome": "PASS"
+    },
+    {
+      "attempt": "product-5",
+      "report": "docs/security/sast-evidence/product-5/summary.json",
+      "sha256": "465f95b5a110d60ca80fd3550e855ee29094bde0df7c85884179fca42bdbf126",
+      "sourceDigest": "b841349ba0f21dc2d57cdd77b078b318dce41687038a47cce894b716117e73b8",
+      "analysis": "PASS",
+      "findingsGate": "PASS",
+      "outcome": "PASS"
+    }
+  ],
+  "note": "Original completed summaries, byte-identical to invocation outputs. Findings and artifact hygiene are separate. Old published SARIF is retained locally and not copied here; percent-encoded-root correction is separately qualified."
+}

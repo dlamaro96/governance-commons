@@ -1,0 +1,48 @@
+{
+  "notProductAnalysis": true,
+  "purpose": "EXTRACTOR_ENVIRONMENT_DIAGNOSTIC_ONLY",
+  "results": [
+    {
+      "diagnosticFlags": {
+        "completed": true,
+        "homeMention": false,
+        "memory": false,
+        "missingEnvironment": false,
+        "nodeMissing": false,
+        "nullPointer": false
+      },
+      "failure": null,
+      "mode": "unset",
+      "privateLogSha256": "53173b542bf862e9ccb54fe58391210f1cfb7da36c5f232ea0f807ce19e87d75",
+      "steps": [
+        {
+          "durationSeconds": 15.314,
+          "exitCode": 0,
+          "step": "extract"
+        }
+      ]
+    },
+    {
+      "diagnosticFlags": {
+        "completed": true,
+        "homeMention": false,
+        "memory": false,
+        "missingEnvironment": false,
+        "nodeMissing": false,
+        "nullPointer": false
+      },
+      "failure": null,
+      "mode": "image-default",
+      "privateLogSha256": "8353eba4f382e81d1bea1ecdafd8e600069829f7478a72c902ba2f4583cdea83",
+      "steps": [
+        {
+          "durationSeconds": 14.35,
+          "exitCode": 0,
+          "step": "extract"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 1,
+  "sourceDigest": "ab80a7ab2f90ea68a7f139de1154dff1c563b094c68baff533edb846371a336e"
+}

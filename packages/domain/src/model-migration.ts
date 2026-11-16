@@ -42,7 +42,8 @@ export interface ModelMigrationInput {
 }
 
 type Fields = Record<string, unknown>;
-type MutableValues = Record<string, AttributeValue>;
+type WorkingValue = string | number | boolean | WorkingValue[] | MutableValues;
+type MutableValues = Map<string, WorkingValue>;
 const identifier = /^[A-Za-z_][A-Za-z0-9_.-]{0,63}$/;
 const reserved = new Set(['__proto__', 'constructor', 'prototype']);
 const malformedUnicode = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/;
@@ -92,33 +93,33 @@ function copyPlanJSON(input: unknown, issues: Issues): unknown {
       if (value.length > maximum) { issues.add('limit', path, 'The permitted array length was exceeded.'); return undefined; }
       if (Reflect.ownKeys(value).length !== value.length + 1) { issues.add('invalid_json', path, 'Sparse arrays and extra array properties are not permitted.'); return undefined; }
       active.add(value);
-      const output: unknown[] = [];
+      const output = new Map<number, unknown>();
       try {
         for (let index = 0; index < value.length; index += 1) {
           const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
           if (!descriptor?.enumerable || !has(descriptor, 'value')) { issues.add('invalid_json', at(path, index), 'Array entries must be enumerable data properties.'); continue; }
-          output.push(copy(descriptor.value, at(path, index), depth + 1));
+          output.set(index, copy(descriptor.value, at(path, index), depth + 1));
           if (issues.overflow || nodes > MIGRATION_LIMITS.planNodes) break;
         }
+        return Array.from(output.values());
       } finally { active.delete(value); }
-      return output;
     }
     if (![Object.prototype, null].includes(Object.getPrototypeOf(value))) { issues.add('invalid_json', path, 'Expected a plain JSON object.'); return undefined; }
     const keys = Reflect.ownKeys(value);
     if (keys.length > MODEL_LIMITS.properties) { issues.add('limit', path, 'The permitted property count was exceeded.'); return undefined; }
     if (keys.some(key => typeof key === 'symbol')) issues.add('invalid_json', path, 'Symbol keys are not JSON.');
     active.add(value);
-    const output: Fields = {};
+    const output = new Map<string, unknown>();
     try {
       for (const key of keys.filter((key): key is string => typeof key === 'string').sort()) {
         if (!identifier.test(key) || reserved.has(key)) { issues.add('invalid_definition', path, 'Object keys must be safe identifiers of at most 64 characters.'); continue; }
         const descriptor = Object.getOwnPropertyDescriptor(value, key)!;
         if (!descriptor.enumerable || !has(descriptor, 'value')) { issues.add('invalid_json', at(path, key), 'Only enumerable data properties are permitted.'); continue; }
-        output[key] = copy(descriptor.value, at(path, key), depth + 1);
+        output.set(key, copy(descriptor.value, at(path, key), depth + 1));
         if (issues.overflow || nodes > MIGRATION_LIMITS.planNodes) break;
       }
+      return Object.fromEntries(output);
     } finally { active.delete(value); }
-    return output;
   };
   return copy(input, '', 0);
 }
@@ -289,21 +290,29 @@ function schemaAt(model: ModelDefinition, path: MigrationPath): AttributeSchema 
   return schema;
 }
 
-function cloneValue(value: AttributeValue): AttributeValue {
+function cloneObject(value: AttributeValues): MutableValues {
+  return new Map(Object.keys(value).sort().map(key => [key, cloneValue(value[key])]));
+}
+function cloneValue(value: AttributeValue): WorkingValue {
   if (Array.isArray(value)) return value.map(cloneValue);
-  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(key => [key, cloneValue((value as MutableValues)[key])]));
+  if (value && typeof value === 'object') return cloneObject(value as AttributeValues);
+  return value as string | number | boolean;
+}
+function toJSON(value: WorkingValue): AttributeValue {
+  if (value instanceof Map) return Object.fromEntries([...value].map(([key, child]) => [key, toJSON(child)]));
+  if (Array.isArray(value)) return value.map(toJSON);
   return value;
 }
 type Location = { parent: MutableValues; key: string; exists: boolean } | { absentParent: true } | { invalidParent: true };
 function locate(values: MutableValues, path: MigrationPath): Location {
   let parent = values;
   for (let index = 0; index < path.length - 1; index += 1) {
-    if (!has(parent, path[index])) return { absentParent: true };
-    const next = parent[path[index]];
-    if (!next || typeof next !== 'object' || Array.isArray(next)) return { invalidParent: true };
-    parent = next as MutableValues;
+    if (!parent.has(path[index])) return { absentParent: true };
+    const next = parent.get(path[index]);
+    if (!(next instanceof Map)) return { invalidParent: true };
+    parent = next;
   }
-  return { parent, key: path[path.length - 1], exists: has(parent, path[path.length - 1]) };
+  return { parent, key: path[path.length - 1], exists: parent.has(path[path.length - 1]) };
 }
 function mutableLocation(location: Location): location is Extract<Location, { parent: MutableValues }> { return 'parent' in location; }
 const decimalModel: ModelDefinition = { formatVersion: 1, id: 'migration_decimal_value', version: 1, attributes: { value: { type: 'decimal', required: true } } };
@@ -327,7 +336,9 @@ export function applyModelMigrationToAttributes(input: ModelMigrationInput): Val
   if (issues.values.length) return issues.result(undefined as never);
   const current = validateAttributes(source.value, input.attributes);
   if (!current.ok) return { ok: false, issues: prefixIssues('/sourceAttributes', current.issues) };
-  const values = current.value as MutableValues; // The shared validator returned a defensive copy.
+  // Dynamic names live only in private Maps; no mutation can reach an object prototype.
+  // Both inputs and returned values still pass through the shared strict JSON validator.
+  const values = cloneObject(current.value);
   const knownSource = (path: MigrationPath): boolean => !!(schemaAt(source.value, path) || schemaAt(head.value, path) || schemaAt(target.value, path));
   for (let index = 0; index < plan.operations.length; index += 1) {
     const operation = plan.operations[index]; const operationPath = `/plan/operations/${index}`;
@@ -342,39 +353,58 @@ export function applyModelMigrationToAttributes(input: ModelMigrationInput): Val
       if (operation.onMissing === 'skip') continue;
       issues.add('required', operationPath, 'The required source path is absent.'); break;
     }
+    if (!mutableLocation(location)) {
+      issues.add('required', operationPath, operation.op === 'set'
+        ? 'Destination parent objects must already exist.' : 'Source parent objects must already exist.'); break;
+    }
+    const key = location.key;
+    // Keep the mutation boundary independently safe if path parsing changes later.
+    // These direct checks also make the safety condition visible to source analysis.
+    if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+      issues.add('format', operationPath, 'Reserved object fields cannot be mutated.'); break;
+    }
     if (operation.op === 'set') {
-      if (!mutableLocation(location)) { issues.add('required', operationPath, 'Destination parent objects must already exist.'); break; }
-      if (operation.mode === 'replace' || !location.exists) location.parent[location.key] = cloneValue(operation.value);
+      if (operation.mode === 'replace' || !location.exists) location.parent.set(key, cloneValue(operation.value));
       continue;
     }
-    if (!mutableLocation(location)) { issues.add('required', operationPath, 'Source parent objects must already exist.'); break; }
-    if (operation.op === 'remove') { delete location.parent[location.key]; continue; }
+    if (operation.op === 'remove') {
+      if (!location.parent.delete(key)) {
+        issues.add('invalid_json', operationPath, 'The defensive source property could not be removed.'); break;
+      }
+      continue;
+    }
     if (operation.op === 'rename') {
       const destination = locate(values, operation.to);
       if (!mutableLocation(destination)) { issues.add('required', `${operationPath}/to`, 'Destination parent objects must already exist.'); break; }
       if (destination.exists) { issues.add('invalid_definition', `${operationPath}/to`, 'Rename cannot overwrite an existing value.'); break; }
-      destination.parent[destination.key] = location.parent[location.key];
-      delete location.parent[location.key];
+      const destinationKey = destination.key;
+      if (destinationKey === '__proto__' || destinationKey === 'constructor' || destinationKey === 'prototype') {
+        issues.add('format', `${operationPath}/to`, 'Reserved object fields cannot be mutated.'); break;
+      }
+      destination.parent.set(destinationKey, location.parent.get(key)!);
+      if (!location.parent.delete(key)) {
+        issues.add('invalid_json', operationPath, 'The defensive source property could not be removed.'); break;
+      }
       continue;
     }
-    const value = location.parent[location.key];
+    const value = location.parent.get(key)!;
     if (operation.op === 'enumMap') {
       if (typeof value !== 'string') { issues.add('type', operationPath, 'Enum mapping requires a string value.'); break; }
       const mapping = operation.mappings.find(item => item.from === value);
-      if (mapping) location.parent[location.key] = mapping.to;
+      if (mapping) location.parent.set(key, mapping.to);
       else if (operation.onUnmapped === 'error') { issues.add('enum', operationPath, 'The source value has no declared enum mapping.'); break; }
       continue;
     }
     if (operation.conversion === 'safeIntegerToDecimal') {
       if (typeof value !== 'number' || !Number.isSafeInteger(value) || Object.is(value, -0)) { issues.add('type', operationPath, 'Conversion requires a safe integer without rounding.'); break; }
-      location.parent[location.key] = String(value);
+      location.parent.set(key, String(value));
     } else {
       const decimal = validateAttributes(decimalModel, { value });
       if (!decimal.ok) { issues.add('format', operationPath, 'Conversion requires an existing canonical decimal string; no trimming or rounding is performed.'); break; }
-      location.parent[location.key] = value;
+      location.parent.set(key, value);
     }
   }
   if (issues.values.length) return issues.result(undefined as never);
-  const result = validateAttributes(target.value, values);
+  const result = validateAttributes(target.value, toJSON(values));
   return result.ok ? result : { ok: false, issues: prefixIssues('/targetAttributes', result.issues) };
 }

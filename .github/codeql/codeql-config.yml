@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+name: Governance Commons source security
+# The local runner also passes exact, bundled pack versions from sast-policy.json.
+disable-default-queries: false
+queries:
+  - uses: security-extended

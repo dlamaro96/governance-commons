@@ -1,0 +1,83 @@
+{
+  "boundedHostCounterProbe": {
+    "observed": {
+      "availableBytes": 4083236864,
+      "darwinAvailabilityBasis": "free+inactive+speculative-pages",
+      "hostAvailableBytes": 4083236864,
+      "inheritedSoftLimitBytes": {},
+      "physicalBytes": 19327352832,
+      "system": "Darwin"
+    },
+    "observedAt": "2026-11-15T23:16:38.050070+00:00",
+    "requiredAvailableBytes": 6442450944,
+    "scannerExecution": "NOT_RUN",
+    "sourceSha256": {
+      ".github/codeql/codeql-config.yml": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+      ".github/workflows/security.yml": "87704b640679588d83b0c4d76a4fe35e07e74ee60f821da2f926f3ed10fa89ed",
+      "policies/sast-policy.json": "bf96aa90bcbb1b184922c0af9c425f7e91caba49807a387ac3054007806fcbad",
+      "policies/sast-triage.json": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+      "policies/sast.py": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7",
+      "policies/test_sast.py": "015c11e7092ed1a8dfd630d495e3b5f05cb36caf55754ad7cbab79cfa769fdc5"
+    },
+    "wouldAdmit": false
+  },
+  "hostedAttempt": 43772519032,
+  "limitations": [
+    "No heavy scan or Docker operation was run alongside the root SQL workload.",
+    "Memory admission observes current available host memory, visible cgroupv2 ancestor headroom and inherited finite RLIMIT ceilings before each native command. It does not impose a new native hard memory cap or reserve memory against concurrent processes.",
+    "Darwin available memory conservatively sums free, inactive and speculative pages; unsupported/malformed accounting, cgroupv1 memory limits or less than6GiB available fail closed.",
+    "The first focused test execution had two fixture errors because RLIM_INFINITY is platform-dependent; fixtures now use the actual platform constant and all42 tests pass. No product/scan pass is inferred."
+  ],
+  "newExecutionBudgets": {
+    "container": {
+      "hardMemoryLimitBytes": 4294967296,
+      "mode": "CONTAINER",
+      "ramSemantics": "CodeQL evaluator/extractor request, not a hard process cap",
+      "requestedRamMiB": 2048,
+      "reserveMiB": 0,
+      "threads": 2
+    },
+    "native": {
+      "hardMemoryLimitBytes": null,
+      "mode": "NATIVE",
+      "ramSemantics": "CodeQL evaluator/extractor request, not a hard process cap",
+      "requestedRamMiB": 4096,
+      "reserveMiB": 2048,
+      "threads": 2
+    }
+  },
+  "observedHostedFailure": {
+    "actualHostedPhysicalOrCgroupMemory": "NOT_RECORDED_BY_PREVIOUS_RUNNER",
+    "durationSeconds": 25.288,
+    "exitCode": 99,
+    "fixedMarker": "out_of_memory",
+    "nativeHardMemoryLimitImposedByRunner": false,
+    "previousRequestedRamMiB": 2048,
+    "previousThreads": 2,
+    "step": "analyze"
+  },
+  "officialReferences": [
+    {
+      "basis": "Exit99 means CodeQL out of memory; physical RAM need not be exhausted.",
+      "url": "https://docs.github.com/en/code-security/reference/code-scanning/codeql/codeql-cli/exit-codes"
+    },
+    {
+      "basis": "--ram is a query-evaluator memory request, not a hard resident-memory ceiling.",
+      "url": "https://docs.github.com/en/code-security/reference/code-scanning/codeql/codeql-cli-manual/database-analyze"
+    },
+    {
+      "basis": "Standard public ubuntu-24.04 documented16GB RAM; this is platform documentation, not measurement of this run.",
+      "url": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners"
+    }
+  ],
+  "purpose": "BOUNDED_RESOURCE_CORRECTION_NOT_SOURCE_SCAN",
+  "recordedAt": "2026-11-15T23:16:38.049918+00:00",
+  "schemaVersion": 1,
+  "sourceHead": "3a5de6090a5a04e056c3e848d8fe272d20a713e4",
+  "testedMergeCommit": "b3596f3525e26b8e01ce6bd8d538cf9113ac1cd1",
+  "verification": {
+    "currentSourceScan": "NOT_RUN",
+    "focusedPolicyTests": 42,
+    "hostedCorrection": "PENDING"
+  }
+}

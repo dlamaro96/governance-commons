@@ -1,0 +1,44 @@
+{
+  "analysis": "NOT_PASSED",
+  "bundleSha256": "7dd066f805dfed19c9c4323d5f2003cd24fabd6e7304cdf799b94a84509fe92b",
+  "configurationSha256": "b6be57fadea89bed9022ef7cb209c684886a8edaccc3333a751bc8bf12ab9112",
+  "containerImage": "sha256:754f4044cfed7f63436c6bbb6d14aed540570c7f3586a5ff62e77aa4f705d44a",
+  "dirty": true,
+  "findingsGate": "BLOCKED",
+  "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+  "languages": {
+    "actions": {
+      "analysis": "NOT_PASSED",
+      "cliVersion": "2.27.4",
+      "dirty": true,
+      "failure": "malformed-json",
+      "findingsGate": "NOT_EVALUATED",
+      "head": "8d9c9c701d1f0ea49df13671088cbc8b1e294832",
+      "language": "actions",
+      "queryPack": "codeql/actions-queries",
+      "queryVersion": "0.6.39",
+      "schemaVersion": 1,
+      "sourceDigest": "3cb5c125375391c39b46c1c49b23c38211500f0b7641cd02133e4870472e1fee",
+      "steps": [
+        {
+          "exitCode": 0,
+          "step": "version"
+        },
+        {
+          "exitCode": 0,
+          "step": "queries"
+        }
+      ],
+      "upload": "NOT_ATTEMPTED"
+    }
+  },
+  "outcome": "NOT_PASSED",
+  "platform": "linux-arm64",
+  "policySha256": "2931b5fe970e847b773d9663a029e052f5b3b190d27040b677757cf97beec8b7",
+  "purpose": "REPOSITORY_SOURCE",
+  "schemaVersion": 1,
+  "scope": "SINGLE_LANGUAGE",
+  "sourceDigest": "3cb5c125375391c39b46c1c49b23c38211500f0b7641cd02133e4870472e1fee",
+  "triageSha256": "995ae6ea1953ff5f8fc2aa561dad9f43a86f7fb6cfc5b37d0e6f5481577c6dae",
+  "upload": "NOT_ATTEMPTED"
+}

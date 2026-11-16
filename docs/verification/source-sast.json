@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "implementation_commit": "5ea6eee38ac6aaf129e225d45be57e15762b0722",
+  "source_binding_method": "Recorded final scan executable hashes match committed Git blobs. This binding is not a scan rerun.",
+  "verified_executable_files": 123,
+  "scan_source_digest": "b841349ba0f21dc2d57cdd77b078b318dce41687038a47cce894b716117e73b8",
+  "final_scan": "docs/security/sast-evidence/product-5/summary.json",
+  "prepublication_checks": [
+    {
+      "check": "units",
+      "command": [
+        "pnpm",
+        "test"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.622,
+      "log": ".local/sast/prepublish-units.log",
+      "logSha256": "2d6340ea90b31c0c2da4d750c3b974670843b57da9b71bbdb5e36a78ef22952b"
+    },
+    {
+      "check": "root-typecheck",
+      "command": [
+        "node",
+        "<shared-checkout>/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.383,
+      "log": ".local/sast/prepublish-root-typecheck.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "check": "sast-policy",
+      "command": [
+        "python3",
+        "policies/test_sast.py"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.248,
+      "log": ".local/sast/prepublish-sast-policy.log",
+      "logSha256": "c35c0a6ee4327227eae9051fd9969ba41879fb04563b9b54a381fa61f25a474c"
+    },
+    {
+      "check": "requirements",
+      "command": [
+        "python3",
+        "scripts/requirements.py",
+        "validate"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.102,
+      "log": ".local/sast/prepublish-requirements.log",
+      "logSha256": "c4fafa5c407bfcba995806c05d71966afe16578c205e60ec8d6ed2b4d2782edf"
+    },
+    {
+      "check": "publication",
+      "command": [
+        "python3",
+        "scripts/github/bootstrap",
+        "check-local"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 9.201,
+      "log": ".local/sast/prepublish-publication.log",
+      "logSha256": "ccb692a6ceaded9a07b50b8e31728c3aa8224a5c89fb156f7480c38f5fad3167"
+    },
+    {
+      "check": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.006,
+      "log": ".local/sast/prepublish-whitespace.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "unit_cases_passed": 86,
+  "hosted_execution": "NOT_RUN",
+  "release_qualified": false,
+  "limitations": [
+    "The scan covers the exact isolated source snapshot before the newer relations/participation source.",
+    "Hosted upload, ingestion read-back and fork permissions remain unqualified."
+  ]
+}
