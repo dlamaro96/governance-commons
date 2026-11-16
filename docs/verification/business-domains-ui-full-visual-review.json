@@ -1,0 +1,802 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-16T03:58:19.639664+00:00",
+  "scope": "Supplemental AI-assisted visual inspection of all 26 business-domain captures from the completed full 19-journey local browser run. The execution includes all registered browser journeys; this visual inspection covers only its business-domain screenshots.",
+  "result": "NO_OBSERVED_VISUAL_BLOCKER_IN_REVIEWED_FULL_RUN_DOMAIN_VIEWPORTS",
+  "baseCommit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
+  "workingTreeDirty": true,
+  "profile": "core",
+  "reviewer": "Codex /root/graph_copier_review (AI-assisted static screenshot and evidence review)",
+  "fullExecution": {
+    "result": "PASS",
+    "command": [
+      "pnpm",
+      "exec",
+      "playwright",
+      "test",
+      "--config",
+      ".github/playwright.ci.config.ts"
+    ],
+    "startedAt": "2026-11-16T03:41:39.295311+00:00",
+    "recordedAt": "2026-11-16T03:55:14.154338+00:00",
+    "exitCode": 0,
+    "stats": {
+      "startTime": "2026-11-16T03:41:39.935Z",
+      "duration": 813487.5819999999,
+      "expected": 19,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "unchanged": true
+  },
+  "executionConfiguration": {
+    "playwrightVersion": "1.65.1",
+    "nodeExecutableVersionFromRecordedPath": "24.22.3",
+    "workers": 1,
+    "projects": [
+      {
+        "name": "vertical-slice",
+        "retries": 0,
+        "repeatEach": 1
+      },
+      {
+        "name": "accessibility",
+        "retries": 0,
+        "repeatEach": 1
+      },
+      {
+        "name": "models",
+        "retries": 0,
+        "repeatEach": 1
+      },
+      {
+        "name": "model-migrations",
+        "retries": 0,
+        "repeatEach": 1
+      },
+      {
+        "name": "asset-types",
+        "retries": 0,
+        "repeatEach": 1
+      },
+      {
+        "name": "asset-type-migrations",
+        "retries": 0,
+        "repeatEach": 1
+      },
+      {
+        "name": "relations",
+        "retries": 0,
+        "repeatEach": 1
+      },
+      {
+        "name": "relation-migrations",
+        "retries": 0,
+        "repeatEach": 1
+      },
+      {
+        "name": "business-domains",
+        "retries": 0,
+        "repeatEach": 1
+      }
+    ],
+    "executedDistinctJourneys": 19,
+    "domainJourneys": 3,
+    "rawTopLevelErrors": 0
+  },
+  "actualJourneys": [
+    {
+      "title": "E2E-02/03: real OIDC, UI source registration, scan, discovery, ownership and audit",
+      "project": "vertical-slice",
+      "file": "vertical-slice.spec.ts",
+      "line": 17,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 6813
+        }
+      ]
+    },
+    {
+      "title": "E2E-03: consumer restrictions and cross-tenant catalog isolation use real identity",
+      "project": "vertical-slice",
+      "file": "vertical-slice.spec.ts",
+      "line": 122,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1230
+        }
+      ]
+    },
+    {
+      "title": "UX-04/AT-UX-01: real catalog layouts, light/dark, RTL and automated accessibility",
+      "project": "accessibility",
+      "file": "ui-accessibility.spec.ts",
+      "line": 30,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 11510
+        }
+      ]
+    },
+    {
+      "title": "UX-30: connection form keyboard focus, dismissal and accessible labels",
+      "project": "accessibility",
+      "file": "ui-accessibility.spec.ts",
+      "line": 74,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1876
+        }
+      ]
+    },
+    {
+      "title": "MOD: visual model, import/export, real typed assets, immutable versions and migration protection",
+      "project": "models",
+      "file": "models.spec.ts",
+      "line": 77,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 20401
+        }
+      ]
+    },
+    {
+      "title": "MOD: consumer cannot publish models and tenant definitions remain isolated",
+      "project": "models",
+      "file": "models.spec.ts",
+      "line": 257,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 4183
+        }
+      ]
+    },
+    {
+      "title": "MOD: explicit visual migration rejects invalid and stale plans, commits exact values and an immutable receipt",
+      "project": "model-migrations",
+      "file": "model-migrations.spec.ts",
+      "line": 80,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 17187
+        }
+      ]
+    },
+    {
+      "title": "MOD: migration execution is permission-scoped and receipts remain tenant-scoped",
+      "project": "model-migrations",
+      "file": "model-migrations.spec.ts",
+      "line": 218,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 3053
+        }
+      ]
+    },
+    {
+      "title": "MOD: authored inheritance pins, required ownership, lifecycle and stale preview survive parent upgrades",
+      "project": "asset-types",
+      "file": "asset-types.spec.ts",
+      "line": 97,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 22087
+        }
+      ]
+    },
+    {
+      "title": "MOD: type authoring and transitions enforce permissions and tenant isolation, and legacy editors stay closed",
+      "project": "asset-types",
+      "file": "asset-types.spec.ts",
+      "line": 242,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 53248
+        }
+      ]
+    },
+    {
+      "title": "MOD: complete typed migration handles mixed pins, explicit owners and states, stale consent and immutable tuples",
+      "project": "asset-type-migrations",
+      "file": "asset-type-migrations.spec.ts",
+      "line": 97,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 22336
+        }
+      ]
+    },
+    {
+      "title": "MOD: typed migration ingress and immutable receipts enforce permissions and tenant scope",
+      "project": "asset-type-migrations",
+      "file": "asset-type-migrations.spec.ts",
+      "line": 252,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 43381
+        }
+      ]
+    },
+    {
+      "title": "MOD: authored relations preserve exact values and pins, enforce constraints, and recover stale edits and graph pages",
+      "project": "relations",
+      "file": "relations.spec.ts",
+      "line": 145,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 74449
+        }
+      ]
+    },
+    {
+      "title": "MOD: restricted relation bridges, current permissions and independent tenants bound graph and history access",
+      "project": "relations",
+      "file": "relations.spec.ts",
+      "line": 358,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 10162
+        }
+      ]
+    },
+    {
+      "title": "MOD: complete graph draft repairs positive participation, jointly assigns first endpoints, round-trips exact intent and follows receipt/history into same-pair repair",
+      "project": "relation-migrations",
+      "file": "relation-migrations.spec.ts",
+      "line": 124,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 47200
+        }
+      ]
+    },
+    {
+      "title": "MOD: edits clear consent, concurrent reviews recover from stale execution, participation cursors and private receipt/history scope remain enforced",
+      "project": "relation-migrations",
+      "file": "relation-migrations.spec.ts",
+      "line": 194,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 53432
+        }
+      ]
+    },
+    {
+      "title": "DOM: visual type authoring, placement survives a real rescan, rename, lifecycle, move and retirement preserve asset identity",
+      "project": "business-domains",
+      "file": "business-domains.spec.ts",
+      "line": 25,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 65104
+        }
+      ]
+    },
+    {
+      "title": "DOM: compatible publication preserves mixed pins, complete migration handles retired domains and stale consent",
+      "project": "business-domains",
+      "file": "business-domains.spec.ts",
+      "line": 80,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 7815
+        }
+      ]
+    },
+    {
+      "title": "DOM: independent tenants and domain-read denial do not leak placements or trigger unauthorized convenience fetches",
+      "project": "business-domains",
+      "file": "business-domains.spec.ts",
+      "line": 92,
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 60735
+        }
+      ]
+    }
+  ],
+  "originalEvidence": {
+    "manifest": {
+      "path": ".local/evidence/business-domains-browser-full-attempt-1/manifest.json",
+      "sha256": "07bc1718043a9e5caf187a5102cd78f09d2daa55a43a5fb45391e034e1418783"
+    },
+    "archiveEntriesVerified": 29,
+    "archiveHashMismatches": 0,
+    "runReport": {
+      "path": ".local/evidence/business-domains-browser-full-20261116T034138.json",
+      "sha256": "7d3c823bd7ef022a873ac6ee856d450acc64276f974d69e4c63a36927b89a418",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/000-business-domains-browser-full-20261116T034138.json"
+    },
+    "rawPlaywrightReport": {
+      "path": ".local/evidence/business-domains-browser-full-20261116T034138-results.json",
+      "sha256": "a0eddbde7cd475ec5d25fa44c8e9fb0b5ec5297f77bae2e49172c743858446c5",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/001-business-domains-browser-full-20261116T034138-results.json"
+    },
+    "log": {
+      "path": ".local/evidence/business-domains-browser-full-20261116T034138.log",
+      "sha256": "64a9de5d6b05798bef336bf2932052cdbc3ea784ddb73494344219aa56984a81",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/002-business-domains-browser-full-20261116T034138.log"
+    },
+    "originalVisualReviewValue": "NOT_RUN",
+    "supplementPolicy": "Original execution report, raw results, log and screenshot files are preserved. This separate report supplements the original NOT_RUN visualReview field; it does not overwrite it."
+  },
+  "targetedReview": {
+    "path": "docs/verification/business-domains-ui-visual-review.json",
+    "sha256": "f56ec20ed95311396af058b4f4ddc67f005df0dabcbcb06e33f1b00fd17adfe1",
+    "unchanged": true,
+    "relationship": "The targeted review records earlier failed attempts, read-only source corrections and the separate attempt-6 pass. It remains byte-identical; this supplement adds the later complete browser execution and fresh image inspection."
+  },
+  "sourceBinding": {
+    "beforeEqualsAfter": true,
+    "equalsTargetedSnapshot": true,
+    "currentWorktreeHashMatches": 169,
+    "currentWorktreeHashMismatches": 0,
+    "sourceCount": 169,
+    "servedAssetCount": 27,
+    "images": {
+      "api": "sha256:b56f057bc8adf068b8541ff2cdef2dfda014c41ee8f63a8f98415d045f4d04ef",
+      "workflow-worker": "sha256:b56f057bc8adf068b8541ff2cdef2dfda014c41ee8f63a8f98415d045f4d04ef",
+      "site-runner": "sha256:b56f057bc8adf068b8541ff2cdef2dfda014c41ee8f63a8f98415d045f4d04ef"
+    },
+    "exactSourceAndServedAssetInventory": {
+      "evidence": {
+        "path": "docs/verification/business-domains-ui-visual-review.json",
+        "sha256": "f56ec20ed95311396af058b4f4ddc67f005df0dabcbcb06e33f1b00fd17adfe1"
+      },
+      "jsonPointer": "/sourceBinding/snapshot",
+      "alsoPresentIn": {
+        "path": ".local/evidence/business-domains-browser-full-20261116T034138.json",
+        "sha256": "7d3c823bd7ef022a873ac6ee856d450acc64276f974d69e4c63a36927b89a418",
+        "archive": ".local/evidence/business-domains-browser-full-attempt-1/000-business-domains-browser-full-20261116T034138.json"
+      }
+    },
+    "boundaryLimit": "The full run records exact runtime-image source and served-asset hashes before and after execution. All 169 source hashes were independently checked against the current worktree and the targeted snapshot. This static reviewer did not issue new runtime or HTTP requests; the dirty source is identified by these hashes, not the base commit alone."
+  },
+  "captureMethod": {
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 960
+      },
+      {
+        "width": 390,
+        "height": 960
+      }
+    ],
+    "fullPage": false,
+    "testSource": {
+      "path": "tests/e2e/business-domains.spec.ts",
+      "sha256": "8d6556f30510ba42eb2d7a537004060fbbf0b9f2714f3f09b8c26d31d25005f6"
+    },
+    "testSourceUnchangedFromTargetedReview": true,
+    "checksBeforeEachDomainCapture": [
+      "No finite-duration running page animations",
+      "document.documentElement.scrollWidth <= innerWidth + 1",
+      "axe WCAG 2 A/AA, 2.1 AA and 2.2 AA tagged checks return no violations"
+    ],
+    "basis": "The unchanged actual capture helper and all three domain journey results were checked. Each journey passed once at retry 0 and reached the captured states.",
+    "screenshotsReviewed": 26
+  },
+  "screenshots": [
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-hierarchy-preview-en-1440.png",
+      "sha256": "d0df36969e6735cb0bac368cc3609e207ec45107c112b1b51176e4345fd43e50",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/003-m2-business-domain-hierarchy-preview-en-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-hierarchy-preview-en-390.png",
+      "sha256": "efa37c6981d264889cdc2c21d3b1f074a937cbc518a2b49874047cf639b3dcf1",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/004-m2-business-domain-hierarchy-preview-en-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-history-ar-1440.png",
+      "sha256": "3611d94f7d27db20eb92926f7ea2ed3a0231039f2e8628f74ee7f120f2cf9251",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/005-m2-business-domain-history-ar-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-history-ar-390.png",
+      "sha256": "a212d565aa17d48fe4c60844c0f1735cd49e668df6e99c86b745df7431ee0d81",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/006-m2-business-domain-history-ar-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-history-ar-dark-1440.png",
+      "sha256": "e8da91c0b468e62272d87dda4c4bb12b6324b949e7b86787d553679173939fb1",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/007-m2-business-domain-history-ar-dark-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-history-ar-dark-390.png",
+      "sha256": "b6f1e7b9694b79e9ddd8251bd5c97bac924bbe6853f815c3dc7015e24c7da196",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/008-m2-business-domain-history-ar-dark-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-preview-ar-1440.png",
+      "sha256": "0ce2738a08c6803c09c4b725ac9ee5a8269252b5daa94fc380a0d3115068d695",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/009-m2-business-domain-migration-preview-ar-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-preview-ar-390.png",
+      "sha256": "95422cdee89ace6558fb800faea6219db42ae6572604735a99495edbada4ac9c",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/010-m2-business-domain-migration-preview-ar-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-preview-en-1440.png",
+      "sha256": "b729e43041f9810b481e971b110cf0014c6c895f7599a76d3396a8d9b851b90c",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/011-m2-business-domain-migration-preview-en-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-preview-en-390.png",
+      "sha256": "e4b90269f929329950c7a908266470d981f920e0a974e76d729d0ae5a2b27543",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/012-m2-business-domain-migration-preview-en-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-ar-1440.png",
+      "sha256": "b835299fb1b351fa6aec646caf3cf70f587eb6bf79e8c50d74326ed47d6b6876",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/013-m2-business-domain-migration-receipt-ar-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-ar-390.png",
+      "sha256": "c76d72bc34eb45836de15c25cb8336ae9bc446db508d5dd40d2a2ee30ef022d6",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/014-m2-business-domain-migration-receipt-ar-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-en-1440.png",
+      "sha256": "8f5d413944b1a188d1b8cec7ac13f93ef1cb01493548c1146410fb0abdf19f8a",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/015-m2-business-domain-migration-receipt-en-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-migration-receipt-en-390.png",
+      "sha256": "08f80e0ed12b480c749de01b6fccad720075e0bfbb1458cae1e5b3a812caf1d1",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/016-m2-business-domain-migration-receipt-en-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-permission-denial-en-1440.png",
+      "sha256": "fc6563e674bb54183ef53d791636d19dbd0bff771dd7056cffd12d8a4cee3504",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/017-m2-business-domain-permission-denial-en-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-permission-denial-en-390.png",
+      "sha256": "790d575b4862b18f01c0363ae5c5df9ec83449c6495cf26339f00edf4eb75b96",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/018-m2-business-domain-permission-denial-en-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-placement-history-en-1440.png",
+      "sha256": "145cc7605e42029cb1eafff1c2d12e07973bf472b8fbf4be489bbd0697d74f6b",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/019-m2-business-domain-placement-history-en-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-placement-history-en-390.png",
+      "sha256": "499eab7108082abd947c612c11dd1d672f139db67e0dc47c207e3d046a0f53d7",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/020-m2-business-domain-placement-history-en-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-retirement-blocked-en-1440.png",
+      "sha256": "f9b1c5cae551a834e37b6c52c0ea6dc752c3c5e7d2f5249139efe6a16bd25dc0",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/021-m2-business-domain-retirement-blocked-en-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-retirement-blocked-en-390.png",
+      "sha256": "fc72a58bb43b4b2795179cfd8820e667115f21b586701c98837b886ad4e06ba7",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/022-m2-business-domain-retirement-blocked-en-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-stale-migration-en-1440.png",
+      "sha256": "fcbab6d9dc9d95bbb24512d8a3e098105e7adc4e9ab22d10438dbc0fc47ca35c",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/023-m2-business-domain-stale-migration-en-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-stale-migration-en-390.png",
+      "sha256": "7b842c56a24061213d99d8d61b3c501f1ebbc6b731fcdbec9bdb5c1526253cc4",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/024-m2-business-domain-stale-migration-en-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-tenant-denial-en-1440.png",
+      "sha256": "70ff6a498d69d52b5d3587073c4d3178b48b50dd10a9326320b35e1c4becb100",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/025-m2-business-domain-tenant-denial-en-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-tenant-denial-en-390.png",
+      "sha256": "c6b028a63f1cb410d924a8b506168100fdade9d6a1f20915e7e2d2d0b4c692a7",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/026-m2-business-domain-tenant-denial-en-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-type-editor-en-1440.png",
+      "sha256": "75b8aeec48266e7083df19ecc94246d5aab0fa8a852d657f825613959df1309a",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/027-m2-business-domain-type-editor-en-1440.png",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    },
+    {
+      "path": "docs/verification/screenshots/m2-business-domain-type-editor-en-390.png",
+      "sha256": "bcd6c4cd3c3eb382b749f792efb013c42397b3dc6e37e7650ccc7bfd4092142f",
+      "archive": ".local/evidence/business-domains-browser-full-attempt-1/028-m2-business-domain-type-editor-en-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      },
+      "reviewMethod": "Direct inspection of this exact full-run archived PNG with view_image",
+      "finding": "No concrete visual blocker observed within the captured viewport."
+    }
+  ],
+  "observations": [
+    {
+      "screens": "hierarchy-preview-en, 1440 and 390",
+      "observation": "The complete affected-subtree notice, separate domain and asset tables, consent checkbox, inactive confirmation action and wrapped digest remain readable. The narrow viewport shows the initial portion of bounded tables; later columns require horizontal scrolling."
+    },
+    {
+      "screens": "history-ar and history-ar-dark, 1440 and 390",
+      "observation": "The RTL shell, hierarchy links, title, status, history tabs and restored revision are legible in both themes. Long synthetic names wrap on the phone viewport. The selected tab has a visible underline; dark-mode buttons use the surrounding theme rather than a contrasting native fill."
+    },
+    {
+      "screens": "migration-preview-en and migration-preview-ar, 1440 and 390",
+      "observation": "The complete two-domain cohort, ready-for-review notice, current/projected tuple disclosures, consent and execute controls have a clear visual hierarchy. RTL reverses the layout and table start edge; hashes wrap within the phone card. Some table columns are outside the static narrow viewport."
+    },
+    {
+      "screens": "migration-receipt-en and migration-receipt-ar, 1440 and 390",
+      "observation": "The committed-evidence notice, export control, actor, timestamp, digest and outcome table are readable. Receipt metadata wraps within the phone viewport. Desktop shows both outcome versions; phone images show only the initial table segment and top rows."
+    },
+    {
+      "screens": "permission-denial-en and tenant-denial-en, 1440 and 390",
+      "observation": "Permission denial uses a generic message without domain contents. Tenant denial shows the generic unavailable-resource message, error code, wrapped correlation reference and refresh action without exposing the requested resource."
+    },
+    {
+      "screens": "placement-history-en, 1440 and 390",
+      "observation": "The unassigned current placement and independent placement version are clear, with immutable placement history, reason and disclosure controls below. The phone capture includes the current revision and start of the prior revision; further history remains below the viewport."
+    },
+    {
+      "screens": "retirement-blocked-en, 1440 and 390",
+      "observation": "The blocked-operation notice explains that placements and active children must be removed. Preview tables remain contained, and consent/confirmation are inactive. Phone content fits the page width."
+    },
+    {
+      "screens": "stale-migration-en, 1440 and 390",
+      "observation": "The retained draft/reason, stale-scope problem notice, wrapped reference and refresh/preview controls remain visible and readable. JSON action buttons wrap their text within the phone viewport."
+    },
+    {
+      "screens": "type-editor-en, 1440 and 390",
+      "observation": "The visual/JSON editor tabs, type key/label, exact parent pin and nested parent picker fit the viewport. The phone search input displays the visible portion of a longer editable value within its own control; no page-wide overflow is visible."
+    },
+    {
+      "screens": "type-editor-en at 1440",
+      "observation": "This full-run viewport starts partway through the top application bar while the domain type form and parent picker are visible. The image is a viewport capture, so no claim is made that the entire header or complete authoring form was visually reviewed in this frame."
+    }
+  ],
+  "observationProvenance": "Every listed full-run PNG was directly displayed and inspected. The same layout observations as the targeted review were reaffirmed against these new bytes, rather than inferred from matching source alone.",
+  "sourceReviewContinuity": {
+    "evidence": {
+      "path": "docs/verification/business-domains-ui-visual-review.json",
+      "sha256": "f56ec20ed95311396af058b4f4ddc67f005df0dabcbcb06e33f1b00fd17adfe1"
+    },
+    "jsonPointer": "/sourceReview",
+    "reviewedFilesUnchanged": true,
+    "qualification": "The five already reviewed UI source files retain exactly the targeted hashes. No source edits were made for this archive or review."
+  },
+  "preservation": {
+    "newArchiveDirectory": ".local/evidence/business-domains-browser-full-attempt-1",
+    "copiedFiles": 29,
+    "copyMode": "Exclusive creation of new archive files; verified SHA-256 equality before/after copying. Originals untouched.",
+    "reportedHistoricalScreenshotRestorationCount": 116,
+    "freshHistoricalManifest": ".local/evidence/business-domains-browser-full-20261116T034138-regression/manifest.json",
+    "historicalVisualReview": "NOT_RUN_BY_THIS_REVIEWER; non-domain screenshots generated by the full suite are outside this supplement."
+  },
+  "otherGates": {
+    "full19LocalBrowser": "PASS_ON_RECORDED_SOURCE",
+    "hostedCI": "NOT_QUALIFIED_BY_THIS_REVIEW",
+    "humanKeyboardAndScreenReaderReview": "NOT_RUN",
+    "professionalArabicTranslationReview": "NOT_RUN",
+    "releaseReadiness": "OPEN; the complete governing specification remains the target"
+  },
+  "limitations": [
+    "All image observations are limited to the captured 1440×960 and 390×960 domain viewports. This supplement does not add domain inspection at 1280, 1024 or 768 pixels, 200% zoom, enlarged system fonts or physical mobile hardware.",
+    "Wide tables remain within bounded containers, but the static narrow screenshots show only initial columns. They do not prove horizontal scrolling, access to every offscreen field, all expanded details or all below-fold content.",
+    "Automated axe checks and actual workflow assertions provide bounded browser evidence. They do not replace manual keyboard, screen-reader or assistive-technology review, and no human accessibility approval is asserted.",
+    "Arabic RTL layout and visible rendering were inspected; the translation-review-pending banner remains accurate. No professional linguistic or cultural review is asserted.",
+    "The full automated execution passes 19 distinct journeys, but this visual supplement inspects only the 26 domain captures. It does not claim visual review of the other journeys or of the 116 preserved historical screenshots.",
+    "The reviewer executed no Docker, browser, API, scanner, build or mutation commands. Execution claims come from the preserved root-run report and raw results.",
+    "The previous targeted report and all historical failures remain unchanged. This later pass does not relabel earlier failures or close broader product, external-integration, hosted or release gates."
+  ]
+}

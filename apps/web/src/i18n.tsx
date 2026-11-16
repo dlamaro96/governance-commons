@@ -9,6 +9,7 @@ import { typeMigrationEn, typeMigrationAr } from './assetTypes/migrationMessages
 import { relationEn, relationAr } from './relations/messages';
 
 const en = {
+  businessDomains: 'Business domains',
   ...modelEn, ...migrationEn, ...planEn, ...assetTypeEn, ...typeMigrationEn, ...relationEn,
   product: 'Governance Commons', tagline: 'A shared understanding of your data.',
   home: 'Overview', catalog: 'Data catalog', sources: 'Sources & scans', audit: 'Audit history',
@@ -106,6 +107,7 @@ const en = {
 } as const;
 export type MessageKey = keyof typeof en;
 const ar: Record<MessageKey, string> = {
+  businessDomains: 'نطاقات الأعمال',
   ...modelAr, ...migrationAr, ...planAr, ...assetTypeAr, ...typeMigrationAr, ...relationAr,
   product: 'Governance Commons', tagline: 'فهم مشترك لبياناتك.',
   home: 'نظرة عامة', catalog: 'كتالوج البيانات', sources: 'المصادر وعمليات المسح', audit: 'سجل التدقيق',

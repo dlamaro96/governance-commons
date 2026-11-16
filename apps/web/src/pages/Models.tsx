@@ -22,7 +22,7 @@ function exportDefinition(definition: ModelDefinition) {
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 export function ModelsPage() {
-  const { t, date, number } = useLocale();
+  const { t, date, number, locale } = useLocale();
   const resource = useModelBrowser();
   const canWrite = usePermission('models:write');
   const columns: ColumnDef<ModelSummary>[] = [
@@ -30,7 +30,7 @@ export function ModelsPage() {
     { accessorKey: 'currentVersion', header: t('currentVersion'), cell: ({ row }) => number(row.original.currentVersion) },
     { accessorKey: 'createdAt', header: t('createdAt'), cell: ({ row }) => date(row.original.createdAt) },
   ];
-  return <><EntityHeader eyebrow={t('operate')} title={t('models')} description={t('modelsDescription')} actions={<><Link className="button secondary" href="/relation-types">{t('relationTypes')}</Link><Link className="button secondary" href="/asset-types">{t('assetTypes')}</Link>{canWrite && <Link className="button primary" href="/models/new/definition"><Plus size={17}/>{t('newModel')}</Link>}</>}/><ModelBrowserControls browser={resource}/>{resource.error ? <RequestError error={resource.error} retry={resource.reload}/> : resource.loading ? <LoadingState label={t('loading')}/> : <section className="panel"><DataGrid caption={t('models')} columns={columns} data={resource.items} empty={<EmptyState icon={<GitBranch size={28}/>} title={t(resource.appliedQuery ? 'noMatchingModels' : 'noModels')} description={t(resource.appliedQuery ? 'noMatchesBody' : 'noModelsBody')} action={canWrite ? <Link className="button secondary" href="/models/new/definition">{t('newModel')}</Link> : undefined}/>}/></section>}<p className="supporting-text">{t('modelLimit')}</p><p className="supporting-text">{t('modelScopeLimit')}</p></>;
+  return <><EntityHeader eyebrow={t('operate')} title={t('models')} description={t('modelsDescription')} actions={<><Link className="button secondary" href="/domain-types">{locale === 'ar' ? 'أنواع النطاقات' : 'Domain types'}</Link><Link className="button secondary" href="/relation-types">{t('relationTypes')}</Link><Link className="button secondary" href="/asset-types">{t('assetTypes')}</Link>{canWrite && <Link className="button primary" href="/models/new/definition"><Plus size={17}/>{t('newModel')}</Link>}</>}/><ModelBrowserControls browser={resource}/>{resource.error ? <RequestError error={resource.error} retry={resource.reload}/> : resource.loading ? <LoadingState label={t('loading')}/> : <section className="panel"><DataGrid caption={t('models')} columns={columns} data={resource.items} empty={<EmptyState icon={<GitBranch size={28}/>} title={t(resource.appliedQuery ? 'noMatchingModels' : 'noModels')} description={t(resource.appliedQuery ? 'noMatchesBody' : 'noModelsBody')} action={canWrite ? <Link className="button secondary" href="/models/new/definition">{t('newModel')}</Link> : undefined}/>}/></section>}<p className="supporting-text">{t('modelLimit')}</p><p className="supporting-text">{t('modelScopeLimit')}</p></>;
 }
 export function ModelPage({ id }: { id: string }) {
   const { t, number, date } = useLocale();

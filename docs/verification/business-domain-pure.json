@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-16T00:06:46.248295+00:00",
+  "result": "PASS",
+  "scope": "Isolated pure business-domain definition parsing/resolution and complete supplied domain-type migration projection; no runtime implementation or qualification.",
+  "implementation_status": "IN_PROGRESS_PURE_LAYER_ONLY",
+  "verification_status": "PASS_FOR_RECORDED_PURE_SCOPE",
+  "release_qualification": "NOT_RUN",
+  "base_commit": "d3bf25ba86d31d84534bb78249c3e5168ec43fdf",
+  "working_tree_dirty_at_execution": true,
+  "execution": {
+    "started_at": "2026-11-15T23:55:41.239018+00:00",
+    "completed_at": "2026-11-15T23:55:42.383028+00:00",
+    "node": "v24.22.3",
+    "tests": 144,
+    "passed": 144,
+    "failed": 0,
+    "typescript": "PASS",
+    "whitespace": "PASS",
+    "source_unchanged": true
+  },
+  "commands": {
+    "pure": "node --import tsx --test tests/unit/*.test.ts",
+    "types": "node node_modules/typescript/bin/tsc --noEmit",
+    "whitespace": "git diff --check; new files checked separately"
+  },
+  "sources": [
+    {
+      "path": "packages/domain/src/business-domain-contracts.ts",
+      "sha256": "b43ecced92ec6dd20392afc06a4f8e466819d98148e2b4bbce39ed91ec56edf1"
+    },
+    {
+      "path": "packages/domain/src/business-domain-type.ts",
+      "sha256": "19c4a82916ba81f5d236c3e46e1edad94e7b747f68643556a6f98af53677885e"
+    },
+    {
+      "path": "packages/domain/src/business-domain-migration.ts",
+      "sha256": "ca5396dc13234e6aa5be9f4087c3cad5bcbea2f05bcd88bb8873f70881972d99"
+    },
+    {
+      "path": "packages/domain/src/model.ts",
+      "sha256": "ebf90e8d24a0cf969d0ebe3c915d5b5113574d354a6e5963d5bc9cd285bc79ad"
+    },
+    {
+      "path": "packages/domain/src/model-migration.ts",
+      "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+    },
+    {
+      "path": "tests/unit/business-domain-type.test.ts",
+      "sha256": "10a686992de6eeb1e1f54d8890daf007b30dc62e6f6c1ddccc87bc189c00d472"
+    },
+    {
+      "path": "tests/unit/business-domain-migration.test.ts",
+      "sha256": "481421685ecb27272980e3a29034b170d060bac808476314358c341706d2bede"
+    },
+    {
+      "path": "tests/unit/model-migration.test.ts",
+      "sha256": "dc6c42b66be1d6ff5215e9ae096682376be0e41d999f73c86f3fc2250ba658b0"
+    },
+    {
+      "path": "docs/execution/BUSINESS_DOMAINS.md",
+      "sha256": "579eab9854886cb13379c94184524ba50027794f61ae42ee28a63bf5baaf7edb"
+    },
+    {
+      "path": "docs/adr/0009-business-domains-and-placement.md",
+      "sha256": "4d602e5147bbd3431af42f07b40b572eb46cd85ae05d11f34ba8b81e2fc052d7"
+    },
+    {
+      "path": "packages/domain/src/asset-type.ts",
+      "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "f52a77d911d79639e73409feadd560a444663c38513dc0b1e67cbd6d78408875"
+    }
+  ],
+  "original_evidence": {
+    "path": ".local/evidence/business-domain-migration-20261116/source-evidence.json",
+    "sha256": "e96e2124fe35d43bc1f2f1a85dfb8226734b661d4b43db24ba6048bb86495cf9"
+  },
+  "logs": [
+    {
+      "path": ".local/evidence/business-domain-migration-20261116/full-unit.log",
+      "sha256": "49870bf270a24092bfc1ae28d7228311329969efa71b506a98245f6080dd2ce0"
+    },
+    {
+      "path": ".local/evidence/business-domain-migration-20261116/typescript.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".local/evidence/business-domain-migration-20261116/tracked-whitespace.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "review": {
+    "kind": "independent_agent_read_only_review",
+    "outcome": "NO_CONCRETE_BLOCKER_FOUND",
+    "test_rerun": false,
+    "scope": "Historical closures, DTOs, actual transformations, policy acknowledgements, immutable outcomes, strict parsing and aggregate bounds. All12 recorded source hashes matched.",
+    "qualification": "Not independent human review or runtime qualification."
+  },
+  "limitations": [
+    "The service must prove complete authorized locked cohort, actual historical revisions and source hashes; supplied pure DTOs confer no authority.",
+    "SQL011, database constraints/claims/journals/replay/deadlines, API, UI and real-service qualification are not implemented by these modules.",
+    "Failed attribute transformation or missing attribute acknowledgement returns no proposed tuple; policy-only invalid drafts may contain actual computable tuples and cannot execute.",
+    "The isolated base predates required participation; integration into the current main implementation requires fresh affected source qualification.",
+    "Original earlier pure report and later narrow shared-copy changes remain distinct in ignored evidence."
+  ]
+}

@@ -21,5 +21,6 @@ export default defineConfig({
     { name: 'asset-type-migrations', testMatch: /asset-type-migrations\.spec\.ts/, dependencies: ['asset-types'] },
     { name: 'relations', testMatch: /relations\.spec\.ts/, dependencies: ['asset-type-migrations'] },
     { name: 'relation-migrations', testMatch: /relation-migrations\.spec\.ts/, dependencies: ['relations'] },
+    { name: 'business-domains', testMatch: /business-domains\.spec\.ts/, dependencies: ['relation-migrations'] },
   ],
 });

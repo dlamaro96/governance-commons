@@ -103,7 +103,7 @@ def main():
   ./dev doctor                        Verify local Docker, capacity and ports (JSON)
   ./dev bootstrap                     Generate/preserve random local secrets
   ./dev up --profile core             Build and start real core dependencies and app
-  ./dev seed --dataset harbor-demo    Seed two tenants and six synthetic personas
+  ./dev seed --dataset harbor-demo    Seed two tenants, six personas and typed domain trees
   ./dev status                        Show project service status
   ./dev test --suite smoke            Run locally configured smoke acceptance gate
   ./dev test --suite security         Run locally configured isolation gate
@@ -113,6 +113,8 @@ def main():
   ./dev test --suite type-migration-upgrade Verify complete typed receipts and principal locking
   ./dev test --suite relations-upgrade Verify asserted relation storage and concurrency
   ./dev test --suite relation-participation-upgrade Verify complete graph operations and required participation
+  ./dev test --suite business-domains-upgrade Verify typed domain storage, hierarchy, placement and concurrency
+  ./dev test --suite business-domain-seed Verify domain seed recovery, provenance and repeatability
   ./dev test --suite relation-preparation-expiry Verify the original fifteen-minute lease and committed retries
   ./dev test --suite connectors       Run Python contract/source tests
   ./dev test --suite recovery         Verify repeated seed and persistent restart
@@ -181,6 +183,10 @@ Never use docker compose config output in public logs: it expands secrets.""")
             run([sys.executable, "scripts/runtime-test-relations-upgrade.py"], timeout=900)
         elif args.suite == "relation-participation-upgrade":
             run([sys.executable, "scripts/runtime-test-relation-participation-upgrade.py"], timeout=900)
+        elif args.suite == "business-domains-upgrade":
+            run([sys.executable, "scripts/runtime-test-business-domains-upgrade.py"], timeout=900)
+        elif args.suite == "business-domain-seed":
+            run([sys.executable, "scripts/runtime-test-business-domain-seed.py", "--run-core"], timeout=900)
         elif args.suite == "relation-preparation-expiry":
             # The test observes the original database deadline; it never shortens
             # the lease. Its own 22-minute bound expires before this outer bound.

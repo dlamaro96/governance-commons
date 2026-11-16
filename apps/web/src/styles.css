@@ -177,9 +177,10 @@ p { margin-bottom: 12px; }
 .entity-summary { display: flex; align-items: center; flex-wrap: wrap; gap: 9px 24px; margin-top: 18px; font-size: 11px; color: var(--text-secondary); }
 .entity-summary strong { font-weight: 550; color: var(--text); }
 .entity-tabs { display: flex; gap: 28px; border-bottom: 1px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
-.entity-tabs a { position: relative; padding: 0 1px 13px; color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
-.entity-tabs a.active { color: var(--accent); font-weight: 650; }
-.entity-tabs a.active::after { content: ''; height: 2px; position: absolute; bottom: 0; inset-inline: 0; background: var(--accent); }
+.entity-tabs button { background: transparent; border: 0; border-radius: 0; flex-shrink: 0; }
+.entity-tabs a, .entity-tabs button { position: relative; padding: 0 1px 13px; color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
+.entity-tabs a.active, .entity-tabs button.active { color: var(--accent); font-weight: 650; }
+.entity-tabs a.active::after, .entity-tabs button.active::after { content: ''; height: 2px; position: absolute; bottom: 0; inset-inline: 0; background: var(--accent); }
 .asset-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; }
 .description-text { line-height: 1.8; font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .ownership-person { display: flex; gap: 12px; align-items: center; }
@@ -377,7 +378,7 @@ p { margin-bottom: 12px; }
   .empty-state p { font-size: 12px; }
   .entity-summary { gap: 10px 16px; font-size: 10px; }
   .entity-tabs { gap: 24px; margin-bottom: 20px; }
-  .entity-tabs a { font-size: 12px; }
+  .entity-tabs a, .entity-tabs button { font-size: 12px; }
   .asset-layout { gap: 0; }
   .asset-layout > div:last-child { display: block; }
   .coverage-note { padding: 0 4px 15px; }
@@ -702,3 +703,29 @@ p { margin-bottom: 12px; }
   .graph-operation-fields .form-actions > .button { inline-size: 100%; }
   .graph-plan-editor .connection-fields { padding-inline: .75rem; }
 }
+
+/* Business-domain workflows retain bounded local scrolling within wide evidence. */
+.domain-workbench { max-inline-size: 80rem; min-inline-size: 0; }
+.domain-form-fields { border: 0; padding: 0; margin: 0; min-inline-size: 0; display: grid; gap: 1.25rem; }
+.domain-form-fields > *, .domain-workbench > *, .domain-detail-layout > *, .domain-definition-editor > *, .domain-placement { min-inline-size: 0; }
+.domain-detail-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.domain-row-identity { display: block; font-weight: 400; overflow-wrap: anywhere; font-size: .75rem; margin-block-start: .35rem; }
+.domain-pin-row { display: flex; gap: .75rem; flex-wrap: wrap; justify-content: space-between; align-items: center; }
+.domain-pin-row > a { min-inline-size: 0; }
+.domain-breadcrumb { display: flex; flex-wrap: wrap; gap: .75rem; margin-block: 1rem; }
+.domain-breadcrumb a { display: grid; gap: .25rem; max-inline-size: 100%; padding-inline-start: .65rem; border-inline-start: 2px solid var(--border); overflow-wrap: anywhere; }
+.domain-breadcrumb small { font-size: .7rem; }
+.domain-evidence { max-inline-size: 100%; min-inline-size: 0; }
+.domain-evidence summary, .domain-definition-editor details > summary { min-block-size: 44px; padding-block: .65rem; cursor: pointer; overflow-wrap: anywhere; }
+.domain-evidence .code-block { max-inline-size: 100%; overflow: auto; }
+.domain-history-row { padding-block: 1rem; border-block-end: 1px solid var(--border); min-inline-size: 0; }
+.domain-file-label { position: relative; overflow: hidden; }
+.domain-file-label input { position: absolute; inset: 0; opacity: 0; inline-size: 100%; cursor: pointer; }
+.domain-file-label:focus-within { outline: 2px solid var(--accent); outline-offset: 3px; }
+.domain-workbench .form-row, .domain-workbench select, .domain-placement select { min-inline-size: 0; max-inline-size: 100%; }
+.domain-workbench fieldset, .domain-placement fieldset { min-inline-size: 0; max-inline-size: 100%; }
+.domain-workbench legend, .domain-placement legend { max-inline-size: 100%; overflow-wrap: anywhere; }
+.domain-workbench .json-editor { inline-size: 100%; font-family: var(--font-mono, monospace); }
+.domain-preview .table-scroll, .domain-hierarchy-preview .table-scroll { position: relative; max-inline-size: 100%; }
+@media (max-width: 900px) { .domain-detail-layout { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) { .domain-workbench .form-row { grid-template-columns: minmax(0, 1fr); } .domain-breadcrumb { flex-direction: column; } .domain-workbench .model-publication-actions > *, .domain-placement .model-publication-actions > * { max-inline-size: 100%; white-space: normal; } }
