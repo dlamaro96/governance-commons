@@ -1,5 +1,11 @@
 # Current state — 2026-11-16
 
+## Product integration checkpoint — 2026-11-16T13:17Z
+
+Product implementation remains the priority; private reports, cost estimates and presentation work are deferred. SQL001–014 are now applied to shared core and immutable. SQL013 canonical authority storage remains inactive for content authorization. Unity Catalog metadata registration/worker execution, Microsoft Entra protected-broker configuration, source search/pagination and slimmer runtime images are integrated development work; external vendor qualification and complete capability coverage remain open.
+
+The integrated host suite passes532 tests plus root/web type checks. The isolated SQL013→014 upgrade and restart gate passes repeated preparation and13 hostile-object/ledger refusals, with unchanged canonical/history data and exact cleanup. The first rebuilt core passes95 Python cases, real PostgreSQL metadata conformance and3 source API cases. Browser acceptance discovered an invalid-source error-code defect; that correction and reviewed pagination fixes await the new image and real browser rerun. Full API/browser, immutable protected-login and fresh hosted CI qualification remain pending for this integrated revision. Earlier failed attempts remain retained. This checkpoint makes no whole-requirement or release claim.
+
 ## Product implementation checkpoint — 2026-11-16T12:10Z
 
 The isolated protected-login correction passes15 native HTTP cases and2 real Keycloak browser journeys with zero skipped/failed cases and exact resource cleanup. Root inspected all8 fresh English/Arabic desktop/mobile captures. A root CHOWN-only helper prepares the private volume; the host-UID helper copies bounded configuration through sensitive stdin with no capabilities. This fixes a Linux file-permission defect without widening credential-file access. The closed publisher revalidated132 source files; see `../verification/protected-authentication-local-attempt-11.json`. Scoped host controls pass10 bootstrap,4 image,24 publisher and65 collector cases. Publication/requirement checks and tree/history secret scans pass. Fresh hosted CI remains required before merge.

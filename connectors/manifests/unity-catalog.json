@@ -1,0 +1,212 @@
+{
+  "connector_id": "unity-catalog",
+  "version": "0.1.0",
+  "source_versions": [],
+  "license": "Apache-2.0",
+  "dependencies": [],
+  "execution_location": "tenant-assigned local Python execution worker",
+  "authentication_methods": [
+    "OAuth M2M via tenant-bound local secret reference",
+    "Explicit access token via tenant-bound local secret reference"
+  ],
+  "required_permissions": [
+    "USE CATALOG selected catalog",
+    "USE SCHEMA selected schema",
+    "Metadata visibility for selected tables and columns"
+  ],
+  "tenant_scope": "secret reference binds tenant IDs and exact destination",
+  "region_scope": "execution site network",
+  "network_destinations": [
+    "Exact operator-registered public Databricks HTTPS workspace origin; redirects and private or special IP answers denied"
+  ],
+  "source_identity_rules": "Tables: metastore UUID plus table UUID. Schema: metastore, namespace and creation time; rename cannot be inferred. Columns: table identity plus column name; rename cannot be inferred. No absence reconciliation.",
+  "supported_asset_types": [
+    "schema",
+    "table",
+    "view",
+    "column"
+  ],
+  "pagination": "Unity Catalog REST2.1 max_results=0, follows opaque next_page_token across empty intermediate pages; repeated tokens,200 pages,10000 normalized records,8MiB or90s bound fail the entire scan.",
+  "incremental_cursor_behavior": "No persistent cursor; bounded permission-filtered listing only.",
+  "rate_limits": {
+    "concurrent_scans_per_site": 1,
+    "scan_wall_limit_s": 90,
+    "http_timeout_s": 10,
+    "oauth_wall_limit_s": 20
+  },
+  "retry_classes": [
+    "Explicit source HTTP, rate-limit, permission and transport codes; no auth-bearing redirects or automatic write retries."
+  ],
+  "deletion_strategy": "Disabled unconditionally for this connector. Permission-filtered listings do not establish absence, even when the principal and scope are unchanged.",
+  "features": {
+    "metadata": {
+      "implemented": true,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "Single selected catalog/schema metadata route; no source data rows or source-authored SQL.",
+        "Public workspace endpoints only; private-link and other network deployment profiles are not implemented.",
+        "Lists are permission-filtered and not an atomic metadata snapshot; no missing-asset reconciliation is authorized.",
+        "Column/schema renames lack immutable IDs and require explicit future reconciliation."
+      ],
+      "test_evidence": []
+    },
+    "table_lineage": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "column_lineage": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "transformations": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "profile": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "sample": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "dq_pushdown": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "classification": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "tag_writeback": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "grant_read": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "grant_write": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "mask_write": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "row_filter_write": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "ai_registry": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "ai_metrics": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "document_content": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    },
+    "acl_sync": {
+      "implemented": false,
+      "tested_source_versions": [],
+      "verification_level": null,
+      "limitations": [
+        "This connector feature is not implemented or qualified."
+      ],
+      "test_evidence": []
+    }
+  },
+  "implementation_status": "partial",
+  "verification_level": null,
+  "configuration_status": "deployment-specific",
+  "runtime_health": "deployment-specific",
+  "limitations": [
+    "Single selected catalog/schema metadata route; no source data rows or source-authored SQL.",
+    "Public workspace endpoints only; private-link and other network deployment profiles are not implemented.",
+    "Lineage, registry/AI metadata, tag writeback and native access management remain required and are not implemented by this increment.",
+    "Lists are permission-filtered and not an atomic metadata snapshot; no missing-asset reconciliation is authorized.",
+    "Column/schema renames lack immutable IDs and require explicit future reconciliation."
+  ],
+  "manifest_version": "1.0",
+  "verification_scope": "Not yet qualified end to end. Fixture and transport tests are separately executed; live workspace qualification is required."
+}

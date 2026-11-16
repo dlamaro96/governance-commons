@@ -90,6 +90,8 @@ def fixture(root):
     batch,receipt_hashes=installation_fixture()
     plan=write('installation/plan.json',batch)
     sources=evidence.source_inventory(root);hashes={r['path']:r['sha256'] for r in sources}
+    ledger=[{'name':n,'checksum':hashes['packages/db/migrations/'+n],'applied_at':'2026-11-16T10:00:00.500000+00:00'} for n in evidence.MIGRATIONS]
+    migration_ledger={phase:write('migrations-'+phase+'.json',json.dumps(ledger)) for phase in ('before','after')}
     app='sha256:'+'d'*64
     runtime={'node':'v24.22.3','pg':'8.23.1','jose':'6.2.17','tsx':package['devDependencies']['tsx'],'packageSha256':hashes['package.json'],'lockSha256':hashes['pnpm-lock.yaml']}
     report={'schema_version':1,'result':'PASS','started_at':'2026-11-16T10:00:00+00:00','recorded_at':'2026-11-16T10:00:10+00:00',
@@ -98,6 +100,7 @@ def fixture(root):
         'dockerVersion':'29.0.2','composeVersion':'v2.40.0','hostNode':{'path':'/PRIVATE_SYNTHETIC/node','version':'v24.22.3'},'browserVersion':'Chromium 141.0.7000.0',
         'images':{'application':app,image_refs[0]:'sha256:'+'e'*64,image_refs[1]:'sha256:'+'f'*64},
         'migrations':[{'name':n,'sha256':hashes['packages/db/migrations/'+n]} for n in evidence.MIGRATIONS],
+        'migrationLedger':migration_ledger,
         'installation':{'operations':13,'exactReplay':True,'renewed':False,'privatePlanSha256':plan['sha256'],'manifestHashes':receipt_hashes},
         'keycloakReadback':readback,'nativeHttp':{'tests':2,'pass':2,'fail':0,'cancelled':0,'skipped':0,'todo':0,'duration_ms':1.5},
         'servedAssets':{k:v['sha256'] for k,v in served.items()},'servedAssetFiles':served,'runtime':runtime,'browser':stats,'captures':captures,'sourceUnchanged':True,
@@ -216,9 +219,46 @@ class ProtectedEvidenceTests(unittest.TestCase):
         (self.root/'packages/authn/new.ts').write_text('new source')
         self.assertIsNone(self.validate())
 
-    def test_exact_twelve_migration_checksums_required(self):
-        for mutate in (lambda r:r['migrations'].pop(),lambda r:r['migrations'][0].update(sha256='0'*64),lambda r:r['migrations'].append(r['migrations'][0])):
+    def test_exact_fourteen_migration_checksums_required(self):
+        self.assertEqual(len(evidence.MIGRATIONS),14)
+        self.assertEqual(evidence.MIGRATIONS[-2:],('013_authority_foundation.sql','014_source_connectors.sql'))
+        for mutate in (lambda r:r['migrations'].pop(),lambda r:r.update(migrations=r['migrations'][:12]),
+                       lambda r:r['migrations'][0].update(sha256='0'*64),lambda r:r['migrations'][12].update(sha256='0'*64),
+                       lambda r:r['migrations'][13].update(name='014_other.sql'),lambda r:r['migrations'].append(r['migrations'][0]),
+                       lambda r:r['migrations'].reverse()):
             r=copy.deepcopy(self.report);mutate(r);self.assertIsNone(self.validate(r))
+
+    def test_extra_missing_changed_or_symlink_migration_cannot_escape_source_binding(self):
+        folder=self.root/'packages/db/migrations'
+        later=folder/'015_unadopted.sql';later.write_text('-- Unreviewed migration\n')
+        self.assertIsNone(self.validate());later.unlink()
+        for name in evidence.MIGRATIONS[-2:]:
+            path=folder/name;original=path.read_bytes();path.unlink()
+            self.assertIsNone(self.validate())
+            path.write_bytes(original+b'-- Changed\n');self.assertIsNone(self.validate());path.unlink()
+            path.symlink_to(folder/evidence.MIGRATIONS[0]);self.assertIsNone(self.validate());path.unlink()
+            path.write_bytes(original)
+        self.assertIsNotNone(self.validate())
+
+    def test_full_ledger_missing_tampered_reordered_stale_or_changed_rows_refuse(self):
+        path=self.root/self.report['migrationLedger']['after']['path'];original=path.read_bytes()
+        original_ref=copy.deepcopy(self.report['migrationLedger'])
+        changes=(lambda rows:rows.pop(),lambda rows:rows.reverse(),lambda rows:rows.append(rows[0]),
+                 lambda rows:rows[-1].update(checksum='0'*64),lambda rows:rows[-1].update(extra='PRIVATE_SYNTHETIC'),
+                 lambda rows:rows[-1].update(applied_at='2026-11-16T10:00:00.750000+00:00'),
+                 lambda rows:rows[-1].update(applied_at='2025-11-16T10:00:00+00:00'))
+        for change in changes:
+            self.alter(self.report['migrationLedger']['after'],lambda rows: (change(rows),None)[1])
+            self.assertIsNone(self.validate());path.write_bytes(original)
+            self.report['migrationLedger']=copy.deepcopy(original_ref)
+        path.unlink();self.assertIsNone(self.validate());path.write_bytes(original)
+        self.assertIsNotNone(self.validate())
+
+    def test_ledger_projection_exports_only_counts_and_digests(self):
+        result=self.validate();self.assertIsNotNone(result)
+        self.assertEqual(result['migration_ledger'],{'rows':14,'unchanged':True,
+            'digests':{k:v['sha256'] for k,v in self.report['migrationLedger'].items()}})
+        self.assertNotIn('applied_at',json.dumps(result));self.assertNotIn('migrations-before.json',json.dumps(result))
 
     def test_tap_filtered_duplicate_unknown_skip_and_forged_totals_rejected(self):
         raw=(self.root/self.report['testLogs']['nativeHttp']['path']).read_text()

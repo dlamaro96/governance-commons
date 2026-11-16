@@ -27905,8 +27905,15 @@
         "Implement UC metadata, system-table lineage, model/agent registry where supported, declared outbound metadata/tag synchronization and source access-management capabilities. Writes are opt-in and require explicit operator configuration/authorization, exact diffs and read-back. Mandatory adapter implementation is separate from optional runtime activation. Test metadata, lineage and mutation permissions separately."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "connectors/manifests/unity-catalog.json",
+        "packages/connectors",
+        "python/governance_workers/unity_catalog.py",
+        "python/governance_workers/oauth.py",
+        "python/governance_workers/secrets.py",
+        "apps/web/src/pages/Sources.tsx"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -27935,8 +27942,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Read-only metadata, credential handling and source registration are implemented in a development increment. System-table lineage, model/agent registry, governed metadata/tag synchronization and access management remain required and unfinished. External Databricks qualification has not run; unit and local failure-path checks do not qualify this compound requirement."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M8",
       "public_comparison_baseline": "Native inbound/outbound metadata and separate lineage capability; some richer outbound mappings are preview"
     },

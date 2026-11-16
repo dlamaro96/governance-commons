@@ -132,7 +132,9 @@ def main():
   ./dev test --suite business-domains-upgrade Verify typed domain storage, hierarchy, placement and concurrency
   ./dev test --suite business-domain-seed Verify domain seed recovery, provenance and repeatability
   ./dev test --suite authority-authn-foundation Verify inactive authentication through native PostgreSQL roles
+  ./dev test --suite authority-foundation Verify canonical authority storage and candidate closure
   ./dev test --suite protected-authn  Verify isolated real OIDC and protected session lifecycle
+  ./dev test --suite source-connectors-upgrade Verify source storage upgrade and native tenant isolation
   ./dev authn-install --input FILE    Apply one private, typed inactive installation manifest
   ./dev test --suite relation-preparation-expiry Verify the original fifteen-minute lease and committed retries
   ./dev test --suite connectors       Run Python contract/source tests
@@ -165,6 +167,12 @@ Never use docker compose config output in public logs: it expands secrets.""")
         # This fresh profile owns its credentials and never depends on core bootstrap.
         require_local()
         run([sys.executable, "scripts/runtime-test-protected-authn.py"], timeout=1800); return
+    if args.command == "test" and args.suite == "source-connectors-upgrade":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-source-connectors-upgrade.py"], timeout=900); return
+    if args.command == "test" and args.suite == "authority-foundation":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-authority-foundation.py"], timeout=1800); return
     require_bootstrap(); require_local()
     if args.command == "up":
         authentication_bootstrap()

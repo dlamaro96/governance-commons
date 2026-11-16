@@ -54,6 +54,24 @@ browser_process = load(ROOT / 'scripts/protected_browser_process.py', 'protected
 def sources():
     return publication.source_inventory(ROOT)
 
+
+def migration_ledger(h, phase):
+    require(phase in ('before', 'after'), 'Fixed migration-ledger phase required')
+    value = json.loads(h.sql("SET TIME ZONE 'UTC'; SELECT coalesce(json_agg(to_jsonb(m) ORDER BY name),'[]') FROM public.schema_migrations m;"))
+    require(type(value) is list and len(value) == len(publication.MIGRATIONS)
+            and all(type(row) is dict and set(row) == {'name','checksum','applied_at'} for row in value),
+            'Full migration ledger has unexpected rows or columns')
+    expected = [{'name': n, 'sha256': sha((ROOT/'packages/db/migrations'/n).read_bytes())} for n in publication.MIGRATIONS]
+    require([{'name': row['name'], 'sha256': row['checksum']} for row in value] == expected,
+            'Full migration ledger differs from exact current source checksums')
+    data = (json.dumps(value, sort_keys=True, separators=(',', ':'))+'\n').encode()
+    require(len(data) <= 65536, 'Migration ledger exceeds bounded private readback')
+    path = h.folder/('migrations-'+phase+'.json')
+    path.write_bytes(data)
+    h.report.setdefault('migrationLedger', {})[phase] = {'path': str(path.relative_to(ROOT)), 'sha256': sha(data)}
+    return value
+
+
 def binary_sha(path):
     require(path.is_file() and path.stat().st_size <= 256*MIB, 'Bounded existing tool binary required')
     digest = hashlib.sha256()
@@ -552,12 +570,12 @@ def execute(h):
     try:
         h.sql(roles.prepare_sql(OWNER, DATABASE))
         migration = h.js("await import('./packages/db/src/migrate.ts');", timeout=180)
-        require(re.findall(r'^Applied (.+)$', migration.stdout, re.MULTILINE) == base.NAMES, 'Fresh database did not apply exact SQL001–012')
+        require(re.findall(r'^Applied (.+)$', migration.stdout, re.MULTILINE) == list(publication.MIGRATIONS), 'Fresh database did not apply exact SQL001–014')
     finally:
         h.sql(roles.finish_sql(OWNER))
     h.sql(roles.executor_sql(DATABASE, definitions))
-    h.report['migrations'] = json.loads(h.sql("SELECT json_agg(json_build_object('name',name,'sha256',checksum) ORDER BY name) FROM schema_migrations;"))
-    require(h.report['migrations'] == [{'name': n, 'sha256': sha((ROOT/'packages/db/migrations'/n).read_bytes())} for n in base.NAMES], 'Applied checksum mismatch')
+    original_ledger = migration_ledger(h, 'before')
+    h.report['migrations'] = [{'name': row['name'], 'sha256': row['checksum']} for row in original_ledger]
     h.phase = 'canonical-seed'
     h.js("await import('./packages/db/src/seed.ts');", timeout=180)
     snapshot_sql = "SELECT json_agg(to_jsonb(m) ORDER BY tenant_id,identity_id) FROM public.memberships m WHERE identity_id::text LIKE '10000000-0000-4000-8000-%';"
@@ -590,7 +608,7 @@ def execute(h):
     receipt = h.helper(['node', '--import', 'tsx', 'scripts/authentication-install.ts', '--stdin'], input=json.dumps(binding_manifest), sensitive=True)
     require(json.loads(receipt.stdout)['result'] == 'COMMITTED_INACTIVE', 'Fresh fixture binding not confirmed')
     require(h.sql(snapshot_sql) == seeded, 'Fresh fixture changed seeded memberships')
-    h.report['checks'].append('Native owner applied exact001–012 with temporary definer grant removed; canonical seed and exact13-manifest replay preserved all six original memberships')
+    h.report['checks'].append(publication.CHECKS[0])
     h.phase = 'keycloak-services'
     h.compose('create', '--no-build', '--pull', 'never', '--no-recreate', 'login-broker', 'session-api', 'authn-edge', timeout=60)
     for service in ('login-broker', 'session-api', 'authn-edge'):
@@ -665,6 +683,7 @@ def execute(h):
     require(len(captures) == 8, 'Required eight current lifecycle captures missing')
     h.report['captures'] = [{'path': str(p.relative_to(ROOT)), 'sha256': sha(p.read_bytes())} for p in captures]
     require(h.sql(snapshot_sql) == seeded, 'Qualification altered any original seeded membership')
+    require(migration_ledger(h, 'after') == original_ledger, 'Qualification changed full migration ledger rows/checksums/timestamps')
     h.report['checks'].append('Two real Keycloak browser journeys passed: fresh code+PKCE, exact private provenance, CSRF/version switch, stale/cross-tenant/unbound denial, member-revoked logout, keyboard/axe EN/AR desktop/mobile; eight fresh captures retained')
     require(h.report['sources'] == sources(), 'Bound source changed during qualification')
     require(h.report['toolHashes'] == {'node': binary_sha(node), 'browser': binary_sha(chrome)}, 'Selected tool binary changed during qualification')

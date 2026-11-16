@@ -6,6 +6,8 @@ import {AUTHENTICATION_SCALARS as S} from '../../authority/src/authentication.ts
 import type {UTC} from '../../authority/src/types.ts';
 import {AUTHN_LIMITS as L, type BrokerOidcConfig, type VerifiedIdentityToken} from './contracts.ts';
 import {AuthnHttpError, equalSecret, sha256, strictJson, validatePublicAuthnConfig} from './transport.ts';
+import {microsoftEntraPreset} from './providers.ts';
+import {appendEntraClientSecret,hasEntraClientAuthentication,type EntraClientAuthentication} from './client-secret.ts';
 
 export interface OidcClient {
  initialize():Promise<void>;
@@ -35,7 +37,18 @@ function endpoint(value:string,production:boolean):URL {
 }
 /** Configuration is deployment-owned, immutable after startup, and never derived from request headers. */
 export function validateBrokerOidcConfig(input:BrokerOidcConfig):BrokerOidcConfig {
+ if(!input||typeof input!=='object'||Array.isArray(input)
+  ||Object.keys(input).some(key=>!['publicOrigin','environment','provider','directoryTenantId','issuer','clientId','redirectUri','authorizationEndpoint','tokenEndpoint','jwksUri','transportAliases'].includes(key)))return configReject();
+ if(input.provider!==undefined&&!['keycloak','microsoft-entra'].includes(input.provider))return configReject();
+ if(input.provider!=='microsoft-entra'&&input.directoryTenantId!==undefined)return configReject();
  const base=validatePublicAuthnConfig(input),production=base.environment==='production';
+ if(input.provider==='microsoft-entra'){
+  const preset=microsoftEntraPreset({...base,directoryTenantId:input.directoryTenantId!,clientId:input.clientId});
+  endpoint(preset.redirectUri,production);
+  if(input.transportAliases!==undefined||(['issuer','redirectUri','authorizationEndpoint','tokenEndpoint','jwksUri'] as const).some(key=>input[key]!==preset[key]))return configReject();
+  if(production&&new URL(base.publicOrigin).hostname==='login.microsoftonline.com')return configReject();
+  return preset;
+ }
  const issuer=endpoint(input.issuer,production),authorization=endpoint(input.authorizationEndpoint,production),token=endpoint(input.tokenEndpoint,production),jwks=endpoint(input.jwksUri,production),callback=endpoint(input.redirectUri,production);
  if(issuer.pathname.endsWith('/')||callback.href!==`${base.publicOrigin}/authn/callback`||!input.clientId||Buffer.byteLength(input.clientId)>256||!/^[A-Za-z0-9._-]+$/.test(input.clientId))return configReject();
  if([authorization,token,jwks].some(url=>url.origin!==issuer.origin||!url.pathname.startsWith(`${issuer.pathname}/`)))return configReject();
@@ -48,7 +61,7 @@ export function validateBrokerOidcConfig(input:BrokerOidcConfig):BrokerOidcConfi
    const original=new URL(source);if(target!==`http://keycloak:8080${original.pathname}`)return configReject();aliases[source]=target;
   }
  }
- return Object.freeze({...base,issuer:issuer.href,clientId:input.clientId,redirectUri:callback.href,authorizationEndpoint:authorization.href,tokenEndpoint:token.href,jwksUri:jwks.href,transportAliases:Object.freeze(aliases)});
+ return Object.freeze({...base,...(input.provider===undefined?{}:{provider:input.provider}),issuer:issuer.href,clientId:input.clientId,redirectUri:callback.href,authorizationEndpoint:authorization.href,tokenEndpoint:token.href,jwksUri:jwks.href,transportAliases:Object.freeze(aliases)});
 }
 function checkSignal(signal?:AbortSignal):void{if(signal?.aborted)return reject();}
 async function abortable<T>(promise:Promise<T>,signal:AbortSignal):Promise<T>{
@@ -87,8 +100,10 @@ function numericDate(value:unknown):UTC {
 }
 
 /** Pinned jose performs real RS256 verification; all transport and JSON admission precede it. */
-export function createOidcClient(rawConfig:BrokerOidcConfig,dependencies:{fetch?:typeof fetch;now?:()=>number}={}):OidcClient {
+export function createOidcClient(rawConfig:BrokerOidcConfig,dependencies:{fetch?:typeof fetch;now?:()=>number;clientAuthentication?:EntraClientAuthentication}={}):OidcClient {
  const config=validateBrokerOidcConfig(rawConfig),fetchImpl=dependencies.fetch??fetch,now=dependencies.now??Date.now;
+ const clientAuthentication=dependencies.clientAuthentication;
+ if(config.provider==='microsoft-entra'?!hasEntraClientAuthentication(clientAuthentication):clientAuthentication!==undefined)return configReject();
  const discovery=`${config.issuer}/.well-known/openid-configuration`,allow=new Set([discovery,config.tokenEndpoint,config.jwksUri]);
  let initialized=false,initializing:Promise<void>|undefined;
  async function fetchJson(url:string,init:RequestInit,limit:number,timeout:number,outer?:AbortSignal):Promise<unknown>{
@@ -121,6 +136,7 @@ export function createOidcClient(rawConfig:BrokerOidcConfig,dependencies:{fetch?
   initializing=(async()=>{const metadata=object(await fetchJson(discovery,{method:'GET',headers:{accept:'application/json'}},L.metadataBytes,L.metadataTimeoutMs));
    if(metadata.issuer!==config.issuer||metadata.authorization_endpoint!==config.authorizationEndpoint||metadata.token_endpoint!==config.tokenEndpoint||metadata.jwks_uri!==config.jwksUri)return reject();
    if(!Array.isArray(metadata.id_token_signing_alg_values_supported)||!metadata.id_token_signing_alg_values_supported.includes('RS256'))return reject();
+   if(config.provider==='microsoft-entra'&&(!Array.isArray(metadata.token_endpoint_auth_methods_supported)||!metadata.token_endpoint_auth_methods_supported.includes('client_secret_post')))return reject();
    await remote.reload();initialized=true;
   })();try{await initializing;}finally{initializing=undefined;}
  }
@@ -134,7 +150,9 @@ export function createOidcClient(rawConfig:BrokerOidcConfig,dependencies:{fetch?
     if(!initialized||attempt.issuer!==config.issuer||attempt.clientId!==config.clientId||attempt.redirectUri!==config.redirectUri)return reject();
     S.uuid(attempt.attemptId);S.digest(attempt.nonceHash);S.time(attempt.expiresAt);S.verifier(attempt.verifier);text(code,L.codeBytes);
     const signal=outer?AbortSignal.any([outer,AbortSignal.timeout(L.requestTimeoutMs)]):AbortSignal.timeout(L.requestTimeoutMs);checkSignal(signal);
-    const response=object(await fetchJson(config.tokenEndpoint,{method:'POST',headers:{accept:'application/json','content-type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'authorization_code',code,client_id:config.clientId,redirect_uri:config.redirectUri,code_verifier:attempt.verifier}).toString()},L.tokenResponseBytes,L.tokenTimeoutMs,signal));
+    const form=new URLSearchParams({grant_type:'authorization_code',code,client_id:config.clientId,redirect_uri:config.redirectUri,code_verifier:attempt.verifier});
+    if(config.provider==='microsoft-entra')appendEntraClientSecret(clientAuthentication!,form);
+    const response=object(await fetchJson(config.tokenEndpoint,{method:'POST',headers:{accept:'application/json','content-type':'application/x-www-form-urlencoded'},body:form.toString()},L.tokenResponseBytes,L.tokenTimeoutMs,signal));
     const compact=text(response.id_token,L.compactTokenBytes),segments=compact.split('.');if(segments.length!==3)return reject();
     const header=object(strictJson(base64(segments[0]!,L.tokenHeaderBytes),L.tokenHeaderBytes));
     const claims=object(strictJson(base64(segments[1]!,L.tokenPayloadBytes),L.tokenPayloadBytes));base64(segments[2]!,512);
@@ -142,6 +160,8 @@ export function createOidcClient(rawConfig:BrokerOidcConfig,dependencies:{fetch?
     if(header.typ!==undefined&&header.typ!=='JWT')return reject();
     const clock=now();if(!Number.isFinite(clock))return reject();
     await abortable(jwtVerify(compact,remote,{algorithms:['RS256'],issuer:config.issuer,audience:config.clientId,requiredClaims:['iss','sub','aud','exp','iat','nonce','auth_time'],currentDate:new Date(clock),clockTolerance:0}),signal);
+    // Directory claims are verified assertions, never an application tenant or identity lookup fallback.
+    if(config.provider==='microsoft-entra'&&(claims.tid!==config.directoryTenantId||claims.ver!=='2.0'))return reject();
     const subject=text(claims.sub,1024),nonce=text(claims.nonce,128);if(!/^[A-Za-z0-9_-]{43}$/.test(nonce)||!equalSecret(sha256(nonce),attempt.nonceHash))return reject();
     const audience=typeof claims.aud==='string'?[text(claims.aud,256)]:claims.aud;
     if(!Array.isArray(audience)||audience.length<1||audience.length>8||audience.some(value=>typeof value!=='string'||text(value,256)!==value)||new Set(audience).size!==audience.length||!audience.includes(config.clientId))return reject();

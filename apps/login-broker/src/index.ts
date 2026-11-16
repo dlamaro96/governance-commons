@@ -1,23 +1,19 @@
 // SPDX-License-Identifier: Apache-2.0
 import {createAuthenticationClient} from '../../../packages/authority/src/authentication.ts';
-import type {AuthnEnvironment,BrokerOidcConfig} from '../../../packages/authn/src/contracts.ts';
-import {createOidcClient,validateBrokerOidcConfig} from '../../../packages/authn/src/oidc.ts';
+import {createOidcClient} from '../../../packages/authn/src/oidc.ts';
 import {createNativeAuthenticationPool,verifyNativeAuthenticationPool} from '../../../packages/authn/src/pool.ts';
-import {strictJson} from '../../../packages/authn/src/transport.ts';
+import {loadBrokerOidcEnvironment} from '../../../packages/authn/src/configuration.ts';
 import {buildLoginBroker} from './app.ts';
 
 function required(name:string):string{const value=process.env[name];if(!value)throw new Error('AUTHN_CONFIGURATION_INVALID');return value;}
 async function main():Promise<void>{
  // Dedicated process boundary: neither a legacy content credential nor a second executor is accepted.
  for(const name of ['DATABASE_URL','AUTHN_API_DATABASE_URL','MIGRATION_DATABASE_URL','DATABASE_OWNER_URL','OWNER_DATABASE_URL','OIDC_CLIENT_SECRET'])if(process.env[name])throw new Error('AUTHN_CONFIGURATION_INVALID');
- const aliases=process.env.OIDC_TRANSPORT_ALIASES_JSON;
- const config=validateBrokerOidcConfig({publicOrigin:required('PUBLIC_AUTHN_ORIGIN'),environment:required('AUTHN_ENVIRONMENT') as AuthnEnvironment,
-  issuer:required('OIDC_ISSUER'),clientId:required('OIDC_CLIENT_ID'),redirectUri:required('OIDC_REDIRECT_URI'),authorizationEndpoint:required('OIDC_AUTHORIZATION_ENDPOINT'),tokenEndpoint:required('OIDC_TOKEN_ENDPOINT'),jwksUri:required('OIDC_JWKS_URI'),
-  ...(aliases?{transportAliases:strictJson(aliases,8192) as BrokerOidcConfig['transportAliases']}:{})});
+ const {config,clientAuthentication}=await loadBrokerOidcEnvironment(process.env);
  const pool=createNativeAuthenticationPool('login',required('AUTHN_LOGIN_DATABASE_URL'),config.environment);
  try{
   await verifyNativeAuthenticationPool(pool,'login');
-  const oidc=createOidcClient(config);await oidc.initialize();
+  const oidc=createOidcClient(config,{clientAuthentication});await oidc.initialize();
   const app=await buildLoginBroker({config,authentication:createAuthenticationClient(pool),oidc,readiness:()=>verifyNativeAuthenticationPool(pool,'login')});
   app.addHook('onClose',async()=>{await pool.end();});
   const port=Number(process.env.PORT??4312),host=process.env.HOST??'0.0.0.0';

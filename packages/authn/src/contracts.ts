@@ -15,6 +15,9 @@ export type VerifiedIdentityToken = {
 export type AuthnEnvironment = 'isolated-test' | 'local-development' | 'production';
 export type PublicAuthnConfig = { readonly publicOrigin: string; readonly environment: AuthnEnvironment };
 export type BrokerOidcConfig = PublicAuthnConfig & {
+ readonly provider?: 'keycloak' | 'microsoft-entra';
+ /** Entra directory identity boundary only; never an application tenant selector. */
+ readonly directoryTenantId?: string;
  readonly issuer: string; readonly clientId: string; readonly redirectUri: string;
  readonly authorizationEndpoint: string; readonly tokenEndpoint: string; readonly jwksUri: string;
  /** Exact server-owned endpoint pairs only; never an accepted claim issuer alias. */

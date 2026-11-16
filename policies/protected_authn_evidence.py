@@ -13,7 +13,7 @@ import math
 from pathlib import Path
 import re
 import struct
-from authentication_evidence import (MIB, MIGRATIONS, declarations, digest, exact,
+from authentication_evidence import (MIB, MIGRATIONS as AUTHENTICATION_MIGRATIONS, declarations, digest, exact,
                                     hashed, integer, read_file, require, strict_json,
                                     tap_summary, timestamp)
 
@@ -23,6 +23,10 @@ PROFILE = 'isolated-protected-authn'
 NATIVE = 'tests/qualification/protected-authn-http.test.ts'
 BROWSER = 'tests/e2e-protected/protected-authn.spec.ts'
 COMPOSE = 'deploy/protected-authn/compose.yaml'
+# Current protected transport is qualified on the exact integrated schema.
+# The separate SQL012 foundation gate and its historical evidence keep their
+# original prefix; new migrations require an explicit protected-gate update.
+MIGRATIONS = (*AUTHENTICATION_MIGRATIONS, '013_authority_foundation.sql', '014_source_connectors.sql')
 FIXED_SOURCES = (
     'CONTRIBUTING.md', 'dev', 'scripts/runtime.py', 'scripts/authentication_roles.py',
     'scripts/runtime-test-authority-authn-foundation.py', 'scripts/runtime-test-protected-authn.py',
@@ -49,7 +53,7 @@ CAPTURES = tuple(sorted(name+'.png' for name in (
 SERVED = {'html': 'served/index.html', 'css': 'served/ui.css', 'js': 'served/ui.js'}
 ROLES = {'login-broker', 'session-api', 'authn-edge', 'owner-tool', 'helper'}
 CHECKS = [
-    'Native owner applied exact001–012 with temporary definer grant removed; canonical seed and exact13-manifest replay preserved all six original memberships',
+    'Native owner applied exact001–014 with temporary definer grant removed; canonical seed and exact13-manifest replay preserved all six original memberships; full migration ledger remained unchanged',
     'Real Keycloak protected public client readback confirms exact callback/origin, S256,RS256 and built-in basic/auth_time mapper',
     'Actual bounded signed-token HTTP probes and native SCRAM SQL lifecycle/privilege/concurrency cases passed with no skipped cases',
     'Two real Keycloak browser journeys passed: fresh code+PKCE, exact private provenance, CSRF/version switch, stale/cross-tenant/unbound denial, member-revoked logout, keyboard/axe EN/AR desktop/mobile; eight fresh captures retained',
@@ -64,6 +68,9 @@ LIMITATIONS = [
 
 
 def source_inventory(root):
+    directory = root/'packages/db/migrations'
+    require(directory.is_dir() and not directory.is_symlink())
+    require(tuple(sorted(p.name for p in directory.glob('*.sql'))) == MIGRATIONS)
     names = set(FIXED_SOURCES) | {'packages/db/migrations/'+name for name in MIGRATIONS}
     for folder in SOURCE_FOLDERS:
         directory = root/folder
@@ -251,7 +258,7 @@ def _safe_report(root, value, commit, require_image):
         'sources','commit','memoryAdmission','dockerVersion','composeVersion','hostNode','browserVersion','images',
         'migrations','installation','keycloakReadback','nativeHttp','servedAssets','runtime','browser','captures',
         'sourceUnchanged','isolation','cleanup','evidence_directory','privateLogs','evidenceMode','imageAttestation',
-        'containerImages','toolHashes','testLogs','privateResourceInventories','servedAssetFiles','hostBrowserCleanup'}
+        'containerImages','toolHashes','testLogs','privateResourceInventories','servedAssetFiles','hostBrowserCleanup','migrationLedger'}
     require(type(value) is dict and required <= set(value) and set(value) <= required | {'privateStorage'})
     require(type(value['schema_version']) is int and value['schema_version'] == 1 and value['result'] == 'PASS')
     require(type(commit) is str and re.fullmatch('[a-f0-9]{40}', commit) and value['commit'] == commit)
@@ -282,6 +289,16 @@ def _safe_report(root, value, commit, require_image):
         data = cached[name]
         require(len(data) <= cap and digest(data) == hashed(ref['sha256']))
         return data
+    exact(value['migrationLedger'], ('before','after'))
+    ledgers = [strict_json(private(value['migrationLedger'][phase], 'migrations-'+phase+'.json', 65536))
+               for phase in ('before','after')]
+    for ledger in ledgers:
+        require(type(ledger) is list and len(ledger) == len(MIGRATIONS))
+        for row, expected in zip(ledger, migrations):
+            exact(row, ('name','checksum','applied_at'))
+            require(row['name'] == expected['name'] and row['checksum'] == expected['sha256'])
+            require(timestamp(value['started_at']) <= timestamp(row['applied_at']) <= timestamp(value['recorded_at']))
+    require(ledgers[0] == ledgers[1])
     logs = value['privateLogs']
     require(type(logs) is list and 0 < len(logs) <= 2048)
     seen = set()
@@ -413,6 +430,8 @@ def _safe_report(root, value, commit, require_image):
         'native_http':{'counts':dict(native),'tests':[{'file':r['file'],'line':r['line'],'status':'passed'} for r in native_rows]},
         'browser':{'stats':stats,'tests':browser},'captures':safe_captures,'served_assets':dict(value['servedAssets']),
         'sources':sources,'migrations':migrations,'images':dict(value['images']),
+        'migration_ledger':{'rows':len(MIGRATIONS),'unchanged':True,
+                            'digests':{k:v['sha256'] for k,v in value['migrationLedger'].items()}},
         'container_image_counts':{role:sum(r['role']==role for r in containers) for role in sorted(ROLES)},
         'runtime':dict(runtime),'tools':{'node':{'version':value['hostNode']['version'],'sha256':value['toolHashes']['node']},'browser':{'version':value['browserVersion'],'sha256':value['toolHashes']['browser']},'docker':value['dockerVersion'],'compose':value['composeVersion']},
         'cleanup':dict(value['cleanup']),'preserved_resource_counts':{k:len(v) for k,v in inventories[0].items()},

@@ -196,14 +196,14 @@ services:
   migrate:
     <<: *app
     restart: 'no'
-    command: [pnpm, db:migrate]
+    command: [node, --import, tsx, packages/db/src/migrate.ts]
     environment:
       MIGRATION_DATABASE_URL: postgresql://gc_owner:${GC_OWNER_PASSWORD}@postgres:5432/governance
     depends_on:
       postgres: {condition: service_healthy}
   api:
     <<: *app
-    command: [pnpm, api/start]
+    command: [node, --import, tsx, apps/api/src/index.ts]
     environment: *api-env
     ports: [127.0.0.1:4310:4310]
     depends_on:
@@ -219,7 +219,7 @@ services:
     mem_limit: 512m
   workflow-worker:
     <<: *app
-    command: [pnpm, workflow/start]
+    command: [node, --import, tsx, apps/workflow-worker/src/index.ts]
     environment:
       API_URL: http://api:4310
       TEMPORAL_ADDRESS: temporal:7233
@@ -237,7 +237,7 @@ services:
     mem_limit: 512m
   site-runner:
     <<: *app
-    command: [pnpm, site/start]
+    command: [node, --import, tsx, apps/site-runner/src/index.ts]
     environment:
       API_URL: http://api:4310
       TEMPORAL_ADDRESS: temporal:7233
@@ -264,9 +264,9 @@ services:
     user: '${LOCAL_UID}:${LOCAL_GID}'
     environment:
       WORKER_TOKEN: ${WORKER_TOKEN}
-      SOURCE_SECRETS_FILE: /run/secrets/source-secrets.json
+      SOURCE_SECRETS_FILE: /run/source-credentials/secrets.json
     volumes:
-      - ../../.local/source-secrets.json:/run/secrets/source-secrets.json:ro
+      - ../../.local/source-credentials:/run/source-credentials:ro
     read_only: true
     tmpfs: [/tmp]
     cap_drop: [ALL]
@@ -284,7 +284,7 @@ services:
     <<: *app
     profiles: [tools]
     restart: 'no'
-    command: [pnpm, db:seed]
+    command: [node, --import, tsx, packages/db/src/seed.ts]
     environment:
       <<: *api-env
       MIGRATION_DATABASE_URL: postgresql://gc_owner:${GC_OWNER_PASSWORD}@postgres:5432/governance
