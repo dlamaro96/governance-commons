@@ -1,5 +1,11 @@
 # Current state — 2026-11-16
 
+## Checked domain source and history integrated — 2026-11-16T04:06Z
+
+Domain correction/UI/evidence commit `d130597` is integrated with the preserved participation/main evidence and main ancestry at `a6fb50b`. The separate committed-source report verifies every99 API and169 targeted/full browser source hash against immutable Git blobs, plus26 final domain screenshots. SQL001–011 are unchanged. Original executed image/time/dirty-worktree provenance remains intact; merging documentation is not a runtime rerun.
+
+Local API154 and full browser19 pass; all26 final domain captures were inspected. Ten browser rows retain scoped partial evidence, all5530 profile verification outcomes and1106 release outcomes remain open. The publication scan's two report-digest false positives were resolved only by path/hash serialization, preserving four original reports privately and changing no scanner rule or execution data. Final merged-tree publication checks and fresh hosted Source/Development gates precede merge. Shared core ownership remains this isolated business-domains checkout; the independent root pure-policy work is not active here. Complete programme and release remain open.
+
 ## Domain full local browser regression passed — 2026-11-16T03:55Z
 
 The isolated domain core passes all19 actual browser journeys in813487.582ms, zero skips, failures, flaky cases or retries. Its169 running-image source files and27 served assets remain stable;99 backend source hashes equal the earlier154-case API pass without claiming an API rerun in the UI-only image. All116 historical PNGs are restored byte-identically;109 fresh regression captures and26 domain captures are retained privately with exact hashes. The targeted3/3 report preserves all five earlier failed attempts. All26 final-run domain captures passed separate visual inspection in `business-domains-ui-full-visual-review.json`; static viewport, horizontal scrolling, human accessibility and translation limits remain explicit. See `business-domains-ui-full.json` and `business-domains-ui-targeted.json` under `docs/verification`.

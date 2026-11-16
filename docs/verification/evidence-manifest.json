@@ -425,7 +425,7 @@
     },
     {
       "path": "docs/verification/relation-participation-upgrade-security-regression.json",
-      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001–010 unchanged; prior executions retained."
+      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001\u2013010 unchanged; prior executions retained."
     },
     {
       "path": "docs/verification/m2-relation-participation-api-final.json",
@@ -443,7 +443,7 @@
     },
     {
       "path": "docs/verification/relation-participation-graph-copy-upgrade.json",
-      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001–010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
+      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001\u2013010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
       "source_binding": {
         "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
         "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
@@ -1020,11 +1020,22 @@
           "sha256": "8aa01566643c520a954d98953b929f420d84957cd85b966659d06ae8b2941a3b"
         }
       ]
+    },
+    {
+      "path": "docs/verification/business-domains-committed-source.json",
+      "scope": "Committed source equivalence after domain/main history integration; no test rerun or hosted qualification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_COMMITTED_SOURCE_EQUIVALENCE",
+      "source_binding": {
+        "implementation_commit": "a6fb50b196eaecd621813d7c0fd7d573e6d630c1",
+        "method": "SHA256 of immutable committed Git blobs equals each original executed source digest and current file. Documentation-only history integration introduces no application source changes. This is source binding, not a test rerun.",
+        "evidence_sha256": "6e67c33d521f7266824c0ec411e8cb86e304e769a649e4edbb6f9ded4833df54"
+      }
     }
   ],
   "limitations": [
     "Passing scoped development gates does not complete compound baseline requirements.",
-    "M1 core local journey passes; full M0 repository/release and M2–M10 programme remain open.",
+    "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
   "bound_at": "2026-11-15T22:23:28.996008+00:00"
