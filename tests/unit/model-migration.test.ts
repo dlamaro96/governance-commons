@@ -36,6 +36,40 @@ function freeze<T>(input: T): T {
   return input;
 }
 
+
+test('model migration copies preserve own data under hostile inherited properties', () => {
+  const name = 'model_copy_probe';
+  const previous = Object.getOwnPropertyDescriptor(Object.prototype, name);
+  let calls = 0;
+  const hostile: PropertyDescriptor[] = [
+    { configurable: true, set() { calls++; throw new Error('inherited setter must not execute'); } },
+    { configurable: true, value: 'inherited read-only sentinel', writable: false },
+  ];
+  for (const descriptor of hostile) {
+    const value = { [name]: 'first', toString: 'allowed', nested: { [name]: ['second', 'third'] } };
+    const input = plan({ operations: [{ op: 'set', path: ['configuration'], value, mode: 'replace' }] });
+    Object.defineProperty(Object.prototype, name, descriptor);
+    try {
+      const result = parseMigrationPlan(input);
+      assert.equal(calls, 0);
+      const parsed = success(result);
+      const operation = parsed.operations[0]; assert.equal(operation.op, 'set');
+      if (operation.op !== 'set') assert.fail('expected set operation');
+      assert.deepEqual(operation.value, value);
+      assert.equal(Object.getPrototypeOf(operation.value), Object.prototype);
+      assert.equal(Object.hasOwn(operation.value as object, name), true);
+      assert.equal(Object.getOwnPropertyDescriptor(operation.value as object, name)?.enumerable, true);
+      assert.equal(Object.isFrozen(operation.value), true);
+      assert.equal(Object.isFrozen(value), false);
+      assert.deepEqual(JSON.parse(JSON.stringify(operation.value)), value);
+    } finally {
+      if (previous) Object.defineProperty(Object.prototype, name, previous);
+      else Reflect.deleteProperty(Object.prototype, name);
+    }
+  }
+  assert.equal(Object.getOwnPropertyDescriptor(Object.prototype, name), previous);
+});
+
 test('migration plans round trip as immutable data without retaining caller-owned objects', () => {
   const input = plan({ operations: [{ op: 'set', path: ['configuration'], value: { enabled: true, amounts: ['12345678901234567890.123'] }, mode: 'replace' }] });
   const result = success(parseMigrationPlan(input));

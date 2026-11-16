@@ -1,5 +1,10 @@
 # Current state — 2026-11-15
 
+## Isolated domain pure checkpoint — 2026-11-16T00:10Z
+
+The codex/business-domains worktree contains strict domain-type definitions/resolution and complete supplied domain-type migration projection. The recorded isolated suite passes144/144, TypeScript and whitespace checks; a separate read-only agent review found no concrete blocker and reran no tests. See docs/verification/business-domain-pure.json. This checkpoint starts from d3bf25ba and has not integrated the newer participation branch; it does not implement SQL011, domain storage, service/API/UI or current scoped authority. Preserve the original12-source evidence and all earlier tests. Root must integrate the reviewed modules after the preceding browser gate, then qualify the actual combined sources. Full programme and release remain open.
+
+
 Programme IN PROGRESS. M1 has a verified local and hosted vertical slice. Full M0 release/repository gates and M2–M10 remain open. The complete 1,426-line specification is preserved byte-for-byte in docs/product/BUILD_SPEC.md; SHA256 8bde0eb8d185958cce46c217c01d7263f6708823a11bb1f45cec7a3a3cb24d61. The canonical register retains 354 named requirements and 1,106 total rows, including 162 named connector routes and an explicitly unreconciled marketplace inventory. Optional runtime activation never removes required implementation.
 
 ## Repository and verified checkpoints

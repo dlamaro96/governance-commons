@@ -93,33 +93,33 @@ function copyPlanJSON(input: unknown, issues: Issues): unknown {
       if (value.length > maximum) { issues.add('limit', path, 'The permitted array length was exceeded.'); return undefined; }
       if (Reflect.ownKeys(value).length !== value.length + 1) { issues.add('invalid_json', path, 'Sparse arrays and extra array properties are not permitted.'); return undefined; }
       active.add(value);
-      const output: unknown[] = [];
+      const output = new Map<number, unknown>();
       try {
         for (let index = 0; index < value.length; index += 1) {
           const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
           if (!descriptor?.enumerable || !has(descriptor, 'value')) { issues.add('invalid_json', at(path, index), 'Array entries must be enumerable data properties.'); continue; }
-          output.push(copy(descriptor.value, at(path, index), depth + 1));
+          output.set(index, copy(descriptor.value, at(path, index), depth + 1));
           if (issues.overflow || nodes > MIGRATION_LIMITS.planNodes) break;
         }
+        return Array.from(output.values());
       } finally { active.delete(value); }
-      return output;
     }
     if (![Object.prototype, null].includes(Object.getPrototypeOf(value))) { issues.add('invalid_json', path, 'Expected a plain JSON object.'); return undefined; }
     const keys = Reflect.ownKeys(value);
     if (keys.length > MODEL_LIMITS.properties) { issues.add('limit', path, 'The permitted property count was exceeded.'); return undefined; }
     if (keys.some(key => typeof key === 'symbol')) issues.add('invalid_json', path, 'Symbol keys are not JSON.');
     active.add(value);
-    const output: Fields = {};
+    const output = new Map<string, unknown>();
     try {
       for (const key of keys.filter((key): key is string => typeof key === 'string').sort()) {
         if (!identifier.test(key) || reserved.has(key)) { issues.add('invalid_definition', path, 'Object keys must be safe identifiers of at most 64 characters.'); continue; }
         const descriptor = Object.getOwnPropertyDescriptor(value, key)!;
         if (!descriptor.enumerable || !has(descriptor, 'value')) { issues.add('invalid_json', at(path, key), 'Only enumerable data properties are permitted.'); continue; }
-        output[key] = copy(descriptor.value, at(path, key), depth + 1);
+        output.set(key, copy(descriptor.value, at(path, key), depth + 1));
         if (issues.overflow || nodes > MIGRATION_LIMITS.planNodes) break;
       }
+      return Object.fromEntries(output);
     } finally { active.delete(value); }
-    return output;
   };
   return copy(input, '', 0);
 }

@@ -311,8 +311,8 @@ export function parseModelFile(text: string): ValidationResult<ModelDefinition> 
 }
 
 /** Shared declarative-file boundary: retain duplicate keys until inspection. */
-export function parseBoundedJSONFile(text: string, profile: 'model' | 'migration' = 'model'): ValidationResult<unknown> {
-  if (typeof text !== 'string' || text.length > MODEL_LIMITS.fileLength) return { ok: false, issues: [{ code: 'limit', path: '', message: 'Model JSON exceeds the permitted file length.' }] };
+export function parseBoundedJSONFile(text: string, profile: 'model' | 'migration' | 'domain-type' | 'domain-migration' = 'model'): ValidationResult<unknown> {
+  if (typeof text !== 'string' || text.length > (profile === 'domain-migration' ? 524_288 : MODEL_LIMITS.fileLength)) return { ok: false, issues: [{ code: 'limit', path: '', message: 'Model JSON exceeds the permitted file length.' }] };
   const documentIssues = inspectModelJSON(text, profile);
   if (documentIssues.length) return { ok: false, issues: documentIssues };
   let value: unknown;
@@ -333,10 +333,11 @@ export function parseBoundedJSONEnvelope(text: string): ValidationResult<unknown
 }
 
 /** Reject duplicate (including escaped) object keys before JSON.parse can overwrite them. */
-function inspectModelJSON(text: string, profile: 'model' | 'migration'): readonly ValidationIssue[] {
-  const context = new Context(profile === 'migration' ? MODEL_LIMITS.valueNodes : MODEL_LIMITS.schemaNodes * 8);
-  const arrayItems = profile === 'migration' ? Math.max(MODEL_LIMITS.listItems, MODEL_LIMITS.schemaNodes) : MODEL_LIMITS.listItems;
-  const depthLimit = profile === 'migration' ? MODEL_LIMITS.valueDepth + 5 : MODEL_LIMITS.schemaDepth * 3 + 4;
+function inspectModelJSON(text: string, profile: 'model' | 'migration' | 'domain-type' | 'domain-migration'): readonly ValidationIssue[] {
+  const domain = profile === 'domain-type' || profile === 'domain-migration';
+  const context = new Context(domain ? 100_000 : profile === 'migration' ? MODEL_LIMITS.valueNodes : MODEL_LIMITS.schemaNodes * 8);
+  const arrayItems = profile === 'migration' || profile === 'domain-migration' ? Math.max(MODEL_LIMITS.listItems, MODEL_LIMITS.schemaNodes) : MODEL_LIMITS.listItems;
+  const depthLimit = domain ? 32 : profile === 'migration' ? MODEL_LIMITS.valueDepth + 5 : MODEL_LIMITS.schemaDepth * 3 + 4;
   let offset = 0;
   const skipSpace = (): void => { while (offset < text.length && /[\t\n\r ]/.test(text[offset])) offset += 1; };
   const string = (): string => {
