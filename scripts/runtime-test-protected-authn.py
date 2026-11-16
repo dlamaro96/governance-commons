@@ -48,6 +48,7 @@ require, sha, literal = base.require, base.sha, base.literal
 sys.path.insert(0, str(ROOT / 'policies'))
 publication = load(ROOT / 'policies/protected_authn_evidence.py', 'protected_publication_inventory')
 image_tools = load(ROOT / 'scripts/protected_authn_image.py', 'protected_immutable_image')
+browser_process = load(ROOT / 'scripts/protected_browser_process.py', 'protected_browser_process')
 
 def sources():
     return publication.source_inventory(ROOT)
@@ -75,6 +76,7 @@ class Harness(base.Harness):
         self.folder.mkdir(mode=0o700)
         self.phase, self.serial, self.owned, self.created = 'admission', 0, [], False
         self.private_ready = False
+        self.host_browser_started, self.host_browser_proof = False, None
         self.app_image, self.evidence_mode, self.compose_override = APP_IMAGE, 'mounted-source', None
         self.deadline, self.cleanup_deadline = time.monotonic() + 1600, None
         self.output_bytes, self.resources_before, self.private_values = 0, None, []
@@ -85,7 +87,8 @@ class Harness(base.Harness):
                        'command': './dev test --suite protected-authn', 'profile': 'isolated-protected-authn',
                        'checks': [], 'containerImages': [], 'testLogs': {}, 'limitations': ['Local HTTP and isolated fresh services only; no production TLS, shared-core ingress, content authority or release qualification.',
                          'Controlled signed-token HTTP probes are distinct from the two actual Keycloak browser journeys.',
-                         'Rendered screenshots require explicit subsequent human/model inspection; automated browser assertions do not imply visual inspection.']}
+                         'Rendered screenshots require explicit subsequent human/model inspection; automated browser assertions do not imply visual inspection.',
+                         'Host cleanup covers registered POSIX browser groups and observed descendants; it does not prove capture of arbitrary unobserved adversarial double-fork escapes.']}
         if REPORT.exists():
             (self.folder / 'previous-report.json').write_bytes(REPORT.read_bytes())
         self.save()
@@ -93,6 +96,34 @@ class Harness(base.Harness):
     def admission(self):
         super().admission()
         require(shutil.disk_usage(ROOT).free >= 2*GIB, 'Protected profile host free space below2GiB floor')
+
+    def browser_command(self, args, executable):
+        self.admission()
+        require(time.monotonic() < self.deadline, 'Bounded browser lifecycle deadline exceeded')
+        self.serial += 1
+        label = f'{self.serial:03d}-{self.phase}'
+        self.host_browser_started = True
+        try:
+            result, self.host_browser_proof = browser_process.run(args, cwd=ROOT,
+                folder=self.folder/'browser/process-control', executable=executable,
+                expected_hash=self.report['toolHashes']['browser'], deadline=self.deadline,
+                admit=self.admission, timeout=300)
+            self.output_bytes += len(result.stdout.encode()) + len(result.stderr.encode())
+        except browser_process.BrowserCommandFailure as error:
+            self.host_browser_proof = error.proof
+            self.output_bytes += browser_process.CAP  # Conservative failed-command accounting.
+            raise
+        finally:
+            if self.host_browser_proof is not None:
+                path = self.folder/'browser/host-process-cleanup.json'
+                path.write_text(json.dumps(self.host_browser_proof, indent=2)+'\n')
+                self.report['hostBrowserCleanup'] = {'path':str(path.relative_to(ROOT)), 'sha256':sha(path.read_bytes())}
+            # CLI output can contain authentication callbacks; only fixed diagnostics persist.
+            (self.folder/(label+'.log')).write_text('Owned browser command completed; inspect private structured results and cleanup proof.\n')
+        require(self.host_browser_proof['result'] == 'PASS' and self.host_browser_proof['registeredBrowserGroups'] >= 1,
+            'Exact registered browser cleanup was not confirmed')
+        self.admission()
+        return result
 
     def scrub_browser_artifacts(self):
         folder = self.folder / 'browser'
@@ -370,7 +401,9 @@ try{directory(root);directory(root+'/batch');if(mode==='verify'){const b=read(ro
         # Remove generated credentials only after bounded diagnostics and resource cleanup.
         for path in [self.secret_path, *(self.folder.glob('*.env')), self.folder / 'realm.json', self.folder / 'browser-private.json']:
             path.unlink(missing_ok=True)
-        self.report['cleanup'] = {'ownedRemoved': True, 'generatedCredentialsRemoved': True}
+        self.report['cleanup'] = {'ownedRemoved': True, 'generatedCredentialsRemoved': True,
+            'ownedHostProcessesRemoved': not self.host_browser_started or (self.host_browser_proof is not None and self.host_browser_proof['result'] == 'PASS')}
+        require(self.report['cleanup']['ownedHostProcessesRemoved'], 'Owned host browser cleanup was not confirmed')
         if export_failed:
             self.report['result'] = 'FAIL'
 
@@ -596,8 +629,8 @@ def execute(h):
     private_browser.write_text(json.dumps(browser_config))
     browser_output = h.folder/'browser'
     browser_output.mkdir()
-    env = ['env', 'AUTHN_BROWSER_CONFIG='+str(private_browser), 'AUTHN_BROWSER_OUTPUT='+str(browser_output), 'GC_BROWSER_EXECUTABLE='+str(chrome)]
-    result = h.command([*env, str(node), 'node_modules/@playwright/test/cli.js', 'test', '--config', 'tests/e2e-protected/playwright.config.ts'], timeout=300, allow_failure=True, sensitive=True)
+    env = ['env', 'AUTHN_BROWSER_CONFIG='+str(private_browser), 'AUTHN_BROWSER_OUTPUT='+str(browser_output), 'GC_BROWSER_EXECUTABLE='+str(ROOT/'scripts/protected_browser_process.py')]
+    result = h.browser_command([*env, str(node), 'node_modules/@playwright/test/cli.js', 'test', '--config', 'tests/e2e-protected/playwright.config.ts'], chrome)
     h.scrub_browser_artifacts()
     browser_report = json.loads((browser_output/'results.json').read_text())
     h.report['browser'] = browser_report['stats']

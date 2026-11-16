@@ -28,6 +28,7 @@ FIXED_SOURCES = (
     'scripts/runtime-test-authority-authn-foundation.py', 'scripts/runtime-test-protected-authn.py',
     'scripts/authentication-install.ts', 'scripts/authentication-install-demo.ts',
     'scripts/runtime-protected-ci.py', 'scripts/protected_authn_image.py', 'scripts/test_protected_authn_image.py',
+    'scripts/protected_browser_process.py', 'scripts/test_protected_browser_process.py',
     'tests/fixtures/authority-authn-foundation.ts',
     'docs/execution/PROTECTED_BROKER_CONTRACT.md', 'docs/execution/AUTHENTICATION_FOUNDATION_CONTRACT.md',
     'docs/execution/authentication-legacy-function-census.json', 'docs/development/protected-authentication.md',
@@ -249,7 +250,7 @@ def _safe_report(root, value, commit, require_image):
         'sources','commit','memoryAdmission','dockerVersion','composeVersion','hostNode','browserVersion','images',
         'migrations','installation','keycloakReadback','nativeHttp','servedAssets','runtime','browser','captures',
         'sourceUnchanged','isolation','cleanup','evidence_directory','privateLogs','evidenceMode','imageAttestation',
-        'containerImages','toolHashes','testLogs','privateResourceInventories','servedAssetFiles'}
+        'containerImages','toolHashes','testLogs','privateResourceInventories','servedAssetFiles','hostBrowserCleanup'}
     require(type(value) is dict and required <= set(value) and set(value) <= required | {'privateStorage'})
     require(type(value['schema_version']) is int and value['schema_version'] == 1 and value['result'] == 'PASS')
     require(type(commit) is str and re.fullmatch('[a-f0-9]{40}', commit) and value['commit'] == commit)
@@ -330,8 +331,24 @@ def _safe_report(root, value, commit, require_image):
             for row in rows: text(row,1024)
         inventories.append(inventory)
     require(inventories[0] == inventories[1])
-    exact(value['cleanup'],('ownedRemoved','generatedCredentialsRemoved','resourceInventoryPreserved'))
+    exact(value['cleanup'],('ownedRemoved','generatedCredentialsRemoved','resourceInventoryPreserved','ownedHostProcessesRemoved'))
     require(all(v is True for v in value['cleanup'].values()))
+    # This records exact registered POSIX groups and observed descendants, not
+    # arbitrary unobserved adversarial double-forks outside that ownership set.
+    host_cleanup = strict_json(private(value['hostBrowserCleanup'],'browser/host-process-cleanup.json'))
+    host_counts = ('registeredBrowserGroups','trackedProcesses','termSignals','killSignals',
+                   'remainingLive','identityConflicts','unresolvedGroups')
+    exact(host_cleanup,('schema_version','scope','result','trigger',*host_counts,'registryClosed'))
+    require(type(host_cleanup['schema_version']) is int and host_cleanup['schema_version'] == 1)
+    require(host_cleanup['scope'] == 'registered-posix-groups-and-observed-descendants'
+            and host_cleanup['result'] == 'PASS' and host_cleanup['trigger'] == 'normal'
+            and host_cleanup['registryClosed'] is True)
+    for key in host_counts: integer(host_cleanup[key],0,4096)
+    require(host_cleanup['registeredBrowserGroups'] >= 1)
+    require(host_cleanup['registeredBrowserGroups'] <= host_cleanup['trackedProcesses'])
+    require(host_cleanup['termSignals'] <= host_cleanup['trackedProcesses'])
+    require(host_cleanup['killSignals'] <= host_cleanup['trackedProcesses'])
+    require(all(host_cleanup[key] == 0 for key in ('remainingLive','identityConflicts','unresolvedGroups')))
     compose = read_file(root,COMPOSE,MIB).decode('utf-8')
     refs = sorted(set(re.findall(r'^\s+image: ([^\s$][^\s]+)$',compose,re.M)))
     require(len(refs) == 2 and all(re.fullmatch(r'[a-z0-9./:_-]+@sha256:[a-f0-9]{64}',r) for r in refs))
@@ -399,6 +416,8 @@ def _safe_report(root, value, commit, require_image):
         'runtime':dict(runtime),'tools':{'node':{'version':value['hostNode']['version'],'sha256':value['toolHashes']['node']},'browser':{'version':value['browserVersion'],'sha256':value['toolHashes']['browser']},'docker':value['dockerVersion'],'compose':value['composeVersion']},
         'cleanup':dict(value['cleanup']),'preserved_resource_counts':{k:len(v) for k,v in inventories[0].items()},
         'resource_inventory_digests':[r['sha256'] for r in value['privateResourceInventories']],
+        'host_browser_cleanup':{'scope':host_cleanup['scope'],'counts':{k:host_cleanup[k] for k in host_counts},
+                                'sha256':value['hostBrowserCleanup']['sha256']},
         'test_log_digests':{k:v['sha256'] for k,v in value['testLogs'].items()},'limitations':list(LIMITATIONS)+([] if mode=='immutable-image' else ['Mounted-source local execution only; no baked application-image or hosted qualification.'])}
 
 

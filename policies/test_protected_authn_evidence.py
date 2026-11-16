@@ -74,6 +74,10 @@ def fixture(root):
     inventory={k:[] for k in ('containers','running','images','volumes','networks')}
     inventory['images']=['PRIVATE_SYNTHETIC existing image']
     inventories=[write(name,inventory) for name in ('resources-before.json','resources-after.json')]
+    host_cleanup=write('browser/host-process-cleanup.json',{'schema_version':1,
+        'scope':'registered-posix-groups-and-observed-descendants','result':'PASS','trigger':'normal',
+        'registeredBrowserGroups':2,'trackedProcesses':8,'termSignals':0,'killSignals':0,
+        'remainingLive':0,'identityConflicts':0,'unresolvedGroups':0,'registryClosed':True})
     origin='http://localhost:4314';issuer='http://localhost:4315/realms/governance'
     readback=write('keycloak-readback.json',{'client':{'clientId':'governance-protected-web','enabled':True,'publicClient':True,
         'standardFlowEnabled':True,'implicitFlowEnabled':False,'directAccessGrantsEnabled':False,'serviceAccountsEnabled':False,
@@ -100,10 +104,10 @@ def fixture(root):
         'isolation':{'project':'gc-protected-123456abcdef','newDatabase':True,'sharedCoreUntouched':True,'cachedImagesOnly':True,'ports':[4314,4315],
             'postgresMemoryBytes':384*evidence.MIB,'keycloakMemoryBytes':640*evidence.MIB,'applicationServicesMemoryBytes':576*evidence.MIB,'helperMemoryBytes':384*evidence.MIB,
             'hostFloorBytes':2048*evidence.MIB,'outputCapBytes':100*evidence.MIB,'diagnosticCapBytes':4*evidence.MIB,'browserTrace':False,'browserVideo':False},
-        'cleanup':{'ownedRemoved':True,'generatedCredentialsRemoved':True,'resourceInventoryPreserved':True},'evidence_directory':folder,'privateLogs':[log],
+        'cleanup':{'ownedRemoved':True,'generatedCredentialsRemoved':True,'resourceInventoryPreserved':True,'ownedHostProcessesRemoved':True},'evidence_directory':folder,'privateLogs':[log],
         'evidenceMode':'immutable-image','imageAttestation':{'imageId':app,'sourceMode':'baked-unmounted','commit':COMMIT,'sources':sources,'packageSha256':hashes['package.json'],'lockSha256':hashes['pnpm-lock.yaml']},
         'containerImages':[{'role':role,'containerId':f'{i:064x}','imageId':app} for i,role in enumerate(sorted(evidence.ROLES),1)],
-        'toolHashes':{'node':'2'*64,'browser':'3'*64},'testLogs':{'nativeHttp':native_log,'browser':browser_log},'privateResourceInventories':inventories}
+        'toolHashes':{'node':'2'*64,'browser':'3'*64},'testLogs':{'nativeHttp':native_log,'browser':browser_log},'privateResourceInventories':inventories,'hostBrowserCleanup':host_cleanup}
     return report
 
 
@@ -132,6 +136,53 @@ class ProtectedEvidenceTests(unittest.TestCase):
             self.assertNotIn(forbidden,output)
         dest=self.root/'safe';dest.mkdir();evidence.copy_captures(self.root,self.report,dest,result)
         self.assertEqual(sorted(p.name for p in dest.iterdir()),list(evidence.CAPTURES))
+
+    def test_host_cleanup_requires_exact_record_path_hash_and_report_claim(self):
+        for mutate in (lambda r:r.pop('hostBrowserCleanup'),
+                lambda r:r['cleanup'].pop('ownedHostProcessesRemoved'),
+                lambda r:r['cleanup'].update(ownedHostProcessesRemoved=False),
+                lambda r:r['hostBrowserCleanup'].update(sha256='0'*64),
+                lambda r:r['hostBrowserCleanup'].update(path=r['evidence_directory']+'/other.json')):
+            r=copy.deepcopy(self.report);mutate(r);self.assertIsNone(self.validate(r))
+
+    def test_host_cleanup_rejects_live_conflicted_unknown_or_unclosed_ownership(self):
+        original=json.loads((self.root/self.report['hostBrowserCleanup']['path']).read_text())
+        mutations=[lambda d:d.update(result='FAIL'),lambda d:d.update(trigger='timeout'),
+            lambda d:d.update(trigger='nonzero'),lambda d:d.update(trigger='exception'),
+            lambda d:d.update(registryClosed=False),lambda d:d.update(registeredBrowserGroups=0),
+            lambda d:d.update(remainingLive=1),lambda d:d.update(identityConflicts=1),
+            lambda d:d.update(unresolvedGroups=1),lambda d:d.update(trackedProcesses=4097),
+            lambda d:d.update(termSignals=-1),lambda d:d.update(killSignals=True),
+            lambda d:d.update(schema_version=True),lambda d:d.update(scope='all-host-processes'),
+            lambda d:d.update(pid=123),lambda d:d.pop('remainingLive')]
+        for mutate in mutations:
+            d=copy.deepcopy(original);mutate(d)
+            self.alter(self.report['hostBrowserCleanup'],lambda _:d);self.assertIsNone(self.validate())
+        self.alter(self.report['hostBrowserCleanup'],lambda _:original);self.assertIsNotNone(self.validate())
+
+    def test_host_cleanup_counts_must_be_possible_for_tracked_identities(self):
+        original=json.loads((self.root/self.report['hostBrowserCleanup']['path']).read_text())
+        for key in ('registeredBrowserGroups','termSignals','killSignals'):
+            with self.subTest(counter=key):
+                data=copy.deepcopy(original);data[key]=data['trackedProcesses']+1
+                self.alter(self.report['hostBrowserCleanup'],lambda _:data)
+                self.assertIsNone(self.validate())
+        boundary=copy.deepcopy(original)
+        for key in ('registeredBrowserGroups','termSignals','killSignals'):
+            boundary[key]=boundary['trackedProcesses']
+        self.alter(self.report['hostBrowserCleanup'],lambda _:boundary)
+        self.assertIsNotNone(self.validate())
+        self.alter(self.report['hostBrowserCleanup'],lambda _:original)
+        self.assertIsNotNone(self.validate())
+
+    def test_host_cleanup_public_summary_contains_only_scoped_counts_and_digest(self):
+        result=self.validate();summary=result['host_browser_cleanup']
+        self.assertEqual(set(summary),{'scope','counts','sha256'})
+        self.assertEqual(summary['scope'],'registered-posix-groups-and-observed-descendants')
+        self.assertEqual(summary['counts']['registeredBrowserGroups'],2)
+        self.assertEqual(summary['counts']['remainingLive'],0)
+        self.assertEqual(summary['sha256'],self.report['hostBrowserCleanup']['sha256'])
+        self.assertNotIn('host-process-cleanup.json',json.dumps(result))
 
     def test_mounted_source_can_only_return_explicit_local_scope(self):
         self.report.update(evidenceMode='mounted-source',imageAttestation=None)
