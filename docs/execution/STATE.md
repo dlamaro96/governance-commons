@@ -1,5 +1,16 @@
 # Current state — 2026-11-16
 
+## PR16 repair-reference follow-up — 2026-11-16T01:20Z
+
+PR16 first hosted attempt failed. Source run43781088999 uploaded all three analyses for tested merge6a3f53ab: JS/TS has one high js/user-controlled-bypass finding, Actions/Python zero; independent stored-analysis readback agrees. Development43781089046 failed at the security step; original safe evidence contains no assertion coordinates, so its precise cause remains unknown. Both original failures are preserved in docs/verification/participation-repair-reference.json and13 byte-identical hosted reports.
+
+The repair-reference helper now runs fresh relation-read authorization unconditionally, with original-receipt visibility for non-null references; complete new-graph write authorization remains enforced. A new real API regression covers null/omitted/explicit/hidden/unknown/foreign references. The rebuilt core passes124/124 API tests,204 pure tests, root/web types and production build. The full16 browser gate passes with zero skips/retries/failures in681739.651ms on imagebc4f15ce. All77 API and140 browser source hashes matched the actual image before/after execution;22 served assets matched. Repeat-scan acceptance now follows signed catalog pages instead of assuming the new source appears among the first50 results. An earlier one-failure browser attempt and intervening TS annotation failure remain recorded. All111 historical captures were restored byte-identically;107 fresh captures are archived,18 inspected by an independent agent and five by root. Five spotchecks are published under distinct names.
+
+Safe API diagnostics publish only declared source coordinates, counters, fixed flags and hashes; raw TAP remains private. After the actual124-test execution, a startup-only runner correction invalidates stale latest summaries while preserving invocation archives. It passes the collector/negative controls but has NOT_RUN in a new local API invocation. The exact earlier runner hash and this later change are separated in the report; hosted qualification will execute the final source. No source-security/Development success is inferred for the new head. SQL001–010 are unchanged. Full programme and release gates remain open.
+
+The existing isolated codex/business-domains checkout contains service/API/UI/seed and SQL011 work;248 pure tests and root/web types pass. Its first isolated real SQL gate is still in progress and has exposed corrected draft defects. Core does not yet have SQL011, and domain API/browser/seed runtime qualification remains NOT_RUN. Preserve the isolated work and continue after the current graph follow-up is published.
+
+
 Programme IN PROGRESS. M1 has a verified local and hosted vertical slice. Full M0 release/repository gates and M2–M10 remain open. The complete 1,426-line specification is preserved byte-for-byte in docs/product/BUILD_SPEC.md; SHA256 8bde0eb8d185958cce46c217c01d7263f6708823a11bb1f45cec7a3a3cb24d61. The canonical register retains 354 named requirements and 1,106 total rows, including 162 named connector routes and an explicitly unreconciled marketplace inventory. Optional runtime activation never removes required implementation.
 
 ## Latest continuation synopsis — 2026-11-16T00:25Z

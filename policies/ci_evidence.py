@@ -8,6 +8,7 @@ import re
 from pathlib import Path
 import shutil
 import sys
+from api_evidence import safe_report
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / ".local/ci-artifacts"
@@ -32,6 +33,25 @@ report = {
     "limitations": ["No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
                     "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification."],
 }
+# The API runner retains raw TAP privately. Only an independently revalidated,
+# exact-source report enters this staging directory; absence cannot turn a
+# claimed successful security step into verified behavior.
+api_source = ROOT / ".local/evidence/api-summary.json"
+api_report = None
+if api_source.is_file() and not api_source.is_symlink() and api_source.stat().st_size <= 4 * 1024 * 1024:
+    try:
+        api_report = safe_report(ROOT, json.loads(api_source.read_text()), os.environ.get("GITHUB_SHA"))
+    except (OSError, ValueError):
+        pass
+api_mismatch = bool(api_report and (outcomes["security"] == "skipped" or
+                    (outcomes["security"] == "success") != (api_report["outcome"] == "PASS")))
+if api_mismatch:
+    api_report = None
+report["api_evidence"] = "STEP_RESULT_MISMATCH" if api_mismatch else "VERIFIED_PASS" if api_report and api_report["outcome"] == "PASS" else "NOT_PASSED" if api_report else "UNAVAILABLE_OR_INVALID"
+if api_report:
+    (DEST / "api-summary.json").write_text(json.dumps(api_report, indent=2) + "\n")
+if outcomes["security"] == "success" and (not api_report or api_report["outcome"] != "PASS"):
+    report["outcome"] = "NOT_PASSED"
 def failure_locations(results, filename):
     """Only reviewed repository coordinates; never copy exception text/paths."""
     locations = set()
