@@ -26,7 +26,7 @@ class AssignmentTests(unittest.TestCase):
         self.assertEqual(len(assigned),len(set(assigned)))
         self.assertFalse(set(assigned)&set(policy.COMMON))
         self.assertEqual(set((*policy.COMMON,*assigned)),set(policy.STEPS))
-        self.assertEqual(len(policy.STEPS),43)
+        self.assertEqual(len(policy.STEPS),45)
 
     def test_each_shard_requires_all_its_results(self):
         for shard in policy.SHARDS:
@@ -173,12 +173,12 @@ class CollectorTests(unittest.TestCase):
 class AuthorityTransitionTests(unittest.TestCase):
     def test_explicit_transition_and_distinct_scope_contracts(self):
         self.assertNotIn('authority_foundation',policy.STEPS)
-        self.assertEqual(set(policy.SUPERSEDED),{'authority_foundation'})
+        self.assertIn('authority_foundation',policy.SUPERSEDED)
         history=policy.SUPERSEDED['authority_foundation']
         self.assertEqual(history['status'],'HISTORICAL_NOT_EXECUTED')
         self.assertEqual(history['retainedCommand'],'./dev test --suite authority-foundation')
         self.assertEqual(history['replacedBy'],['authority_read_original','authority_read_current'])
-        self.assertEqual(policy.RETIRED_REPORTS,('authority-foundation.json',))
+        self.assertIn('authority-foundation.json',policy.RETIRED_REPORTS)
         self.assertEqual(set(policy.AUTHORITY_SCOPES),set(history['replacedBy']))
         for scope in ('original','current'):
             step='authority_read_'+scope
@@ -238,5 +238,102 @@ class AuthorityTransitionTests(unittest.TestCase):
         ]
         for before,after in mutations:
             with self.subTest(before=before),self.assertRaises(ValueError):policy.validate_workflow(workflow.replace(before,after))
+
+
+class RepairedRelationTransitionTests(unittest.TestCase):
+    OLD = ('glossary_population_upgrade','quality_upgrade','lineage_upgrade','classification_upgrade',
+           'reference_upgrade','reference_quality_upgrade','reference_structure_upgrade')
+    NEW = tuple(step.replace('_upgrade','_repaired_upgrade') for step in OLD)
+
+    def test_exact_seven_replacements_and_two_new_scopes(self):
+        self.assertEqual(set(policy.SUPERSEDED),{'authority_foundation',*self.OLD})
+        self.assertEqual(set(policy.RELATION_SCOPES),{*self.NEW,'relation_candidate_original','relation_candidate_current'})
+        self.assertEqual(len(policy.SHARDS['governance']),7)
+        for index,(old,new) in enumerate(zip(self.OLD,self.NEW),18):
+            history=policy.SUPERSEDED[old];scope=policy.RELATION_SCOPES[new]
+            self.assertNotIn(old,policy.STEPS);self.assertIn(new,policy.STEPS)
+            self.assertEqual(history['retainedCommand'],'./dev test --suite '+old.replace('_','-'))
+            self.assertEqual(history['status'],'HISTORICAL_NOT_EXECUTED');self.assertEqual(history['replacedBy'],[new])
+            self.assertEqual(scope['runner'],'scripts/runtime-test-governance-repaired-upgrade.py')
+            self.assertEqual(scope['arguments'],['--run-local','--through',str(index).zfill(3)])
+            self.assertEqual(scope['profile'],'isolated-governance-repaired-sql'+str(index).zfill(3))
+            self.assertEqual(scope['evidence'],'STEP_OUTCOME_ONLY')
+        for name in ('original','current'):
+            step='relation_candidate_'+name;scope=policy.RELATION_SCOPES[step]
+            self.assertIn(step,policy.SHARDS['governance'])
+            self.assertEqual(scope['arguments'],['--run-local','--scope',name])
+            self.assertEqual(scope['runner'],'scripts/runtime-test-relation-candidate-upgrade.py')
+            self.assertEqual(scope['outerTimeoutSeconds'],900)
+        self.assertNotEqual(policy.RELATION_SCOPES['relation_candidate_original']['schemaScope'],policy.RELATION_SCOPES['relation_candidate_current']['schemaScope'])
+
+    def test_every_historical_environment_outcome_refuses_substitution_and_coexistence(self):
+        for shard in (None,*policy.SHARDS):
+            env={'GC_'+step.upper()+'_RESULT':'success' if step in policy.required_steps(shard) else 'skipped' for step in policy.STEPS}
+            for old in self.OLD:
+                for value in ('success','failure','skipped','cancelled','NOT_IN_SHARD','',None):
+                    with self.subTest(shard=shard,old=old,value=value):
+                        self.assertFalse(policy.collect_outcomes({**env,'GC_'+old.upper()+'_RESULT':value},shard)[1])
+
+    def test_historical_reports_never_become_repaired_evidence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);folder=root/'.local/evidence';folder.mkdir(parents=True)
+            for old in self.OLD:
+                path=folder/(old.replace('_','-')+'.json')
+                for symlink in (False,True):
+                    if symlink:path.symlink_to(folder/'absent')
+                    else:path.write_text('{"outcome":"PASS"}')
+                    for shard in (None,*policy.SHARDS):self.assertTrue(policy.foreign_evidence(root,shard))
+                    path.unlink()
+
+    def test_new_report_ownership_allows_nested_private_stage_records_but_not_foreign_profile(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);folder=root/'.local/evidence';folder.mkdir(parents=True)
+            nested=folder/'synthetic-owned-stage';nested.mkdir();(nested/'report.json').write_text('{"phase":"predecessor"}')
+            for step,scope in policy.RELATION_SCOPES.items():
+                file=folder/scope['report'];file.write_text('{"private":"not ingested"}')
+                owner=next(shard for shard,steps in policy.SHARDS.items() if step in steps)
+                self.assertFalse(policy.foreign_evidence(root,owner))
+                for other in set(policy.SHARDS)-{owner}:self.assertTrue(policy.foreign_evidence(root,other))
+                file.unlink()
+
+    def test_real_collector_missing_failure_cancelled_and_historical_substitution_all_fail(self):
+        collect=evidence_tests.EvidenceGateTests(methodName='runTest').collect
+        for step in policy.RELATION_SCOPES:
+            owner=next(shard for shard,steps in policy.SHARDS.items() if step in steps)
+            for invalid in (None,'failure','cancelled','skipped','NOT_IN_SHARD'):
+                options={'omitted_step':step} if invalid is None else {'failed_step':step,'failed_outcome':invalid}
+                code,report=collect(shard=owner,**options)
+                self.assertEqual(code,1);self.assertEqual(report['outcome'],'NOT_PASSED')
+            old=next((old for old,new in zip(self.OLD,self.NEW) if new==step),self.OLD[0])
+            code,_=collect(shard=owner,omitted_step=step,shard_environment={'GC_'+old.upper()+'_RESULT':'success'})
+            self.assertEqual(code,1)
+
+    def test_scope_disclosure_does_not_publish_native_reports_or_historical_diagnostics(self):
+        collect=evidence_tests.EvidenceGateTests(methodName='runTest').collect
+        for shard in ('governance','quality-basics'):
+            code,report=collect(shard=shard)
+            self.assertEqual(code,0)
+            self.assertEqual(report['glossary_population_diagnostic'],'HISTORICAL_NOT_EXECUTED')
+            self.assertEqual(report['relation_qualifications'],{step:{**scope,'outcome':'success' if step in policy.required_steps(shard) else 'NOT_IN_SHARD'} for step,scope in policy.RELATION_SCOPES.items()})
+            self.assertEqual(report['tests'],[]);self.assertEqual(report['screenshots'],[])
+
+    def test_workflow_wrong_scope_alias_duplicate_omitted_controls_and_crosswired_results_refuse(self):
+        workflow=(ROOT/'.github/workflows/ci.yml').read_text()
+        for step,scope in policy.RELATION_SCOPES.items():
+            alternate='relation_candidate_current' if step!='relation_candidate_current' else 'relation_candidate_original'
+            for before,after in (
+                ('run: '+scope['command'],'run: '+policy.COMMANDS[alternate]),
+                ('id: '+step+'\n','id: glossary_population_upgrade\n'),
+                ('GC_'+step.upper()+'_RESULT: ${{ steps.'+step+'.outcome }}','GC_'+step.upper()+'_RESULT: ${{ steps.'+alternate+'.outcome }}'),
+            ):
+                with self.subTest(step=step,before=before),self.assertRaises(ValueError):policy.validate_workflow(workflow.replace(before,after))
+        for name in ('test_relation_candidate_upgrade.py','test_governance_repaired_chain.py','test_runtime_routing.py'):
+            with self.assertRaises(ValueError):policy.validate_workflow(workflow.replace('run: python3 scripts/'+name,'run: true'))
+
+    def test_assignment_digest_binds_repaired_profile_and_clock_budget(self):
+        original=policy.assignment_hash()
+        for field,value in (('profile','wrong-profile'),('outerTimeoutSeconds',9999),('arguments',['--run-local','--through','017'])):
+            with patch.dict(policy.RELATION_SCOPES['quality_repaired_upgrade'],{field:value}):self.assertNotEqual(policy.assignment_hash(),original)
+        self.assertEqual(policy.assignment_hash(),original)
 
 if __name__=='__main__':unittest.main()

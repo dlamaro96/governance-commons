@@ -21,18 +21,20 @@ SHARDS = {'foundation': ('connectors',
                 'authority_read_current',
                 'source_connectors_upgrade',
                 'postgres_targets'),
- 'governance': ('glossary_upgrade',
+ 'governance': ('relation_candidate_original',
+                'relation_candidate_current',
+                'glossary_upgrade',
                 'relation_scope_upgrade',
-                'glossary_population_upgrade',
-                'lineage_upgrade',
-                'classification_upgrade'),
- 'quality-basics': ('quality_upgrade',
+                'glossary_population_repaired_upgrade',
+                'lineage_repaired_upgrade',
+                'classification_repaired_upgrade'),
+ 'quality-basics': ('quality_repaired_upgrade',
                     'quality_worker',
                     'lineage_worker',
-                    'reference_upgrade',
-                    'reference_quality_upgrade',
+                    'reference_repaired_upgrade',
+                    'reference_quality_repaired_upgrade',
                     'reference_quality_worker',
-                    'reference_structure_upgrade',
+                    'reference_structure_repaired_upgrade',
                     'reference_import'),
  'quality-freshness-volume': ('uniqueness_upgrade',
                               'uniqueness_worker',
@@ -62,18 +64,20 @@ COMMANDS = {'bootstrap': './dev bootstrap',
  'authority_read_current': './dev test --suite authority-read-current',
  'source_connectors_upgrade': './dev test --suite source-connectors-upgrade',
  'postgres_targets': './dev test --suite postgres-targets',
+ 'relation_candidate_original': './dev test --suite relation-candidate-original',
+ 'relation_candidate_current': './dev test --suite relation-candidate-current',
  'glossary_upgrade': './dev test --suite glossary-upgrade',
  'relation_scope_upgrade': './dev test --suite relation-scope-upgrade',
- 'glossary_population_upgrade': './dev test --suite glossary-population-upgrade',
- 'lineage_upgrade': './dev test --suite lineage-upgrade',
- 'classification_upgrade': './dev test --suite classification-upgrade',
- 'quality_upgrade': './dev test --suite quality-upgrade',
+ 'glossary_population_repaired_upgrade': './dev test --suite glossary-population-repaired-upgrade',
+ 'lineage_repaired_upgrade': './dev test --suite lineage-repaired-upgrade',
+ 'classification_repaired_upgrade': './dev test --suite classification-repaired-upgrade',
+ 'quality_repaired_upgrade': './dev test --suite quality-repaired-upgrade',
  'quality_worker': './dev test --suite quality-worker',
  'lineage_worker': './dev test --suite lineage-worker',
- 'reference_upgrade': './dev test --suite reference-upgrade',
- 'reference_quality_upgrade': './dev test --suite reference-quality-upgrade',
+ 'reference_repaired_upgrade': './dev test --suite reference-repaired-upgrade',
+ 'reference_quality_repaired_upgrade': './dev test --suite reference-quality-repaired-upgrade',
  'reference_quality_worker': './dev test --suite reference-quality-worker',
- 'reference_structure_upgrade': './dev test --suite reference-structure-upgrade',
+ 'reference_structure_repaired_upgrade': './dev test --suite reference-structure-repaired-upgrade',
  'reference_import': './dev test --suite reference-import',
  'uniqueness_upgrade': './dev test --suite uniqueness-upgrade',
  'uniqueness_worker': './dev test --suite uniqueness-worker',
@@ -116,14 +120,167 @@ AUTHORITY_SCOPES = {'authority_read_original': {'command': './dev test --suite a
                             'schemaScope': 'Populated SQL001–030 to SQL031 application, full preservation '
                                            'and inert replay',
                             'evidence': 'STEP_OUTCOME_ONLY'}}
-RETIRED_REPORTS = ('authority-foundation.json',)
+SUPERSEDED.update({'glossary_population_upgrade': {'status': 'HISTORICAL_NOT_EXECUTED',
+                                 'retainedCommand': './dev test --suite glossary-population-upgrade',
+                                 'retainedSchema': 'SQL001–018',
+                                 'replacedBy': ['glossary_population_repaired_upgrade'],
+                                 'limitation': 'Original SQL018 population deadline failure and original '
+                                               'commands remain historical. This explicitly repaired chain '
+                                               'applies SQL032 before the unchanged population assertions; '
+                                               'an old outcome cannot substitute.'},
+ 'quality_upgrade': {'status': 'HISTORICAL_NOT_EXECUTED',
+                     'retainedCommand': './dev test --suite quality-upgrade',
+                     'retainedSchema': 'SQL001–019',
+                     'replacedBy': ['quality_repaired_upgrade'],
+                     'limitation': 'Original SQL018 population deadline failure and original commands remain '
+                                   'historical. This explicitly repaired chain applies SQL032 before the '
+                                   'unchanged population assertions; an old outcome cannot substitute.'},
+ 'lineage_upgrade': {'status': 'HISTORICAL_NOT_EXECUTED',
+                     'retainedCommand': './dev test --suite lineage-upgrade',
+                     'retainedSchema': 'SQL001–020',
+                     'replacedBy': ['lineage_repaired_upgrade'],
+                     'limitation': 'Original SQL018 population deadline failure and original commands remain '
+                                   'historical. This explicitly repaired chain applies SQL032 before the '
+                                   'unchanged population assertions; an old outcome cannot substitute.'},
+ 'classification_upgrade': {'status': 'HISTORICAL_NOT_EXECUTED',
+                            'retainedCommand': './dev test --suite classification-upgrade',
+                            'retainedSchema': 'SQL001–021',
+                            'replacedBy': ['classification_repaired_upgrade'],
+                            'limitation': 'Original SQL018 population deadline failure and original commands '
+                                          'remain historical. This explicitly repaired chain applies SQL032 '
+                                          'before the unchanged population assertions; an old outcome cannot '
+                                          'substitute.'},
+ 'reference_upgrade': {'status': 'HISTORICAL_NOT_EXECUTED',
+                       'retainedCommand': './dev test --suite reference-upgrade',
+                       'retainedSchema': 'SQL001–022',
+                       'replacedBy': ['reference_repaired_upgrade'],
+                       'limitation': 'Original SQL018 population deadline failure and original commands '
+                                     'remain historical. This explicitly repaired chain applies SQL032 '
+                                     'before the unchanged population assertions; an old outcome cannot '
+                                     'substitute.'},
+ 'reference_quality_upgrade': {'status': 'HISTORICAL_NOT_EXECUTED',
+                               'retainedCommand': './dev test --suite reference-quality-upgrade',
+                               'retainedSchema': 'SQL001–023',
+                               'replacedBy': ['reference_quality_repaired_upgrade'],
+                               'limitation': 'Original SQL018 population deadline failure and original '
+                                             'commands remain historical. This explicitly repaired chain '
+                                             'applies SQL032 before the unchanged population assertions; an '
+                                             'old outcome cannot substitute.'},
+ 'reference_structure_upgrade': {'status': 'HISTORICAL_NOT_EXECUTED',
+                                 'retainedCommand': './dev test --suite reference-structure-upgrade',
+                                 'retainedSchema': 'SQL001–024',
+                                 'replacedBy': ['reference_structure_repaired_upgrade'],
+                                 'limitation': 'Original SQL018 population deadline failure and original '
+                                               'commands remain historical. This explicitly repaired chain '
+                                               'applies SQL032 before the unchanged population assertions; '
+                                               'an old outcome cannot substitute.'}})
+RELATION_SCOPES = {'glossary_population_repaired_upgrade': {'command': './dev test --suite '
+                                                     'glossary-population-repaired-upgrade',
+                                          'runner': 'scripts/runtime-test-governance-repaired-upgrade.py',
+                                          'arguments': ['--run-local', '--through', '018'],
+                                          'profile': 'isolated-governance-repaired-sql018',
+                                          'report': 'glossary-population-repaired-upgrade.json',
+                                          'schemaScope': 'SQL001–018 application/refusal/replay, then SQL032 '
+                                                         'before unchanged population assertions; inherited '
+                                                         'upgrades and assertions retained through SQL018',
+                                          'outerTimeoutSeconds': 1500,
+                                          'evidence': 'STEP_OUTCOME_ONLY'},
+ 'quality_repaired_upgrade': {'command': './dev test --suite quality-repaired-upgrade',
+                              'runner': 'scripts/runtime-test-governance-repaired-upgrade.py',
+                              'arguments': ['--run-local', '--through', '019'],
+                              'profile': 'isolated-governance-repaired-sql019',
+                              'report': 'quality-repaired-upgrade.json',
+                              'schemaScope': 'SQL001–018 application/refusal/replay, then SQL032 before '
+                                             'unchanged population assertions; inherited upgrades and '
+                                             'assertions retained through SQL019',
+                              'outerTimeoutSeconds': 1800,
+                              'evidence': 'STEP_OUTCOME_ONLY'},
+ 'lineage_repaired_upgrade': {'command': './dev test --suite lineage-repaired-upgrade',
+                              'runner': 'scripts/runtime-test-governance-repaired-upgrade.py',
+                              'arguments': ['--run-local', '--through', '020'],
+                              'profile': 'isolated-governance-repaired-sql020',
+                              'report': 'lineage-repaired-upgrade.json',
+                              'schemaScope': 'SQL001–018 application/refusal/replay, then SQL032 before '
+                                             'unchanged population assertions; inherited upgrades and '
+                                             'assertions retained through SQL020',
+                              'outerTimeoutSeconds': 1800,
+                              'evidence': 'STEP_OUTCOME_ONLY'},
+ 'classification_repaired_upgrade': {'command': './dev test --suite classification-repaired-upgrade',
+                                     'runner': 'scripts/runtime-test-governance-repaired-upgrade.py',
+                                     'arguments': ['--run-local', '--through', '021'],
+                                     'profile': 'isolated-governance-repaired-sql021',
+                                     'report': 'classification-repaired-upgrade.json',
+                                     'schemaScope': 'SQL001–018 application/refusal/replay, then SQL032 '
+                                                    'before unchanged population assertions; inherited '
+                                                    'upgrades and assertions retained through SQL021',
+                                     'outerTimeoutSeconds': 2100,
+                                     'evidence': 'STEP_OUTCOME_ONLY'},
+ 'reference_repaired_upgrade': {'command': './dev test --suite reference-repaired-upgrade',
+                                'runner': 'scripts/runtime-test-governance-repaired-upgrade.py',
+                                'arguments': ['--run-local', '--through', '022'],
+                                'profile': 'isolated-governance-repaired-sql022',
+                                'report': 'reference-repaired-upgrade.json',
+                                'schemaScope': 'SQL001–018 application/refusal/replay, then SQL032 before '
+                                               'unchanged population assertions; inherited upgrades and '
+                                               'assertions retained through SQL022',
+                                'outerTimeoutSeconds': 2400,
+                                'evidence': 'STEP_OUTCOME_ONLY'},
+ 'reference_quality_repaired_upgrade': {'command': './dev test --suite reference-quality-repaired-upgrade',
+                                        'runner': 'scripts/runtime-test-governance-repaired-upgrade.py',
+                                        'arguments': ['--run-local', '--through', '023'],
+                                        'profile': 'isolated-governance-repaired-sql023',
+                                        'report': 'reference-quality-repaired-upgrade.json',
+                                        'schemaScope': 'SQL001–018 application/refusal/replay, then SQL032 '
+                                                       'before unchanged population assertions; inherited '
+                                                       'upgrades and assertions retained through SQL023',
+                                        'outerTimeoutSeconds': 2700,
+                                        'evidence': 'STEP_OUTCOME_ONLY'},
+ 'reference_structure_repaired_upgrade': {'command': './dev test --suite '
+                                                     'reference-structure-repaired-upgrade',
+                                          'runner': 'scripts/runtime-test-governance-repaired-upgrade.py',
+                                          'arguments': ['--run-local', '--through', '024'],
+                                          'profile': 'isolated-governance-repaired-sql024',
+                                          'report': 'reference-structure-repaired-upgrade.json',
+                                          'schemaScope': 'SQL001–018 application/refusal/replay, then SQL032 '
+                                                         'before unchanged population assertions; inherited '
+                                                         'upgrades and assertions retained through SQL024',
+                                          'outerTimeoutSeconds': 3000,
+                                          'evidence': 'STEP_OUTCOME_ONLY'},
+ 'relation_candidate_original': {'command': './dev test --suite relation-candidate-original',
+                                 'runner': 'scripts/runtime-test-relation-candidate-upgrade.py',
+                                 'arguments': ['--run-local', '--scope', 'original'],
+                                 'profile': 'isolated-relation-candidate-original',
+                                 'report': 'relation-candidate-original.json',
+                                 'schemaScope': 'SQL001–018 to SQL032 application, complete row '
+                                                'preservation, inert replay and unchanged population '
+                                                'assertions',
+                                 'outerTimeoutSeconds': 900,
+                                 'evidence': 'STEP_OUTCOME_ONLY'},
+ 'relation_candidate_current': {'command': './dev test --suite relation-candidate-current',
+                                'runner': 'scripts/runtime-test-relation-candidate-upgrade.py',
+                                'arguments': ['--run-local', '--scope', 'current'],
+                                'profile': 'isolated-relation-candidate-current',
+                                'report': 'relation-candidate-current.json',
+                                'schemaScope': 'SQL001–031 to SQL032 application, complete row preservation, '
+                                               'inert replay and unchanged population assertions',
+                                'outerTimeoutSeconds': 900,
+                                'evidence': 'STEP_OUTCOME_ONLY'}}
+RETIRED_REPORTS = ('authority-foundation.json', 'glossary-population-upgrade.json', 'quality-upgrade.json', 'lineage-upgrade.json', 'classification-upgrade.json', 'reference-upgrade.json', 'reference-quality-upgrade.json', 'reference-structure-upgrade.json')
 STEPS = tuple(COMMANDS)
 OUTCOMES = frozenset(("success", "failure", "cancelled", "skipped"))
 EVIDENCE = {'security': ('api-summary.json',),
  'authority_authn_foundation': ('authority-authn-foundation.json',),
  'authority_read_original': ('authority-read-original.json',),
  'authority_read_current': ('authority-read-current.json',),
- 'glossary_population_upgrade': ('glossary-population-upgrade.json',),
+ 'glossary_population_repaired_upgrade': ('glossary-population-repaired-upgrade.json',),
+ 'quality_repaired_upgrade': ('quality-repaired-upgrade.json',),
+ 'lineage_repaired_upgrade': ('lineage-repaired-upgrade.json',),
+ 'classification_repaired_upgrade': ('classification-repaired-upgrade.json',),
+ 'reference_repaired_upgrade': ('reference-repaired-upgrade.json',),
+ 'reference_quality_repaired_upgrade': ('reference-quality-repaired-upgrade.json',),
+ 'reference_structure_repaired_upgrade': ('reference-structure-repaired-upgrade.json',),
+ 'relation_candidate_original': ('relation-candidate-original.json',),
+ 'relation_candidate_current': ('relation-candidate-current.json',),
  'protected_authn': ('protected-authn.json',),
  'browser': ('playwright-results.json',)}
 
@@ -135,7 +292,7 @@ def required_steps(shard):
     return frozenset((*COMMON, *SHARDS[shard]))
 
 def assignment_hash():
-    return hashlib.sha256(json.dumps({'common':COMMON,'shards':SHARDS,'commands':COMMANDS,'superseded':SUPERSEDED,'authorityScopes':AUTHORITY_SCOPES},sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    return hashlib.sha256(json.dumps({'common':COMMON,'shards':SHARDS,'commands':COMMANDS,'superseded':SUPERSEDED,'authorityScopes':AUTHORITY_SCOPES,'relationScopes':RELATION_SCOPES},sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 def collect_outcomes(environment, shard):
     required = required_steps(shard)
@@ -240,18 +397,20 @@ def validate_workflow(text):
  '          GC_AUTHORITY_READ_CURRENT_RESULT: ${{ steps.authority_read_current.outcome }}\n'
  '          GC_SOURCE_CONNECTORS_UPGRADE_RESULT: ${{ steps.source_connectors_upgrade.outcome }}\n'
  '          GC_POSTGRES_TARGETS_RESULT: ${{ steps.postgres_targets.outcome }}\n'
+ '          GC_RELATION_CANDIDATE_ORIGINAL_RESULT: ${{ steps.relation_candidate_original.outcome }}\n'
+ '          GC_RELATION_CANDIDATE_CURRENT_RESULT: ${{ steps.relation_candidate_current.outcome }}\n'
  '          GC_GLOSSARY_UPGRADE_RESULT: ${{ steps.glossary_upgrade.outcome }}\n'
  '          GC_RELATION_SCOPE_UPGRADE_RESULT: ${{ steps.relation_scope_upgrade.outcome }}\n'
- '          GC_GLOSSARY_POPULATION_UPGRADE_RESULT: ${{ steps.glossary_population_upgrade.outcome }}\n'
- '          GC_QUALITY_UPGRADE_RESULT: ${{ steps.quality_upgrade.outcome }}\n'
+ '          GC_GLOSSARY_POPULATION_REPAIRED_UPGRADE_RESULT: ${{ steps.glossary_population_repaired_upgrade.outcome }}\n'
+ '          GC_QUALITY_REPAIRED_UPGRADE_RESULT: ${{ steps.quality_repaired_upgrade.outcome }}\n'
  '          GC_QUALITY_WORKER_RESULT: ${{ steps.quality_worker.outcome }}\n'
- '          GC_LINEAGE_UPGRADE_RESULT: ${{ steps.lineage_upgrade.outcome }}\n'
+ '          GC_LINEAGE_REPAIRED_UPGRADE_RESULT: ${{ steps.lineage_repaired_upgrade.outcome }}\n'
  '          GC_LINEAGE_WORKER_RESULT: ${{ steps.lineage_worker.outcome }}\n'
- '          GC_CLASSIFICATION_UPGRADE_RESULT: ${{ steps.classification_upgrade.outcome }}\n'
- '          GC_REFERENCE_UPGRADE_RESULT: ${{ steps.reference_upgrade.outcome }}\n'
- '          GC_REFERENCE_QUALITY_UPGRADE_RESULT: ${{ steps.reference_quality_upgrade.outcome }}\n'
+ '          GC_CLASSIFICATION_REPAIRED_UPGRADE_RESULT: ${{ steps.classification_repaired_upgrade.outcome }}\n'
+ '          GC_REFERENCE_REPAIRED_UPGRADE_RESULT: ${{ steps.reference_repaired_upgrade.outcome }}\n'
+ '          GC_REFERENCE_QUALITY_REPAIRED_UPGRADE_RESULT: ${{ steps.reference_quality_repaired_upgrade.outcome }}\n'
  '          GC_REFERENCE_QUALITY_WORKER_RESULT: ${{ steps.reference_quality_worker.outcome }}\n'
- '          GC_REFERENCE_STRUCTURE_UPGRADE_RESULT: ${{ steps.reference_structure_upgrade.outcome }}\n'
+ '          GC_REFERENCE_STRUCTURE_REPAIRED_UPGRADE_RESULT: ${{ steps.reference_structure_repaired_upgrade.outcome }}\n'
  '          GC_REFERENCE_IMPORT_RESULT: ${{ steps.reference_import.outcome }}\n'
  '          GC_UNIQUENESS_UPGRADE_RESULT: ${{ steps.uniqueness_upgrade.outcome }}\n'
  '          GC_UNIQUENESS_WORKER_RESULT: ${{ steps.uniqueness_worker.outcome }}\n'
@@ -299,7 +458,10 @@ def validate_workflow(text):
     require('permissions:\n  contents: read\n' in text and text.count('permissions:')==3)
     require('run: python3 policies/test_ci_shards.py' in blocks['quality'])
     require('run: python3 scripts/test_authority_read_upgrade.py' in blocks['quality'])
-    require('GC_AUTHORITY_FOUNDATION_RESULT' not in body and 'id: authority_foundation\n' not in body)
+    for step in SUPERSEDED:
+        require('GC_'+step.upper()+'_RESULT' not in body and 'id: '+step+'\n' not in body)
+    for control in ('test_relation_candidate_upgrade.py','test_governance_repaired_chain.py','test_runtime_routing.py'):
+        require('run: python3 scripts/'+control in blocks['quality'])
     require(body.index('id: authority_authn_foundation\n')<body.index('id: authority_read_original\n')<body.index('id: authority_read_current\n')<body.index('id: source_connectors_upgrade\n'))
     require(body.index('id: browser\n')<body.index('id: protected_authn\n')<body.index('name: Collect bounded redacted evidence')<body.index('name: Stop only this Compose'))
     return True

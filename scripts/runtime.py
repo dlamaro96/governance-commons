@@ -352,6 +352,15 @@ def main():
   ./dev test --suite business-domains-upgrade Verify typed domain storage, hierarchy, placement and concurrency
   ./dev test --suite business-domain-seed Verify domain seed recovery, provenance and repeatability
   ./dev test --suite authority-authn-foundation Verify inactive authentication through native PostgreSQL roles
+  ./dev test --suite glossary-population-repaired-upgrade Verify isolated-governance-repaired-sql018
+  ./dev test --suite quality-repaired-upgrade Verify isolated-governance-repaired-sql019
+  ./dev test --suite lineage-repaired-upgrade Verify isolated-governance-repaired-sql020
+  ./dev test --suite classification-repaired-upgrade Verify isolated-governance-repaired-sql021
+  ./dev test --suite reference-repaired-upgrade Verify isolated-governance-repaired-sql022
+  ./dev test --suite reference-quality-repaired-upgrade Verify isolated-governance-repaired-sql023
+  ./dev test --suite reference-structure-repaired-upgrade Verify isolated-governance-repaired-sql024
+  ./dev test --suite relation-candidate-original Verify isolated-relation-candidate-original
+  ./dev test --suite relation-candidate-current Verify isolated-relation-candidate-current
   ./dev test --suite authority-foundation Verify historical SQL001–013 authority foundation
   ./dev test --suite authority-read-original Verify explicit SQL013-to031 authority read upgrade
   ./dev test --suite authority-read-current Verify populated SQL030-to031 authority read upgrade
@@ -480,6 +489,33 @@ Never use docker compose config output in public logs: it expands secrets.""")
     if args.command == "test" and args.suite == "authority-foundation":
         require_local()
         run([sys.executable, "scripts/runtime-test-authority-foundation.py"], timeout=1800); return
+    if args.command == "test" and args.suite == "glossary-population-repaired-upgrade":
+        require_local()
+        run([sys.executable, 'scripts/runtime-test-governance-repaired-upgrade.py', '--run-local', '--through', '018'], timeout=1500); return
+    if args.command == "test" and args.suite == "quality-repaired-upgrade":
+        require_local()
+        run([sys.executable, 'scripts/runtime-test-governance-repaired-upgrade.py', '--run-local', '--through', '019'], timeout=1800); return
+    if args.command == "test" and args.suite == "lineage-repaired-upgrade":
+        require_local()
+        run([sys.executable, 'scripts/runtime-test-governance-repaired-upgrade.py', '--run-local', '--through', '020'], timeout=1800); return
+    if args.command == "test" and args.suite == "classification-repaired-upgrade":
+        require_local()
+        run([sys.executable, 'scripts/runtime-test-governance-repaired-upgrade.py', '--run-local', '--through', '021'], timeout=2100); return
+    if args.command == "test" and args.suite == "reference-repaired-upgrade":
+        require_local()
+        run([sys.executable, 'scripts/runtime-test-governance-repaired-upgrade.py', '--run-local', '--through', '022'], timeout=2400); return
+    if args.command == "test" and args.suite == "reference-quality-repaired-upgrade":
+        require_local()
+        run([sys.executable, 'scripts/runtime-test-governance-repaired-upgrade.py', '--run-local', '--through', '023'], timeout=2700); return
+    if args.command == "test" and args.suite == "reference-structure-repaired-upgrade":
+        require_local()
+        run([sys.executable, 'scripts/runtime-test-governance-repaired-upgrade.py', '--run-local', '--through', '024'], timeout=3000); return
+    if args.command == "test" and args.suite == "relation-candidate-original":
+        require_local()
+        run([sys.executable, 'scripts/runtime-test-relation-candidate-upgrade.py', '--run-local', '--scope', 'original'], timeout=900); return
+    if args.command == "test" and args.suite == "relation-candidate-current":
+        require_local()
+        run([sys.executable, 'scripts/runtime-test-relation-candidate-upgrade.py', '--run-local', '--scope', 'current'], timeout=900); return
     require_bootstrap(); require_local()
     if args.command == "up":
         authentication_bootstrap()

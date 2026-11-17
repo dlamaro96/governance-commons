@@ -13,6 +13,7 @@ _pin_spec=importlib.util.spec_from_file_location('quality_sql019_binding',ROOT/'
 sql019=importlib.util.module_from_spec(_pin_spec);_pin_spec.loader.exec_module(sql019)
 spec=importlib.util.spec_from_file_location('quality_upgrade_base',ROOT/'scripts/runtime-test-glossary-population-upgrade.py')
 base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
+repaired = base.repaired
 REPORT=ROOT/'.local/evidence/quality-upgrade.json'
 MIGRATION='019_quality_execution.sql'
 NAMES=[*base.NAMES,base.MIGRATION]
@@ -29,6 +30,7 @@ def sources():
  paths={row['path'] for row in base.sources()}
  paths.add(PREDECESSOR_FIXTURE)
  paths.update(sql019.INPUTS)
+ paths.update(['policies/quality_upgrade_diagnostics.py','policies/api_evidence.py','policies/authentication_evidence.py','policies/ci_evidence.py'])
  paths.update(['scripts/runtime-test-quality-upgrade.py',*TESTS,'packages/domain/src/quality-service.ts','packages/domain/src/quality.ts','packages/domain/src/quality-contracts.ts','packages/domain/src/glossary-service.ts','packages/db/migrations/'+MIGRATION,'apps/api/src/repository.ts','packages/domain/src/approval-service.ts','packages/domain/src/approval.ts','packages/domain/src/approval-contracts.ts','packages/domain/src/glossary.ts','packages/domain/src/glossary-contracts.ts','packages/domain/src/model-service.ts','packages/domain/src/cursor.ts'])
  pending=[ROOT/name for name in paths if name.endswith(('.ts','.tsx'))]
  while pending:
@@ -49,6 +51,11 @@ class Harness(base.Harness):
   base.REPORT=REPORT
   super().__init__()
   self.report.update(command='./dev test --suite quality-upgrade',profile='isolated-quality-execution')
+
+ def remember_quality_failure(self,error):
+  # Diagnostics must not mask the original failed operation or skip its readback.
+  try:self.remember_failure(error)
+  except Exception:self.report.setdefault('quality_diagnostic_capture','UNAVAILABLE')
 
  def helper(self,args,*,mounts=(),**kwargs):
   if self.phase==sql019.PHASE:
@@ -177,6 +184,7 @@ def canonical_snapshot(h,tables):
 
 def execute(h):
  frozen=sources()
+ h.report['quality_diagnostic_sources']=frozen
  predecessor_phase(h,frozen)
  h.report['sources']=frozen
  h.phase='quality-predecessor'
@@ -184,13 +192,13 @@ def execute(h):
  before=canonical_snapshot(h,tables)
  ledger=json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))
  target=h.folder/'quality-target';target.mkdir()
- for name in [*NAMES,MIGRATION]:shutil.copyfile(base.MIGRATIONS/name,target/name)
+ for name in repaired.names(h, [*NAMES,MIGRATION]):shutil.copyfile(base.MIGRATIONS/name,target/name)
  h.phase='quality-upgrade'
  result=h.migrate(target)
  require(re.findall(r'^Applied (.+)$',result.stdout,re.MULTILINE)==[MIGRATION],'Expected exact SQL019 application')
  require(canonical_snapshot(h,tables)==before,'Quality upgrade changed predecessor canonical/history rows')
  after=json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))
- require(len(ledger)==18 and after[:18]==ledger and len(after)==19,'Quality upgrade changed predecessor ledger')
+ require((repaired.after(h, ledger, after, NAMES, MIGRATION) if repaired.active(h) else len(ledger)==18 and after[:18]==ledger and len(after)==19),'Quality upgrade changed predecessor ledger')
  require('Applied' not in h.migrate(target).stdout and canonical_snapshot(h,tables)==before,'Quality replay changed predecessor rows')
  h.report['qualitySnapshotAlgorithm']='sha256 of sorted fixed-width SHA256 canonical row digests, with duplicate multiplicity and exact row count'
  h.report['qualityUpgradeBaseline']=[{'table':name,**row} for name,row in before.items()]
@@ -206,6 +214,8 @@ def execute(h):
  try:
   stage['mountedModulesBefore']=sql019.readback(h)
   tested=h.helper(['node','--import','tsx','--test','--test-reporter=tap','--test-concurrency=1',*TESTS],timeout=180,allow_failure=True)
+  # Retain the failed suite before the mandatory source readback replaces last_command.
+  if tested.returncode:h.remember_quality_failure(RuntimeError('Native quality suite returned nonzero'))
   stage['mountedModulesAfter']=sql019.readback(h)
   require(tested.returncode==0,'Native quality execution suite failed; retained bounded TAP identifies failing case')
   h.report['tests']=base.tap_summary(tested.stdout,expected)
@@ -216,7 +226,8 @@ def execute(h):
   h.repository_stage=None
   if stage['result']=='RUNNING':stage['result']='FAIL'
  require(sources()==frozen,'Quality execution source changed during native qualification')
- h.report['migrations']=[{'name':name,'sha256':sha((base.MIGRATIONS/name).read_bytes())} for name in [*NAMES,MIGRATION]]
+ repaired.complete(h, [*NAMES, MIGRATION])
+ h.report['migrations']=[{'name':name,'sha256':sha((base.MIGRATIONS/name).read_bytes())} for name in repaired.names(h, [*NAMES,MIGRATION])]
  h.report['limitations']=['Predecessor SQL001–018 tests mount the exact recorded immutable repository module; SQL019 tests bind exact ee21065 service/parser/contracts/repository with mounted readback and startup/exit checks. Outer predecessor module overlays retain their verified precedence; other dependencies/tests use the recorded checkout bytes.',
   'Approved quality execution storage and production domain-service paths; API/browser and Temporal restart qualification remain separate.','Canonical content authority remains inactive. No shared runtime or external infrastructure was modified.']
 
@@ -224,14 +235,14 @@ def main():
  h,failed=Harness(),False
  try:execute(h)
  except BaseException as error:
-  failed=True;h.report.update(failed_phase=h.phase,error_type=type(error).__name__,error='Inspect bounded private diagnostics')
+  failed=True;h.remember_quality_failure(error);h.report.update(failed_phase=h.phase,error_type=type(error).__name__,error='Inspect bounded private diagnostics')
  finally:
   try:
    h.phase='cleanup';h.cleanup()
    if h.resources_before is not None:
     h.deadline=h.cleanup_deadline;require(h.inventory()==h.resources_before,'Preexisting resource inventory changed');h.report['cleanup']['resourceInventoryPreserved']=True
   except BaseException as error:
-   failed=True;h.report['cleanupErrorType']=type(error).__name__
+   failed=True;h.remember_quality_failure(error);h.report.setdefault('failed_phase',h.phase);h.report['cleanupErrorType']=type(error).__name__
   h.report.update(result='FAIL' if failed else 'PASS',recorded_at=datetime.now(timezone.utc).isoformat(),evidence_directory=str(h.folder.relative_to(ROOT)))
   h.report['private_logs']=[{'path':str(p.relative_to(ROOT)),'sha256':sha(p.read_bytes())} for p in sorted(h.folder.glob('*.log'))];h.save(final=True)
  print(json.dumps({'result':h.report['result'],'report':str(REPORT.relative_to(ROOT))}));return int(failed)

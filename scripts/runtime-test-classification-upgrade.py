@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('classification_upgrade_base', ROOT / 'scripts/runtime-test-lineage-upgrade.py')
 base = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(base)
+repaired = base.repaired
 REPORT = ROOT / '.local/evidence/classification-upgrade.json'
 MIGRATION = '021_classification_review.sql'
 MIGRATIONS = ROOT / 'packages/db/migrations'
@@ -213,20 +214,20 @@ def execute(h):
     # Every SQL020 field is legacy now, including source/job generation fields.
     before = base.base.canonical_snapshot(h, tables)
     ledger = json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))
-    require(len(NAMES) == 20 and [row['name'] for row in ledger] == NAMES, 'Expected exact SQL001–020 predecessor')
+    require((repaired.before(h, ledger, NAMES) if repaired.active(h) else len(NAMES) == 20 and [row['name'] for row in ledger] == NAMES), 'Expected exact SQL001–020 predecessor')
     require(all(row['checksum'] == sha((MIGRATIONS / row['name']).read_bytes()) for row in ledger),
             'Classification predecessor migration checksum differs')
     target = h.folder / 'classification-target'
     target.mkdir()
-    for name in [*NAMES, MIGRATION]:
+    for name in repaired.names(h, [*NAMES, MIGRATION]):
         shutil.copyfile(MIGRATIONS / name, target / name)
     h.phase = 'classification-upgrade'
     migrated = h.migrate(target)
     require(re.findall(r'^Applied (.+)$', migrated.stdout, re.MULTILINE) == [MIGRATION], 'Expected exact SQL021 application')
     require(base.base.canonical_snapshot(h, tables) == before, 'Classification upgrade changed predecessor canonical/history rows')
     after = json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))
-    require(len(after) == 21 and after[:20] == ledger and after[-1]['name'] == MIGRATION
-            and after[-1]['checksum'] == sha((MIGRATIONS / MIGRATION).read_bytes()), 'Classification changed predecessor ledger')
+    require((repaired.after(h, ledger, after, NAMES, MIGRATION) if repaired.active(h) else len(after) == 21 and after[:20] == ledger and after[-1]['name'] == MIGRATION
+            and after[-1]['checksum'] == sha((MIGRATIONS / MIGRATION).read_bytes())), 'Classification changed predecessor ledger')
     require('Applied' not in h.migrate(target).stdout, 'Classification replay reapplied migration')
     require(base.base.canonical_snapshot(h, tables) == before, 'Classification replay changed predecessor data')
     require(json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;')) == after, 'Classification replay changed ledger')
@@ -254,7 +255,8 @@ def execute(h):
     finally:
         h.classification_current = None
     require(sources() == frozen, 'Classification source changed during native qualification')
-    h.report['migrations'] = [{'name': name, 'sha256': sha((MIGRATIONS / name).read_bytes())} for name in [*NAMES, MIGRATION]]
+    repaired.complete(h, [*NAMES, MIGRATION])
+    h.report['migrations'] = [{'name': name, 'sha256': sha((MIGRATIONS / name).read_bytes())} for name in repaired.names(h, [*NAMES, MIGRATION])]
     h.report['limitations'] = [
         'Real disposable PostgreSQL, native runtime privileges and actual canonical command/scan/read services; fixture metadata is authored, not source extraction evidence.',
         'Pure TypeScript normalization/evaluation executes in the native suite before exact SQL comparison; no source rows, samples, probabilities or arbitrary code are involved.',

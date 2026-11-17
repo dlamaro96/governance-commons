@@ -85,24 +85,25 @@ class Controls(unittest.TestCase):
                 with self.assertRaises(RuntimeError) as caught:h.command([sys.executable,'-c','import time;time.sleep(2)' if timeout else 'raise SystemExit(3)'],timeout=.03 if timeout else 2)
                 h.phase='cleanup';h.command([sys.executable,'-c','pass'],timeout=2);h.remember_failure(caught.exception)
                 failure=h.report['failure_diagnostic'];self.assertEqual(failure['phase'],'population-native-tests');self.assertEqual(failure['category'],'command_timeout' if timeout else 'command_failed');self.assertGreaterEqual(failure['elapsedMs'],0)
-    def test_collector_exports_only_failed_or_cancelled_stage_and_never_qualifies_success(self):
-        tree=ast.parse((ROOT/'policies/ci_evidence.py').read_text());start=next(i for i,n in enumerate(tree.body) if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='population_diagnostic' for t in n.targets))
-        code=compile(ast.fix_missing_locations(ast.Module(body=tree.body[start:start+3],type_ignores=[])),'actual-collector-block','exec')
-        import os
-        for outcome in ('success','failure','cancelled','skipped'):
-            dest=self.root/('artifact-'+outcome);dest.mkdir();report={'outcome':'PASS'}
-            env={'load_population_diagnostic':lambda *args:self.result(),'ROOT':self.root,'os':os,'REQUIRED':{'glossary_population_upgrade'},'outcomes':{'glossary_population_upgrade':outcome},'DEST':dest,'report':report,'json':json}
-            exec(code,env);self.assertEqual((dest/'glossary-population-diagnostic.json').exists(),outcome in ('failure','cancelled'))
-            if outcome=='success':self.assertEqual(report['outcome'],'NOT_PASSED')
-    def test_unassigned_collector_does_not_load_or_export_population_evidence(self):
+    def test_retired_collector_never_loads_or_exports_historical_population_report(self):
         tree=ast.parse((ROOT/'policies/ci_evidence.py').read_text())
-        start=next(i for i,n in enumerate(tree.body) if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='population_diagnostic' for t in n.targets))
-        code=compile(ast.fix_missing_locations(ast.Module(body=tree.body[start:start+3],type_ignores=[])),'actual-collector-block','exec')
-        def forbidden(*args):raise AssertionError('Foreign diagnostic loaded')
-        import os
-        dest=self.root/'unassigned';dest.mkdir();report={'outcome':'PASS'}
-        exec(code,{'load_population_diagnostic':forbidden,'ROOT':self.root,'os':os,'REQUIRED':set(),'outcomes':{'glossary_population_upgrade':'NOT_IN_SHARD'},'DEST':dest,'report':report,'json':json})
-        self.assertEqual(list(dest.iterdir()),[])
+        self.assertFalse(any(isinstance(n,ast.ImportFrom) and n.module=='glossary_population_diagnostics' for n in ast.walk(tree)))
+        self.assertFalse(any(isinstance(n,ast.Name) and n.id=='load_population_diagnostic' for n in ast.walk(tree)))
+        assignments=[n for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Subscript) and isinstance(t.value,ast.Name) and t.value.id=='report' and isinstance(t.slice,ast.Constant) and t.slice.value=='glossary_population_diagnostic' for t in n.targets)]
+        self.assertEqual(len(assignments),1)
+        code=compile(ast.fix_missing_locations(ast.Module(body=assignments,type_ignores=[])),'actual-retired-collector','exec')
+        old=self.root/evidence.REPORT;old.parent.mkdir(exist_ok=True);old.write_text(json.dumps(self.report))
+        for outcome in ('success','failure','cancelled','skipped'):
+            report={'outcome':'NOT_PASSED'};exec(code,{'report':report,'outcomes':{'glossary_population_upgrade':outcome}})
+            self.assertEqual(report,{'outcome':'NOT_PASSED','glossary_population_diagnostic':'HISTORICAL_NOT_EXECUTED'})
+        self.assertFalse(any(isinstance(n,ast.Constant) and n.value=='glossary-population-diagnostic.json' for n in ast.walk(tree)))
+    def test_retired_canonical_population_report_is_refused_in_every_shard(self):
+        import ci_shards
+        path=self.root/evidence.REPORT;path.parent.mkdir(exist_ok=True)
+        for shard in (None,*ci_shards.SHARDS):
+            self.assertFalse(ci_shards.foreign_evidence(self.root,shard))
+            path.write_text(json.dumps(self.report));self.assertTrue(ci_shards.foreign_evidence(self.root,shard));path.unlink()
+            path.symlink_to(self.root/'missing-private-report');self.assertTrue(ci_shards.foreign_evidence(self.root,shard));path.unlink()
 
     def test_actual_node_failed_tap_is_accepted_without_message_reflection(self):
         import shutil

@@ -138,5 +138,65 @@ class RuntimeRoutingTests(unittest.TestCase):
             run.assert_not_called()
 
 
+
+class RepairedRelationRoutingTests(unittest.TestCase):
+    CHAIN = (
+        ('glossary-population', '018', 1500), ('quality', '019', 1800),
+        ('lineage', '020', 1800), ('classification', '021', 2100),
+        ('reference', '022', 2400), ('reference-quality', '023', 2700),
+        ('reference-structure', '024', 3000),
+    )
+    ROUTES = tuple((name+'-repaired-upgrade', ['scripts/runtime-test-governance-repaired-upgrade.py', '--run-local', '--through', through], timeout)
+                   for name,through,timeout in CHAIN) + tuple(
+        ('relation-candidate-'+scope, ['scripts/runtime-test-relation-candidate-upgrade.py','--run-local','--scope',scope],900)
+        for scope in ('original','current'))
+
+    def test_nine_exact_routes_guard_before_execution_without_bootstrap(self):
+        for suite,argv,timeout in self.ROUTES:
+            calls=[]
+            with self.subTest(suite=suite), patch.object(sys,'argv',['dev','test','--suite',suite]), \
+                    patch.object(runtime,'require_local',side_effect=lambda:calls.append('local')), \
+                    patch.object(runtime,'require_bootstrap',side_effect=AssertionError('core bootstrap reached')), \
+                    patch.object(runtime,'run',side_effect=lambda args,**kwargs:calls.append((args,kwargs))):
+                runtime.main()
+            self.assertEqual(calls,['local',([sys.executable,*argv],{'timeout':timeout})])
+
+    def test_all_nine_refuse_remote_and_unknown_local_context_before_execution(self):
+        for suite,_,_ in self.ROUTES:
+            for override,endpoint in (('tcp://remote.invalid:2375','unix:///local.sock'),('', 'ssh://remote.invalid'),('',None)):
+                with self.subTest(suite=suite,endpoint=endpoint), patch.object(sys,'argv',['dev','test','--suite',suite]), \
+                        patch.dict(os.environ,{'DOCKER_HOST':override}), \
+                        patch.object(runtime,'capture',return_value=json.dumps([{'Endpoints':{'docker':{'Host':endpoint}}}]) if endpoint else 'invalid'), \
+                        patch.object(runtime,'require_bootstrap',side_effect=AssertionError('core bootstrap reached')), \
+                        patch.object(runtime,'run') as run:
+                    with self.assertRaises(SystemExit):runtime.main()
+                    run.assert_not_called()
+
+    def test_nine_failures_propagate_once_without_retry_or_fallback(self):
+        for suite,argv,timeout in self.ROUTES:
+            with self.subTest(suite=suite), patch.object(sys,'argv',['dev','test','--suite',suite]), \
+                    patch.object(runtime,'require_local'), \
+                    patch.object(runtime,'require_bootstrap',side_effect=AssertionError('core bootstrap reached')), \
+                    patch.object(runtime,'run',side_effect=RuntimeError('synthetic gate refusal')) as run:
+                with self.assertRaisesRegex(RuntimeError,'^synthetic gate refusal$'):runtime.main()
+                run.assert_called_once_with([sys.executable,*argv],timeout=timeout)
+
+    def test_original_seven_commands_still_execute_original_runners(self):
+        for name,_,timeout in self.CHAIN:
+            with self.subTest(name=name), patch.object(sys,'argv',['dev','test','--suite',name+'-upgrade']), \
+                    patch.object(runtime,'require_local'), \
+                    patch.object(runtime,'require_bootstrap',side_effect=AssertionError('core bootstrap reached')), \
+                    patch.object(runtime,'run') as run:
+                runtime.main()
+                run.assert_called_once_with([sys.executable,'scripts/runtime-test-'+name+'-upgrade.py'],timeout=timeout)
+
+    def test_help_lists_all_distinct_routes_without_execution(self):
+        output=io.StringIO()
+        with patch.object(sys,'argv',['dev','help']), contextlib.redirect_stdout(output), \
+                patch.object(runtime,'capture') as capture,patch.object(runtime,'run') as run:
+            runtime.main()
+        for suite,_,_ in self.ROUTES:self.assertEqual(output.getvalue().count('./dev test --suite '+suite+' '),1)
+        capture.assert_not_called();run.assert_not_called()
+
 if __name__ == '__main__':
     unittest.main()

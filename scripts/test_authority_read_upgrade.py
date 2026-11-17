@@ -51,6 +51,19 @@ const result=await alternate(f,{});assert.equal(installs,1);assert.equal(f.regis
   rows=g.sources();self.assertEqual(len(rows),len({r['path'] for r in rows}));by={r['path']:r['sha256'] for r in rows}
   for path in ('scripts/qualification_quality_pre030.py','tests/qualification/predecessors/quality-service-sql029.ts.txt','tests/qualification/predecessors/repository-sql029.ts.txt',g.NEW_TEST,'packages/db/migrations/'+g.MIGRATION):self.assertIn(path,by)
   self.assertEqual(by['packages/db/migrations/013_authority_foundation.sql'],'4a9304cf02ab51fc085a6018cd22980e948bc6cd1167b3595ccb817b2cf41fbf')
+ def test_exact032_source_successor_never_changes_031_execution_prefix(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   folder=Path(tmp);migrations=folder/'packages/db/migrations';migrations.mkdir(parents=True)
+   for name in g.NAMES:(migrations/name).write_text('-- original prefix')
+   with patch.object(g,'ROOT',folder):
+    self.assertEqual(g.migrations(),g.NAMES)
+    successor=migrations/'032_relation_candidate_validation.sql';successor.write_text('-- declared successor')
+    self.assertEqual(g.migrations(),g.NAMES);self.assertNotIn(successor.name,g.NAMES)
+    successor.write_text('-- successor bytes do not enter031 prefix proof');self.assertEqual(g.migrations(),g.NAMES)
+    future=migrations/'033_undeclared.sql';future.write_text('-- refuse')
+    with self.assertRaises(RuntimeError):g.migrations()
+    future.unlink();(migrations/g.NAMES[-1]).unlink()
+    with self.assertRaises(RuntimeError):g.migrations()
  def test_original_loader_and_validator_delta_is_exact(self):
   old=(ROOT/'packages/db/migrations/013_authority_foundation.sql').read_text();new=(ROOT/'packages/db/migrations'/g.MIGRATION).read_text()
   def fn(text,name,head='CREATE FUNCTION'):

@@ -13,9 +13,9 @@ from api_evidence import safe_report
 from authentication_evidence import load_report as load_authentication_report
 from protected_authn_evidence import load_report as load_protected_report, copy_captures as copy_protected_captures
 from authentication_evidence import read_file as bounded_read, strict_json as private_json
-from glossary_population_diagnostics import load_report as load_population_diagnostic
+from quality_upgrade_diagnostics import load_repaired_report as load_quality_diagnostic
 
-from ci_shards import SUPERSEDED, AUTHORITY_SCOPES, STEPS, required_steps, collect_outcomes, checkout_identity, foreign_evidence
+from ci_shards import SUPERSEDED, AUTHORITY_SCOPES, RELATION_SCOPES, STEPS, required_steps, collect_outcomes, checkout_identity, foreign_evidence
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--shard")
@@ -45,11 +45,12 @@ report = {
     "foreign_evidence": "REFUSED" if foreign_outputs else "NONE",
     "superseded_outcomes": SUPERSEDED,
     "authority_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in AUTHORITY_SCOPES.items()},
+    "relation_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in RELATION_SCOPES.items()},
     "tests": [],
     "screenshots": [],
     "limitations": ["No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
                     "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification.",
-                    "Explicit SQL031 original/current authority qualifications, source-connector upgrade, configurable PostgreSQL TLS, glossary upgrade, completeness, lineage, classification, reference-data, reference-quality, reference-structure, reference-import, uniqueness, range, monitoring, freshness, scheduled-freshness and volume native gates remain CI step outcomes only; the superseded SQL013 failure is retained in its original evidence and is not requalified here. Raw native reports/logs and unreviewed completeness/lineage/classification/reference-data/reference-quality/reference-structure/reference-import/uniqueness/range/monitoring/freshness/volume captures and all raw import uploads remain private."],
+                    "Explicit SQL032 repaired-chain and original/current relation qualifications, SQL031 original/current authority qualifications, source-connector upgrade, configurable PostgreSQL TLS, glossary upgrade, completeness, lineage, classification, reference-data, reference-quality, reference-structure, reference-import, uniqueness, range, monitoring, freshness, scheduled-freshness and volume native gates remain CI step outcomes only; the superseded SQL013/SQL018 failures are retained in its original evidence and are not requalified here. Raw native reports/logs and unreviewed completeness/lineage/classification/reference-data/reference-quality/reference-structure/reference-import/uniqueness/range/monitoring/freshness/volume captures and all raw import uploads remain private."],
 }
 # The API runner retains raw TAP privately. Only an independently revalidated,
 # exact-source report enters this staging directory; absence cannot turn a
@@ -83,14 +84,16 @@ if outcomes["authority_authn_foundation"] == "success" and not authn_report:
     report["outcome"] = "NOT_PASSED"
 # The retired SQL013 diagnostic remains independently testable; this run never loads or exports it.
 report["authority_foundation_diagnostic"] = "HISTORICAL_NOT_EXECUTED"
-# Population diagnostics are never a success qualification or raw-log upload.
-population_diagnostic = load_population_diagnostic(ROOT, os.environ.get("GITHUB_SHA")) if "glossary_population_upgrade" in REQUIRED else None
-if population_diagnostic and outcomes["glossary_population_upgrade"] in {"failure", "cancelled"}:
-    (DEST / "glossary-population-diagnostic.json").write_text(json.dumps(population_diagnostic, indent=2) + "\n")
-    report["glossary_population_diagnostic"] = "FAILURE_DIAGNOSTIC_ONLY"
+# Historical diagnostics are not evidence for the explicitly repaired SQL032 profiles.
+report["glossary_population_diagnostic"] = "HISTORICAL_NOT_EXECUTED"
+# Bind failures to the exact repaired019 command, never a historical quality report.
+quality_diagnostic = load_quality_diagnostic(ROOT, os.environ.get("GITHUB_SHA")) if "quality_repaired_upgrade" in REQUIRED else None
+if quality_diagnostic and outcomes["quality_repaired_upgrade"] in {"failure", "cancelled"}:
+    (DEST / "quality-repaired-upgrade-diagnostic.json").write_text(json.dumps(quality_diagnostic, indent=2) + "\n")
+    report["quality_repaired_upgrade_diagnostic"] = "FAILURE_DIAGNOSTIC_ONLY"
 else:
-    report["glossary_population_diagnostic"] = "STEP_RESULT_MISMATCH" if population_diagnostic else "UNAVAILABLE_OR_INVALID"
-if population_diagnostic and outcomes["glossary_population_upgrade"] == "success":
+    report["quality_repaired_upgrade_diagnostic"] = "STEP_RESULT_MISMATCH" if quality_diagnostic else "UNAVAILABLE_OR_INVALID"
+if quality_diagnostic and outcomes["quality_repaired_upgrade"] == "success":
     report["outcome"] = "NOT_PASSED"
 # Protected transport is a separate required gate, never a replacement for
 # native foundation or the thirty-six core browser journeys. Hosted collection
@@ -229,7 +232,7 @@ if outcomes["browser"] == "success":
             report["outcome"] = "NOT_PASSED"
 # Ownership is explicit; missing owner evidence is never relabeled unassigned.
 for step, field in (("security", "api_evidence"), ("authority_authn_foundation", "authentication_evidence"),
-                    ("glossary_population_upgrade", "glossary_population_diagnostic"),
+                    ("quality_repaired_upgrade", "quality_repaired_upgrade_diagnostic"),
                     ("protected_authn", "protected_authentication_evidence")):
     if step not in REQUIRED:
         report[field] = "NOT_IN_SHARD"

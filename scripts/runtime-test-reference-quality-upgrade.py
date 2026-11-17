@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('reference_quality_upgrade_base', ROOT / 'scripts/runtime-test-reference-upgrade.py')
 base = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(base)
+repaired = base.repaired
 REPORT = ROOT / '.local/evidence/reference-quality-upgrade.json'
 MIGRATION = '023_reference_quality.sql'
 MIGRATIONS = ROOT / 'packages/db/migrations'
@@ -230,19 +231,19 @@ def execute(h):
     tables = json.loads(h.sql("SELECT json_agg(schemaname||'.'||tablename ORDER BY schemaname,tablename) FROM pg_tables WHERE schemaname IN('public','gc_authn','gc_authority') AND tablename<>'schema_migrations';"))
     before = base.canonical_snapshot(h, tables)
     ledger = json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))
-    require(len(NAMES) == 22 and [row['name'] for row in ledger] == NAMES, 'Expected exact SQL001–022 predecessor')
+    require((repaired.before(h, ledger, NAMES) if repaired.active(h) else len(NAMES) == 22 and [row['name'] for row in ledger] == NAMES), 'Expected exact SQL001–022 predecessor')
     require(all(row['checksum'] == sha((MIGRATIONS / row['name']).read_bytes()) for row in ledger), 'Reference quality predecessor checksum differs')
     target = h.folder / 'reference-quality-target'
     target.mkdir()
-    for name in [*NAMES, MIGRATION]:
+    for name in repaired.names(h, [*NAMES, MIGRATION]):
         shutil.copyfile(MIGRATIONS / name, target / name)
     h.phase = 'reference-quality-upgrade'
     migrated = h.migrate(target)
     require(re.findall(r'^Applied (.+)$', migrated.stdout, re.MULTILINE) == [MIGRATION], 'Expected exact SQL023 application')
     require(base.canonical_snapshot(h, tables) == before, 'Reference quality changed predecessor rows')
     after = json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))
-    require(len(after) == 23 and after[:22] == ledger and after[-1]['name'] == MIGRATION
-            and after[-1]['checksum'] == sha((MIGRATIONS / MIGRATION).read_bytes()), 'Reference quality changed predecessor ledger')
+    require((repaired.after(h, ledger, after, NAMES, MIGRATION) if repaired.active(h) else len(after) == 23 and after[:22] == ledger and after[-1]['name'] == MIGRATION
+            and after[-1]['checksum'] == sha((MIGRATIONS / MIGRATION).read_bytes())), 'Reference quality changed predecessor ledger')
     require('Applied' not in h.migrate(target).stdout, 'Reference quality replay reapplied migration')
     require(base.canonical_snapshot(h, tables) == before, 'Reference quality replay changed predecessor rows')
     require(json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;')) == after, 'Reference quality replay changed ledger')
@@ -251,7 +252,8 @@ def execute(h):
     run_suite(h, frozen, 'reference-quality-completeness-tests', COMPLETENESS_TESTS, 15, 'completenessTests')
     run_suite(h, frozen, 'reference-quality-native-tests', TESTS, 21, 'referenceQualityTests')
     require(sources() == frozen, 'Reference quality source changed during native qualification')
-    h.report['migrations'] = [{'name': name, 'sha256': sha((MIGRATIONS / name).read_bytes())} for name in [*NAMES, MIGRATION]]
+    repaired.complete(h, [*NAMES, MIGRATION])
+    h.report['migrations'] = [{'name': name, 'sha256': sha((MIGRATIONS / name).read_bytes())} for name in repaired.names(h, [*NAMES, MIGRATION])]
     h.report['limitations'] = [
         'Disposable PostgreSQL storage/service only. Measurements are explicit native fixtures, not source executor, HTTP, Temporal or browser evidence.',
         'All predecessor gates execute. SQL022 quality modules are exact 591220a fixtures; SQL018/020/021 repository overrides retain their earlier precedence.',

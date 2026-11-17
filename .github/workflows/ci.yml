@@ -55,6 +55,12 @@ jobs:
         run: python3 policies/test_ci_evidence.py
       - name: Explicit authority-read upgrade qualification controls
         run: python3 scripts/test_authority_read_upgrade.py
+      - name: Explicit relation-candidate upgrade controls
+        run: python3 scripts/test_relation_candidate_upgrade.py
+      - name: Repaired governance chain controls
+        run: python3 scripts/test_governance_repaired_chain.py
+      - name: Exact local launcher routing controls
+        run: python3 scripts/test_runtime_routing.py
       - name: Fixed behavior shard contract
         run: python3 policies/test_ci_shards.py
       - name: Immutable application-image admission
@@ -121,6 +127,8 @@ jobs:
         run: pnpm build
       - name: Bounded glossary population failure diagnostics
         run: python3 policies/test_glossary_population_diagnostics.py
+      - name: Bounded quality upgrade failure diagnostics
+        run: python3 policies/test_quality_upgrade_diagnostics.py
       - name: Repository publication policy
         run: python3 scripts/github/bootstrap check-local
   secrets:
@@ -275,6 +283,14 @@ jobs:
         if: success() && matrix.shard == 'foundation'
         id: postgres_targets
         run: ./dev test --suite postgres-targets
+      - name: Explicit relation candidate original upgrade
+        if: success() && matrix.shard == 'governance'
+        id: relation_candidate_original
+        run: ./dev test --suite relation-candidate-original
+      - name: Explicit relation candidate current upgrade
+        if: success() && matrix.shard == 'governance'
+        id: relation_candidate_current
+        run: ./dev test --suite relation-candidate-current
       - name: Verify approval storage and atomic glossary publication upgrade
         if: success() && matrix.shard == 'governance'
         id: glossary_upgrade
@@ -285,44 +301,44 @@ jobs:
         run: ./dev test --suite relation-scope-upgrade
       - name: Verify multi-policy glossary publication on populated catalogs
         if: success() && matrix.shard == 'governance'
-        id: glossary_population_upgrade
-        run: ./dev test --suite glossary-population-upgrade
+        id: glossary_population_repaired_upgrade
+        run: ./dev test --suite glossary-population-repaired-upgrade
       - name: Verify completeness storage upgrade and current authorization
         if: success() && matrix.shard == 'quality-basics'
-        id: quality_upgrade
-        run: ./dev test --suite quality-upgrade
+        id: quality_repaired_upgrade
+        run: ./dev test --suite quality-repaired-upgrade
       - name: Verify completeness execution against the live synthetic source
         if: success() && matrix.shard == 'quality-basics'
         id: quality_worker
         run: ./dev test --suite quality-worker
       - name: Verify PostgreSQL lineage upgrade, evidence and transaction boundaries
         if: success() && matrix.shard == 'governance'
-        id: lineage_upgrade
-        run: ./dev test --suite lineage-upgrade
+        id: lineage_repaired_upgrade
+        run: ./dev test --suite lineage-repaired-upgrade
       - name: Verify PostgreSQL view dependency extraction against the live source
         if: success() && matrix.shard == 'quality-basics'
         id: lineage_worker
         run: ./dev test --suite lineage-worker
       - name: Verify classification upgrade, immutable evidence and reviewed labels
         if: success() && matrix.shard == 'governance'
-        id: classification_upgrade
-        run: ./dev test --suite classification-upgrade
+        id: classification_repaired_upgrade
+        run: ./dev test --suite classification-repaired-upgrade
       - name: Verify governed reference publication, effective history and immutable exports
         if: success() && matrix.shard == 'quality-basics'
-        id: reference_upgrade
-        run: ./dev test --suite reference-upgrade
+        id: reference_repaired_upgrade
+        run: ./dev test --suite reference-repaired-upgrade
       - name: Verify reference quality upgrade, retained bindings and current authority
         if: success() && matrix.shard == 'quality-basics'
-        id: reference_quality_upgrade
-        run: ./dev test --suite reference-quality-upgrade
+        id: reference_quality_repaired_upgrade
+        run: ./dev test --suite reference-quality-repaired-upgrade
       - name: Verify reference allowed values against the live synthetic source
         if: success() && matrix.shard == 'quality-basics'
         id: reference_quality_worker
         run: ./dev test --suite reference-quality-worker
       - name: Verify temporal reference structures, immutable history and concurrent authorization
         if: success() && matrix.shard == 'quality-basics'
-        id: reference_structure_upgrade
-        run: ./dev test --suite reference-structure-upgrade
+        id: reference_structure_repaired_upgrade
+        run: ./dev test --suite reference-structure-repaired-upgrade
       - name: Verify bounded reference import reconciliation and current authority
         if: success() && matrix.shard == 'quality-basics'
         id: reference_import
@@ -397,18 +413,20 @@ jobs:
           GC_AUTHORITY_READ_CURRENT_RESULT: ${{ steps.authority_read_current.outcome }}
           GC_SOURCE_CONNECTORS_UPGRADE_RESULT: ${{ steps.source_connectors_upgrade.outcome }}
           GC_POSTGRES_TARGETS_RESULT: ${{ steps.postgres_targets.outcome }}
+          GC_RELATION_CANDIDATE_ORIGINAL_RESULT: ${{ steps.relation_candidate_original.outcome }}
+          GC_RELATION_CANDIDATE_CURRENT_RESULT: ${{ steps.relation_candidate_current.outcome }}
           GC_GLOSSARY_UPGRADE_RESULT: ${{ steps.glossary_upgrade.outcome }}
           GC_RELATION_SCOPE_UPGRADE_RESULT: ${{ steps.relation_scope_upgrade.outcome }}
-          GC_GLOSSARY_POPULATION_UPGRADE_RESULT: ${{ steps.glossary_population_upgrade.outcome }}
-          GC_QUALITY_UPGRADE_RESULT: ${{ steps.quality_upgrade.outcome }}
+          GC_GLOSSARY_POPULATION_REPAIRED_UPGRADE_RESULT: ${{ steps.glossary_population_repaired_upgrade.outcome }}
+          GC_QUALITY_REPAIRED_UPGRADE_RESULT: ${{ steps.quality_repaired_upgrade.outcome }}
           GC_QUALITY_WORKER_RESULT: ${{ steps.quality_worker.outcome }}
-          GC_LINEAGE_UPGRADE_RESULT: ${{ steps.lineage_upgrade.outcome }}
+          GC_LINEAGE_REPAIRED_UPGRADE_RESULT: ${{ steps.lineage_repaired_upgrade.outcome }}
           GC_LINEAGE_WORKER_RESULT: ${{ steps.lineage_worker.outcome }}
-          GC_CLASSIFICATION_UPGRADE_RESULT: ${{ steps.classification_upgrade.outcome }}
-          GC_REFERENCE_UPGRADE_RESULT: ${{ steps.reference_upgrade.outcome }}
-          GC_REFERENCE_QUALITY_UPGRADE_RESULT: ${{ steps.reference_quality_upgrade.outcome }}
+          GC_CLASSIFICATION_REPAIRED_UPGRADE_RESULT: ${{ steps.classification_repaired_upgrade.outcome }}
+          GC_REFERENCE_REPAIRED_UPGRADE_RESULT: ${{ steps.reference_repaired_upgrade.outcome }}
+          GC_REFERENCE_QUALITY_REPAIRED_UPGRADE_RESULT: ${{ steps.reference_quality_repaired_upgrade.outcome }}
           GC_REFERENCE_QUALITY_WORKER_RESULT: ${{ steps.reference_quality_worker.outcome }}
-          GC_REFERENCE_STRUCTURE_UPGRADE_RESULT: ${{ steps.reference_structure_upgrade.outcome }}
+          GC_REFERENCE_STRUCTURE_REPAIRED_UPGRADE_RESULT: ${{ steps.reference_structure_repaired_upgrade.outcome }}
           GC_REFERENCE_IMPORT_RESULT: ${{ steps.reference_import.outcome }}
           GC_UNIQUENESS_UPGRADE_RESULT: ${{ steps.uniqueness_upgrade.outcome }}
           GC_UNIQUENESS_WORKER_RESULT: ${{ steps.uniqueness_worker.outcome }}

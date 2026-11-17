@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('lineage_upgrade_base', ROOT / 'scripts/runtime-test-quality-upgrade.py')
 base = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(base)
+repaired = base.repaired
 REPORT = ROOT / '.local/evidence/lineage-upgrade.json'
 MIGRATION = '020_native_lineage.sql'
 NAMES = [*base.NAMES, base.MIGRATION]
@@ -83,10 +84,10 @@ def execute(h):
     tables = json.loads(h.sql("SELECT json_agg(schemaname||'.'||tablename ORDER BY schemaname,tablename) FROM pg_tables WHERE schemaname IN('public','gc_authn','gc_authority') AND tablename<>'schema_migrations';"))
     before = legacy_snapshot(h, tables)
     ledger = json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))
-    require(len(NAMES) == 19 and [row['name'] for row in ledger] == NAMES, 'Expected exact SQL001–019 predecessor')
+    require((repaired.before(h, ledger, NAMES) if repaired.active(h) else len(NAMES) == 19 and [row['name'] for row in ledger] == NAMES), 'Expected exact SQL001–019 predecessor')
     target = h.folder / 'lineage-target'
     target.mkdir()
-    for name in [*NAMES, MIGRATION]:
+    for name in repaired.names(h, [*NAMES, MIGRATION]):
         shutil.copyfile(MIGRATIONS / name, target / name)
     h.phase = 'lineage-upgrade'
     migrated = h.migrate(target)
@@ -95,7 +96,7 @@ def execute(h):
     defaults = "SELECT NOT EXISTS(SELECT 1 FROM sources WHERE next_scan_generation<>1 OR accepted_scan_generation<>0) AND NOT EXISTS(SELECT 1 FROM jobs WHERE scan_generation IS NOT NULL);"
     require(h.sql(defaults) == 't', 'Lineage initial generation defaults differ')
     after = json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))
-    require(len(after) == 20 and after[:19] == ledger and after[-1]['name'] == MIGRATION, 'Lineage changed predecessor ledger')
+    require((repaired.after(h, ledger, after, NAMES, MIGRATION) if repaired.active(h) else len(after) == 20 and after[:19] == ledger and after[-1]['name'] == MIGRATION), 'Lineage changed predecessor ledger')
     require('Applied' not in h.migrate(target).stdout, 'Lineage replay reapplied migration')
     require(legacy_snapshot(h, tables) == before and h.sql(defaults) == 't', 'Lineage replay changed predecessor data')
     require(json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;')) == after, 'Lineage replay changed ledger')
@@ -119,7 +120,8 @@ def execute(h):
     require(tested.returncode == 0, 'Native lineage suite failed; retained TAP identifies failing case')
     h.report['tests'] = base.base.tap_summary(tested.stdout, expected)
     require(sources() == frozen, 'Lineage source changed during native qualification')
-    h.report['migrations'] = [{'name': name, 'sha256': sha((MIGRATIONS / name).read_bytes())} for name in [*NAMES, MIGRATION]]
+    repaired.complete(h, [*NAMES, MIGRATION])
+    h.report['migrations'] = [{'name': name, 'sha256': sha((MIGRATIONS / name).read_bytes())} for name in repaired.names(h, [*NAMES, MIGRATION])]
     h.report['limitations'] = [
         'Real isolated PostgreSQL and production scan handlers/read service; completion payloads in this gate are authored fixtures, not worker extraction evidence.',
         'Full predecessor SQL001–019 execution uses the exact repository phase override recorded by the quality gate.',

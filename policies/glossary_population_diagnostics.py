@@ -11,7 +11,7 @@ REPORT='.local/evidence/glossary-population-upgrade.json'
 MARKER='GLOSSARY_POPULATION_DIAGNOSTIC_V1='
 TIMING_MARKER='GLOSSARY_POPULATION_PHASES_V1='
 TEST='tests/qualification/glossary-population.test.ts'
-FIXED=('scripts/runtime-test-glossary-population-upgrade.py','packages/db/migrations/018_glossary_nominal_candidates.sql',TEST,
+FIXED=('scripts/runtime-test-glossary-population-upgrade.py','scripts/qualification_relation_candidate.py','packages/db/migrations/018_glossary_nominal_candidates.sql',TEST,
  'tests/fixtures/glossary-population-diagnostic.ts','policies/glossary_population_diagnostics.py','policies/authentication_evidence.py','policies/ci_evidence.py')
 PHASES=frozenset(('admission','database-start','predecessor','pre013-preparation','checksum-refusal','upgrade','repeat-preparation',
  'approval-predecessor','approval-upgrade','approval-native-tests','glossary-predecessor','glossary-upgrade','glossary-native-tests',

@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('structure_upgrade_base', ROOT / 'scripts/runtime-test-reference-quality-upgrade.py')
 base = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(base)
+repaired = base.repaired
 REPORT = ROOT / '.local/evidence/reference-structure-upgrade.json'
 MIGRATION = '024_reference_structures.sql'
 MIGRATIONS = ROOT / 'packages/db/migrations'
@@ -214,19 +215,19 @@ def execute(h):
     tables = json.loads(h.sql("SELECT json_agg(schemaname||'.'||tablename ORDER BY schemaname,tablename) FROM pg_tables WHERE schemaname IN('public','gc_authn','gc_authority') AND tablename<>'schema_migrations';"))
     before = canonical_snapshot(h, tables)
     ledger = json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))
-    require(len(NAMES) == 23 and [row['name'] for row in ledger] == NAMES, 'Expected exact SQL001–023 predecessor')
+    require((repaired.before(h, ledger, NAMES) if repaired.active(h) else len(NAMES) == 23 and [row['name'] for row in ledger] == NAMES), 'Expected exact SQL001–023 predecessor')
     require(all(row['checksum'] == sha((MIGRATIONS / row['name']).read_bytes()) for row in ledger), 'Structure predecessor checksum differs')
     target = h.folder / 'structure-target'
     target.mkdir()
-    for name in [*NAMES, MIGRATION]:
+    for name in repaired.names(h, [*NAMES, MIGRATION]):
         shutil.copyfile(MIGRATIONS / name, target / name)
     h.phase = 'structure-upgrade'
     migrated = h.migrate(target)
     require(re.findall(r'^Applied (.+)$', migrated.stdout, re.MULTILINE) == [MIGRATION], 'Expected exact SQL024 application')
     require(canonical_snapshot(h, tables) == before, 'Structure changed predecessor rows')
     after = json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))
-    require(len(after) == 24 and after[:23] == ledger and after[-1]['name'] == MIGRATION
-            and after[-1]['checksum'] == sha((MIGRATIONS / MIGRATION).read_bytes()), 'Structure changed predecessor ledger')
+    require((repaired.after(h, ledger, after, NAMES, MIGRATION) if repaired.active(h) else len(after) == 24 and after[:23] == ledger and after[-1]['name'] == MIGRATION
+            and after[-1]['checksum'] == sha((MIGRATIONS / MIGRATION).read_bytes())), 'Structure changed predecessor ledger')
     require('Applied' not in h.migrate(target).stdout, 'Structure replay reapplied migration')
     require(canonical_snapshot(h, tables) == before, 'Structure replay changed predecessor rows')
     require(json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;')) == after, 'Structure replay changed ledger')
@@ -236,7 +237,8 @@ def execute(h):
     run_suite(h, frozen, 'structure-reference-quality-tests', ['tests/api/reference-quality-storage.test.ts'], 21, 'structureQualityTests')
     run_suite(h, frozen, 'structure-native-tests', TESTS, 30, 'structureTests')
     require(sources() == frozen, 'Structure source changed during native qualification')
-    h.report['migrations'] = [{'name': name, 'sha256': sha((MIGRATIONS / name).read_bytes())} for name in [*NAMES, MIGRATION]]
+    repaired.complete(h, [*NAMES, MIGRATION])
+    h.report['migrations'] = [{'name': name, 'sha256': sha((MIGRATIONS / name).read_bytes())} for name in repaired.names(h, [*NAMES, MIGRATION])]
     h.report['limitations'] = [
         'Disposable PostgreSQL/service only; no source executor, HTTP conditional response, Temporal or browser evidence.',
         'All predecessor gates execute with exact prior overlays. SQL022/023 approval modules use immutable6b090767; SQL022 repository keeps its prior immutable pin.',

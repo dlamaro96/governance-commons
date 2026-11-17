@@ -41,8 +41,9 @@ volume.effective_sources=lambda rows,phase: rows if phase in NATIVE_PHASES else 
 
 def migrations():
  actual=sorted(p.name for p in (ROOT/'packages/db/migrations').glob('*.sql'))
- require(actual==NAMES,'Exact001–031 candidate inventory required')
- return actual
+ suffix=actual[len(NAMES):]
+ require(actual[:len(NAMES)]==NAMES and suffix in ([],['032_relation_candidate_validation.sql']),'Exact001–031 prefix and declared032 successor inventory required')
+ return list(NAMES)
 
 def sources():
  migrations()

@@ -82,13 +82,13 @@ class Controls(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             gate.migrations()
 
-    def test_current_schema_binds_all_31_migrations_including_authority_read(self):
-        self.assertEqual(len(gate.NAMES), 31)
-        self.assertEqual(gate.NAMES[-1], '031_authority_read_grants.sql')
+    def test_current_schema_binds_all_32_migrations_including_relation_candidate(self):
+        self.assertEqual(len(gate.NAMES), 32)
+        self.assertEqual(gate.NAMES[-1], '032_relation_candidate_validation.sql')
         before = {row['path']: row['sha256'] for row in gate.sources()}
         for name in gate.NAMES:
             self.assertIn('packages/db/migrations/' + name, before)
-        path = 'packages/db/migrations/031_authority_read_grants.sql'
+        path = 'packages/db/migrations/032_relation_candidate_validation.sql'
         self.write(path, '-- changed current migration')
         after = {row['path']: row['sha256'] for row in gate.sources()}
         self.assertNotEqual(before[path], after[path])

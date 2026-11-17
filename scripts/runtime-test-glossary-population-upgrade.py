@@ -16,6 +16,8 @@ sys.path.insert(0,str(ROOT/'policies'))
 import glossary_population_diagnostics as diagnostics
 spec=importlib.util.spec_from_file_location('glossary_population_upgrade_base',ROOT/'scripts/runtime-test-relation-scope-upgrade.py')
 base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
+_repair_spec=importlib.util.spec_from_file_location('relation_candidate_binding',ROOT/'scripts/qualification_relation_candidate.py')
+repaired=importlib.util.module_from_spec(_repair_spec);_repair_spec.loader.exec_module(repaired)
 REPORT=ROOT/'.local/evidence/glossary-population-upgrade.json'
 MIGRATION='018_glossary_nominal_candidates.sql'
 MIGRATIONS=ROOT/'packages/db/migrations'
@@ -111,6 +113,7 @@ def execute(h):
  require(json.loads(h.sql('SELECT json_agg(to_jsonb(m) ORDER BY name) FROM schema_migrations m;'))==after,'Population replay changed migration ledger')
  h.report['populationUpgradeBaseline']=[{'table':name,**row} for name,row in before.items()]
  h.report['checks'].append('Exact SQL017→018 application and inert replay preserve full canonical row digests/counts for every predecessor table and the original seventeen migration ledger entries')
+ repaired.apply(h, [*NAMES,MIGRATION])
  h.phase='population-native-tests'
  expected=sum(len(re.findall(r'^test\(', (ROOT/name).read_text(),re.MULTILINE)) for name in TESTS)
  require(expected==26,'Expected all twenty-five scope cases plus one population case')
@@ -118,7 +121,8 @@ def execute(h):
  require(tested.returncode==0,'Native glossary population suite failed; retained bounded TAP identifies failing case')
  h.report['tests']=tap_summary(tested.stdout,expected)
  require(sources()==frozen,'Population qualification source changed during execution')
- h.report['migrations']=[{'name':name,'sha256':sha((MIGRATIONS/name).read_bytes())} for name in [*NAMES,MIGRATION]]
+ repaired.complete(h, [*NAMES, MIGRATION])
+ h.report['migrations']=[{'name':name,'sha256':sha((MIGRATIONS/name).read_bytes())} for name in repaired.names(h, [*NAMES,MIGRATION])]
  h.report['limitations']=['Actual isolated SQL017 predecessor and SQL018 production domain-service qualification; no captured pre-upgrade population failure is claimed.',
   'The population case retains the original thirty-second product transaction budget; API/browser and Temporal restart qualification remain separate.',
   'Canonical content authority remains inactive. No shared runtime or external infrastructure was modified.']

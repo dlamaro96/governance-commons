@@ -48,7 +48,7 @@ NAMES = [*base.NAMES, '015_approval_workflows.sql', '016_glossary_publication.sq
 def migrations():
     actual = sorted(path.name for path in (ROOT / 'packages/db/migrations').glob('*.sql'))
     # Execute only this exact historical prefix; never mount a successor here.
-    successors = ['028_quality_freshness.sql', '029_quality_freshness_scheduling.sql', '030_quality_volume.sql', '031_authority_read_grants.sql']
+    successors = ['028_quality_freshness.sql', '029_quality_freshness_scheduling.sql', '030_quality_volume.sql', '031_authority_read_grants.sql', '032_relation_candidate_validation.sql']
     tail = actual[len(NAMES):]
     require(actual[:len(NAMES)] == NAMES and len(tail) <= len(successors)
             and tail == successors[:len(tail)], 'Exact SQL001–027 prefix and declared successor inventory required')
