@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-17T08:38:06.966882+00:00",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "implementation_commit": "2186dcb3d4ddd65f68e26e0bb76dc15e73d527d2",
+  "tested_merge": "70de6bccb312add7e1c1c7a3ad33e61a617d9eb1",
+  "same_tree_and_parent_verified": true,
+  "source_security": {
+    "runId": 44042091992,
+    "status": "SUCCESS_VERIFIED",
+    "receiptSha256": "0e603b98b6f1acf4b4c0929d9f57da7a3055ed6c438c25e74c86f5977e9ee63b",
+    "sourceFiles": 1466,
+    "everySourceByteMatchesRequestedCommit": true,
+    "languages": {
+      "javascript-typescript": {
+        "expectedFiles": 465,
+        "queryCount": 105,
+        "findings": 0,
+        "storedAnalysisId": 2184152175
+      },
+      "python": {
+        "expectedFiles": 132,
+        "queryCount": 52,
+        "findings": 0,
+        "storedAnalysisId": 2184144747
+      },
+      "actions": {
+        "expectedFiles": 2,
+        "queryCount": 24,
+        "findings": 0,
+        "storedAnalysisId": 2184139814
+      }
+    },
+    "archiveDigestsVerified": 3,
+    "url": "https://github.com/dlamaro96/governance-commons/actions/runs/44042091992"
+  },
+  "development": {
+    "runId": 44042091799,
+    "status": "FAILURE",
+    "attempt": 1,
+    "closedAssignedOutcomes": {
+      "success": 27,
+      "failure": 3,
+      "skipped": 10
+    },
+    "all40ExactOutcomeNamesVerified": true,
+    "commonSetupSucceededOnAll5": true,
+    "artifactArchivesVerified": 5,
+    "governanceFailure": {
+      "phase": "population-native-tests",
+      "tests": {
+        "passed": 25,
+        "failed": 1
+      },
+      "failedCase": "tests/qualification/glossary-population.test.ts:124",
+      "publicationElapsedMs": 43149,
+      "code": "RELATION_RETRY",
+      "lastRejectedQuery": {
+        "query": "finish",
+        "elapsedMs": 8553,
+        "sqlstate": "57014"
+      },
+      "cleanup": {
+        "ownedRemoved": true,
+        "resourceInventoryPreserved": true
+      }
+    },
+    "qualityBasicsFailure": {
+      "step": "quality_upgrade",
+      "reportedResult": "FAIL",
+      "nativeCause": "UNKNOWN: detailed raw native report/log not exported; no substitution of governance failure cause."
+    },
+    "browser": {
+      "counts": {
+        "passed": 26,
+        "failed": 1,
+        "notRun": 9
+      },
+      "failedCase": "tests/e2e/classification.spec.ts:117",
+      "failureSite": [
+        "tests/e2e/classification.spec.ts:108",
+        "tests/e2e/classification.spec.ts:156"
+      ],
+      "error": "HTTP429 RATE_LIMITED during approval read polling; expected200",
+      "notRun": [
+        "tests/e2e/reference-data.spec.ts",
+        "tests/e2e/reference-quality.spec.ts",
+        "tests/e2e/reference-structures.spec.ts",
+        "tests/e2e/reference-import.spec.ts",
+        "tests/e2e/quality-uniqueness.spec.ts",
+        "tests/e2e/quality-range.spec.ts",
+        "tests/e2e/quality-monitoring.spec.ts",
+        "tests/e2e/quality-freshness.spec.ts",
+        "tests/e2e/quality-freshness-monitoring.spec.ts"
+      ],
+      "retries": 0
+    },
+    "foundation": {
+      "apiCounts": {
+        "tests": 168,
+        "suites": 0,
+        "pass": 168,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "authenticationCounts": {
+        "tests": {
+          "tests": 21,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 5063.789072
+        },
+        "concurrency_tests": {
+          "tests": 14,
+          "pass": 14,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 1806.818315
+        }
+      },
+      "historicalAuthorityFoundation": "STEP_SUCCESS; native raw report was not exported or independently revalidated."
+    },
+    "url": "https://github.com/dlamaro96/governance-commons/actions/runs/44042091799"
+  },
+  "jobs": [
+    {
+      "name": "secrets",
+      "status": "completed",
+      "conclusion": "success",
+      "durationMinutes": 0.48,
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (governance)",
+      "status": "completed",
+      "conclusion": "failure",
+      "durationMinutes": 15.17,
+      "failedSteps": [
+        "Verify multi-policy glossary publication on populated catalogs",
+        "Collect bounded redacted evidence"
+      ]
+    },
+    {
+      "name": "behavior (quality-basics)",
+      "status": "completed",
+      "conclusion": "failure",
+      "durationMinutes": 7.63,
+      "failedSteps": [
+        "Verify completeness storage upgrade and current authorization",
+        "Collect bounded redacted evidence"
+      ]
+    },
+    {
+      "name": "quality",
+      "status": "completed",
+      "conclusion": "success",
+      "durationMinutes": 3.77,
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (browser)",
+      "status": "completed",
+      "conclusion": "failure",
+      "durationMinutes": 20.72,
+      "failedSteps": [
+        "Verify browser acceptance and accessibility",
+        "Collect bounded redacted evidence"
+      ]
+    },
+    {
+      "name": "behavior (quality-freshness-volume)",
+      "status": "completed",
+      "conclusion": "success",
+      "durationMinutes": 22.48,
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (foundation)",
+      "status": "completed",
+      "conclusion": "success",
+      "durationMinutes": 24.93,
+      "failedSteps": []
+    },
+    {
+      "name": "behavior",
+      "status": "completed",
+      "conclusion": "failure",
+      "durationMinutes": 0.12,
+      "failedSteps": [
+        "Require every fixed behavior shard to succeed"
+      ]
+    },
+    {
+      "name": "required",
+      "status": "completed",
+      "conclusion": "failure",
+      "durationMinutes": 0.07,
+      "failedSteps": [
+        "Require every mandatory child to succeed"
+      ]
+    }
+  ],
+  "receipt_sha256": "84a9c55b6b17198397522620b6e4b9ef72a0a9dd125da74b785afbfe072898d0",
+  "limitations": [
+    "Only the exact published2186dcb source is qualified; SQL030/031 and subsequent fixes require fresh hosted runs.",
+    "Security covers the configured source analyses and verified coverage. Zero findings does not establish absence of vulnerabilities, container security, penetration testing or enterprise readiness.",
+    "Native gates without exported validated records retain step-only evidence. The completeness-upgrade cause remains unknown.",
+    "All40 mandatory outcomes are retained;27 passed,3 failed and10 were skipped. Aggregate failure is expected and preserved."
+  ]
+}

@@ -1547,7 +1547,7 @@
       "scope": "quality-freshness-scheduling-local",
       "source_binding": {
         "implementation_commit": "4cc3bd2afff9f75b8cba6bdbdc849e9252df8e70",
-        "evidence_sha256": "8c3585b13d7ab4b9f0090d809acbc4a9a4498ff6af3c59cd498f826af9f98179",
+        "evidence_sha256": "cf8464b06b5451b5d46c9df0df86e7b0824e59c17687ceaffb370fba6ae45b37",
         "method": "Exact committed native, baked application/API and browser source inventories matched; scoped native276/API168/host1103 and target journeys pass. Full36 fails31/1/4; no whole-profile pass inferred."
       }
     },
@@ -1556,7 +1556,7 @@
       "scope": "development-pipeline-local",
       "source_binding": {
         "implementation_commit": "ac464afc83a3e01d925a45b20723dfd8f2ab0572",
-        "evidence_sha256": "9abd8b5cd5aee81af49b8e96602149aa566c94d2631a9236a661079424a4475b",
+        "evidence_sha256": "f2214e41c77b65efd01d334e47a5da99f8ae418699dbee7d284d77d429c28a47",
         "method": "Exact Git-bound CI and browser source inventories;156 CI controls and target browser pass. Full36 and fresh hosted matrix pending."
       }
     },
@@ -1567,6 +1567,51 @@
         "implementation_commit": "0b485925b6a07f1bb8518696d654376af0b079ed",
         "evidence_sha256": "5ae6125730d0681a6238523ffdad5322e75058a9112bfbbac7fe4415d771a7ed",
         "method": "Exact tested merge/published tree equality, official Action pins, five hosted setup/upload steps and two authenticated artifact downloads verified. No full behavior claim."
+      }
+    },
+    {
+      "path": "docs/verification/product-quality-volume-local.json",
+      "scope": "partial-table-volume-local",
+      "source_binding": {
+        "implementation_commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
+        "method": "Exact integrated product revision; isolated native execution retains explicitly enumerated source-manifest differences. See the scoped evidence record.",
+        "evidence_sha256": "d82453800701b30c0b26b73accf4018ede24bd1f8cf2747ae953147f3063bf3a"
+      }
+    },
+    {
+      "path": "docs/verification/authority-read-upgrade-local.json",
+      "scope": "inactive-authority-read-forward-upgrade",
+      "source_binding": {
+        "implementation_commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
+        "method": "Exact integrated product revision; isolated native execution retains explicitly enumerated source-manifest differences. See the scoped evidence record.",
+        "evidence_sha256": "b0d54ff279a0da7928685794e5650c46c353779b9199b36fa7ce5a3024858d2e"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-2186dcb.json",
+      "scope": "hosted-exact-source-security-and-five-shard-development",
+      "source_binding": {
+        "implementation_commit": "2186dcb3d4ddd65f68e26e0bb76dc15e73d527d2",
+        "method": "Authenticated archives, API digests, exact source bytes and stored CodeQL analyses verified; development failures and skipped outcomes retained.",
+        "evidence_sha256": "c2bbd975815693461e81b4022ea371452c73ae7009a64c88e710fa3264b6e58a"
+      }
+    },
+    {
+      "path": "docs/verification/classification-browser-budget-local.json",
+      "scope": "classification-browser-budget",
+      "source_binding": {
+        "implementation_commit": "a5e30195085ef7e4e61fbdf66e2b6a1f104ef2ba",
+        "method": "All691 measured sources match exact Git blobs; every execution artifact was rehashed and owned cleanup passed.",
+        "evidence_sha256": "99dd9b2b5eaabfbb2aa180d8da7c2ea2681f870f68fc8cd4f6a5d732a093185c"
+      }
+    },
+    {
+      "path": "docs/verification/business-domain-snapshot-local.json",
+      "scope": "bounded-api-test-snapshot",
+      "source_binding": {
+        "implementation_commit": "f3f21e5e7eb7190a2b6ff98725737d7255be1878",
+        "method": "Exact committed fixture/regression hashes; native/API remains separately qualified.",
+        "evidence_sha256": "5df1491beb3265ddd3fbb24f39e466cd4fc18955c2d446ced321bf7651e24b47"
       }
     }
   ],

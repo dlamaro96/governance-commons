@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-17T08:45:15.938441+00:00",
+  "scope": "Classification browser request-budget admission repair only",
+  "implementation_commit": "a5e30195085ef7e4e61fbdf66e2b6a1f104ef2ba",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "source_files": 691,
+  "exact_git_source_hashes_match": true,
+  "application_provenance": {
+    "commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
+    "explanation": "Only browser test admission changed at this commit; actual application/worker sources match the verified514ddee images."
+  },
+  "automated_result": "PASS",
+  "counts": {
+    "startTime": "2026-11-17T08:42:21.299Z",
+    "duration": 65947.97099999999,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "versions": {
+    "node": "v24.22.3",
+    "pnpm": "10.32.1",
+    "chrome": "Google Chrome 157.0.8103.79"
+  },
+  "host_controls": 7,
+  "types": "PASS",
+  "execution": {
+    "private_record": ".local/evidence/product-classification-budget-browser-attempt-1/execution.json",
+    "sha256": "6419b1a90f081e428196ee22c999cabc66f806dbc43b57d9d812f111c6477f7d"
+  },
+  "visual_review": {
+    "private_record": ".local/evidence/product-classification-budget-browser-attempt-1/visual-review-sample.json",
+    "sha256": "40318902363c00802f82846504d6ad0fb90a2c1c529b5d0f5ca5be309c71ca01",
+    "inspected": 4,
+    "total": 12
+  },
+  "cleanup": {
+    "schema_version": 1,
+    "scope": "registered-posix-groups-and-observed-descendants",
+    "result": "PASS",
+    "trigger": "normal",
+    "registeredBrowserGroups": 1,
+    "trackedProcesses": 47,
+    "termSignals": 0,
+    "killSignals": 0,
+    "remainingLive": 0,
+    "identityConflicts": 0,
+    "unresolvedGroups": 0,
+    "registryClosed": true
+  },
+  "screenshots_restored": true,
+  "repair": "Use the existing bounded295-request admission helper before login; retain exact200 response assertions and600-second journey/120-second polling deadlines. No product request retry or rate-policy change.",
+  "full37": "RUNNING",
+  "hosted": "NOT_RUN",
+  "limitations": [
+    "Target pass does not replace a fresh full37-journey or hosted regression.",
+    "The prior hosted429 failure remains retained in hosted-checkpoint-2186dcb.json."
+  ]
+}

@@ -53,7 +53,7 @@
         "sha256": "14e700767ce4219d65864d2357b01594166d51d4e23e12bbaa99fad9e7dc526b"
       }
     ],
-    "hosted_execution": "NOT_RUN",
+    "hosted_execution": "FAIL",
     "required_outcomes": 40,
     "browser_journeys": 36,
     "limits": "Five separate Ubuntu runners,90minutes each; original product/operation limits and every stage assertion retained.",
@@ -61,7 +61,8 @@
       "Hosted timing and complete fresh matrix pass remain required.",
       "Raw native outcomes remain step-level evidence where the existing collector has no separately validated projection.",
       "Known authority and historical glossary-population failures remain mandatory; splitting CI does not resolve or relabel them."
-    ]
+    ],
+    "hosted_evidence": "docs/verification/hosted-checkpoint-2186dcb.json"
   },
   "browser_target": {
     "result": "PASS",
@@ -120,7 +121,61 @@
     "limitations": [
       "All8 English1440/Arabic390 viewports inspected by an automated assistant; no independent accessibility or linguistic certification.",
       "Rate exhaustion remains an inference supported by the recorded429 history response; original inspector status was not captured.",
-      "Complete36-journey attempt15 is running; attempt14 remains failed31/1/4."
+      "Complete36-journey attempt15 passed36 at its recorded predecessor revision; attempt14 remains failed31/1/4. The expanded37-journey graph is not yet executed."
+    ]
+  },
+  "full_browser": {
+    "result": "PASS_AUTOMATED",
+    "expected_journeys": 36,
+    "attempt": "product-full-browser-attempt-15",
+    "counts": {
+      "startTime": "2026-11-17T07:25:20.442Z",
+      "duration": 2234966.517,
+      "expected": 36,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "source_binding": {
+      "implementation_commit": "ac464afc83a3e01d925a45b20723dfd8f2ab0572",
+      "files": 664,
+      "exact_committed_source_hashes_match": true
+    },
+    "execution": {
+      "private_record": ".local/evidence/product-full-browser-attempt-15/execution.json",
+      "sha256": "93f65293534d141477a5da3a1a171d3b8e9882efd1dd86a9ddbd0170cb11826b"
+    },
+    "readback": {
+      "private_record": ".local/evidence/product-full-browser-attempt-15/root-readback.json",
+      "sha256": "b756c9deb263a847381a6d229cf5addfe3319043b55c9ff6974ea731c054e7fd"
+    },
+    "cleanup": {
+      "schema_version": 1,
+      "scope": "registered-posix-groups-and-observed-descendants",
+      "result": "PASS",
+      "trigger": "normal",
+      "registeredBrowserGroups": 25,
+      "trackedProcesses": 879,
+      "termSignals": 0,
+      "killSignals": 0,
+      "remainingLive": 0,
+      "identityConflicts": 0,
+      "unresolvedGroups": 0,
+      "registryClosed": true
+    },
+    "screenshots_restored": true,
+    "capture_count": 281,
+    "visual_review": {
+      "result": "PARTIAL",
+      "inspected": 3,
+      "record": {
+        "private_record": ".local/evidence/product-full-browser-attempt-15/visual-review-sample.json",
+        "sha256": "a190f75950b7251b482cdfc0c260a4f52def5a7494c2f4811771e79e0eb991e8"
+      }
+    },
+    "limitations": [
+      "No retries, skips or flaky cases. Three of281 captures inspected; no complete manual visual, independent accessibility or Arabic linguistic qualification.",
+      "Exact predecessor revision only; SQL030/031 and the37th volume journey require their own qualification."
     ]
   }
 }

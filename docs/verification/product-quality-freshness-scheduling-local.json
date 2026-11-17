@@ -618,33 +618,37 @@
     "scope": "Three protected-envelope mutation refusals retained; mutable delivery bookkeeping checked separately."
   },
   "full_browser": {
-    "result": "FAIL_OR_INCOMPLETE",
+    "result": "PASS_AUTOMATED",
     "expected_journeys": 36,
-    "attempt": "product-full-browser-attempt-14",
+    "attempt": "product-full-browser-attempt-15",
     "counts": {
-      "startTime": "2026-11-17T06:43:25.801Z",
-      "duration": 1724209.819,
-      "expected": 31,
-      "skipped": 4,
-      "unexpected": 1,
+      "startTime": "2026-11-17T07:25:20.442Z",
+      "duration": 2234966.517,
+      "expected": 36,
+      "skipped": 0,
+      "unexpected": 0,
       "flaky": 0
     },
     "source_binding": {
-      "implementation_commit": "4cc3bd2afff9f75b8cba6bdbdc849e9252df8e70",
-      "files": 663,
+      "implementation_commit": "ac464afc83a3e01d925a45b20723dfd8f2ab0572",
+      "files": 664,
       "exact_committed_source_hashes_match": true
     },
     "execution": {
-      "private_record": ".local/evidence/product-full-browser-attempt-14/execution.json",
-      "sha256": "5dec674d6d50d5ff7200d2922ecab193a447b1464dd7181bae62bfc238a96ce8"
+      "private_record": ".local/evidence/product-full-browser-attempt-15/execution.json",
+      "sha256": "93f65293534d141477a5da3a1a171d3b8e9882efd1dd86a9ddbd0170cb11826b"
+    },
+    "readback": {
+      "private_record": ".local/evidence/product-full-browser-attempt-15/root-readback.json",
+      "sha256": "b756c9deb263a847381a6d229cf5addfe3319043b55c9ff6974ea731c054e7fd"
     },
     "cleanup": {
       "schema_version": 1,
       "scope": "registered-posix-groups-and-observed-descendants",
       "result": "PASS",
-      "trigger": "nonzero",
-      "registeredBrowserGroups": 21,
-      "trackedProcesses": 732,
+      "trigger": "normal",
+      "registeredBrowserGroups": 25,
+      "trackedProcesses": 879,
       "termSignals": 0,
       "killSignals": 0,
       "remainingLive": 0,
@@ -652,17 +656,19 @@
       "unresolvedGroups": 0,
       "registryClosed": true
     },
-    "sources_unchanged": true,
     "screenshots_restored": true,
-    "failure": {
-      "project": "quality-uniqueness",
-      "assertion": "Historical run pinned-threshold element was absent.",
-      "diagnosis": "Recorded UI displays request-rate refusal; cause under investigation."
+    "capture_count": 281,
+    "visual_review": {
+      "result": "PARTIAL",
+      "inspected": 3,
+      "record": {
+        "private_record": ".local/evidence/product-full-browser-attempt-15/visual-review-sample.json",
+        "sha256": "a190f75950b7251b482cdfc0c260a4f52def5a7494c2f4811771e79e0eb991e8"
+      }
     },
     "limitations": [
-      "31 passed, one failed, four skipped; no complete browser-profile pass.",
-      "Earlier full35 attempt13 remains failed:27 passed,one failed,seven skipped.",
-      "233 generated captures are retained privately; no full visual review claimed."
+      "No retries, skips or flaky cases. Three of281 captures inspected; no complete manual visual, independent accessibility or Arabic linguistic qualification.",
+      "Exact predecessor revision only; SQL030/031 and the37th volume journey require their own qualification."
     ]
   },
   "security": {
@@ -691,5 +697,55 @@
     "Current eligibility uses conservative persisted timing and source-clock bounds; no NTP, monotonic-clock or unrecorded-clock-rewind guarantee.",
     "Other rule families, filters/partition scopes and broader delivery requirements remain open.",
     "Mixed-direction issue-text punctuation remains a minor UI correction assigned to the next increment."
+  ],
+  "prior_full_browser_attempts": [
+    {
+      "result": "FAIL_OR_INCOMPLETE",
+      "expected_journeys": 36,
+      "attempt": "product-full-browser-attempt-14",
+      "counts": {
+        "startTime": "2026-11-17T06:43:25.801Z",
+        "duration": 1724209.819,
+        "expected": 31,
+        "skipped": 4,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "source_binding": {
+        "implementation_commit": "4cc3bd2afff9f75b8cba6bdbdc849e9252df8e70",
+        "files": 663,
+        "exact_committed_source_hashes_match": true
+      },
+      "execution": {
+        "private_record": ".local/evidence/product-full-browser-attempt-14/execution.json",
+        "sha256": "5dec674d6d50d5ff7200d2922ecab193a447b1464dd7181bae62bfc238a96ce8"
+      },
+      "cleanup": {
+        "schema_version": 1,
+        "scope": "registered-posix-groups-and-observed-descendants",
+        "result": "PASS",
+        "trigger": "nonzero",
+        "registeredBrowserGroups": 21,
+        "trackedProcesses": 732,
+        "termSignals": 0,
+        "killSignals": 0,
+        "remainingLive": 0,
+        "identityConflicts": 0,
+        "unresolvedGroups": 0,
+        "registryClosed": true
+      },
+      "sources_unchanged": true,
+      "screenshots_restored": true,
+      "failure": {
+        "project": "quality-uniqueness",
+        "assertion": "Historical run pinned-threshold element was absent.",
+        "diagnosis": "Recorded UI displays request-rate refusal; cause under investigation."
+      },
+      "limitations": [
+        "31 passed, one failed, four skipped; no complete browser-profile pass.",
+        "Earlier full35 attempt13 remains failed:27 passed,one failed,seven skipped.",
+        "233 generated captures are retained privately; no full visual review claimed."
+      ]
+    }
   ]
 }

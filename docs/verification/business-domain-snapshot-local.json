@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-17T08:51:11.081161+00:00",
+  "scope": "Memory-bounded rollback test snapshots; no product authorization or budget change",
+  "implementation_commit": "f3f21e5e7eb7190a2b6ff98725737d7255be1878",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "previous_api_attempt": {
+    "implementation_commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
+    "result": "FAIL",
+    "expected": 168,
+    "observed": 155,
+    "passed": 154,
+    "failed_test_processes": 1,
+    "diagnosis": "Business-domain rollback fixture exhausted256MiB Node heap while retaining full accumulated tenant rows.",
+    "summary_sha256": "fcc00ddae8adc55e9c11e2143387a557b892f9306c7fe849f1e823c98b0f9dec"
+  },
+  "repair": "Compute SHA256 of every complete selected row inside PostgreSQL; transfer sorted fixed-size digests while preserving duplicate multiplicity, all12 tenant-scoped tables, seven immutable outbox fields and scope epoch.",
+  "source_review": "PASS",
+  "host_controls": {
+    "pass": 7,
+    "fail": 0,
+    "skipped": 0
+  },
+  "types": "PASS",
+  "ci_inventory": {
+    "expected_tests": 171,
+    "unchanged_predecessor_declarations": 168,
+    "new_real_database_regressions": 3,
+    "declaration_flags": []
+  },
+  "current_api": {
+    "outcome": "PASS",
+    "commit": "f3f21e5e7eb7190a2b6ff98725737d7255be1878",
+    "expected": 171,
+    "observed": 171,
+    "counts": {
+      "tests": 171,
+      "suites": 0,
+      "pass": 171,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_source_files": 25,
+    "runtime_test_sources_match": true,
+    "summary": {
+      "private_record": ".local/evidence/api-runs/20261117T085232Z-c17bb1a4b52449d3a6a4d6f50134b9ca/summary.json",
+      "sha256": "6a9c320a5f51fd489bb449cc2024fc49f02c4a9793df0338fde7b3b14bf8b3f3"
+    },
+    "readback": {
+      "private_record": ".local/evidence/api-runs/20261117T085232Z-c17bb1a4b52449d3a6a4d6f50134b9ca/root-readback.json",
+      "sha256": "9ff1992e7c9247f55d772f239a6152cb47ab54808bcda8cb8c5bd16f02e4b897"
+    },
+    "limitations": [
+      "Real core API/PostgreSQL execution; does not qualify unexecuted browser, hosted or vendor workflows."
+    ]
+  },
+  "source_files": {
+    "tests/fixtures/business-domains.ts": "b239c5fe41d9261e8d2067fd8e364a5cb9a49d1a82fb23cce188ca49ae8ffeb3",
+    "tests/integration/business-domain-snapshot.test.ts": "8a6d90c4183221b66fb5cfa1b8220c07d46bbcd1f6678417fc55105f2265f216"
+  },
+  "limitations": [
+    "The preceding heap-abort attempt remains retained. All171 cases now pass, including the three new real database snapshot regressions, with the original256MiB process limit.",
+    "Digest comparison is collision-resistant equality evidence, not a new product data access path. No rows are limited, sampled or deleted."
+  ]
+}
