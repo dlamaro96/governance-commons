@@ -13,10 +13,9 @@ from api_evidence import safe_report
 from authentication_evidence import load_report as load_authentication_report
 from protected_authn_evidence import load_report as load_protected_report, copy_captures as copy_protected_captures
 from authentication_evidence import read_file as bounded_read, strict_json as private_json
-from authority_diagnostics import load_report as load_authority_diagnostic
 from glossary_population_diagnostics import load_report as load_population_diagnostic
 
-from ci_shards import STEPS, required_steps, collect_outcomes, checkout_identity, foreign_evidence
+from ci_shards import SUPERSEDED, AUTHORITY_SCOPES, STEPS, required_steps, collect_outcomes, checkout_identity, foreign_evidence
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--shard")
@@ -44,11 +43,13 @@ report = {
     "outcome": "PASS" if outcomes_valid and not foreign_outputs else "NOT_PASSED",
     "shard": shard_identity,
     "foreign_evidence": "REFUSED" if foreign_outputs else "NONE",
+    "superseded_outcomes": SUPERSEDED,
+    "authority_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in AUTHORITY_SCOPES.items()},
     "tests": [],
     "screenshots": [],
     "limitations": ["No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
                     "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification.",
-                    "Canonical authority success, source-connector upgrade, configurable PostgreSQL TLS, glossary upgrade, completeness, lineage, classification, reference-data, reference-quality, reference-structure, reference-import, uniqueness, range, monitoring, freshness and scheduled-freshness native gates remain CI step outcomes only; authority failures may include a separately source-bound, failure-only diagnostic. Raw native reports/logs and unreviewed completeness/lineage/classification/reference-data/reference-quality/reference-structure/reference-import/uniqueness/range/monitoring/freshness captures and all raw import uploads remain private."],
+                    "Explicit SQL031 original/current authority qualifications, source-connector upgrade, configurable PostgreSQL TLS, glossary upgrade, completeness, lineage, classification, reference-data, reference-quality, reference-structure, reference-import, uniqueness, range, monitoring, freshness, scheduled-freshness and volume native gates remain CI step outcomes only; the superseded SQL013 failure is retained in its original evidence and is not requalified here. Raw native reports/logs and unreviewed completeness/lineage/classification/reference-data/reference-quality/reference-structure/reference-import/uniqueness/range/monitoring/freshness/volume captures and all raw import uploads remain private."],
 }
 # The API runner retains raw TAP privately. Only an independently revalidated,
 # exact-source report enters this staging directory; absence cannot turn a
@@ -80,16 +81,8 @@ if authn_report:
     (DEST / "authentication-summary.json").write_text(json.dumps(authn_report, indent=2) + "\n")
 if outcomes["authority_authn_foundation"] == "success" and not authn_report:
     report["outcome"] = "NOT_PASSED"
-# Diagnostics never qualify a successful gate. Preserve only an independently
-# source/log-bound failure projection and keep the required step failed.
-authority_diagnostic = load_authority_diagnostic(ROOT, os.environ.get("GITHUB_SHA")) if "authority_foundation" in REQUIRED else None
-if authority_diagnostic and outcomes["authority_foundation"] in {"failure", "cancelled"}:
-    (DEST / "authority-foundation-diagnostic.json").write_text(json.dumps(authority_diagnostic, indent=2) + "\n")
-    report["authority_foundation_diagnostic"] = "FAILURE_DIAGNOSTIC_ONLY"
-else:
-    report["authority_foundation_diagnostic"] = "STEP_RESULT_MISMATCH" if authority_diagnostic else "UNAVAILABLE_OR_INVALID"
-if authority_diagnostic and outcomes["authority_foundation"] == "success":
-    report["outcome"] = "NOT_PASSED"
+# The retired SQL013 diagnostic remains independently testable; this run never loads or exports it.
+report["authority_foundation_diagnostic"] = "HISTORICAL_NOT_EXECUTED"
 # Population diagnostics are never a success qualification or raw-log upload.
 population_diagnostic = load_population_diagnostic(ROOT, os.environ.get("GITHUB_SHA")) if "glossary_population_upgrade" in REQUIRED else None
 if population_diagnostic and outcomes["glossary_population_upgrade"] in {"failure", "cancelled"}:
@@ -151,6 +144,7 @@ def failure_locations(results, filename):
 
 source = ROOT / ".local/evidence/playwright-results.json"
 REVIEWED_TITLES = {
+    "quality-volume.spec.ts": 'DQ-VOLUME: exact table counts, immutable thresholds, scheduled recovery and reopened issue history',
     "quality-freshness-monitoring.spec.ts": 'DQ-FRESHNESS-MONITOR: scheduled latest timestamps recover, reopen and expire without rewriting a recorded pass',
     "quality-freshness.spec.ts": 'DQ-FRESHNESS: exact source-clock latest age, immutable duration versions, all-null outcome and current read boundaries',
     "quality-monitoring.spec.ts": 'DQ-MONITOR: actual UTC scheduling deduplicates failures, verifies recovery and preserves reopened issue history',
@@ -176,7 +170,7 @@ if "browser" in REQUIRED and source.is_file():
                     results = test.get("results", [])
                     status = test.get("status", "unknown")
                     filename = Path(str(spec.get("file", ""))).name
-                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts", "relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts", "lineage.spec.ts", "classification.spec.ts", "reference-data.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts", "quality-monitoring.spec.ts", "quality-freshness.spec.ts", "quality-freshness-monitoring.spec.ts"}:
+                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts", "relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts", "lineage.spec.ts", "classification.spec.ts", "reference-data.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts", "quality-monitoring.spec.ts", "quality-freshness.spec.ts", "quality-freshness-monitoring.spec.ts", "quality-volume.spec.ts"}:
                         continue
                     # Bind each new journey to its reviewed declaration, without
                     # exporting arbitrary titles or accepting a same-file substitute.
@@ -209,6 +203,7 @@ if outcomes["browser"] == "success":
     expected["tests/e2e/quality-monitoring.spec.ts"] = 1
     expected["tests/e2e/quality-freshness.spec.ts"] = 1
     expected["tests/e2e/quality-freshness-monitoring.spec.ts"] = 1
+    expected["tests/e2e/quality-volume.spec.ts"] = 1
     observed = {name: sum(test["file"] == name for test in report["tests"]) for name in expected}
     locations = {(test["file"], test["line"]) for test in report["tests"]}
     if observed != expected or len(locations) != sum(expected.values()) or any(test["status"] != "expected" or test["attempts"] != 1 for test in report["tests"]):
@@ -234,7 +229,7 @@ if outcomes["browser"] == "success":
             report["outcome"] = "NOT_PASSED"
 # Ownership is explicit; missing owner evidence is never relabeled unassigned.
 for step, field in (("security", "api_evidence"), ("authority_authn_foundation", "authentication_evidence"),
-                    ("authority_foundation", "authority_foundation_diagnostic"), ("glossary_population_upgrade", "glossary_population_diagnostic"),
+                    ("glossary_population_upgrade", "glossary_population_diagnostic"),
                     ("protected_authn", "protected_authentication_evidence")):
     if step not in REQUIRED:
         report[field] = "NOT_IN_SHARD"

@@ -53,6 +53,8 @@ jobs:
         run: pnpm test
       - name: Fail-closed evidence collection
         run: python3 policies/test_ci_evidence.py
+      - name: Explicit authority-read upgrade qualification controls
+        run: python3 scripts/test_authority_read_upgrade.py
       - name: Fixed behavior shard contract
         run: python3 policies/test_ci_shards.py
       - name: Immutable application-image admission
@@ -87,6 +89,16 @@ jobs:
         run: python3 scripts/test_freshness_worker_gate.py
       - name: Freshness source fixture controls
         run: python3 scripts/test_runtime_freshness_fixture.py
+      - name: Table volume upgrade controls
+        run: python3 scripts/test_quality_volume_upgrade.py
+      - name: Historical quality source binding controls
+        run: python3 scripts/test_quality_pre030.py
+      - name: Original quality source binding controls
+        run: python3 scripts/test_quality_sql019_binding.py
+      - name: Table volume worker controls
+        run: python3 scripts/test_volume_worker_gate.py
+      - name: Table volume fixture controls
+        run: python3 scripts/test_volume_fixture.py
       - name: Scheduled freshness upgrade controls
         run: python3 scripts/test_quality_freshness_scheduling_upgrade.py
       - name: Owned monitoring source fixture controls
@@ -247,10 +259,14 @@ jobs:
         if: success() && matrix.shard == 'foundation'
         id: authority_authn_foundation
         run: ./dev test --suite authority-authn-foundation
-      - name: Verify canonical authority storage and complete loader closure
+      - name: Verify explicit SQL013-to031 authority read upgrade with original assertions
         if: success() && matrix.shard == 'foundation'
-        id: authority_foundation
-        run: ./dev test --suite authority-foundation
+        id: authority_read_original
+        run: ./dev test --suite authority-read-original
+      - name: Verify populated SQL030-to031 authority read upgrade and preservation
+        if: success() && matrix.shard == 'foundation'
+        id: authority_read_current
+        run: ./dev test --suite authority-read-current
       - name: Verify source connector identity upgrade and preservation
         if: success() && matrix.shard == 'foundation'
         id: source_connectors_upgrade
@@ -343,10 +359,18 @@ jobs:
         if: success() && matrix.shard == 'quality-freshness-volume'
         id: freshness_worker
         run: ./dev test --suite freshness-worker
+      - name: Verify exact table volume upgrade and retained evidence
+        if: success() && matrix.shard == 'quality-freshness-volume'
+        id: volume_upgrade
+        run: ./dev test --suite volume-upgrade
+      - name: Verify exact table volume source aggregates
+        if: success() && matrix.shard == 'quality-freshness-volume'
+        id: volume_worker
+        run: ./dev test --suite volume-worker
       - name: Verify browser acceptance and accessibility
         if: success() && matrix.shard == 'browser'
         id: browser
-        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts tests/e2e/source-connectors.spec.ts tests/e2e/postgres-configuration.spec.ts tests/e2e/approvals.spec.ts tests/e2e/glossary.spec.ts tests/e2e/quality.spec.ts tests/e2e/lineage.spec.ts tests/e2e/classification.spec.ts tests/e2e/reference-data.spec.ts tests/e2e/reference-quality.spec.ts tests/e2e/reference-structures.spec.ts tests/e2e/reference-import.spec.ts tests/e2e/quality-uniqueness.spec.ts tests/e2e/quality-range.spec.ts tests/e2e/quality-monitoring.spec.ts tests/e2e/quality-freshness.spec.ts tests/e2e/quality-freshness-monitoring.spec.ts
+        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts tests/e2e/source-connectors.spec.ts tests/e2e/postgres-configuration.spec.ts tests/e2e/approvals.spec.ts tests/e2e/glossary.spec.ts tests/e2e/quality.spec.ts tests/e2e/lineage.spec.ts tests/e2e/classification.spec.ts tests/e2e/reference-data.spec.ts tests/e2e/reference-quality.spec.ts tests/e2e/reference-structures.spec.ts tests/e2e/reference-import.spec.ts tests/e2e/quality-uniqueness.spec.ts tests/e2e/quality-range.spec.ts tests/e2e/quality-monitoring.spec.ts tests/e2e/quality-freshness.spec.ts tests/e2e/quality-freshness-monitoring.spec.ts tests/e2e/quality-volume.spec.ts
       - name: Verify protected OIDC and session lifecycle on the exact built image
         if: success() && matrix.shard == 'browser'
         id: protected_authn
@@ -369,7 +393,8 @@ jobs:
           GC_BUSINESS_DOMAINS_UPGRADE_RESULT: ${{ steps.business_domains_upgrade.outcome }}
           GC_BUSINESS_DOMAIN_SEED_RESULT: ${{ steps.business_domain_seed.outcome }}
           GC_AUTHORITY_AUTHN_FOUNDATION_RESULT: ${{ steps.authority_authn_foundation.outcome }}
-          GC_AUTHORITY_FOUNDATION_RESULT: ${{ steps.authority_foundation.outcome }}
+          GC_AUTHORITY_READ_ORIGINAL_RESULT: ${{ steps.authority_read_original.outcome }}
+          GC_AUTHORITY_READ_CURRENT_RESULT: ${{ steps.authority_read_current.outcome }}
           GC_SOURCE_CONNECTORS_UPGRADE_RESULT: ${{ steps.source_connectors_upgrade.outcome }}
           GC_POSTGRES_TARGETS_RESULT: ${{ steps.postgres_targets.outcome }}
           GC_GLOSSARY_UPGRADE_RESULT: ${{ steps.glossary_upgrade.outcome }}
@@ -393,6 +418,8 @@ jobs:
           GC_FRESHNESS_UPGRADE_RESULT: ${{ steps.freshness_upgrade.outcome }}
           GC_FRESHNESS_SCHEDULING_UPGRADE_RESULT: ${{ steps.freshness_scheduling_upgrade.outcome }}
           GC_FRESHNESS_WORKER_RESULT: ${{ steps.freshness_worker.outcome }}
+          GC_VOLUME_UPGRADE_RESULT: ${{ steps.volume_upgrade.outcome }}
+          GC_VOLUME_WORKER_RESULT: ${{ steps.volume_worker.outcome }}
           GC_BROWSER_RESULT: ${{ steps.browser.outcome }}
           GC_PROTECTED_AUTHN_RESULT: ${{ steps.protected_authn.outcome }}
         run: python3 policies/ci_evidence.py --shard "$GC_BEHAVIOR_SHARD"

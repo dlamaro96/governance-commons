@@ -45,10 +45,24 @@ class Controls(unittest.TestCase):
             self.write(name, '{}\n' if name.endswith('.json') else '')
         self.write('scripts/qualification_quality_repository.py', '')
         self.write(gate.repository.REPOSITORY, 'export const checkout = true;\n')
-        self.write(gate.repository.FIXTURE, (ROOT / gate.repository.FIXTURE).read_text())
+        self.write(gate.repository.repository.FIXTURE, (ROOT / gate.repository.repository.FIXTURE).read_text())
         self.write('deploy/compose/compose.yaml', 'services:\n  postgres:\n    image: postgres:17\n')
         for name in gate.NAMES:
             self.write('packages/db/migrations/' + name, '-- synthetic host-only migration fixture\n')
+
+        for name in gate.repository.INPUTS:
+            path=self.root/name;path.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copyfile(ROOT/name,path)
+        for name in (gate.repository.SERVICE, gate.repository.REPOSITORY):
+            path=self.root/name;path.parent.mkdir(parents=True,exist_ok=True)
+            if not path.exists() or path.stat().st_size==0: path.write_text('export {};\n')
+            text=gate.repository.historical_imports(self.root,name)
+            for relative in gate.re.findall(r'''(?:from\s*|import\s*(?:\(\s*)?|require\s*\(\s*)?['"](\.[^'"]+)['"]''',text):
+                imported=Path(os.path.abspath(path.parent/relative))
+                if imported.suffix=='.js':imported=imported.with_suffix('.ts')
+                if not imported.suffix:imported=imported.with_suffix('.ts')
+                imported.parent.mkdir(parents=True,exist_ok=True)
+                if not imported.exists():imported.write_text('export {};\n')
 
     def tearDown(self):
         self.root_patch.stop()
@@ -95,6 +109,42 @@ class Controls(unittest.TestCase):
             (self.root / 'packages/db/migrations' / successors[0]).unlink()
             with self.assertRaises(RuntimeError):
                 gate.migrations()
+
+    def test_sql030_is_only_a_declared_contiguous_successor_never_a_phase_input(self):
+        names=['025_quality_uniqueness.sql','026_quality_range.sql','027_quality_monitoring.sql','028_quality_freshness.sql','029_quality_freshness_scheduling.sql','030_quality_volume.sql']
+        for name in names:
+            if name not in gate.NAMES:self.write('packages/db/migrations/'+name,'-- successor only')
+        self.assertEqual(gate.migrations(),gate.NAMES)
+        self.assertNotIn('packages/db/migrations/030_quality_volume.sql',{r['path'] for r in gate.sources()})
+        self.write('packages/db/migrations/031_undeclared.sql','-- undeclared')
+        with self.assertRaises(RuntimeError):gate.migrations()
+        (self.root/'packages/db/migrations/031_undeclared.sql').unlink()
+        (self.root/'packages/db/migrations/030_quality_volume.sql').unlink()
+        self.write('packages/db/migrations/030_wrong.sql','-- wrong successor')
+        with self.assertRaises(RuntimeError):gate.migrations()
+
+    def test_sql031_suffix_is_admitted_but_never_a_historical_phase_input(self):
+        before = gate.sources()
+        names = ['025_quality_uniqueness.sql', '026_quality_range.sql', '027_quality_monitoring.sql',
+                 '028_quality_freshness.sql', '029_quality_freshness_scheduling.sql',
+                 '030_quality_volume.sql', '031_authority_read_grants.sql']
+        for name in names:
+            if name not in gate.NAMES:
+                self.write('packages/db/migrations/' + name, '-- successor only')
+        self.assertEqual(gate.migrations(), gate.NAMES)
+        self.assertEqual(gate.sources(), before)
+        path = 'packages/db/migrations/031_authority_read_grants.sql'
+        self.assertNotIn(path, {row['path'] for row in gate.sources()})
+        self.write(path, '-- changed unexecuted successor')
+        self.assertEqual(gate.sources(), before)
+        future = self.write('packages/db/migrations/032_undeclared.sql', '-- unreviewed')
+        with self.assertRaises(RuntimeError): gate.migrations()
+        future.unlink()
+        if '030_quality_volume.sql' not in gate.NAMES:
+            (self.root/'packages/db/migrations/030_quality_volume.sql').unlink()
+        else:
+            (self.root/'packages/db/migrations'/gate.NAMES[-1]).unlink()
+        with self.assertRaises(RuntimeError): gate.migrations()
 
     def test_exact_current_migration_inventory(self):
         self.assertEqual(gate.migrations(), gate.NAMES)
@@ -179,40 +229,40 @@ class Controls(unittest.TestCase):
         self.assertTrue(kwargs['allow_failure'])
 
     def test_historical_repository_exact_phase_mount_and_effective_verifier(self):
-        for phase in sorted(gate.repository.PHASES[gate.REPOSITORY_GATE]):
+        for phase in sorted(gate.repository.repository.PHASES[gate.REPOSITORY_GATE]):
             h = self.harness(phase)
-            h.serial = 100 + len(h.calls) + list(sorted(gate.repository.PHASES[gate.REPOSITORY_GATE])).index(phase)
+            h.serial = 100 + len(h.calls) + list(sorted(gate.repository.repository.PHASES[gate.REPOSITORY_GATE])).index(phase)
             h.helper(['node', '--test', 'synthetic.test.ts'])
             args = h.calls[-1][0]
             mounts = [args[i+1] for i,v in enumerate(args) if v == '--volume']
             target = '/app/' + gate.repository.REPOSITORY
             actual = [m for m in mounts if m.endswith(':' + target + ':ro')]
-            self.assertEqual(actual, [str(self.root / gate.repository.FIXTURE) + ':' + target + ':ro'])
+            self.assertEqual(actual, [str(self.root / gate.repository.repository.FIXTURE) + ':' + target + ':ro'])
             record = h.report['sourceChecks'][-1]
-            self.assertEqual(record['repositoryBinding']['sha256'], gate.repository.DIGEST)
-            self.assertEqual(record['repositoryBinding']['commit'], gate.repository.COMMIT)
+            self.assertEqual(record['repositoryBinding']['sha256'], gate.repository.repository.DIGEST)
+            self.assertEqual(record['repositoryBinding']['commit'], gate.repository.repository.COMMIT)
             effective = record['effectiveSources']
-            self.assertEqual(next(r['sha256'] for r in effective if r['path'] == gate.repository.REPOSITORY), gate.repository.DIGEST)
-            self.assertEqual([r for r in effective if r['path'] != gate.repository.REPOSITORY], [r for r in h.frozen if r['path'] != gate.repository.REPOSITORY])
+            self.assertEqual(next(r['sha256'] for r in effective if r['path'] == gate.repository.REPOSITORY), gate.repository.repository.DIGEST)
+            self.assertEqual([r for r in effective if r['path'] not in (gate.repository.REPOSITORY,gate.repository.SERVICE)], [r for r in h.frozen if r['path'] not in (gate.repository.REPOSITORY,gate.repository.SERVICE)])
             verifier = next(m.rsplit(':',2)[0] for m in mounts if m.endswith(':' + gate.PROBE + ':ro'))
             self.assertEqual(Path(verifier).read_text(), gate.verifier(effective, gate.sha(b'{}')))
         h = self.harness('post027-monitoring-tests')
         selected = gate.repository.select(self.root,h.frozen,'monitoring',h.phase)
-        self.assertIsNone(selected['override'])
-        self.assertEqual(selected['sources'], h.frozen)
+        self.assertEqual(selected['override']['sha256'], gate.repository.BINDINGS[gate.repository.REPOSITORY][1])
+        self.assertEqual({item['path'] for item in selected['overrides']}, {gate.repository.SERVICE,gate.repository.REPOSITORY})
 
     def test_historical_repository_tamper_and_missing_binding_fail_closed(self):
-        phase = sorted(gate.repository.PHASES[gate.REPOSITORY_GATE])[0]
+        phase = sorted(gate.repository.repository.PHASES[gate.REPOSITORY_GATE])[0]
         h = self.harness(phase)
         with self.assertRaises(RuntimeError):
-            gate.repository.select(self.root,[r for r in h.frozen if r['path'] != gate.repository.FIXTURE],gate.REPOSITORY_GATE,phase)
-        (self.root / gate.repository.FIXTURE).write_text('not the immutable repository')
+            gate.repository.select(self.root,[r for r in h.frozen if r['path'] != gate.repository.repository.FIXTURE],gate.REPOSITORY_GATE,phase)
+        (self.root / gate.repository.repository.FIXTURE).write_text('not the immutable repository')
         with self.assertRaisesRegex(RuntimeError,'hash differs'):
             h.helper(['node','--test','synthetic.test.ts'])
         self.assertEqual(h.calls,[])
 
     def test_historical_readback_requires_effective_bytes_not_checkout_claim(self):
-        phase = sorted(gate.repository.PHASES[gate.REPOSITORY_GATE])[0]
+        phase = sorted(gate.repository.repository.PHASES[gate.REPOSITORY_GATE])[0]
         h = self.harness(phase)
         value = {'sources': h.frozen, 'configSha256': h.report['privateConfigSha256'],
                  'node': {'version':'v24.22.3','sha256':'a'*64},'tsx':{'version':'4.20.0','entrySha256':'b'*64}}

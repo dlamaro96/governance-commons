@@ -66,7 +66,33 @@ export interface FreshnessMeasurement {
  estimatedCost:number;estimatedBytes:number;
 }
 
-export type QualityRuleDefinition=CompletenessRuleDefinition|ReferenceAllowedValuesRuleDefinition|UniquenessRuleDefinition|RangeRuleDefinition|FreshnessRuleDefinition;
+/** Volume is a table family: no invented column identity or null-count metric.
+ * Authored maximumRows is a verdict threshold. Only execution.budget.maximumRows
+ * bounds the query/overflow probe: six rows/max5 is FAIL; 100001 is RESOURCE_LIMIT. */
+export const QUALITY_VOLUME_LIMITS=Object.freeze({minimumRows:0,maximumRows:100000} as const);
+export interface QualityVolumeSettings {
+ minimumRows:number;maximumRows:number;comparison:'row-count-inclusive';scope:'entire-table';
+}
+export interface VolumeRuleDefinition extends QualityVolumeSettings {
+ formatVersion:1;kind:'volume';target:{kind:'table';tableAssetId:string};
+ name:string;purpose:string;ownerId:string;severity:'info'|'warning'|'critical';
+}
+/** Static canonical hash preimage: {formatVersion:1,kind:'volume',...settings}.
+ * No target/clock/count is included; full definition/input hashes retain those pins. */
+export interface QualityVolumeBinding extends QualityVolumeSettings {volumeHash:string}
+export interface QualityTableTarget {
+ kind:'table';databaseOid:string;schemaOid:string;relationOid:string;schemaName:string;tableName:string;
+}
+export interface VolumeExecution {
+ formatVersion:1;kind:'volume';target:QualityTableTarget;budget:QualityBudget;volume:QualityVolumeBinding;
+}
+export interface VolumeMeasurement {
+ formatVersion:1;kind:'volume';strategy:'exact-bounded-role-scope';rowCount:number;volumeHash:string;
+ observedStartedAt:string;observedFinishedAt:string;elapsedMs:number;sourceVersion:string;adapterVersion:'1';
+ queryTemplate:'postgresql-volume-v1';estimatedCost:number;estimatedBytes:number;
+}
+
+export type QualityRuleDefinition=CompletenessRuleDefinition|ReferenceAllowedValuesRuleDefinition|UniquenessRuleDefinition|RangeRuleDefinition|FreshnessRuleDefinition|VolumeRuleDefinition;
 export interface QualityReferenceMetadata {setId:string;version:number;publicationHash:string;asOf:string;codeStatus:'active';bindingHash:string}
 export interface QualityReferenceBinding extends QualityReferenceMetadata {codes:string[]}
 export interface QualityTarget {
@@ -81,7 +107,7 @@ export type QualityExecution={formatVersion:1;kind:'completeness';target:Quality
  |{formatVersion:1;kind:'reference-allowed-values';target:QualityTarget;budget:QualityBudget;reference:QualityReferenceBinding}
  |{formatVersion:1;kind:'uniqueness';target:QualityTarget;budget:QualityUniquenessBudget}
  |{formatVersion:1;kind:'range';target:QualityTarget;budget:QualityBudget;range:QualityRangeBinding}
- |FreshnessExecution;
+ |FreshnessExecution|VolumeExecution;
 export interface CompletenessMeasurement {
  formatVersion:1;kind:'completeness';strategy:'exact-bounded-role-scope';rowCount:number;nullCount:number;
  observedStartedAt:string;observedFinishedAt:string;elapsedMs:number;sourceVersion:string;adapterVersion:'1';
@@ -103,7 +129,7 @@ export interface RangeMeasurement {
  observedStartedAt:string;observedFinishedAt:string;elapsedMs:number;sourceVersion:string;adapterVersion:'1';
  queryTemplate:'postgresql-range-v1';estimatedCost:number;estimatedBytes:number;
 }
-export type QualityMeasurement=CompletenessMeasurement|ReferenceAllowedValuesMeasurement|UniquenessMeasurement|RangeMeasurement|FreshnessMeasurement;
+export type QualityMeasurement=CompletenessMeasurement|ReferenceAllowedValuesMeasurement|UniquenessMeasurement|RangeMeasurement|FreshnessMeasurement|VolumeMeasurement;
 export type QualityStatus='queued'|'running'|'succeeded'|'failed'|'cancelled';
 export type QualityVerdict='PASS'|'FAIL'|'NO_DATA';
 export const QUALITY_ERRORS=['QUALITY_RESOURCE_LIMIT','QUALITY_TARGET_STALE','QUALITY_TARGET_UNSUPPORTED','QUALITY_SOURCE_FAILED','QUALITY_DEADLINE_EXCEEDED','QUALITY_AUTHORITY_REVOKED','QUALITY_ATTEMPTS_EXHAUSTED','QUALITY_CANCELLED','QUALITY_REFERENCE_UNAVAILABLE','QUALITY_CLOCK_SKEW'] as const;
@@ -114,7 +140,12 @@ export interface QualityRunFields {
  status:QualityStatus;version:number;attempt:number;createdAt:string;startedAt:string|null;finishedAt:string|null;expiresAt:string;
  measurement:QualityMeasurement|null;verdict:QualityVerdict|null;errorCode:QualityError|null;
 }
-export type QualityRunView=QualityRunFields & ({kind?:never;reference?:never;range?:never;freshness?:never}|{kind:'reference-allowed-values';reference:QualityReferenceMetadata;range?:never;freshness?:never}|{kind:'uniqueness';reference?:never;range?:never;freshness?:never}|{kind:'range';range:QualityRangeBinding;reference?:never;freshness?:never;measurement:RangeMeasurement|null}|{kind:'freshness';freshness:QualityFreshnessBinding;reference?:never;range?:never;measurement:FreshnessMeasurement|null});
+export type QualityColumnRunView=Omit<QualityRunFields,'measurement'> & {measurement:Exclude<QualityMeasurement,VolumeMeasurement>|null} & ({kind?:never;volume?:never;reference?:never;range?:never;freshness?:never}|{kind:'reference-allowed-values';volume?:never;reference:QualityReferenceMetadata;range?:never;freshness?:never}|{kind:'uniqueness';volume?:never;reference?:never;range?:never;freshness?:never}|{kind:'range';volume?:never;range:QualityRangeBinding;reference?:never;freshness?:never;measurement:RangeMeasurement|null}|{kind:'freshness';volume?:never;freshness:QualityFreshnessBinding;reference?:never;range?:never;measurement:FreshnessMeasurement|null});
+export type VolumeRunView=Omit<QualityRunFields,'columnAssetId'|'measurement'|'verdict'> & {
+ kind:'volume';columnAssetId:null;volume:QualityVolumeBinding;measurement:VolumeMeasurement|null;
+ verdict:'PASS'|'FAIL'|null;reference?:never;range?:never;freshness?:never;
+};
+export type QualityRunView=QualityColumnRunView|VolumeRunView;
 export interface QualityPageQuery {limit?:number;cursor?:string}
 export interface QualityPage<T>{items:T[];nextCursor:string|null}
 export interface QualityAssetView extends QualityPage<QualityRuleView>{

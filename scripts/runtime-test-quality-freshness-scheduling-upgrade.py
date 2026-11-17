@@ -35,6 +35,10 @@ spec = importlib.util.spec_from_file_location('quality_freshness_scheduling_sour
 base = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(base)
 require, sha = base.require, base.sha
+repository_spec = importlib.util.spec_from_file_location('quality_pre030_binding', ROOT / 'scripts/qualification_quality_pre030.py')
+repository = importlib.util.module_from_spec(repository_spec)
+repository_spec.loader.exec_module(repository)
+REPOSITORY_GATE = 'freshness-scheduling'
 NAMES = [*base.NAMES, '015_approval_workflows.sql', '016_glossary_publication.sql',
          '017_relation_scope_candidates.sql', '018_glossary_nominal_candidates.sql',
          '019_quality_execution.sql', '020_native_lineage.sql', '021_classification_review.sql',
@@ -43,8 +47,10 @@ NAMES = [*base.NAMES, '015_approval_workflows.sql', '016_glossary_publication.sq
 
 def migrations():
     actual = sorted(path.name for path in (ROOT / 'packages/db/migrations').glob('*.sql'))
-    require(actual == NAMES, 'Exact candidate SQL001–029 inventory required')
-    return actual
+    successors = ['030_quality_volume.sql', '031_authority_read_grants.sql']
+    suffix = actual[len(NAMES):]
+    require(actual[:len(NAMES)] == NAMES and suffix == successors[:len(suffix)], 'Exact SQL001–029 prefix and declared contiguous successors required')
+    return list(NAMES)
 
 
 def source_file(path):
@@ -64,7 +70,7 @@ def sources():
     paths = {'scripts/runtime-test-quality-freshness-scheduling-upgrade.py', 'scripts/runtime-test-source-connectors-upgrade.py',
              'scripts/runtime-test-authority-authn-foundation.py', 'scripts/authentication_roles.py',
                      'scripts/runtime-test-quality-monitoring-upgrade.py', 'scripts/qualification_quality_repository.py',
-                     'tests/qualification/predecessors/repository-sql026.ts.txt',
+                     *repository.INPUTS, repository.REPOSITORY,
              'package.json', 'pnpm-lock.yaml', 'Dockerfile', 'tsconfig.json', 'deploy/compose/compose.yaml',
              POST_FRESHNESS, 'tests/fixtures/quality-freshness-monitoring.ts', *(path for path, _ in TESTS), *(path for path, _ in LEGACY), 'tests/fixtures/reference-quality.ts', 'packages/db/src/migrate.ts',
              'packages/domain/src/quality-service.ts', 'apps/api/src/quality.ts',
@@ -74,7 +80,7 @@ def sources():
     pending = [ROOT / path for path in paths if path.endswith(('.ts', '.tsx'))]
     while pending:
         current = pending.pop()
-        text = source_file(current).read_text()
+        text = source_file(current).read_text() + '\n' + repository.historical_imports(ROOT, str(current.relative_to(ROOT)))
         relative = re.findall(r'''(?:from\s*|import\s*(?:\(\s*)?|require\s*\(\s*)['"](\.[^'"]+)['"]''', text)
         for name in relative:
             candidate = Path(os.path.abspath(current.parent / name))
@@ -152,6 +158,7 @@ class Harness(base.Harness):
                    '--user', f'{os.getuid()}:{os.getgid()}', '--tmpfs', '/tmp:rw,nosuid,nodev,size=32m,mode=1777', '--workdir', '/app',
                    '--env', 'HOME=/tmp', '--env', 'NODE_OPTIONS=--max-old-space-size=256', '--env', 'AUTHN_FOUNDATION_CONFIG=/run/authn-config.json',
                    '--volume', f'{self.secret_path}:/run/authn-config.json:ro']
+        selected = repository.select(ROOT, self.frozen, REPOSITORY_GATE, self.phase)
         targets = set()
         for row in self.frozen:
             # Migration helpers receive exact prefix directories instead. Native
@@ -159,7 +166,7 @@ class Harness(base.Harness):
             if row['path'].startswith('packages/db/migrations/') and self.phase.startswith('schema-'):
                 continue
             target = '/app/' + row['path']
-            command += ['--volume', f'{ROOT / row["path"]}:{target}:ro']
+            command += ['--volume', f'{repository.mounted_path(ROOT, row, selected)}:{target}:ro']
             targets.add(target)
         for host, target in mounts:
             require(target not in targets and target != PROBE and target != '/run/authn-config.json', 'Conflicting helper mount')
@@ -171,13 +178,14 @@ class Harness(base.Harness):
         if native:
             require(sources() == self.frozen, 'Checkout changed before native helper')
             probe_path = self.folder / ('source-check-' + str(self.serial) + '.cjs')
-            body = verifier(self.frozen, sha(self.secret_path.read_bytes())).encode()
+            body = verifier(selected['sources'], sha(self.secret_path.read_bytes())).encode()
             with probe_path.open('xb') as output:
                 output.write(body)
             probe_path.chmod(0o444)
             command += ['--volume', f'{probe_path}:{PROBE}:ro']
             args = [args[0], '--require', PROBE, *args[1:]]
-            record = {'phase': self.phase, 'verifierSha256': sha(body), 'sourceCount': len(self.frozen), 'result': 'RUNNING'}
+            record = {'phase': self.phase, 'verifierSha256': sha(body), 'sourceCount': len(self.frozen), 'result': 'RUNNING',
+                      'effectiveSources': selected['sources'], 'repositoryBinding': selected['override'], 'historicalBindings': selected['overrides']}
             self.report.setdefault('sourceChecks', []).append(record)
         try:
             result = self.docker(*command, self.app_image, *args, timeout=timeout, allow_failure=allow_failure, sensitive=sensitive, input=input)
@@ -191,6 +199,7 @@ class Harness(base.Harness):
         finally:
             if native:
                 require(sha(probe_path.read_bytes()) == sha(body) and sources() == self.frozen, 'Native helper source changed')
+                require(repository.select(ROOT, self.frozen, REPOSITORY_GATE, self.phase) == selected, 'Historical selection changed during native helper')
                 record['sourceHashesMatched'] = True
 
 
@@ -255,7 +264,7 @@ def readback(h):
     probe = ("const fs=require('node:fs'),c=require('node:crypto'),sha=p=>c.createHash('sha256').update(fs.readFileSync(p)).digest('hex');"
              "console.log(JSON.stringify({sources:" + json.dumps([r['path'] for r in h.frozen]) + ".map(path=>({path,sha256:sha(path)})),node:{version:process.version,sha256:sha(process.execPath)},tsx:{version:require('tsx/package.json').version,entrySha256:sha(require.resolve('tsx'))},configSha256:sha('/run/authn-config.json')}));")
     observed = json.loads(h.helper(['node', '-e', probe], sensitive=True).stdout)
-    require(set(observed) == {'sources', 'node', 'tsx', 'configSha256'} and observed['sources'] == h.frozen, 'Actual mounted quality source bytes differ')
+    require(set(observed) == {'sources', 'node', 'tsx', 'configSha256'} and observed['sources'] == repository.select(ROOT, h.frozen, REPOSITORY_GATE, h.phase)['sources'], 'Actual mounted quality source bytes differ')
     require(observed['configSha256'] == h.report['privateConfigSha256'], 'Actual private configuration differs')
     require(re.fullmatch(r'v24\.[0-9]+\.[0-9]+', observed['node']['version']) is not None and all(re.fullmatch(r'[a-f0-9]{64}', x) for x in (observed['node']['sha256'], observed['tsx']['entrySha256'])), 'Pinned native Node24/tool readback invalid')
     return observed
@@ -272,9 +281,11 @@ def declared_tests(path, expected):
 
 def native_suite(h, phase, path, expected):
     h.phase = phase
+    h.report.update(tests=None, testExitStatus=None)
     names = declared_tests(path, expected)
     record = {'phase': phase, 'path': path, 'expected': expected, 'testNames': names,
-              'tests': None, 'exitStatus': None, 'result': 'RUNNING'}
+              'tests': None, 'exitStatus': None, 'result': 'RUNNING',
+              'historicalBindings': repository.select(ROOT, h.frozen, REPOSITORY_GATE, h.phase)['overrides']}
     h.report.setdefault('nativeSuites', []).append(record)
     h.report.update(tests=None, testExitStatus=None)
     before = readback(h)

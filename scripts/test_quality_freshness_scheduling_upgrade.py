@@ -52,6 +52,20 @@ class Controls(unittest.TestCase):
         for name in gate.NAMES:
             self.write('packages/db/migrations/' + name, '-- synthetic host-only migration fixture\n')
 
+        for name in gate.repository.INPUTS:
+            path=self.root/name;path.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copyfile(ROOT/name,path)
+        for name in (gate.repository.SERVICE, gate.repository.REPOSITORY):
+            path=self.root/name;path.parent.mkdir(parents=True,exist_ok=True)
+            if not path.exists() or path.stat().st_size==0: path.write_text('export {};\n')
+            text=gate.repository.historical_imports(self.root,name)
+            for relative in gate.re.findall(r'''(?:from\s*|import\s*(?:\(\s*)?|require\s*\(\s*)?['"](\.[^'"]+)['"]''',text):
+                imported=Path(os.path.abspath(path.parent/relative))
+                if imported.suffix=='.js':imported=imported.with_suffix('.ts')
+                if not imported.suffix:imported=imported.with_suffix('.ts')
+                imported.parent.mkdir(parents=True,exist_ok=True)
+                if not imported.exists():imported.write_text('export {};\n')
+
     def tearDown(self):
         self.history_patch.stop()
         self.root_patch.stop()
@@ -80,6 +94,42 @@ class Controls(unittest.TestCase):
             return subprocess.CompletedProcess(args, 0, '{}', '')
         h.docker = docker
         return h
+
+    def test_sql030_is_only_a_declared_contiguous_successor_never_a_phase_input(self):
+        names=['025_quality_uniqueness.sql','026_quality_range.sql','027_quality_monitoring.sql','028_quality_freshness.sql','029_quality_freshness_scheduling.sql','030_quality_volume.sql']
+        for name in names:
+            if name not in gate.NAMES:self.write('packages/db/migrations/'+name,'-- successor only')
+        self.assertEqual(gate.migrations(),gate.NAMES)
+        self.assertNotIn('packages/db/migrations/030_quality_volume.sql',{r['path'] for r in gate.sources()})
+        self.write('packages/db/migrations/031_undeclared.sql','-- undeclared')
+        with self.assertRaises(RuntimeError):gate.migrations()
+        (self.root/'packages/db/migrations/031_undeclared.sql').unlink()
+        (self.root/'packages/db/migrations/030_quality_volume.sql').unlink()
+        self.write('packages/db/migrations/030_wrong.sql','-- wrong successor')
+        with self.assertRaises(RuntimeError):gate.migrations()
+
+    def test_sql031_suffix_is_admitted_but_never_a_historical_phase_input(self):
+        before = gate.sources()
+        names = ['025_quality_uniqueness.sql', '026_quality_range.sql', '027_quality_monitoring.sql',
+                 '028_quality_freshness.sql', '029_quality_freshness_scheduling.sql',
+                 '030_quality_volume.sql', '031_authority_read_grants.sql']
+        for name in names:
+            if name not in gate.NAMES:
+                self.write('packages/db/migrations/' + name, '-- successor only')
+        self.assertEqual(gate.migrations(), gate.NAMES)
+        self.assertEqual(gate.sources(), before)
+        path = 'packages/db/migrations/031_authority_read_grants.sql'
+        self.assertNotIn(path, {row['path'] for row in gate.sources()})
+        self.write(path, '-- changed unexecuted successor')
+        self.assertEqual(gate.sources(), before)
+        future = self.write('packages/db/migrations/032_undeclared.sql', '-- unreviewed')
+        with self.assertRaises(RuntimeError): gate.migrations()
+        future.unlink()
+        if '030_quality_volume.sql' not in gate.NAMES:
+            (self.root/'packages/db/migrations/030_quality_volume.sql').unlink()
+        else:
+            (self.root/'packages/db/migrations'/gate.NAMES[-1]).unlink()
+        with self.assertRaises(RuntimeError): gate.migrations()
 
     def test_exact_current_migration_inventory(self):
         self.assertEqual(gate.migrations(), gate.NAMES)
@@ -132,8 +182,11 @@ class Controls(unittest.TestCase):
         for name in expected:
             original = (self.root / name).read_bytes()
             (self.root / name).write_bytes(original + b'changed')
-            after = {row['path']: row['sha256'] for row in gate.sources()}
-            self.assertNotEqual(before[name], after[name])
+            if name == gate.repository.repository.FIXTURE:
+                with self.assertRaisesRegex(RuntimeError,'hash differs'):gate.sources()
+            else:
+                after = {row['path']: row['sha256'] for row in gate.sources()}
+                self.assertNotEqual(before[name], after[name])
             (self.root / name).write_bytes(original)
         (self.root / 'scripts/qualification_quality_repository.py').unlink()
         with self.assertRaises(RuntimeError):
@@ -186,8 +239,15 @@ class Controls(unittest.TestCase):
         args, kwargs = h.calls[-1]
         mounts = [args[i + 1] for i, v in enumerate(args) if v == '--volume']
         for row in h.frozen:
-            self.assertIn(f'{self.root / row["path"]}:/app/{row["path"]}:ro', mounts)
+            self.assertIn(f'{gate.repository.mounted_path(self.root, row, gate.repository.select(self.root, h.frozen, gate.REPOSITORY_GATE, h.phase))}:/app/{row["path"]}:ro', mounts)
         self.assertEqual(len(mounts), len(h.frozen) + 2)
+        selected=gate.repository.select(self.root,h.frozen,gate.REPOSITORY_GATE,h.phase)
+        record=h.report['sourceChecks'][-1]
+        self.assertEqual(record['effectiveSources'],selected['sources'])
+        self.assertEqual(record['historicalBindings'],selected['overrides'])
+        self.assertEqual(len({m.rsplit(':',2)[1] for m in mounts}),len(mounts))
+        probe=next(m.rsplit(':',2)[0] for m in mounts if m.endswith(':'+gate.PROBE+':ro'))
+        self.assertEqual(Path(probe).read_text(),gate.verifier(selected['sources'],gate.sha(b'{}')))
         self.assertTrue(all(v.endswith(':ro') for v in mounts))
         self.assertIn('container:' + h.id, args)
         for option in ('--read-only', '--cap-drop', '--security-opt', '--pids-limit', '--memory', '--pull'):
@@ -230,7 +290,7 @@ class Controls(unittest.TestCase):
 
     def test_readback_checks_actual_sources_config_and_tools(self):
         h = self.harness()
-        value = {'sources': h.frozen, 'configSha256': h.report['privateConfigSha256'],
+        value = {'sources': gate.repository.select(self.root,h.frozen,gate.REPOSITORY_GATE,h.phase)['sources'], 'configSha256': h.report['privateConfigSha256'],
                  'node': {'version': 'v24.22.3', 'sha256': 'a' * 64}, 'tsx': {'version': '4.20.0', 'entrySha256': 'b' * 64}}
         h.helper = lambda *args, **kwargs: SimpleNamespace(stdout=json.dumps(value))
         self.assertEqual(gate.readback(h), value)

@@ -3,9 +3,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {qualityEvidenceMatches,qualityThreshold,qualityThresholdKey,percentageToBasisPoints,basisPointsToInput} from '../../apps/web/src/quality/presentation.ts';
 import {qualityCopy} from '../../apps/web/src/quality/messages.ts';
-import type {QualityRuleView,QualityRunView} from '../../packages/domain/src/quality-contracts.ts';
+import type {QualityRuleView,QualityRunView,UniquenessRuleDefinition} from '../../packages/domain/src/quality-contracts.ts';
 
-const rule:QualityRuleView={id:'rule',version:1,currentVersion:null,definitionHash:'a'.repeat(64),createdAt:'2026-11-17T00:00:00.000Z',createdBy:'actor',definition:{formatVersion:1,kind:'uniqueness',target:{tableAssetId:'table',columnAssetId:'column'},name:'Uniqueness',purpose:'Exact duplicate rows',ownerId:'actor',severity:'warning',maximumDuplicateBasisPoints:3749,comparison:'utf8-exact',nullPolicy:'exclude'}};
+const rule:QualityRuleView & {definition:UniquenessRuleDefinition}={id:'rule',version:1,currentVersion:null,definitionHash:'a'.repeat(64),createdAt:'2026-11-17T00:00:00.000Z',createdBy:'actor',definition:{formatVersion:1,kind:'uniqueness',target:{tableAssetId:'table',columnAssetId:'column'},name:'Uniqueness',purpose:'Exact duplicate rows',ownerId:'actor',severity:'warning',maximumDuplicateBasisPoints:3749,comparison:'utf8-exact',nullPolicy:'exclude'}};
 const run:QualityRunView={kind:'uniqueness',id:'run',ruleId:rule.id,ruleVersion:rule.version,ruleHash:rule.definitionHash,requesterId:'actor',columnAssetId:'column',tableAssetId:'table',status:'succeeded',version:3,attempt:1,createdAt:'2026-11-17T00:00:00.000Z',startedAt:null,finishedAt:null,expiresAt:'2026-11-18T00:00:00.000Z',errorCode:null,verdict:'FAIL',measurement:{formatVersion:1,kind:'uniqueness',strategy:'exact-bounded-role-scope',rowCount:20,nullCount:4,distinctCount:12,duplicateGroupCount:2,duplicateRowCount:6,totalValueBytes:16,largestValueBytes:1,observedStartedAt:'2026-11-17T01:00:00.000Z',observedFinishedAt:'2026-11-17T01:00:00.001Z',elapsedMs:1,sourceVersion:'18',adapterVersion:'1',queryTemplate:'postgresql-uniqueness-v1',estimatedCost:1,estimatedBytes:160}};
 
 test('uniqueness threshold editor preserves the exact boundary in English and Arabic',()=>{

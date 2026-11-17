@@ -24,6 +24,7 @@ native_tap_totals = base.base.native_tap_totals
 tap_summary = base.base.tap_summary
 COMMIT = '6b090767d3d7ca2a1645b81c97a96354d3b26358'
 PREDECESSORS = ({'path': 'packages/domain/src/approval-service.ts', 'fixture': 'tests/qualification/predecessors/approval-service-sql023.ts.txt', 'gitBlob': '0611657abc7af29c021105defd4397fdc3a56872', 'sha256': 'c9a2a002a1e9bb54c114778c3e49adac1bf98ce34728a87f1a16d140e9e2ed83'}, {'path': 'apps/api/src/approvals.ts', 'fixture': 'tests/qualification/predecessors/approvals-sql023.ts.txt', 'gitBlob': '4bb24777f769df13f2bedb5fa91dba5b24f69598', 'sha256': 'b03e2e6e7b081d8ae78222e4b3b9557547a136ee116534f458a23950ac33857d'}, {'path': 'apps/api/src/repository.ts', 'fixture': 'tests/qualification/predecessors/repository-sql023.ts.txt', 'gitBlob': 'a2734a8d7999e2bb66aedff2c6f80e44e7030260', 'sha256': '3e48472c23f874bf8eb478c8ecb1c88f380c5649df12d56c1929a6458c352048'})
+NATIVE_BINDINGS = ({'path': 'packages/domain/src/quality-service.ts', 'fixture': 'tests/qualification/predecessors/quality-service-sql029.ts.txt', 'gitBlob': '289dfdd222f7949d1aaabdb35c46cc48b7a5e975', 'sha256': '6a7691da7bf328341277ad0cf6737f44b5fd25cc61dbb97b2b345ecec14e1a73', 'commit': 'fca6bb94a8bd87965c4bf614ae492b85235f4ea9'}, {'path': 'apps/api/src/repository.ts', 'fixture': 'tests/qualification/predecessors/repository-sql026.ts.txt', 'gitBlob': '074a6ac9b0e1ba33e06197009386563d92e7ea33', 'sha256': '9cb5f78fe0d70e1d614f7940ed3de4e44394ae47befd817c2f7816f08fe654f5', 'commit': '629e475c2fb00198b51e673074eabd0aa5bcff48'})
 PROBE = '/app/reference-structure-source-check.cjs'
 REPOSITORY = 'apps/api/src/repository.ts'
 
@@ -34,12 +35,13 @@ def sources():
                   'packages/domain/src/reference-structure.ts', 'packages/domain/src/reference-structure-contracts.ts',
                   'packages/domain/src/reference-structure-service.ts', 'apps/api/src/reference-structure.ts',
                   'apps/api/src/reference-structure-publication.ts', 'tests/fixtures/reference-structure.ts', *TESTS])
-    paths.update(row['fixture'] for row in PREDECESSORS)
+    paths.update(row['fixture'] for row in (*PREDECESSORS,*NATIVE_BINDINGS))
     paths.update(row['path'] for row in PREDECESSORS)
     pending = [ROOT / path for path in paths if path.endswith(('.ts', '.tsx'))]
     while pending:
         current = pending.pop()
-        for relative in re.findall(r'''(?:from\s*|import\s*)['"](\.[^'"]+)['"]''', current.read_text()):
+        text=current.read_text()+'\n'+'\n'.join((ROOT/row['fixture']).read_text() for row in NATIVE_BINDINGS if row['path']==str(current.relative_to(ROOT)))
+        for relative in re.findall(r'''(?:from\s*|import\s*)['"](\.[^'"]+)['"]''', text):
             candidate = (current.parent / relative).resolve()
             if candidate.suffix == '.js' and not candidate.exists():
                 candidate = candidate.with_suffix('.ts')
@@ -54,7 +56,7 @@ def sources():
 
 
 def fixtures():
-    for row in PREDECESSORS:
+    for row in (*PREDECESSORS,*NATIVE_BINDINGS):
         data = base.base.base.read_exact(ROOT / row['fixture'], row['sha256'])
         require(hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data, usedforsecurity=False).hexdigest() == row['gitBlob'],
                 'Structure predecessor Git identity differs')
@@ -67,6 +69,16 @@ def effective_sources(measured, paths):
     replacements = {row['path']: row['sha256'] for row in PREDECESSORS if row['path'] in paths}
     require(set(replacements).issubset({row['path'] for row in measured}), 'Structure source map omits predecessor modules')
     return [{'path': row['path'], 'sha256': replacements.get(row['path'], row['sha256'])} for row in measured]
+
+
+def native_sources(measured):
+    fixtures()
+    require(type(measured) is list and 1 <= len(measured) <= 4096
+            and all(type(row) is dict and set(row)=={'path','sha256'} for row in measured)
+            and len({row['path'] for row in measured})==len(measured), 'Invalid historical native source map')
+    replacements={row['path']:row['sha256'] for row in NATIVE_BINDINGS}
+    require(set(replacements).issubset({row['path'] for row in measured}), 'Native source map omits retained modules')
+    return [{**row,'sha256':replacements.get(row['path'],row['sha256'])} for row in measured]
 
 
 def verifier(rows):
@@ -95,7 +107,7 @@ class Harness(base.Harness):
         original = [row for row in self.reference_quality_current['sources'] if row['path'].endswith('.ts')]
         require(measured == original, 'SQL023 original source map differs')
         fixtures()
-        return effective_sources(measured, {row['path'] for row in PREDECESSORS})
+        return effective_sources(super().reference_quality_native_source_expectations(measured), {row['path'] for row in PREDECESSORS})
 
     def helper(self, args, *, mounts=(), **kwargs):
         # All older SQL018/020/021 overlays keep their precedence and measured probes unchanged.
@@ -104,7 +116,7 @@ class Harness(base.Harness):
         if stage is None and current is None:
             return super().helper(args, mounts=mounts, **kwargs)
         require(not (stage is not None and current is not None) and args and args[0] == 'node', 'Invalid structure source phase')
-        paths = {row['path'] for row in PREDECESSORS}
+        paths = {row['path'] for row in PREDECESSORS} | ({row['path'] for row in NATIVE_BINDINGS} if current is not None else set())
         if stage is not None and self.reference_current is not None:
             require(self.phase == 'reference-native-tests' and self.reference_quality_predecessor is not None, 'Invalid SQL022 structure predecessor stage')
             paths.remove(REPOSITORY)
@@ -122,7 +134,7 @@ class Harness(base.Harness):
                     for _, target in mounts for fixed in targets), 'Conflicting structure source mount')
         fixtures()
         original = stage or current
-        effective = effective_sources(original['sources'], paths) if stage is not None else original['sources']
+        effective = effective_sources(original['sources'], paths) if stage is not None else native_sources(original['sources'])
         selected = []
         if stage is not None:
             for row in PREDECESSORS:
@@ -132,6 +144,10 @@ class Harness(base.Harness):
                     if checkout['sha256'] != row['sha256']:
                         mounts.append((ROOT / row['fixture'], '/app/' + row['path']))
                     selected.append({**row, 'commit': COMMIT, 'readOnly': True, 'mountRequired': checkout['sha256'] != row['sha256']})
+        if current is not None:
+            for row in NATIVE_BINDINGS:
+                mounts.append((ROOT/row['fixture'],'/app/'+row['path']))
+                selected.append({**row,'readOnly':True,'mountRequired':True})
         expected = [row for row in effective if row['path'] in paths]
         require(len(expected) == len(paths), 'Structure inventory omits phase modules')
         self.structure_serial += 1
@@ -154,7 +170,7 @@ class Harness(base.Harness):
             record['overrideReleased'] = True
             base.base.base.read_exact(probe, sha(data))
             fixtures()
-            for row in PREDECESSORS:
+            for row in (*PREDECESSORS,*NATIVE_BINDINGS):
                 checkout = next(item for item in original['sources'] if item['path'] == row['path'])
                 base.base.base.read_exact(ROOT / row['path'], checkout['sha256'])
             record['sourceHashesMatched'] = True
@@ -169,7 +185,7 @@ def run_suite(h, frozen, phase, tests, expected, field):
         measured = [row for row in frozen if row['path'].endswith('.ts')]
         probe = "const fs=require('node:fs'),crypto=require('node:crypto');console.log(JSON.stringify(" + json.dumps([row['path'] for row in measured]) + ".map(path=>({path,sha256:crypto.createHash('sha256').update(fs.readFileSync(path)).digest('hex')}))));"
         observed = json.loads(h.helper(['node', '-e', probe]).stdout)
-        require(observed == measured, 'Actual structure native source bytes differ')
+        require(observed == native_sources(measured), 'Actual structure native source bytes differ')
         h.report[field + 'SourceReadback'] = {'result': 'PASS', 'files': len(measured), 'manifestSha256': sha(json.dumps(observed, sort_keys=True).encode())}
         count = sum(len(re.findall(r'^test\(', (ROOT / name).read_text(), re.MULTILINE)) for name in tests)
         require(count == expected, 'Structure case inventory differs')
@@ -224,7 +240,7 @@ def execute(h):
     h.report['limitations'] = [
         'Disposable PostgreSQL/service only; no source executor, HTTP conditional response, Temporal or browser evidence.',
         'All predecessor gates execute with exact prior overlays. SQL022/023 approval modules use immutable6b090767; SQL022 repository keeps its prior immutable pin.',
-        'SQL024 executes current sources with full readback and independent startup/exit verification, eighteen original reference and twenty-one reference-quality cases plus thirty structure cases (including eight observed lock races/ordering/budget controls).',
+        'SQL024 retains exact pre-volume service and SQL026 repository with full readback and independent startup/exit verification, eighteen original reference and twenty-one reference-quality cases plus thirty structure cases (including eight observed lock races/ordering/budget controls).',
         'Bounded real clock wait checks an effective boundary; synthetic owner-only projection suppression is rollback-contained and explicitly hostile.',
         'Reports and bounded raw TAP stay private. No shared application services or preexisting resources are mutated.']
 

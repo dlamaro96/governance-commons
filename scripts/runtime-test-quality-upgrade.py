@@ -9,6 +9,8 @@ import re
 import shutil
 
 ROOT=Path(__file__).resolve().parents[1]
+_pin_spec=importlib.util.spec_from_file_location('quality_sql019_binding',ROOT/'scripts/qualification_quality_sql019.py')
+sql019=importlib.util.module_from_spec(_pin_spec);_pin_spec.loader.exec_module(sql019)
 spec=importlib.util.spec_from_file_location('quality_upgrade_base',ROOT/'scripts/runtime-test-glossary-population-upgrade.py')
 base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
 REPORT=ROOT/'.local/evidence/quality-upgrade.json'
@@ -26,11 +28,13 @@ PREDECESSOR_FIXTURE='tests/qualification/predecessors/repository-sql018.ts.txt'
 def sources():
  paths={row['path'] for row in base.sources()}
  paths.add(PREDECESSOR_FIXTURE)
+ paths.update(sql019.INPUTS)
  paths.update(['scripts/runtime-test-quality-upgrade.py',*TESTS,'packages/domain/src/quality-service.ts','packages/domain/src/quality.ts','packages/domain/src/quality-contracts.ts','packages/domain/src/glossary-service.ts','packages/db/migrations/'+MIGRATION,'apps/api/src/repository.ts','packages/domain/src/approval-service.ts','packages/domain/src/approval.ts','packages/domain/src/approval-contracts.ts','packages/domain/src/glossary.ts','packages/domain/src/glossary-contracts.ts','packages/domain/src/model-service.ts','packages/domain/src/cursor.ts'])
  pending=[ROOT/name for name in paths if name.endswith(('.ts','.tsx'))]
  while pending:
   current=pending.pop()
-  for relative in re.findall(r'''(?:from\s*|import\s*)['"](\.[^'"]+)['"]''',current.read_text()):
+  source=current.read_text()+'\n'+sql019.historical_imports(ROOT,str(current.relative_to(ROOT)))
+  for relative in re.findall(r'''(?:from\s*|import\s*)['"](\.[^'"]+)['"]''',source):
    candidate=(current.parent/relative).resolve()
    if not candidate.suffix:
     candidate=candidate.with_suffix('.ts') if candidate.with_suffix('.ts').is_file() else candidate/'index.ts'
@@ -47,6 +51,11 @@ class Harness(base.Harness):
   self.report.update(command='./dev test --suite quality-upgrade',profile='isolated-quality-execution')
 
  def helper(self,args,*,mounts=(),**kwargs):
+  if self.phase==sql019.PHASE:
+   return sql019.run(self,self.repository_helper,args,root=ROOT,inventory=sources(),repository_phase=repository_phase,mounts=mounts,**kwargs)
+  return self.repository_helper(args,mounts=mounts,**kwargs)
+
+ def repository_helper(self,args,*,mounts=(),**kwargs):
   stage=self.repository_stage
   if stage is None:return super().helper(args,mounts=mounts,**kwargs)
   mounts=tuple(mounts)
@@ -189,22 +198,26 @@ def execute(h):
  h.phase='quality-native-tests'
  expected=sum(len(re.findall(r'^test\(', (ROOT/name).read_text(),re.MULTILINE)) for name in TESTS)
  current=next(row['sha256'] for row in frozen if row['path']==REPOSITORY)
- stage={'stage':'SQL019-quality','result':'RUNNING','effectiveSources':frozen,'repositoryOverride':False}
+ require(expected==15,'Expected all fifteen original quality execution cases')
+ stage={'stage':'SQL019-quality','result':'RUNNING','checkoutSources':frozen,'effectiveModuleSources':sql019.expected_sources(),'repositoryOverride':True,
+        'scope':'Four exact ee21065 modules; all other inherited overlays remain bound by their own phase records.'}
  h.report['sourceStages'].append(stage)
  h.repository_stage=repository_phase(h,'current',ROOT/REPOSITORY,current,False)
  try:
+  stage['mountedModulesBefore']=sql019.readback(h)
   tested=h.helper(['node','--import','tsx','--test','--test-reporter=tap','--test-concurrency=1',*TESTS],timeout=180,allow_failure=True)
+  stage['mountedModulesAfter']=sql019.readback(h)
   require(tested.returncode==0,'Native quality execution suite failed; retained bounded TAP identifies failing case')
   h.report['tests']=base.tap_summary(tested.stdout,expected)
-  stage['effectiveSourcesAfter']=sources()
-  require(stage['effectiveSourcesAfter']==frozen,'Quality test source changed during native execution')
+  stage['checkoutSourcesAfter']=sources()
+  require(stage['checkoutSourcesAfter']==frozen,'Quality test source changed during native execution')
   stage['result']='PASS'
  finally:
   h.repository_stage=None
   if stage['result']=='RUNNING':stage['result']='FAIL'
  require(sources()==frozen,'Quality execution source changed during native qualification')
  h.report['migrations']=[{'name':name,'sha256':sha((base.MIGRATIONS/name).read_bytes())} for name in [*NAMES,MIGRATION]]
- h.report['limitations']=['Predecessor SQL001–018 tests mount the exact recorded immutable repository module; only SQL019 tests use the current quality-aware repository. Other predecessor dependencies/tests use the recorded current checkout bytes.',
+ h.report['limitations']=['Predecessor SQL001–018 tests mount the exact recorded immutable repository module; SQL019 tests bind exact ee21065 service/parser/contracts/repository with mounted readback and startup/exit checks. Outer predecessor module overlays retain their verified precedence; other dependencies/tests use the recorded checkout bytes.',
   'Approved quality execution storage and production domain-service paths; API/browser and Temporal restart qualification remain separate.','Canonical content authority remains inactive. No shared runtime or external infrastructure was modified.']
 
 def main():

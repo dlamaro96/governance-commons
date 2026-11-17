@@ -35,7 +35,7 @@ spec = importlib.util.spec_from_file_location('quality_monitoring_source_base', 
 base = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(base)
 require, sha = base.require, base.sha
-repository_spec = importlib.util.spec_from_file_location('quality_repository_binding', ROOT / 'scripts/qualification_quality_repository.py')
+repository_spec = importlib.util.spec_from_file_location('quality_repository_binding', ROOT / 'scripts/qualification_quality_pre030.py')
 repository = importlib.util.module_from_spec(repository_spec)
 repository_spec.loader.exec_module(repository)
 REPOSITORY_GATE = 'monitoring'
@@ -48,7 +48,7 @@ NAMES = [*base.NAMES, '015_approval_workflows.sql', '016_glossary_publication.sq
 def migrations():
     actual = sorted(path.name for path in (ROOT / 'packages/db/migrations').glob('*.sql'))
     # Execute only this exact historical prefix; never mount a successor here.
-    successors = ['028_quality_freshness.sql', '029_quality_freshness_scheduling.sql']
+    successors = ['028_quality_freshness.sql', '029_quality_freshness_scheduling.sql', '030_quality_volume.sql', '031_authority_read_grants.sql']
     tail = actual[len(NAMES):]
     require(actual[:len(NAMES)] == NAMES and len(tail) <= len(successors)
             and tail == successors[:len(tail)], 'Exact SQL001–027 prefix and declared successor inventory required')
@@ -64,7 +64,7 @@ def source_file(path):
 
 
 def sources():
-    paths = {'scripts/runtime-test-quality-monitoring-upgrade.py', 'scripts/qualification_quality_repository.py', repository.FIXTURE, repository.REPOSITORY, 'scripts/runtime-test-source-connectors-upgrade.py',
+    paths = {'scripts/runtime-test-quality-monitoring-upgrade.py', 'scripts/qualification_quality_repository.py', *repository.INPUTS, repository.REPOSITORY, 'scripts/runtime-test-source-connectors-upgrade.py',
              'scripts/runtime-test-authority-authn-foundation.py', 'scripts/authentication_roles.py',
              'package.json', 'pnpm-lock.yaml', 'Dockerfile', 'tsconfig.json', 'deploy/compose/compose.yaml',
              *(path for path, _ in TESTS), *(path for path, _ in LEGACY), 'tests/fixtures/reference-quality.ts', 'packages/db/src/migrate.ts',
@@ -75,7 +75,7 @@ def sources():
     pending = [ROOT / path for path in paths if path.endswith(('.ts', '.tsx'))]
     while pending:
         current = pending.pop()
-        text = source_file(current).read_text()
+        text = source_file(current).read_text() + '\n' + repository.historical_imports(ROOT, str(current.relative_to(ROOT)))
         relative = re.findall(r'''(?:from\s*|import\s*(?:\(\s*)?|require\s*\(\s*)['"](\.[^'"]+)['"]''', text)
         for name in relative:
             candidate = Path(os.path.abspath(current.parent / name))
@@ -180,7 +180,7 @@ class Harness(base.Harness):
             command += ['--volume', f'{probe_path}:{PROBE}:ro']
             args = [args[0], '--require', PROBE, *args[1:]]
             record = {'phase': self.phase, 'verifierSha256': sha(body), 'sourceCount': len(self.frozen), 'result': 'RUNNING',
-                      'effectiveSources': selected['sources'], 'repositoryBinding': selected['override']}
+                      'effectiveSources': selected['sources'], 'repositoryBinding': selected['override'], 'historicalBindings': selected['overrides']}
             self.report.setdefault('sourceChecks', []).append(record)
         try:
             result = self.docker(*command, self.app_image, *args, timeout=timeout, allow_failure=allow_failure, sensitive=sensitive, input=input)
@@ -276,10 +276,12 @@ def declared_tests(path, expected):
 
 def native_suite(h, phase, path, expected):
     h.phase = phase
+    h.report.update(tests=None, testExitStatus=None)
     names = declared_tests(path, expected)
     record = {'phase': phase, 'path': path, 'expected': expected, 'testNames': names,
               'tests': None, 'exitStatus': None, 'result': 'RUNNING',
-              'repositoryBinding': repository.select(ROOT, h.frozen, REPOSITORY_GATE, h.phase)['override']}
+              'repositoryBinding': repository.select(ROOT, h.frozen, REPOSITORY_GATE, h.phase)['override'],
+              'historicalBindings': repository.select(ROOT, h.frozen, REPOSITORY_GATE, h.phase)['overrides']}
     h.report.setdefault('nativeSuites', []).append(record)
     h.report.update(tests=None, testExitStatus=None)
     before = readback(h)

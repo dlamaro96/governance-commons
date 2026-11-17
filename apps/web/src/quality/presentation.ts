@@ -29,7 +29,12 @@ export function referenceTimeInput(input:string,now=Date.now()):string|null {
  * commitment. Current head numbers are intentionally irrelevant to old evidence. */
 export function qualityEvidenceMatches(run:QualityRunView,rule:QualityRuleView):boolean {
  if(rule.id!==run.ruleId||rule.version!==run.ruleVersion||rule.definitionHash!==run.ruleHash)return false;
- if(rule.definition.target.columnAssetId!==run.columnAssetId||rule.definition.target.tableAssetId!==run.tableAssetId)return false;
+ if(rule.definition.target.tableAssetId!==run.tableAssetId)return false;
+ if(run.kind==='volume'){
+  const d=rule.definition,b=run.volume;
+  return d.kind==='volume'&&d.target.kind==='table'&&run.columnAssetId===null&&!Object.hasOwn(run,'reference')&&!Object.hasOwn(run,'range')&&!Object.hasOwn(run,'freshness')&&b.minimumRows===d.minimumRows&&b.maximumRows===d.maximumRows&&b.comparison==='row-count-inclusive'&&b.scope==='entire-table'&&/^[a-f0-9]{64}$/.test(b.volumeHash)&&(!run.measurement||run.measurement.kind==='volume'&&run.measurement.volumeHash===b.volumeHash&&!Object.hasOwn(run.measurement,'nullCount'));
+ }
+ if(rule.definition.kind==='volume'||rule.definition.target.columnAssetId!==run.columnAssetId||Object.hasOwn(run,'volume'))return false;
  if(run.kind==='freshness'){
   const d=rule.definition,b=run.freshness;
   return !Object.hasOwn(run,'range')&&!Object.hasOwn(run,'reference')&&d.kind==='freshness'&&b.maximumAgeSeconds===d.maximumAgeSeconds&&b.maximumFutureSkewSeconds===d.maximumFutureSkewSeconds&&b.comparison==='latest-timestamptz'&&b.clock==='source-statement-start'&&b.invalidTimestampPolicy==='fail'&&b.nullPolicy==='exclude'&&/^[a-f0-9]{64}$/.test(b.freshnessHash)&&(!run.measurement||run.measurement.kind==='freshness'&&run.measurement.freshnessHash===b.freshnessHash);
@@ -48,10 +53,10 @@ export function qualityEvidenceMatches(run:QualityRunView,rule:QualityRuleView):
 /** Read the selected immutable family's threshold; do not reinterpret history
  * using a later head's kind or borrow another family's similarly named field. */
 export function qualityThreshold(definition:QualityRuleDefinition):number {
- switch(definition.kind){case 'freshness':throw new Error('Freshness uses duration, not a percentage');case 'completeness':return definition.maximumNullBasisPoints;case 'reference-allowed-values':return definition.maximumInvalidBasisPoints;case 'uniqueness':return definition.maximumDuplicateBasisPoints;case 'range':return definition.maximumOutOfRangeBasisPoints;}
+ switch(definition.kind){case 'volume':throw new Error('Volume uses row bounds, not a percentage');case 'freshness':throw new Error('Freshness uses duration, not a percentage');case 'completeness':return definition.maximumNullBasisPoints;case 'reference-allowed-values':return definition.maximumInvalidBasisPoints;case 'uniqueness':return definition.maximumDuplicateBasisPoints;case 'range':return definition.maximumOutOfRangeBasisPoints;}
 }
-export function qualityThresholdKey(kind:QualityRuleDefinition['kind']):'maximumNull'|'maximumInvalid'|'maximumDuplicate'|'maximumOutOfRange'|'maximumAge' {
- return kind==='freshness'?'maximumAge':kind==='completeness'?'maximumNull':kind==='reference-allowed-values'?'maximumInvalid':kind==='range'?'maximumOutOfRange':'maximumDuplicate';
+export function qualityThresholdKey(kind:QualityRuleDefinition['kind']):'maximumNull'|'maximumInvalid'|'maximumDuplicate'|'maximumOutOfRange'|'maximumAge'|'maximumRows' {
+ return kind==='volume'?'maximumRows':kind==='freshness'?'maximumAge':kind==='completeness'?'maximumNull':kind==='reference-allowed-values'?'maximumInvalid':kind==='range'?'maximumOutOfRange':'maximumDuplicate';
 }
 
 /** Bounds stay canonical ASCII decimal strings from input through submission.
@@ -75,4 +80,10 @@ export function freshnessAgeLabel(value:string):string {
  if(!/^(?:0|-?[1-9][0-9]{0,17})$/.test(value))throw new Error('Invalid exact age');
  const n=BigInt(value),a=n<0n?-n:n;if(a>315537897599999999n)throw new Error('Invalid exact age');
  return (n<0n?'-':'')+String(a/1000000n)+'.'+String(a%1000000n).padStart(6,'0');
+}
+
+/** Inclusive exact row bounds. Localized decimal digits are accepted without rounding. */
+export function volumeBoundsInput(minimum:string,maximum:string):{minimumRows:number;maximumRows:number}|null {
+ const integer=(input:string)=>{const value=input.trim().replace(/[٠-٩]/g,c=>String(c.charCodeAt(0)-0x660)).replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-0x6f0));if(!/^(?:0|[1-9][0-9]{0,5})$/.test(value))return null;const n=Number(value);return n<=100000?n:null;};
+ const low=integer(minimum),high=integer(maximum);return low!==null&&high!==null&&low<=high?{minimumRows:low,maximumRows:high}:null;
 }

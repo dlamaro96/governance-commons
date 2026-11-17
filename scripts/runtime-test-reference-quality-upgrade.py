@@ -22,6 +22,7 @@ COMPLETENESS_TESTS = ['tests/qualification/quality.test.ts']
 require, sha = base.require, base.sha
 COMMIT = '591220ab2b398c8af2ed3c9a8441641fa77bfc8d'
 PREDECESSORS = ({'path': 'packages/domain/src/quality-contracts.ts', 'fixture': 'tests/qualification/predecessors/quality-contracts-sql022.ts.txt', 'gitBlob': '5b5763224209e406b0f076e0ba15d2a4e83035e1', 'sha256': '21b61ae254b6633f74bf071a68301d8a5cc6f077dc3fb58d938bd22e36163a83'}, {'path': 'packages/domain/src/quality.ts', 'fixture': 'tests/qualification/predecessors/quality-sql022.ts.txt', 'gitBlob': 'bb3b725212a622fa65345fa8cb77bde706f27135', 'sha256': 'e9ef493c57c149154efd627204dde21dd1f3d7277afcbd108d5e7dd9423bace0'}, {'path': 'packages/domain/src/quality-service.ts', 'fixture': 'tests/qualification/predecessors/quality-service-sql022.ts.txt', 'gitBlob': '80160627852ff36f7c8d58f99171cce996e2a94c', 'sha256': '9d510d1cf4eb5a99c6667efad7eea9c4ed302ce450d469b77a086f428410b982'}, {'path': 'apps/api/src/repository.ts', 'fixture': 'tests/qualification/predecessors/repository-sql022.ts.txt', 'gitBlob': 'b70e95bc65dc4b9723b01948604c722b560ba82e', 'sha256': '75aa5e716c537a0caafabba08e5e3ada6aefeae3a42d11c8b942444d6073a1ee'})
+NATIVE_BINDINGS = ({'path': 'packages/domain/src/quality-service.ts', 'fixture': 'tests/qualification/predecessors/quality-service-sql029.ts.txt', 'gitBlob': '289dfdd222f7949d1aaabdb35c46cc48b7a5e975', 'sha256': '6a7691da7bf328341277ad0cf6737f44b5fd25cc61dbb97b2b345ecec14e1a73', 'commit': 'fca6bb94a8bd87965c4bf614ae492b85235f4ea9'}, {'path': 'apps/api/src/repository.ts', 'fixture': 'tests/qualification/predecessors/repository-sql023.ts.txt', 'gitBlob': 'a2734a8d7999e2bb66aedff2c6f80e44e7030260', 'sha256': '3e48472c23f874bf8eb478c8ecb1c88f380c5649df12d56c1929a6458c352048', 'commit': '6b090767d3d7ca2a1645b81c97a96354d3b26358'})
 PROBE = '/app/reference-quality-source-check.cjs'
 REPOSITORY = 'apps/api/src/repository.ts'
 NON_REPOSITORY = {'packages/domain/src/quality-contracts.ts', 'packages/domain/src/quality.ts', 'packages/domain/src/quality-service.ts'}
@@ -31,13 +32,16 @@ def sources():
     paths = {row['path'] for row in base.sources()}
     paths.update(['scripts/runtime-test-reference-quality-upgrade.py', 'packages/db/migrations/' + MIGRATION,
                   'tests/fixtures/reference-quality.ts', *TESTS, *COMPLETENESS_TESTS])
-    paths.update(row['fixture'] for row in PREDECESSORS)
+    paths.update(row['fixture'] for row in (*PREDECESSORS,*NATIVE_BINDINGS))
     paths.update(row['path'] for row in PREDECESSORS)
     pending = [ROOT / name for name in paths if name.endswith(('.ts', '.tsx'))]
     while pending:
         current = pending.pop()
-        for relative in re.findall(r'''(?:from\s*|import\s*)['"](\.[^'"]+)['"]''', current.read_text()):
+        text=current.read_text()+'\n'+'\n'.join((ROOT/row['fixture']).read_text() for row in NATIVE_BINDINGS if row['path']==str(current.relative_to(ROOT)))
+        for relative in re.findall(r'''(?:from\s*|import\s*)['"](\.[^'"]+)['"]''', text):
             candidate = (current.parent / relative).resolve()
+            if candidate.suffix == '.js' and not candidate.exists():
+                candidate=candidate.with_suffix('.ts')
             if not candidate.suffix:
                 candidate = candidate.with_suffix('.ts') if candidate.with_suffix('.ts').is_file() else candidate / 'index.ts'
             require(candidate.is_relative_to(ROOT) and candidate.is_file(), 'Unresolved reference quality source')
@@ -49,7 +53,7 @@ def sources():
 
 
 def fixtures():
-    for row in PREDECESSORS:
+    for row in (*PREDECESSORS,*NATIVE_BINDINGS):
         value = base.base.read_exact(ROOT / row['fixture'], row['sha256'])
         require(hashlib.sha1(b'blob ' + str(len(value)).encode() + b'\0' + value, usedforsecurity=False).hexdigest() == row['gitBlob'],
                 'Immutable reference quality predecessor Git identity differs')
@@ -61,6 +65,16 @@ def effective_sources(measured, paths):
             and len({row['path'] for row in measured}) == len(measured), 'Invalid reference quality source map')
     replacements = {row['path']: row['sha256'] for row in PREDECESSORS if row['path'] in paths}
     return [{'path': row['path'], 'sha256': replacements.get(row['path'], row['sha256'])} for row in measured]
+
+
+def native_sources(measured):
+    fixtures()
+    require(type(measured) is list and 1 <= len(measured) <= 4096
+            and all(type(row) is dict and set(row)=={'path','sha256'} for row in measured)
+            and len({row['path'] for row in measured})==len(measured), 'Invalid historical native source map')
+    replacements={row['path']:row['sha256'] for row in NATIVE_BINDINGS}
+    require(set(replacements).issubset({row['path'] for row in measured}), 'Native source map omits retained modules')
+    return [{**row,'sha256':replacements.get(row['path'],row['sha256'])} for row in measured]
 
 
 def verifier(rows):
@@ -78,8 +92,11 @@ class Harness(base.Harness):
         self.report.update(command='./dev test --suite reference-quality-upgrade', profile='isolated-postgresql-reference-quality')
 
     def reference_quality_native_source_expectations(self, measured):
-        # Identity by default; later isolated gates may declare immutable predecessor overlays.
-        return measured
+        require(self.reference_quality_current is not None and self.reference_quality_predecessor is None
+                and self.phase in ('reference-quality-completeness-tests','reference-quality-native-tests'), 'Undeclared SQL023 native readback')
+        original=[row for row in self.reference_quality_current['sources'] if row['path'].endswith('.ts')]
+        require(measured == original, 'SQL023 original source map differs')
+        return native_sources(measured)
 
     def predecessor_expectations(self, measured, all_paths=False):
         stage = self.reference_quality_predecessor
@@ -138,6 +155,12 @@ class Harness(base.Harness):
                     and self.classification_current is None and self.classification_predecessor is None
                     and self.repository_stage is None, 'Overlapping current reference quality source phase')
             paths = NON_REPOSITORY | {REPOSITORY}
+            for row in NATIVE_BINDINGS:
+                matches=[(file,target) for file,target in mounts if target=='/app/'+row['path']]
+                require(len(matches)<=1, 'Duplicate historical native module mount')
+                if matches:base.base.read_exact(matches[0][0],row['sha256'])
+                else:mounts.append((ROOT/row['fixture'],'/app/'+row['path']))
+                selected.append({**row,'readOnly':True,'mountRequired':not bool(matches)})
         expected = [row for row in effective if row['path'] in paths]
         require(len(expected) == len(paths), 'Reference quality source inventory omits phase modules')
         self.reference_quality_serial += 1
@@ -162,7 +185,7 @@ class Harness(base.Harness):
             record['overrideReleased'] = True
             base.base.read_exact(probe, sha(data))
             fixtures()
-            for row in PREDECESSORS:
+            for row in (*PREDECESSORS,*NATIVE_BINDINGS):
                 source = next(item for item in original['sources'] if item['path'] == row['path'])
                 base.base.read_exact(ROOT / row['path'], source['sha256'])
             record['sourceHashesMatched'] = True
@@ -232,7 +255,7 @@ def execute(h):
     h.report['limitations'] = [
         'Disposable PostgreSQL storage/service only. Measurements are explicit native fixtures, not source executor, HTTP, Temporal or browser evidence.',
         'All predecessor gates execute. SQL022 quality modules are exact 591220a fixtures; SQL018/020/021 repository overrides retain their earlier precedence.',
-        'SQL023 runs the current source tree, the original fifteen completeness cases and twenty-one reference cases with real source-byte readbacks.',
+        'SQL023 retains exact pre-volume service and SQL023 repository modules with current tests; the original fifteen completeness cases and twenty-one reference cases with real source-byte readbacks.',
         'Same-millisecond head collision is an explicitly owner-authored rollback-contained timestamp fixture, not a production clock assertion.',
         'No two-minute expired-lease wait or live external source execution is claimed; source execution is a separate qualification.',
         'Reports, source bindings and bounded raw TAP remain private. No shared application service or preexisting resource is mutated.']

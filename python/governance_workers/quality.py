@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-"""Exact bounded quality measurements for one pinned column.
+"""Exact bounded quality measurements for one pinned column or whole table.
 
 No source-authored SQL or business rows cross this interface. Planner costs and
 widths are estimates, never a claim to enforce physical I/O or byte consumption.
@@ -33,6 +33,9 @@ REFERENCE_KIND = 'reference-allowed-values'
 UNIQUENESS_KIND = 'uniqueness'
 RANGE_KIND = 'range'
 FRESHNESS_KIND = 'freshness'
+VOLUME_KIND = 'volume'
+VOLUME_KEYS = frozenset(('minimumRows', 'maximumRows', 'comparison', 'scope', 'volumeHash'))
+TABLE_TARGET_KEYS = frozenset(('kind', 'databaseOid', 'schemaOid', 'relationOid', 'schemaName', 'tableName'))
 FRESHNESS_KEYS = frozenset(('maximumAgeSeconds', 'maximumFutureSkewSeconds', 'comparison',
                             'clock', 'nullPolicy', 'invalidTimestampPolicy', 'freshnessHash'))
 MAX_AGE_SECONDS = 31536000
@@ -275,6 +278,26 @@ def _freshness_clock_envelope(metrics, observed_started, observed_finished):
         _fail('QUALITY_CLOCK_SKEW')
 
 
+def validate_volume_binding(value):
+    """Closed static threshold hash; thresholds do not control query resources."""
+    _keys(value, VOLUME_KEYS)
+    for key in ('minimumRows', 'maximumRows'):
+        if type(value[key]) is not int or not 0 <= value[key] <= MAX_ROWS:
+            _fail()
+    if (value['minimumRows'] > value['maximumRows']
+            or value['comparison'] != 'row-count-inclusive' or value['scope'] != 'entire-table'
+            or type(value['volumeHash']) is not str
+            or not re.fullmatch(r'[a-f0-9]{64}', value['volumeHash'])):
+        _fail()
+    detached = {key: value[key] for key in VOLUME_KEYS if key != 'volumeHash'}
+    encoded = json.dumps(dict(detached, formatVersion=1, kind=VOLUME_KIND),
+                         sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode('ascii')
+    expected = hashlib.sha256(encoded).hexdigest()
+    if not hmac.compare_digest(expected, value['volumeHash']):
+        _fail()
+    return dict(detached, volumeHash=expected)
+
+
 def validate_execution(source, execution):
     """Closed fixed-shape JSON admission, before credentials or connection use."""
     _keys(source, ('connectorId', 'host', 'port', 'database', 'schema', 'secretRef'))
@@ -292,8 +315,9 @@ def validate_execution(source, execution):
     _keys(execution, ('formatVersion', 'kind', 'target', 'budget', 'reference')
           if kind == REFERENCE_KIND else ('formatVersion', 'kind', 'target', 'budget', 'range')
           if kind == RANGE_KIND else ('formatVersion', 'kind', 'target', 'budget', 'freshness')
-          if kind == FRESHNESS_KIND else ('formatVersion', 'kind', 'target', 'budget'))
-    if type(execution['formatVersion']) is not int or execution['formatVersion'] != 1 or kind not in ('completeness', REFERENCE_KIND, UNIQUENESS_KIND, RANGE_KIND, FRESHNESS_KIND):
+          if kind == FRESHNESS_KIND else ('formatVersion', 'kind', 'target', 'budget', 'volume')
+          if kind == VOLUME_KIND else ('formatVersion', 'kind', 'target', 'budget'))
+    if type(execution['formatVersion']) is not int or execution['formatVersion'] != 1 or kind not in ('completeness', REFERENCE_KIND, UNIQUENESS_KIND, RANGE_KIND, FRESHNESS_KIND, VOLUME_KIND):
         _fail()
     if kind == REFERENCE_KIND:
         validate_reference_binding(execution['reference'])
@@ -301,18 +325,24 @@ def validate_execution(source, execution):
         validate_range_binding(execution['range'])
     if kind == FRESHNESS_KIND:
         validate_freshness_binding(execution['freshness'])
+    if kind == VOLUME_KIND:
+        validate_volume_binding(execution['volume'])
     target, budget = execution['target'], execution['budget']
-    _keys(target, TARGET_KEYS)
+    _keys(target, TABLE_TARGET_KEYS if kind == VOLUME_KIND else TARGET_KEYS)
     ceilings = UNIQUENESS_BUDGETS if kind == UNIQUENESS_KIND else BUDGETS
     _keys(budget, ceilings)
     for key in ('databaseOid', 'schemaOid', 'relationOid'):
         value = target[key]
         if type(value) is not str or not re.fullmatch(r'[1-9][0-9]{0,9}', value) or int(value) > 4294967295:
             _fail()
-    _integer(target['attributeNumber'], 32767)
-    for key in ('schemaName', 'tableName', 'columnName'):
+    if kind == VOLUME_KIND:
+        if target['kind'] != 'table':
+            _fail()
+    else:
+        _integer(target['attributeNumber'], 32767)
+        _text(target['dataType'], 256)
+    for key in ('schemaName', 'tableName') if kind == VOLUME_KIND else ('schemaName', 'tableName', 'columnName'):
         _text(target[key], 63, bytes_limit=True)
-    _text(target['dataType'], 256)
     if target['schemaName'] != source['schema']:
         _fail('QUALITY_TARGET_STALE')
     for key, maximum in ceilings.items():
@@ -464,6 +494,57 @@ def _measure_uniqueness(conn, relation, target, budget, deadline_at):
         'totalValueBytes': total, 'largestValueBytes': largest}
 
 
+def _measure_volume(conn, target, budget, deadline_at):
+    # This branch intentionally never loads column names/types/values. Table
+    # authority and an exact source relation pin suffice for a whole-row count.
+    conn.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY')
+    relation = sql.Identifier(target['schemaName'], target['tableName'])
+    _query(conn, sql.SQL('LOCK TABLE ONLY {} IN ACCESS SHARE MODE').format(relation), None, budget, deadline_at)
+    identity = _query(conn, """SELECT d.oid::text AS database_oid,
+        current_setting('server_version_num') AS version, r.rolsuper, r.rolbypassrls
+        FROM pg_catalog.pg_database d CROSS JOIN pg_catalog.pg_roles r
+        WHERE d.datname=current_database() AND r.rolname=current_user""", None, budget, deadline_at).fetchone()
+    if not identity or identity['database_oid'] != target['databaseOid']:
+        _fail('QUALITY_TARGET_STALE')
+    if identity['rolsuper'] is not False or identity['rolbypassrls'] is not False:
+        _fail('SOURCE_PRIVILEGE_TOO_BROAD')
+    version = identity['version']
+    if type(version) is not str or not re.fullmatch(r'[0-9]{5,16}', version):
+        _fail('SOURCE_DATABASE_ERROR')
+    row = _query(conn, """SELECT c.oid::text AS relation_oid,n.oid::text AS schema_oid,
+        n.nspname,c.relname,c.relkind,c.relispartition,c.relrowsecurity,c.relforcerowsecurity,
+        EXISTS(SELECT 1 FROM pg_catalog.pg_inherits i WHERE i.inhrelid=c.oid OR i.inhparent=c.oid) AS inherited,
+        has_schema_privilege(n.oid,'USAGE') AS schema_allowed,has_table_privilege(c.oid,'SELECT') AS table_allowed,
+        EXISTS(SELECT 1 FROM pg_catalog.pg_locks l WHERE l.pid=pg_backend_pid()
+          AND l.locktype='relation' AND l.relation=c.oid AND l.mode='AccessShareLock' AND l.granted) AS locked
+        FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+        WHERE c.oid=%s::oid""", (target['relationOid'],), budget, deadline_at).fetchone()
+    if (not row or row['relation_oid'] != target['relationOid'] or row['schema_oid'] != target['schemaOid']
+            or row['nspname'] != target['schemaName'] or row['relname'] != target['tableName']
+            or row['locked'] is not True):
+        _fail('QUALITY_TARGET_STALE')
+    if row['schema_allowed'] is not True or row['table_allowed'] is not True:
+        _fail('SOURCE_SCOPE_DENIED')
+    if (row['relkind'] != 'r' or row['relispartition'] is not False or row['relrowsecurity'] is not False
+            or row['relforcerowsecurity'] is not False or row['inherited'] is not False):
+        _fail('QUALITY_TARGET_UNSUPPORTED')
+    # Count+1 is bounded by the admitted execution resource budget, never by a
+    # rule threshold. Six rows with authored maximum5 is a valid measurement.
+    aggregate = sql.SQL('SELECT pg_catalog.count(*) AS row_count '
+                        'FROM (SELECT 1 FROM ONLY {} LIMIT %s) AS bounded').format(relation)
+    parameters = (budget['maximumRows'] + 1,)
+    plan = _query(conn, sql.SQL('EXPLAIN (FORMAT JSON, ANALYZE FALSE, COSTS TRUE) ') + aggregate,
+                  parameters, budget, deadline_at).fetchone()
+    cost, estimated_bytes = _estimates(plan.get('QUERY PLAN') if type(plan) is dict else None, budget)
+    counts = _query(conn, aggregate, parameters, budget, deadline_at).fetchone()
+    if (type(counts) is not dict or set(counts) != {'row_count'} or type(counts['row_count']) is not int
+            or not 0 <= counts['row_count'] <= budget['maximumRows'] + 1):
+        _fail('SOURCE_DATABASE_ERROR')
+    if counts['row_count'] > budget['maximumRows']:
+        _fail('QUALITY_RESOURCE_LIMIT')
+    return counts['row_count'], version, cost, estimated_bytes
+
+
 def _measure(conn, target, budget, deadline_at, reference=None, *, uniqueness=False, range_binding=None, freshness=None):
     conn.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY')
     relation = sql.Identifier(target['schemaName'], target['tableName'])
@@ -578,6 +659,7 @@ def execute(source, secret, tenant_id, execution):
     uniqueness = execution['kind'] == UNIQUENESS_KIND
     range_binding = validate_range_binding(execution['range']) if execution['kind'] == RANGE_KIND else None
     freshness = validate_freshness_binding(execution['freshness']) if execution['kind'] == FRESHNESS_KIND else None
+    volume = validate_volume_binding(execution['volume']) if execution['kind'] == VOLUME_KIND else None
     deadline_at = started + budget['maximumSeconds']
     try:
         with deadline(_remaining(deadline_at)):
@@ -592,12 +674,22 @@ def execute(source, secret, tenant_id, execution):
                         conn = psycopg.connect(**kwargs, row_factory=dict_row)
                         resources.own(conn.close)
                     set_json_loads(_plan_json, context=conn)
-                    measured = _measure(conn, target, budget, deadline_at, reference, uniqueness=uniqueness, range_binding=range_binding, freshness=freshness)
-                    rows, nulls, version, cost, estimated_bytes = measured[:5]
+                    if volume is not None:
+                        rows, version, cost, estimated_bytes = _measure_volume(conn, target, budget, deadline_at)
+                    else:
+                        measured = _measure(conn, target, budget, deadline_at, reference, uniqueness=uniqueness, range_binding=range_binding, freshness=freshness)
+                        rows, nulls, version, cost, estimated_bytes = measured[:5]
             # Connection close (rollback) and CA cleanup are inside the original
             # wall deadline. No connection context manager can print DB details.
             _remaining(deadline_at)
             observed_finished = _stamp()
+            if volume is not None:
+                return {'formatVersion': 1, 'kind': VOLUME_KIND, 'strategy': 'exact-bounded-role-scope',
+                        'rowCount': rows, 'volumeHash': volume['volumeHash'],
+                        'observedStartedAt': observed_started, 'observedFinishedAt': observed_finished,
+                        'elapsedMs': math.floor((time.monotonic() - started) * 1000),
+                        'sourceVersion': version, 'adapterVersion': '1', 'queryTemplate': 'postgresql-volume-v1',
+                        'estimatedCost': cost, 'estimatedBytes': estimated_bytes}
             if freshness is not None:
                 _freshness_clock_envelope(measured[5], observed_started, observed_finished)
                 _remaining(deadline_at)
@@ -615,6 +707,10 @@ def execute(source, secret, tenant_id, execution):
     except TargetPolicyError as error:
         raise ScanFailure(error.code) from None
     except psycopg.Error as error:
+        # LOCK rejects non-table relation kinds before catalog inspection. Keep
+        # that refusal specific to the new table-only family; old mappings stay.
+        if volume is not None and error.sqlstate == '42809':
+            raise ScanFailure('QUALITY_TARGET_UNSUPPORTED') from None
         if error.sqlstate in ('42P01', '42703', '3F000'):
             raise ScanFailure('QUALITY_TARGET_STALE') from None
         if error.sqlstate == '42501':

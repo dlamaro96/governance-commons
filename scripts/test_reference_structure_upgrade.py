@@ -27,8 +27,10 @@ class Controls(unittest.TestCase):
   m.fixtures();self.assertEqual(len(m.NAMES),23);self.assertEqual(m.NAMES[-1],'023_reference_quality.sql');self.assertEqual(sum((ROOT/p).read_text().count('\ntest(') for p in m.TESTS),30);self.assertEqual(len(m.PREDECESSORS),3)
  def test_migration_is_the_complete_single_generated_candidate(self):
   data=(ROOT/'packages/db/migrations'/m.MIGRATION).read_bytes();self.assertEqual(m.sha(data),'71a019163fec45a88fc91f4cb53839e582c23eb37db7615928ae5d7f888dcd2c');self.assertEqual(data.decode().count('CREATE FUNCTION public.gc_reference_structure_release_seal()'),1)
- def test_identity_default_hook_does_not_relax_existing_gate(self):
-  rows=[{'path':'a.ts','sha256':'a'*64}];self.assertIs(m.base.Harness.reference_quality_native_source_expectations(self.h,rows),rows)
+ def test_sql023_default_hook_requires_exact_current_phase_and_retained_source_map(self):
+  self.to023();rows=[r for r in self.h.reference_quality_current['sources'] if r['path'].endswith('.ts')]
+  self.assertEqual(m.base.Harness.reference_quality_native_source_expectations(self.h,rows),m.base.native_sources(rows))
+  with self.assertRaises(RuntimeError):m.base.Harness.reference_quality_native_source_expectations(self.h,[{'path':'a.ts','sha256':'a'*64}])
  def test_sql018_repository_remains_exact(self):
   self.h.phase='approval-native-tests';f=self.h.folder/'predecessor.ts';f.write_bytes((ROOT/q.PREDECESSOR_FIXTURE).read_bytes());stage=q.repository_phase(self.h,'predecessor',f,q.PREDECESSOR_SHA256,True);self.h.repository_stage=stage
   self.h.helper(['node','--test','owned.ts']);self.assertEqual(m.sha(self.selected(m.REPOSITORY).read_bytes()),q.PREDECESSOR_SHA256);self.assertIs(self.h.repository_stage,stage);self.assertNotIn('structureSourceChecks',self.h.report)
@@ -49,9 +51,39 @@ class Controls(unittest.TestCase):
   self.to023();rows=[r for r in self.h.reference_quality_current['sources'] if r['path'].endswith('.ts')];expected=self.h.reference_quality_native_source_expectations(rows);self.h.helper(['node','--test','owned.ts'])
   for row in m.PREDECESSORS:self.assertEqual(m.sha(self.selected(row['path']).read_bytes()),row['sha256']);self.assertEqual(next(r['sha256'] for r in expected if r['path']==row['path']),row['sha256'])
   quality=self.h.report['referenceQualitySourceChecks'][-1];repo=next(r for r in quality['effectiveOwnedSources'] if r['path']==m.REPOSITORY);self.assertEqual(repo['sha256'],m.PREDECESSORS[-1]['sha256'])
- def test_sql024_only_current_modules_no_predecessor_mount(self):
+ def test_sql024_retains_only_exact_pre_volume_service_and_repository(self):
   self.to023();self.h.reference_quality_current=None;self.h.structure_predecessor=None;self.h.structure_current={'sources':m.sources()};self.h.phase='structure-native-tests';self.h.helper(['node','--test','owned.ts'])
-  self.assertFalse(any(target=='/app/'+row['path'] for _,target in self.mounts() for row in m.PREDECESSORS));record=self.h.report['structureSourceChecks'][-1];self.assertEqual(record['overrides'],[]);self.assertTrue(record['sourceHashesMatched'])
+  for row in m.NATIVE_BINDINGS:self.assertEqual(m.sha(self.selected(row['path']).read_bytes()),row['sha256'])
+  self.assertFalse(any(target=='/app/'+row['path'] for _,target in self.mounts() for row in m.PREDECESSORS if row['path']!=m.REPOSITORY))
+  record=self.h.report['structureSourceChecks'][-1];self.assertEqual({r['path'] for r in record['overrides']},{r['path'] for r in m.NATIVE_BINDINGS});self.assertTrue(record['sourceHashesMatched'])
+  expected=m.native_sources(self.h.structure_current['sources']);self.assertEqual(record['effectiveOwnedSources'],[r for r in expected if r['path'] in {p['path'] for p in (*m.PREDECESSORS,*m.NATIVE_BINDINGS)}])
+ def test_standalone_sql023_mounts_and_reports_each_retained_native_module(self):
+  self.to023();standalone=object.__new__(m.base.Harness);standalone.__dict__.update(self.h.__dict__)
+  rows=[r for r in standalone.reference_quality_current['sources'] if r['path'].endswith('.ts')]
+  expected=standalone.reference_quality_native_source_expectations(rows)
+  standalone.helper(['node','--test','owned.ts'])
+  for row in m.base.NATIVE_BINDINGS:
+   self.assertEqual(m.sha(self.selected(row['path']).read_bytes()),row['sha256'])
+   self.assertEqual(next(r['sha256'] for r in expected if r['path']==row['path']),row['sha256'])
+  record=standalone.report['referenceQualitySourceChecks'][-1]
+  self.assertEqual(record['effectiveOwnedSources'],[r for r in expected if r['path'] in m.base.NON_REPOSITORY|{m.REPOSITORY}])
+  self.assertEqual(len(self.mounts()),len({target for _,target in self.mounts()}))
+ def test_standalone_sql023_rejects_duplicate_or_untrusted_service_override_before_leaf(self):
+  self.to023();standalone=object.__new__(m.base.Harness);standalone.__dict__.update(self.h.__dict__)
+  row=m.base.NATIVE_BINDINGS[0];target='/app/'+row['path'];fixed=(ROOT/row['fixture'],target)
+  for mounts in ([(ROOT/'package.json',target)],[fixed,fixed],[(ROOT/'package.json','/app/packages/domain')]):
+   with self.assertRaises(RuntimeError):standalone.helper(['node'],mounts=mounts)
+  self.assertEqual(self.calls,[])
+ def test_sql022_outer_quality_bytes_keep_precedence_over_later_service(self):
+  self.to022();self.h.helper(['node','--test','owned.ts'])
+  row=next(r for r in m.base.PREDECESSORS if r['path']=='packages/domain/src/quality-service.ts')
+  self.assertEqual(m.sha(self.selected(row['path']).read_bytes()),row['sha256'])
+ def test_sql023_nested_retained_service_has_one_exact_mount_and_honest_verifier(self):
+  self.to023();self.h.helper(['node','--test','owned.ts']);row=m.base.NATIVE_BINDINGS[0]
+  self.assertEqual(m.sha(self.selected(row['path']).read_bytes()),row['sha256'])
+  record=self.h.report['referenceQualitySourceChecks'][-1]
+  self.assertEqual(next(r['sha256'] for r in record['effectiveOwnedSources'] if r['path']==row['path']),row['sha256'])
+  self.assertEqual(len(self.mounts()),len({target for _,target in self.mounts()}))
  def test_changed_missing_or_wrong_phase_source_map_refused(self):
   self.to023();rows=[r for r in self.h.reference_quality_current['sources'] if r['path'].endswith('.ts')]
   for value in [rows[:-1],[{**rows[0],'sha256':'0'*64},*rows[1:]]]:
@@ -72,7 +104,7 @@ class Controls(unittest.TestCase):
  def test_failed_native_suite_replaces_inherited_totals_with_actual_tap(self):
   self.to023();self.h.reference_quality_current=None;self.h.structure_predecessor=None;self.h.report['tests']={'tests':21,'pass':21};frozen=m.sources();measured=[r for r in frozen if r['path'].endswith('.ts')]
   tap='TAP version 13\nnot ok 1 - synthetic failure\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 1.25\n'
-  def fake(args,**kwargs):return subprocess.CompletedProcess(args,0,json.dumps(measured),'') if '-e' in args else subprocess.CompletedProcess(args,1,tap,'')
+  def fake(args,**kwargs):return subprocess.CompletedProcess(args,0,json.dumps(m.native_sources(measured)),'') if '-e' in args else subprocess.CompletedProcess(args,1,tap,'')
   with patch.object(self.h,'helper',fake),self.assertRaises(RuntimeError):m.run_suite(self.h,frozen,'structure-native-tests',m.TESTS,30,'structureTests')
   self.assertEqual(self.h.report['tests']['tests'],1);self.assertEqual(self.h.report['tests']['fail'],1);self.assertEqual(self.h.report['structureTestsExitStatus'],1);self.assertIsNone(self.h.structure_current)
  def test_malformed_or_skipped_tap_cannot_qualify(self):

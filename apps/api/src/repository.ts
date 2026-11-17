@@ -24,14 +24,14 @@ export function visibleAudit(tx:Tx,p:Principal){return tx.selectFrom('audit').se
  sql<boolean>`(
   audit.action='quality.rule_published' AND EXISTS(
    SELECT 1 FROM public.quality_rules qr JOIN public.quality_rule_versions qv ON qv.tenant_id=qr.tenant_id AND qv.rule_id=qr.id
-   WHERE qr.tenant_id=audit.tenant_id AND qr.column_asset_id::text=audit.resource_id
+   WHERE qr.tenant_id=audit.tenant_id AND coalesce(qr.column_asset_id,qr.table_asset_id)::text=audit.resource_id
     AND qr.id::text=audit.changes->>'ruleId' AND qv.version::text=audit.changes->>'resourceVersion'
     AND qv.definition_hash=audit.changes->>'definitionHash'
     AND public.gc_quality_rule_visible(qr.id,qv.version,${p.id}::uuid))
   OR audit.action IN ('quality.run_requested','quality.run_claimed','quality.run_cancelled','quality.run_finished') AND EXISTS(
    SELECT 1 FROM public.quality_runs qrun JOIN public.quality_rules qr ON qr.tenant_id=qrun.tenant_id AND qr.id=qrun.rule_id
    WHERE qrun.tenant_id=audit.tenant_id AND qrun.id::text=audit.changes->>'runId'
-    AND qr.id::text=audit.changes->>'ruleId' AND qr.column_asset_id::text=audit.resource_id
+    AND qr.id::text=audit.changes->>'ruleId' AND coalesce(qr.column_asset_id,qr.table_asset_id)::text=audit.resource_id
     AND public.gc_quality_run_visible(qrun.id,${p.id}::uuid)))`,
  sql<boolean>`audit.action IN ('quality.monitor_published','quality.monitor_state_changed','quality.monitor_occurrence','quality.monitor_projected',
   'quality.issue_opened','quality.issue_failed_again','quality.issue_acknowledged','quality.issue_assigned','quality.issue_recovery_available','quality.issue_recovery_invalidated','quality.issue_resolved','quality.issue_reopened','quality.issue_superseded','quality.notification_created','quality.notification_read')

@@ -1,5 +1,16 @@
 // SPDX-License-Identifier: Apache-2.0
 const en={
+ "volume":"Volume (rows)",
+ "minimumRows":"Minimum rows",
+ "maximumRows":"Maximum rows",
+ "volumeInvalid":"Enter whole row counts from 0 to 100000, with the minimum at or below the maximum.",
+ "volumeHint":"Count every row in the selected PostgreSQL table, including rows with NULL values. Views, partitions, inherited tables and row-level security are unsupported.",
+ "volumeFormula":"Pass when the exact observed row count is within both pinned bounds, inclusively. An empty table has an exact count of zero.",
+ "volumeLimit":"The authored maximum is a pass/fail threshold. Observations over the fixed 100000-row execution limit fail without a measurement.",
+ "volumeHash":"Volume settings hash",
+ "volumePinned":"Pinned row bounds",
+ "volumeTable":"Selected table",
+
  "freshness":"Latest timestamp freshness",
  "maximumAge":"Maximum age (seconds)",
  "futureSkew":"Permitted future skew (seconds)",
@@ -85,8 +96,8 @@ const en={
  "EXPIRED":"Expired",
  "QUALITY_REFERENCE_UNAVAILABLE":"The approved reference values are unavailable for the requested date or current access.",
 
- quality:'Quality',intro:'Measure completeness, uniqueness, integer ranges, latest timestamps or approved reference values in a PostgreSQL column through an authorized source worker.',scope:'These are data-quality measurements, separate from metadata documentation completeness.',
- unsupported:'This asset does not support source quality checks',unsupportedBody:'Open a scanned PostgreSQL column. Eligibility does not guarantee current source access.',openColumns:'Open columns',unmonitored:'No quality rules configured',unmonitoredBody:'This column has no recorded quality rule. No quality pass is implied.',
+ quality:'Quality',intro:'Measure table row counts or column completeness, uniqueness, integer ranges, latest timestamps and approved reference values through an authorized PostgreSQL source worker.',scope:'These are data-quality measurements, separate from metadata documentation completeness.',
+ unsupported:'This asset does not support source quality checks',unsupportedBody:'Open a supported scanned PostgreSQL table or column. Eligibility does not guarantee current source access.',openColumns:'Open columns',unmonitored:'No quality rules configured',unmonitoredBody:'This asset has no recorded quality rule. No quality pass is implied.',
  rules:'Quality rules',newRule:'Create rule',editRule:'Publish new version',ruleName:'Rule name',purpose:'Business purpose',owner:'Owner',severity:'Severity',info:'Information',warning:'Warning',critical:'Critical',
  maximumNull:'Maximum null percentage',thresholdHint:'Enter 0 to 100, with up to two decimal places. Empty strings are values; this rule counts SQL NULL only.',thresholdInvalid:'Enter a percentage from 0 to 100 with at most two decimal places.',
  publish:'Publish rule',publishing:'Publishing…',saveVersion:'Publish version',cancel:'Cancel',close:'Close',chooseOwner:'Choose an active member',membersUnavailable:'The current member directory is unavailable.',memberPermission:'Without member-directory access, a new rule uses you as owner; an existing rule keeps its owner.',ownerUnavailable:'Member unavailable',
@@ -101,6 +112,17 @@ const en={
  QUALITY_RESOURCE_LIMIT:'The query exceeded its resource budget. No quality verdict was recorded.',QUALITY_TARGET_STALE:'The source target changed. Scan and review the current column before another run.',QUALITY_TARGET_UNSUPPORTED:'This source target does not support the check.',QUALITY_SOURCE_FAILED:'The source could not complete the check.',QUALITY_DEADLINE_EXCEEDED:'The execution deadline was exceeded. No quality verdict was recorded.',QUALITY_AUTHORITY_REVOKED:'Current authority no longer permits this execution.',QUALITY_ATTEMPTS_EXHAUSTED:'The allowed execution attempts were exhausted.',QUALITY_CANCELLED:'The execution was cancelled.',
 };
 const ar:Record<keyof typeof en,string>={
+ "volume":"حجم الجدول (صفوف)",
+ "minimumRows":"الحد الأدنى للصفوف",
+ "maximumRows":"الحد الأقصى للصفوف",
+ "volumeInvalid":"أدخل عددًا صحيحًا من 0 إلى 100000 بحيث لا يتجاوز الحد الأدنى الحد الأقصى.",
+ "volumeHint":"يُحسب كل صف في جدول PostgreSQL المحدد، بما في ذلك الصفوف ذات القيم الفارغة. العروض والجداول المقسمة أو الموروثة وأمان الصفوف غير مدعومة.",
+ "volumeFormula":"ينجح الفحص إذا كان عدد الصفوف المرصود ضمن الحدين المثبتين مع تضمينهما. عدد صفوف الجدول الفارغ هو صفر بالضبط.",
+ "volumeLimit":"الحد الأقصى المؤلف هو عتبة للنجاح أو الفشل. تتوقف الملاحظة التي تتجاوز حد التنفيذ الثابت البالغ 100000 صف دون قياس.",
+ "volumeHash":"بصمة إعدادات الحجم",
+ "volumePinned":"حدود الصفوف المثبتة",
+ "volumeTable":"الجدول المحدد",
+
  "freshness":"حداثة أحدث طابع زمني",
  "maximumAge":"العمر الأقصى (بالثواني)",
  "futureSkew":"الفرق المستقبلي المسموح (بالثواني)",
@@ -186,8 +208,8 @@ const ar:Record<keyof typeof en,string>={
  "EXPIRED":"منتهي",
  "QUALITY_REFERENCE_UNAVAILABLE":"القيم المرجعية المعتمدة غير متاحة للتاريخ المطلوب أو بالصلاحيات الحالية.",
 
- quality:'الجودة',intro:'قِس الاكتمال أو التفرّد أو نطاقات الأعداد الصحيحة أو القيم المرجعية المعتمدة في عمود PostgreSQL عبر عامل مصدر مخوّل.',scope:'هذه قياسات لجودة البيانات، وهي منفصلة عن اكتمال توثيق البيانات الوصفية.',
- unsupported:'لا يدعم هذا الأصل فحوص جودة المصدر',unsupportedBody:'افتح عمود PostgreSQL جرى مسحه. لا تضمن الأهلية استمرار الوصول إلى المصدر.',openColumns:'فتح الأعمدة',unmonitored:'لا توجد قواعد جودة معدّة',unmonitoredBody:'لا توجد قاعدة جودة مسجلة لهذا العمود. ولا يعني ذلك نجاح الجودة.',
+ quality:'الجودة',intro:'قِس عدد صفوف الجدول أو اكتمال العمود وتفرّده ونطاقاته وحداثة توقيته وقيمه المرجعية عبر عامل PostgreSQL مخوّل.',scope:'هذه قياسات لجودة البيانات، وهي منفصلة عن اكتمال توثيق البيانات الوصفية.',
+ unsupported:'لا يدعم هذا الأصل فحوص جودة المصدر',unsupportedBody:'افتح جدول PostgreSQL أو عمودًا مدعومًا جرى مسحه. لا تضمن الأهلية استمرار الوصول إلى المصدر.',openColumns:'فتح الأعمدة',unmonitored:'لا توجد قواعد جودة معدّة',unmonitoredBody:'لا توجد قاعدة جودة مسجلة لهذا الأصل. ولا يعني ذلك نجاح الجودة.',
  rules:'قواعد الجودة',newRule:'إنشاء قاعدة',editRule:'نشر إصدار جديد',ruleName:'اسم القاعدة',purpose:'الغرض التجاري',owner:'المالك',severity:'الأهمية',info:'معلومات',warning:'تحذير',critical:'حرج',
  maximumNull:'النسبة القصوى للقيم الفارغة',thresholdHint:'أدخل قيمة من ٠ إلى ١٠٠ بمنزلتين عشريتين كحد أقصى. السلسلة النصية الفارغة قيمة؛ تحسب هذه القاعدة SQL NULL فقط.',thresholdInvalid:'أدخل نسبة من ٠ إلى ١٠٠ بمنزلتين عشريتين كحد أقصى.',
  publish:'نشر القاعدة',publishing:'جارٍ النشر…',saveVersion:'نشر الإصدار',cancel:'إلغاء',close:'إغلاق',chooseOwner:'اختر عضواً نشطاً',membersUnavailable:'دليل الأعضاء الحالي غير متاح.',memberPermission:'دون صلاحية دليل الأعضاء، تكون أنت مالك القاعدة الجديدة؛ وتحتفظ القاعدة الحالية بمالكها.',ownerUnavailable:'العضو غير متاح',

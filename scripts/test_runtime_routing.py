@@ -17,6 +17,40 @@ spec.loader.exec_module(runtime)
 
 
 class RuntimeRoutingTests(unittest.TestCase):
+    def test_explicit_authority_read_scopes_and_historical_route_are_distinct(self):
+        for suite, argv in (
+                ('authority-read-original', ['scripts/runtime-test-authority-read-upgrade.py', '--run-local', '--scope', 'original']),
+                ('authority-read-current', ['scripts/runtime-test-authority-read-upgrade.py', '--run-local', '--scope', 'current']),
+                ('authority-foundation', ['scripts/runtime-test-authority-foundation.py'])):
+            calls = []
+            with self.subTest(suite=suite), patch.object(sys, 'argv', ['dev', 'test', '--suite', suite]), \
+                    patch.object(runtime, 'require_local', side_effect=lambda: calls.append('local')), \
+                    patch.object(runtime, 'require_bootstrap', side_effect=AssertionError('core bootstrap reached')), \
+                    patch.object(runtime, 'run', side_effect=lambda args, **kw: calls.append((args, kw))):
+                runtime.main()
+            self.assertEqual(calls, ['local', ([sys.executable, *argv], {'timeout': 1800})])
+
+    def test_authority_read_scopes_refuse_remote_or_unavailable_local_context(self):
+        for suite in ('authority-read-original', 'authority-read-current'):
+            for override, endpoint in (('tcp://remote.invalid:2375', 'unix:///local.sock'), ('', 'ssh://remote.invalid'), ('', None)):
+                with self.subTest(suite=suite, endpoint=endpoint), \
+                        patch.object(sys, 'argv', ['dev', 'test', '--suite', suite]), \
+                        patch.dict(os.environ, {'DOCKER_HOST': override}), \
+                        patch.object(runtime, 'capture', return_value=json.dumps([{'Endpoints': {'docker': {'Host': endpoint}}}]) if endpoint else 'invalid'), \
+                        patch.object(runtime, 'require_bootstrap', side_effect=AssertionError('core bootstrap reached')), \
+                        patch.object(runtime, 'run') as run:
+                    with self.assertRaises(SystemExit): runtime.main()
+                    run.assert_not_called()
+
+    def test_authority_read_failures_propagate_without_retry_or_core_fallback(self):
+        for scope in ('original', 'current'):
+            with self.subTest(scope=scope), patch.object(sys, 'argv', ['dev', 'test', '--suite', 'authority-read-' + scope]), \
+                    patch.object(runtime, 'require_local'), \
+                    patch.object(runtime, 'require_bootstrap', side_effect=AssertionError('core bootstrap reached')), \
+                    patch.object(runtime, 'run', side_effect=RuntimeError('synthetic gate failure')) as run:
+                with self.assertRaisesRegex(RuntimeError, '^synthetic gate failure$'): runtime.main()
+                run.assert_called_once_with([sys.executable, 'scripts/runtime-test-authority-read-upgrade.py', '--run-local', '--scope', scope], timeout=1800)
+
     def test_postgres_target_gate_checks_local_context_without_bootstrap(self):
         calls = []
         def capture(args, timeout=15):
@@ -67,6 +101,9 @@ class RuntimeRoutingTests(unittest.TestCase):
         self.assertIn('./dev test --suite range-upgrade', output.getvalue())
         self.assertIn('./dev test --suite range-worker', output.getvalue())
         self.assertIn('./dev test --suite monitoring-upgrade', output.getvalue())
+        self.assertIn('./dev test --suite authority-read-original', output.getvalue())
+        self.assertIn('./dev test --suite authority-read-current', output.getvalue())
+        self.assertIn('./dev test --suite authority-foundation', output.getvalue())
         capture.assert_not_called()
         run.assert_not_called()
 

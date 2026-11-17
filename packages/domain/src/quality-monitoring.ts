@@ -116,14 +116,17 @@ export function parseOccurrence(input:unknown):QualityOccurrence{return checked(
  need(v.disposition==='enqueued'&&v.reason===null&&(range===null||range.count===1));return {...base,disposition:'enqueued',reason:null,runId:id(v.runId),comparisonScopeHash:hash(v.comparisonScopeHash)};
  });}
 function comparison(x:unknown):QualityComparisonScope {
- const v=obj(x,['formatVersion','monitorId','executorId','rule','sourceId','sourceVersion','sourceConfigHash','schemaAssetId','tableAssetId','columnAssetId','targetHash','family']);need(v.formatVersion===1);
- const f=obj(v.family,['kind'],['comparison','nullPolicy','rangeHash','freshnessHash','setId','version','publicationHash','codeStatus','codesHash']);let family:QualityComparisonScope['family'];
+ const v=obj(x,['formatVersion','monitorId','executorId','rule','sourceId','sourceVersion','sourceConfigHash','schemaAssetId','tableAssetId','columnAssetId','targetHash','family'],['targetKind']);need(v.formatVersion===1);
+ const f=obj(v.family,['kind'],['comparison','nullPolicy','rangeHash','freshnessHash','volumeHash','setId','version','publicationHash','codeStatus','codesHash']);let family:QualityComparisonScope['family'];
  if(f.kind==='completeness'){obj(f,['kind']);family={kind:'completeness'};}
  else if(f.kind==='uniqueness'){obj(f,['kind','comparison','nullPolicy']);need(f.comparison==='utf8-exact'&&f.nullPolicy==='exclude');family={kind:'uniqueness',comparison:'utf8-exact',nullPolicy:'exclude'};}
  else if(f.kind==='range'){obj(f,['kind','rangeHash']);family={kind:'range',rangeHash:hash(f.rangeHash)};}
  else if(f.kind==='freshness'){obj(f,['kind','freshnessHash']);family={kind:'freshness',freshnessHash:hash(f.freshnessHash)};}
+ else if(f.kind==='volume'){obj(f,['kind','volumeHash']);family={kind:'volume',volumeHash:hash(f.volumeHash)};}
  else{obj(f,['kind','setId','version','publicationHash','codeStatus','codesHash']);need(f.kind==='reference-allowed-values'&&f.codeStatus==='active');family={kind:'reference-allowed-values',setId:id(f.setId),version:int(f.version),publicationHash:hash(f.publicationHash),codeStatus:'active',codesHash:hash(f.codesHash)};}
- const schemaAssetId=id(v.schemaAssetId),tableAssetId=id(v.tableAssetId),columnAssetId=id(v.columnAssetId);need(new Set([schemaAssetId,tableAssetId,columnAssetId]).size===3);
+ const schemaAssetId=id(v.schemaAssetId),tableAssetId=id(v.tableAssetId);
+ if(f.kind==='volume'){obj(f,['kind','volumeHash']);need(v.targetKind==='table'&&v.columnAssetId===null&&schemaAssetId!==tableAssetId);return {formatVersion:1,targetKind:'table',monitorId:id(v.monitorId),executorId:id(v.executorId),rule:pin(v.rule),sourceId:id(v.sourceId),sourceVersion:int(v.sourceVersion),sourceConfigHash:hash(v.sourceConfigHash),schemaAssetId,tableAssetId,columnAssetId:null,targetHash:hash(v.targetHash),family:{kind:'volume',volumeHash:hash(f.volumeHash)}};}
+ need(!Object.hasOwn(v,'targetKind')&&family.kind!=='volume');const columnAssetId=id(v.columnAssetId);need(new Set([schemaAssetId,tableAssetId,columnAssetId]).size===3);
  return {formatVersion:1,monitorId:id(v.monitorId),executorId:id(v.executorId),rule:pin(v.rule),sourceId:id(v.sourceId),sourceVersion:int(v.sourceVersion),sourceConfigHash:hash(v.sourceConfigHash),schemaAssetId,tableAssetId,columnAssetId,targetHash:hash(v.targetHash),family};
 }
 export const parseComparisonScope=(input:unknown):QualityComparisonScope=>checked(input,comparison);
@@ -131,15 +134,15 @@ export const parseComparisonScope=(input:unknown):QualityComparisonScope=>checke
 export const comparisonScopeHash=(input:unknown):string=>digest(parseComparisonScope(input));
 function resolutionValue(input:unknown):NonNullable<QualityIssueView['resolution']>{const r=obj(input,['rootCause','remediation','reason','evidence','at','by']);return {rootCause:text(r.rootCause,L.textReason),remediation:text(r.remediation,L.textReason),reason:text(r.reason,L.textReason),evidence:evidence(r.evidence),at:stamp(r.at),by:id(r.by)};}
 export function parseIssueView(input:unknown):QualityIssueView{return checked(input,x=>{
- const v=obj(x,['id','version','monitorId','comparisonScopeHash','rule','category','severity','tableAssetId','columnAssetId','status','episode','assignedOwnerId','ownerAvailable','openedAt','acknowledgeDueAt','resolveDueAt','opening','lastFailure','recovery','resolution','superseded']);
+ const v=obj(x,['id','version','monitorId','comparisonScopeHash','rule','category','severity','tableAssetId','columnAssetId','status','episode','assignedOwnerId','ownerAvailable','openedAt','acknowledgeDueAt','resolveDueAt','opening','lastFailure','recovery','resolution','superseded'],['targetKind']);
  need(v.category==='data-quality');const opening=evidence(v.opening),lastFailure=evidence(v.lastFailure),recovery=nullable(v.recovery,evidence),scope=hash(v.comparisonScopeHash);need(opening.comparisonScopeHash===scope&&lastFailure.comparisonScopeHash===scope&&lastFailure.ordinal>=opening.ordinal);if(recovery)need(recovery.comparisonScopeHash===scope&&recovery.ordinal>lastFailure.ordinal);
  const resolution=nullable(v.resolution,resolutionValue);if(resolution)need(resolution.evidence.comparisonScopeHash===scope);
  const superseded=nullable(v.superseded,x=>{const r=obj(x,['reason','replacementMonitorId','replacementDefinitionVersion','at','by']);return {reason:text(r.reason,L.textReason),replacementMonitorId:id(r.replacementMonitorId),replacementDefinitionVersion:int(r.replacementDefinitionVersion),at:stamp(r.at),by:id(r.by)};});
  const status=choice(v.status,issueStates);need((status==='resolved')===(resolution!==null)&&(status==='superseded')===(superseded!==null));if(status==='resolved'||status==='superseded')need(recovery===null);
  if(resolution){same(v.resolution,resolution);need(resolution.evidence.ordinal>lastFailure.ordinal);}if(superseded)same(v.superseded,superseded);
  const openedAt=stamp(v.openedAt),acknowledgeDueAt=stamp(v.acknowledgeDueAt),resolveDueAt=stamp(v.resolveDueAt);need(openedAt<acknowledgeDueAt&&acknowledgeDueAt<=resolveDueAt);
- const tableAssetId=id(v.tableAssetId),columnAssetId=id(v.columnAssetId);need(tableAssetId!==columnAssetId);
- return {id:id(v.id),version:int(v.version),monitorId:id(v.monitorId),comparisonScopeHash:scope,rule:pin(v.rule),category:'data-quality',severity:choice(v.severity,['info','warning','critical']),tableAssetId,columnAssetId,status,episode:int(v.episode),assignedOwnerId:id(v.assignedOwnerId),ownerAvailable:bool(v.ownerAvailable),openedAt,acknowledgeDueAt,resolveDueAt,opening,lastFailure,recovery,resolution,superseded};
+ const tableAssetId=id(v.tableAssetId);const target=v.targetKind==='table'?(need(v.columnAssetId===null),{targetKind:'table' as const,tableAssetId,columnAssetId:null}):(need(!Object.hasOwn(v,'targetKind')),{tableAssetId,columnAssetId:id(v.columnAssetId)});need(target.columnAssetId!==tableAssetId);
+ return {id:id(v.id),version:int(v.version),monitorId:id(v.monitorId),comparisonScopeHash:scope,rule:pin(v.rule),category:'data-quality',severity:choice(v.severity,['info','warning','critical']),...target,status,episode:int(v.episode),assignedOwnerId:id(v.assignedOwnerId),ownerAvailable:bool(v.ownerAvailable),openedAt,acknowledgeDueAt,resolveDueAt,opening,lastFailure,recovery,resolution,superseded};
  });}
 export function parseIssueEvent(input:unknown):QualityIssueEvent{return checked(input,x=>{
  const v=obj(x,['id','issueId','version','episode','kind','monitor','occurrenceId','runId','actorId','at','reason','resolution']);const reason=nullable(v.reason,x=>text(x,L.textReason));if(reason!==null)need(v.reason===reason);

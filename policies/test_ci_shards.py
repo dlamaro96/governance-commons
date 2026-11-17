@@ -26,7 +26,7 @@ class AssignmentTests(unittest.TestCase):
         self.assertEqual(len(assigned),len(set(assigned)))
         self.assertFalse(set(assigned)&set(policy.COMMON))
         self.assertEqual(set((*policy.COMMON,*assigned)),set(policy.STEPS))
-        self.assertEqual(len(policy.STEPS),40)
+        self.assertEqual(len(policy.STEPS),43)
 
     def test_each_shard_requires_all_its_results(self):
         for shard in policy.SHARDS:
@@ -139,7 +139,7 @@ class CollectorTests(unittest.TestCase):
                 self.assertEqual(code,0);self.assertEqual(report['outcome'],'PASS')
                 self.assertEqual(report['shard']['shard'],shard)
                 self.assertEqual(report['shard']['assignment_sha256'],policy.assignment_hash())
-                self.assertEqual(len(report['tests']),36 if shard=='browser' else 0)
+                self.assertEqual(len(report['tests']),37 if shard=='browser' else 0)
                 for step,value in report['steps'].items():self.assertEqual(value,'success' if step in policy.required_steps(shard) else 'NOT_IN_SHARD')
 
     def test_each_actual_collector_refuses_missing_assigned_and_foreign_success(self):
@@ -152,7 +152,7 @@ class CollectorTests(unittest.TestCase):
                 self.assertEqual(code,1)
 
     def test_actual_collector_refuses_foreign_artifacts_without_publishing_them(self):
-        for name in ('api-summary.json','authority-authn-foundation.json','authority-foundation.json','protected-authn.json','playwright-results.json'):
+        for name in ('api-summary.json','authority-authn-foundation.json','authority-read-original.json','authority-read-current.json','authority-foundation.json','protected-authn.json','playwright-results.json'):
             code,report=self.collect(shard='quality-basics',retained_foreign=name)
             self.assertEqual(code,1);self.assertEqual(report['foreign_evidence'],'REFUSED')
             self.assertEqual(report['tests'],[]);self.assertEqual(report['screenshots'],[])
@@ -169,5 +169,74 @@ class CollectorTests(unittest.TestCase):
         code,report=self.collect(shard='browser',protected_mutation=lambda r:r.update(evidenceMode='mounted-source',imageAttestation=None))
         self.assertEqual(code,1)
 
+
+class AuthorityTransitionTests(unittest.TestCase):
+    def test_explicit_transition_and_distinct_scope_contracts(self):
+        self.assertNotIn('authority_foundation',policy.STEPS)
+        self.assertEqual(set(policy.SUPERSEDED),{'authority_foundation'})
+        history=policy.SUPERSEDED['authority_foundation']
+        self.assertEqual(history['status'],'HISTORICAL_NOT_EXECUTED')
+        self.assertEqual(history['retainedCommand'],'./dev test --suite authority-foundation')
+        self.assertEqual(history['replacedBy'],['authority_read_original','authority_read_current'])
+        self.assertEqual(policy.RETIRED_REPORTS,('authority-foundation.json',))
+        self.assertEqual(set(policy.AUTHORITY_SCOPES),set(history['replacedBy']))
+        for scope in ('original','current'):
+            step='authority_read_'+scope
+            self.assertIn(step,policy.SHARDS['foundation'])
+            self.assertEqual(policy.COMMANDS[step],'./dev test --suite authority-read-'+scope)
+            self.assertEqual(policy.EVIDENCE[step],('authority-read-'+scope+'.json',))
+            self.assertEqual(policy.AUTHORITY_SCOPES[step]['profile'],'isolated-authority-read-'+scope)
+            self.assertEqual(policy.AUTHORITY_SCOPES[step]['evidence'],'STEP_OUTCOME_ONLY')
+        self.assertNotEqual(policy.AUTHORITY_SCOPES['authority_read_original']['schemaScope'],policy.AUTHORITY_SCOPES['authority_read_current']['schemaScope'])
+
+    def test_no_legacy_environment_value_can_substitute_or_coexist(self):
+        for shard in (None,*policy.SHARDS):
+            env={'GC_'+step.upper()+'_RESULT':'success' if step in policy.required_steps(shard) else 'skipped' for step in policy.STEPS}
+            self.assertTrue(policy.collect_outcomes(env,shard)[1])
+            for value in ('success','failure','skipped','cancelled','NOT_IN_SHARD','',None):
+                with self.subTest(shard=shard,value=value):
+                    self.assertFalse(policy.collect_outcomes({**env,'GC_AUTHORITY_FOUNDATION_RESULT':value},shard)[1])
+
+    def test_retired_report_refuses_every_shard_and_unsharded_collection(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);folder=root/'.local/evidence';folder.mkdir(parents=True)
+            file=folder/'authority-foundation.json'
+            for symlink in (False,True):
+                if symlink:file.symlink_to(folder/'absent-private-report')
+                else:file.write_text('{}')
+                for shard in (None,*policy.SHARDS):self.assertTrue(policy.foreign_evidence(root,shard))
+                file.unlink()
+
+    def test_real_collector_discloses_both_scopes_without_ingesting_raw_reports(self):
+        collect=evidence_tests.EvidenceGateTests(methodName='runTest').collect
+        code,report=collect(shard='foundation')
+        self.assertEqual(code,0)
+        self.assertNotIn('authority_foundation',report['steps'])
+        self.assertEqual(report['superseded_outcomes'],policy.SUPERSEDED)
+        self.assertEqual(report['authority_foundation_diagnostic'],'HISTORICAL_NOT_EXECUTED')
+        for step in policy.AUTHORITY_SCOPES:
+            self.assertEqual(report['authority_qualifications'][step],{**policy.AUTHORITY_SCOPES[step],'outcome':'success'})
+            for value in (None,'failure','skipped','cancelled'):
+                kwargs={'omitted_step':step} if value is None else {'failed_step':step,'failed_outcome':value}
+                code,refused=collect(shard='foundation',**kwargs)
+                self.assertEqual(code,1);self.assertEqual(refused['outcome'],'NOT_PASSED')
+            code,_=collect(shard='foundation',omitted_step=step,shard_environment={'GC_AUTHORITY_FOUNDATION_RESULT':'success'})
+            self.assertEqual(code,1)
+        code,refused=collect(shard='foundation',shard_environment={'GC_AUTHORITY_FOUNDATION_RESULT':'success'})
+        self.assertEqual(code,1)
+
+    def test_scope_crossing_duplicates_legacy_alias_and_control_omission_refuse(self):
+        workflow=(ROOT/'.github/workflows/ci.yml').read_text()
+        mutations=[
+            ('run: ./dev test --suite authority-read-original','run: ./dev test --suite authority-read-current'),
+            ('run: ./dev test --suite authority-read-current','run: ./dev test --suite authority-read-original'),
+            ('id: authority_read_current','id: authority_read_original'),
+            ('id: authority_read_original','id: authority_foundation'),
+            ('GC_AUTHORITY_READ_CURRENT_RESULT: ${{ steps.authority_read_current.outcome }}','GC_AUTHORITY_READ_CURRENT_RESULT: ${{ steps.authority_read_original.outcome }}'),
+            ('GC_AUTHORITY_READ_CURRENT_RESULT: ${{ steps.authority_read_current.outcome }}','GC_AUTHORITY_FOUNDATION_RESULT: success'),
+            ('run: python3 scripts/test_authority_read_upgrade.py','run: true'),
+        ]
+        for before,after in mutations:
+            with self.subTest(before=before),self.assertRaises(ValueError):policy.validate_workflow(workflow.replace(before,after))
 
 if __name__=='__main__':unittest.main()

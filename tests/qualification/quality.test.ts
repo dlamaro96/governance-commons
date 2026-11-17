@@ -15,7 +15,7 @@ import {Problem,type Principal} from '../../packages/authz/src/index.ts';
 import {assetView} from '../../apps/api/src/repository.ts';
 import {configureRelationTransaction} from '../../packages/domain/src/relation-store.ts';
 import {getQualityAsset,getQualityRule,getQualityRun,listQualityRuns,publishQualityRule,requestQualityRun,cancelQualityRun,claimQualityRun,finishQualityRun} from '../../packages/domain/src/quality-service.ts';
-import type {CompletenessRuleDefinition,QualityRuleView,QualityMeasurement,QualityClaim} from '../../packages/domain/src/quality-contracts.ts';
+import type {CompletenessRuleDefinition,QualityRuleView,CompletenessMeasurement,QualityColumnRunView,QualityClaim} from '../../packages/domain/src/quality-contracts.ts';
 
 const config=JSON.parse(readFileSync(process.env.AUTHN_FOUNDATION_CONFIG!,'utf8')) as {owner:string;legacy:string};
 process.env.SESSION_KEY=randomUUID()+randomUUID();
@@ -24,7 +24,7 @@ const status=(expected:number)=>(e:unknown)=>e instanceof Problem&&e.status===ex
 const stateCode=(expected:string)=>(e:unknown)=>!!e&&typeof e==='object'&&'code'in e&&e.code===expected;
 const protectedTables=['quality_rules','quality_rule_versions','quality_runs'] as const;
 const snapshotTables=[...protectedTables,'assets','asset_revisions','sources','audit','outbox','idempotency'] as const;
-function measurement(rows=20,nulls=5):QualityMeasurement{
+function measurement(rows=20,nulls=5):CompletenessMeasurement{
  const at=new Date().toISOString();return {formatVersion:1,kind:'completeness',strategy:'exact-bounded-role-scope',rowCount:rows,nullCount:nulls,
  observedStartedAt:at,observedFinishedAt:at,elapsedMs:0,sourceVersion:'170006',adapterVersion:'1',queryTemplate:'postgresql-completeness-v1',estimatedCost:1,estimatedBytes:80};
 }
@@ -80,7 +80,7 @@ async function fixture(t:TestContext){
  const publish=(value=definition(),id:string=randomUUID(),expectedVersion=0,key=randomUUID())=>as(tx=>publishQualityRule(tx,principal(),{id,expectedVersion,definition:value},key,'quality-native'));
  const request=(rule:QualityRuleView,id=randomUUID(),key=randomUUID())=>as(tx=>requestQualityRun(tx,principal(),rule.id,{id,ruleVersion:rule.version,ruleHash:rule.definitionHash},key,'quality-native'));
  const claim=(id:string,claimId:string=randomUUID())=>site(tx=>claimQualityRun(tx,id,{claimId}));
- const finish=(id:string,c:Extract<QualityClaim,{status:'claimed'}>,value:QualityMeasurement=measurement())=>site(tx=>finishQualityRun(tx,id,{claimId:c.claimId,attempt:c.attempt,measurement:value}));
+ const finish=(id:string,c:Extract<QualityClaim,{status:'claimed'}>,value:CompletenessMeasurement=measurement())=>site(tx=>finishQualityRun(tx,id,{claimId:c.claimId,attempt:c.attempt,measurement:value})) as Promise<{run:QualityColumnRunView}>;
  const state=()=>ownerTx(async()=>{
   const result:Record<string,unknown[]>={};for(const name of snapshotTables){const rows=(await owner.query('SELECT * FROM public."'+name+'" WHERE tenant_id=$1',[tenant])).rows;
    result[name]=rows.sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)));}return result;

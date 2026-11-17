@@ -352,7 +352,9 @@ def main():
   ./dev test --suite business-domains-upgrade Verify typed domain storage, hierarchy, placement and concurrency
   ./dev test --suite business-domain-seed Verify domain seed recovery, provenance and repeatability
   ./dev test --suite authority-authn-foundation Verify inactive authentication through native PostgreSQL roles
-  ./dev test --suite authority-foundation Verify canonical authority storage and candidate closure
+  ./dev test --suite authority-foundation Verify historical SQL001–013 authority foundation
+  ./dev test --suite authority-read-original Verify explicit SQL013-to031 authority read upgrade
+  ./dev test --suite authority-read-current Verify populated SQL030-to031 authority read upgrade
   ./dev test --suite protected-authn  Verify isolated real OIDC and protected session lifecycle
   ./dev test --suite source-connectors-upgrade Verify source storage upgrade and native tenant isolation
   ./dev test --suite postgres-targets Verify isolated configurable PostgreSQL TLS and metadata boundaries
@@ -378,6 +380,8 @@ def main():
   ./dev test --suite freshness-upgrade Verify exact timestamp age storage and retained quality families
   ./dev test --suite freshness-scheduling-upgrade Verify clock-bounded scheduled freshness and retained evidence
   ./dev test --suite freshness-worker Verify timestamp aggregates against the local PostgreSQL source
+  ./dev test --suite volume-upgrade Verify exact table volume and retained quality evidence
+  ./dev test --suite volume-worker Verify table counts against the local PostgreSQL source
   ./dev authn-install --input FILE    Apply one private, typed inactive installation manifest
   ./dev test --suite relation-preparation-expiry Verify the original fifteen-minute lease and committed retries
   ./dev test --suite connectors       Run Python contract/source tests
@@ -419,6 +423,9 @@ Never use docker compose config output in public logs: it expands secrets.""")
     if args.command == "test" and args.suite == "glossary-population-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-glossary-population-upgrade.py"], timeout=1500); return
+    if args.command == "test" and args.suite == "volume-upgrade":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-quality-volume-upgrade.py", "--run-local"], timeout=900); return
     if args.command == "test" and args.suite == "freshness-scheduling-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-quality-freshness-scheduling-upgrade.py", "--run-local"], timeout=900); return
@@ -464,6 +471,12 @@ Never use docker compose config output in public logs: it expands secrets.""")
     if args.command == "test" and args.suite == "postgres-targets":
         require_local()
         run([sys.executable, "scripts/runtime-test-postgres-targets.py"], timeout=480); return
+    if args.command == "test" and args.suite == "authority-read-original":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-authority-read-upgrade.py", "--run-local", "--scope", "original"], timeout=1800); return
+    if args.command == "test" and args.suite == "authority-read-current":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-authority-read-upgrade.py", "--run-local", "--scope", "current"], timeout=1800); return
     if args.command == "test" and args.suite == "authority-foundation":
         require_local()
         run([sys.executable, "scripts/runtime-test-authority-foundation.py"], timeout=1800); return
@@ -512,6 +525,7 @@ Never use docker compose config output in public logs: it expands secrets.""")
         run([sys.executable, "scripts/runtime-install-quality-fixture.py", "--run-core", "--reference"], timeout=60)
         run([sys.executable, "scripts/runtime-install-quality-fixture.py", "--run-core", "--uniqueness"], timeout=60)
         run([sys.executable, "scripts/runtime-install-quality-fixture.py", "--run-core", "--range"], timeout=60)
+        run([sys.executable, "scripts/runtime-volume-fixture.py", "--run-core", "--step", "prepare"], timeout=60)
         run(COMPOSE + ["run", "--rm", "seed"], timeout=120)
     elif args.command == "status":
         output = capture(COMPOSE + ["ps", "--all", "--format", "json"], timeout=30)
@@ -528,6 +542,8 @@ Never use docker compose config output in public logs: it expands secrets.""")
             run([sys.executable, "scripts/runtime-test-connectors.py"], timeout=300)
         elif args.suite == "lineage-worker":
             run([sys.executable, "python/tests/test_postgres_lineage_conformance.py", "--run-core"], timeout=720)
+        elif args.suite == "volume-worker":
+            run([sys.executable, "scripts/runtime-test-volume-quality-worker.py", "--run-local"], timeout=900)
         elif args.suite == "freshness-worker":
             run([sys.executable, "scripts/runtime-test-freshness-quality-worker.py", "--run-local"], timeout=900)
         elif args.suite == "range-worker":

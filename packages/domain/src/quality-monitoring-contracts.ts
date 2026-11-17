@@ -4,7 +4,7 @@
 export type MonitorId = string; // canonical lower-case UUID
 export type MonitorHash = string; // lower-case SHA-256 over existing canonical JSON
 export type MonitorInstant = string; // real UTC YYYY-MM-DDTHH:mm:ss.sssZ; no coercion
-export type QualityFamily = 'completeness'|'reference-allowed-values'|'uniqueness'|'range'|'freshness';
+export type QualityFamily = 'completeness'|'reference-allowed-values'|'uniqueness'|'range'|'freshness'|'volume';
 export interface MonitorRulePin {id:MonitorId;version:number;definitionHash:MonitorHash}
 export const MONITOR_LIMITS = Object.freeze({
   definitionBytes:32768, textName:240, textPurpose:4096, textReason:4096,
@@ -69,7 +69,7 @@ export type QualityOccurrence = MonitorDefinitionPin & {
 );
 // Internal hash preimage only. No codes, credentials, source configuration, or native target
 // names are added to public monitor/issue DTOs. Source config hash covers the existing inputs.
-export interface QualityComparisonScope {
+export interface QualityColumnComparisonScope {
   formatVersion:1;monitorId:MonitorId;executorId:MonitorId;rule:MonitorRulePin;
   sourceId:MonitorId;sourceVersion:number;sourceConfigHash:MonitorHash;
   schemaAssetId:MonitorId;tableAssetId:MonitorId;columnAssetId:MonitorId;
@@ -81,8 +81,16 @@ export interface QualityComparisonScope {
     |{kind:'reference-allowed-values';setId:MonitorId;version:number;publicationHash:MonitorHash;
       codeStatus:'active';codesHash:MonitorHash}; // exact sorted effective codes; EXCLUDES asOf only
 }
+/** New table-only branch; existing column scope objects/hashes gain no keys. */
+export interface QualityTableComparisonScope {
+ formatVersion:1;targetKind:'table';monitorId:MonitorId;executorId:MonitorId;rule:MonitorRulePin;
+ sourceId:MonitorId;sourceVersion:number;sourceConfigHash:MonitorHash;
+ schemaAssetId:MonitorId;tableAssetId:MonitorId;columnAssetId:null;targetHash:MonitorHash;
+ family:{kind:'volume';volumeHash:MonitorHash};
+}
+export type QualityComparisonScope=QualityColumnComparisonScope|QualityTableComparisonScope;
 export type QualityIssueStatus = 'open'|'acknowledged'|'resolved'|'superseded';
-export interface QualityIssueView {
+export interface QualityColumnIssueView {
   id:MonitorId;version:number;monitorId:MonitorId;comparisonScopeHash:MonitorHash;rule:MonitorRulePin;
   category:'data-quality';severity:'info'|'warning'|'critical';tableAssetId:MonitorId;columnAssetId:MonitorId;
   status:QualityIssueStatus;episode:number;assignedOwnerId:MonitorId;ownerAvailable:boolean;
@@ -92,6 +100,12 @@ export interface QualityIssueView {
   resolution:{rootCause:string;remediation:string;reason:string;evidence:MonitorRunEvidence;at:MonitorInstant;by:MonitorId}|null;
   superseded:{reason:string;replacementMonitorId:MonitorId;replacementDefinitionVersion:number;at:MonitorInstant;by:MonitorId}|null;
 }
+/** The protected immutable volume rule pin proves this target; caller fields cannot.
+ * Column issue objects retain their exact old shape without targetKind. */
+export type QualityTableIssueView=Omit<QualityColumnIssueView,'columnAssetId'> & {
+ targetKind:'table';columnAssetId:null;
+};
+export type QualityIssueView=QualityColumnIssueView|QualityTableIssueView;
 export interface IssueVersionInput {expectedVersion:number;reason:string}
 export interface AssignQualityIssueInput extends IssueVersionInput {ownerId:MonitorId}
 export interface ResolveQualityIssueInput extends IssueVersionInput {

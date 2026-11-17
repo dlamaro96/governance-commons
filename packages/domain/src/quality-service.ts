@@ -58,7 +58,7 @@ export async function getQualityAsset(tx:Tx,p:Principal,assetId:string,query:Qua
  if(!eligibility||typeof eligibility.supported!=='boolean')throw integrity();
  const after=page.after===null?sql`true`:sql`r.id>${page.after}::uuid`;
  const rows=(await qualityQuery(tx,()=>sql<{value:unknown}>`select public.gc_quality_rule_view(r.id,r.current_version) as value from public.quality_rules r
-  where r.tenant_id=${p.tenantId}::uuid and r.column_asset_id=${assetId}::uuid and public.gc_quality_rule_visible(r.id,r.current_version,${p.id}::uuid)
+  where r.tenant_id=${p.tenantId}::uuid and (r.column_asset_id=${assetId}::uuid or r.table_asset_id=${assetId}::uuid) and public.gc_quality_rule_visible(r.id,r.current_version,${p.id}::uuid)
   and ${after} order by r.id limit ${page.limit+1}`.execute(tx))).rows;
  const items=rows.slice(0,page.limit).map(r=>ruleView(r.value));return bounded({assetId,eligibility,items,nextCursor:rows.length>page.limit?page.next(items.at(-1)!.id):null});
 }

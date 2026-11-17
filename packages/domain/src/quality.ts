@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import {createHash} from 'node:crypto';
 import {Problem} from '../../authz/src/index.ts';
-import {QUALITY_BUDGET,QUALITY_UNIQUENESS_BUDGET,QUALITY_FRESHNESS_LIMITS,QUALITY_ERRORS,type CompletenessRuleDefinition,type QualityRuleDefinition,type QualityReferenceMetadata,type QualityReferenceBinding,type QualitySource,type QualityPublishInput,type QualityRunInput,type QualityMeasurement,type QualityRuleView,type QualityRunView,type QualityClaim,type QualityCompletion,type QualityWorkflowInput,type QualityExecution,type QualityRangeBinding,type QualityFreshnessBinding,type QualityFreshnessSettings,type FreshnessMeasurement} from './quality-contracts.ts';
+import {QUALITY_BUDGET,QUALITY_UNIQUENESS_BUDGET,QUALITY_FRESHNESS_LIMITS,QUALITY_ERRORS,type CompletenessRuleDefinition,type QualityRuleDefinition,type QualityReferenceMetadata,type QualityReferenceBinding,type QualitySource,type QualityPublishInput,type QualityRunInput,type QualityMeasurement,type QualityRuleView,type QualityRunView,type QualityClaim,type QualityCompletion,type QualityWorkflowInput,type QualityExecution,type QualityRangeBinding,type QualityFreshnessBinding,type QualityFreshnessSettings,type FreshnessMeasurement,type QualityVolumeBinding,type QualityVolumeSettings,type VolumeMeasurement} from './quality-contracts.ts';
 export const QUALITY_UUID=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 const hash=/^[a-f0-9]{64}$/;
 export const qualityInvalid=()=>new Problem(400,'QUALITY_INPUT_INVALID','Provide exactly the declared quality fields and values.');
@@ -25,7 +25,8 @@ function instant(value:unknown):asserts value is string {
 function finite(value:unknown,max:number):asserts value is number {if(typeof value!=='number'||!Number.isFinite(value)||Object.is(value,-0)||value<0||value>max)throw qualityInvalid();}
 export function parseQualityDefinition(value:unknown):QualityRuleDefinition {
  const common=['formatVersion','kind','target','name','purpose','ownerId','severity'];
- const tag=qualityObject(value,common,['maximumNullBasisPoints','maximumInvalidBasisPoints','maximumDuplicateBasisPoints','maximumOutOfRangeBasisPoints','minimum','maximum','reference','comparison','nullPolicy','maximumAgeSeconds','maximumFutureSkewSeconds','clock','invalidTimestampPolicy']);
+ const tag=qualityObject(value,common,['maximumNullBasisPoints','maximumInvalidBasisPoints','maximumDuplicateBasisPoints','maximumOutOfRangeBasisPoints','minimum','maximum','reference','comparison','nullPolicy','maximumAgeSeconds','maximumFutureSkewSeconds','clock','invalidTimestampPolicy','minimumRows','maximumRows','scope']);
+ if(tag.kind==='volume')return parseVolumeDefinition(value);
  const reference=tag.kind==='reference-allowed-values',unique=tag.kind==='uniqueness',range=tag.kind==='range',freshness=tag.kind==='freshness';
  const v=qualityObject(value,[...common,...(freshness?['maximumAgeSeconds','maximumFutureSkewSeconds','comparison','clock','nullPolicy','invalidTimestampPolicy']:range?['maximumOutOfRangeBasisPoints','minimum','maximum','comparison','nullPolicy']:reference?['maximumInvalidBasisPoints','reference','comparison','nullPolicy']:unique?['maximumDuplicateBasisPoints','comparison','nullPolicy']:['maximumNullBasisPoints'])]);
  const target=qualityObject(v.target,['tableAssetId','columnAssetId']);qualityId(target.tableAssetId);qualityId(target.columnAssetId);qualityId(v.ownerId);
@@ -51,17 +52,18 @@ export function parseQualityRunInput(value:unknown):QualityRunInput {
  return {id:v.id,ruleVersion:v.ruleVersion,ruleHash:v.ruleHash,...(Object.hasOwn(v,'referenceAsOf')?{referenceAsOf:v.referenceAsOf as string}:{})};
 }
 export function parseQualityMeasurement(value:unknown):QualityMeasurement {
- const common=['formatVersion','kind','strategy','rowCount','nullCount','observedStartedAt','observedFinishedAt','elapsedMs','sourceVersion','adapterVersion','queryTemplate','estimatedCost','estimatedBytes'];
+ const common=['formatVersion','kind','strategy','rowCount','observedStartedAt','observedFinishedAt','elapsedMs','sourceVersion','adapterVersion','queryTemplate','estimatedCost','estimatedBytes'];
  const uniqueFields=['distinctCount','duplicateGroupCount','duplicateRowCount','totalValueBytes','largestValueBytes'];
  const freshFields=['nonFiniteCount','unrepresentableCount','futureCount','sourceObservedAt','latestObservedAt','ageMicroseconds','freshnessHash'];
- const tag=qualityObject(value,common,['invalidCount','referenceBindingHash','belowCount','aboveCount','rangeHash',...uniqueFields,...freshFields]),reference=tag.kind==='reference-allowed-values',unique=tag.kind==='uniqueness',range=tag.kind==='range',freshness=tag.kind==='freshness';
- const v=qualityObject(value,[...common,...(freshness?freshFields:range?['belowCount','aboveCount','rangeHash']:reference?['invalidCount','referenceBindingHash']:unique?uniqueFields:[])]);
- if(v.formatVersion!==1||!['completeness','reference-allowed-values','uniqueness','range','freshness'].includes(v.kind as string)||v.strategy!=='exact-bounded-role-scope'||v.adapterVersion!=='1'||v.queryTemplate!==(freshness?'postgresql-freshness-v1':range?'postgresql-range-v1':reference?'postgresql-reference-allowed-values-v1':unique?'postgresql-uniqueness-v1':'postgresql-completeness-v1'))throw qualityInvalid();
- qualityInteger(v.rowCount,0,QUALITY_BUDGET.maximumRows);qualityInteger(v.nullCount,0,v.rowCount);qualityInteger(v.elapsedMs,0,QUALITY_BUDGET.maximumSeconds*1000);
- if(range){qualityInteger(v.belowCount,0,v.rowCount-v.nullCount);qualityInteger(v.aboveCount,0,v.rowCount-v.nullCount);if(v.belowCount+v.aboveCount>v.rowCount-v.nullCount)throw qualityInvalid();digest(v.rangeHash);}
- if(reference){qualityInteger(v.invalidCount,0,v.rowCount-v.nullCount);digest(v.referenceBindingHash);}
+ const tag=qualityObject(value,common,['nullCount','volumeHash','invalidCount','referenceBindingHash','belowCount','aboveCount','rangeHash',...uniqueFields,...freshFields]),reference=tag.kind==='reference-allowed-values',unique=tag.kind==='uniqueness',range=tag.kind==='range',freshness=tag.kind==='freshness',volume=tag.kind==='volume';
+ const v=qualityObject(value,[...common,...(volume?['volumeHash']:['nullCount']),...(freshness?freshFields:range?['belowCount','aboveCount','rangeHash']:reference?['invalidCount','referenceBindingHash']:unique?uniqueFields:[])]);
+ if(v.formatVersion!==1||!['completeness','reference-allowed-values','uniqueness','range','freshness','volume'].includes(v.kind as string)||v.strategy!=='exact-bounded-role-scope'||v.adapterVersion!=='1'||v.queryTemplate!==(volume?'postgresql-volume-v1':freshness?'postgresql-freshness-v1':range?'postgresql-range-v1':reference?'postgresql-reference-allowed-values-v1':unique?'postgresql-uniqueness-v1':'postgresql-completeness-v1'))throw qualityInvalid();
+ qualityInteger(v.rowCount,0,QUALITY_BUDGET.maximumRows);if(volume)digest(v.volumeHash);else qualityInteger(v.nullCount,0,v.rowCount);qualityInteger(v.elapsedMs,0,QUALITY_BUDGET.maximumSeconds*1000);
+ const nullCount=volume?0:v.nullCount as number;
+ if(range){qualityInteger(v.belowCount,0,v.rowCount-nullCount);qualityInteger(v.aboveCount,0,v.rowCount-nullCount);if(v.belowCount+v.aboveCount>v.rowCount-nullCount)throw qualityInvalid();digest(v.rangeHash);}
+ if(reference){qualityInteger(v.invalidCount,0,v.rowCount-nullCount);digest(v.referenceBindingHash);}
  if(unique){
-  const n=v.rowCount-v.nullCount;qualityInteger(v.distinctCount,0,n);qualityInteger(v.duplicateGroupCount,0,n);qualityInteger(v.duplicateRowCount,0,n);
+  const n=v.rowCount-nullCount;qualityInteger(v.distinctCount,0,n);qualityInteger(v.duplicateGroupCount,0,n);qualityInteger(v.duplicateRowCount,0,n);
   qualityInteger(v.totalValueBytes,0,QUALITY_UNIQUENESS_BUDGET.maximumTotalValueBytes);qualityInteger(v.largestValueBytes,0,QUALITY_UNIQUENESS_BUDGET.maximumValueBytes);
   if(v.distinctCount!==n-v.duplicateRowCount+v.duplicateGroupCount||v.duplicateRowCount<2*v.duplicateGroupCount||
    (v.duplicateRowCount===0)!==(v.duplicateGroupCount===0)||(v.distinctCount===0)!==(n===0)||
@@ -75,7 +77,7 @@ export function parseQualityMeasurement(value:unknown):QualityMeasurement {
  return {...v} as unknown as QualityMeasurement;
 }
 export function qualityVerdict(measurement:QualityMeasurement,maximumBasisPoints:number):'PASS'|'FAIL'|'NO_DATA'{
- const checked=parseQualityMeasurement(measurement);if(checked.kind==='freshness')throw qualityInvalid();qualityInteger(maximumBasisPoints,0,10000);
+ const checked=parseQualityMeasurement(measurement);if(checked.kind==='freshness'||checked.kind==='volume')throw qualityInvalid();qualityInteger(maximumBasisPoints,0,10000);
  const denominator=checked.kind==='completeness'?checked.rowCount:checked.rowCount-checked.nullCount;
  const failures=checked.kind==='completeness'?checked.nullCount:checked.kind==='uniqueness'?checked.duplicateRowCount:checked.kind==='range'?checked.belowCount+checked.aboveCount:checked.invalidCount;
  return denominator===0?'NO_DATA':BigInt(failures)*10000n<=BigInt(denominator)*BigInt(maximumBasisPoints)?'PASS':'FAIL';
@@ -89,20 +91,21 @@ export function parseQualityRuleView(value:unknown):QualityRuleView {
 }
 export function parseQualityRunView(value:unknown):QualityRunView {
  const common=['id','ruleId','ruleVersion','ruleHash','requesterId','columnAssetId','tableAssetId','status','version','attempt','createdAt','startedAt','finishedAt','expiresAt','measurement','verdict','errorCode'];
- const tag=qualityObject(value,common,['kind','reference','range','freshness']),reference=tag.kind==='reference-allowed-values',unique=tag.kind==='uniqueness',range=tag.kind==='range',freshness=tag.kind==='freshness';
- const v=qualityObject(value,[...common,...(freshness?['kind','freshness']:range?['kind','range']:reference?['kind','reference']:unique?['kind']:[])]);
- const metadata=reference?parseQualityReferenceMetadata(v.reference):undefined,bounds=range?parseQualityRangeBinding(v.range):undefined,fresh=freshness?parseQualityFreshnessBinding(v.freshness):undefined;
- for(const key of ['id','ruleId','requesterId','columnAssetId','tableAssetId'])qualityId(v[key]);qualityInteger(v.ruleVersion);digest(v.ruleHash);qualityInteger(v.version);qualityInteger(v.attempt,0,3);
+ const tag=qualityObject(value,common,['kind','reference','range','freshness','volume']),reference=tag.kind==='reference-allowed-values',unique=tag.kind==='uniqueness',range=tag.kind==='range',freshness=tag.kind==='freshness',volume=tag.kind==='volume';
+ const v=qualityObject(value,[...common,...(volume?['kind','volume']:freshness?['kind','freshness']:range?['kind','range']:reference?['kind','reference']:unique?['kind']:[])]);
+ const metadata=reference?parseQualityReferenceMetadata(v.reference):undefined,bounds=range?parseQualityRangeBinding(v.range):undefined,fresh=freshness?parseQualityFreshnessBinding(v.freshness):undefined,vol=volume?parseQualityVolumeBinding(v.volume):undefined;
+ for(const key of ['id','ruleId','requesterId','tableAssetId'])qualityId(v[key]);if(volume){if(v.columnAssetId!==null)throw qualityInvalid();}else qualityId(v.columnAssetId);qualityInteger(v.ruleVersion);digest(v.ruleHash);qualityInteger(v.version);qualityInteger(v.attempt,0,3);
  instant(v.createdAt);instant(v.expiresAt);if(v.startedAt!==null)instant(v.startedAt);if(v.finishedAt!==null)instant(v.finishedAt);
  if(!['queued','running','succeeded','failed','cancelled'].includes(v.status as string))throw qualityInvalid();
  const terminal=['succeeded','failed','cancelled'].includes(v.status as string);if(terminal!==(v.finishedAt!==null))throw qualityInvalid();
  if(v.status==='succeeded'){const m=parseQualityMeasurement(v.measurement);
-  if(freshness?m.kind!=='freshness'||m.freshnessHash!==fresh!.freshnessHash:range?m.kind!=='range'||m.rangeHash!==bounds!.rangeHash:reference?m.kind!=='reference-allowed-values'||m.referenceBindingHash!==metadata!.bindingHash:m.kind!==(unique?'uniqueness':'completeness'))throw qualityInvalid();
-  const denominator=m.kind==='completeness'?m.rowCount:m.rowCount-m.nullCount;
-  if(!['PASS','FAIL','NO_DATA'].includes(v.verdict as string)||v.errorCode!==null||(denominator===0)!==(v.verdict==='NO_DATA'))throw qualityInvalid();if(freshness&&qualityFreshnessVerdict(m,fresh)!==v.verdict)throw qualityInvalid();}
+  if(volume?m.kind!=='volume'||m.volumeHash!==vol!.volumeHash:freshness?m.kind!=='freshness'||m.freshnessHash!==fresh!.freshnessHash:range?m.kind!=='range'||m.rangeHash!==bounds!.rangeHash:reference?m.kind!=='reference-allowed-values'||m.referenceBindingHash!==metadata!.bindingHash:m.kind!==(unique?'uniqueness':'completeness'))throw qualityInvalid();
+  if(volume){if(qualityVolumeVerdict(m,vol)!==v.verdict||v.errorCode!==null)throw qualityInvalid();}
+  else {if(m.kind==='volume')throw qualityInvalid();const denominator=m.kind==='completeness'?m.rowCount:m.rowCount-m.nullCount;
+   if(!['PASS','FAIL','NO_DATA'].includes(v.verdict as string)||v.errorCode!==null||(denominator===0)!==(v.verdict==='NO_DATA'))throw qualityInvalid();if(freshness&&qualityFreshnessVerdict(m,fresh)!==v.verdict)throw qualityInvalid();}}
  else {if(v.measurement!==null||v.verdict!==null)throw qualityInvalid();if(terminal?!QUALITY_ERRORS.includes(v.errorCode as never):v.errorCode!==null)throw qualityInvalid();}
  if(v.errorCode==='QUALITY_CLOCK_SKEW'&&!freshness)throw qualityInvalid();
- return {...v,...(metadata?{reference:metadata}:{}),...(bounds?{range:bounds}:{}),...(fresh?{freshness:fresh}:{}),measurement:v.measurement===null?null:parseQualityMeasurement(v.measurement)} as unknown as QualityRunView;
+ return {...v,...(metadata?{reference:metadata}:{}),...(bounds?{range:bounds}:{}),...(fresh?{freshness:fresh}:{}),...(vol?{volume:vol}:{}),measurement:v.measurement===null?null:parseQualityMeasurement(v.measurement)} as unknown as QualityRunView;
 }
 export function parseQualityCompletion(value:unknown):QualityCompletion {
  const v=qualityObject(value,['claimId','attempt'],['measurement','errorCode']);qualityId(v.claimId);qualityInteger(v.attempt,1,3);
@@ -118,13 +121,13 @@ function postgresText(value:unknown,maximum:number,bytes=false):asserts value is
   ||(bytes?Buffer.byteLength(value):[...value].length)>maximum)throw qualityInvalid();
 }
 export function parseQualityExecution(value:unknown):QualityExecution {
- const tag=qualityObject(value,['formatVersion','kind','target','budget'],['reference','range','freshness']),reference=tag.kind==='reference-allowed-values',unique=tag.kind==='uniqueness',range=tag.kind==='range',freshness=tag.kind==='freshness';
- const v=qualityObject(value,['formatVersion','kind','target','budget',...(freshness?['freshness']:range?['range']:reference?['reference']:[])]);if(v.formatVersion!==1||!['completeness','reference-allowed-values','uniqueness','range','freshness'].includes(v.kind as string))throw qualityInvalid();
- const t=qualityObject(v.target,['databaseOid','schemaOid','relationOid','attributeNumber','schemaName','tableName','columnName','dataType']);
+ const tag=qualityObject(value,['formatVersion','kind','target','budget'],['reference','range','freshness','volume']),reference=tag.kind==='reference-allowed-values',unique=tag.kind==='uniqueness',range=tag.kind==='range',freshness=tag.kind==='freshness',volume=tag.kind==='volume';
+ const v=qualityObject(value,['formatVersion','kind','target','budget',...(volume?['volume']:freshness?['freshness']:range?['range']:reference?['reference']:[])]);if(v.formatVersion!==1||!['completeness','reference-allowed-values','uniqueness','range','freshness','volume'].includes(v.kind as string))throw qualityInvalid();
+ const t=qualityObject(v.target,volume?['kind','databaseOid','schemaOid','relationOid','schemaName','tableName']:['databaseOid','schemaOid','relationOid','attributeNumber','schemaName','tableName','columnName','dataType']);
  for(const k of ['databaseOid','schemaOid','relationOid'])if(typeof t[k]!=='string'||!/^[1-9]\d{0,9}$/.test(t[k] as string)||Number(t[k])>4294967295)throw qualityInvalid();
- qualityInteger(t.attributeNumber,1,32767);for(const k of ['schemaName','tableName','columnName'])postgresText(t[k],63,true);postgresText(t.dataType,256);
+ for(const k of ['schemaName','tableName'])postgresText(t[k],63,true);if(volume){if(t.kind!=='table')throw qualityInvalid();}else {qualityInteger(t.attributeNumber,1,32767);postgresText(t.columnName,63,true);postgresText(t.dataType,256);}
  const budget=unique?QUALITY_UNIQUENESS_BUDGET:QUALITY_BUDGET;const b=qualityObject(v.budget,Object.keys(budget));for(const [k,expected] of Object.entries(budget))if(b[k]!==expected)throw qualityInvalid();
- return {...v,target:{...t},budget:{...b},...(freshness?{freshness:parseQualityFreshnessBinding(v.freshness)}:range?{range:parseQualityRangeBinding(v.range)}:reference?{reference:parseQualityReferenceBinding(v.reference)}:{})} as unknown as QualityExecution;
+ return {...v,target:{...t},budget:{...b},...(volume?{volume:parseQualityVolumeBinding(v.volume)}:freshness?{freshness:parseQualityFreshnessBinding(v.freshness)}:range?{range:parseQualityRangeBinding(v.range)}:reference?{reference:parseQualityReferenceBinding(v.reference)}:{})} as unknown as QualityExecution;
 }
 export function parseQualityClaim(value:unknown):QualityClaim {
  const tag=qualityObject(value,['status'],['runId','claimId','attempt','leaseExpiresAt','source','execution','retryAt','run']);
@@ -233,4 +236,31 @@ export function qualityFreshnessVerdict(measurement:unknown,binding:unknown):'PA
  if((m.futureCount>0)!==(latest!==null&&latest>source+BigInt(b.maximumFutureSkewSeconds)*1000000n))throw qualityInvalid();
  if(m.rowCount===m.nullCount)return 'NO_DATA';if(m.nonFiniteCount>0||m.unrepresentableCount>0||m.futureCount>0)return 'FAIL';
  if(m.ageMicroseconds===null)throw qualityInvalid();return BigInt(m.ageMicroseconds)<=BigInt(b.maximumAgeSeconds)*1000000n?'PASS':'FAIL';
+}
+
+/** Authored thresholds never set the execution row cap. */
+function volumeFields(value:unknown):QualityVolumeSettings {
+ const v=qualityObject(value,['minimumRows','maximumRows','comparison','scope'],['volumeHash']);
+ qualityInteger(v.minimumRows,0,QUALITY_BUDGET.maximumRows);qualityInteger(v.maximumRows,0,QUALITY_BUDGET.maximumRows);
+ if(v.minimumRows>v.maximumRows||v.comparison!=='row-count-inclusive'||v.scope!=='entire-table')throw qualityInvalid();
+ if(Object.hasOwn(v,'volumeHash'))digest(v.volumeHash);
+ return {minimumRows:v.minimumRows,maximumRows:v.maximumRows,comparison:'row-count-inclusive',scope:'entire-table'};
+}
+function parseVolumeDefinition(value:unknown):QualityRuleDefinition {
+ const v=qualityObject(value,['formatVersion','kind','target','name','purpose','ownerId','severity','minimumRows','maximumRows','comparison','scope']);
+ const target=qualityObject(v.target,['kind','tableAssetId']);qualityId(target.tableAssetId);qualityId(v.ownerId);
+ if(v.formatVersion!==1||v.kind!=='volume'||target.kind!=='table'||!['info','warning','critical'].includes(v.severity as string)||typeof v.name==='string'&&/[\t\r\n]/.test(v.name))throw qualityInvalid();
+ return {formatVersion:1,kind:'volume',target:{kind:'table',tableAssetId:target.tableAssetId},name:qualityText(v.name,240),purpose:qualityText(v.purpose,4096),ownerId:v.ownerId,severity:v.severity as 'info'|'warning'|'critical',...volumeFields({minimumRows:v.minimumRows,maximumRows:v.maximumRows,comparison:v.comparison,scope:v.scope})};
+}
+export function qualityVolumeBindingHash(value:unknown):string {
+ const v=volumeFields(value);return createHash('sha256').update(JSON.stringify({comparison:v.comparison,formatVersion:1,kind:'volume',maximumRows:v.maximumRows,minimumRows:v.minimumRows,scope:v.scope}),'utf8').digest('hex');
+}
+export function parseQualityVolumeBinding(value:unknown):QualityVolumeBinding {
+ const v=qualityObject(value,['minimumRows','maximumRows','comparison','scope','volumeHash']),fields=volumeFields(v);digest(v.volumeHash);
+ if(qualityVolumeBindingHash(fields)!==v.volumeHash)throw qualityInvalid();return {...fields,volumeHash:v.volumeHash};
+}
+export function qualityVolumeVerdict(measurement:unknown,binding:unknown):'PASS'|'FAIL' {
+ const m=parseQualityMeasurement(measurement),b=parseQualityVolumeBinding(binding);
+ if(m.kind!=='volume'||m.volumeHash!==b.volumeHash)throw qualityInvalid();
+ return m.rowCount>=b.minimumRows&&m.rowCount<=b.maximumRows?'PASS':'FAIL';
 }

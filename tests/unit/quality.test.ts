@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {Value} from '@sinclair/typebox/value';
-import {QUALITY_BUDGET,type CompletenessRuleDefinition,type QualityMeasurement,type QualityRunView} from '../../packages/domain/src/quality-contracts.ts';
+import {QUALITY_BUDGET,type CompletenessRuleDefinition,type QualityMeasurement,type QualityTarget,type QualityRunView} from '../../packages/domain/src/quality-contracts.ts';
 import {parseQualityDefinition,parseQualityPublish,parseQualityRunInput,parseQualityMeasurement,qualityVerdict,parseQualityRunView,parseQualityCompletion,parseQualityClaim,parseQualityExecution} from '../../packages/domain/src/quality.ts';
 import {parseQualityRequestJSON,qualityRawQuery,qualityHttp} from '../../apps/api/src/quality.ts';
 import {qualityFailure} from '../../packages/domain/src/quality-service.ts';
@@ -70,8 +70,8 @@ test('PostgreSQL execution preserves exact quoted names and bounds valid Unicode
  // A four-byte scalar counts once for datatype text, but four bytes in a name.
  const name='😀'.repeat(15)+'abc',datatype='😀'.repeat(256);
  assert.equal(Buffer.byteLength(name),63);
- assert.equal(parseQualityExecution({...execution,target:{...target,columnName:name,dataType:datatype}}).target.columnName,name);
- assert.equal(parseQualityExecution({...execution,target:{...target,dataType:datatype}}).target.dataType,datatype);
+ assert.equal((parseQualityExecution({...execution,target:{...target,columnName:name,dataType:datatype}}).target as QualityTarget).columnName,name);
+ assert.equal((parseQualityExecution({...execution,target:{...target,dataType:datatype}}).target as QualityTarget).dataType,datatype);
  invalid(()=>parseQualityExecution({...execution,target:{...target,columnName:name+'a'}}));
  invalid(()=>parseQualityExecution({...execution,target:{...target,dataType:datatype+'a'}}));
  for(const value of ['x\0y','x\ud800y','x\udc00y']){
