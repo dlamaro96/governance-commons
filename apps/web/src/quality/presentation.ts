@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import type {QualityRuleView,QualityRunView} from "../../../../packages/domain/src/quality-contracts.js";
+import type {QualityRuleDefinition,QualityRuleView,QualityRunView} from "../../../../packages/domain/src/quality-contracts.ts";
 /** Decimal percentage admission without floating-point rounding or clamping.
  * Arabic-Indic digits and the Arabic decimal mark are accepted explicitly. */
 export function percentageToBasisPoints(input:string):number|null {
@@ -31,5 +31,15 @@ export function qualityEvidenceMatches(run:QualityRunView,rule:QualityRuleView):
  if(rule.id!==run.ruleId||rule.version!==run.ruleVersion||rule.definitionHash!==run.ruleHash)return false;
  if(rule.definition.target.columnAssetId!==run.columnAssetId||rule.definition.target.tableAssetId!==run.tableAssetId)return false;
  if(run.kind==='reference-allowed-values')return rule.definition.kind==='reference-allowed-values'&&run.reference.setId===rule.definition.reference.setId&&(!run.measurement||(run.measurement.kind==='reference-allowed-values'&&run.measurement.referenceBindingHash===run.reference.bindingHash));
- return rule.definition.kind==='completeness'&&(!run.measurement||run.measurement.kind==='completeness');
+ if(run.kind==='uniqueness')return !Object.hasOwn(run,'reference')&&rule.definition.kind==='uniqueness'&&(!run.measurement||run.measurement.kind==='uniqueness');
+ return !Object.hasOwn(run,'kind')&&!Object.hasOwn(run,'reference')&&rule.definition.kind==='completeness'&&(!run.measurement||run.measurement.kind==='completeness');
+}
+
+/** Read the selected immutable family's threshold; do not reinterpret history
+ * using a later head's kind or borrow another family's similarly named field. */
+export function qualityThreshold(definition:QualityRuleDefinition):number {
+ switch(definition.kind){case 'completeness':return definition.maximumNullBasisPoints;case 'reference-allowed-values':return definition.maximumInvalidBasisPoints;case 'uniqueness':return definition.maximumDuplicateBasisPoints;}
+}
+export function qualityThresholdKey(kind:QualityRuleDefinition['kind']):'maximumNull'|'maximumInvalid'|'maximumDuplicate' {
+ return kind==='completeness'?'maximumNull':kind==='reference-allowed-values'?'maximumInvalid':'maximumDuplicate';
 }

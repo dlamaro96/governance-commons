@@ -1,5 +1,12 @@
 # Current state — 2026-11-17
 
+## Product checkpoint — 2026-11-17T03:22Z
+
+Shared core SQL001–024 is applied and immutable. Governed reference hierarchy/crosswalk and bulk-import journeys pass2/2 without retries or skips on ff8519b; all16 original EN/AR desktop/mobile captures were inspected. The real browser found and verified the repaired membership-denial403 mapping. Exact baked app bytes,24 migration checksums and owned-process cleanup pass. See `../verification/product-reference-browser-local.json`; earlier API168 and Source security3372217 remain separate recorded scopes. Full current regression and fresh hosted qualification remain required.
+
+Uniqueness quality is integrated for local runtime qualification: combined953 host tests and root/web types pass; the real PostgreSQL worker passes16 checks and7 measured runs. The final isolated SQL024→025 gate passes all88 predecessor/current cases, complete canonical-row preservation and replay, exact100-source/476-log readback and owned cleanup. SQL025 remains unapplied at this checkpoint. Next: rebuild shared core, apply SQL025, run its browser journey and full32-browser/API gates. Exact integer-range implementation has started privately on an adopted contract; SQL026 remains unapplied. Continue all remaining programme work. Product implementation takes priority; private dossiers, Azure costs and presentation work remain deferred. Root is the sole shared-runtime launcher.
+
+
 ## Product checkpoint — 2026-11-17T02:30Z
 
 Product implementation remains the priority. Shared SQL001–023 is applied and immutable. Reference-backed allowed-values quality passes real source execution and its browser journey. The final integrated SQL023→024 hierarchy/crosswalk upgrade passes; SQL024 is not yet applied to shared core. Bulk import passes five fresh PostgreSQL cases and the integrated host suite passes935 tests. Both corrected glossary journeys pass without retries or skips; all six actual captures were inspected. See `../verification/product-reference-integration-local.json` for exact scopes and retained failures.

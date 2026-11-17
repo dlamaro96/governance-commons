@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import {createHash} from 'node:crypto';
 import {Problem} from '../../authz/src/index.ts';
-import {QUALITY_BUDGET,QUALITY_ERRORS,type CompletenessRuleDefinition,type QualityRuleDefinition,type QualityReferenceMetadata,type QualityReferenceBinding,type QualitySource,type QualityPublishInput,type QualityRunInput,type QualityMeasurement,type QualityRuleView,type QualityRunView,type QualityClaim,type QualityCompletion,type QualityWorkflowInput,type QualityExecution} from './quality-contracts.ts';
+import {QUALITY_BUDGET,QUALITY_UNIQUENESS_BUDGET,QUALITY_ERRORS,type CompletenessRuleDefinition,type QualityRuleDefinition,type QualityReferenceMetadata,type QualityReferenceBinding,type QualitySource,type QualityPublishInput,type QualityRunInput,type QualityMeasurement,type QualityRuleView,type QualityRunView,type QualityClaim,type QualityCompletion,type QualityWorkflowInput,type QualityExecution} from './quality-contracts.ts';
 export const QUALITY_UUID=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 const hash=/^[a-f0-9]{64}$/;
 export const qualityInvalid=()=>new Problem(400,'QUALITY_INPUT_INVALID','Provide exactly the declared quality fields and values.');
@@ -25,13 +25,14 @@ function instant(value:unknown):asserts value is string {
 function finite(value:unknown,max:number):asserts value is number {if(typeof value!=='number'||!Number.isFinite(value)||Object.is(value,-0)||value<0||value>max)throw qualityInvalid();}
 export function parseQualityDefinition(value:unknown):QualityRuleDefinition {
  const common=['formatVersion','kind','target','name','purpose','ownerId','severity'];
- const tag=qualityObject(value,common,['maximumNullBasisPoints','maximumInvalidBasisPoints','reference','comparison','nullPolicy']);
- const reference=tag.kind==='reference-allowed-values';
- const v=qualityObject(value,[...common,...(reference?['maximumInvalidBasisPoints','reference','comparison','nullPolicy']:['maximumNullBasisPoints'])]);
+ const tag=qualityObject(value,common,['maximumNullBasisPoints','maximumInvalidBasisPoints','maximumDuplicateBasisPoints','reference','comparison','nullPolicy']);
+ const reference=tag.kind==='reference-allowed-values',unique=tag.kind==='uniqueness';
+ const v=qualityObject(value,[...common,...(reference?['maximumInvalidBasisPoints','reference','comparison','nullPolicy']:unique?['maximumDuplicateBasisPoints','comparison','nullPolicy']:['maximumNullBasisPoints'])]);
  const target=qualityObject(v.target,['tableAssetId','columnAssetId']);qualityId(target.tableAssetId);qualityId(target.columnAssetId);qualityId(v.ownerId);
- if(v.formatVersion!==1||!['completeness','reference-allowed-values'].includes(v.kind as string)||!['info','warning','critical'].includes(v.severity as string)||target.tableAssetId===target.columnAssetId)throw qualityInvalid();
+ if(v.formatVersion!==1||!['completeness','reference-allowed-values','uniqueness'].includes(v.kind as string)||!['info','warning','critical'].includes(v.severity as string)||target.tableAssetId===target.columnAssetId)throw qualityInvalid();
  if(typeof v.name==='string'&&/[\t\r\n]/.test(v.name))throw qualityInvalid();
  const shared={formatVersion:1 as const,target:{tableAssetId:target.tableAssetId,columnAssetId:target.columnAssetId},name:qualityText(v.name,240),purpose:qualityText(v.purpose,4096),ownerId:v.ownerId,severity:v.severity as CompletenessRuleDefinition['severity']};
+ if(unique){qualityInteger(v.maximumDuplicateBasisPoints,0,10000);if(v.comparison!=='utf8-exact'||v.nullPolicy!=='exclude')throw qualityInvalid();return {...shared,kind:'uniqueness',maximumDuplicateBasisPoints:v.maximumDuplicateBasisPoints,comparison:'utf8-exact',nullPolicy:'exclude'};}
  if(!reference){qualityInteger(v.maximumNullBasisPoints,0,10000);return {...shared,kind:'completeness',maximumNullBasisPoints:v.maximumNullBasisPoints};}
  qualityInteger(v.maximumInvalidBasisPoints,0,10000);const ref=qualityObject(v.reference,['setId','selection','codeStatus']);qualityId(ref.setId);if(ref.setId==='00000000-0000-0000-0000-000000000000')throw qualityInvalid();
  if(ref.selection!=='effective-at-run'||ref.codeStatus!=='active'||v.comparison!=='utf8-exact'||v.nullPolicy!=='exclude')throw qualityInvalid();
@@ -49,11 +50,20 @@ export function parseQualityRunInput(value:unknown):QualityRunInput {
 }
 export function parseQualityMeasurement(value:unknown):QualityMeasurement {
  const common=['formatVersion','kind','strategy','rowCount','nullCount','observedStartedAt','observedFinishedAt','elapsedMs','sourceVersion','adapterVersion','queryTemplate','estimatedCost','estimatedBytes'];
- const tag=qualityObject(value,common,['invalidCount','referenceBindingHash']),reference=tag.kind==='reference-allowed-values';
- const v=qualityObject(value,[...common,...(reference?['invalidCount','referenceBindingHash']:[])]);
- if(v.formatVersion!==1||!['completeness','reference-allowed-values'].includes(v.kind as string)||v.strategy!=='exact-bounded-role-scope'||v.adapterVersion!=='1'||v.queryTemplate!==(reference?'postgresql-reference-allowed-values-v1':'postgresql-completeness-v1'))throw qualityInvalid();
+ const uniqueFields=['distinctCount','duplicateGroupCount','duplicateRowCount','totalValueBytes','largestValueBytes'];
+ const tag=qualityObject(value,common,['invalidCount','referenceBindingHash',...uniqueFields]),reference=tag.kind==='reference-allowed-values',unique=tag.kind==='uniqueness';
+ const v=qualityObject(value,[...common,...(reference?['invalidCount','referenceBindingHash']:unique?uniqueFields:[])]);
+ if(v.formatVersion!==1||!['completeness','reference-allowed-values','uniqueness'].includes(v.kind as string)||v.strategy!=='exact-bounded-role-scope'||v.adapterVersion!=='1'||v.queryTemplate!==(reference?'postgresql-reference-allowed-values-v1':unique?'postgresql-uniqueness-v1':'postgresql-completeness-v1'))throw qualityInvalid();
  qualityInteger(v.rowCount,0,QUALITY_BUDGET.maximumRows);qualityInteger(v.nullCount,0,v.rowCount);qualityInteger(v.elapsedMs,0,QUALITY_BUDGET.maximumSeconds*1000);
  if(reference){qualityInteger(v.invalidCount,0,v.rowCount-v.nullCount);digest(v.referenceBindingHash);}
+ if(unique){
+  const n=v.rowCount-v.nullCount;qualityInteger(v.distinctCount,0,n);qualityInteger(v.duplicateGroupCount,0,n);qualityInteger(v.duplicateRowCount,0,n);
+  qualityInteger(v.totalValueBytes,0,QUALITY_UNIQUENESS_BUDGET.maximumTotalValueBytes);qualityInteger(v.largestValueBytes,0,QUALITY_UNIQUENESS_BUDGET.maximumValueBytes);
+  if(v.distinctCount!==n-v.duplicateRowCount+v.duplicateGroupCount||v.duplicateRowCount<2*v.duplicateGroupCount||
+   (v.duplicateRowCount===0)!==(v.duplicateGroupCount===0)||(v.distinctCount===0)!==(n===0)||
+   v.largestValueBytes>v.totalValueBytes||v.totalValueBytes>n*v.largestValueBytes)throw qualityInvalid();
+ }
+
  instant(v.observedStartedAt);instant(v.observedFinishedAt);const elapsed=Date.parse(v.observedFinishedAt)-Date.parse(v.observedStartedAt);
  if(elapsed<0||elapsed>31000||Math.abs(elapsed-v.elapsedMs)>1000||typeof v.sourceVersion!=='string'||!/^\d{5,16}$/.test(v.sourceVersion))throw qualityInvalid();
  finite(v.estimatedCost,QUALITY_BUDGET.maximumEstimatedCost);qualityInteger(v.estimatedBytes,0,QUALITY_BUDGET.maximumEstimatedBytes);
@@ -62,7 +72,7 @@ export function parseQualityMeasurement(value:unknown):QualityMeasurement {
 export function qualityVerdict(measurement:QualityMeasurement,maximumBasisPoints:number):'PASS'|'FAIL'|'NO_DATA'{
  const checked=parseQualityMeasurement(measurement);qualityInteger(maximumBasisPoints,0,10000);
  const denominator=checked.kind==='completeness'?checked.rowCount:checked.rowCount-checked.nullCount;
- const failures=checked.kind==='completeness'?checked.nullCount:checked.invalidCount;
+ const failures=checked.kind==='completeness'?checked.nullCount:checked.kind==='uniqueness'?checked.duplicateRowCount:checked.invalidCount;
  return denominator===0?'NO_DATA':BigInt(failures)*10000n<=BigInt(denominator)*BigInt(maximumBasisPoints)?'PASS':'FAIL';
 }
 export function parseQualityRuleView(value:unknown):QualityRuleView {
@@ -74,16 +84,15 @@ export function parseQualityRuleView(value:unknown):QualityRuleView {
 }
 export function parseQualityRunView(value:unknown):QualityRunView {
  const common=['id','ruleId','ruleVersion','ruleHash','requesterId','columnAssetId','tableAssetId','status','version','attempt','createdAt','startedAt','finishedAt','expiresAt','measurement','verdict','errorCode'];
- const tag=qualityObject(value,common,['kind','reference']),reference=Object.hasOwn(tag,'kind');
- const v=qualityObject(value,[...common,...(reference?['kind','reference']:[])]);
- if(reference&&v.kind!=='reference-allowed-values')throw qualityInvalid();
+ const tag=qualityObject(value,common,['kind','reference']),reference=tag.kind==='reference-allowed-values',unique=tag.kind==='uniqueness';
+ const v=qualityObject(value,[...common,...(reference?['kind','reference']:unique?['kind']:[])]);
  const metadata=reference?parseQualityReferenceMetadata(v.reference):undefined;
  for(const key of ['id','ruleId','requesterId','columnAssetId','tableAssetId'])qualityId(v[key]);qualityInteger(v.ruleVersion);digest(v.ruleHash);qualityInteger(v.version);qualityInteger(v.attempt,0,3);
  instant(v.createdAt);instant(v.expiresAt);if(v.startedAt!==null)instant(v.startedAt);if(v.finishedAt!==null)instant(v.finishedAt);
  if(!['queued','running','succeeded','failed','cancelled'].includes(v.status as string))throw qualityInvalid();
  const terminal=['succeeded','failed','cancelled'].includes(v.status as string);if(terminal!==(v.finishedAt!==null))throw qualityInvalid();
  if(v.status==='succeeded'){const m=parseQualityMeasurement(v.measurement);
-  if(reference?m.kind!=='reference-allowed-values'||m.referenceBindingHash!==metadata!.bindingHash:m.kind!=='completeness')throw qualityInvalid();
+  if(reference?m.kind!=='reference-allowed-values'||m.referenceBindingHash!==metadata!.bindingHash:m.kind!==(unique?'uniqueness':'completeness'))throw qualityInvalid();
   const denominator=m.kind==='completeness'?m.rowCount:m.rowCount-m.nullCount;
   if(!['PASS','FAIL','NO_DATA'].includes(v.verdict as string)||v.errorCode!==null||(denominator===0)!==(v.verdict==='NO_DATA'))throw qualityInvalid();}
  else {if(v.measurement!==null||v.verdict!==null)throw qualityInvalid();if(terminal?!QUALITY_ERRORS.includes(v.errorCode as never):v.errorCode!==null)throw qualityInvalid();}
@@ -103,12 +112,12 @@ function postgresText(value:unknown,maximum:number,bytes=false):asserts value is
   ||(bytes?Buffer.byteLength(value):[...value].length)>maximum)throw qualityInvalid();
 }
 export function parseQualityExecution(value:unknown):QualityExecution {
- const tag=qualityObject(value,['formatVersion','kind','target','budget'],['reference']),reference=tag.kind==='reference-allowed-values';
- const v=qualityObject(value,['formatVersion','kind','target','budget',...(reference?['reference']:[])]);if(v.formatVersion!==1||!['completeness','reference-allowed-values'].includes(v.kind as string))throw qualityInvalid();
+ const tag=qualityObject(value,['formatVersion','kind','target','budget'],['reference']),reference=tag.kind==='reference-allowed-values',unique=tag.kind==='uniqueness';
+ const v=qualityObject(value,['formatVersion','kind','target','budget',...(reference?['reference']:[])]);if(v.formatVersion!==1||!['completeness','reference-allowed-values','uniqueness'].includes(v.kind as string))throw qualityInvalid();
  const t=qualityObject(v.target,['databaseOid','schemaOid','relationOid','attributeNumber','schemaName','tableName','columnName','dataType']);
  for(const k of ['databaseOid','schemaOid','relationOid'])if(typeof t[k]!=='string'||!/^[1-9]\d{0,9}$/.test(t[k] as string)||Number(t[k])>4294967295)throw qualityInvalid();
  qualityInteger(t.attributeNumber,1,32767);for(const k of ['schemaName','tableName','columnName'])postgresText(t[k],63,true);postgresText(t.dataType,256);
- const b=qualityObject(v.budget,Object.keys(QUALITY_BUDGET));for(const k of Object.keys(QUALITY_BUDGET))if(b[k]!==QUALITY_BUDGET[k as keyof typeof QUALITY_BUDGET])throw qualityInvalid();
+ const budget=unique?QUALITY_UNIQUENESS_BUDGET:QUALITY_BUDGET;const b=qualityObject(v.budget,Object.keys(budget));for(const [k,expected] of Object.entries(budget))if(b[k]!==expected)throw qualityInvalid();
  return {...v,target:{...t},budget:{...b},...(reference?{reference:parseQualityReferenceBinding(v.reference)}:{})} as unknown as QualityExecution;
 }
 export function parseQualityClaim(value:unknown):QualityClaim {

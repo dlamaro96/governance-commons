@@ -1,5 +1,18 @@
 // SPDX-License-Identifier: Apache-2.0
 const en={
+ "uniqueness":"Uniqueness",
+ "maximumDuplicate":"Maximum duplicate percentage",
+ "uniquenessThresholdHint":"Enter 0 to 100, with up to two decimal places. Count every row in a repeated non-null group, including its first occurrence. SQL NULL is excluded.",
+ "uniquenessComparison":"Exact UTF-8 comparison: case, whitespace and leading zeros remain distinct. No trimming or Unicode normalization. PostgreSQL text and varchar columns only.",
+ "distinctValues":"Distinct non-null values",
+ "duplicateGroups":"Repeated value groups",
+ "duplicateRows":"All rows in repeated groups",
+ "duplicatePercentage":"Duplicate percentage",
+ "totalValueBytes":"Total logical value bytes",
+ "largestValueBytes":"Largest logical value bytes",
+ "logicalBytesHint":"Measured logical bytes are the UTF-8 sizes of non-null values, including repeated occurrences. They are not physical disk or network I/O. Planner estimates are shown separately.",
+ "uniquenessFormula":"Duplicate percentage = all rows in repeated non-null groups ÷ all non-null rows × 100. Every occurrence counts, not just excess copies. Pass requires the exact ratio to be at or below the pinned threshold.",
+
  "ruleKind":"Check type",
  "completeness":"Completeness",
  "reference-allowed-values":"Approved reference values",
@@ -39,7 +52,7 @@ const en={
  "EXPIRED":"Expired",
  "QUALITY_REFERENCE_UNAVAILABLE":"The approved reference values are unavailable for the requested date or current access.",
 
- quality:'Quality',intro:'Measure completeness or approved reference values in a PostgreSQL column through an authorized source worker.',scope:'These are data-quality measurements, separate from metadata documentation completeness.',
+ quality:'Quality',intro:'Measure completeness, uniqueness or approved reference values in a PostgreSQL column through an authorized source worker.',scope:'These are data-quality measurements, separate from metadata documentation completeness.',
  unsupported:'This asset does not support completeness checks',unsupportedBody:'Open a scanned PostgreSQL column. Eligibility does not guarantee current source access.',openColumns:'Open columns',unmonitored:'No quality rules configured',unmonitoredBody:'This column has no recorded quality rule. No quality pass is implied.',
  rules:'Quality rules',newRule:'Create rule',editRule:'Publish new version',ruleName:'Rule name',purpose:'Business purpose',owner:'Owner',severity:'Severity',info:'Information',warning:'Warning',critical:'Critical',
  maximumNull:'Maximum null percentage',thresholdHint:'Enter 0 to 100, with up to two decimal places. Empty strings are values; this rule counts SQL NULL only.',thresholdInvalid:'Enter a percentage from 0 to 100 with at most two decimal places.',
@@ -55,6 +68,19 @@ const en={
  QUALITY_RESOURCE_LIMIT:'The query exceeded its resource budget. No quality verdict was recorded.',QUALITY_TARGET_STALE:'The source target changed. Scan and review the current column before another run.',QUALITY_TARGET_UNSUPPORTED:'This source target does not support the check.',QUALITY_SOURCE_FAILED:'The source could not complete the check.',QUALITY_DEADLINE_EXCEEDED:'The execution deadline was exceeded. No quality verdict was recorded.',QUALITY_AUTHORITY_REVOKED:'Current authority no longer permits this execution.',QUALITY_ATTEMPTS_EXHAUSTED:'The allowed execution attempts were exhausted.',QUALITY_CANCELLED:'The execution was cancelled.',
 };
 const ar:Record<keyof typeof en,string>={
+ "uniqueness":"التفرّد",
+ "maximumDuplicate":"النسبة القصوى للتكرار",
+ "uniquenessThresholdHint":"أدخل قيمة من ٠ إلى ١٠٠ بمنزلتين عشريتين كحد أقصى. تُحسب جميع الصفوف في مجموعة متكررة غير فارغة، بما فيها الظهور الأول. تُستبعد SQL NULL.",
+ "uniquenessComparison":"مقارنة UTF-8 دقيقة: تبقى حالة الأحرف والمسافات والأصفار البادئة مميزة. لا تُحذف المسافات ولا يُجرى تطبيع Unicode. تدعم أعمدة PostgreSQL من نوع text وvarchar فقط.",
+ "distinctValues":"القيم غير الفارغة المميزة",
+ "duplicateGroups":"مجموعات القيم المتكررة",
+ "duplicateRows":"جميع الصفوف في المجموعات المتكررة",
+ "duplicatePercentage":"نسبة التكرار",
+ "totalValueBytes":"إجمالي بايتات القيم المنطقية",
+ "largestValueBytes":"بايتات أكبر قيمة منطقية",
+ "logicalBytesHint":"البايتات المنطقية المقاسة هي أحجام UTF-8 للقيم غير الفارغة، بما فيها مرات التكرار. وهي ليست عمليات إدخال أو إخراج فعلية للقرص أو الشبكة. تُعرض تقديرات المخطط بشكل منفصل.",
+ "uniquenessFormula":"نسبة التكرار = جميع الصفوف في المجموعات المتكررة غير الفارغة ÷ جميع الصفوف غير الفارغة × ١٠٠. يُحسب كل ظهور، وليس النسخ الإضافية فقط. يتطلب النجاح ألا تتجاوز النسبة الدقيقة الحد المثبت.",
+
  "ruleKind":"نوع الفحص",
  "completeness":"الاكتمال",
  "reference-allowed-values":"القيم المرجعية المعتمدة",
@@ -94,7 +120,7 @@ const ar:Record<keyof typeof en,string>={
  "EXPIRED":"منتهي",
  "QUALITY_REFERENCE_UNAVAILABLE":"القيم المرجعية المعتمدة غير متاحة للتاريخ المطلوب أو بالصلاحيات الحالية.",
 
- quality:'الجودة',intro:'قِس الاكتمال أو القيم المرجعية المعتمدة في عمود PostgreSQL عبر عامل مصدر مخوّل.',scope:'هذه قياسات لجودة البيانات، وهي منفصلة عن اكتمال توثيق البيانات الوصفية.',
+ quality:'الجودة',intro:'قِس الاكتمال أو التفرّد أو القيم المرجعية المعتمدة في عمود PostgreSQL عبر عامل مصدر مخوّل.',scope:'هذه قياسات لجودة البيانات، وهي منفصلة عن اكتمال توثيق البيانات الوصفية.',
  unsupported:'لا يدعم هذا الأصل فحوص الاكتمال',unsupportedBody:'افتح عمود PostgreSQL جرى مسحه. لا تضمن الأهلية استمرار الوصول إلى المصدر.',openColumns:'فتح الأعمدة',unmonitored:'لا توجد قواعد جودة معدّة',unmonitoredBody:'لم يُتحقق من هذا العمود بقاعدة اكتمال. ولا يعني ذلك نجاح الجودة.',
  rules:'قواعد الجودة',newRule:'إنشاء قاعدة',editRule:'نشر إصدار جديد',ruleName:'اسم القاعدة',purpose:'الغرض التجاري',owner:'المالك',severity:'الأهمية',info:'معلومات',warning:'تحذير',critical:'حرج',
  maximumNull:'النسبة القصوى للقيم الفارغة',thresholdHint:'أدخل قيمة من ٠ إلى ١٠٠ بمنزلتين عشريتين كحد أقصى. السلسلة النصية الفارغة قيمة؛ تحسب هذه القاعدة SQL NULL فقط.',thresholdInvalid:'أدخل نسبة من ٠ إلى ١٠٠ بمنزلتين عشريتين كحد أقصى.',

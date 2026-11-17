@@ -86,7 +86,7 @@ def request_payload(raw, operation="scan"):
         raise ValueError("source shape")
     if operation == "quality":
         # The family is inside duplicate-aware JSON. Large quality framing is
-        # not admission for completeness, unknown families or loose envelopes.
+        # not admission for completeness/uniqueness, unknown families or loose envelopes.
         execution = value['execution']
         if (len(raw) > MAX_REQUEST_BYTES and
                 (type(execution) is not dict or execution.get('kind') != REFERENCE_KIND)):

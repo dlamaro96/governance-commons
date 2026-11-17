@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-"""Exact bounded completeness or reference membership for one pinned column.
+"""Exact bounded quality measurements for one pinned column.
 
 No source-authored SQL or business rows cross this interface. Planner costs and
 widths are estimates, never a claim to enforce physical I/O or byte consumption.
@@ -30,6 +30,9 @@ MAX_ESTIMATED_BYTES = 67108864
 MAX_PLAN_BYTES = 65536
 MAX_PLAN_NODES = 64
 REFERENCE_KIND = 'reference-allowed-values'
+UNIQUENESS_KIND = 'uniqueness'
+MAX_VALUE_BYTES = 4096
+MAX_TOTAL_VALUE_BYTES = 67108864
 MAX_REFERENCE_CODES = 256
 REFERENCE_KEYS = frozenset(('setId', 'version', 'publicationHash', 'asOf',
                             'codeStatus', 'codes', 'bindingHash'))
@@ -38,6 +41,8 @@ TARGET_KEYS = frozenset(('databaseOid', 'schemaOid', 'relationOid', 'attributeNu
 BUDGETS = {'maximumRows': MAX_ROWS, 'maximumSeconds': MAX_SECONDS,
            'statementTimeoutMs': MAX_STATEMENT_MS, 'maximumEstimatedCost': MAX_ESTIMATED_COST,
            'maximumEstimatedBytes': MAX_ESTIMATED_BYTES}
+UNIQUENESS_BUDGETS = dict(BUDGETS, maximumValueBytes=MAX_VALUE_BYTES,
+                         maximumTotalValueBytes=MAX_TOTAL_VALUE_BYTES)
 
 
 def _fail(code='QUALITY_INPUT_INVALID'):
@@ -130,13 +135,14 @@ def validate_execution(source, execution):
     kind = execution['kind']
     _keys(execution, ('formatVersion', 'kind', 'target', 'budget', 'reference')
           if kind == REFERENCE_KIND else ('formatVersion', 'kind', 'target', 'budget'))
-    if type(execution['formatVersion']) is not int or execution['formatVersion'] != 1 or kind not in ('completeness', REFERENCE_KIND):
+    if type(execution['formatVersion']) is not int or execution['formatVersion'] != 1 or kind not in ('completeness', REFERENCE_KIND, UNIQUENESS_KIND):
         _fail()
     if kind == REFERENCE_KIND:
         validate_reference_binding(execution['reference'])
     target, budget = execution['target'], execution['budget']
     _keys(target, TARGET_KEYS)
-    _keys(budget, BUDGETS)
+    ceilings = UNIQUENESS_BUDGETS if kind == UNIQUENESS_KIND else BUDGETS
+    _keys(budget, ceilings)
     for key in ('databaseOid', 'schemaOid', 'relationOid'):
         value = target[key]
         if type(value) is not str or not re.fullmatch(r'[1-9][0-9]{0,9}', value) or int(value) > 4294967295:
@@ -147,7 +153,7 @@ def validate_execution(source, execution):
     _text(target['dataType'], 256)
     if target['schemaName'] != source['schema']:
         _fail('QUALITY_TARGET_STALE')
-    for key, maximum in BUDGETS.items():
+    for key, maximum in ceilings.items():
         value = budget[key]
         if key == 'maximumEstimatedCost':
             if type(value) not in (int, float) or not 0 < value <= maximum or not math.isfinite(value):
@@ -234,7 +240,69 @@ def _query(conn, statement, parameters, budget, deadline_at):
     return result
 
 
-def _measure(conn, target, budget, deadline_at, reference=None):
+def _measure_uniqueness(conn, relation, target, budget, deadline_at):
+    # octet_length(text) measures logical bytes without constructing each UTF-8
+    # bytea key. On UTF8 servers this is the exact later convert_to length.
+    encoding = _query(conn, "SELECT current_setting('server_encoding') AS encoding",
+                      None, budget, deadline_at).fetchone()
+    if type(encoding) is not dict or set(encoding) != {'encoding'} or encoding['encoding'] != 'UTF8':
+        _fail('QUALITY_TARGET_UNSUPPORTED')
+    bounded = sql.SQL('SELECT {} AS value FROM ONLY {} LIMIT %s').format(
+        sql.Identifier(target['columnName']), relation)
+    preflight = sql.SQL(
+        'SELECT count(*) AS row_count, count(*) FILTER (WHERE value IS NULL) AS null_count, '
+        'coalesce(sum(pg_catalog.octet_length(value)),0)::bigint AS total_value_bytes, '
+        'coalesce(max(pg_catalog.octet_length(value)),0) AS largest_value_bytes '
+        'FROM ({}) AS bounded').format(bounded)
+    parameters = (budget['maximumRows'] + 1,)
+    first_plan = _query(conn, sql.SQL('EXPLAIN (FORMAT JSON, ANALYZE FALSE, COSTS TRUE) ') + preflight,
+                        parameters, budget, deadline_at).fetchone()
+    cost, estimated_bytes = _estimates(first_plan.get('QUERY PLAN') if type(first_plan) is dict else None, budget)
+    counts = _query(conn, preflight, parameters, budget, deadline_at).fetchone()
+    fields = {'row_count', 'null_count', 'total_value_bytes', 'largest_value_bytes'}
+    if (type(counts) is not dict or set(counts) != fields
+            or any(type(counts[key]) is not int for key in fields)
+            or not 0 <= counts['null_count'] <= counts['row_count'] <= budget['maximumRows'] + 1):
+        _fail('SOURCE_DATABASE_ERROR')
+    rows, nulls = counts['row_count'], counts['null_count']
+    nonnull = rows - nulls
+    total, largest = counts['total_value_bytes'], counts['largest_value_bytes']
+    if not 0 <= largest <= total <= nonnull * largest:
+        _fail('SOURCE_DATABASE_ERROR')
+    if (rows > budget['maximumRows'] or largest > budget['maximumValueBytes']
+            or total > budget['maximumTotalValueBytes']):
+        _fail('QUALITY_RESOURCE_LIMIT')
+    # The preceding whole-column preflight proved that this repeatable-read
+    # snapshot fits all limits. No key conversion/grouping precedes that check.
+    aggregate = sql.SQL(
+        'SELECT count(*) AS distinct_count, '
+        'count(*) FILTER (WHERE group_size > 1) AS duplicate_group_count, '
+        'coalesce(sum(group_size) FILTER (WHERE group_size > 1),0)::bigint AS duplicate_row_count '
+        'FROM (SELECT count(*) AS group_size FROM ({}) AS bounded '
+        "WHERE value IS NOT NULL GROUP BY pg_catalog.convert_to(value,'UTF8')) AS grouped").format(bounded)
+    second_plan = _query(conn, sql.SQL('EXPLAIN (FORMAT JSON, ANALYZE FALSE, COSTS TRUE) ') + aggregate,
+                         parameters, budget, deadline_at).fetchone()
+    second_cost, second_bytes = _estimates(second_plan.get('QUERY PLAN') if type(second_plan) is dict else None, budget)
+    cost, estimated_bytes = cost + second_cost, estimated_bytes + second_bytes
+    if cost > budget['maximumEstimatedCost'] or estimated_bytes > budget['maximumEstimatedBytes']:
+        _fail('QUALITY_RESOURCE_LIMIT')
+    groups = _query(conn, aggregate, parameters, budget, deadline_at).fetchone()
+    group_fields = {'distinct_count', 'duplicate_group_count', 'duplicate_row_count'}
+    if (type(groups) is not dict or set(groups) != group_fields
+            or any(type(groups[key]) is not int or not 0 <= groups[key] <= nonnull for key in group_fields)):
+        _fail('SOURCE_DATABASE_ERROR')
+    distinct, duplicates, duplicate_rows = (groups[key] for key in
+                                           ('distinct_count', 'duplicate_group_count', 'duplicate_row_count'))
+    if (distinct != nonnull - duplicate_rows + duplicates or duplicate_rows < 2 * duplicates
+            or (duplicate_rows == 0) != (duplicates == 0)
+            or (distinct == 0) != (nonnull == 0)):
+        _fail('SOURCE_DATABASE_ERROR')
+    return rows, nulls, cost, estimated_bytes, {
+        'distinctCount': distinct, 'duplicateGroupCount': duplicates, 'duplicateRowCount': duplicate_rows,
+        'totalValueBytes': total, 'largestValueBytes': largest}
+
+
+def _measure(conn, target, budget, deadline_at, reference=None, *, uniqueness=False):
     conn.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY')
     relation = sql.Identifier(target['schemaName'], target['tableName'])
     # Lock by safely quoted name, then independently prove that the lock belongs
@@ -275,6 +343,11 @@ def _measure(conn, target, budget, deadline_at, reference=None):
             or row['inherited'] is not False or row['type_namespace'] != 'pg_catalog' or row['typtype'] != 'b'
             or row['typcategory'] in ('A', 'C', 'P') or row['type_element'] != '0'):
         _fail('QUALITY_TARGET_UNSUPPORTED')
+    if uniqueness:
+        if row['type_oid'] not in ('25', '1043'):
+            _fail('QUALITY_TARGET_UNSUPPORTED')
+        rows, nulls, cost, estimated_bytes, metrics = _measure_uniqueness(conn, relation, target, budget, deadline_at)
+        return rows, nulls, version, cost, estimated_bytes, metrics
     if reference is not None:
         # Actual built-in OIDs, not a name/category check, exclude domains,
         # char padding, extension types and user-authored casts/operators.
@@ -314,6 +387,7 @@ def execute(source, secret, tenant_id, execution):
     started, observed_started = time.monotonic(), _stamp()
     source, target, budget = validate_execution(source, execution)
     reference = validate_reference_binding(execution['reference']) if execution['kind'] == REFERENCE_KIND else None
+    uniqueness = execution['kind'] == UNIQUENESS_KIND
     deadline_at = started + budget['maximumSeconds']
     try:
         with deadline(_remaining(deadline_at)):
@@ -328,19 +402,21 @@ def execute(source, secret, tenant_id, execution):
                         conn = psycopg.connect(**kwargs, row_factory=dict_row)
                         resources.own(conn.close)
                     set_json_loads(_plan_json, context=conn)
-                    measured = _measure(conn, target, budget, deadline_at, reference)
+                    measured = _measure(conn, target, budget, deadline_at, reference, uniqueness=uniqueness)
                     rows, nulls, version, cost, estimated_bytes = measured[:5]
             # Connection close (rollback) and CA cleanup are inside the original
             # wall deadline. No connection context manager can print DB details.
             _remaining(deadline_at)
-            result = {'formatVersion': 1, 'kind': REFERENCE_KIND if reference is not None else 'completeness', 'strategy': 'exact-bounded-role-scope',
+            result = {'formatVersion': 1, 'kind': UNIQUENESS_KIND if uniqueness else REFERENCE_KIND if reference is not None else 'completeness', 'strategy': 'exact-bounded-role-scope',
                     'rowCount': rows, 'nullCount': nulls, 'observedStartedAt': observed_started,
                     'observedFinishedAt': _stamp(), 'elapsedMs': math.floor((time.monotonic() - started) * 1000),
                     'sourceVersion': version, 'adapterVersion': '1',
-                    'queryTemplate': 'postgresql-reference-allowed-values-v1' if reference is not None else 'postgresql-completeness-v1',
+                    'queryTemplate': 'postgresql-uniqueness-v1' if uniqueness else 'postgresql-reference-allowed-values-v1' if reference is not None else 'postgresql-completeness-v1',
                     'estimatedCost': cost, 'estimatedBytes': estimated_bytes}
             if reference is not None:
                 result.update(invalidCount=measured[5], referenceBindingHash=reference['bindingHash'])
+            if uniqueness:
+                result.update(measured[5])
             return result
     except TargetPolicyError as error:
         raise ScanFailure(error.code) from None

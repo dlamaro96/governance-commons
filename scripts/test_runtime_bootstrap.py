@@ -27,7 +27,7 @@ class BootstrapPersistenceTests(unittest.TestCase):
         (self.root/'scripts').mkdir()
         (self.root/'deploy/compose').mkdir(parents=True)
         shutil.copyfile(ROOT/'scripts/runtime-bootstrap.py',self.root/'scripts/runtime-bootstrap.py')
-        for filename in ('source-fixture.sql','reference-quality-fixture.sql'):
+        for filename in ('source-fixture.sql','reference-quality-fixture.sql','uniqueness-quality-fixture.sql'):
             shutil.copyfile(ROOT/'deploy/compose'/filename,self.root/'deploy/compose'/filename)
         self.local = self.root/'.local'
         self.provider = self.local/'source-credentials/secrets.json'

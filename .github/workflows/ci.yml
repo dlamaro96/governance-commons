@@ -69,6 +69,10 @@ jobs:
         run: python3 scripts/test_reference_structure_upgrade.py
       - name: Isolated reference import qualification controls
         run: python3 scripts/test_runtime_reference_import.py
+      - name: Isolated uniqueness upgrade qualification controls
+        run: python3 scripts/test_quality_uniqueness_upgrade.py
+      - name: Owned uniqueness worker qualification controls
+        run: python3 scripts/test_uniqueness_worker_gate.py
       - name: Isolated developer command routing
         run: python3 scripts/test_runtime_routing.py
       - name: Application build admission and image integrity controls
@@ -243,9 +247,15 @@ jobs:
       - name: Verify bounded reference import reconciliation and current authority
         id: reference_import
         run: ./dev test --suite reference-import
+      - name: Verify uniqueness upgrade, immutable measurements and retained quality families
+        id: uniqueness_upgrade
+        run: ./dev test --suite uniqueness-upgrade
+      - name: Verify exact duplicate groups against the live synthetic source
+        id: uniqueness_worker
+        run: ./dev test --suite uniqueness-worker
       - name: Verify browser acceptance and accessibility
         id: browser
-        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts tests/e2e/source-connectors.spec.ts tests/e2e/postgres-configuration.spec.ts tests/e2e/approvals.spec.ts tests/e2e/glossary.spec.ts tests/e2e/quality.spec.ts tests/e2e/lineage.spec.ts tests/e2e/classification.spec.ts tests/e2e/reference-data.spec.ts tests/e2e/reference-quality.spec.ts tests/e2e/reference-structures.spec.ts tests/e2e/reference-import.spec.ts
+        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts tests/e2e/source-connectors.spec.ts tests/e2e/postgres-configuration.spec.ts tests/e2e/approvals.spec.ts tests/e2e/glossary.spec.ts tests/e2e/quality.spec.ts tests/e2e/lineage.spec.ts tests/e2e/classification.spec.ts tests/e2e/reference-data.spec.ts tests/e2e/reference-quality.spec.ts tests/e2e/reference-structures.spec.ts tests/e2e/reference-import.spec.ts tests/e2e/quality-uniqueness.spec.ts
       - name: Verify protected OIDC and session lifecycle on the exact built image
         id: protected_authn
         run: python3 scripts/runtime-protected-ci.py
@@ -282,6 +292,8 @@ jobs:
           GC_REFERENCE_QUALITY_WORKER_RESULT: ${{ steps.reference_quality_worker.outcome }}
           GC_REFERENCE_STRUCTURE_UPGRADE_RESULT: ${{ steps.reference_structure_upgrade.outcome }}
           GC_REFERENCE_IMPORT_RESULT: ${{ steps.reference_import.outcome }}
+          GC_UNIQUENESS_UPGRADE_RESULT: ${{ steps.uniqueness_upgrade.outcome }}
+          GC_UNIQUENESS_WORKER_RESULT: ${{ steps.uniqueness_worker.outcome }}
           GC_BROWSER_RESULT: ${{ steps.browser.outcome }}
           GC_PROTECTED_AUTHN_RESULT: ${{ steps.protected_authn.outcome }}
         run: python3 policies/ci_evidence.py

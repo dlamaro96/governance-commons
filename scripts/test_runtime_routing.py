@@ -62,8 +62,31 @@ class RuntimeRoutingTests(unittest.TestCase):
                 patch.object(runtime, 'capture') as capture, patch.object(runtime, 'run') as run:
             runtime.main()
         self.assertIn('./dev test --suite postgres-targets', output.getvalue())
+        self.assertIn('./dev test --suite uniqueness-upgrade', output.getvalue())
+        self.assertIn('./dev test --suite uniqueness-worker', output.getvalue())
         capture.assert_not_called()
         run.assert_not_called()
+
+    def test_both_uniqueness_gates_refuse_remote_and_unavailable_context(self):
+        for suite in ('uniqueness-upgrade', 'uniqueness-worker'):
+            for override, endpoint in (('tcp://remote.invalid:2375', 'unix:///local.sock'), ('', 'ssh://remote.invalid'), ('', None)):
+                with self.subTest(suite=suite, override=override, endpoint=endpoint), \
+                        patch.object(sys, 'argv', ['dev', 'test', '--suite', suite]), \
+                        patch.dict(os.environ, {'DOCKER_HOST': override}), \
+                        patch.object(runtime, 'capture', return_value=json.dumps([{'Endpoints': {'docker': {'Host': endpoint}}}]) if endpoint else 'invalid'), \
+                        patch.object(runtime, 'require_bootstrap'), patch.object(runtime, 'run') as run:
+                    with self.assertRaises(SystemExit):
+                        runtime.main()
+                    run.assert_not_called()
+
+    def test_uniqueness_worker_missing_bootstrap_cannot_even_inspect_or_launch_core(self):
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'uniqueness-worker']), \
+                patch.object(runtime, 'require_bootstrap', side_effect=SystemExit('bootstrap unavailable')), \
+                patch.object(runtime, 'capture') as capture, patch.object(runtime, 'run') as run:
+            with self.assertRaisesRegex(SystemExit, '^bootstrap unavailable$'):
+                runtime.main()
+            capture.assert_not_called()
+            run.assert_not_called()
 
 
 if __name__ == '__main__':

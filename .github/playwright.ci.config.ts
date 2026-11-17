@@ -33,5 +33,6 @@ export default defineConfig({
     { name: 'reference-quality', testMatch: /reference-quality\.spec\.ts/, dependencies: ['reference-data'] },
     { name: 'reference-structures', testMatch: /reference-structures\.spec\.ts/, dependencies: ['reference-quality'] },
     { name: 'reference-import', testMatch: /reference-import\.spec\.ts/, dependencies: ['reference-structures'] },
+    { name: 'quality-uniqueness', testMatch: /quality-uniqueness\.spec\.ts/, dependencies: ['reference-import'] },
   ],
 });

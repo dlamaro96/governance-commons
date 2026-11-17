@@ -1505,6 +1505,15 @@
         "evidence_sha256": "869f0f7d806ee254cd6cf7cb6a2aaf53a97caf9c7308b38df205c48de43da9ed",
         "method": "Exact executed-source hashes and private native/browser/worker receipts with separate runtime and release statuses."
       }
+    },
+    {
+      "path": "docs/verification/product-reference-browser-local.json",
+      "scope": "reference-structures-import-browser-local",
+      "source_binding": {
+        "implementation_commit": "ff8519b26ce552234ce26a74feb12c86c00638cd",
+        "evidence_sha256": "fffd10eac5f6c818b3df4f5dd9d4f1be3f28ea2738b6900f64738ce0a7684d45",
+        "method": "Exact baked application and24migration readback; two real no-retry browser journeys and16original visual reviews. Earlier API168 scope remains separate."
+      }
     }
   ],
   "limitations": [

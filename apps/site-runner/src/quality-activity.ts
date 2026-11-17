@@ -37,7 +37,7 @@ export function createQualityActivity(config:{apiUrl:string;apiToken:string;work
     }catch{completion={claimId,attempt:claim.attempt,errorCode:'QUALITY_SOURCE_FAILED'};}
    }
    const finished=await api(`/internal/quality-runs/${input.runId}/finish`,{tenantId:input.tenantId,body:completion,timeoutMs:35000,maximum:16384});
-   if(finished.status!==200)throw 0;const run=parseQualityRunView(qualityObject(finished.body,['run']).run);if(run.id!==input.runId||(claim.execution.kind==='reference-allowed-values'?run.kind!=='reference-allowed-values'||run.reference.bindingHash!==claim.execution.reference.bindingHash:run.kind!==undefined))throw 0;return terminal(run);
+   if(finished.status!==200)throw 0;const run=parseQualityRunView(qualityObject(finished.body,['run']).run);if(run.id!==input.runId||(claim.execution.kind==='reference-allowed-values'?run.kind!=='reference-allowed-values'||run.reference.bindingHash!==claim.execution.reference.bindingHash:run.kind!==(claim.execution.kind==='uniqueness'?'uniqueness':undefined)))throw 0;return terminal(run);
   }catch{
    // No private source, measurements, secrets, remote response or exception can
    // enter the durable history. Retry obtains a fresh canonical claim or busy.

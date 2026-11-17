@@ -20795,7 +20795,8 @@
       "owner": "governance-commons maintainers",
       "milestone": "M2",
       "partial_evidence": [
-        "docs/verification/product-reference-integration-local.json"
+        "docs/verification/product-reference-integration-local.json",
+        "docs/verification/product-reference-browser-local.json"
       ]
     },
     {
@@ -21022,7 +21023,8 @@
       "owner": "governance-commons maintainers",
       "milestone": "M2",
       "partial_evidence": [
-        "docs/verification/product-reference-integration-local.json"
+        "docs/verification/product-reference-integration-local.json",
+        "docs/verification/product-reference-browser-local.json"
       ]
     },
     {
@@ -21098,7 +21100,8 @@
       "owner": "governance-commons maintainers",
       "milestone": "M2",
       "partial_evidence": [
-        "docs/verification/product-reference-integration-local.json"
+        "docs/verification/product-reference-integration-local.json",
+        "docs/verification/product-reference-browser-local.json"
       ]
     },
     {
@@ -43789,7 +43792,8 @@
       "owner": "governance-commons maintainers",
       "milestone": "M10",
       "partial_evidence": [
-        "docs/verification/product-reference-integration-local.json"
+        "docs/verification/product-reference-integration-local.json",
+        "docs/verification/product-reference-browser-local.json"
       ]
     },
     {
@@ -54822,7 +54826,8 @@
       "owner": "governance-commons maintainers",
       "milestone": "M0",
       "partial_evidence": [
-        "docs/verification/product-reference-integration-local.json"
+        "docs/verification/product-reference-integration-local.json",
+        "docs/verification/product-reference-browser-local.json"
       ]
     },
     {
