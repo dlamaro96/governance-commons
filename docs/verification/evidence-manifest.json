@@ -1529,7 +1529,7 @@
       "scope": "quality-monitoring-local",
       "source_binding": {
         "implementation_commit": "a3d8f55620b4c762fb88473c222e5ba05c86b7c9",
-        "evidence_sha256": "9819d0b608fa3441efc1907d0a8ce887afedeb044d50462b45330153cf0e227c",
+        "evidence_sha256": "d0d1d20b1955b7126e5d6bbbdf800dbb41b8f5d0e1d9d2dd03da4f99845e7f2a",
         "method": "Exact committed native112 and baked293 source bindings;175 upgrade cases, real scheduled browser workflow/eight inspected frames,168 API and1040 host cases. Other scopes remain distinct."
       }
     }

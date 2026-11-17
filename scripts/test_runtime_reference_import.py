@@ -82,6 +82,20 @@ class Controls(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             gate.migrations()
 
+    def test_current_schema_binds_all_28_migrations_including_freshness(self):
+        self.assertEqual(len(gate.NAMES), 28)
+        self.assertEqual(gate.NAMES[-1], '028_quality_freshness.sql')
+        before = {row['path']: row['sha256'] for row in gate.sources()}
+        for name in gate.NAMES:
+            self.assertIn('packages/db/migrations/' + name, before)
+        path = 'packages/db/migrations/028_quality_freshness.sql'
+        self.write(path, '-- changed current migration')
+        after = {row['path']: row['sha256'] for row in gate.sources()}
+        self.assertNotEqual(before[path], after[path])
+        (self.root / path).unlink()
+        with self.assertRaises(RuntimeError):
+            gate.sources()
+
     def test_transitive_imports_and_missing_source_refusal(self):
         self.write(gate.TEST, "import {x} from '../../packages/domain/src/leaf.js';\nawait import('./side.ts');\n")
         self.write('packages/domain/src/leaf.ts', "export {x} from './deep/index.ts';\n")

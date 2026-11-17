@@ -6,6 +6,7 @@ import {readFileSync} from 'node:fs';
 import {randomUUID} from 'node:crypto';
 import test,{type TestContext} from 'node:test';
 import pg from 'pg';
+import {observePopulationPool} from '../fixtures/glossary-population-diagnostic.ts';
 import {Kysely,PostgresDialect} from 'kysely';
 import {sql,type Tx} from '../../packages/db/src/index.ts';
 import {Problem,type Principal} from '../../packages/authz/src/index.ts';
@@ -29,9 +30,9 @@ type TypeView=Awaited<ReturnType<typeof createAssetType>>['type'];
 type RelationView=Awaited<ReturnType<typeof createRelationType>>['type'];
 const typePin=(t:TypeView)=>({typeId:t.typeId,modelId:t.id,version:t.version,definitionHash:t.definitionHash,resolutionHash:t.resolutionHash});
 const attributes=(name='Net revenue')=>({translations:[{locale:'en',name,definition:'Sales after approved adjustments.',synonyms:['Adjusted revenue'],abbreviations:['NR'],examples:['Synthetic quarterly revenue.']}]});
-async function fixture(t:TestContext){
+async function fixture(t:TestContext,diagnostic:ReturnType<typeof observePopulationPool>){
  const owner=new pg.Client({connectionString:config.owner});
- const store=new Kysely<Record<string,any>>({dialect:new PostgresDialect({pool:new pg.Pool({connectionString:config.legacy,max:1,connectionTimeoutMillis:5000})})});
+ const store=new Kysely<Record<string,any>>({dialect:new PostgresDialect({pool:diagnostic.pool})});
  t.after(async()=>{await store.destroy();await owner.end();});await owner.connect();
  const tenant=randomUUID(),author=randomUUID(),reviewer=randomUUID(),second=randomUUID(),reader=randomUUID(),workflowId='publish_'+randomUUID().replaceAll('-','');
  await owner.query('BEGIN');try{
@@ -121,17 +122,25 @@ async function seedUnrelatedPopulation(f:Fixture,model:TypeView){
 }
 
 test('native glossary publication retains all twelve affected policies with 11176 unrelated assets within its original budget',async t=>{
- const f=await fixture(t),noise=await f.type({formatVersion:1,id:'population_noise',version:1,parents:[],attributes:{},overrideAttributes:[],requiredOwner:false,
+ const diagnostic=observePopulationPool(new pg.Pool({connectionString:config.legacy,max:1,connectionTimeoutMillis:5000}));
+ try{
+ const f=await fixture(t,diagnostic),noise=await f.type({formatVersion:1,id:'population_noise',version:1,parents:[],attributes:{},overrideAttributes:[],requiredOwner:false,
   lifecycle:{initial:'active',states:['active'],transitions:[]}});
+ diagnostic.phase('population');
  assert.equal(await seedUnrelatedPopulation(f,noise),11176);
  // The target is created before the policies. All twelve policies then admit
  // the staged new business term, including eleven with no requested/live edge.
+ diagnostic.phase('target');
  const target=await f.makeTerm(),policies:RelationView[]=[];
+ diagnostic.phase('policies');
  for(let index=0;index<12;index++)policies.push(await f.relation({id:`population_link_${index}`,label:`Synthetic relation ${index}`}));
  const typeIds=policies.map(p=>p.relationTypeId).sort();assert.equal(new Set(typeIds).size,12);
+ diagnostic.phase('proposal');
  const proposal=await f.ready(f.input({publication:f.publication({links:[f.link(policies[0],target)]})}));
  assert.equal((await f.as(tx=>tx.selectFrom('relations').select(sql<string>`count(*)::text`.as('count')).executeTakeFirstOrThrow())).count,'0');
+ diagnostic.phase('publication');
  const started=performance.now(),result=await f.publish(proposal),elapsedMs=performance.now()-started;
+ diagnostic.phase('assertions');
  assert.equal(result.status,'succeeded');assert.ok(result.result.graphReceiptId);
  assert.ok(elapsedMs<30000,'Successful publication must retain the unchanged thirty-second transaction budget');
  const graphId=result.result.graphReceiptId!,assetIds=[target.id,proposal.resourceId].sort();
@@ -172,8 +181,10 @@ test('native glossary publication retains all twelve affected policies with 1117
  const beforeReplay=await state();assert.equal(beforeReplay.counts.typed,'5382');assert.equal(beforeReplay.counts.untyped,'5794');
  assert.equal(beforeReplay.counts.edges,'1');assert.equal(beforeReplay.counts.bindings,'0');assert.equal(beforeReplay.counts.receipts,'1');
  assert.equal(beforeReplay.request.status,'succeeded');assert.equal(beforeReplay.asset.version,1);
+ diagnostic.phase('replay');
  const replayStarted=performance.now();assert.deepEqual(await f.publish(proposal),result);
  assert.deepEqual(await state(),beforeReplay,'Exact sealed replay leaves all canonical revisions, journals and graph receipts unchanged');
  assert.deepEqual((await f.as(tx=>tx.selectFrom('relation_graph_receipts').select('receipt').where('id','=',graphId).executeTakeFirstOrThrow())).receipt,receipt.receipt);
  t.diagnostic(JSON.stringify({population:11176,typed:5382,untyped:5794,affectedPolicies:12,publicationMs:Math.round(elapsedMs),replayMs:Math.round(performance.now()-replayStarted)}));
+ }catch(error){throw diagnostic.failure(error);}
 });

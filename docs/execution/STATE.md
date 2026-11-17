@@ -1,5 +1,11 @@
 # Current state — 2026-11-17
 
+## Product integration — 2026-11-17T05:58Z
+
+SQL001–028 is now applied and immutable in shared core. PostgreSQL latest-observation freshness is integrated through the real worker, Temporal and UI. Native232, real source18 checks/14 measurements, host1079, Python114, types/build and the one-journey browser target pass; all24 target English/Arabic desktop/mobile captures were inspected. Current glossary population and reference import native gates pass. Full35 browser regression is running; current API regression remains pending. Exact private artifacts are retained for the post-regression evidence checkpoint. No whole-capability or release claim.
+
+Published6d0b9a6 Source security44025508599 passes; its Development44025508601 fails in API authorization and is under diagnosis. SQL029 scheduled freshness remains private under native qualification and is not applied. Root remains sole shared-runtime launcher. Product first; private reports, Azure costs and presentation polish remain deferred. All remaining programme requirements stay in scope.
+
 ## Product checkpoint — 2026-11-17T05:37Z
 
 Product remains the priority. Shared SQL001–027 is applied and immutable. UTC scheduled quality checks now create deduplicated incidents, in-app notifications and verified recovery/reopening history. Local native175, historical uniqueness88/range122, API168, host1040, types and production build pass. The real no-retry monitoring browser journey passes; all eight original English/Arabic frames were inspected. See `../verification/product-quality-monitoring-local.json` for exact source/image bindings and limitations.

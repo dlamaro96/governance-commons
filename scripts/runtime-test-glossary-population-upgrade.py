@@ -4,11 +4,16 @@
 from datetime import datetime, timezone
 import importlib.util
 import json
+import os
+import sys
+import time
 from pathlib import Path
 import re
 import shutil
 
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT/'policies'))
+import glossary_population_diagnostics as diagnostics
 spec=importlib.util.spec_from_file_location('glossary_population_upgrade_base',ROOT/'scripts/runtime-test-relation-scope-upgrade.py')
 base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
 REPORT=ROOT/'.local/evidence/glossary-population-upgrade.json'
@@ -22,19 +27,7 @@ tap_summary=base.base.base.base.base.tap_summary
 
 
 def sources():
- paths={row['path'] for row in base.sources()}
- paths.update(['scripts/runtime-test-glossary-population-upgrade.py','packages/db/migrations/'+MIGRATION,*TESTS])
- pending=[ROOT/name for name in paths if name.endswith(('.ts','.tsx'))]
- while pending:
-  current=pending.pop()
-  for relative in re.findall(r'''(?:from\s*|import\s*)['"](\.[^'"]+)['"]''',current.read_text()):
-   candidate=(current.parent/relative).resolve()
-   if not candidate.suffix:
-    candidate=candidate.with_suffix('.ts') if candidate.with_suffix('.ts').is_file() else candidate/'index.ts'
-   require(candidate.is_relative_to(ROOT) and candidate.is_file(),'Unresolved local qualification source')
-   name=str(candidate.relative_to(ROOT))
-   if name not in paths:paths.add(name);pending.append(candidate)
- return [{'path':name,'sha256':sha((ROOT/name).read_bytes())} for name in sorted(paths)]
+ return diagnostics.source_inventory(ROOT)
 
 
 def canonical_snapshot(h,tables):
@@ -58,6 +51,38 @@ class Harness(base.Harness):
   base.REPORT=REPORT
   super().__init__()
   self.report.update(command='./dev test --suite glossary-population-upgrade',profile='isolated-glossary-population')
+  self.last_command,self.command_failure=None,None
+  if re.fullmatch(r'[a-f0-9]{40}',os.environ.get('GITHUB_SHA','')):self.report['commit']=os.environ['GITHUB_SHA']
+
+ def command(self,args,**kwargs):
+  phase,serial,started=self.phase,self.serial,time.monotonic()
+  self.last_command=None;error=None
+  try:return super().command(args,**kwargs)
+  except BaseException as caught:error=caught;raise
+  finally:
+   elapsed=max(0,min(3600000,round((time.monotonic()-started)*1000)))
+   log=self.folder/f'{self.serial:03d}-{phase}.log'
+   if self.serial>serial and log.is_file():self.last_command={'phase':phase,'path':str(log.relative_to(ROOT)),'elapsedMs':elapsed}
+   if error is not None and self.command_failure is None:
+    category='interrupted' if isinstance(error,KeyboardInterrupt) else 'command_timeout' if str(error)=='Bounded qualification command timed out' else 'command_failed'
+    self.command_failure=self.failure_record(phase,category,self.last_command,elapsed)
+
+ def failure_record(self,phase,category,command=None,elapsed=0):
+  if command is None or command['phase']!=phase:return {'phase':phase,'category':'interrupted' if category=='interrupted' else 'unknown','commandLog':None,'elapsedMs':elapsed}
+  path=ROOT/command['path'];data=path.read_bytes();header=re.match(rb'phase=[a-z0-9_-]+\nexit=(-?[0-9]+)\n',data)
+  if header is None or (category in ('command_failed','suite_failed') and int(header[1])==0):return {'phase':phase,'category':'unknown','commandLog':None,'elapsedMs':elapsed}
+  marker=('\n'+diagnostics.MARKER+category+'\n').encode();path.write_bytes(data+marker);self.output_bytes+=len(marker)
+  return {'phase':phase,'category':category,'commandLog':{'path':command['path'],'sha256':sha(data+marker)},'elapsedMs':command['elapsedMs']}
+
+ def remember_failure(self,error):
+  if 'failure_diagnostic' in self.report:return
+  if self.command_failure is not None:failure=self.command_failure
+  elif self.phase.endswith('-native-tests') and self.last_command is not None and self.last_command['phase']==self.phase:
+   data=(ROOT/self.last_command['path']).read_bytes();code=re.match(rb'phase=[a-z0-9_-]+\nexit=(-?[0-9]+)\n',data)
+   failure=self.failure_record(self.phase,'suite_failed',self.last_command) if code and int(code[1])!=0 else {'phase':self.phase,'category':'invariant_failed','commandLog':None,'elapsedMs':0}
+  else:failure={'phase':self.phase,'category':'interrupted' if isinstance(error,KeyboardInterrupt) else 'invariant_failed','commandLog':None,'elapsedMs':0}
+  self.report['failure_diagnostic']=failure
+
 
 
 def execute(h):
@@ -103,14 +128,14 @@ def main():
  h,failed=Harness(),False
  try:execute(h)
  except BaseException as error:
-  failed=True;h.report.update(failed_phase=h.phase,error_type=type(error).__name__,error='Inspect bounded private diagnostics')
+  failed=True;h.remember_failure(error);h.report.update(failed_phase=h.phase,error_type=type(error).__name__,error='Inspect bounded private diagnostics')
  finally:
   try:
    h.phase='cleanup';h.cleanup()
    if h.resources_before is not None:
     h.deadline=h.cleanup_deadline;require(h.inventory()==h.resources_before,'Preexisting resource inventory changed');h.report['cleanup']['resourceInventoryPreserved']=True
   except BaseException as error:
-   failed=True;h.report['cleanupErrorType']=type(error).__name__
+   failed=True;h.remember_failure(error);h.report.setdefault('failed_phase',h.phase);h.report['cleanupErrorType']=type(error).__name__
   h.report.update(result='FAIL' if failed else 'PASS',recorded_at=datetime.now(timezone.utc).isoformat(),evidence_directory=str(h.folder.relative_to(ROOT)))
   h.report['private_logs']=[{'path':str(p.relative_to(ROOT)),'sha256':sha(p.read_bytes())} for p in sorted(h.folder.glob('*.log'))];h.save(final=True)
  print(json.dumps({'result':h.report['result'],'report':str(REPORT.relative_to(ROOT))}));return int(failed)

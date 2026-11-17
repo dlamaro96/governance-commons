@@ -32,12 +32,13 @@ require, sha = base.require, base.sha
 NAMES = [*base.NAMES, '015_approval_workflows.sql', '016_glossary_publication.sql',
          '017_relation_scope_candidates.sql', '018_glossary_nominal_candidates.sql',
          '019_quality_execution.sql', '020_native_lineage.sql', '021_classification_review.sql',
-         '022_reference_publication.sql', '023_reference_quality.sql', '024_reference_structures.sql']
+         '022_reference_publication.sql', '023_reference_quality.sql', '024_reference_structures.sql',
+         '025_quality_uniqueness.sql', '026_quality_range.sql', '027_quality_monitoring.sql', '028_quality_freshness.sql']
 
 
 def migrations():
     actual = sorted(path.name for path in (ROOT / 'packages/db/migrations').glob('*.sql'))
-    require(actual == NAMES, 'Exact current SQL001–024 inventory required')
+    require(actual == NAMES, 'Exact current SQL001–028 inventory required')
     return actual
 
 

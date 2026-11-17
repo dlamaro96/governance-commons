@@ -181,6 +181,10 @@ export async function fixture(options:{principal?:Principal;definition?:Partial<
   await tx.insertInto('asset_revisions').values({tenant_id:p.tenantId,asset_id:id,version:row.version,snapshot:JSON.stringify(assetView(row))}).execute();return row;
  });return {principal:p,type,domains,asset};
 }
+/** Cache each full-row digest once; stable hash ties retain the original query order. */
+export function sortSnapshotRows<T>(rows:readonly T[],hash:(row:T)=>string=typeHash):T[]{
+ return rows.map(row=>({row,key:hash(row)})).sort((a,b)=>a.key.localeCompare(b.key)).map(entry=>entry.row);
+}
 export async function snapshot(p=principal){return scope(p.tenantId,p.id,async tx=>{
  const result:Row={};for(const table of ['domain_types','domain_type_versions','domain_type_dependencies','domains','domain_revisions','asset_domain_placements','asset_domain_placement_revisions','domain_type_migrations','domain_type_migration_domains','audit','outbox','idempotency']){
   // Delivery bookkeeping changes independently in the live outbox worker. Compare
@@ -188,6 +192,6 @@ export async function snapshot(p=principal){return scope(p.tenantId,p.id,async t
   const rows=table==='outbox'
    ?await tx.selectFrom(table).select(['tenant_id','id','event_type','resource_id','resource_version','payload','created_at']).execute()
    :await tx.selectFrom(table).selectAll().execute();
-  result[table]=rows.sort((a,b)=>typeHash(a).localeCompare(typeHash(b)));}
+  result[table]=sortSnapshotRows(rows);}
  result.epoch=(await sql<{value:string}>`SELECT gc_domain_scope_epoch() value`.execute(tx)).rows[0]!.value;return result;
 });}

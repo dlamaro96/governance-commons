@@ -27,6 +27,7 @@ export function monitoringFailure(error:unknown):Problem{
  if(code==='P0002')return unavailable();if(code==='42501')return forbidden();
  if(code==='40001')return ['VERSION_CONFLICT','IDEMPOTENCY_CONFLICT','MONITOR_PIN_STALE','RECOVERY_UNAVAILABLE'].includes(message)?new Problem(409,message,'The monitoring state changed. Reload before continuing.'):retry();
  if(['22023','22007','22008','22P02','22003'].includes(code))return monitoringInvalid();
+ if(code==='0A000'&&message==='MONITOR_RULE_UNSUPPORTED')return new Problem(422,'MONITOR_RULE_UNSUPPORTED','Scheduled monitoring is not yet supported for this quality rule family.');
  if(code==='54000')return new Problem(422,'MONITOR_LIMIT','The monitoring operation exceeds its supported bounds.');
  return integrity();
 }

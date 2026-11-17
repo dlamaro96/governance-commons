@@ -30,24 +30,28 @@ export function referenceTimeInput(input:string,now=Date.now()):string|null {
 export function qualityEvidenceMatches(run:QualityRunView,rule:QualityRuleView):boolean {
  if(rule.id!==run.ruleId||rule.version!==run.ruleVersion||rule.definitionHash!==run.ruleHash)return false;
  if(rule.definition.target.columnAssetId!==run.columnAssetId||rule.definition.target.tableAssetId!==run.tableAssetId)return false;
- if(run.kind==='reference-allowed-values')return !Object.hasOwn(run,'range')&&rule.definition.kind==='reference-allowed-values'&&run.reference.setId===rule.definition.reference.setId&&(!run.measurement||(run.measurement.kind==='reference-allowed-values'&&run.measurement.referenceBindingHash===run.reference.bindingHash));
- if(run.kind==='uniqueness')return !Object.hasOwn(run,'range')&&!Object.hasOwn(run,'reference')&&rule.definition.kind==='uniqueness'&&(!run.measurement||run.measurement.kind==='uniqueness');
+ if(run.kind==='freshness'){
+  const d=rule.definition,b=run.freshness;
+  return !Object.hasOwn(run,'range')&&!Object.hasOwn(run,'reference')&&d.kind==='freshness'&&b.maximumAgeSeconds===d.maximumAgeSeconds&&b.maximumFutureSkewSeconds===d.maximumFutureSkewSeconds&&b.comparison==='latest-timestamptz'&&b.clock==='source-statement-start'&&b.invalidTimestampPolicy==='fail'&&b.nullPolicy==='exclude'&&/^[a-f0-9]{64}$/.test(b.freshnessHash)&&(!run.measurement||run.measurement.kind==='freshness'&&run.measurement.freshnessHash===b.freshnessHash);
+ }
+ if(run.kind==='reference-allowed-values')return !Object.hasOwn(run,'freshness')&&!Object.hasOwn(run,'range')&&rule.definition.kind==='reference-allowed-values'&&run.reference.setId===rule.definition.reference.setId&&(!run.measurement||(run.measurement.kind==='reference-allowed-values'&&run.measurement.referenceBindingHash===run.reference.bindingHash));
+ if(run.kind==='uniqueness')return !Object.hasOwn(run,'freshness')&&!Object.hasOwn(run,'range')&&!Object.hasOwn(run,'reference')&&rule.definition.kind==='uniqueness'&&(!run.measurement||run.measurement.kind==='uniqueness');
  if(run.kind==='range'){
   const definition=rule.definition,binding=run.range;
-  return !Object.hasOwn(run,'reference')&&definition.kind==='range'&&!!rangeBounds(binding.minimum,binding.maximum)&&
+  return !Object.hasOwn(run,'freshness')&&!Object.hasOwn(run,'reference')&&definition.kind==='range'&&!!rangeBounds(binding.minimum,binding.maximum)&&
    binding.minimum===definition.minimum&&binding.maximum===definition.maximum&&binding.comparison==='int64-inclusive'&&binding.nullPolicy==='exclude'&&
    /^[a-f0-9]{64}$/.test(binding.rangeHash)&&(!run.measurement||run.measurement.kind==='range'&&run.measurement.rangeHash===binding.rangeHash);
  }
- return !Object.hasOwn(run,'range')&&!Object.hasOwn(run,'kind')&&!Object.hasOwn(run,'reference')&&rule.definition.kind==='completeness'&&(!run.measurement||run.measurement.kind==='completeness');
+ return !Object.hasOwn(run,'freshness')&&!Object.hasOwn(run,'range')&&!Object.hasOwn(run,'kind')&&!Object.hasOwn(run,'reference')&&rule.definition.kind==='completeness'&&(!run.measurement||run.measurement.kind==='completeness');
 }
 
 /** Read the selected immutable family's threshold; do not reinterpret history
  * using a later head's kind or borrow another family's similarly named field. */
 export function qualityThreshold(definition:QualityRuleDefinition):number {
- switch(definition.kind){case 'completeness':return definition.maximumNullBasisPoints;case 'reference-allowed-values':return definition.maximumInvalidBasisPoints;case 'uniqueness':return definition.maximumDuplicateBasisPoints;case 'range':return definition.maximumOutOfRangeBasisPoints;}
+ switch(definition.kind){case 'freshness':throw new Error('Freshness uses duration, not a percentage');case 'completeness':return definition.maximumNullBasisPoints;case 'reference-allowed-values':return definition.maximumInvalidBasisPoints;case 'uniqueness':return definition.maximumDuplicateBasisPoints;case 'range':return definition.maximumOutOfRangeBasisPoints;}
 }
-export function qualityThresholdKey(kind:QualityRuleDefinition['kind']):'maximumNull'|'maximumInvalid'|'maximumDuplicate'|'maximumOutOfRange' {
- return kind==='completeness'?'maximumNull':kind==='reference-allowed-values'?'maximumInvalid':kind==='range'?'maximumOutOfRange':'maximumDuplicate';
+export function qualityThresholdKey(kind:QualityRuleDefinition['kind']):'maximumNull'|'maximumInvalid'|'maximumDuplicate'|'maximumOutOfRange'|'maximumAge' {
+ return kind==='freshness'?'maximumAge':kind==='completeness'?'maximumNull':kind==='reference-allowed-values'?'maximumInvalid':kind==='range'?'maximumOutOfRange':'maximumDuplicate';
 }
 
 /** Bounds stay canonical ASCII decimal strings from input through submission.
@@ -59,4 +63,16 @@ export function canonicalInt64(input:string):string|null {
 }
 export function rangeBounds(minimum:string,maximum:string):{minimum:string;maximum:string}|null {
  return canonicalInt64(minimum)!==null&&canonicalInt64(maximum)!==null&&BigInt(minimum)<=BigInt(maximum)?{minimum,maximum}:null;
+}
+
+/** User-facing whole seconds; localized digits are admitted without rounding. */
+export function freshnessSettingsInput(age:string,skew:string):{maximumAgeSeconds:number;maximumFutureSkewSeconds:number}|null {
+ const integer=(v:string,max:number)=>{const s=v.trim().replace(/[٠-٩]/g,c=>String(c.charCodeAt(0)-0x660)).replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-0x6f0));if(!/^(?:0|[1-9][0-9]{0,7})$/.test(s))return null;const n=Number(s);return n<=max?n:null;};
+ const a=integer(age,31536000),f=integer(skew,300);return a!==null&&a>=1&&f!==null?{maximumAgeSeconds:a,maximumFutureSkewSeconds:f}:null;
+}
+/** Exact display only: never converts a microsecond age through Number. */
+export function freshnessAgeLabel(value:string):string {
+ if(!/^(?:0|-?[1-9][0-9]{0,17})$/.test(value))throw new Error('Invalid exact age');
+ const n=BigInt(value),a=n<0n?-n:n;if(a>315537897599999999n)throw new Error('Invalid exact age');
+ return (n<0n?'-':'')+String(a/1000000n)+'.'+String(a%1000000n).padStart(6,'0');
 }

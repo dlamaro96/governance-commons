@@ -78,6 +78,24 @@ class Controls(unittest.TestCase):
         h.docker = docker
         return h
 
+    def test_sql028_successor_is_excluded_and_unknown_or_gapped_suffix_refuses(self):
+        original = gate.sources()
+        successors = ['028_quality_freshness.sql']
+        for name in successors:
+            self.write('packages/db/migrations/' + name, '-- declared successor, never executed here')
+        self.assertEqual(gate.migrations(), gate.NAMES)
+        self.assertEqual(gate.sources(), original)
+        self.write('packages/db/migrations/028_quality_freshness.sql', '-- changed successor stays outside prefix proof')
+        self.assertEqual(gate.sources(), original)
+        extra = self.write('packages/db/migrations/029_undeclared.sql', '-- undeclared')
+        with self.assertRaises(RuntimeError):
+            gate.migrations()
+        extra.unlink()
+        if len(successors) > 1:
+            (self.root / 'packages/db/migrations' / successors[0]).unlink()
+            with self.assertRaises(RuntimeError):
+                gate.migrations()
+
     def test_exact_current_migration_inventory(self):
         self.assertEqual(gate.migrations(), gate.NAMES)
         file = self.root / 'packages/db/migrations' / gate.NAMES[-1]

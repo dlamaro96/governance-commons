@@ -32,6 +32,12 @@ MAX_PLAN_NODES = 64
 REFERENCE_KIND = 'reference-allowed-values'
 UNIQUENESS_KIND = 'uniqueness'
 RANGE_KIND = 'range'
+FRESHNESS_KIND = 'freshness'
+FRESHNESS_KEYS = frozenset(('maximumAgeSeconds', 'maximumFutureSkewSeconds', 'comparison',
+                            'clock', 'nullPolicy', 'invalidTimestampPolicy', 'freshnessHash'))
+MAX_AGE_SECONDS = 31536000
+MAX_FUTURE_SKEW_SECONDS = 300
+CLOCK_ALLOWANCE_US = 5000000
 RANGE_KEYS = frozenset(('minimum', 'maximum', 'comparison', 'nullPolicy', 'rangeHash'))
 MAX_VALUE_BYTES = 4096
 MAX_TOTAL_VALUE_BYTES = 67108864
@@ -154,6 +160,121 @@ def validate_range_binding(value):
     return detached
 
 
+def validate_freshness_binding(value):
+    """Static immutable rule settings; no supplied clock, SQL or source sample."""
+    _keys(value, FRESHNESS_KEYS)
+    _integer(value['maximumAgeSeconds'], MAX_AGE_SECONDS)
+    if (type(value['maximumFutureSkewSeconds']) is not int
+            or not 0 <= value['maximumFutureSkewSeconds'] <= MAX_FUTURE_SKEW_SECONDS
+            or any(type(value[k]) is not str for k in ('comparison', 'clock', 'nullPolicy', 'invalidTimestampPolicy'))
+            or value['comparison'] != 'latest-timestamptz' or value['clock'] != 'source-statement-start'
+            or value['nullPolicy'] != 'exclude' or value['invalidTimestampPolicy'] != 'fail'
+            or type(value['freshnessHash']) is not str
+            or not re.fullmatch(r'[a-f0-9]{64}', value['freshnessHash'])):
+        _fail()
+    detached = {key: value[key] for key in FRESHNESS_KEYS if key != 'freshnessHash'}
+    preimage = dict(detached, formatVersion=1, kind=FRESHNESS_KIND)
+    expected = hashlib.sha256(json.dumps(preimage, sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode()).hexdigest()
+    if not hmac.compare_digest(expected, value['freshnessHash']):
+        _fail()
+    return dict(detached, freshnessHash=expected)
+
+
+def _micro_instant(value):
+    # Aggregate clocks/MAX are text, so infinity and PostgreSQL's much wider
+    # date range can never enter the driver's datetime decoder. No float epoch.
+    if type(value) is not str or not re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{6}Z', value):
+        _fail('SOURCE_DATABASE_ERROR')
+    try:
+        stamp = datetime.fromisoformat(value)
+        if stamp.isoformat(timespec='microseconds').replace('+00:00', 'Z') != value:
+            _fail('SOURCE_DATABASE_ERROR')
+        delta = stamp - datetime(1970, 1, 1, tzinfo=timezone.utc)
+        return delta.days * 86400000000 + delta.seconds * 1000000 + delta.microseconds
+    except (ValueError, OverflowError):
+        _fail('SOURCE_DATABASE_ERROR')
+
+
+def _freshness_aggregate(relation, target, budget, binding):
+    # Qualified OPERATOR forms have equal left-associative precedence; the
+    # clock-plus-interval operand must be grouped before the comparison.
+    # Both bounds and operators are fixed native timestamptz operations. MAX
+    # includes representable future timestamps; invalid rows force failure in
+    # the canonical verdict and cannot be discarded to fabricate freshness.
+    finite = "pg_catalog.isfinite(value)"
+    representable = (finite + " AND value OPERATOR(pg_catalog.>=) '0001-01-01 00:00:00+00'::pg_catalog.timestamptz"
+                     " AND value OPERATOR(pg_catalog.<) '10000-01-01 00:00:00+00'::pg_catalog.timestamptz")
+    aggregate = sql.SQL(
+        "WITH clock AS MATERIALIZED (SELECT pg_catalog.statement_timestamp() AS at), "
+        "bounded AS MATERIALIZED (SELECT {} AS value FROM ONLY {} LIMIT %s), "
+        "counts AS (SELECT count(*) AS row_count, count(*) FILTER (WHERE value IS NULL) AS null_count, "
+        "count(*) FILTER (WHERE value IS NOT NULL AND NOT " + finite + ") AS non_finite_count, "
+        "count(*) FILTER (WHERE " + finite + " AND NOT (" + representable + ")) AS unrepresentable_count, "
+        "count(*) FILTER (WHERE " + representable + " AND value OPERATOR(pg_catalog.>) "
+        "(clock.at OPERATOR(pg_catalog.+) %s::pg_catalog.interval)) AS future_count, "
+        "max(value) FILTER (WHERE " + representable + ") AS latest FROM bounded CROSS JOIN clock) "
+        "SELECT row_count,null_count,non_finite_count,unrepresentable_count,future_count, "
+        "pg_catalog.to_char(clock.at AT TIME ZONE 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"') AS source_observed_at, "
+        "pg_catalog.to_char(latest AT TIME ZONE 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"') AS latest_observed_at, "
+        "((EXTRACT(EPOCH FROM clock.at) OPERATOR(pg_catalog.-) EXTRACT(EPOCH FROM latest)) "
+        "OPERATOR(pg_catalog.*) 1000000)::pg_catalog.int8::pg_catalog.text AS age_microseconds "
+        "FROM counts CROSS JOIN clock").format(sql.Identifier(target['columnName']), relation)
+    # The interval parameter is generated from an admitted bounded integer only;
+    # integral seconds are exact and introduce no calendar/DST arithmetic.
+    return aggregate, (budget['maximumRows'] + 1, str(binding['maximumFutureSkewSeconds']) + ' seconds')
+
+
+def _measure_freshness(conn, relation, target, budget, deadline_at, binding):
+    aggregate, parameters = _freshness_aggregate(relation, target, budget, binding)
+    plan = _query(conn, sql.SQL('EXPLAIN (FORMAT JSON, ANALYZE FALSE, COSTS TRUE) ') + aggregate,
+                  parameters, budget, deadline_at).fetchone()
+    cost, estimated_bytes = _estimates(plan.get('QUERY PLAN') if type(plan) is dict else None, budget)
+    value = _query(conn, aggregate, parameters, budget, deadline_at).fetchone()
+    keys = {'row_count', 'null_count', 'non_finite_count', 'unrepresentable_count', 'future_count',
+            'source_observed_at', 'latest_observed_at', 'age_microseconds'}
+    if type(value) is not dict or set(value) != keys:
+        _fail('SOURCE_DATABASE_ERROR')
+    rows, nulls = value['row_count'], value['null_count']
+    if (type(rows) is not int or type(nulls) is not int
+            or not 0 <= nulls <= rows <= budget['maximumRows'] + 1):
+        _fail('SOURCE_DATABASE_ERROR')
+    if rows > budget['maximumRows']:
+        _fail('QUALITY_RESOURCE_LIMIT')
+    nonfinite, unrepresentable, future = (value[k] for k in ('non_finite_count', 'unrepresentable_count', 'future_count'))
+    if any(type(v) is not int or not 0 <= v <= rows-nulls for v in (nonfinite, unrepresentable, future)):
+        _fail('SOURCE_DATABASE_ERROR')
+    represented = rows - nulls - nonfinite - unrepresentable
+    if represented < 0 or future > represented:
+        _fail('SOURCE_DATABASE_ERROR')
+    clock = _micro_instant(value['source_observed_at'])
+    latest, age = value['latest_observed_at'], value['age_microseconds']
+    if represented == 0:
+        if latest is not None or age is not None:
+            _fail('SOURCE_DATABASE_ERROR')
+    else:
+        instant = _micro_instant(latest)
+        if (type(age) is not str or not re.fullmatch(r'(?:0|-?[1-9][0-9]{0,17})', age)
+                or int(age) != clock-instant
+                or (future > 0) != (instant > clock + binding['maximumFutureSkewSeconds'] * 1000000)):
+            _fail('SOURCE_DATABASE_ERROR')
+    return rows, nulls, cost, estimated_bytes, {
+        'nonFiniteCount': nonfinite, 'unrepresentableCount': unrepresentable, 'futureCount': future,
+        'sourceObservedAt': value['source_observed_at'], 'latestObservedAt': latest,
+        'ageMicroseconds': age, 'freshnessHash': binding['freshnessHash']}
+
+
+def _freshness_clock_envelope(metrics, observed_started, observed_finished):
+    def wall(value):
+        if type(value) is not str or not re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z', value):
+            _fail('SOURCE_DATABASE_ERROR')
+        return _micro_instant(value[:-1] + '000Z')
+    started, finished = wall(observed_started), wall(observed_finished)
+    source_at = _micro_instant(metrics['sourceObservedAt'])
+    if (finished < started or source_at < started-CLOCK_ALLOWANCE_US
+            or source_at > finished+CLOCK_ALLOWANCE_US):
+        _fail('QUALITY_CLOCK_SKEW')
+
+
 def validate_execution(source, execution):
     """Closed fixed-shape JSON admission, before credentials or connection use."""
     _keys(source, ('connectorId', 'host', 'port', 'database', 'schema', 'secretRef'))
@@ -170,13 +291,16 @@ def validate_execution(source, execution):
     kind = execution['kind']
     _keys(execution, ('formatVersion', 'kind', 'target', 'budget', 'reference')
           if kind == REFERENCE_KIND else ('formatVersion', 'kind', 'target', 'budget', 'range')
-          if kind == RANGE_KIND else ('formatVersion', 'kind', 'target', 'budget'))
-    if type(execution['formatVersion']) is not int or execution['formatVersion'] != 1 or kind not in ('completeness', REFERENCE_KIND, UNIQUENESS_KIND, RANGE_KIND):
+          if kind == RANGE_KIND else ('formatVersion', 'kind', 'target', 'budget', 'freshness')
+          if kind == FRESHNESS_KIND else ('formatVersion', 'kind', 'target', 'budget'))
+    if type(execution['formatVersion']) is not int or execution['formatVersion'] != 1 or kind not in ('completeness', REFERENCE_KIND, UNIQUENESS_KIND, RANGE_KIND, FRESHNESS_KIND):
         _fail()
     if kind == REFERENCE_KIND:
         validate_reference_binding(execution['reference'])
     if kind == RANGE_KIND:
         validate_range_binding(execution['range'])
+    if kind == FRESHNESS_KIND:
+        validate_freshness_binding(execution['freshness'])
     target, budget = execution['target'], execution['budget']
     _keys(target, TARGET_KEYS)
     ceilings = UNIQUENESS_BUDGETS if kind == UNIQUENESS_KIND else BUDGETS
@@ -340,7 +464,7 @@ def _measure_uniqueness(conn, relation, target, budget, deadline_at):
         'totalValueBytes': total, 'largestValueBytes': largest}
 
 
-def _measure(conn, target, budget, deadline_at, reference=None, *, uniqueness=False, range_binding=None):
+def _measure(conn, target, budget, deadline_at, reference=None, *, uniqueness=False, range_binding=None, freshness=None):
     conn.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY')
     relation = sql.Identifier(target['schemaName'], target['tableName'])
     # Lock by safely quoted name, then independently prove that the lock belongs
@@ -381,6 +505,11 @@ def _measure(conn, target, budget, deadline_at, reference=None, *, uniqueness=Fa
             or row['inherited'] is not False or row['type_namespace'] != 'pg_catalog' or row['typtype'] != 'b'
             or row['typcategory'] in ('A', 'C', 'P') or row['type_element'] != '0'):
         _fail('QUALITY_TARGET_UNSUPPORTED')
+    if freshness is not None:
+        if row['type_oid'] != '1184':
+            _fail('QUALITY_TARGET_UNSUPPORTED')
+        rows, nulls, cost, estimated_bytes, metrics = _measure_freshness(conn, relation, target, budget, deadline_at, freshness)
+        return rows, nulls, version, cost, estimated_bytes, metrics
     if uniqueness:
         if row['type_oid'] not in ('25', '1043'):
             _fail('QUALITY_TARGET_UNSUPPORTED')
@@ -448,6 +577,7 @@ def execute(source, secret, tenant_id, execution):
     reference = validate_reference_binding(execution['reference']) if execution['kind'] == REFERENCE_KIND else None
     uniqueness = execution['kind'] == UNIQUENESS_KIND
     range_binding = validate_range_binding(execution['range']) if execution['kind'] == RANGE_KIND else None
+    freshness = validate_freshness_binding(execution['freshness']) if execution['kind'] == FRESHNESS_KIND else None
     deadline_at = started + budget['maximumSeconds']
     try:
         with deadline(_remaining(deadline_at)):
@@ -462,20 +592,24 @@ def execute(source, secret, tenant_id, execution):
                         conn = psycopg.connect(**kwargs, row_factory=dict_row)
                         resources.own(conn.close)
                     set_json_loads(_plan_json, context=conn)
-                    measured = _measure(conn, target, budget, deadline_at, reference, uniqueness=uniqueness, range_binding=range_binding)
+                    measured = _measure(conn, target, budget, deadline_at, reference, uniqueness=uniqueness, range_binding=range_binding, freshness=freshness)
                     rows, nulls, version, cost, estimated_bytes = measured[:5]
             # Connection close (rollback) and CA cleanup are inside the original
             # wall deadline. No connection context manager can print DB details.
             _remaining(deadline_at)
-            result = {'formatVersion': 1, 'kind': RANGE_KIND if range_binding is not None else UNIQUENESS_KIND if uniqueness else REFERENCE_KIND if reference is not None else 'completeness', 'strategy': 'exact-bounded-role-scope',
+            observed_finished = _stamp()
+            if freshness is not None:
+                _freshness_clock_envelope(measured[5], observed_started, observed_finished)
+                _remaining(deadline_at)
+            result = {'formatVersion': 1, 'kind': FRESHNESS_KIND if freshness is not None else RANGE_KIND if range_binding is not None else UNIQUENESS_KIND if uniqueness else REFERENCE_KIND if reference is not None else 'completeness', 'strategy': 'exact-bounded-role-scope',
                     'rowCount': rows, 'nullCount': nulls, 'observedStartedAt': observed_started,
-                    'observedFinishedAt': _stamp(), 'elapsedMs': math.floor((time.monotonic() - started) * 1000),
+                    'observedFinishedAt': observed_finished, 'elapsedMs': math.floor((time.monotonic() - started) * 1000),
                     'sourceVersion': version, 'adapterVersion': '1',
-                    'queryTemplate': 'postgresql-range-v1' if range_binding is not None else 'postgresql-uniqueness-v1' if uniqueness else 'postgresql-reference-allowed-values-v1' if reference is not None else 'postgresql-completeness-v1',
+                    'queryTemplate': 'postgresql-freshness-v1' if freshness is not None else 'postgresql-range-v1' if range_binding is not None else 'postgresql-uniqueness-v1' if uniqueness else 'postgresql-reference-allowed-values-v1' if reference is not None else 'postgresql-completeness-v1',
                     'estimatedCost': cost, 'estimatedBytes': estimated_bytes}
             if reference is not None:
                 result.update(invalidCount=measured[5], referenceBindingHash=reference['bindingHash'])
-            if uniqueness or range_binding is not None:
+            if uniqueness or range_binding is not None or freshness is not None:
                 result.update(measured[5])
             return result
     except TargetPolicyError as error:
