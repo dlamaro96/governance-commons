@@ -37,6 +37,12 @@ inspect STATE and readiness records for what has actually run. A command that
 reports an unavailable prerequisite is not passing evidence. `./dev down`
 preserves volumes; never remove another project's containers or volumes.
 
+For relation/glossary upgrade checks, use the explicit commands in the
+[repaired-governance gate runbook](docs/runbooks/repaired-governance-gates.md).
+It distinguishes original historical schemas, the forward SQL032 repair and
+the scope of each recorded result. Run isolated gates sequentially on one Docker
+host; concurrent changes can invalidate their resource-inventory checks.
+
 ## Repository map and work boundaries
 
 `apps/web` contains the React interface; `apps/api` owns Fastify application
@@ -83,6 +89,12 @@ contributors do not receive publishing credentials. Do not add
 `pull_request_target`, privileged artifact execution or a persistent runner to
 bypass this boundary. The bootstrap currently has one eligible maintainer;
 independent review remains an explicit qualification gap.
+
+The [fixed CI groups](docs/adr/0016-fixed-ci-shards.md) run on separate hosts.
+Every assigned outcome remains mandatory; missing or skipped work cannot pass.
+The local 45-outcome configuration still needs hosted qualification. Publish
+only the collector's bounded diagnostic artifacts, never raw database logs,
+source values or generated credentials.
 
 ## Contribution certification and attribution
 

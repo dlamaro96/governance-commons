@@ -97,10 +97,46 @@
       "registryClosed": true
     },
     "full_profile": {
-      "outcome": "RUNNING",
+      "outcome": "FAIL_OR_INCOMPLETE",
       "declared_journeys": 37,
       "attempt": "product-full-browser-attempt-16",
-      "commit": "f3f21e5e7eb7190a2b6ff98725737d7255be1878"
+      "commit": "f3f21e5e7eb7190a2b6ff98725737d7255be1878",
+      "counts": {
+        "startTime": "2026-11-17T09:03:49.564Z",
+        "duration": 1140274.5990000002,
+        "expected": 24,
+        "skipped": 12,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "cause": "An obsolete browser assertion expected ordinary tables to reject quality checks after table-volume support was added. The original completeness lifecycle was not reached in this attempt.",
+      "execution": {
+        "private_record": ".local/evidence/product-full-browser-attempt-16/execution.json",
+        "sha256": "b0e06fb4409830949e2f083743822bffb4ec35409f371735c3687d8a623d99e1"
+      },
+      "root_readback": {
+        "private_record": ".local/evidence/product-full-browser-attempt-16/root-readback.json",
+        "sha256": "37f99df83c3b149dc44e5a132eac2e609973e3f3a315d4de60466ffc9bbd45b3"
+      },
+      "source_files": 692,
+      "artifacts_rehashed": 187,
+      "captures_archived": 165,
+      "captures_visually_reviewed": 0,
+      "original_screenshots_restored": 154,
+      "cleanup": {
+        "schema_version": 1,
+        "scope": "registered-posix-groups-and-observed-descendants",
+        "result": "PASS",
+        "trigger": "nonzero",
+        "registeredBrowserGroups": 14,
+        "trackedProcesses": 488,
+        "termSignals": 0,
+        "killSignals": 0,
+        "remainingLive": 0,
+        "identityConflicts": 0,
+        "unresolvedGroups": 0,
+        "registryClosed": true
+      }
     }
   },
   "hosted": {

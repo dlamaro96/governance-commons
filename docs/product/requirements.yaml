@@ -4471,7 +4471,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/relation-candidate-repair-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -15242,7 +15244,8 @@
             "docs/verification/product-quality-exact-local.json",
             "docs/verification/product-quality-freshness-local.json",
             "docs/verification/product-quality-freshness-scheduling-local.json",
-            "docs/verification/product-quality-volume-local.json"
+            "docs/verification/product-quality-volume-local.json",
+            "docs/verification/quality-table-browser-repair-local.json"
           ]
         },
         "vendor_live": {
@@ -15789,7 +15792,8 @@
             "docs/verification/product-quality-exact-local.json",
             "docs/verification/product-quality-monitoring-local.json",
             "docs/verification/product-quality-freshness-scheduling-local.json",
-            "docs/verification/product-quality-volume-local.json"
+            "docs/verification/product-quality-volume-local.json",
+            "docs/verification/quality-table-browser-repair-local.json"
           ]
         },
         "vendor_live": {
