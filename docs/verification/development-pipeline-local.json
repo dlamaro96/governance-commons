@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-17T07:47:22.610922+00:00",
+  "scope": "Five independent CI groups retaining all40 mandatory outcomes; browser uniqueness rate-budget admission repair.",
+  "implementation_status": "IN_PROGRESS",
+  "implementation_commit": "ac464afc83a3e01d925a45b20723dfd8f2ab0572",
+  "release_qualified": false,
+  "ci": {
+    "host_result": "PASS",
+    "controls": {
+      "collector": 129,
+      "shard_assignment": 15,
+      "failure_diagnostics": 12
+    },
+    "source_files": [
+      {
+        "path": ".github/workflows/ci.yml",
+        "sha256": "871accc617d9efd1783aa3dd8c7300eacbbfc848fbd77a1ac9cff6acbbf51928"
+      },
+      {
+        "path": "policies/ci_shards.py",
+        "sha256": "251eb10683e7b79c6c4a8b264edef41bac3c2b947b45ec533951b3529d4713b5"
+      },
+      {
+        "path": "policies/ci_evidence.py",
+        "sha256": "65f1e4446051ba9ab711e37ef54bf40232ad5fd189621aaca4e811a500673fb5"
+      },
+      {
+        "path": "policies/test_ci_shards.py",
+        "sha256": "ae6087e5fe5f31251c6d82db92788b345558f480a551fe4ff257298c91386c5a"
+      },
+      {
+        "path": "policies/test_ci_evidence.py",
+        "sha256": "32a2b379dc53d5179559387107b93aaf78eaa0ba1ac31e2457955fba2e864374"
+      },
+      {
+        "path": "policies/test_glossary_population_diagnostics.py",
+        "sha256": "66570a57e333469183c6aa62b6e115b7bd30c856404c00152e6d1aac5a0448bd"
+      }
+    ],
+    "source_binding": "Every listed file matches its exact Git blob at implementation_commit.",
+    "records": [
+      {
+        "private_record": ".local/product-ci-shards-collector-attempt-1.log",
+        "sha256": "f03e4aef1be7475ec33288cb42bffe3d0a4a72c7d506a45a8c70eee65f74f5eb"
+      },
+      {
+        "private_record": ".local/product-ci-shards-controls-attempt-1.log",
+        "sha256": "f6f828f3dfbca76185e5478ada427b377466e58bfa177e16bf0acfa32a8690ee"
+      },
+      {
+        "private_record": ".local/product-ci-shards-diagnostics-attempt-1.log",
+        "sha256": "14e700767ce4219d65864d2357b01594166d51d4e23e12bbaa99fad9e7dc526b"
+      }
+    ],
+    "hosted_execution": "NOT_RUN",
+    "required_outcomes": 40,
+    "browser_journeys": 36,
+    "limits": "Five separate Ubuntu runners,90minutes each; original product/operation limits and every stage assertion retained.",
+    "limitations": [
+      "Hosted timing and complete fresh matrix pass remain required.",
+      "Raw native outcomes remain step-level evidence where the existing collector has no separately validated projection.",
+      "Known authority and historical glossary-population failures remain mandatory; splitting CI does not resolve or relabel them."
+    ]
+  },
+  "browser_target": {
+    "result": "PASS",
+    "cases": 1,
+    "counts": {
+      "startTime": "2026-11-17T07:23:34.539Z",
+      "duration": 31778.478000000003,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "versions": {
+      "node": "v24.22.3",
+      "pnpm": "10.32.1",
+      "chrome": "Google Chrome 157.0.8103.79"
+    },
+    "source_files": 664,
+    "exact_committed_source_hashes_match": true,
+    "cleanup": {
+      "schema_version": 1,
+      "scope": "registered-posix-groups-and-observed-descendants",
+      "result": "PASS",
+      "trigger": "normal",
+      "registeredBrowserGroups": 1,
+      "trackedProcesses": 28,
+      "termSignals": 0,
+      "killSignals": 0,
+      "remainingLive": 0,
+      "identityConflicts": 0,
+      "unresolvedGroups": 0,
+      "registryClosed": true
+    },
+    "screenshots_restored": true,
+    "visual_review": {
+      "private_record": ".local/evidence/product-uniqueness-budget-browser-attempt-1/visual-review.json",
+      "sha256": "7d98c88258f0d2f8162be46337b25d62d9ec62e96203c112f8cf6fe1c09d8971"
+    },
+    "inspected_captures": 8,
+    "execution": {
+      "private_record": ".local/evidence/product-uniqueness-budget-browser-attempt-1/execution.json",
+      "sha256": "552b9555c7f88a7b85b73e8937a94a05e23ee2011617fa42f8f8e50b06d685a0"
+    },
+    "host_controls": 7,
+    "typechecks": "PASS",
+    "host_records": [
+      {
+        "private_record": ".local/product-browser-rate-budget-host-attempt-1.log",
+        "sha256": "d33f9eaddf706c96f6fff2c35c1ee298c219c085d2bc5ae07cc3bb2e28c8f2d8"
+      },
+      {
+        "private_record": ".local/product-browser-budget-types-attempt-1.log",
+        "sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+      }
+    ],
+    "limitations": [
+      "All8 English1440/Arabic390 viewports inspected by an automated assistant; no independent accessibility or linguistic certification.",
+      "Rate exhaustion remains an inference supported by the recorded429 history response; original inspector status was not captured.",
+      "Complete36-journey attempt15 is running; attempt14 remains failed31/1/4."
+    ]
+  }
+}

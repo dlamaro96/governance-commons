@@ -61788,9 +61788,16 @@
         "Separate pipelines into quick pull-request gates, slower main/nightly qualification and release gates. Required short gates include formatting/type checks, targeted units, schema checks, critical integration/security tests and build integrity. Slower tests must remain visible and required for the corresponding release claim. A release cannot reuse evidence from an unrelated commit without documented equivalence."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        "policies/ci_shards.py",
+        "policies/ci_evidence.py"
+      ],
+      "test_ids": [
+        "policies/test_ci_shards.py",
+        "policies/test_ci_evidence.py"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -61798,7 +61805,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/development-pipeline-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -61818,8 +61827,10 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
+      "limitations": [
+        "Fixed CI groups preserve all40 mandatory outcomes with156 passing host controls; fresh complete hosted execution, quick/slow release separation and the broader pipeline requirement remain open. No whole-row verification promotion."
+      ],
+      "owner": "governance-commons maintainers",
       "milestone": "M0"
     },
     {

@@ -1550,6 +1550,24 @@
         "evidence_sha256": "8c3585b13d7ab4b9f0090d809acbc4a9a4498ff6af3c59cd498f826af9f98179",
         "method": "Exact committed native, baked application/API and browser source inventories matched; scoped native276/API168/host1103 and target journeys pass. Full36 fails31/1/4; no whole-profile pass inferred."
       }
+    },
+    {
+      "path": "docs/verification/development-pipeline-local.json",
+      "scope": "development-pipeline-local",
+      "source_binding": {
+        "implementation_commit": "ac464afc83a3e01d925a45b20723dfd8f2ab0572",
+        "evidence_sha256": "9abd8b5cd5aee81af49b8e96602149aa566c94d2631a9236a661079424a4475b",
+        "method": "Exact Git-bound CI and browser source inventories;156 CI controls and target browser pass. Full36 and fresh hosted matrix pending."
+      }
+    },
+    {
+      "path": "docs/verification/dependency-actions-hosted.json",
+      "scope": "dependency-actions-hosted",
+      "source_binding": {
+        "implementation_commit": "0b485925b6a07f1bb8518696d654376af0b079ed",
+        "evidence_sha256": "5ae6125730d0681a6238523ffdad5322e75058a9112bfbbac7fe4415d771a7ed",
+        "method": "Exact tested merge/published tree equality, official Action pins, five hosted setup/upload steps and two authenticated artifact downloads verified. No full behavior claim."
+      }
     }
   ],
   "limitations": [

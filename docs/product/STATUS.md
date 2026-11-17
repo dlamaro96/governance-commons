@@ -29,7 +29,7 @@ Each item is narrower than its complete baseline requirement. Consult the [evide
 | Integrations | The complete named connector inventory. Unity metadata adapter code exists; live Databricks and its other capability routes remain unqualified. A generic connector does not complete named integrations. |
 | Operations and release | Clean-install reproduction, Kubernetes/OpenShift and offline profiles, backup/restore, upgrades, performance/soak tests, final artifact scans/SBOM/signing/provenance and independent security/accessibility reviews. |
 
-There are 354 named baseline requirements plus their detailed and supplemental tracking records (1,106 total). The register currently marks 121 records in progress and 985 not started; these are scope-tracking states, **not a percentage-complete estimate**. No whole baseline requirement is promoted solely because a narrower journey passes.
+There are 354 named baseline requirements plus their detailed and supplemental tracking records (1,106 total). The register currently marks 122 records in progress and 984 not started; these are scope-tracking states, **not a percentage-complete estimate**. No whole baseline requirement is promoted solely because a narrower journey passes.
 
 ## Immediate delivery gates
 

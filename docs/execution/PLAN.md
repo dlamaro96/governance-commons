@@ -4,9 +4,9 @@ Updated 17 November 2026. The complete M0–M10 programme remains required. [Pro
 
 ## Active delivery sequence
 
-1. Restore green integration CI: profile and fix the SQL013 authority-loader deadline without increasing its limits; preserve failed evidence. Verify all historical quality gates against their declared source/schema versions.
+1. Restore green integration CI: qualify the forward authority-read repair without increasing the SQL013 limits; preserve failed evidence. Publish and verify the five fixed CI groups. Verify all historical quality gates against their declared source/schema versions.
 2. Complete scheduled-freshness regression: SQL001–029 is applied locally; 276 native cases, 1,103 host cases, types/build and the real freshness lifecycle journey pass. The repaired reference picker and protected outbox target also pass. All 168 current API cases pass; the full 36-journey attempt records 31 passed, one uniqueness-quality failure and four skipped. Repair and rerun the affected journey, then the complete profile.
-3. Finish table-volume integration: isolated worker15/8 measurements and fixture29 pass; the SQL029→030 upgrade and combined application/browser checks are separate gates. No shared SQL030 application is yet claimed.
+3. Finish table-volume integration: the composed 320-case SQL029→030 upgrade, real worker (15 checks/eight measurements) and fixture (29 checks) pass. The historical SQL019 gate exposes an inherited glossary-population budget failure; fix and qualify it before the remaining historical gates and combined application/browser checks. No shared SQL030 application is yet claimed.
 4. Publish coherent development changes with exact-source evidence, current README/support status and a small actionable GitHub backlog. Consolidate superseded integration PRs without discarding history. Do not merge failed checks or publish a supported release.
 5. Continue canonical authorization, remaining quality/lineage and every milestone below. Vendor credentials and independent reviews block only their own qualification; executable implementation continues.
 
