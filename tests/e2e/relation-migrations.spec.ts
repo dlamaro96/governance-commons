@@ -104,7 +104,8 @@ async function preview(page: Page): Promise<RelationMigrationPreview> {
 async function executeAttempt(page: Page) {
   const response = page.waitForResponse(response => new URL(response.url()).pathname === '/api/v1/relation-migrations' && response.request().method() === 'POST', { timeout: 45_000 });
   await page.getByRole('button', { name: 'Execute reviewed graph change', exact: true }).click();
-  const result = await response; return { status: result.status(), body: await result.json() };
+  const result = await response; return { status: result.status(), body: await result.json(),
+    requestKey: await result.request().headerValue('idempotency-key'), requestBody: result.request().postData() };
 }
 async function execute(page: Page): Promise<RelationMigrationReceipt> {
   const control = page.getByRole('checkbox', { name: consent, exact: true }); await control.focus(); await page.keyboard.press('Space'); await expect(control).toBeChecked();
@@ -220,8 +221,21 @@ test('MOD: edits clear consent, concurrent reviews recover from stale execution,
     expect([409, 503]).toContain(attempts[loserIndex].status);
     expect(['VERSION_CONFLICT', 'RELATION_PREVIEW_STALE', 'RELATION_RETRY']).toContain(attempts[loserIndex].body.code);
     if (attempts[loserIndex].status === 503) {
-      const retried = loser.waitForResponse(response => new URL(response.url()).pathname === '/api/v1/relation-migrations' && response.request().method() === 'POST');
-      await loser.getByRole('button', { name: 'Retry', exact: true }).click(); expect((await retried).status()).toBe(409);
+      expect(attempts[loserIndex].body.code).toBe('RELATION_RETRY');
+      await expect(loser.getByText('The execution result is unknown. Retry the exact same request key and preview, or inspect its receipt before changing the draft.', { exact: true })).toBeVisible();
+      await expect(loser.getByRole('checkbox', { name: consent, exact: true })).toBeChecked();
+      await expect(loser.getByRole('checkbox', { name: consent, exact: true })).toBeDisabled();
+      const retry = loser.getByRole('button', { name: 'Try again', exact: true });
+      await expect(retry).toBeVisible(); await expect(retry).toBeEnabled();
+      const [retried] = await Promise.all([
+        loser.waitForResponse(response => new URL(response.url()).pathname === '/api/v1/relation-migrations' && response.request().method() === 'POST'),
+        retry.click(),
+      ]);
+      expect(attempts[loserIndex].requestKey).toBeTruthy(); expect(attempts[loserIndex].requestBody).toBeTruthy();
+      expect(await retried.request().headerValue('idempotency-key')).toBe(attempts[loserIndex].requestKey);
+      expect(retried.request().postData()).toBe(attempts[loserIndex].requestBody);
+      expect(retried.status()).toBe(409);
+      expect(['VERSION_CONFLICT', 'RELATION_PREVIEW_STALE']).toContain((await retried.json()).code);
     }
     await expect(loser.getByRole('checkbox', { name: consent, exact: true })).toHaveCount(0);
   } finally { await competing.close(); }

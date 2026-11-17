@@ -2,12 +2,14 @@
 /** Synthetic browser setup through authenticated real HTTP; no response interception. */
 import { expect, type APIResponse, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import {waitForBrowserRateBudget} from './browser-rate-budget.ts';
 import type { DomainTypeDefinition, DomainTypeView, DomainView } from '../../packages/domain/src/business-domain-contracts.ts';
 const credentials = JSON.parse(readFileSync('.local/bootstrap.json', 'utf8'));
 export const domainBrowserOrigin = new URL(process.env.GC_BROWSER_BASE_URL || 'http://localhost:4310').origin;
 export const stewardIdentity = '10000000-0000-4000-8000-000000000001';
 const csrf = new WeakMap<Page, string>();
 export async function domainLogin(page: Page, username = 'steward') {
+  await waitForBrowserRateBudget(page.request);
   await page.goto('/auth/login'); await page.locator('input[name="username"]').fill(username);
   await page.locator('input[name="password"]').fill(credentials.personas[username]);
   await page.getByRole('button', { name: 'Sign In', exact: true }).click(); await expect(page).toHaveURL(`${domainBrowserOrigin}/`);

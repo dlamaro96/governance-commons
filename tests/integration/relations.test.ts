@@ -462,7 +462,14 @@ test('real internal source completions preserve assertions through rename, empty
   const workerHeaders = { Authorization: `Bearer ${process.env.SITE_TOKEN}`, 'X-Tenant-Id': tenant, 'Content-Type': 'application/json' };
   const records = [{ externalId: 'relation-source', name: 'Observed source', qualifiedName: 'synthetic.source', type: 'table', metadata: {} },
     { externalId: 'relation-target', name: 'Observed target', qualifiedName: 'synthetic.target', type: 'table', metadata: {} }];
-  const { job } = await createManualScanFixture(t, { tenantId: tenant, sourceId, actorId: steward, fetch });
+  const manual = await createManualScanFixture(t, { tenantId: tenant, sourceId, actorId: steward, fetch });
+  // Keep controlled Temporal reservations isolated while using the supported
+  // claim route to allocate the generation required by every completion.
+  const job = async () => {
+    const id = await manual.job(), claimed = await response(await fetch(base + '/internal/jobs/' + id + '/claim', {
+      method: 'POST', headers: workerHeaders, body: '{}', signal: AbortSignal.timeout(15_000) }), 200);
+    assert.equal(claimed.job.id, id); assert.equal(claimed.job.sourceId, sourceId); assert.equal(claimed.job.status, 'running'); assert.equal(claimed.source.id, sourceId); return id;
+  };
   const complete = (id: string, rows: typeof records, permissionFingerprint = 'wide', finished: boolean = true) => fetch(base + '/internal/jobs/' + id + '/complete', {
     method: 'POST', headers: workerHeaders, body: JSON.stringify({ observedAt: new Date().toISOString(), sourceVersion: 'synthetic-real-handler', permissionFingerprint, complete: finished, records: rows }) });
   await response(await complete(await job(), records), 200);

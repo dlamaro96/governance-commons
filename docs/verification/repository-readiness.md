@@ -1,4 +1,10 @@
-# Repository readiness — development bootstrap
+# Repository readiness
+
+Current checkpoint, 17 November 2026: the project remains a development preview. [Product status](../product/STATUS.md), [delivery plan](../execution/PLAN.md) and [release readiness](../release/READINESS.md) describe the active implementation. Delivery issues #24–#33 are created and verified; [the mapping](../execution/backlog.json) covers all1,106 requirements. PR #23 targets main and supersedes closed #22 with every commit preserved; it remains draft. Latest published source security passes, but integration CI fails the authority-loader deadline after168 passing API cases. No merge or release qualification is claimed.
+
+## Historical repository bootstrap — 15 November 2026
+
+The evidence and settings below describe their recorded bootstrap dates, not a fresh read-back of every setting.
 
 Repository: [dlamaro96/governance-commons](https://github.com/dlamaro96/governance-commons),
 public, default branch `main`. Initial published commit:

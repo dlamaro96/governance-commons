@@ -1,0 +1,514 @@
+{
+  "schema_version": 1,
+  "status": "FAIL_HOSTED_SOURCE_FINDINGS",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "recorded_at": "2026-11-16T10:44:14.061740+00:00",
+  "repository": "dlamaro96/governance-commons",
+  "pull_request": 22,
+  "source_run": 43849455765,
+  "url": "https://github.com/dlamaro96/governance-commons/actions/runs/43849455765",
+  "source_commit": "74b2acbf5a579261c070e0671fb05176e408b726",
+  "tested_merge": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+  "base_commit": "086f16c412c889bf5af3a6c898c2f9b14f9297ba",
+  "source_binding": {
+    "file_count": 1050,
+    "source_bytes": 47562406,
+    "source_digest": "f6364ba50fe8565435ec248446bd7abe215e3558fdf9c8bbedfd1320a41c921a",
+    "identical_tree": "b7070ae36922867d415cf58231cfbf6a41c80f76",
+    "expected_counts": {
+      "actions": 2,
+      "javascript-typescript": 237,
+      "python": 43
+    },
+    "method": "Immutable Git commit API metadata establishes identical tested-merge/local-commit tree; all local immutable Git blobs independently read and checked, including exact path set, byte length, SHA256, expected language and canonical source digest. No mutable worktree substituted; no Git fetch performed.",
+    "private_original": {
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-review/source-binding.json",
+      "sha256": "a485b5e23ca774fa5ccf06c4a3b79d15e53c8dd2571ff38d57a46ac9acfffcf4",
+      "bytes": 218051
+    }
+  },
+  "jobs": {
+    "actions": "PASS",
+    "javascript-typescript": "FAIL",
+    "python": "PASS",
+    "sast-policy": "PASS",
+    "sast-required": "FAIL"
+  },
+  "languages": [
+    {
+      "language": "actions",
+      "analysis": "PASS",
+      "findings_gate": "PASS",
+      "results": 0,
+      "coverage": {
+        "databaseFiles": 2,
+        "expectedFiles": 2,
+        "extractedExpectedFiles": 2,
+        "extractedPathsDigest": "c228ac51166e11c81d1ef65cfb1e67d5b6c9d23d4c5afd201c961b7f25483467"
+      },
+      "resolved_queries": 24,
+      "sarif_rules": 23,
+      "tool_version": "2.27.4",
+      "query_pack": "codeql/actions-queries",
+      "query_version": "0.6.39",
+      "library_version": "0.7.1",
+      "published_sarif_sha256": "3cc863f342a59b0075e3e106255a9b92e8650232e417b25e455c0f9071af8aef",
+      "analysis_id": 2175649300,
+      "sarif_id": "e36cd944-e1a8-11f1-84eb-878d941224b8",
+      "archive": {
+        "name": "sast-actions-43849455765-1",
+        "sha256": "2957ae4267b0a03b9062a8d10bdccc032bdc70c4958e91c42b23a677c4ac98a6"
+      },
+      "stored_analysis": {
+        "ref": "refs/pull/22/merge",
+        "commit_sha": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+        "category": "governance-commons/actions",
+        "created_at": "2026-11-16T10:31:32Z",
+        "results_count": 0,
+        "rules_count": 23,
+        "error": "",
+        "warning": ""
+      }
+    },
+    {
+      "language": "python",
+      "analysis": "PASS",
+      "findings_gate": "PASS",
+      "results": 0,
+      "coverage": {
+        "databaseFiles": 63,
+        "expectedFiles": 43,
+        "extractedExpectedFiles": 43,
+        "extractedPathsDigest": "fe4ab944ac8a814141f6e9103e10e4a73e0e0d47ba6d0864b76c1d1434d7bf1c"
+      },
+      "resolved_queries": 52,
+      "sarif_rules": 50,
+      "tool_version": "2.27.4",
+      "query_pack": "codeql/python-queries",
+      "query_version": "1.9.0",
+      "library_version": "7.2.9",
+      "published_sarif_sha256": "73f4e4545f85c85d9f3b5107f7291b76c2e87fb6537cbf040080c2ed829f6118",
+      "analysis_id": 2175652121,
+      "sarif_id": "f25e11e8-e1a8-11f1-8172-0059845716b0",
+      "archive": {
+        "name": "sast-python-43849455765-1",
+        "sha256": "2036a79e53beb030b6143719c504fa7cac4f7850519a585e7e0865afeb217415"
+      },
+      "stored_analysis": {
+        "ref": "refs/pull/22/merge",
+        "commit_sha": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+        "category": "governance-commons/python",
+        "created_at": "2026-11-16T10:31:57Z",
+        "results_count": 0,
+        "rules_count": 50,
+        "error": "",
+        "warning": ""
+      }
+    },
+    {
+      "language": "javascript-typescript",
+      "analysis": "PASS",
+      "findings_gate": "BLOCKED",
+      "results": 10,
+      "coverage": {
+        "databaseFiles": 263,
+        "expectedFiles": 237,
+        "extractedExpectedFiles": 237,
+        "extractedPathsDigest": "812e781fae7b661713fb33ab95f308e526e323e43922d278cc45247cabf1eb7b"
+      },
+      "resolved_queries": 105,
+      "sarif_rules": 103,
+      "tool_version": "2.27.4",
+      "query_pack": "codeql/javascript-queries",
+      "query_version": "2.5.0",
+      "library_version": "3.0.0",
+      "published_sarif_sha256": "1c1b328dbbc688131e273ade49a6d8bca9265959706dab11201b7a6e7b8d62ad",
+      "analysis_id": 2175659561,
+      "sarif_id": "1a24c2ee-e1a9-11f1-91bf-2298744e040a",
+      "archive": {
+        "name": "sast-javascript-typescript-43849455765-1",
+        "sha256": "abedba8c3f4054c2371243167e05f25da33d3adbdb4f08b44c3c1508bcb7334a"
+      },
+      "stored_analysis": {
+        "ref": "refs/pull/22/merge",
+        "commit_sha": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+        "category": "governance-commons/javascript-typescript",
+        "created_at": "2026-11-16T10:33:04Z",
+        "results_count": 10,
+        "rules_count": 103,
+        "error": "",
+        "warning": ""
+      }
+    }
+  ],
+  "findings": [
+    {
+      "ruleId": "js/missing-rate-limiting",
+      "path": "apps/login-broker/src/app.ts",
+      "line": 28,
+      "startColumn": 26,
+      "endColumn": 3,
+      "severity": "high",
+      "blocking": true,
+      "disposition": "untriaged",
+      "fingerprint": "0d3605cdcfb5e174dd9ae3b1370eff327436696834d4afb72107f97bbfce89ca",
+      "sourceSuppressed": false
+    },
+    {
+      "ruleId": "js/missing-rate-limiting",
+      "path": "apps/login-broker/src/app.ts",
+      "line": 32,
+      "startColumn": 25,
+      "endColumn": 3,
+      "severity": "high",
+      "blocking": true,
+      "disposition": "untriaged",
+      "fingerprint": "005f0878b415fe639bdad6909897341d0fa86db731c6c2f9aa1b89df9988911f",
+      "sourceSuppressed": false
+    },
+    {
+      "ruleId": "js/missing-rate-limiting",
+      "path": "apps/login-broker/src/app.ts",
+      "line": 44,
+      "startColumn": 28,
+      "endColumn": 3,
+      "severity": "high",
+      "blocking": true,
+      "disposition": "untriaged",
+      "fingerprint": "c19d9703cbf8991fb42766c9cd8316aa25e9991baaa3f31bec4cb803d663edd7",
+      "sourceSuppressed": false
+    },
+    {
+      "ruleId": "js/missing-rate-limiting",
+      "path": "apps/session-api/src/server.ts",
+      "line": 11,
+      "startColumn": 27,
+      "endColumn": 3,
+      "severity": "high",
+      "blocking": true,
+      "disposition": "untriaged",
+      "fingerprint": "70495720a633dcc1e9d27f32570b1ef3b8c98e11c1f9e8c611a8c05a491bc760",
+      "sourceSuppressed": false
+    },
+    {
+      "ruleId": "js/missing-rate-limiting",
+      "path": "apps/session-api/src/server.ts",
+      "line": 19,
+      "startColumn": 28,
+      "endColumn": 3,
+      "severity": "high",
+      "blocking": true,
+      "disposition": "untriaged",
+      "fingerprint": "ec008b00db3bccb5aa439c56f5e225c7cbc7dc47e33ad5387110dd8f77afdc04",
+      "sourceSuppressed": false
+    },
+    {
+      "ruleId": "js/missing-rate-limiting",
+      "path": "apps/session-api/src/server.ts",
+      "line": 30,
+      "startColumn": 28,
+      "endColumn": 3,
+      "severity": "high",
+      "blocking": true,
+      "disposition": "untriaged",
+      "fingerprint": "ae7d223d652419f171aee9ac71829980b435fc0a5e364017f1d6c5d94514dd37",
+      "sourceSuppressed": false
+    },
+    {
+      "ruleId": "js/missing-rate-limiting",
+      "path": "apps/session-api/src/server.ts",
+      "line": 49,
+      "startColumn": 28,
+      "endColumn": 3,
+      "severity": "high",
+      "blocking": true,
+      "disposition": "untriaged",
+      "fingerprint": "75ae1c0203d0d659b1528bd34212cf16f1e363e946655e5ded59fc6e0ab0a8e2",
+      "sourceSuppressed": false
+    },
+    {
+      "ruleId": "js/missing-rate-limiting",
+      "path": "packages/authn/src/transport.ts",
+      "line": 168,
+      "startColumn": 27,
+      "endColumn": 3,
+      "severity": "high",
+      "blocking": true,
+      "disposition": "untriaged",
+      "fingerprint": "3c3ad545f1f5db5c4514b4e08539d76e20d2ac7cd88cea51f773230db22be7ce",
+      "sourceSuppressed": false
+    },
+    {
+      "ruleId": "js/missing-rate-limiting",
+      "path": "tests/unit/protected-transport.test.ts",
+      "line": 52,
+      "startColumn": 124,
+      "endColumn": 338,
+      "severity": "high",
+      "blocking": true,
+      "disposition": "untriaged",
+      "fingerprint": "ab2fb87b3e57acd3038c52c6de0c86628913791fc34618f680b084ae4e4c56aa",
+      "sourceSuppressed": false
+    },
+    {
+      "ruleId": "js/reflected-xss",
+      "path": "tests/unit/protected-transport.test.ts",
+      "line": 40,
+      "startColumn": 102,
+      "endColumn": 114,
+      "severity": "high",
+      "blocking": true,
+      "disposition": "untriaged",
+      "fingerprint": "17cc0d30eff5a439e2e838d6e099c54bb90977aae79a7c840326aab4a352deac",
+      "sourceSuppressed": false
+    }
+  ],
+  "stored_alerts": [
+    {
+      "commit": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+      "location": {
+        "end_column": 114,
+        "end_line": 40,
+        "path": "tests/unit/protected-transport.test.ts",
+        "start_column": 102,
+        "start_line": 40
+      },
+      "number": 21,
+      "ref": "refs/pull/22/merge",
+      "ruleId": "js/reflected-xss",
+      "securitySeverity": "high",
+      "state": "open"
+    },
+    {
+      "commit": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+      "location": {
+        "end_column": 338,
+        "end_line": 52,
+        "path": "tests/unit/protected-transport.test.ts",
+        "start_column": 124,
+        "start_line": 52
+      },
+      "number": 20,
+      "ref": "refs/pull/22/merge",
+      "ruleId": "js/missing-rate-limiting",
+      "securitySeverity": "high",
+      "state": "open"
+    },
+    {
+      "commit": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+      "location": {
+        "end_column": 3,
+        "end_line": 194,
+        "path": "packages/authn/src/transport.ts",
+        "start_column": 27,
+        "start_line": 168
+      },
+      "number": 19,
+      "ref": "refs/pull/22/merge",
+      "ruleId": "js/missing-rate-limiting",
+      "securitySeverity": "high",
+      "state": "open"
+    },
+    {
+      "commit": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+      "location": {
+        "end_column": 3,
+        "end_line": 64,
+        "path": "apps/session-api/src/server.ts",
+        "start_column": 28,
+        "start_line": 49
+      },
+      "number": 18,
+      "ref": "refs/pull/22/merge",
+      "ruleId": "js/missing-rate-limiting",
+      "securitySeverity": "high",
+      "state": "open"
+    },
+    {
+      "commit": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+      "location": {
+        "end_column": 3,
+        "end_line": 48,
+        "path": "apps/session-api/src/server.ts",
+        "start_column": 28,
+        "start_line": 30
+      },
+      "number": 17,
+      "ref": "refs/pull/22/merge",
+      "ruleId": "js/missing-rate-limiting",
+      "securitySeverity": "high",
+      "state": "open"
+    },
+    {
+      "commit": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+      "location": {
+        "end_column": 3,
+        "end_line": 29,
+        "path": "apps/session-api/src/server.ts",
+        "start_column": 28,
+        "start_line": 19
+      },
+      "number": 16,
+      "ref": "refs/pull/22/merge",
+      "ruleId": "js/missing-rate-limiting",
+      "securitySeverity": "high",
+      "state": "open"
+    },
+    {
+      "commit": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+      "location": {
+        "end_column": 3,
+        "end_line": 15,
+        "path": "apps/session-api/src/server.ts",
+        "start_column": 27,
+        "start_line": 11
+      },
+      "number": 15,
+      "ref": "refs/pull/22/merge",
+      "ruleId": "js/missing-rate-limiting",
+      "securitySeverity": "high",
+      "state": "open"
+    },
+    {
+      "commit": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+      "location": {
+        "end_column": 3,
+        "end_line": 66,
+        "path": "apps/login-broker/src/app.ts",
+        "start_column": 28,
+        "start_line": 44
+      },
+      "number": 14,
+      "ref": "refs/pull/22/merge",
+      "ruleId": "js/missing-rate-limiting",
+      "securitySeverity": "high",
+      "state": "open"
+    },
+    {
+      "commit": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+      "location": {
+        "end_column": 3,
+        "end_line": 43,
+        "path": "apps/login-broker/src/app.ts",
+        "start_column": 25,
+        "start_line": 32
+      },
+      "number": 13,
+      "ref": "refs/pull/22/merge",
+      "ruleId": "js/missing-rate-limiting",
+      "securitySeverity": "high",
+      "state": "open"
+    },
+    {
+      "commit": "8dc61b870283a54d445bbc90365e51a98f7ce3a3",
+      "location": {
+        "end_column": 3,
+        "end_line": 31,
+        "path": "apps/login-broker/src/app.ts",
+        "start_column": 26,
+        "start_line": 28
+      },
+      "number": 12,
+      "ref": "refs/pull/22/merge",
+      "ruleId": "js/missing-rate-limiting",
+      "securitySeverity": "high",
+      "state": "open"
+    }
+  ],
+  "all_state_alert_inventory_complete": true,
+  "stored_analysis_count": 3,
+  "original_artifacts": [
+    {
+      "bytes": 4152,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-actions/actions-summary.json",
+      "sha256": "e1d7e69960dcc7caf137c3248bd7d65a9f5e9be3291438c2a9f273905c0f6b6c"
+    },
+    {
+      "bytes": 293264,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-actions/actions.sarif",
+      "sha256": "3cc863f342a59b0075e3e106255a9b92e8650232e417b25e455c0f9071af8aef"
+    },
+    {
+      "bytes": 230682,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-actions/source-manifest.json",
+      "sha256": "6449faa5b20e863122f428706394a4d5f5109b0b54df985ec513cc85217ec3fe"
+    },
+    {
+      "bytes": 6255,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-actions/summary.json",
+      "sha256": "f014758c78d0f243ecfdf807f7568c90deec72f2ee0d4c5e897907ac800cceb0"
+    },
+    {
+      "bytes": 290,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-actions/upload-status.json",
+      "sha256": "67e097f892fa3f6a186b6d15bd19d58677ff157afd527cb5290a6adcca59e665"
+    },
+    {
+      "bytes": 4623,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-python/python-summary.json",
+      "sha256": "d350aa358c3ce7c1b95e741a694f2a9ca85f6c0588f881edb4a53e375564f830"
+    },
+    {
+      "bytes": 378814,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-python/python.sarif",
+      "sha256": "73f4e4545f85c85d9f3b5107f7291b76c2e87fb6537cbf040080c2ed829f6118"
+    },
+    {
+      "bytes": 230682,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-python/source-manifest.json",
+      "sha256": "6449faa5b20e863122f428706394a4d5f5109b0b54df985ec513cc85217ec3fe"
+    },
+    {
+      "bytes": 6788,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-python/summary.json",
+      "sha256": "2e0123180089a0efbba4ff3c7043926625baa54bd5a1eac7ca7b2ccc52d72c83"
+    },
+    {
+      "bytes": 289,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-python/upload-status.json",
+      "sha256": "37cdf6bfd6021ff822723080c8c83d284978552de5c183776c42e35c18a83ec8"
+    },
+    {
+      "bytes": 7932,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-js/javascript-typescript-summary.json",
+      "sha256": "4f98e40a566713fc3300052c64b07f7dc6ace9ef6d5fa230726cedd5ea5332d2"
+    },
+    {
+      "bytes": 624406,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-js/javascript-typescript.sarif",
+      "sha256": "1c1b328dbbc688131e273ade49a6d8bca9265959706dab11201b7a6e7b8d62ad"
+    },
+    {
+      "bytes": 230682,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-js/source-manifest.json",
+      "sha256": "6449faa5b20e863122f428706394a4d5f5109b0b54df985ec513cc85217ec3fe"
+    },
+    {
+      "bytes": 10541,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-js/summary.json",
+      "sha256": "0b4309152c345095c6b23622ffe178d16ae1b1c265418cd233f8d5e772baa85b"
+    },
+    {
+      "bytes": 304,
+      "path": ".local/evidence/protected-authn-hosted-attempt-1/source-js/upload-status.json",
+      "sha256": "0c3fdf3c01e17a216b7ac2d38ade0e0ce5470bfac4dda687a45c4364c96f5e21"
+    }
+  ],
+  "private_verifier": {
+    "path": ".local/evidence/protected-authn-hosted-attempt-1/source-review.json",
+    "sha256": "97696d725b95bca4c9b3355f12fcb616ff524193add6af4d5c7f3e86131c46a3",
+    "bytes": 29677
+  },
+  "limits": [
+    "All three language analyses and extraction coverage pass; JavaScript findings gate is BLOCKED by ten high findings. The complete ref-scoped alert inventory contains the same ten open results. This does not qualify Development, runtime health, full authority decisions/activation or release.",
+    "Original exported summaries record exact extraction coverage; their expected path sets, source hashes, policy and coverage query hashes were independently verified. Raw BQRS/decoded extraction-path tables and query-resolution lists are not exported artifacts, so their path digests and resolved query-set digests were not independently recomputed. No scanner rerun occurred.",
+    "ZIP SHA256 values were observed in public UI by root and supplied to this agent; gh run download retained extracted original bytes only. ZIP bytes were not retained or independently rehashed.",
+    "Stored analysis metadata and complete ref-scoped all-state CodeQL alert inventory were independently read. Stored SARIF bytes were not downloaded; published SARIF hashes were independently computed from original extracted artifact files.",
+    "All analysis and alert API reads are point-in-time observations; later commits or scans are not covered.",
+    "Source analysis covers only the recorded Actions, JavaScript/TypeScript and Python sources. SQL/RLS, dependencies, images, general IaC, behavior, runtime health, independent human review and programme/release qualification are outside this check.",
+    "Native 4096MiB requested memory plus 2048MiB admission reserve is an estimate, not a hard process memory cap.",
+    "No Actions metadata/log/checks REST/GraphQL reads, browser actions, source edits, tests, runtime or scanner executions were performed by this validation. Only supplied original artifacts, immutable Git metadata, local immutable Git blob reads and stored CodeQL analysis/alert endpoints were used."
+  ],
+  "subsequent_correction": "Standard global authentication limiter and JSON test envelope are later source. This failed scan does not execute or qualify them. Original ten findings remain open at recorded readback."
+}

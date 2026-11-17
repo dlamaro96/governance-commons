@@ -1,0 +1,13 @@
+.structure-workspace { min-width: 0; }
+.structure-workspace fieldset { min-width: 0; }
+.structure-entry { border: 1px solid var(--border); border-radius: 8px; padding: 1rem; display: grid; gap: .85rem; }
+.structure-entry legend { font-weight: 650; padding-inline: .35rem; }
+.structure-endpoint .reference-records { max-height: 24rem; overflow: auto; }
+.structure-pin { display: flex; flex-wrap: wrap; gap: .65rem; align-items: baseline; border: 1px solid var(--border); padding: .8rem; border-radius: 8px; min-width: 0; }
+.structure-pin details { width: 100%; overflow-wrap: anywhere; }
+.structure-table td { vertical-align: top; min-width: 7rem; max-width: 25rem; overflow-wrap: anywhere; }
+.structure-forest { min-width: 0; margin-block: 1rem; }
+.structure-levels { display: grid; gap: .75rem; padding-inline-start: 1.5rem; }
+.structure-levels > li > ul { list-style: none; display: flex; flex-wrap: wrap; gap: .6rem; padding: .5rem 0; }
+.structure-levels > li > ul > li { display: grid; gap: .3rem; border: 1px solid var(--border); padding: .65rem; border-radius: 6px; min-width: 6rem; max-width: 100%; overflow-wrap: anywhere; }
+@media (max-width: 640px) { .structure-pin { display: grid; } .structure-entry { padding: .65rem; } .structure-workspace .reference-actions > .button { white-space: normal; } }

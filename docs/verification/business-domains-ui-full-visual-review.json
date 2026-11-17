@@ -6,7 +6,7 @@
   "baseCommit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
   "workingTreeDirty": true,
   "profile": "core",
-  "reviewer": "Codex /root/graph_copier_review (AI-assisted static screenshot and evidence review)",
+  "reviewer": "Automated assistant (AI-assisted static screenshot and evidence review)",
   "fullExecution": {
     "result": "PASS",
     "command": [
@@ -380,9 +380,9 @@
   },
   "targetedReview": {
     "path": "docs/verification/business-domains-ui-visual-review.json",
-    "sha256": "f56ec20ed95311396af058b4f4ddc67f005df0dabcbcb06e33f1b00fd17adfe1",
-    "unchanged": true,
-    "relationship": "The targeted review records earlier failed attempts, read-only source corrections and the separate attempt-6 pass. It remains byte-identical; this supplement adds the later complete browser execution and fresh image inspection."
+    "sha256": "2a70cdbf432fe2ebc35dc47e8f59d8331977039aa7870e81fdadc33d2ec9ddbd",
+    "unchanged": false,
+    "relationship": "The original targeted review is preserved privately at the original SHA256 recorded in this report’s publication_serialization. The linked public serialization removes only the internal reviewer task identifier and records that editorial change. Its execution, source, screenshot and visual-review facts are unchanged."
   },
   "sourceBinding": {
     "beforeEqualsAfter": true,
@@ -399,7 +399,7 @@
     "exactSourceAndServedAssetInventory": {
       "evidence": {
         "path": "docs/verification/business-domains-ui-visual-review.json",
-        "sha256": "f56ec20ed95311396af058b4f4ddc67f005df0dabcbcb06e33f1b00fd17adfe1"
+        "sha256": "2a70cdbf432fe2ebc35dc47e8f59d8331977039aa7870e81fdadc33d2ec9ddbd"
       },
       "jsonPointer": "/sourceBinding/snapshot",
       "alsoPresentIn": {
@@ -769,7 +769,7 @@
   "sourceReviewContinuity": {
     "evidence": {
       "path": "docs/verification/business-domains-ui-visual-review.json",
-      "sha256": "f56ec20ed95311396af058b4f4ddc67f005df0dabcbcb06e33f1b00fd17adfe1"
+      "sha256": "2a70cdbf432fe2ebc35dc47e8f59d8331977039aa7870e81fdadc33d2ec9ddbd"
     },
     "jsonPointer": "/sourceReview",
     "reviewedFilesUnchanged": true,
@@ -798,5 +798,21 @@
     "The full automated execution passes 19 distinct journeys, but this visual supplement inspects only the 26 domain captures. It does not claim visual review of the other journeys or of the 116 preserved historical screenshots.",
     "The reviewer executed no Docker, browser, API, scanner, build or mutation commands. Execution claims come from the preserved root-run report and raw results.",
     "The previous targeted report and all historical failures remain unchanged. This later pass does not relabel earlier failures or close broader product, external-integration, hosted or release gates."
-  ]
+  ],
+  "publication_serialization": {
+    "reason": "Internal reviewer task identifier removed; links updated to the metadata-only targeted-review serialization. Automated review scope retained.",
+    "original_report_sha256": "9514ab544d1bacbb27f99aa9d38b3c568d6c5ac4260f3b57801115e596a1a076",
+    "original_targeted_report_sha256": "f56ec20ed95311396af058b4f4ddc67f005df0dabcbcb06e33f1b00fd17adfe1",
+    "changed_fields": [
+      "/reviewer",
+      "/targetedReview/sha256",
+      "/targetedReview/unchanged",
+      "/targetedReview/relationship",
+      "/sourceBinding/exactSourceAndServedAssetInventory/evidence/sha256",
+      "/sourceReviewContinuity/evidence/sha256"
+    ],
+    "execution_and_review_facts_unchanged": true,
+    "test_rerun": false,
+    "historical_fields": "Original timestamps, source and screenshot inventories, pass/fail results and preservation statements describe the recorded execution/review; this serialization is not a new execution or review."
+  }
 }

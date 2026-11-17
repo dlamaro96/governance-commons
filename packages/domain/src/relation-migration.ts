@@ -7,6 +7,7 @@ import { RELATION_LIMITS, parseRelationDefinition, relationValidationInternals a
 import { policyKey, edgeKey, bindingKey, bindingIdentity, structuralProjection, policiesFromJSON, graphFromJSON,
   valuesFromJSON, eligible, deriveFromGraph, checkFinalGraph } from './relation-participation.ts';
 import type { RelationDefinition, RelationEndpointPolicyState } from './relation-contracts.ts';
+import { glossarySourceFromJSON, checkGlossaryGraphSource, checkGlossaryGraphIntent, type GlossaryGraphSourceProof } from './relation-glossary-source.ts';
 import type { AuthorizedCompleteGraphChange, BindingDisposition, CompleteGraphSnapshot, GraphAssetChange, GraphAssetPolicyEvidence,
   GraphAssetTuple, GraphBindingSnapshot, GraphChangeSet, GraphEdgeSnapshot, PreparedAssetChanges, RelationCreationProposal,
   RelationDisposition, RelationMigrationPlan, RelationMigrationTarget, RelationMigrationValues, RelationPolicyChange,
@@ -289,7 +290,8 @@ function transformEdge(edge: GraphEdgeSnapshot, head: RelationPolicySnapshot, so
 }
 /** These exact-policy and captured-shape checks are common to projection and validation.
  * They establish no access, source-asset preparation or principal eligibility. */
-function checkCapturedGraph(before: CompleteGraphSnapshot, policies: Map<string, RelationPolicySnapshot>, issues: Issues): void {
+function checkCapturedGraph(before: CompleteGraphSnapshot, policies: Map<string, RelationPolicySnapshot>, issues: Issues, sourceProof?: GlossaryGraphSourceProof): void {
+  if (sourceProof) { checkGlossaryGraphSource(before, policies, sourceProof, issues); return; }
   for (const row of before.edges) if (row.key.kind !== 'existing' || row.status !== 'active') issues.add('invalid_definition', '/before/edges', 'The captured before cohort contains only actual active edges.');
   for (const row of before.bindings) if (row.key.kind !== 'existing' || row.status !== 'active') issues.add('invalid_definition', '/before/bindings', 'The captured before cohort contains only actual active bindings.');
   const sourceConstraints = new Issues(); checkFinalGraph(before, policies, sourceConstraints); if (sourceConstraints.values.length) issues.append('/migration/source', sourceConstraints.values);
@@ -393,16 +395,19 @@ type GraphProposalInput = {
   policies: readonly RelationPolicySnapshot[]; preparedAssets: PreparedAssetChanges;
   proposedEndpoints: readonly RelationEndpointPolicyState[];
 };
-function constructGraphProposal(input: GraphProposalInput): ValidationResult<CompleteGraphSnapshot> {
-  const issues = new Issues(), copied = copyJSON(input, issues);
+function constructGraphProposal(input: GraphProposalInput, protectedSource?: { proof: unknown }): ValidationResult<CompleteGraphSnapshot> {
+  const issues = new Issues(), copied = copyJSON(protectedSource ? { input, sourceProof: protectedSource.proof } : input, issues);
   if (issues.values.length) return issues.result(undefined as never);
-  const raw = fields(copied, '', ['changeSet', 'before', 'policies', 'preparedAssets', 'proposedEndpoints'], issues);
+  const raw = fields(protectedSource ? (copied as Fields).input : copied, '', ['changeSet', 'before', 'policies', 'preparedAssets', 'proposedEndpoints'], issues);
+  const sourceProof = protectedSource ? glossarySourceFromJSON((copied as Fields).sourceProof, issues) : undefined;
   if (!raw) return issues.result(undefined as never);
   const changeSet = changeSetFromJSON(raw.changeSet, issues), policies = policiesFromJSON(raw.policies, issues);
   const before = graphFromJSON(raw.before, '/before', issues);
   const projected = graphFromJSON({ heads: [], edges: [], bindings: [], endpoints: raw.proposedEndpoints }, '/proposed', issues);
   if (!changeSet || !before || !projected || issues.values.length) return issues.result(undefined as never);
-  checkCapturedGraph(before, policies, issues);
+  if (protectedSource && !sourceProof) return issues.result(undefined as never);
+  if (sourceProof) checkGlossaryGraphIntent(changeSet, sourceProof, issues);
+  checkCapturedGraph(before, policies, issues, sourceProof);
   checkPreparedAssets(raw.preparedAssets, changeSet, before, projected, issues);
   if (issues.values.length) return issues.result(undefined as never);
   const { computed } = computeGraphProposal(changeSet, before, policies, projected.endpoints, issues);
@@ -424,10 +429,16 @@ export function constructRelationGraphProposal(input: GraphProposalInput): Valid
   catch { return { ok: false, issues: [{ code: 'invalid_definition', path: '/migration/proposal', message: 'The complete proposal envelope is malformed.' }] }; }
 }
 
-function validateGraphChange(input: AuthorizedCompleteGraphChange): ValidationResult<ValidatedGraphChange> {
-  const issues = new Issues(), copied = copyJSON(input, issues, RELATION_LIMITS.bytes, true);
+function validateGraphChange(input: AuthorizedCompleteGraphChange, protectedSource?: { proof: unknown }): ValidationResult<ValidatedGraphChange> {
+  const issues = new Issues();
+  // Admit native principal sets at their existing exact root paths first; then
+  // charge the detached input and proof together under one aggregate envelope.
+  const admitted = copyJSON(input, issues, RELATION_LIMITS.bytes, true);
   if (issues.values.length) return issues.result(undefined as never);
-  const raw = fields(copied, '', ['changeSet', 'completeRelationTypeIds', 'policies', 'preparedAssets', 'before', 'proposed', 'activeOwnerIds', 'tenantMemberIds', 'actorId'], issues);
+  const copied = protectedSource ? copyJSON({ input: admitted, sourceProof: protectedSource.proof }, issues) : admitted;
+  if (issues.values.length) return issues.result(undefined as never);
+  const raw = fields(protectedSource ? (copied as Fields).input : copied, '', ['changeSet', 'completeRelationTypeIds', 'policies', 'preparedAssets', 'before', 'proposed', 'activeOwnerIds', 'tenantMemberIds', 'actorId'], issues);
+  const sourceProof = protectedSource ? glossarySourceFromJSON((copied as Fields).sourceProof, issues) : undefined;
   if (!raw) return issues.result(undefined as never);
   const changeSet = changeSetFromJSON(raw.changeSet, issues), policies = policiesFromJSON(raw.policies, issues), before = graphFromJSON(raw.before, '/before', issues), proposed = graphFromJSON(raw.proposed, '/proposed', issues);
   const activity = new Set<string>(), members = new Set<string>(), complete = new Set<string>();
@@ -445,7 +456,12 @@ function validateGraphChange(input: AuthorizedCompleteGraphChange): ValidationRe
   const beforeHeads = new Map(before.heads.map(row => [row.relationTypeId, row.version]));
   const expectedTypes = new Set([...beforeHeads.keys(), ...changeSet.relationTargets.map(row => row.plan.relationTypeId)]);
   if (canonical([...expectedTypes].sort()) !== canonical([...complete].sort())) issues.add('invalid_definition', '/completeRelationTypeIds', 'Complete logical type scope must equal all current and explicit target types.');
-  checkCapturedGraph(before, policies, issues);
+  if (protectedSource && !sourceProof) return issues.result(undefined as never);
+  if (sourceProof) {
+    checkGlossaryGraphIntent(changeSet, sourceProof, issues);
+    if (sourceProof.actorId !== raw.actorId) issues.add('invalid_definition', '/sourceProof/actorId', 'Protected evidence belongs to the actual current actor.');
+  }
+  checkCapturedGraph(before, policies, issues, sourceProof);
   const sourceIssues: RepairableRelationSourceIssue[] = [];
   for (const [i, edge] of before.edges.entries()) {
     const policy = policies.get(policyKey(edge.relationTypeId, edge.relationTypeVersion));
@@ -478,4 +494,18 @@ function validateGraphChange(input: AuthorizedCompleteGraphChange): ValidationRe
 export function validateRelationGraphChange(input: AuthorizedCompleteGraphChange): ValidationResult<ValidatedGraphChange> {
   try { return validateGraphChange(input); }
   catch { return { ok: false, issues: [{ code: 'invalid_definition', path: '/migration', message: 'The complete prepared graph envelope is malformed.' }] }; }
+}
+
+/** Internal SQL016 composition only. Callers load the proof from the protected
+ * transaction helper; this pure function neither creates nor authenticates it.
+ * Ordinary constructRelationGraphProposal keeps its strict source contract. */
+export function constructGlossaryRelationGraphProposal(input: GraphProposalInput, sourceProof: GlossaryGraphSourceProof): ValidationResult<CompleteGraphSnapshot> {
+  try { return constructGraphProposal(input, { proof: sourceProof }); }
+  catch { return { ok: false, issues: [{ code: 'invalid_definition', path: '/sourceProof', message: 'Protected glossary graph proposal is malformed.' }] }; }
+}
+/** Internal companion: all deterministic, principal/value and final graph
+ * validation remains identical to the ordinary complete-graph validator. */
+export function validateGlossaryRelationGraphChange(input: AuthorizedCompleteGraphChange, sourceProof: GlossaryGraphSourceProof): ValidationResult<ValidatedGraphChange> {
+  try { return validateGraphChange(input, { proof: sourceProof }); }
+  catch { return { ok: false, issues: [{ code: 'invalid_definition', path: '/sourceProof', message: 'Protected glossary graph validation is malformed.' }] }; }
 }

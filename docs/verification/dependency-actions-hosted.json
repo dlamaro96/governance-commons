@@ -1,0 +1,163 @@
+{
+  "formatVersion": 1,
+  "status": "ACTION_UPDATES_HOSTED_QUALIFIED_FOR_SUPERSESSION",
+  "checkedAt": "2026-11-17T07:33:13.971992+00:00",
+  "repository": "dlamaro96/governance-commons",
+  "replacementPullRequest": 23,
+  "supersededPullRequests": [
+    1,
+    2,
+    5
+  ],
+  "publishedHead": "0b485925b6a07f1bb8518696d654376af0b079ed",
+  "testedMerge": "038a5914047317eb42bde1bf71247ae93e26ce82",
+  "samePublishedAndTestedTree": "d5723e2eba3cbc9e68e67933859b075d438f5f6c",
+  "run": {
+    "id": 44038149828,
+    "attempt": 1,
+    "url": "https://github.com/dlamaro96/governance-commons/actions/runs/44038149828",
+    "overallStatusAtRead": "in_progress",
+    "overallConclusionAtRead": null,
+    "qualifiedJobs": [
+      "quality",
+      "secrets"
+    ]
+  },
+  "actions": [
+    {
+      "job": "quality",
+      "jobId": 133885946332,
+      "step": "Run pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115",
+      "number": 3,
+      "action": "pnpm/action-setup",
+      "version": "v6.1.1",
+      "commit": "73e46992e05b19abd31f2f3c20e0e7370d762115",
+      "inputs": {
+        "version": "10.32.1",
+        "run_install": false
+      },
+      "outcome": "success"
+    },
+    {
+      "job": "quality",
+      "jobId": 133885946332,
+      "step": "Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+      "number": 5,
+      "action": "actions/setup-python",
+      "version": "v7.1.0",
+      "commit": "6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+      "inputs": {
+        "python-version": "3.14.5"
+      },
+      "outcome": "success"
+    },
+    {
+      "job": "quality",
+      "jobId": 133885946332,
+      "step": "Preserve the executed dependency inventory",
+      "number": 9,
+      "action": "actions/upload-artifact",
+      "version": "v7.0.2",
+      "commit": "cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+      "inputs": {
+        "name": "dependency-inventory-${{ github.sha }}",
+        "path": "docs/legal/dependency-inventory.json",
+        "retention-days": 14,
+        "if-no-files-found": "error"
+      },
+      "outcome": "success"
+    },
+    {
+      "job": "secrets",
+      "jobId": 133885945689,
+      "step": "Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+      "number": 3,
+      "action": "actions/setup-python",
+      "version": "v7.1.0",
+      "commit": "6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+      "inputs": {
+        "python-version": "3.14.5"
+      },
+      "outcome": "success"
+    },
+    {
+      "job": "secrets",
+      "jobId": 133885945689,
+      "step": "Preserve redacted scanner summary",
+      "number": 6,
+      "action": "actions/upload-artifact",
+      "version": "v7.0.2",
+      "commit": "cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+      "inputs": {
+        "name": "secret-scan-${{ github.sha }}",
+        "path": ".local/evidence/secret-scan.json",
+        "include-hidden-files": true,
+        "retention-days": 14,
+        "if-no-files-found": "error"
+      },
+      "outcome": "success"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 14308231850,
+      "name": "dependency-inventory-038a5914047317eb42bde1bf71247ae93e26ce82",
+      "archiveBytes": 8988,
+      "archiveSha256": "6e57093b1be00ed2639b5bc0c7661705bb7df7642bf01ac06e8abb211d0b843e",
+      "member": "dependency-inventory.json",
+      "memberBytes": 196104,
+      "memberSha256": "4509129c1eede82f7a6f2ec0a5452511df64650d3ddb3852cc580e9c29a372e6",
+      "metadataSha256": "586fc0428ba5d78255d9648b6ee813bd8afd40ec5846a7bdba0220c14b4684c6",
+      "archiveApiDigestMatches": true
+    },
+    {
+      "id": 14307942766,
+      "name": "secret-scan-038a5914047317eb42bde1bf71247ae93e26ce82",
+      "archiveBytes": 855,
+      "archiveSha256": "9cb25a7bd20f8ce25b64fde39b1706532389f32b7177dead9c07523e29ebc07d",
+      "member": "secret-scan.json",
+      "memberBytes": 1382,
+      "memberSha256": "164b2ca91f2668fc6fce0884ce083321b09156ee2ecf5f3cd1bf04e97e7d5776",
+      "metadataSha256": "f7a4da9334c55716634cdff563219f59ff1df146d03c9e440f6d7bec55c6dce8",
+      "archiveApiDigestMatches": true
+    }
+  ],
+  "dependencyInventory": {
+    "packages": 316,
+    "allow": 311,
+    "reviewedException": 5,
+    "unresolved": 0,
+    "lockSha256": "f1b463cb91ca5d7eafab95defa355eeefea766a2c9179beaf360c4b72a906210",
+    "allRecordsInExactLock": true,
+    "allDirectDependenciesPresent": true,
+    "allDecisionsRecomputedAgainstExactPolicy": true,
+    "lockedPackagesOutsideExecutedHostInventory": 91,
+    "scope": "installed Linux development host profile only"
+  },
+  "secretScan": {
+    "tool": "gitleaks",
+    "version": "8.30.1",
+    "scopes": [
+      "publishable_worktree",
+      "reachable_git_history"
+    ],
+    "findingCount": 0,
+    "publishableFiles": 1460,
+    "independentlyRecomputedTreeManifest": "4f132dcdb369a1bb40798f33ca4c4c4b385c864b56b0475e79e59e8a1dbdad87",
+    "sourceManifestMatches": true,
+    "worktreeDirty": false
+  },
+  "qualification_record": {
+    "private_record": ".local/github-delivery/action-hosted-qualification/receipt.json",
+    "sha256": "916ec6eeceb50833db1dbc771c56d6b55669fd031a77529efaae099c07dc7091"
+  },
+  "supersession_readback": {
+    "private_record": ".local/github-delivery/action-pr-supersession-receipt.json",
+    "sha256": "a20564955a6a2a690713a3a1d1a11390c34edbe6fd04e285e01bdfbfd27eaf98"
+  },
+  "limitations": [
+    "Only exact Action setup/upload compatibility,host dependency licence inventory and worktree/history secret scans are qualified.",
+    "The full Development behavior run is not qualified by these jobs. No enterprise/container/release claim.",
+    "PR1/2/5 were closed as superseded, not merged."
+  ]
+}

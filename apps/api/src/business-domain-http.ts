@@ -201,7 +201,9 @@ export function domainRawQuery(req: FastifyRequest, allowed: readonly string[]):
 /** Inspect the original spelling before JSON.parse can erase repeated fields.
  * The envelope budget includes two wrapper levels beyond a domain document;
  * retained domain values keep the service's stricter shared 512 KiB profile. */
-export function parseDomainRequestJSON(text: string): unknown {
+export type DomainJSONProfile = 'domain' | 'glossary-proposal';
+export function parseDomainRequestJSON(text: string, profile: DomainJSONProfile = 'domain'): unknown {
+  if (profile !== 'domain' && profile !== 'glossary-proposal') throw domainJSONInvalid();
   if (Buffer.byteLength(text, 'utf8') > 1048576) throw domainJSONInvalid();
   let offset = 0, nodes = 0;
   const malformed = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/;
@@ -220,7 +222,7 @@ export function parseDomainRequestJSON(text: string): unknown {
     }
     throw domainJSONInvalid();
   };
-  const visit = (depth: number): void => {
+  const visit = (depth: number, rootAssignments = false): void => {
     nodes += 1;
     if (nodes > 100010 || depth > 34) throw domainJSONInvalid();
     space();
@@ -229,10 +231,13 @@ export function parseDomainRequestJSON(text: string): unknown {
       if (text[offset] === '}') { offset += 1; return; }
       while (offset < text.length) {
         space(); const key = string();
-        if (keys.has(key) || !safeKey.test(key) || keys.size >= 128) throw domainJSONInvalid();
+        // A workflow may use 16 distinct assignments in each of 16 stages.
+        // This exception belongs only to the glossary proposal's root map.
+        const maximum = profile === 'glossary-proposal' && rootAssignments ? 256 : 128;
+        if (keys.has(key) || !safeKey.test(key) || keys.size >= maximum) throw domainJSONInvalid();
         keys.add(key); space();
         if (text[offset++] !== ':') throw domainJSONInvalid();
-        visit(depth + 1); space(); const next = text[offset++];
+        visit(depth + 1, depth === 0 && key === 'assignments'); space(); const next = text[offset++];
         if (next === '}') return;
         if (next !== ',') throw domainJSONInvalid();
       }
@@ -267,9 +272,10 @@ export function parseDomainRequestJSON(text: string): unknown {
 
 /** Fastify normally supplies parsed JSON. Keep injected or earlier-hook values
  * from introducing accessors, symbols, sparse arrays or exotic prototypes. */
-export function checkDomainData(input: unknown): void {
+export function checkDomainData(input: unknown, profile: DomainJSONProfile = 'domain'): void {
+  if (profile !== 'domain' && profile !== 'glossary-proposal') throw domainJSONInvalid();
   const active = new Set<object>(); let nodes = 0;
-  const visit = (value: unknown, depth: number): void => {
+  const visit = (value: unknown, depth: number, rootAssignments = false): void => {
     if (++nodes > 100010 || depth > 34) throw domainJSONInvalid();
     if (value === null || typeof value === 'boolean') return;
     if (typeof value === 'string') {
@@ -280,7 +286,7 @@ export function checkDomainData(input: unknown): void {
     if (!value || typeof value !== 'object' || active.has(value)) throw domainJSONInvalid();
     const array = Array.isArray(value), keys = Reflect.ownKeys(value);
     if (array ? Object.getPrototypeOf(value) !== Array.prototype || value.length > 2048 || keys.length !== value.length + 1
-      : ![Object.prototype, null].includes(Object.getPrototypeOf(value)) || keys.length > 128) throw domainJSONInvalid();
+      : ![Object.prototype, null].includes(Object.getPrototypeOf(value)) || keys.length > (profile === 'glossary-proposal' && rootAssignments ? 256 : 128)) throw domainJSONInvalid();
     active.add(value);
     try {
       const selected = array ? Array.from({ length: value.length }, (_, index) => String(index)) : keys;
@@ -288,7 +294,7 @@ export function checkDomainData(input: unknown): void {
         if (typeof key !== 'string' || !array && !safeKey.test(key)) throw domainJSONInvalid();
         const descriptor = Object.getOwnPropertyDescriptor(value, key);
         if (!descriptor?.enumerable || !Object.hasOwn(descriptor, 'value')) throw domainJSONInvalid();
-        visit(descriptor.value, depth + 1);
+        visit(descriptor.value, depth + 1, depth === 0 && key === 'assignments');
       }
     } finally { active.delete(value); }
   };

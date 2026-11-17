@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "result": "PRESERVED_EXECUTION_HISTORY",
+  "attempts": [
+    {
+      "launch": 1,
+      "result": "FAIL",
+      "phase": "developer-dispatch",
+      "reason": "Command incorrectly required shared-core bootstrap before isolated gate dispatch; no runtime resources started.",
+      "private_record_sha256": "5d90b8d354eedf5e2bfaa419d565d4a3aa2125f2eec51d2dad8fd449ac39164f"
+    },
+    {
+      "launch": 2,
+      "result": "FAIL",
+      "phase": "explicit-installation",
+      "reason": "Docker host bind ownership prevented private batch creation; later diagnosed with safe stage codes.",
+      "record_sha256": "9520282432bed1d5617bb0be1c9e630d0e67aa6ffc049c440a742ee839c7ba41",
+      "started_at": "2026-11-16T09:04:21.383398+00:00",
+      "recorded_at": "2026-11-16T09:04:31.683647+00:00",
+      "cleanup": {
+        "ownedRemoved": true,
+        "generatedCredentialsRemoved": true,
+        "resourceInventoryPreserved": true
+      },
+      "original_resources_retained": false
+    },
+    {
+      "launch": 3,
+      "result": "FAIL",
+      "phase": "explicit-installation",
+      "reason": "Exact private-directory ownership refusal; repaired with project-owned private named volume.",
+      "record_sha256": "a1ebe6b4dabd44af59d053d303629873cff283960af13edcc59881279cd10215",
+      "started_at": "2026-11-16T09:07:06.999656+00:00",
+      "recorded_at": "2026-11-16T09:07:17.073004+00:00",
+      "cleanup": {
+        "ownedRemoved": true,
+        "generatedCredentialsRemoved": true,
+        "resourceInventoryPreserved": true
+      },
+      "original_resources_retained": false
+    },
+    {
+      "launch": 4,
+      "result": "FAIL",
+      "phase": "keycloak-services",
+      "reason": "Native services ran but health checks could not supply exact Host through fetch; omitted tools volume required exact-owned cleanup addendum.",
+      "record_sha256": "87b7a0b4a82e9a3016bbcaec6bb99713c3b06c48d40df2bb1312b7bad555bb32",
+      "started_at": "2026-11-16T09:16:31.613717+00:00",
+      "recorded_at": "2026-11-16T09:18:40.661255+00:00",
+      "cleanup": {
+        "ownedRemoved": true,
+        "generatedCredentialsRemoved": true
+      },
+      "original_resources_retained": true,
+      "separate_cleanup_addendum_sha256": "21ea33fb378f0b1c4f0fc441f58ec1951d8ea28c4180c963b37bb15c3d779c83"
+    },
+    {
+      "launch": 5,
+      "result": "FAIL",
+      "phase": "keycloak-services",
+      "reason": "Service diagnostics confirmed Host-probe failure; cleanup and preserved inventories passed.",
+      "record_sha256": "ea03e00e542faf16ba33d604bad3fb6aa8f6f22e495a231a7e587d66bbb2cd5b",
+      "started_at": "2026-11-16T09:23:33.471984+00:00",
+      "recorded_at": "2026-11-16T09:25:42.457095+00:00",
+      "cleanup": {
+        "ownedRemoved": true,
+        "generatedCredentialsRemoved": true,
+        "resourceInventoryPreserved": true
+      },
+      "original_resources_retained": true
+    },
+    {
+      "launch": 6,
+      "result": "FAIL",
+      "phase": "native-http-tests",
+      "reason": "Fourteen fixture cases failed PostgreSQL42P08 parameter inference; explicit UUID/text casts repaired the fixture.",
+      "record_sha256": "fdb0c02551399e7628183fdf46096422f2cd32866e4ddf2086419caafbc8719d",
+      "started_at": "2026-11-16T09:29:16.798749+00:00",
+      "recorded_at": "2026-11-16T09:30:00.311060+00:00",
+      "cleanup": {
+        "ownedRemoved": true,
+        "generatedCredentialsRemoved": true,
+        "resourceInventoryPreserved": true
+      },
+      "original_resources_retained": true
+    },
+    {
+      "launch": 7,
+      "result": "FAIL",
+      "phase": "real-browser",
+      "reason": "Fifteen native cases and first journey passed; second journey stalled on unconsumed denial response body. Actual edge/Chrome diagnosis led to UI body consumption fix.",
+      "record_sha256": "b1cd1c9d8dcbebc4283ed460c3a92cd8257e38c39d4474c08f921d600d28df27",
+      "started_at": "2026-11-16T09:35:12.984704+00:00",
+      "recorded_at": "2026-11-16T09:38:12.526081+00:00",
+      "cleanup": {
+        "ownedRemoved": true,
+        "generatedCredentialsRemoved": true,
+        "resourceInventoryPreserved": true
+      },
+      "original_resources_retained": true,
+      "nativeHttp": {
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 11003.386338
+      },
+      "browser": {
+        "startTime": "2026-11-16T09:36:05.904Z",
+        "duration": 123963.145,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "launch": 8,
+      "result": "PASS",
+      "phase": "complete",
+      "reason": "Fifteen native and two real browser journeys passed; all eight captures reviewed and existing resource inventory preserved.",
+      "record_sha256": "078d8775860264c973813e0b3ca7af21a3b774149418c7ed01f7020353ba59f3",
+      "started_at": "2026-11-16T09:51:10.344706+00:00",
+      "recorded_at": "2026-11-16T09:52:13.023183+00:00",
+      "cleanup": {
+        "ownedRemoved": true,
+        "generatedCredentialsRemoved": true,
+        "resourceInventoryPreserved": true
+      },
+      "original_resources_retained": true,
+      "nativeHttp": {
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 11117.928756
+      },
+      "browser": {
+        "startTime": "2026-11-16T09:52:04.287Z",
+        "duration": 5973.261,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "limitations": [
+    "No failed attempt is relabeled. The seventh runtime execution is launch8 because launch1 stopped at dispatch.",
+    "Early failures retained cleanup comparisons but not both raw inventory snapshots, limiting independent reconstruction.",
+    "Launch4 retained its failed cleanup result and a separate exact-owned volume removal addendum.",
+    "Runtime execution used local mounted-source mode; immutable-image and hosted execution remain separate."
+  ]
+}

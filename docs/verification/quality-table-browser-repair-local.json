@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-17T09:35:59.514878+00:00",
+  "implementation_commit": "a1a2972c299edb557ee885616f4e26a35dcd3cd3",
+  "implementation_status": "TEST_REPAIR",
+  "outcome": "PASS_TARGET_FULL_PROFILE_PENDING",
+  "release_qualified": false,
+  "scope": [
+    "Retain the unsupported-target UI/API assertion on a real scanned PostgreSQL view (COLUMN_REQUIRED).",
+    "Verify an ordinary scanned table offers the single supported volume rule type.",
+    "Preserve the original column completeness lifecycle, immutable threshold and authorization assertions."
+  ],
+  "target": {
+    "outcome": "PASS",
+    "counts": {
+      "startTime": "2026-11-17T09:33:05.673Z",
+      "duration": 29883.114,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "source_files": 692,
+    "exact_git_blob_match": true,
+    "runtime_commit": "f3f21e5e7eb7190a2b6ff98725737d7255be1878",
+    "runtime_application_source_equivalence": 299,
+    "runtime_worker_source_equivalence": 13,
+    "execution": {
+      "private_record": ".local/evidence/product-quality-table-support-browser-attempt-2/execution.json",
+      "sha256": "111230d8144526d4f73df2a541ee775d752a4130b8d793b5f12138903e55c77f"
+    },
+    "root_readback": {
+      "private_record": ".local/evidence/product-quality-table-support-browser-attempt-2/root-readback.json",
+      "sha256": "00a26df9f6164a0d840d1c80a93db3c7c6ba5e14188f4a140f341fc78d2c1993"
+    },
+    "visual_review": {
+      "private_record": ".local/evidence/product-quality-table-support-browser-attempt-2/visual-review.json",
+      "sha256": "79700711819adafefb88bd9fca6b456a449f2794f05a9d342ff1a4b6d19e451a",
+      "outcome": "PASS_WITH_VIEWPORT_LIMITATIONS",
+      "inspected_captures": 4
+    },
+    "original_screenshots_restored": 154,
+    "cleanup": {
+      "schema_version": 1,
+      "scope": "registered-posix-groups-and-observed-descendants",
+      "result": "PASS",
+      "trigger": "normal",
+      "registeredBrowserGroups": 1,
+      "trackedProcesses": 28,
+      "termSignals": 0,
+      "killSignals": 0,
+      "remainingLive": 0,
+      "identityConflicts": 0,
+      "unresolvedGroups": 0,
+      "registryClosed": true
+    }
+  },
+  "preceding_full_profile": {
+    "outcome": "FAIL_OR_INCOMPLETE",
+    "declared_journeys": 37,
+    "attempt": "product-full-browser-attempt-16",
+    "commit": "f3f21e5e7eb7190a2b6ff98725737d7255be1878",
+    "counts": {
+      "startTime": "2026-11-17T09:03:49.564Z",
+      "duration": 1140274.5990000002,
+      "expected": 24,
+      "skipped": 12,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "cause": "An obsolete browser assertion expected ordinary tables to reject quality checks after table-volume support was added. The original completeness lifecycle was not reached in this attempt.",
+    "execution": {
+      "private_record": ".local/evidence/product-full-browser-attempt-16/execution.json",
+      "sha256": "b0e06fb4409830949e2f083743822bffb4ec35409f371735c3687d8a623d99e1"
+    },
+    "root_readback": {
+      "private_record": ".local/evidence/product-full-browser-attempt-16/root-readback.json",
+      "sha256": "37f99df83c3b149dc44e5a132eac2e609973e3f3a315d4de60466ffc9bbd45b3"
+    },
+    "source_files": 692,
+    "artifacts_rehashed": 187,
+    "captures_archived": 165,
+    "captures_visually_reviewed": 0,
+    "original_screenshots_restored": 154,
+    "cleanup": {
+      "schema_version": 1,
+      "scope": "registered-posix-groups-and-observed-descendants",
+      "result": "PASS",
+      "trigger": "nonzero",
+      "registeredBrowserGroups": 14,
+      "trackedProcesses": 488,
+      "termSignals": 0,
+      "killSignals": 0,
+      "remainingLive": 0,
+      "identityConflicts": 0,
+      "unresolvedGroups": 0,
+      "registryClosed": true
+    }
+  },
+  "launcher_attempts": [
+    {
+      "attempt": "product-quality-table-support-browser-attempt-1",
+      "outcome": "REFUSED_BEFORE_EXECUTION",
+      "cause": "The private file-selector matched two tests instead of one. No browser tests ran; the attempt is retained.",
+      "execution": {
+        "private_record": ".local/evidence/product-quality-table-support-browser-attempt-1/execution.json",
+        "sha256": "0525d8dd500ed879504e8e0a1002452f458767a192b464676842071382e61823"
+      }
+    }
+  ],
+  "limitations": [
+    "The one repaired journey does not establish that all37 journeys pass together.",
+    "The four inspected screenshots show scrolled completeness evidence panels; they are not full-page review, Arabic linguistic certification or independent accessibility assessment.",
+    "Browser-test-only changes use explicit source equivalence to the existing f3f21e5 runtime; no new core image build is inferred.",
+    "No whole baseline capability or supported release is qualified by this targeted test repair."
+  ]
+}

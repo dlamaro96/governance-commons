@@ -14,17 +14,18 @@
   ],
   "execution_location": "tenant-assigned local Python execution worker",
   "authentication_methods": [
-    "password via site-local secret reference"
+    "Password resolved from a tenant-bound site-local credential reference; generic targets require operator-approved verify-full TLS with a private CA policy"
   ],
   "required_permissions": [
     "CONNECT database",
     "USAGE selected schema",
     "SELECT all relations in scan scope"
   ],
-  "tenant_scope": "secret reference binds tenant IDs and exact destination",
+  "tenant_scope": "Credential and operator target policy independently bind tenant IDs and exact host, port, database and schema",
   "region_scope": "execution site network",
   "network_destinations": [
-    "operator-registered PostgreSQL host and port; local profile source-postgres:5432 only"
+    "Exact operator-approved PostgreSQL host and port, with every resolved address admitted by explicit CIDRs and pinned for verify-full TLS",
+    "Bundled synthetic profile only: source-postgres:5432 / harbor / public; explicit separate local plaintext exception"
   ],
   "source_identity_rules": "Within an existing registered source/database: database OID + relation OID + column attnum; display paths never identify objects. Database recreation/recycled-OID detection and source epochs remain unimplemented.",
   "supported_asset_types": [
@@ -52,8 +53,8 @@
       ],
       "verification_level": "V2",
       "limitations": [
-        "Bounded schema/table/view/column catalog extraction only; exact local destination and tenant allowlist.",
-        "Other PostgreSQL versions, architectures and remote deployment profiles remain unqualified.",
+        "Bounded schema/table/view/column catalog extraction; bundled local metadata qualification is distinct from the configurable target policy/TLS native gate.",
+        "Configurable targets are implemented with DNS/CIDR pinning and verify-full TLS. Other source versions, architectures, external deployments and end-to-end custom-target scans remain unqualified.",
         "Database/cluster recreation and recycled OID detection are not implemented; source-epoch reconciliation remains required and unverified."
       ],
       "test_evidence": [
@@ -61,13 +62,19 @@
       ]
     },
     "table_lineage": {
-      "implemented": false,
-      "tested_source_versions": [],
-      "verification_level": null,
-      "limitations": [
-        "No implementation or verification for this connector feature."
+      "implemented": true,
+      "tested_source_versions": [
+        "PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2)"
       ],
-      "test_evidence": []
+      "verification_level": "V2",
+      "limitations": [
+        "Bounded native pg_rewrite/pg_depend table/view dependencies within one successful registered-source scan.",
+        "Routine bodies, out-of-scope relations and unsupported relation kinds are explicit gaps. No SQL bodies, output-column mappings or cross-system stitching are inferred.",
+        "Local synthetic Linux arm64 source only; other versions and external deployments remain unqualified."
+      ],
+      "test_evidence": [
+        "docs/verification/postgresql-lineage-source-local.json"
+      ]
     },
     "column_lineage": {
       "implemented": false,
@@ -106,13 +113,18 @@
       "test_evidence": []
     },
     "dq_pushdown": {
-      "implemented": false,
-      "tested_source_versions": [],
-      "verification_level": null,
-      "limitations": [
-        "No implementation or verification for this connector feature."
+      "implemented": true,
+      "tested_source_versions": [
+        "PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2)"
       ],
-      "test_evidence": []
+      "verification_level": "V2",
+      "limitations": [
+        "Bounded exact completeness/null-count execution on a single PostgreSQL column, with immutable thresholds and aggregate-only results.",
+        "No source-row samples or source writes. Other quality rule families, broad profiling and external deployments remain unqualified."
+      ],
+      "test_evidence": [
+        "docs/verification/product-quality-local.json"
+      ]
     },
     "classification": {
       "implemented": false,
@@ -210,10 +222,10 @@
   "configuration_status": "deployment-specific",
   "runtime_health": "deployment-specific",
   "limitations": [
-    "Required PostgreSQL lineage, profiling, DQ and scoped native grant capabilities remain unimplemented; metadata-only flag is not full CX-001 completion.",
+    "PostgreSQL coverage remains partial: SQL/column/cross-system lineage, broad profiling, other DQ rule families and scoped native grant capabilities remain required.",
     "No deletion occurs on failed or incomplete scans.",
     "Database/cluster recreation and recycled OID detection are not implemented; source-epoch reconciliation remains required and unverified."
   ],
   "manifest_version": "1.0",
-  "verification_scope": "metadata flag only; overall PostgreSQL requirement remains partial"
+  "verification_scope": "Metadata, bounded native table/view dependencies and aggregate completeness execution on the exact local source; overall PostgreSQL requirement remains partial"
 }

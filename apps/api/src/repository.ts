@@ -5,13 +5,40 @@ import {Problem,type Principal} from '../../../packages/authz/src/index.ts';
 import type {DomainJournalOptions,DomainOnceOptions} from '../../../packages/domain/src/business-domain-service-contracts.ts';
 import {visibleDomainMigration} from '../../../packages/domain/src/business-domain-read.ts';
 import {visibleRelationOperation} from '../../../packages/domain/src/relation-migration-read.ts';
+import {visibleApprovalRequest} from '../../../packages/domain/src/approval-service.ts';
+import {sourceConfiguration} from '../../../packages/connectors/src/sources.ts';
+import {connectorCapabilities} from '../../../packages/connectors/src/capabilities.ts';
 export function assetView(r:any){return {id:r.id,name:r.name,qualifiedName:r.qualified_name,type:r.type,description:r.description,ownerId:r.owner_id??null,ownerName:r.owner_name??null,sourceId:r.source_id??null,sourceName:r.source_name??null,version:r.version,observedAt:r.observed_at,updatedAt:r.updated_at,status:r.status,metadata:r.metadata,modelId:r.model_id??null,modelVersion:r.model_version??null,attributes:r.attributes??{},typeState:r.type_state??null};}
-export function sourceView(r:any){return {id:r.id,name:r.name,host:r.host,port:r.port,database:r.database_name,schema:r.schema_name,secretRef:r.secret_ref,status:r.status,lastSuccessfulScan:r.last_successful_scan,capabilities:{metadata:{implemented:true,verification:'NOT_RUN'},columnLineage:{implemented:false,reason:'Parser qualification remains pending.'}}};}
+export function sourceView(r:any){return {id:r.id,name:r.name,...sourceConfiguration(r),status:r.status,lastSuccessfulScan:r.last_successful_scan,capabilities:connectorCapabilities(r.connector_id)};}
 export function jobView(r:any){return {id:r.id,sourceId:r.source_id,status:r.status,createdAt:r.created_at,finishedAt:r.finished_at,assetCount:r.asset_count,errorCode:r.error_code};}
 export function auditView(r:any){return {id:r.id,action:r.action,resourceId:r.resource_id,actorName:r.actor_name,occurredAt:r.occurred_at,changes:r.changes,hash:r.hash,previousHash:r.previous_hash,correlationId:r.correlation_id};}
 export function visibleAssets(tx:Tx,p:Principal){return tx.selectFrom('assets').leftJoin('identities as owners','owners.id','assets.owner_id').leftJoin('sources',j=>j.onRef('sources.id','=','assets.source_id').onRef('sources.tenant_id','=','assets.tenant_id')).selectAll('assets').select(['owners.name as owner_name','sources.name as source_name']).where('assets.tenant_id','=',p.tenantId).where(eb=>eb.or([eb('assets.visibility','=','tenant'),sql<boolean>`assets.allowed_identities @> ${JSON.stringify([p.id])}::jsonb`]));}
 export function visibleAudit(tx:Tx,p:Principal){return tx.selectFrom('audit').selectAll().where('audit.tenant_id','=',p.tenantId).where(eb=>eb.or([
- eb.and(['asset.%','relation.%','relation_participation.%','participation.%','relation_migration.%','relation_preparation.%','domain_type.%','domain.%','asset_domain_placement.%','domain_type_migration.%'].map(pattern=>eb('audit.action','not like',pattern))),
+ sql<boolean>`${p.permissions.includes('models:read')} AND audit.action LIKE 'workflow.%' AND EXISTS(SELECT 1 FROM workflow_definitions w WHERE w.tenant_id=audit.tenant_id AND w.id=audit.resource_id)`,
+ sql<boolean>`${p.permissions.includes('catalog:read')&&(p.permissions.includes('catalog:write')||p.permissions.includes('classification:read')||p.permissions.includes('reference:read'))} AND audit.action LIKE 'approval.%' AND EXISTS(SELECT 1 FROM approval_requests r WHERE r.tenant_id=audit.tenant_id AND r.id::text=audit.resource_id AND (${visibleApprovalRequest(p)}))`,
+ sql<boolean>`${p.permissions.includes('catalog:read')&&p.permissions.includes('classification:read')} AND audit.action IN ('classification.taxonomy.publish','classification.rule.publish')
+  AND EXISTS(SELECT 1 FROM memberships m JOIN identities i ON i.id=m.identity_id WHERE m.tenant_id=audit.tenant_id AND m.identity_id=${p.id}::uuid AND m.active AND i.active AND m.permissions @> '["catalog:read","classification:read"]'::jsonb)
+  AND ((audit.action='classification.taxonomy.publish' AND EXISTS(SELECT 1 FROM classification_taxonomies t WHERE t.tenant_id=audit.tenant_id AND t.id::text=audit.resource_id))
+   OR (audit.action='classification.rule.publish' AND EXISTS(SELECT 1 FROM classification_rules r WHERE r.tenant_id=audit.tenant_id AND r.id::text=audit.resource_id)))`,
+ sql<boolean>`audit.action IN ('classification.evaluate','classification.applied','classification.withdrawn') AND EXISTS(SELECT 1 FROM assets target WHERE target.tenant_id=audit.tenant_id AND target.id::text=audit.resource_id AND public.gc_classification_visible(target.id,${p.id}::uuid))`,
+ sql<boolean>`(
+  audit.action='quality.rule_published' AND EXISTS(
+   SELECT 1 FROM public.quality_rules qr JOIN public.quality_rule_versions qv ON qv.tenant_id=qr.tenant_id AND qv.rule_id=qr.id
+   WHERE qr.tenant_id=audit.tenant_id AND coalesce(qr.column_asset_id,qr.table_asset_id)::text=audit.resource_id
+    AND qr.id::text=audit.changes->>'ruleId' AND qv.version::text=audit.changes->>'resourceVersion'
+    AND qv.definition_hash=audit.changes->>'definitionHash'
+    AND public.gc_quality_rule_visible(qr.id,qv.version,${p.id}::uuid))
+  OR audit.action IN ('quality.run_requested','quality.run_claimed','quality.run_cancelled','quality.run_finished') AND EXISTS(
+   SELECT 1 FROM public.quality_runs qrun JOIN public.quality_rules qr ON qr.tenant_id=qrun.tenant_id AND qr.id=qrun.rule_id
+   WHERE qrun.tenant_id=audit.tenant_id AND qrun.id::text=audit.changes->>'runId'
+    AND qr.id::text=audit.changes->>'ruleId' AND coalesce(qr.column_asset_id,qr.table_asset_id)::text=audit.resource_id
+    AND public.gc_quality_run_visible(qrun.id,${p.id}::uuid)))`,
+ sql<boolean>`audit.action IN ('quality.monitor_published','quality.monitor_state_changed','quality.monitor_occurrence','quality.monitor_projected',
+  'quality.issue_opened','quality.issue_failed_again','quality.issue_acknowledged','quality.issue_assigned','quality.issue_recovery_available','quality.issue_recovery_invalidated','quality.issue_resolved','quality.issue_reopened','quality.issue_superseded','quality.notification_created','quality.notification_read')
+  AND public.gc_quality_monitoring_audit_visible(audit.action,audit.resource_id,audit.changes,${p.id}::uuid)`,
+ sql<boolean>`audit.action='reference.published' AND EXISTS(SELECT 1 FROM reference_sets reference_target WHERE reference_target.tenant_id=audit.tenant_id AND reference_target.id::text=audit.resource_id AND public.gc_reference_visible(reference_target.id,${p.id}::uuid))`,
+ sql<boolean>`audit.action='reference.structure_published' AND EXISTS(SELECT 1 FROM reference_structure_heads structure_target WHERE structure_target.tenant_id=audit.tenant_id AND structure_target.id::text=audit.resource_id AND public.gc_reference_structure_visible(structure_target.id,${p.id}::uuid))`,
+ eb.and(['reference.%','classification.%','quality.%','approval.%','workflow.%','glossary.%','asset.%','relation.%','relation_participation.%','participation.%','relation_migration.%','relation_preparation.%','domain_type.%','domain.%','asset_domain_placement.%','domain_type_migration.%'].map(pattern=>eb('audit.action','not like',pattern))),
  sql<boolean>`${p.permissions.includes('models:read')} AND audit.action LIKE 'domain_type.%' AND audit.changes->>'resourceKind'='domain-type'
   AND EXISTS(SELECT 1 FROM domain_types d WHERE d.tenant_id=audit.tenant_id AND d.id::text=audit.resource_id)`,
  sql<boolean>`${p.permissions.includes('domains:read')} AND audit.action LIKE 'domain.%' AND audit.changes->>'resourceKind'='domain'

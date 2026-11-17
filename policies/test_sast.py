@@ -3,10 +3,12 @@
 """Adversarial policy tests using explicitly synthetic reports, never scan evidence."""
 import copy
 from datetime import datetime, timedelta, timezone
+import hashlib
 import importlib.util
 import importlib.machinery
 import json
 import os
+import re
 import shutil
 from pathlib import Path
 import subprocess
@@ -144,12 +146,23 @@ class FindingsTests(unittest.TestCase):
 
 
 class PublicationRedactionTests(unittest.TestCase):
-    def test_real_detector_projects_only_fixed_rule_ids_not_matched_bytes(self):
+    @staticmethod
+    def bootstrap():
         path = sast.ROOT / 'scripts/github/bootstrap'
         loader = importlib.machinery.SourceFileLoader('publication_bootstrap_fixture', str(path))
         spec = importlib.util.spec_from_loader(loader.name, loader)
         module = importlib.util.module_from_spec(spec)
         loader.exec_module(module)
+        return module
+
+    @staticmethod
+    def historical_fixture():
+        result = subprocess.run(['git', 'cat-file', 'blob', '4e3b99481cb4b5b7f61aa28cec6460ee5cff6dbf'],
+                                cwd=sast.ROOT, capture_output=True, check=True, timeout=30)
+        return result.stdout
+
+    def test_real_detector_projects_only_fixed_rule_ids_not_matched_bytes(self):
+        module = self.bootstrap()
         fixtures = [('private-key', b'-----BEGIN ' + b'PRIVATE KEY-----'),
                     ('github-token', b'ghp_' + b'S' * 36),
                     ('aws-access-key', b'AKIA' + b'S' * 16),
@@ -163,6 +176,48 @@ class PublicationRedactionTests(unittest.TestCase):
         with mock.patch.dict(module.SECRET_RULES, {'unknown': __import__('re').compile(b'test')}, clear=True):
             with self.assertRaisesRegex(ValueError, 'Unrecognized publication finding rule'):
                 module.publication_findings('synthetic.txt', b'test')
+
+    def test_exact_historical_invalid_ca_marker_requires_history_scan_and_full_blob_digest(self):
+        module = self.bootstrap()
+        content = self.historical_fixture()
+        self.assertEqual(hashlib.sha256(content).hexdigest(),
+                         '661320b4f55debc782546f40b8122e1ab8e4f8172de7ff4fbdb914bfc071de03')
+        marker = b'-----BEGIN ' + b'PRIVATE KEY-----\\nabc\\n-----END PRIVATE KEY-----'
+        self.assertEqual(content.count(marker), 1)
+        self.assertEqual(module.publication_findings('historic-fixture', content, historical=True), [])
+        for label in ('python/tests/test_postgres_targets.py', 'history:claimed:fixture'):
+            with self.subTest(label=label):
+                self.assertEqual(module.publication_findings(label, content),
+                                 [{'path': label, 'rule': 'private-key'}])
+
+    def test_historical_exemption_does_not_follow_changed_or_appended_content_or_path(self):
+        module = self.bootstrap()
+        content = self.historical_fixture()
+        marker = b'-----BEGIN ' + b'PRIVATE KEY-----\\nabc\\n-----END PRIVATE KEY-----'
+        changes = (content.replace(marker, marker.replace(b'abc', b'different')),
+                   content + b'\n# harmless added comment\n', content + b'\n' + marker,
+                   marker, b'-----BEGIN ' + b'RSA PRIVATE KEY-----')
+        for index, changed in enumerate(changes):
+            with self.subTest(index=index):
+                self.assertNotEqual(hashlib.sha256(changed).hexdigest(), module.HISTORICAL_INVALID_CA_SHA256)
+                self.assertEqual(module.publication_findings('python/tests/test_postgres_targets.py', changed,
+                                                            historical=True),
+                                 [{'path': 'python/tests/test_postgres_targets.py', 'rule': 'private-key'}])
+        token = b'ghp_' + b'S' * 36
+        self.assertEqual(module.publication_findings('historic-fixture', content + b'\n' + token,
+                                                    historical=True),
+                         [{'path': 'historic-fixture', 'rule': 'private-key'},
+                          {'path': 'historic-fixture', 'rule': 'github-token'}])
+
+    def test_historical_normalization_is_private_key_rule_only(self):
+        module = self.bootstrap()
+        content = self.historical_fixture()
+        marker = b'-----BEGIN ' + b'PRIVATE KEY-----\\nabc\\n-----END PRIVATE KEY-----'
+        # Another detector must still see even the exact bytes normalized for the
+        # private-key rule; this is not a whole-file or cross-rule suppression.
+        with mock.patch.dict(module.SECRET_RULES, {'github-token': re.compile(re.escape(marker))}):
+            self.assertEqual(module.publication_findings('historic-fixture', content, historical=True),
+                             [{'path': 'historic-fixture', 'rule': 'github-token'}])
 
 
 class CoverageAndSnapshotTests(unittest.TestCase):

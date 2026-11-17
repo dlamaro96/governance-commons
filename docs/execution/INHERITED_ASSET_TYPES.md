@@ -1,5 +1,7 @@
 # Inherited asset-type increment contract
 
+Editorial revision (2026-11-17): coordination-only text was removed. Technical requirements and qualification scope are unchanged. Historical implementation and execution records retain the original contract SHA256 `7c88e140320a15f10825ccbabd4631095217122c0ddfac464c84e6f4ab9f3220`.
+
 Status: implementation contract for the next verified increment, not capability completion. Parent programme MOD-001/002/003, SYS-DATA-001/002 and later glossary/reference work remain binding. Existing formatVersion1 attribute models and their hashes remain unchanged. Applied SQL001–005 is immutable.
 
 ## Authored and resolved definitions
@@ -12,7 +14,7 @@ Resolved attributes combine parents and local fields. Equal inherited fields may
 
 The domain module `asset-type.ts` exports interfaces `TypePin`, `LifecycleDefinition`, `AssetTypeDefinition`, `ResolvedAssetType`, plus `parseAssetTypeDefinition(input)`, `parseAssetTypeFile(text)` and `resolveAssetType(input, dependencies)`, returning the existing ValidationResult shape. `ResolvedAssetType` contains `definition`, `dependencies:TypePin[]` (transitive, excluding root), `model:ModelDefinition` (fully resolved), `requiredOwner:boolean`, `lifecycle:LifecycleDefinition`. Resolution is pure and accepts supplied authored dependency definitions, never performs IO.
 
-## Persistence and invariants (root-owned)
+## Persistence and invariants
 
 New SQL006 creates immutable tenant-scoped `asset_type_versions` and `asset_type_dependencies` referencing actual governance model versions. Each authored version stores its resolved attribute-model hash, required-owner/lifecycle constraints and resolution digest. Model heads receive an immutable opaque type UUID for authored asset types; existing logical keys remain compatible. The existing model-version row stores the resolved formatVersion1 attribute model. Direct legacy model publication/migration must reject authored asset types, requiring the asset-type service. Reads may show the resolved model. Asset assignment and ordinary owner edits enforce the pinned authored constraints, including fresh active owner membership. Same-type reassignment preserves lifecycle state; a different type starts at its initial state. An explicit state transition follows the pinned lifecycle, with optimistic version and normal audit/outbox/revision writes. Ownership does not confer permission.
 
@@ -35,8 +37,6 @@ All prefixes are `/api/v1`. Authentication/CSRF/Problem Details/If-Match/Idempot
 
 Browser routes `/asset-types`, `/asset-types/new/definition`, `/asset-types/:id`, `/asset-types/:id/edit`. Model list links authored types to the type page; asset chooser still uses resolved definitions. Asset detail displays pinned lifecycle and allowed actions with the normal permission/error states. File export preserves authored definitions. UI supports visual parents/overrides/owner/lifecycle editing, raw file roundtrip, resolved inheritance evidence, stale-preview recovery, required-owner denial, immutable parent/child pins, English/Arabic, keyboard, light/dark and responsive behavior. Do not expose a misleading attribute-only migration action for these types.
 
-## Ownership and qualification
-
-Root owns SQL006, shared persistence/service/API/legacy enforcement and central records/CI/Git. Domain worker owns only new pure `asset-type.ts` and unit tests. Web worker owns `apps/web/**`, route inventory and new browser tests. Integration worker owns new `tests/integration/asset-types.test.ts` against this contract. All workers preserve others' edits; contract changes require coordination.
+## Qualification
 
 Meaningful gates include pinned parent upgrades preserving old child/asset behavior, explicit child preview and compatible publication, cycle/conflict/ambiguous-pin denial, inherited required-owner enforcement through assignment and ordinary edits, illegal transitions, stale digests/If-Match, hidden-cohort refusal, tenant/FK isolation and late-write rollback. Tests execute against actual services; no fixture or unexecuted screen is represented as completed capability.

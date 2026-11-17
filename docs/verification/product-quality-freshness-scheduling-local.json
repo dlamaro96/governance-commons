@@ -1,0 +1,751 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-17T06:53:28.598978+00:00",
+  "scope": "Scheduled PostgreSQL freshness, conservative current-evidence expiry, deduplicated incidents, verified recovery and reopening; separate repaired browser picker and protected outbox regression.",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "implementation_commit": "4cc3bd2afff9f75b8cba6bdbdc849e9252df8e70",
+  "profile": "core",
+  "runtime": {
+    "result": "PASS",
+    "application_image": "sha256:bd3ead6e9b041fd88b7d6d019e85ab858745f0559ec2dfd7b556a2f380241a3c",
+    "worker_image": "sha256:3f947ad93ed6979edd210804f104cab7158b20da6b836774f8555ca93b5a7e61",
+    "application_source_binding": {
+      "files": 296,
+      "exact_committed_source_hashes_match": true,
+      "implementation_commit": "4cc3bd2afff9f75b8cba6bdbdc849e9252df8e70"
+    },
+    "migrations": [
+      {
+        "name": "001_foundation.sql",
+        "checksum": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "name": "002_audit_envelopes.sql",
+        "checksum": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "name": "003_governance_models.sql",
+        "checksum": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "name": "004_model_migrations.sql",
+        "checksum": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "name": "005_model_migration_integrity.sql",
+        "checksum": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "name": "006_inherited_asset_types.sql",
+        "checksum": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "name": "007_asset_type_migrations.sql",
+        "checksum": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "name": "008_constrained_relations.sql",
+        "checksum": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "name": "009_relation_participation.sql",
+        "checksum": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "name": "010_relation_scope_discovery.sql",
+        "checksum": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "name": "011_business_domains.sql",
+        "checksum": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+      },
+      {
+        "name": "012_authentication_foundation.sql",
+        "checksum": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77"
+      },
+      {
+        "name": "013_authority_foundation.sql",
+        "checksum": "4a9304cf02ab51fc085a6018cd22980e948bc6cd1167b3595ccb817b2cf41fbf"
+      },
+      {
+        "name": "014_source_connectors.sql",
+        "checksum": "5d43592b8120818db2a2d81e62652ffccdc9dde1a0c0111604bc373b8b2e1f4b"
+      },
+      {
+        "name": "015_approval_workflows.sql",
+        "checksum": "571e14b0b42fe2dc58d076e35e7e2a3bab0bca918042e4ef222c63b3be2f269d"
+      },
+      {
+        "name": "016_glossary_publication.sql",
+        "checksum": "26b03dd63077e0477da3ed80d2a099b2dc4e00390d9e11eeea2546a0d19aea57"
+      },
+      {
+        "name": "017_relation_scope_candidates.sql",
+        "checksum": "c22f0b6d35e75555e1c58b503a82d2bbf6f23ab404c3af618143178cc5baa47b"
+      },
+      {
+        "name": "018_glossary_nominal_candidates.sql",
+        "checksum": "60361c7b2ddee2f1f095d0e832116b4b97cc04fdbee6a88b398721e5bee13fea"
+      },
+      {
+        "name": "019_quality_execution.sql",
+        "checksum": "ed7fefe9f1598831b6feb5954ba688fd35073af20dc1717082cb5176bc576ab5"
+      },
+      {
+        "name": "020_native_lineage.sql",
+        "checksum": "b5e601a50fdad2417f6b497eade5d65da7c5dcdb7bde94e74694a04d208691b8"
+      },
+      {
+        "name": "021_classification_review.sql",
+        "checksum": "e8637511016f4e9cf6741c4d5718c14a8b47a97898b8769e2884a7ee2a3a294e"
+      },
+      {
+        "name": "022_reference_publication.sql",
+        "checksum": "5720d63ac78b9ad9781c3a46da00369c90d25cf5493cddb318fd8252b131c9d9"
+      },
+      {
+        "name": "023_reference_quality.sql",
+        "checksum": "92221543903d7069d34d9e946b18063be52b1dfa0a7423cdb1b9bd5ff8b5d3ee"
+      },
+      {
+        "name": "024_reference_structures.sql",
+        "checksum": "71a019163fec45a88fc91f4cb53839e582c23eb37db7615928ae5d7f888dcd2c"
+      },
+      {
+        "name": "025_quality_uniqueness.sql",
+        "checksum": "94a814af5b80baf9835eca83ad200e67bf6e5697f79ae99e7abb2a1f4c0a3f9e"
+      },
+      {
+        "name": "026_quality_range.sql",
+        "checksum": "7fda1bc5768525ff60449433b452da549063ee52f2d9cad01c0b26330c52bd8e"
+      },
+      {
+        "name": "027_quality_monitoring.sql",
+        "checksum": "b50fc5375c9a992e55fd196cf3e745b667b1b11dff045a88cb5899d493b4f35a"
+      },
+      {
+        "name": "028_quality_freshness.sql",
+        "checksum": "d1157374269dad9a2d43dd2e6fbe2bf67ab8b487c67db9f3f30ae266cefd41ef"
+      },
+      {
+        "name": "029_quality_freshness_scheduling.sql",
+        "checksum": "ae29e6ff984b0a48dead1c9a99eb3c1ea69b7e530e7a0f2ff3a16ffcd5266026"
+      }
+    ],
+    "readback": {
+      "private_record": ".local/product-quality-freshness-monitoring-runtime-readback.json",
+      "sha256": "2356ba816ceb78fdd56f86ccc1bb92fc28b07f3032e1724bdb5549883674fc4b"
+    }
+  },
+  "native_upgrade": {
+    "result": "PASS",
+    "command": "./dev test --suite freshness-scheduling-upgrade",
+    "tests": 276,
+    "source_binding": {
+      "files": 122,
+      "exact_committed_source_hashes_match": true,
+      "implementation_commit": "4cc3bd2afff9f75b8cba6bdbdc849e9252df8e70"
+    },
+    "phases": [
+      {
+        "phase": "pre028-completeness-tests",
+        "path": "tests/qualification/quality.test.ts",
+        "expected": 15,
+        "tests": {
+          "tests": 15,
+          "suites": 0,
+          "pass": 15,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 1744.956668
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre028-reference-tests",
+        "path": "tests/api/reference-quality-storage.test.ts",
+        "expected": 21,
+        "tests": {
+          "tests": 21,
+          "suites": 0,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 9743.050004
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre028-uniqueness-tests",
+        "path": "tests/api/quality-uniqueness-storage.test.ts",
+        "expected": 16,
+        "tests": {
+          "tests": 16,
+          "suites": 0,
+          "pass": 16,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2263.004418
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre028-range-tests",
+        "path": "tests/api/quality-range-storage.test.ts",
+        "expected": 18,
+        "tests": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 3422.59096
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre028-monitoring-tests",
+        "path": "tests/api/quality-monitoring-storage.test.ts",
+        "expected": 31,
+        "tests": {
+          "tests": 31,
+          "suites": 0,
+          "pass": 31,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 50712.145314
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre028-monitoring-invariants-tests",
+        "path": "tests/api/quality-monitoring-invariants.test.ts",
+        "expected": 4,
+        "tests": {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 5568.276003
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre028-freshness-tests",
+        "path": "tests/api/quality-freshness-sql028.ts",
+        "expected": 18,
+        "tests": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2865.070626
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre028-freshness-invariants-tests",
+        "path": "tests/api/quality-freshness-invariants.test.ts",
+        "expected": 4,
+        "tests": {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 1467.977626
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post029-completeness-tests",
+        "path": "tests/qualification/quality.test.ts",
+        "expected": 15,
+        "tests": {
+          "tests": 15,
+          "suites": 0,
+          "pass": 15,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 1866.312085
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post029-reference-tests",
+        "path": "tests/api/reference-quality-storage.test.ts",
+        "expected": 21,
+        "tests": {
+          "tests": 21,
+          "suites": 0,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 10641.039797
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post029-uniqueness-tests",
+        "path": "tests/api/quality-uniqueness-storage.test.ts",
+        "expected": 16,
+        "tests": {
+          "tests": 16,
+          "suites": 0,
+          "pass": 16,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2954.400002
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post029-range-tests",
+        "path": "tests/api/quality-range-storage.test.ts",
+        "expected": 18,
+        "tests": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2627.826043
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post029-monitoring-tests",
+        "path": "tests/api/quality-monitoring-storage.test.ts",
+        "expected": 31,
+        "tests": {
+          "tests": 31,
+          "suites": 0,
+          "pass": 31,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 51195.143274
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post029-monitoring-invariants-tests",
+        "path": "tests/api/quality-monitoring-invariants.test.ts",
+        "expected": 4,
+        "tests": {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 6015.853211
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post029-freshness-tests",
+        "path": "tests/api/quality-freshness-storage.test.ts",
+        "expected": 18,
+        "tests": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 4677.452586
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post029-freshness-invariants-tests",
+        "path": "tests/api/quality-freshness-invariants.test.ts",
+        "expected": 4,
+        "tests": {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 1183.342209
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post029-freshness-monitoring-tests",
+        "path": "tests/api/quality-freshness-monitoring-storage.test.ts",
+        "expected": 18,
+        "tests": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 34953.321808
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post029-freshness-monitoring-invariants-tests",
+        "path": "tests/api/quality-freshness-monitoring-invariants.test.ts",
+        "expected": 4,
+        "tests": {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 7528.669587
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      }
+    ],
+    "upgrade_preservation": true,
+    "replay_preservation": true,
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "record": {
+      "private_record": ".local/quality-freshness-scheduling-candidate/wiring/host/tree/.local/evidence/quality-freshness-scheduling-upgrade.json",
+      "sha256": "539cf471d29f28376e0b3a884b4aea80d899258c46a324731877a19bbb19f8af"
+    }
+  },
+  "api_regression": {
+    "result": "PASS",
+    "command": "./dev test --suite security",
+    "counts": {
+      "tests": 168,
+      "suites": 0,
+      "pass": 168,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "source_binding": {
+      "files": 24,
+      "exact_committed_source_hashes_match": true,
+      "implementation_commit": "4cc3bd2afff9f75b8cba6bdbdc849e9252df8e70"
+    },
+    "baked_sources_match": true,
+    "record": {
+      "private_record": ".local/evidence/api-runs/20261117T062738Z-2d2a1cba134843459cc45c88f08417cb/summary.json",
+      "sha256": "b8b843f515391f40f9fe575f29e167d3ba81eadfd316bb5486ab43cc3acfdf0c"
+    }
+  },
+  "host": {
+    "units": 1103,
+    "types": "PASS",
+    "production_build": "PASS",
+    "records": [
+      {
+        "private_record": ".local/product-freshness-scheduling-units-attempt-1.log",
+        "sha256": "39a7268143b0214cd1e19f7ea3e3d209f96b545fd1626835cef442757308ff06"
+      },
+      {
+        "private_record": ".local/product-freshness-scheduling-types-attempt-1.log",
+        "sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+      },
+      {
+        "private_record": ".local/product-freshness-scheduling-build-attempt-1.log",
+        "sha256": "5a7e050b622f785ea12fbced5c52a35ba13638f8752d62678df9f1e079f60653"
+      }
+    ]
+  },
+  "freshness_lifecycle_browser": {
+    "automated_result": "PASS",
+    "command": "Source-bound Playwright target; full equivalent ./dev test --suite e2e",
+    "counts": {
+      "startTime": "2026-11-17T06:23:09.163Z",
+      "duration": 131915.649,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "versions": {
+      "node": "v24.22.3",
+      "pnpm": "10.32.1",
+      "chrome": "Google Chrome 157.0.8103.79"
+    },
+    "source_binding": {
+      "files": 663,
+      "exact_committed_source_hashes_match": true,
+      "implementation_commit": "4cc3bd2afff9f75b8cba6bdbdc849e9252df8e70"
+    },
+    "execution": {
+      "private_record": ".local/evidence/product-quality-freshness-monitoring-browser-attempt-1/execution.json",
+      "sha256": "c9f45661770903ff02d1c3e124e70455e58f9f062ff0e5614467df26b85e559f"
+    },
+    "cleanup": {
+      "schema_version": 1,
+      "scope": "registered-posix-groups-and-observed-descendants",
+      "result": "PASS",
+      "trigger": "normal",
+      "registeredBrowserGroups": 1,
+      "trackedProcesses": 55,
+      "termSignals": 0,
+      "killSignals": 0,
+      "remainingLive": 0,
+      "identityConflicts": 0,
+      "unresolvedGroups": 0,
+      "registryClosed": true
+    },
+    "visual_result": "PASS_WITH_VIEWPORT_LIMITATIONS",
+    "inspected_captures": 8,
+    "visual_review": {
+      "private_record": ".local/evidence/product-quality-freshness-monitoring-browser-attempt-1/visual-review.json",
+      "sha256": "0c0d8c5115098f78983fb1481cf8340d8a55b61af8388718cc2db9490e8a61e5"
+    },
+    "limitations": [
+      "Screenshots cover fixed viewports rather than complete page contents.",
+      "Mixed-direction user-authored English text has misplaced terminal punctuation in Arabic; dir=auto correction is assigned for next UI increment.",
+      "Automated Axe checks are not independent assistive-technology or Arabic linguistic certification."
+    ]
+  },
+  "reference_picker_browser": {
+    "automated_result": "PASS",
+    "counts": {
+      "startTime": "2026-11-17T06:19:09.657Z",
+      "duration": 171579.506,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "source_binding": {
+      "files": 663,
+      "exact_committed_source_hashes_match": true,
+      "implementation_commit": "4cc3bd2afff9f75b8cba6bdbdc849e9252df8e70"
+    },
+    "execution": {
+      "private_record": ".local/evidence/product-reference-picker-browser-attempt-1/execution.json",
+      "sha256": "275bcb49fff6142a921e5b7dc079788b8882191b11767fb013b42928cb270c2f"
+    },
+    "inspected_captures": 2,
+    "capture_count": 12,
+    "visual_review": {
+      "private_record": ".local/evidence/product-reference-picker-browser-attempt-1/root-visual-review.json",
+      "sha256": "091ab01773d857a55e0099d22d3d92e41f1389d0be7cccedfb28b6aa00fdd413"
+    },
+    "limitations": [
+      "Two of twelve captures inspected; no all-capture or complete page/Arabic linguistic certification.",
+      "The workflow-picker race correction is established by the real response/render-bound browser journey, not these authoring screenshots."
+    ]
+  },
+  "protected_outbox_target": {
+    "result": "PASS",
+    "tests": 1,
+    "record": {
+      "private_record": ".local/product-outbox-regression-attempt-1.log",
+      "sha256": "68bb6f545abadbb603c8639762ab302bada5e91cc140b855fd38ce41f5609295"
+    },
+    "scope": "Three protected-envelope mutation refusals retained; mutable delivery bookkeeping checked separately."
+  },
+  "full_browser": {
+    "result": "PASS_AUTOMATED",
+    "expected_journeys": 36,
+    "attempt": "product-full-browser-attempt-15",
+    "counts": {
+      "startTime": "2026-11-17T07:25:20.442Z",
+      "duration": 2234966.517,
+      "expected": 36,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "source_binding": {
+      "implementation_commit": "ac464afc83a3e01d925a45b20723dfd8f2ab0572",
+      "files": 664,
+      "exact_committed_source_hashes_match": true
+    },
+    "execution": {
+      "private_record": ".local/evidence/product-full-browser-attempt-15/execution.json",
+      "sha256": "93f65293534d141477a5da3a1a171d3b8e9882efd1dd86a9ddbd0170cb11826b"
+    },
+    "readback": {
+      "private_record": ".local/evidence/product-full-browser-attempt-15/root-readback.json",
+      "sha256": "b756c9deb263a847381a6d229cf5addfe3319043b55c9ff6974ea731c054e7fd"
+    },
+    "cleanup": {
+      "schema_version": 1,
+      "scope": "registered-posix-groups-and-observed-descendants",
+      "result": "PASS",
+      "trigger": "normal",
+      "registeredBrowserGroups": 25,
+      "trackedProcesses": 879,
+      "termSignals": 0,
+      "killSignals": 0,
+      "remainingLive": 0,
+      "identityConflicts": 0,
+      "unresolvedGroups": 0,
+      "registryClosed": true
+    },
+    "screenshots_restored": true,
+    "capture_count": 281,
+    "visual_review": {
+      "result": "PARTIAL",
+      "inspected": 3,
+      "record": {
+        "private_record": ".local/evidence/product-full-browser-attempt-15/visual-review-sample.json",
+        "sha256": "a190f75950b7251b482cdfc0c260a4f52def5a7494c2f4811771e79e0eb991e8"
+      }
+    },
+    "limitations": [
+      "No retries, skips or flaky cases. Three of281 captures inspected; no complete manual visual, independent accessibility or Arabic linguistic qualification.",
+      "Exact predecessor revision only; SQL030/031 and the37th volume journey require their own qualification."
+    ]
+  },
+  "security": {
+    "secret_scan": {
+      "result": "PASS",
+      "findings": 0,
+      "record": {
+        "private_record": ".local/product-scheduled-freshness-secret-scan-attempt-2.json",
+        "sha256": "7719f906271a1ab29f39312d9856ad693fe06b51f007d3f9afe1c28da2941160"
+      }
+    },
+    "fresh_hosted_revision": "REQUIRED",
+    "preceding_source": {
+      "run": 44027780524,
+      "revision": "fca6bb94a8bd87965c4bf614ae492b85235f4ea9",
+      "result": "PASS"
+    },
+    "preceding_development": {
+      "run": 44027780537,
+      "result": "FAIL",
+      "reason": "Authority-loader512 closure exceeded existing25-second deadline after168 API passes."
+    }
+  },
+  "limitations": [
+    "Scoped local development evidence only; no whole-capability, live-vendor, enterprise or release qualification.",
+    "Current eligibility uses conservative persisted timing and source-clock bounds; no NTP, monotonic-clock or unrecorded-clock-rewind guarantee.",
+    "Other rule families, filters/partition scopes and broader delivery requirements remain open.",
+    "Mixed-direction issue-text punctuation remains a minor UI correction assigned to the next increment."
+  ],
+  "prior_full_browser_attempts": [
+    {
+      "result": "FAIL_OR_INCOMPLETE",
+      "expected_journeys": 36,
+      "attempt": "product-full-browser-attempt-14",
+      "counts": {
+        "startTime": "2026-11-17T06:43:25.801Z",
+        "duration": 1724209.819,
+        "expected": 31,
+        "skipped": 4,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "source_binding": {
+        "implementation_commit": "4cc3bd2afff9f75b8cba6bdbdc849e9252df8e70",
+        "files": 663,
+        "exact_committed_source_hashes_match": true
+      },
+      "execution": {
+        "private_record": ".local/evidence/product-full-browser-attempt-14/execution.json",
+        "sha256": "5dec674d6d50d5ff7200d2922ecab193a447b1464dd7181bae62bfc238a96ce8"
+      },
+      "cleanup": {
+        "schema_version": 1,
+        "scope": "registered-posix-groups-and-observed-descendants",
+        "result": "PASS",
+        "trigger": "nonzero",
+        "registeredBrowserGroups": 21,
+        "trackedProcesses": 732,
+        "termSignals": 0,
+        "killSignals": 0,
+        "remainingLive": 0,
+        "identityConflicts": 0,
+        "unresolvedGroups": 0,
+        "registryClosed": true
+      },
+      "sources_unchanged": true,
+      "screenshots_restored": true,
+      "failure": {
+        "project": "quality-uniqueness",
+        "assertion": "Historical run pinned-threshold element was absent.",
+        "diagnosis": "Recorded UI displays request-rate refusal; cause under investigation."
+      },
+      "limitations": [
+        "31 passed, one failed, four skipped; no complete browser-profile pass.",
+        "Earlier full35 attempt13 remains failed:27 passed,one failed,seven skipped.",
+        "233 generated captures are retained privately; no full visual review claimed."
+      ]
+    }
+  ]
+}

@@ -1,8 +1,10 @@
 # Constrained relations implementation contract
 
+Editorial revision (2026-11-17): coordination-only text was removed. Technical requirements and qualification scope are unchanged. Historical implementation and execution records retain the original contract SHA256 `de7a5fbe0a670fe485b7000f1693b9dfd03d15d2a50a4682df43b07a735e6acd`.
+
 Status: **IMPLEMENTATION IN PROGRESS — NOT QUALIFIED.** This is the next bounded increment after complete authored-type migrations. It advances MOD-001/002/004, CORE-002/006/007, SYS-DATA-001–005 and SYS-SEC-002/003; it does not complete those requirements, AT-MOD-01, E2E-06 or M2. The full specification and canonical requirement register remain authoritative. Optional activation does not remove any later required implementation.
 
-SQL001–007 and existing authored asset/model/plan formats remain unchanged once applied. SQL008 is a new migration, subject to root review and isolated upgrade qualification before core application. Do not modify application source or runtime while the preceding increment's qualification is frozen.
+SQL001–007 and existing authored asset/model/plan formats remain unchanged once applied. SQL008 is a new migration, subject to design review and isolated upgrade qualification before core application. Qualification binds the exact application and migration sources executed.
 
 ## Authored relation types
 
@@ -148,7 +150,7 @@ Missing/inaccessible edge or endpoint uses the same 404 unavailable response. Cu
 
 SQL008 adds relation-type heads/immutable versions, normalized endpoint-type references, canonical edges, immutable revisions, normalized visibility membership references, and one tenant graph-revision row. Its counter is an internal PostgreSQL bigint, read and hashed without numeric rounding; it is never a public revision number. Every tenant table has forced RLS and tenant-scoped unique/FK identities, including source/target assets, owner/allowed memberships, type versions and revision parents. Runtime roles cannot own/bypass tables; no runtime history UPDATE/DELETE/TRUNCATE. Database constraints enforce paired identities, interval ordering, exact version references, canonical undirected endpoints, live uniqueness and immutable parent-derived reference membership. Deferred checks cannot be satisfied by a fabricated nested trigger. Direct SQL invariant and concurrency probes are required; service-only happy paths do not qualify the storage boundary.
 
-Application locks follow the established order: idempotency → tenant ledger → model scope → relevant type heads → all affected assets ascending UUID → relations ascending UUID → identities ascending UUID → memberships ascending UUID. Acquire actor/owner activity locks where necessary using the reviewed narrowly scoped principal-lock mechanism, followed by fresh authorization. Apply bounded lock/statement budgets before the first wait. Direct storage guards must not introduce a conflicting lock order. Root and storage worker agree the actual SQL serialization mechanism before implementation; cardinality/cycle checks cannot rely on an unprotected count-before-insert.
+Application locks follow the established order: idempotency → tenant ledger → model scope → relevant type heads → all affected assets ascending UUID → relations ascending UUID → identities ascending UUID → memberships ascending UUID. Acquire actor/owner activity locks where necessary using the reviewed narrowly scoped principal-lock mechanism, followed by fresh authorization. Apply bounded lock/statement budgets before the first wait. Direct storage guards must not introduce a conflicting lock order. The actual SQL serialization mechanism must be specified before implementation; cardinality/cycle checks cannot rely on an unprotected count-before-insert.
 
 Relation create/edit/transition/tombstone commits canonical state, its immutable revision, normalized references, audit, outbox, graph revision and idempotency success atomically. No connector or external service execution occurs in a request handler. Late failures roll back every affected write; separate failed-attempt audit stores sanitized codes only.
 
@@ -197,17 +199,16 @@ The internal graph counter increments transactionally on edge creation, editable
 
 Identity, role and membership revocations may not bump the graph revision. Independently reauthorize the actor and every returned edge/endpoint on every request, including cursor pages and cached mutation replays. A matching revision/cursor never revives revoked access. Do not claim graph revision alone is a permission epoch.
 
-## Pure contracts, UI and ownership
+## Pure contracts, UI and subsystem boundaries
 
-The pure module uses the existing `ValidationResult<T>`/`ValidationIssue` shape. Proposed exports: `parseRelationTypeDefinition(unknown)`, `parseRelationTypeFile(string)`, `validateRelationTypeUpgrade(current, proposed, providedRelations)`, `validateRelationCandidate(definition, sourcePolicy, targetPolicy, input, completeTypedAdjacency)`, and a bounded deterministic traversal helper over already authorized input. All limits and collection completeness must be explicit in input contracts; pure helpers do not authorize, query databases, accept tenant headers as proof or claim complete tenancy from caller-supplied arrays. Root freezes the precise TypeScript signatures and shared HTTP view module before workers edit.
+The pure module uses the existing `ValidationResult<T>`/`ValidationIssue` shape. Proposed exports: `parseRelationTypeDefinition(unknown)`, `parseRelationTypeFile(string)`, `validateRelationTypeUpgrade(current, proposed, providedRelations)`, `validateRelationCandidate(definition, sourcePolicy, targetPolicy, input, completeTypedAdjacency)`, and a bounded deterministic traversal helper over already authorized input. All limits and collection completeness must be explicit in input contracts; pure helpers do not authorize, query databases, accept tenant headers as proof or claim complete tenancy from caller-supplied arrays. The precise TypeScript signatures and shared HTTP view module must be defined before implementation.
 
 Web routes are `/relation-types`, `/relation-types/new/definition`, `/relation-types/:id`, `/relation-types/:id/edit`, `/relations/:id`, and asset `?tab=relations`. The creation route keeps logical key `new` usable as an ordinary detail key. Provide visual definition editing, duplicate-safe file import/export, complete preview/confirmation, immutable type and relation histories, owner/state/validity editing, stale recovery, tenant/permission states, an accessible relation table and bounded graph expansion. Show asserted provenance and exact pins; do not label this technical lineage. Preserve existing English/Arabic RTL, keyboard, light/dark and responsive behavior. No disabled button may stand in for a required implemented capability.
 
-- Root owns final shared SQL/API/domain contracts, application services, endpoint-mutation/audit/source integration, integration review, records, CI and Git. Root reviews and integrates every shared change.
-- Pure worker owns new relation validation/traversal modules and their unit tests only, against agreed signatures.
-- Web worker owns relation authoring/detail/graph UI, route inventory and browser acceptance tests; coordinate shared Asset page hooks with root.
-- Storage worker owns SQL008 drafting and isolated SQL/concurrency tests under explicit root delegation and review; do not apply to core independently or edit prior migrations.
-- Workers are not alone in the checkout. Preserve others' edits, agree interfaces first, and keep current application-source freeze until root opens the increment.
+- Shared SQL/API/domain contracts connect application services, endpoint mutations, audit and source integration; integration review and CI qualify those boundaries.
+- Pure relation validation/traversal modules and unit tests use the agreed signatures.
+- Relation authoring/detail/graph UI, route inventory, shared Asset page hooks and browser acceptance tests use the shared contracts.
+- SQL008 and isolated SQL/concurrency tests require review before core application; prior migrations remain immutable.
 
 ## Acceptance gates and evidence boundaries
 

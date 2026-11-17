@@ -1,10 +1,12 @@
 # Scoped authority pure policy implementation contract
 
-Status: ROOT-ADOPTED FOR THE PURE MODULE ONLY, 2026-11-16. No runtime activation, full authorization implementation or verification is implied. The broader authority contracts remain under review in the existing business-domains worktree. This narrow contract permits independent implementation of strict policy parsing and the literal legacy-action mapping while the actual domain browser gate proceeds in that separate checkout. It grants no permission to implement or activate SQL, administration, adapters, search filtering or leases before their complete shared contracts are frozen.
+Editorial revision (2026-11-17): coordination-only text was removed. Technical requirements and qualification scope are unchanged. Historical implementation and execution records retain the original contract SHA256 `00fd5a4aee6e067bd81ed66ef4b812f7019851fc4082a27609098c531fb36dd6`.
 
-Authoritative inputs are the governing BUILD_SPEC and the reviewed `SCOPED_AUTHORITY_CONTRACT_CANDIDATE.md` SHA-256 `443a6b796354f6b8daf2dea3b98e83426faca19d4c57139e89a526c533433802`, sections 2–3 and the pure parser/mapping exports in section 4. Preserve its exact ten permission strings, 103 compatibility actions, 21 administration actions, two field actions, ten service actions, ResourceKind union, PolicyExpr/Rule/Definition grammar and limits. The separate projection/storage candidates supply no runtime grant.
+Status: ADOPTED FOR THE PURE MODULE ONLY, 2026-11-16. No runtime activation, full authorization implementation or verification is implied. This narrow contract covers strict policy parsing and the literal legacy-action mapping. SQL, administration, adapters, search filtering and leases require their complete shared contracts and separate implementation and qualification.
 
-Implementation ownership is `packages/authority/src/{actions,policy,types}.ts` and focused `tests/unit/authority-policy.test.ts` / `authority-compatibility.test.ts` in the root `codex/scoped-authority` checkout. Do not change existing domain/API/browser/SQL sources or package dependencies. Export implemented functions and types only; do not add an unimplemented evaluator, permissive adapter or stub service.
+Authoritative inputs are the governing BUILD_SPEC and the reviewed historical revision of `SCOPED_AUTHORITY_CONTRACT_CANDIDATE.md`, SHA-256 `443a6b796354f6b8daf2dea3b98e83426faca19d4c57139e89a526c533433802`, sections 2–3 and the pure parser/mapping exports in section 4. Preserve its exact ten permission strings, 103 compatibility actions, 21 administration actions, two field actions, ten service actions, ResourceKind union, PolicyExpr/Rule/Definition grammar and limits. The separate projection/storage candidates supply no runtime grant.
+
+Implementation modules: `packages/authority/src/{actions,policy,types}.ts`; focused controls: `tests/unit/authority-policy.test.ts` and `tests/unit/authority-compatibility.test.ts`. Export implemented functions and types only; an unimplemented evaluator, permissive adapter or stub service does not satisfy this contract.
 
 ## Frozen pure behavior
 

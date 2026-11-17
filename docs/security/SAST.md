@@ -143,7 +143,7 @@ space; the 2 GiB watchdog remains mandatory during every CLI command. macOS's 1.
 larger than the 679 MB Linux arm64 bundle. A 16 November 2026 metadata inspection of
 the verified Linux arm64 archive measured 1,298,284,624 regular-file bytes across
 40,452 archive members; this is installation sizing, not scan evidence. Existing
-Hive Citadel/unrelated images, volumes, source and caches must be preserved.
+unrelated local projects/unrelated images, volumes, source and caches must be preserved.
 
 ## Findings and publication
 

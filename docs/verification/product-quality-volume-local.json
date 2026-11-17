@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "record_status": "SCOPED_LOCAL_EVIDENCE",
+  "implementation_commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
+  "current_core": {
+    "outcome": "PASS",
+    "profile": "core",
+    "commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
+    "migrations": 31,
+    "application_source_files": 299,
+    "worker_source_files": 13,
+    "application_image": "sha256:ea2fe5fa3cb4d16c65f1f001393d34d9a62109bf5da1766e65f28d9f95d94cf3",
+    "worker_image": "sha256:d226b8c7e2c2883091473f0aefb7565723f38822489ef6a288c208d6a23a2554",
+    "readback": {
+      "private_record": ".local/product-quality-volume-runtime-readback.json",
+      "sha256": "33ec162cd7b3c3c2ccbbe90fd075f7d454a1331d1cde1c9bd45477ebacae785d"
+    },
+    "command": "./dev up --profile core; ./dev seed --dataset harbor-demo; source and migration ledger readback",
+    "limitations": [
+      "Initialized persistent local core; this is not empty-volume installation, recovery or full-profile qualification."
+    ]
+  },
+  "current_api": {
+    "outcome": "PASS",
+    "commit": "f3f21e5e7eb7190a2b6ff98725737d7255be1878",
+    "expected": 171,
+    "observed": 171,
+    "counts": {
+      "tests": 171,
+      "suites": 0,
+      "pass": 171,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_source_files": 25,
+    "runtime_test_sources_match": true,
+    "summary": {
+      "private_record": ".local/evidence/api-runs/20261117T085232Z-c17bb1a4b52449d3a6a4d6f50134b9ca/summary.json",
+      "sha256": "6a9c320a5f51fd489bb449cc2024fc49f02c4a9793df0338fde7b3b14bf8b3f3"
+    },
+    "readback": {
+      "private_record": ".local/evidence/api-runs/20261117T085232Z-c17bb1a4b52449d3a6a4d6f50134b9ca/root-readback.json",
+      "sha256": "9ff1992e7c9247f55d772f239a6152cb47ab54808bcda8cb8c5bd16f02e4b897"
+    },
+    "limitations": [
+      "Real core API/PostgreSQL execution; does not qualify unexecuted browser, hosted or vendor workflows."
+    ]
+  },
+  "current_browser": {
+    "outcome": "PASS_TARGET",
+    "target_journeys": 1,
+    "counts": {
+      "startTime": "2026-11-17T08:37:11.098Z",
+      "duration": 175928.385,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
+    "source_files": 691,
+    "versions": {
+      "node": "v24.22.3",
+      "pnpm": "10.32.1",
+      "chrome": "Google Chrome 157.0.8103.79"
+    },
+    "execution": {
+      "private_record": ".local/evidence/product-quality-volume-browser-attempt-1/execution.json",
+      "sha256": "b5e35f9a4ec5e91f94b61ac5817e9833c7814a1e9ef58a9d822f29bf9a11c0bb"
+    },
+    "readback": {
+      "private_record": ".local/evidence/product-quality-volume-browser-attempt-1/root-readback.json",
+      "sha256": "5971a8551bf19183d9962272abdd26480743c0bef871d95c78eb0f563f046419"
+    },
+    "visual_review": {
+      "private_record": ".local/evidence/product-quality-volume-browser-attempt-1/visual-review.json",
+      "sha256": "07d561a0d885320a4befa65ac21938da32026916539969ab29c1bd5b0b6a77f1",
+      "result": "PASS_WITH_VIEWPORT_LIMITATIONS",
+      "inspected_captures": 18
+    },
+    "cleanup": {
+      "schema_version": 1,
+      "scope": "registered-posix-groups-and-observed-descendants",
+      "result": "PASS",
+      "trigger": "normal",
+      "registeredBrowserGroups": 1,
+      "trackedProcesses": 56,
+      "termSignals": 0,
+      "killSignals": 0,
+      "remainingLive": 0,
+      "identityConflicts": 0,
+      "unresolvedGroups": 0,
+      "registryClosed": true
+    },
+    "full_profile": {
+      "outcome": "FAIL_OR_INCOMPLETE",
+      "declared_journeys": 37,
+      "attempt": "product-full-browser-attempt-16",
+      "commit": "f3f21e5e7eb7190a2b6ff98725737d7255be1878",
+      "counts": {
+        "startTime": "2026-11-17T09:03:49.564Z",
+        "duration": 1140274.5990000002,
+        "expected": 24,
+        "skipped": 12,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "cause": "An obsolete browser assertion expected ordinary tables to reject quality checks after table-volume support was added. The original completeness lifecycle was not reached in this attempt.",
+      "execution": {
+        "private_record": ".local/evidence/product-full-browser-attempt-16/execution.json",
+        "sha256": "b0e06fb4409830949e2f083743822bffb4ec35409f371735c3687d8a623d99e1"
+      },
+      "root_readback": {
+        "private_record": ".local/evidence/product-full-browser-attempt-16/root-readback.json",
+        "sha256": "37f99df83c3b149dc44e5a132eac2e609973e3f3a315d4de60466ffc9bbd45b3"
+      },
+      "source_files": 692,
+      "artifacts_rehashed": 187,
+      "captures_archived": 165,
+      "captures_visually_reviewed": 0,
+      "original_screenshots_restored": 154,
+      "cleanup": {
+        "schema_version": 1,
+        "scope": "registered-posix-groups-and-observed-descendants",
+        "result": "PASS",
+        "trigger": "nonzero",
+        "registeredBrowserGroups": 14,
+        "trackedProcesses": 488,
+        "termSignals": 0,
+        "killSignals": 0,
+        "remainingLive": 0,
+        "identityConflicts": 0,
+        "unresolvedGroups": 0,
+        "registryClosed": true
+      }
+    }
+  },
+  "hosted": {
+    "outcome": "NOT_RUN"
+  },
+  "scope": "Exact ordinary-table PostgreSQL row-volume checks, immutable thresholds and scheduled incident storage.",
+  "native_upgrade": {
+    "outcome": "PASS",
+    "tests": 320,
+    "phases": 22,
+    "predecessor_tests": 149,
+    "post_upgrade_tests": 171,
+    "report_sha256": "39da064b42ae0c61d9fbd1eb85c74779c5e97b95fc77859baff8471608e0cf68",
+    "source_binding": {
+      "recorded_source_files": 128,
+      "integrated_source_files_matching": 126,
+      "integrated_source_differences": [
+        "scripts/runtime-test-quality-monitoring-upgrade.py",
+        "scripts/runtime-test-quality-volume-upgrade.py"
+      ],
+      "exact_entire_manifest_match": false,
+      "method": "Compare recorded SHA256 inputs to the integrated source tree; unchanged implementation and assertions are distinguished from later documentation, CI and qualification-wrapper changes. This comparison does not rerun a test."
+    },
+    "preservation": true,
+    "replay": true,
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    }
+  },
+  "source_worker": {
+    "outcome": "PASS",
+    "checks": 15,
+    "measurements": 8,
+    "log_sha256": "ceaafb17e81e3d7c63f74cb5f33b30d0e78fe422d40622dc2bea647bf612ca96",
+    "scope": "Real PostgreSQL source counts, identity/permission/type refusals, bounded execution and owned cleanup. No HTTP, Temporal or browser claim.",
+    "cleanup": "owned_helper_relations_and_lock_session_absent_and_catalog_inventory_preserved"
+  },
+  "limitations": [
+    "Historical SQL019 qualification remains failed in inherited SQL018 population work before SQL019-specific cases; later passes do not relabel it.",
+    "Remaining quality families, row filters, partition scope, anomaly baselines and whole-profile/release qualification stay open.",
+    "The predecessor 36-journey browser pass at ac464af is not the volume journey or the integrated 37-journey pass.",
+    "Volume browser target passes separately; the current API run failed a test-fixture heap limit and the integrated37-journey regression remains required."
+  ],
+  "recorded_at": "2026-11-17T08:34:59.156090+00:00",
+  "source_equivalence": {
+    "private_record": ".local/product-integration-030-031/native-equivalence-review.json",
+    "sha256": "11393f49343e0dcfdec4c9552977d955def01e7a81393d6a94a05b5cefae77fb"
+  },
+  "host": {
+    "outcome": "PASS",
+    "unit_tests": 1126,
+    "failed": 0,
+    "skipped": 0,
+    "command": "node --import tsx --test --test-reporter=tap tests/unit/*.test.ts",
+    "log": {
+      "private_record": ".local/product-030-031-unit-attempt-2.log",
+      "sha256": "ac8e9b038d6d71bf5ed3229c749c8536c7227c53fa9ed9cae3797bfa215c46a2"
+    },
+    "prior_attempt": {
+      "outcome": "FAIL",
+      "passed": 1102,
+      "failed": 24,
+      "cause": "Sandbox local HTTP loopback restrictions; repeated with the needed execution permission.",
+      "log": {
+        "private_record": ".local/product-030-031-unit-attempt-1.log",
+        "sha256": "9804e7eba02243fbfb49eb307dfd88eebbe17a5ddf86f6a7fdc5c2624d2cc9f6"
+      }
+    }
+  },
+  "previous_api_attempts": [
+    {
+      "outcome": "FAIL",
+      "expected": 168,
+      "observed": 155,
+      "counts": {
+        "tests": 155,
+        "suites": 0,
+        "pass": 154,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "runtime_test_sources_match": true,
+      "summary_sha256": "fcc00ddae8adc55e9c11e2143387a557b892f9306c7fe849f1e823c98b0f9dec",
+      "failure": "A business-domain rollback test loads accumulated tenant history into memory and exhausts its256MiB Node heap; test fixture repair is in progress. Missing cases are not counted as passed."
+    }
+  ]
+}

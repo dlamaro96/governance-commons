@@ -1,0 +1,592 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-17T05:37:13.228363+00:00",
+  "scope": "Scheduled PostgreSQL quality checks, deduplicated incidents, in-app notifications and verified recovery/reopening.",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "implementation_commit": "a3d8f55620b4c762fb88473c222e5ba05c86b7c9",
+  "profile": "core",
+  "runtime": {
+    "result": "PASS",
+    "application_image": "sha256:04abd1aa228cea7a2c0ca93cfdf9b5ecfa05080ab257f669009073e7f470e1d5",
+    "worker_image": "sha256:e0b8974d173ff2298b9d86ef83de988ca786312cd8ac7f502b139f544fa607c3",
+    "application_source_binding": {
+      "files": 293,
+      "exact_source_hashes_match": true,
+      "implementation_commit": "a3d8f55620b4c762fb88473c222e5ba05c86b7c9"
+    },
+    "migrations": [
+      {
+        "name": "001_foundation.sql",
+        "checksum": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "name": "002_audit_envelopes.sql",
+        "checksum": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "name": "003_governance_models.sql",
+        "checksum": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "name": "004_model_migrations.sql",
+        "checksum": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "name": "005_model_migration_integrity.sql",
+        "checksum": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "name": "006_inherited_asset_types.sql",
+        "checksum": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "name": "007_asset_type_migrations.sql",
+        "checksum": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "name": "008_constrained_relations.sql",
+        "checksum": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "name": "009_relation_participation.sql",
+        "checksum": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "name": "010_relation_scope_discovery.sql",
+        "checksum": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "name": "011_business_domains.sql",
+        "checksum": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+      },
+      {
+        "name": "012_authentication_foundation.sql",
+        "checksum": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77"
+      },
+      {
+        "name": "013_authority_foundation.sql",
+        "checksum": "4a9304cf02ab51fc085a6018cd22980e948bc6cd1167b3595ccb817b2cf41fbf"
+      },
+      {
+        "name": "014_source_connectors.sql",
+        "checksum": "5d43592b8120818db2a2d81e62652ffccdc9dde1a0c0111604bc373b8b2e1f4b"
+      },
+      {
+        "name": "015_approval_workflows.sql",
+        "checksum": "571e14b0b42fe2dc58d076e35e7e2a3bab0bca918042e4ef222c63b3be2f269d"
+      },
+      {
+        "name": "016_glossary_publication.sql",
+        "checksum": "26b03dd63077e0477da3ed80d2a099b2dc4e00390d9e11eeea2546a0d19aea57"
+      },
+      {
+        "name": "017_relation_scope_candidates.sql",
+        "checksum": "c22f0b6d35e75555e1c58b503a82d2bbf6f23ab404c3af618143178cc5baa47b"
+      },
+      {
+        "name": "018_glossary_nominal_candidates.sql",
+        "checksum": "60361c7b2ddee2f1f095d0e832116b4b97cc04fdbee6a88b398721e5bee13fea"
+      },
+      {
+        "name": "019_quality_execution.sql",
+        "checksum": "ed7fefe9f1598831b6feb5954ba688fd35073af20dc1717082cb5176bc576ab5"
+      },
+      {
+        "name": "020_native_lineage.sql",
+        "checksum": "b5e601a50fdad2417f6b497eade5d65da7c5dcdb7bde94e74694a04d208691b8"
+      },
+      {
+        "name": "021_classification_review.sql",
+        "checksum": "e8637511016f4e9cf6741c4d5718c14a8b47a97898b8769e2884a7ee2a3a294e"
+      },
+      {
+        "name": "022_reference_publication.sql",
+        "checksum": "5720d63ac78b9ad9781c3a46da00369c90d25cf5493cddb318fd8252b131c9d9"
+      },
+      {
+        "name": "023_reference_quality.sql",
+        "checksum": "92221543903d7069d34d9e946b18063be52b1dfa0a7423cdb1b9bd5ff8b5d3ee"
+      },
+      {
+        "name": "024_reference_structures.sql",
+        "checksum": "71a019163fec45a88fc91f4cb53839e582c23eb37db7615928ae5d7f888dcd2c"
+      },
+      {
+        "name": "025_quality_uniqueness.sql",
+        "checksum": "94a814af5b80baf9835eca83ad200e67bf6e5697f79ae99e7abb2a1f4c0a3f9e"
+      },
+      {
+        "name": "026_quality_range.sql",
+        "checksum": "7fda1bc5768525ff60449433b452da549063ee52f2d9cad01c0b26330c52bd8e"
+      },
+      {
+        "name": "027_quality_monitoring.sql",
+        "checksum": "b50fc5375c9a992e55fd196cf3e745b667b1b11dff045a88cb5899d493b4f35a"
+      }
+    ],
+    "readback": {
+      "private_record": ".local/product-quality-monitoring-runtime-readback.json",
+      "sha256": "41a14e7717503c4d58dbbd0f78d46253d20baca6648fa749a41661227261aed6"
+    }
+  },
+  "native_upgrade": {
+    "result": "PASS",
+    "command": "./dev test --suite monitoring-upgrade",
+    "tests": 175,
+    "suites": [
+      {
+        "phase": "pre026-completeness-tests",
+        "path": "tests/qualification/quality.test.ts",
+        "expected": 15,
+        "tests": {
+          "tests": 15,
+          "suites": 0,
+          "pass": 15,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 1761.736001
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "repositoryBinding": {
+          "path": "apps/api/src/repository.ts",
+          "fixture": "tests/qualification/predecessors/repository-sql026.ts.txt",
+          "commit": "629e475c2fb00198b51e673074eabd0aa5bcff48",
+          "gitBlob": "074a6ac9b0e1ba33e06197009386563d92e7ea33",
+          "sha256": "9cb5f78fe0d70e1d614f7940ed3de4e44394ae47befd817c2f7816f08fe654f5",
+          "checkoutSha256": "0b3305e0318db339031dee812b6c06d742f32c8af8b5a44b601b4d50569d9eed",
+          "readOnly": true,
+          "mountTarget": "/app/apps/api/src/repository.ts"
+        },
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre026-reference-tests",
+        "path": "tests/api/reference-quality-storage.test.ts",
+        "expected": 21,
+        "tests": {
+          "tests": 21,
+          "suites": 0,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 9210.276462
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "repositoryBinding": {
+          "path": "apps/api/src/repository.ts",
+          "fixture": "tests/qualification/predecessors/repository-sql026.ts.txt",
+          "commit": "629e475c2fb00198b51e673074eabd0aa5bcff48",
+          "gitBlob": "074a6ac9b0e1ba33e06197009386563d92e7ea33",
+          "sha256": "9cb5f78fe0d70e1d614f7940ed3de4e44394ae47befd817c2f7816f08fe654f5",
+          "checkoutSha256": "0b3305e0318db339031dee812b6c06d742f32c8af8b5a44b601b4d50569d9eed",
+          "readOnly": true,
+          "mountTarget": "/app/apps/api/src/repository.ts"
+        },
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre026-uniqueness-tests",
+        "path": "tests/api/quality-uniqueness-storage.test.ts",
+        "expected": 16,
+        "tests": {
+          "tests": 16,
+          "suites": 0,
+          "pass": 16,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 1976.643085
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "repositoryBinding": {
+          "path": "apps/api/src/repository.ts",
+          "fixture": "tests/qualification/predecessors/repository-sql026.ts.txt",
+          "commit": "629e475c2fb00198b51e673074eabd0aa5bcff48",
+          "gitBlob": "074a6ac9b0e1ba33e06197009386563d92e7ea33",
+          "sha256": "9cb5f78fe0d70e1d614f7940ed3de4e44394ae47befd817c2f7816f08fe654f5",
+          "checkoutSha256": "0b3305e0318db339031dee812b6c06d742f32c8af8b5a44b601b4d50569d9eed",
+          "readOnly": true,
+          "mountTarget": "/app/apps/api/src/repository.ts"
+        },
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre026-range-tests",
+        "path": "tests/api/quality-range-storage.test.ts",
+        "expected": 18,
+        "tests": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2238.928168
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "repositoryBinding": {
+          "path": "apps/api/src/repository.ts",
+          "fixture": "tests/qualification/predecessors/repository-sql026.ts.txt",
+          "commit": "629e475c2fb00198b51e673074eabd0aa5bcff48",
+          "gitBlob": "074a6ac9b0e1ba33e06197009386563d92e7ea33",
+          "sha256": "9cb5f78fe0d70e1d614f7940ed3de4e44394ae47befd817c2f7816f08fe654f5",
+          "checkoutSha256": "0b3305e0318db339031dee812b6c06d742f32c8af8b5a44b601b4d50569d9eed",
+          "readOnly": true,
+          "mountTarget": "/app/apps/api/src/repository.ts"
+        },
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post027-completeness-tests",
+        "path": "tests/qualification/quality.test.ts",
+        "expected": 15,
+        "tests": {
+          "tests": 15,
+          "suites": 0,
+          "pass": 15,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 1952.070459
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "repositoryBinding": null,
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post027-reference-tests",
+        "path": "tests/api/reference-quality-storage.test.ts",
+        "expected": 21,
+        "tests": {
+          "tests": 21,
+          "suites": 0,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 9472.720796
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "repositoryBinding": null,
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post027-uniqueness-tests",
+        "path": "tests/api/quality-uniqueness-storage.test.ts",
+        "expected": 16,
+        "tests": {
+          "tests": 16,
+          "suites": 0,
+          "pass": 16,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2074.773501
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "repositoryBinding": null,
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post027-range-tests",
+        "path": "tests/api/quality-range-storage.test.ts",
+        "expected": 18,
+        "tests": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2399.025335
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "repositoryBinding": null,
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post027-monitoring-tests",
+        "path": "tests/api/quality-monitoring-storage.test.ts",
+        "expected": 31,
+        "tests": {
+          "tests": 31,
+          "suites": 0,
+          "pass": 31,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 50291.500815
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "repositoryBinding": null,
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post027-monitoring-invariants-tests",
+        "path": "tests/api/quality-monitoring-invariants.test.ts",
+        "expected": 4,
+        "tests": {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 5469.901002
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "repositoryBinding": null,
+        "sourceHashesMatched": true
+      }
+    ],
+    "source_binding": {
+      "files": 112,
+      "exact_source_hashes_match": true,
+      "implementation_commit": "a3d8f55620b4c762fb88473c222e5ba05c86b7c9"
+    },
+    "upgrade_preservation": true,
+    "replay_preservation": true,
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "record": {
+      "private_record": ".local/evidence/quality-monitoring-upgrade.json",
+      "sha256": "90416c658c306234fb469abd00aaf915dff0a8d7e90a6eab2058bfabbb073ab8"
+    }
+  },
+  "historical_regression": [
+    {
+      "family": "uniqueness",
+      "tests": 88,
+      "result": "PASS",
+      "cleanup": {
+        "ownedRemoved": true,
+        "resourceInventoryPreserved": true,
+        "generatedCredentialsRemoved": true
+      },
+      "record": {
+        "private_record": ".local/evidence/quality-uniqueness-upgrade.json",
+        "sha256": "da340521242acb3a6589fcfe8c8f15f2fbedc5c6487581ab896c0e955fd3410e"
+      }
+    },
+    {
+      "family": "range",
+      "tests": 122,
+      "result": "PASS",
+      "cleanup": {
+        "ownedRemoved": true,
+        "resourceInventoryPreserved": true,
+        "generatedCredentialsRemoved": true
+      },
+      "record": {
+        "private_record": ".local/evidence/quality-range-upgrade.json",
+        "sha256": "f4651ca689631c8d75c76ad8533fb9e29d7151d680a1804c5cc74b9f5ea05794"
+      }
+    }
+  ],
+  "targeted_browser": {
+    "result": "PASS",
+    "command": "Private source-bound Playwright target launcher; public equivalent ./dev test --suite e2e",
+    "tests": [
+      {
+        "file": "quality-monitoring.spec.ts",
+        "line": 30,
+        "title": "DQ-MONITOR: actual UTC scheduling deduplicates failures, verifies recovery and preserves reopened issue history",
+        "project": "quality-monitoring",
+        "status": "expected",
+        "expected_status": "passed",
+        "attempts": [
+          {
+            "status": "passed",
+            "retry": 0,
+            "duration": 160682
+          }
+        ]
+      }
+    ],
+    "counts": {
+      "startTime": "2026-11-17T05:16:26.982Z",
+      "duration": 161965.482,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "versions": {
+      "node": "v24.22.3",
+      "pnpm": "10.32.1",
+      "chrome": "Google Chrome 157.0.8103.79"
+    },
+    "captures": 8,
+    "execution": {
+      "private_record": ".local/evidence/product-quality-monitoring-browser-attempt-1/execution.json",
+      "sha256": "c637d32ed5f990f3a0c41429ab30df970677d7f9a87eda39bad597785d918df8"
+    },
+    "visual_review": {
+      "private_record": ".local/evidence/product-quality-monitoring-browser-attempt-1/visual-review.json",
+      "sha256": "4f6e014162bc15a8203b1623ee3cc970a9550bed554a9430eb170c2feb8c7958"
+    },
+    "limitations": [
+      "Single viewport captures; below-fold history is not fully visible.",
+      "Automated Axe checks and this inspection are not full accessibility or Arabic linguistic certification.",
+      "No enterprise or release readiness claim."
+    ]
+  },
+  "api_regression": {
+    "result": "PASS",
+    "command": "./dev test --suite security",
+    "counts": {
+      "tests": 168,
+      "suites": 0,
+      "pass": 168,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "record": {
+      "private_record": ".local/evidence/api-summary.json",
+      "sha256": "dfe8af573508c8a6040049d83848abe99dbddc8be30059e98e4fbe76ebfcaace"
+    }
+  },
+  "host": {
+    "unit_tests": 1040,
+    "unit_result": "PASS",
+    "types": "PASS",
+    "production_build": "PASS",
+    "worker_transport_tests": 99,
+    "worker_transport_result": "PASS",
+    "units": {
+      "private_record": ".local/product-monitoring-units-attempt-3.log",
+      "sha256": "62dc1670e4fbffc9072f78827e596249ffe1ab98029f0866a0766b6cbfba869e"
+    },
+    "types_record": {
+      "private_record": ".local/product-monitoring-types-attempt-2.log",
+      "sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+    },
+    "build_record": {
+      "private_record": ".local/product-monitoring-web-build-attempt-3.log",
+      "sha256": "2f7969a3335d71d6d74e6f8cbc42ab2d359ff75d53c4cefe010fa541dda013c6"
+    },
+    "transport_record": {
+      "private_record": ".local/product-monitoring-worker-transport-attempt-1.log",
+      "sha256": "790ae01f4f5d89a7f717a210f750c7e298dd9f8ee15588e111841a6437867dec"
+    }
+  },
+  "security": {
+    "secret_scan": {
+      "schema_version": 1,
+      "tool": "gitleaks",
+      "tool_version": "8.30.1",
+      "tool_pin": "policies/security-tools.json",
+      "command": "python3 policies/scan_secrets.py --install",
+      "timestamp": "2026-11-17T05:27:03.999562+00:00",
+      "commit": "629e475c2fb00198b51e673074eabd0aa5bcff48",
+      "working_tree_manifest_sha256": "f577cfa18d543385a7953dee5d3ea051e730dc8e215556f750503d79672ff3f8",
+      "publishable_files_scanned": 1422,
+      "worktree_dirty": true,
+      "platform": {
+        "system": "Darwin",
+        "architecture": "arm64"
+      },
+      "outcome": "PASS",
+      "results": [
+        {
+          "scope": "publishable_worktree",
+          "outcome": "PASS",
+          "exit_code": 0,
+          "finding_count": 0,
+          "findings": []
+        },
+        {
+          "scope": "reachable_git_history",
+          "outcome": "PASS",
+          "exit_code": 0,
+          "finding_count": 0,
+          "findings": []
+        }
+      ],
+      "limitations": [
+        "Detection by pinned gitleaks rules is not proof that every possible secret is absent.",
+        "Scans publishable files, excluding ignored runtime secrets/dependencies and this newly generated safe summary; history covers every reachable revision.",
+        "The source snapshot hash identifies uncommitted files tested; a supported release must rerun at its exact final commit.",
+        "Tool checksum verification is against pinned official release metadata; no independent signing/provenance claim."
+      ]
+    },
+    "publication_policy": "PASS",
+    "hosted_source_security": {
+      "commit": "629e475c2fb00198b51e673074eabd0aa5bcff48",
+      "run": 44018142213,
+      "result": "PASS",
+      "findings": 0,
+      "receipt": {
+        "private_record": ".local/range-hosted-629e475/verification-receipt.json",
+        "sha256": "650ab5fa38355297143abaa38790d4f9b402ded0aa21d08db52f331f3f68a2f8"
+      }
+    },
+    "fresh_hosted_revision": "REQUIRED"
+  },
+  "retained_failures": [
+    {
+      "scope": "full browser attempt12",
+      "result": "FAIL",
+      "pass": 24,
+      "fail": 1,
+      "not_run": 8,
+      "reason": "Old completeness heading assertion; corrected target passes separately. Full rerun remains required."
+    },
+    {
+      "scope": "Development44018142157",
+      "result": "FAIL",
+      "commit": "629e475c2fb00198b51e673074eabd0aa5bcff48",
+      "stage": "glossary_population",
+      "reason": "Cause remains unknown; earlier stages including authority pass, later stages skipped."
+    },
+    {
+      "scope": "monitoring upgrade attempt1",
+      "result": "FAIL",
+      "reason": "Current repository called SQL027 helper in SQL026 phase. Exact historical repository binding repaired; corrected native175 and historical88/122 pass."
+    },
+    {
+      "scope": "core build attempt1",
+      "result": "FAIL",
+      "reason": "Four UI imports used .ts instead of .tsx. Corrected host and Compose builds pass."
+    },
+    {
+      "scope": "host build attempt2 and units attempt2",
+      "result": "FAIL",
+      "reason": "Old corepack home-cache and sandbox loopback refusals. Explicit project toolchain build and permitted real socket unit reruns pass."
+    }
+  ],
+  "limitations": [
+    "Local development evidence only; whole capability, vendor-live, enterprise and release qualification remain open.",
+    "UTC interval schedules, supported current rule families and in-app routing are scoped evidence; backfills, source time zones, maintenance/silence and external routes remain required work.",
+    "Freshness candidate native232 and source measurements pass privately but are not part of this applied SQL027 checkpoint.",
+    "Full integrated browser and fresh hosted qualification remain required; no failing requirement was removed."
+  ]
+}

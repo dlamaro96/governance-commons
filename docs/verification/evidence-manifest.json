@@ -425,7 +425,7 @@
     },
     {
       "path": "docs/verification/relation-participation-upgrade-security-regression.json",
-      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001\u2013010 unchanged; prior executions retained."
+      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001–010 unchanged; prior executions retained."
     },
     {
       "path": "docs/verification/m2-relation-participation-api-final.json",
@@ -443,7 +443,7 @@
     },
     {
       "path": "docs/verification/relation-participation-graph-copy-upgrade.json",
-      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001\u2013010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
+      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001–010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
       "source_binding": {
         "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
         "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
@@ -776,7 +776,12 @@
         "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
         "working_tree_dirty": true,
         "method": "Original execution and review report hashes retained;169 actual-image source hashes and27 served assets bind the final passing source. This document does not imply a test rerun or whole-requirement completion.",
-        "evidence_sha256": "9872e843d8b2be7d3c61f879fab6cb0159bb46e96780e134f32572f7a0c98d98"
+        "evidence_sha256": "26c3d474826ac806a3d6e0c2d73afc008d3848575b72aca2d917943aa8f7824e"
+      },
+      "editorial_redaction": {
+        "reason": "Remove an unrelated project name from a historical capacity note; no execution result changes.",
+        "original_evidence_sha256": "9872e843d8b2be7d3c61f879fab6cb0159bb46e96780e134f32572f7a0c98d98",
+        "redacted_evidence_sha256": "26c3d474826ac806a3d6e0c2d73afc008d3848575b72aca2d917943aa8f7824e"
       }
     },
     {
@@ -787,8 +792,8 @@
       "source_binding": {
         "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
         "working_tree_dirty": true,
-        "method": "Original execution and review report hashes retained;169 actual-image source hashes and27 served assets bind the final passing source. This document does not imply a test rerun or whole-requirement completion.",
-        "evidence_sha256": "f56ec20ed95311396af058b4f4ddc67f005df0dabcbcb06e33f1b00fd17adfe1"
+        "method": "Metadata-only public serialization removes an internal reviewer identifier and updates linked public report digests. Original report hashes are retained in publication_serialization; execution timestamps,169 actual-image source hashes,27 served assets, screenshot hashes, results and automated-review limitations remain unchanged. No new execution, visual review or human approval is inferred.",
+        "evidence_sha256": "2a70cdbf432fe2ebc35dc47e8f59d8331977039aa7870e81fdadc33d2ec9ddbd"
       }
     },
     {
@@ -811,8 +816,8 @@
       "source_binding": {
         "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
         "working_tree_dirty": true,
-        "method": "Original execution and review report hashes retained;169 actual-image source hashes and27 served assets bind the final passing source. This document does not imply a test rerun or whole-requirement completion.",
-        "evidence_sha256": "9514ab544d1bacbb27f99aa9d38b3c568d6c5ac4260f3b57801115e596a1a076"
+        "method": "Metadata-only public serialization removes an internal reviewer identifier and updates linked public report digests. Original report hashes are retained in publication_serialization; execution timestamps,169 actual-image source hashes,27 served assets, screenshot hashes, results and automated-review limitations remain unchanged. No new execution, visual review or human approval is inferred.",
+        "evidence_sha256": "a764d1812e44cdfb2af9ef83d6a5516746513de7901983c80a2d7b03869d7d0e"
       }
     },
     {
@@ -1106,7 +1111,7 @@
     },
     {
       "path": "docs/verification/authority-admission-budget-alignment.json",
-      "scope": "Generic admission proposed dependency-depth alignment8\u219216;18 focused and313 combined host unit cases/types. No semantic engine or runtime claim.",
+      "scope": "Generic admission proposed dependency-depth alignment8→16;18 focused and313 combined host unit cases/types. No semantic engine or runtime claim.",
       "implementation_status": "IN_PROGRESS",
       "verification_status": "PASS_FOCUSED_AND_COMBINED_HOST_UNIT_AND_TYPECHECK_SCOPE",
       "source_binding": {
@@ -1222,10 +1227,16 @@
       "source_binding": {
         "base_revision": "94efe7f8bec0fe054ed003521b832f9a02239910",
         "verified_source_files": 262,
-        "evidence_sha256": "05c45ff1f8d5c883abef56a5d7f89b60d4d411effadbdd022f6cb5636e6a7d0e"
+        "evidence_sha256": "1ae2c6bbb126f3f4bbf1d334cf49007a8037678848023fe325ad09d4fd9ae1f5"
       },
       "runtime_authority_activated": false,
-      "release_qualified": false
+      "release_qualified": false,
+      "editorial_redaction": {
+        "recorded_at": "2026-11-16T11:32:05.039407+00:00",
+        "reason": "Remove local account paths and unrelated project references at the owner’s request. Original execution outcomes and source binding are unchanged. Original evidence remains in private archive and Git history.",
+        "original_evidence_sha256": "05c45ff1f8d5c883abef56a5d7f89b60d4d411effadbdd022f6cb5636e6a7d0e",
+        "redacted_evidence_sha256": "1ae2c6bbb126f3f4bbf1d334cf49007a8037678848023fe325ad09d4fd9ae1f5"
+      }
     },
     {
       "path": "docs/verification/authentication-foundation-core-api.json",
@@ -1276,12 +1287,365 @@
       },
       "runtime_authority_activated": false,
       "release_qualified": false
+    },
+    {
+      "path": "docs/verification/authentication-foundation-hosted-attempt-2.json",
+      "scope": "Exact PR21 head and tested merge qualify hosted source/dependency/secret checks,154API,19browser,21storage,14concurrency and15 stages. Attempt1 is preserved; merged revision execution is separate.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EXACT_SOURCE_HOSTED_FOUNDATION",
+      "source_binding": {
+        "base_revision": "4ec8e148a3b02fbf8b30d4388b6539cf55878e9e",
+        "tested_merge": "0e9dafdd66638e227e57fdffe14e40e0cf78abf7",
+        "merged_revision": "086f16c412c889bf5af3a6c898c2f9b14f9297ba",
+        "verified_source_files": 991,
+        "evidence_sha256": "88f116bc31272439847cc47add1a6dae7136be783fdda33aa235ed833d660215"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-host.json",
+      "scope": "484 host units and root/web types on protected authentication implementation. Real services and runtime activation remain separate.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_HOST_UNITS_AND_TYPES",
+      "source_binding": {
+        "base_revision": "086f16c412c889bf5af3a6c898c2f9b14f9297ba",
+        "observed_source_files": 189,
+        "evidence_sha256": "037a0a8fef61f64ee81d227c0fcf5c6a4d2b0e7486e46e0b89f85d7fb7769fb5"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-local.json",
+      "scope": "15 native HTTP/SQL cases and2 real Keycloak browser journeys with129 source bindings, exact13-manifest replay,served assets and cleanup.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_ISOLATED_MOUNTED_SOURCE_AUTHENTICATION",
+      "source_binding": {
+        "base_revision": "086f16c412c889bf5af3a6c898c2f9b14f9297ba",
+        "evidence_sha256": "232fae73df58ebacbfcddda830397ee7139b883a6615e912a47b5318b6469670"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-visual-review.json",
+      "scope": "Actual English/Arabic desktop/mobile captures from the passing isolated run; linguistic/human accessibility and full product qualifications remain open.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EIGHT_SCOPED_ORIGINAL_FRAME_REVIEWS",
+      "source_binding": {
+        "base_revision": "086f16c412c889bf5af3a6c898c2f9b14f9297ba",
+        "evidence_sha256": "855d553d32c30478d2d98e6b875eab55f00c980b6c84e602a18f550f8778142e"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-attempt-history.json",
+      "scope": "All8 launches retained; corrections, failed cleanup and evidence limits remain explicit.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PRESERVED_FAILED_AND_PASSING_ATTEMPTS",
+      "source_binding": {
+        "base_revision": "086f16c412c889bf5af3a6c898c2f9b14f9297ba",
+        "evidence_sha256": "fd1e62505a1b858e03d638c706d0697cafb3ef5113a50d2efed64a714f0b8b9d"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-local-attempt-9.json",
+      "scope": "15 native HTTP/SQL cases and2 real Keycloak journeys on committed131source snapshot with actual owned-process cleanup.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_ISOLATED_MOUNTED_SOURCE_AUTHENTICATION",
+      "source_binding": {
+        "implementation_commit": "d5c7d8aa9f3cd592fd13117c2c267ced6767270b",
+        "evidence_sha256": "20db58d0b1427fd28f103e1829426865189d876ee6bf4d876f85c56b9fe600c0"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-visual-review-attempt-9.json",
+      "scope": "Eight fresh English/Arabic desktop/mobile original captures inspected; no linguistic or human accessibility certification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EIGHT_SCOPED_ORIGINAL_FRAME_REVIEWS",
+      "source_binding": {
+        "implementation_commit": "d5c7d8aa9f3cd592fd13117c2c267ced6767270b",
+        "evidence_sha256": "bfa8e71109f5640df44f34533021ae2d8c680d19737ec77856abc91660791002"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-cleanup-qualification.json",
+      "scope": "14 actual host subprocess regressions,65 publisher tests, independent review and fresh real-service launch9.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_SCOPED_OWNED_PROCESS_CLEANUP",
+      "source_binding": {
+        "implementation_commit": "d5c7d8aa9f3cd592fd13117c2c267ced6767270b",
+        "evidence_sha256": "1145e9af123a8accb70525071e4ac13197b8fba55ba3b6aa8bef903b7dfaff7a"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false,
+      "editorial_redaction": {
+        "recorded_at": "2026-11-16T11:32:05.042226+00:00",
+        "reason": "Remove local account paths and unrelated project references at the owner’s request. Original execution outcomes and source binding are unchanged. Original evidence remains in private archive and Git history.",
+        "original_evidence_sha256": "ac3f41617053e65973adda8dabaf5eab1d7cdb229a53491b63a49cf0a4255d23",
+        "redacted_evidence_sha256": "1145e9af123a8accb70525071e4ac13197b8fba55ba3b6aa8bef903b7dfaff7a"
+      }
+    },
+    {
+      "path": "docs/verification/protected-authentication-hosted-source-attempt-1.json",
+      "scope": "PR22 protected authentication source finding and correction evidence; no new runtime or release qualification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "FAIL_HOSTED_SOURCE_FINDINGS",
+      "source_binding": {
+        "base_revision": "74b2acbf5a579261c070e0671fb05176e408b726",
+        "evidence_sha256": "a53f2d69e27d4068d77f75503e35211f27a72562e618bc115b646e6646da6cc8"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-rate-limit-host.json",
+      "scope": "PR22 protected authentication source finding and correction evidence; no new runtime or release qualification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_HOST_REGRESSION_ONLY",
+      "source_binding": {
+        "base_revision": "74b2acbf5a579261c070e0671fb05176e408b726",
+        "evidence_sha256": "4b18473b6428674408252972e92cdd66a808792215e67e38d4f47ab0af8bae7b"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-local-attempt-10.json",
+      "scope": "15 native HTTP/SQL cases and2 real Keycloak journeys on exact131-source rate-limit correction; owned-resource cleanup verified.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_ISOLATED_MOUNTED_SOURCE_AUTHENTICATION",
+      "source_binding": {
+        "implementation_commit": "90986ff5d3aa0f2bc6dbd594a32019f8bbe05dd3",
+        "evidence_sha256": "d3657c3d9b1e2023759227a5b8bc7ded8ea4cbb75bfe85c1abfa321e96e95e40"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-visual-review-attempt-10.json",
+      "scope": "Actual English/Arabic desktop/mobile captures from launch10 reviewed; no linguistic certification.",
+      "implementation_status": "IN_PROGRESS",
+      "verification_status": "PASS_EIGHT_SCOPED_ORIGINAL_FRAME_REVIEWS",
+      "source_binding": {
+        "implementation_commit": "90986ff5d3aa0f2bc6dbd594a32019f8bbe05dd3",
+        "evidence_sha256": "efa59438179300a4852cf5899a2944fa992be839734a06a3c7e0fd60225c5461"
+      },
+      "runtime_authority_activated": false,
+      "release_qualified": false
+    },
+    {
+      "path": "docs/verification/protected-authentication-local-attempt-11.json",
+      "scope": "protected-login-linux-portable-bootstrap",
+      "source_binding": {
+        "method": "Closed publisher independently revalidated132 exact mounted source files,15 native HTTP cases and2 real Keycloak browser journeys. Local execution only; no hosted or release qualification.",
+        "verified_files": 132,
+        "evidence_sha256": "4abc7feadb6455a97dfc3bbc8b6669ca2a11990c4a5e94d3ce82c32fb6b82ee5"
+      }
+    },
+    {
+      "path": "docs/verification/product-search-postgres-local.json",
+      "scope": "product-search-postgres-local",
+      "source_binding": {
+        "base_commit": "0c7982f83cd9c66c377e7eb804e6ca5d70205d18",
+        "method": "Recorded dirty-worktree source hashes; scoped executions only.",
+        "evidence_sha256": "4e45aa6fea365f600144a04f766ca5b3e058be0685a1026a9cb6c9585a46b294"
+      }
+    },
+    {
+      "path": "docs/verification/product-cursor-core-local.json",
+      "scope": "catalog-cursor-and-core-browser",
+      "source_binding": {
+        "implementation_commit": "64a13ed44dfc091193514e289f067e2574c7e07e",
+        "method": "Working-source hashes and private original execution records; base commit plus explicitly hashed repair. Hosted qualification remains separate.",
+        "verified_files": 8,
+        "evidence_sha256": "99d26aca20f172a1ba981d19327481120f56ad4cace85017e162d13623fa42dd"
+      }
+    },
+    {
+      "path": "docs/verification/product-quality-local.json",
+      "scope": "local-postgresql-completeness",
+      "source_binding": {
+        "base_commit": "3ee86ab42fd40a7e337f6efdccd101d62ea34cab",
+        "method": "Executed dirty-tree source hashes, real native/worker/seed/browser evidence; not whole release qualification.",
+        "evidence_sha256": "0b7251c927a6f7ce62ca983e22cbb44b7c7bd26987b2ee08b217156bdca69d89"
+      }
+    },
+    {
+      "path": "docs/verification/product-lineage-classification-local.json",
+      "scope": "local-lineage-classification-and-existing-regression",
+      "source_binding": {
+        "implementation_commit": "49c166c2f2e2da9a3e9723880b7fb239af20f684",
+        "method": "Exact application source/image readback plus independently retained host, native, seed, API and browser receipts. Scope limitations preserved."
+      }
+    },
+    {
+      "path": "docs/verification/product-reference-local.json",
+      "scope": "local-reference-publication-history-and-exports",
+      "source_binding": {
+        "implementation_commit": "b5d1531d5be1bef0ab188e9e7e6d081a672e630a",
+        "browser_commit": "591220ab2b398c8af2ed3c9a8441641fa77bfc8d",
+        "method": "Exact application source/image readback; isolated forward native18, existing API168, seed replay and one real no-retry browser workflow with12 original captures visually inspected.",
+        "evidence_sha256": "badb7cc89ac0490eaefbcd91f68fca4580a7b78a92247d2eee337ce9617c911c"
+      }
+    },
+    {
+      "path": "docs/verification/product-reference-integration-local.json",
+      "scope": "reference-integration-development",
+      "source_binding": {
+        "base_commit": "6b090767d3d7ca2a1645b81c97a96354d3b26358",
+        "evidence_sha256": "869f0f7d806ee254cd6cf7cb6a2aaf53a97caf9c7308b38df205c48de43da9ed",
+        "method": "Exact executed-source hashes and private native/browser/worker receipts with separate runtime and release statuses."
+      }
+    },
+    {
+      "path": "docs/verification/product-reference-browser-local.json",
+      "scope": "reference-structures-import-browser-local",
+      "source_binding": {
+        "implementation_commit": "ff8519b26ce552234ce26a74feb12c86c00638cd",
+        "evidence_sha256": "fffd10eac5f6c818b3df4f5dd9d4f1be3f28ea2738b6900f64738ce0a7684d45",
+        "method": "Exact baked application and24migration readback; two real no-retry browser journeys and16original visual reviews. Earlier API168 scope remains separate."
+      }
+    },
+    {
+      "path": "docs/verification/product-quality-exact-local.json",
+      "scope": "quality-uniqueness-range-local",
+      "source_binding": {
+        "implementation_commit": "17e5abb2ea4f10588bb1f2cbd65dbf3e0bbe9895",
+        "evidence_sha256": "df0680a7a403cf4bfe579111f55c222b8dbe06678012a24716569b60c5abedf5",
+        "method": "Exact279baked-source and102native-input comparison against committed tree;122isolated upgrade cases,16worker checks per family,2target browser journeys/16original frame reviews and168API regression."
+      }
+    },
+    {
+      "path": "docs/verification/product-quality-monitoring-local.json",
+      "scope": "quality-monitoring-local",
+      "source_binding": {
+        "implementation_commit": "a3d8f55620b4c762fb88473c222e5ba05c86b7c9",
+        "evidence_sha256": "d0d1d20b1955b7126e5d6bbbdf800dbb41b8f5d0e1d9d2dd03da4f99845e7f2a",
+        "method": "Exact committed native112 and baked293 source bindings;175 upgrade cases, real scheduled browser workflow/eight inspected frames,168 API and1040 host cases. Other scopes remain distinct."
+      }
+    },
+    {
+      "path": "docs/verification/product-quality-freshness-local.json",
+      "scope": "quality-freshness-local",
+      "source_binding": {
+        "implementation_commit": "fca6bb94a8bd87965c4bf614ae492b85235f4ea9",
+        "evidence_sha256": "9afebd437e850395f37defec9e9ff93651be871eefe6f550347ac61090fe40c7",
+        "method": "Native, baked application, worker and targeted-browser inventories matched exact committed blobs; failed full35 retained. No whole-profile pass inferred."
+      }
+    },
+    {
+      "path": "docs/verification/product-quality-freshness-scheduling-local.json",
+      "scope": "quality-freshness-scheduling-local",
+      "source_binding": {
+        "implementation_commit": "4cc3bd2afff9f75b8cba6bdbdc849e9252df8e70",
+        "evidence_sha256": "cf8464b06b5451b5d46c9df0df86e7b0824e59c17687ceaffb370fba6ae45b37",
+        "method": "Exact committed native, baked application/API and browser source inventories matched; scoped native276/API168/host1103 and target journeys pass. Full36 fails31/1/4; no whole-profile pass inferred."
+      }
+    },
+    {
+      "path": "docs/verification/development-pipeline-local.json",
+      "scope": "development-pipeline-local",
+      "source_binding": {
+        "implementation_commit": "ac464afc83a3e01d925a45b20723dfd8f2ab0572",
+        "evidence_sha256": "f2214e41c77b65efd01d334e47a5da99f8ae418699dbee7d284d77d429c28a47",
+        "method": "Exact Git-bound CI and browser source inventories;156 CI controls and target browser pass. Full36 and fresh hosted matrix pending."
+      }
+    },
+    {
+      "path": "docs/verification/dependency-actions-hosted.json",
+      "scope": "dependency-actions-hosted",
+      "source_binding": {
+        "implementation_commit": "0b485925b6a07f1bb8518696d654376af0b079ed",
+        "evidence_sha256": "5ae6125730d0681a6238523ffdad5322e75058a9112bfbbac7fe4415d771a7ed",
+        "method": "Exact tested merge/published tree equality, official Action pins, five hosted setup/upload steps and two authenticated artifact downloads verified. No full behavior claim."
+      }
+    },
+    {
+      "path": "docs/verification/product-quality-volume-local.json",
+      "scope": "partial-table-volume-local",
+      "source_binding": {
+        "implementation_commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
+        "method": "Exact integrated product revision; isolated native execution retains explicitly enumerated source-manifest differences. See the scoped evidence record.",
+        "evidence_sha256": "68a6477a585abca328eb9247f1189b94b56dc5a4c8d4205ab386eb489e0011f2"
+      }
+    },
+    {
+      "path": "docs/verification/authority-read-upgrade-local.json",
+      "scope": "inactive-authority-read-forward-upgrade",
+      "source_binding": {
+        "implementation_commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
+        "method": "Exact integrated product revision; isolated native execution retains explicitly enumerated source-manifest differences. See the scoped evidence record.",
+        "evidence_sha256": "99bccf93637f87dd6067155394cdebd5e4204614e8df5b9c0c39520269521bcb"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-2186dcb.json",
+      "scope": "hosted-exact-source-security-and-five-shard-development",
+      "source_binding": {
+        "implementation_commit": "2186dcb3d4ddd65f68e26e0bb76dc15e73d527d2",
+        "method": "Authenticated archives, API digests, exact source bytes and stored CodeQL analyses verified; development failures and skipped outcomes retained.",
+        "evidence_sha256": "c2bbd975815693461e81b4022ea371452c73ae7009a64c88e710fa3264b6e58a"
+      }
+    },
+    {
+      "path": "docs/verification/classification-browser-budget-local.json",
+      "scope": "classification-browser-budget",
+      "source_binding": {
+        "implementation_commit": "a5e30195085ef7e4e61fbdf66e2b6a1f104ef2ba",
+        "method": "All691 measured sources match exact Git blobs; every execution artifact was rehashed and owned cleanup passed.",
+        "evidence_sha256": "99dd9b2b5eaabfbb2aa180d8da7c2ea2681f870f68fc8cd4f6a5d732a093185c"
+      }
+    },
+    {
+      "path": "docs/verification/business-domain-snapshot-local.json",
+      "scope": "bounded-api-test-snapshot",
+      "source_binding": {
+        "implementation_commit": "f3f21e5e7eb7190a2b6ff98725737d7255be1878",
+        "method": "Exact committed fixture/regression hashes; native/API remains separately qualified.",
+        "evidence_sha256": "5df1491beb3265ddd3fbb24f39e466cd4fc18955c2d446ced321bf7651e24b47"
+      }
+    },
+    {
+      "path": "docs/verification/quality-table-browser-repair-local.json",
+      "scope": "table-quality-browser-acceptance-repair",
+      "source_binding": {
+        "implementation_commit": "a1a2972c299edb557ee885616f4e26a35dcd3cd3",
+        "method": "All692 recorded source hashes match committed blobs;23 artifacts rehashed, four captures inspected and owned cleanup/restoration verified.",
+        "evidence_sha256": "6d38a709ca26c797759ff801d13bbd7ffe9190bd01234b3d28d7ba8e3886d165"
+      }
+    },
+    {
+      "path": "docs/verification/source-security-f7fc213.json",
+      "scope": "hosted-exact-source-security",
+      "source_binding": {
+        "implementation_commit": "f7fc21307b4562a04812f5a3bd782dce3fea3a13",
+        "method": "Authenticated archives, all1502 source bytes and three stored CodeQL analyses independently matched; no runtime or enterprise qualification inferred.",
+        "evidence_sha256": "88064f0363ec6c04360e9889a5c3c261e98d199eb4ec5d76e4dae100e71819f6"
+      }
+    },
+    {
+      "path": "docs/verification/relation-candidate-repair-local.json",
+      "scope": "forward-relation-candidate-and-explicit-repaired-chain",
+      "source_binding": {
+        "implementation_commit": "fabc708a74c78fe5e68e66ba9516f22e48ecbf62",
+        "method": "Frozen native receipts and exact composed-source host controls are recorded separately; composed runtime and hosted outcomes remain pending.",
+        "evidence_sha256": "214c68d94797b1f1763bcc3b86c367d76052247723156831ef92948698f5b09b"
+      }
     }
   ],
   "limitations": [
     "Passing scoped development gates does not complete compound baseline requirements.",
-    "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
+    "M1 core local journey passes; full M0 repository/release and M2–M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "bound_at": "2026-11-16T06:35:28.291653+00:00"
+  "bound_at": "2026-11-17T06:53:28.598978+00:00"
 }

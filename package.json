@@ -19,7 +19,10 @@
     "test": "node --import tsx --test tests/unit/*.test.ts",
     "test:integration": "node --import tsx --test --test-concurrency=1 tests/integration/*.test.ts",
     "test:e2e": "playwright test",
-    "requirements": "python3 scripts/requirements.py"
+    "requirements": "python3 scripts/requirements.py",
+    "authn-edge/start": "tsx apps/authn-edge/src/index.ts",
+    "login-broker/start": "tsx apps/login-broker/src/index.ts",
+    "session-api/start": "tsx apps/session-api/src/index.ts"
   },
   "dependencies": {
     "@fastify/cookie": "11.1.5",
@@ -41,7 +44,8 @@
     "kysely": "0.29.9",
     "pg": "8.23.1",
     "react": "19.3.1",
-    "react-dom": "19.3.1"
+    "react-dom": "19.3.1",
+    "tsx": "4.23.15"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
@@ -51,7 +55,6 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.3.0",
-    "tsx": "4.23.15",
     "turbo": "2.11.11",
     "typescript": "7.0.2",
     "vite": "8.3.8"
