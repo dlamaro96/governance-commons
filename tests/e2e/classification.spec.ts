@@ -3,9 +3,10 @@
  * application. No intercepted responses, internal completion or SQL fixtures.
  * An unchanged scan must preserve selected-field evidence freshness; actual
  * source rename invalidation belongs to native qualification. */
-import {test,expect,type Browser,type Locator,type Page,type Response,type TestInfo} from '@playwright/test';
+import {test,expect,type Locator,type Page,type Response,type TestInfo} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {randomUUID} from 'node:crypto';
+import {waitForBrowserRateBudget} from '../fixtures/browser-rate-budget.ts';
 import {classificationCopy} from '../../apps/web/src/classification/messages.ts';
 import {domainBody,domainHeaders,domainLogin,rescanDomainBrowserAsset,scanDomainBrowserAsset,stewardIdentity} from '../fixtures/business-domains-browser.ts';
 import type {Session} from '../../apps/web/src/types.ts';
@@ -110,12 +111,8 @@ async function approve(reviewer:Page,requester:Page,row:Review,status:'active'|'
  expect(completed.decisions).toHaveLength(1);expect(completed.decisions[0]).toMatchObject({actorId:reviewerId,decision:'approve',reason,taskId:row.tasks[0].id,taskVersion:row.tasks[0].version});return completed;
 }
 
-test.beforeAll(async({browser}:{browser:Browser})=>{
- test.setTimeout(75_000);const context=await browser.newContext();
- try{const response=await context.request.get('/api/v1/me'),remaining=Number(response.headers()['x-ratelimit-remaining']),reset=Number(response.headers()['x-ratelimit-reset']);if(Number.isFinite(remaining)&&remaining<220&&Number.isFinite(reset)&&reset>=0&&reset<=60)await new Promise(resolve=>setTimeout(resolve,Math.min(60,reset+1)*1000));}finally{await context.close();}
-});
 test('CLS: real metadata suggestion, independent application, immutable pins, reviewed withdrawal and access boundaries',async({page,browser},info)=>{
- test.setTimeout(600_000);await page.setViewportSize({width:1440,height:960});await domainLogin(page);await language(page,'en');
+ test.setTimeout(600_000);await waitForBrowserRateBudget(page.request,295);await page.setViewportSize({width:1440,height:960});await domainLogin(page);await language(page,'en');
  const me=await domainBody<Session>(await page.request.get('/api/v1/me'));expect(me.permissions).toEqual(expect.arrayContaining(['catalog:read','catalog:write','classification:read','classification:write','models:read','models:write','sources:read','sources:write']));
  const token=randomUUID().replaceAll('-',''),asset=await scanDomainBrowserAsset(page,'Synthetic classification browser '+token);
  const definition:ApprovalDefinition={formatVersion:1,id:'classification_browser_'+token,version:1,name:'Synthetic label review '+token,separationOfDuties:true,stages:[{id:'review',name:'Sensitivity review',assignments:['reviewer'],quorum:1,deadlineSeconds:3600,rejection:'any'}]};
