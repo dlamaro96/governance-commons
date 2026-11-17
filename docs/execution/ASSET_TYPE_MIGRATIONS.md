@@ -1,5 +1,7 @@
 # Explicit authored-type migration contract
 
+Editorial revision (2026-11-17): coordination-only text was removed. Technical requirements and qualification scope are unchanged. Historical implementation and execution records retain the original contract SHA256 `6c354424f5f9e580ac8349e07e22aeaadd592347e0e9f3494873f72e2cf07bf6`.
+
 Status: implementation IN PROGRESS; pure parser/policy, isolated upgrade/storage/concurrency and core PostgreSQL/API gates pass. Targeted and full 12-journey browser qualification pass for the recorded development scope. It follows pinned inheritance and does not close full MOD-001/002 or AT-MOD-01. Applied SQL001–006 and existing attribute-only plans/receipts remain immutable and compatible.
 
 ## Shared representation
@@ -49,7 +51,7 @@ Receipt getters and cached execution reauthorize the original recorded assets ev
 
 Use authenticated existing CSRF/If-Match/Idempotency-Key conventions under `/api/v1/asset-types/:id`: GET migration-context, POST migration-previews, POST migrations and GET migrations/:migrationId. A shared validation endpoint parses raw plan files. Preview displays complete before/after attributes, owner and state plus source repair issues and target validation failures, and requires confirmation of the exact digest. Provide explicit owner overrides, source-version state mappings, policy acknowledgements, file import/export, stale recovery and immutable receipt history. Exact shared response types are in packages/domain/src/asset-type-migration-contracts.ts. Context returns that object directly; preview returns {preview}; execution returns {type: PublishedAssetType, receipt}; receipt GET returns {receipt}. Request bodies are {definition,plan} and execution adds previewDigest. POST /api/v1/asset-types/migration-plans/validate accepts {text} and returns {plan}. Context sources include exact resolved policies for the bound source pins; assets include IDs, names, versions, owner and state. The existing /members endpoint supplies selectable owners; execution validates their live eligibility. UI routes are /asset-types/:id/migrate and /asset-types/:id/migrations/:migrationId.
 
-Root owns shared contracts, service/persistence, HTTP and central records. A specifically assigned storage worker owns SQL007 and its direct SQL/concurrency tests, subject to root review before application. Domain worker owns only the new pure migration module and units; web worker owns authoring/receipt UI and browser tests; integration worker owns new real DB/API cases. Preserve others' edits. No runtime migration or application-source changes while an earlier increment's image qualification is running.
+The implementation spans shared contracts, service/persistence, HTTP, SQL007 and its direct SQL/concurrency tests, the pure migration module and unit tests, authoring/receipt UI and browser tests, and real DB/API integration cases. SQL review and isolated qualification precede application. Qualification results bind the exact application and migration sources executed.
 
 ## Required increment evidence
 

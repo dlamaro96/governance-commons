@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/media/governance-commons.svg" alt="Governance Commons — open source data governance" width="100%"></p>
 
-<p align="center"><a href="#run-it-locally">Run locally</a> · <a href="docs/product/parity-matrix.md">Capability roadmap</a> · <a href="CONTRIBUTING.md">Contribute</a> · <a href="SECURITY.md">Security</a></p>
+<p align="center"><a href="#run-it-locally">Run locally</a> · <a href="docs/product/STATUS.md">Product status</a> · <a href="docs/execution/PLAN.md">Delivery plan</a> · <a href="CONTRIBUTING.md">Contribute</a> · <a href="SECURITY.md">Security</a></p>
 
 Governance Commons brings technical metadata, business context, ownership and change history into one self-hosted workspace. It is an independent Apache-2.0 project with original code and synthetic examples.
 
@@ -22,6 +22,10 @@ Governance Commons brings technical metadata, business context, ownership and ch
 | Steward | Assign owners, maintain descriptions, inspect change history and retain source provenance. |
 | Model | Author versioned operating models, inherited asset types, lifecycle rules, constrained relations and typed business domains. |
 | Change safely | Preview bounded model and graph migrations, detect stale versions and retain operation receipts. |
+| Publish business meaning | Propose glossary terms and reference code lists, obtain independent approval, schedule effective releases and export governed reference values. |
+| Trace and classify | Explore PostgreSQL view dependencies and review metadata classification proposals with retained evidence. |
+| Measure quality | Execute bounded PostgreSQL completeness, reference allowed-values, uniqueness, integer-range and latest-timestamp checks with immutable rule versions and measurements. |
+| Respond to quality issues | Schedule checks, acknowledge incidents, record remediation, verify recovery and retain reopening history. Expired freshness evidence cannot authorize resolution. |
 | Collaborate securely | Keycloak OIDC login, server-side sessions, tenant-scoped API/database checks and append-only audit/outbox records. |
 | Work in your language | English and Arabic layouts, light and dark themes, responsive views and scoped automated accessibility checks. |
 
@@ -29,11 +33,11 @@ These are scoped development capabilities. Passing one workflow does not qualify
 
 ## Configurable identity and integrations
 
-Microsoft Entra ID and other OIDC identity providers are part of the required identity design. Entra federation, account/group synchronization and live vendor qualification are separate capabilities; only the recorded Keycloak profile is currently locally qualified.
+Microsoft Entra ID federation has an operator-configured OIDC broker path. The protected login/session lifecycle is tested with real local Keycloak. Entra tenant registration, tenant-specific claims and live Microsoft sign-in still require external qualification; account/group synchronization and the broader identity administration capability remain open.
 
-Databricks Unity Catalog is a required connector target, alongside the complete [connector matrix](docs/product/connector-support.yaml). Metadata, lineage, model registry, writeback and source permissions have separate implementation and verification states. Unity Catalog is **not yet implemented or live-qualified**. PostgreSQL metadata scanning is the currently qualified source path.
+Databricks Unity Catalog source registration and a metadata worker adapter are implemented in the development branch. Registration and missing-credential handling have local tests; a real Databricks workspace has **not** been qualified. Unity lineage, model registry, writeback and source permissions are separate remaining capabilities. PostgreSQL is the currently qualified real source path. The full [connector matrix](docs/product/connector-support.yaml) remains required.
 
-The remaining programme includes glossary and policies, stewardship workflows, lineage, quality and observability, data products and access, privacy, AI governance, notebooks, marketplace integrations and enterprise operations. Required features stay in the open-source project; there is no seat, asset or connector license gate.
+The [product status](docs/product/STATUS.md) separates usable workflows from remaining implementation and qualification. Contracts, data products, source-access enforcement, notebooks, privacy, AI governance, semantic modelling, broader integrations and enterprise operations remain substantial work. Required features stay in the open-source project; there is no seat, asset or connector license gate.
 
 ## Run it locally
 

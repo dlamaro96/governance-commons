@@ -15201,7 +15201,12 @@
         "apps/web/src/quality/AssetQuality.tsx",
         "packages/domain/src/quality.ts",
         "packages/db/migrations/025_quality_uniqueness.sql",
-        "packages/db/migrations/026_quality_range.sql"
+        "packages/db/migrations/026_quality_range.sql",
+        "packages/db/migrations/028_quality_freshness.sql",
+        "apps/web/src/quality/FreshnessFields.tsx",
+        "packages/db/migrations/029_quality_freshness_scheduling.sql",
+        "packages/domain/src/quality-monitoring.ts",
+        "apps/web/src/quality/monitoring/Monitor.tsx"
       ],
       "test_ids": [
         "tests/qualification/quality.test.ts",
@@ -15209,7 +15214,13 @@
         "tests/api/quality-uniqueness-storage.test.ts",
         "tests/api/quality-range-storage.test.ts",
         "tests/e2e/quality-uniqueness.spec.ts",
-        "tests/e2e/quality-range.spec.ts"
+        "tests/e2e/quality-range.spec.ts",
+        "tests/api/quality-freshness-storage.test.ts",
+        "tests/api/quality-freshness-invariants.test.ts",
+        "tests/e2e/quality-freshness.spec.ts",
+        "tests/api/quality-freshness-monitoring-storage.test.ts",
+        "tests/api/quality-freshness-monitoring-invariants.test.ts",
+        "tests/e2e/quality-freshness-monitoring.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -15219,7 +15230,9 @@
         "local": {
           "outcome": "NOT_RUN",
           "evidence": [
-            "docs/verification/product-quality-exact-local.json"
+            "docs/verification/product-quality-exact-local.json",
+            "docs/verification/product-quality-freshness-local.json",
+            "docs/verification/product-quality-freshness-scheduling-local.json"
           ]
         },
         "vendor_live": {
@@ -15242,7 +15255,9 @@
       },
       "limitations": [
         "First bounded PostgreSQL completeness family passes scoped local native/worker/browser qualification. Remaining compound capability and profile/release qualification are open.",
-        "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome."
+        "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome.",
+        "Manual freshness passes native232, source18 checks/14 measurements and its one-journey browser target with24 inspected frames. Full35 failed27/1/7; whole-row verification and release outcomes remain unchanged.",
+        "Scheduled freshness passes native276, API168 and the real recovery/reopening/expiry browser target. Full36 records31 passed, one failed and four skipped; remaining families, broader scheduling and whole-profile/release qualification remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M4",
@@ -15288,13 +15303,24 @@
         "packages/db/migrations/025_quality_uniqueness.sql",
         "packages/db/migrations/026_quality_range.sql",
         "python/governance_workers/quality.py",
-        "apps/web/src/quality/AssetQuality.tsx"
+        "apps/web/src/quality/AssetQuality.tsx",
+        "packages/db/migrations/028_quality_freshness.sql",
+        "apps/web/src/quality/FreshnessFields.tsx",
+        "packages/db/migrations/029_quality_freshness_scheduling.sql",
+        "packages/domain/src/quality-monitoring.ts",
+        "apps/web/src/quality/monitoring/Monitor.tsx"
       ],
       "test_ids": [
         "tests/api/quality-uniqueness-storage.test.ts",
         "tests/api/quality-range-storage.test.ts",
         "tests/e2e/quality-uniqueness.spec.ts",
-        "tests/e2e/quality-range.spec.ts"
+        "tests/e2e/quality-range.spec.ts",
+        "tests/api/quality-freshness-storage.test.ts",
+        "tests/api/quality-freshness-invariants.test.ts",
+        "tests/e2e/quality-freshness.spec.ts",
+        "tests/api/quality-freshness-monitoring-storage.test.ts",
+        "tests/api/quality-freshness-monitoring-invariants.test.ts",
+        "tests/e2e/quality-freshness-monitoring.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -15304,7 +15330,9 @@
         "local": {
           "outcome": "NOT_RUN",
           "evidence": [
-            "docs/verification/product-quality-exact-local.json"
+            "docs/verification/product-quality-exact-local.json",
+            "docs/verification/product-quality-freshness-local.json",
+            "docs/verification/product-quality-freshness-scheduling-local.json"
           ]
         },
         "vendor_live": {
@@ -15326,7 +15354,9 @@
         "evidence": []
       },
       "limitations": [
-        "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome."
+        "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome.",
+        "Manual freshness passes native232, source18 checks/14 measurements and its one-journey browser target with24 inspected frames. Full35 failed27/1/7; whole-row verification and release outcomes remain unchanged.",
+        "Scheduled freshness passes native276, API168 and the real recovery/reopening/expiry browser target. Full36 records31 passed, one failed and four skipped; remaining families, broader scheduling and whole-profile/release qualification remain open."
       ],
       "owner": "unassigned",
       "milestone": "M4"
@@ -15640,7 +15670,8 @@
         "packages/db/migrations/027_quality_monitoring.sql",
         "packages/domain/src/quality-monitoring.ts",
         "apps/workflow-worker/src/quality-monitoring-activities.ts",
-        "apps/web/src/quality/monitoring/Monitor.tsx"
+        "apps/web/src/quality/monitoring/Monitor.tsx",
+        "packages/db/migrations/029_quality_freshness_scheduling.sql"
       ],
       "test_ids": [
         "tests/api/quality-uniqueness-storage.test.ts",
@@ -15649,7 +15680,10 @@
         "tests/e2e/quality-range.spec.ts",
         "tests/api/quality-monitoring-storage.test.ts",
         "tests/api/quality-monitoring-invariants.test.ts",
-        "tests/e2e/quality-monitoring.spec.ts"
+        "tests/e2e/quality-monitoring.spec.ts",
+        "tests/api/quality-freshness-monitoring-storage.test.ts",
+        "tests/api/quality-freshness-monitoring-invariants.test.ts",
+        "tests/e2e/quality-freshness-monitoring.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -15660,7 +15694,8 @@
           "outcome": "NOT_RUN",
           "evidence": [
             "docs/verification/product-quality-exact-local.json",
-            "docs/verification/product-quality-monitoring-local.json"
+            "docs/verification/product-quality-monitoring-local.json",
+            "docs/verification/product-quality-freshness-scheduling-local.json"
           ]
         },
         "vendor_live": {
@@ -15683,7 +15718,8 @@
       },
       "limitations": [
         "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome.",
-        "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged."
+        "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged.",
+        "Scheduled freshness passes native276, API168 and the real recovery/reopening/expiry browser target. Full36 records31 passed, one failed and four skipped; remaining families, broader scheduling and whole-profile/release qualification remain open."
       ],
       "owner": "unassigned",
       "milestone": "M4"
@@ -16089,12 +16125,15 @@
         "packages/db/migrations/027_quality_monitoring.sql",
         "packages/domain/src/quality-monitoring.ts",
         "apps/workflow-worker/src/quality-monitoring-activities.ts",
-        "apps/web/src/quality/monitoring/Monitor.tsx"
+        "apps/web/src/quality/monitoring/Monitor.tsx",
+        "packages/db/migrations/029_quality_freshness_scheduling.sql"
       ],
       "test_ids": [
         "tests/api/quality-monitoring-storage.test.ts",
         "tests/api/quality-monitoring-invariants.test.ts",
-        "tests/e2e/quality-monitoring.spec.ts"
+        "tests/e2e/quality-monitoring.spec.ts",
+        "tests/api/quality-freshness-monitoring-storage.test.ts",
+        "tests/e2e/quality-freshness-monitoring.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -16104,7 +16143,8 @@
         "local": {
           "outcome": "NOT_RUN",
           "evidence": [
-            "docs/verification/product-quality-monitoring-local.json"
+            "docs/verification/product-quality-monitoring-local.json",
+            "docs/verification/product-quality-freshness-scheduling-local.json"
           ]
         },
         "vendor_live": {
@@ -16126,7 +16166,8 @@
         "evidence": []
       },
       "limitations": [
-        "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged."
+        "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged.",
+        "Scoped UTC freshness scheduling, deduplicated incidents and current-evidence expiry pass native276 and the real lifecycle browser target; broader backfill, time-zone, silence and routing modes remain open."
       ],
       "owner": "unassigned",
       "milestone": "M4"
@@ -55966,7 +56007,10 @@
         "packages/db/migrations/027_quality_monitoring.sql",
         "packages/domain/src/quality-monitoring.ts",
         "apps/workflow-worker/src/quality-monitoring-activities.ts",
-        "apps/web/src/quality/monitoring/Monitor.tsx"
+        "apps/web/src/quality/monitoring/Monitor.tsx",
+        "packages/db/migrations/028_quality_freshness.sql",
+        "apps/web/src/quality/FreshnessFields.tsx",
+        "packages/db/migrations/029_quality_freshness_scheduling.sql"
       ],
       "test_ids": [
         "tests/api/quality-uniqueness-storage.test.ts",
@@ -55975,7 +56019,13 @@
         "tests/e2e/quality-range.spec.ts",
         "tests/api/quality-monitoring-storage.test.ts",
         "tests/api/quality-monitoring-invariants.test.ts",
-        "tests/e2e/quality-monitoring.spec.ts"
+        "tests/e2e/quality-monitoring.spec.ts",
+        "tests/api/quality-freshness-storage.test.ts",
+        "tests/api/quality-freshness-invariants.test.ts",
+        "tests/e2e/quality-freshness.spec.ts",
+        "tests/api/quality-freshness-monitoring-storage.test.ts",
+        "tests/api/quality-freshness-monitoring-invariants.test.ts",
+        "tests/e2e/quality-freshness-monitoring.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -55986,7 +56036,9 @@
           "outcome": "NOT_RUN",
           "evidence": [
             "docs/verification/product-quality-exact-local.json",
-            "docs/verification/product-quality-monitoring-local.json"
+            "docs/verification/product-quality-monitoring-local.json",
+            "docs/verification/product-quality-freshness-local.json",
+            "docs/verification/product-quality-freshness-scheduling-local.json"
           ]
         },
         "vendor_live": {
@@ -56009,7 +56061,9 @@
       },
       "limitations": [
         "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome.",
-        "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged."
+        "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged.",
+        "Manual freshness passes native232, source18 checks/14 measurements and its one-journey browser target with24 inspected frames. Full35 failed27/1/7; whole-row verification and release outcomes remain unchanged.",
+        "Scheduled freshness passes native276, API168 and the real recovery/reopening/expiry browser target. Full36 records31 passed, one failed and four skipped; remaining families, broader scheduling and whole-profile/release qualification remain open."
       ],
       "owner": "unassigned",
       "milestone": "M0"

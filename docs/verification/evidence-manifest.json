@@ -792,8 +792,8 @@
       "source_binding": {
         "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
         "working_tree_dirty": true,
-        "method": "Original execution and review report hashes retained;169 actual-image source hashes and27 served assets bind the final passing source. This document does not imply a test rerun or whole-requirement completion.",
-        "evidence_sha256": "f56ec20ed95311396af058b4f4ddc67f005df0dabcbcb06e33f1b00fd17adfe1"
+        "method": "Metadata-only public serialization removes an internal reviewer identifier and updates linked public report digests. Original report hashes are retained in publication_serialization; execution timestamps,169 actual-image source hashes,27 served assets, screenshot hashes, results and automated-review limitations remain unchanged. No new execution, visual review or human approval is inferred.",
+        "evidence_sha256": "2a70cdbf432fe2ebc35dc47e8f59d8331977039aa7870e81fdadc33d2ec9ddbd"
       }
     },
     {
@@ -816,8 +816,8 @@
       "source_binding": {
         "base_commit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
         "working_tree_dirty": true,
-        "method": "Original execution and review report hashes retained;169 actual-image source hashes and27 served assets bind the final passing source. This document does not imply a test rerun or whole-requirement completion.",
-        "evidence_sha256": "9514ab544d1bacbb27f99aa9d38b3c568d6c5ac4260f3b57801115e596a1a076"
+        "method": "Metadata-only public serialization removes an internal reviewer identifier and updates linked public report digests. Original report hashes are retained in publication_serialization; execution timestamps,169 actual-image source hashes,27 served assets, screenshot hashes, results and automated-review limitations remain unchanged. No new execution, visual review or human approval is inferred.",
+        "evidence_sha256": "a764d1812e44cdfb2af9ef83d6a5516746513de7901983c80a2d7b03869d7d0e"
       }
     },
     {
@@ -1532,6 +1532,24 @@
         "evidence_sha256": "d0d1d20b1955b7126e5d6bbbdf800dbb41b8f5d0e1d9d2dd03da4f99845e7f2a",
         "method": "Exact committed native112 and baked293 source bindings;175 upgrade cases, real scheduled browser workflow/eight inspected frames,168 API and1040 host cases. Other scopes remain distinct."
       }
+    },
+    {
+      "path": "docs/verification/product-quality-freshness-local.json",
+      "scope": "quality-freshness-local",
+      "source_binding": {
+        "implementation_commit": "fca6bb94a8bd87965c4bf614ae492b85235f4ea9",
+        "evidence_sha256": "9afebd437e850395f37defec9e9ff93651be871eefe6f550347ac61090fe40c7",
+        "method": "Native, baked application, worker and targeted-browser inventories matched exact committed blobs; failed full35 retained. No whole-profile pass inferred."
+      }
+    },
+    {
+      "path": "docs/verification/product-quality-freshness-scheduling-local.json",
+      "scope": "quality-freshness-scheduling-local",
+      "source_binding": {
+        "implementation_commit": "4cc3bd2afff9f75b8cba6bdbdc849e9252df8e70",
+        "evidence_sha256": "8c3585b13d7ab4b9f0090d809acbc4a9a4498ff6af3c59cd498f826af9f98179",
+        "method": "Exact committed native, baked application/API and browser source inventories matched; scoped native276/API168/host1103 and target journeys pass. Full36 fails31/1/4; no whole-profile pass inferred."
+      }
     }
   ],
   "limitations": [
@@ -1539,5 +1557,5 @@
     "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "bound_at": "2026-11-17T05:37:13.228363+00:00"
+  "bound_at": "2026-11-17T06:53:28.598978+00:00"
 }

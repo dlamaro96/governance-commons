@@ -1,8 +1,10 @@
 # Business-domain storage and service boundary — SQL011 contract
 
+Editorial revision (2026-11-17): coordination-only text was removed. Technical requirements and qualification scope are unchanged. Historical implementation and execution records retain the original contract SHA256 `5fc3f052a2cc15f6d370ed9916473eb38fe6ffd918a89f8116b7c61fa3a11d66`.
+
 Current status, 2026-11-16: **SQL011 IMPLEMENTED, ISOLATED GATE PASSED, APPLIED TO CORE AND IMMUTABLE.** The final isolated gate records eight upgrade checks,18 storage cases and nine concurrency cases; the separate real core API gate passes154 cases. Refer to `../verification/business-domains-upgrade-final-source.json`, `../verification/business-domains-api.json` and `STATE.md` for exact source/checksum bindings and limits. These scoped checks do not complete the broader authority or release obligations.
 
-Original adoption checkpoint (2026-11-15): **CONTRACT ADOPTED; implementation and execution had not begun.** Root reviewed and adopted this concrete storage/service boundary, including the original-transaction clock, ordinary-write preparation/seal pair, tagged envelopes, server-allocated create identity, projection hashes and exact journal/deferred proof. It specifies the storage/service obligations of the adopted [business-domain contract](BUSINESS_DOMAINS.md) and [ADR0009](../adr/0009-business-domains-and-placement.md); it is not a working capability. No approval is outstanding. No requirement, milestone, runtime or release status advances through this document.
+Original adoption checkpoint (2026-11-15): **CONTRACT ADOPTED; implementation and execution had not begun.** The adopted concrete storage/service boundary covers the original-transaction clock, ordinary-write preparation/seal pair, tagged envelopes, server-allocated create identity, projection hashes and exact journal/deferred proof. It specifies the storage/service obligations of the adopted [business-domain contract](BUSINESS_DOMAINS.md) and [ADR0009](../adr/0009-business-domains-and-placement.md); it is not a working capability. No approval is outstanding. No requirement, milestone, runtime or release status advances through this document.
 
 SQL001–011 are applied and immutable. SQL011 was qualified first against an isolated copy of the actual prior schema, after the preceding required-participation browser gates. Corrections require a new forward migration and a separate isolated upgrade gate. The governing [BUILD_SPEC](../product/BUILD_SPEC.md) and canonical [requirement register](../product/requirements.yaml) retain their full scope. This contract contributes to CORE-001/002/006/007/009, MOD-001/002/003, SYS-DATA-001.01–.05, SYS-DATA-002/004, SYS-API-001.01–.03, SYS-SEC-002.01–.03 and SYS-SEC-003. It does not complete scoped authority, full M2, AT-MOD-01, AT-TEN-01, AT-AUD-01 or release qualification.
 
@@ -16,7 +18,7 @@ PostgreSQL independently proves complete scope, policy, projection, revision, jo
 
 ## Frozen physical columns for service integration
 
-Root and the storage worker adopt the following SQL011 columns. All named tables are in `public`; every identity/reference includes `tenant_id`. These column names are an implementation interface, not a claim that the tables exist. Types, composite foreign keys, forced RLS, immutable history, positive versions and prepared-write guards retain all obligations below and in BUSINESS_DOMAINS.md.
+The adopted SQL011 interface uses the following columns. All named tables are in `public`; every identity/reference includes `tenant_id`. These column names are an implementation interface, not a claim that the tables exist. Types, composite foreign keys, forced RLS, immutable history, positive versions and prepared-write guards retain all obligations below and in BUSINESS_DOMAINS.md.
 
 | Table | Frozen service-visible columns |
 | --- | --- |
@@ -247,7 +249,7 @@ Map only explicit stable SQL domain codes/known named constraints. Never transla
 
 Raw HTTP envelope, missing version/consent, cursor and idempotency failures retain their adopted 400/428/409 codes. Public errors do not contain SQL, stack, request literals, hidden references, raw epochs or permission contents. A cooperative SQL timeout does not mean the service may commit a partial result or record idempotency success on a failed transaction.
 
-## Required isolated qualification and handoff
+## Required isolated qualification
 
 The following are unexecuted acceptance obligations for SQL011 and its integration, not reported test results:
 
@@ -259,6 +261,4 @@ The following are unexecuted acceptance obligations for SQL011 and its integrati
 - Prove exact journal resource kinds/versions/data, stable receipt hash attribution, original-scope historical reads and same-request replay after permission loss. Passing migration alone is not proof that the generic audit or replay paths are safe.
 - Record exact source/image/SQL/tool versions, commands, timings and retained failed attempts. Run affected real API/browser/upgrade/concurrency and historical regression gates before advancing the bounded increment. All full requirement profiles, hosted checks and broader programme/release gates remain separate.
 
-Root owns service transaction/idempotency/journal/auth integration and contract freeze. The separately assigned storage worker owns SQL011 and its real isolated upgrade/storage/concurrency tests. Pure definition adapters retain their separate ownership; UI work does not change storage formats. This document author owns no source, migration or execution-state file.
-
-Root adopted the ordinary-write preparation/seal pair and all exact tagged request/response contracts above. There is no outstanding design approval. Source ownership is assigned separately after the preceding gates. Any later material alternative needs an explicit contract revision preserving the complete authorized union and protected original-clock context before canonical row locks, exact row/revision/journal/idempotency completeness and direct-SQL enforcement. A BEFORE ROW trigger alone is insufficient evidence of the prescribed lock order.
+The ordinary-write preparation/seal pair and all exact tagged request/response contracts above are adopted. There is no outstanding design approval. Any later material alternative needs an explicit contract revision preserving the complete authorized union and protected original-clock context before canonical row locks, exact row/revision/journal/idempotency completeness and direct-SQL enforcement. A BEFORE ROW trigger alone is insufficient evidence of the prescribed lock order.

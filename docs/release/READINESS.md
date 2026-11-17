@@ -1,7 +1,18 @@
 # Release readiness
 
-Tier: development source, **not a supported release**. The M1 core vertical slice and successive M2 model-authoring, inheritance and complete asset-type migration increments have scoped local and hosted evidence. Constrained asserted relations pass scoped local API, upgrade and browser gates; hosted checks are pending, and required participation and relation migration remain subsequent implementation work. M0 release/repository gates and M2–M10 remain open. Consult STATE and the evidence manifest for exact commits, images, test counts and outstanding failures rather than treating this ledger as a later test execution. All 354 named baseline requirements are retained in 1,106 tracked parent/child rows. Optional runtime activation does not remove implementation requirements.
+**Development preview — not a supported release.** Updated 17 November 2026.
 
-No production, competitor-parity, certification, scale, high availability, recovery, live-vendor integration or independent-review claim. The local environment is Linux arm64 under Docker Desktop; the scoped core browser, isolation, source-conformance and controlled-restart gates pass. This is not backup/restore, full-profile or release qualification. Source publication can proceed after source/history and initial checks; supported release gates remain blocking.
+The active integration includes real catalog/ownership/audit workflows, operating models and graph migrations, glossary/reference publication, PostgreSQL lineage/classification, and several source-executed quality families with scheduled incidents and recovery. These have scoped local evidence; they do not complete the entire product baseline. See [product status](../product/STATUS.md) for the remaining capability areas.
 
-See canonical requirements, connector support, `docs/verification/evidence-manifest.json`, repository-readiness and STATE. Unavailable vendor credentials, licensed SDKs, enterprise cluster, translation/screen-reader/human security review are separate qualification prerequisites, not passes.
+The current source-security run on `fca6bb94` passes its JavaScript/TypeScript, Python and Actions analyses. Its Development run passes 168 API cases but fails the authority-loader deadline; later stages are unexecuted. Local SQL029 scheduled freshness passes its target browser journey and 276 native cases. All 168 current local API cases pass; the full 36-journey browser regression records 31 passed, one failure and four skipped and a fresh exact-head hosted pass remains required. Historical results stay bound to their original sources in the [evidence manifest](../verification/evidence-manifest.json).
+
+## Blocking release work
+
+- Finish the remaining M0–M10 implementation and all 354 named baseline requirements. Optional activation does not remove required implementation.
+- Pass clean installation, complete declared browser/security suites, current immutable-image CI and contributor onboarding.
+- Qualify required connectors and identity providers against their declared real environments; retain exact external prerequisites until executed.
+- Execute Kubernetes/OpenShift, offline, upgrade/restore, failure/recovery and measured load/soak profiles.
+- Complete artifact/container/dependency scans, licence/SBOM inventories, signing/attestation and offline verification.
+- Complete independent security, accessibility/Arabic and architecture review, plus a functioning private conduct-reporting/escalation route.
+
+No production, parity, scale, high availability, backup/restore, live-vendor or certification claim is made. The qualified local host profile is Linux arm64 containers under Docker Desktop. GitHub source publication is allowed independently of supported-release qualification; protected merge/release gates stay blocking.

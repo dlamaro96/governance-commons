@@ -6,7 +6,7 @@
   "baseCommit": "6ff4afd47693a05b8baa2343d24321fcc3451361",
   "workingTreeDirty": true,
   "profile": "core",
-  "reviewer": "Codex /root/graph_copier_review (AI-assisted static screenshot and source review)",
+  "reviewer": "Automated assistant (AI-assisted static screenshot and source review)",
   "targetedExecution": {
     "result": "PASS",
     "command": [
@@ -1696,5 +1696,14 @@
     "No Docker, API, browser, scanner, build or mutation was executed by this visual reviewer. Functional execution claims derive from the exact preserved root-run report and unchanged test source.",
     "Historical attempts 2–5 retain their original failures. Screenshot review does not turn a failed execution into a pass.",
     "This report qualifies only the described targeted business-domain slice. The full 19-journey browser result and broader capability/release gates require their own evidence."
-  ]
+  ],
+  "publication_serialization": {
+    "reason": "Internal reviewer task identifier removed; automated review scope retained.",
+    "original_report_sha256": "f56ec20ed95311396af058b4f4ddc67f005df0dabcbcb06e33f1b00fd17adfe1",
+    "changed_fields": [
+      "/reviewer"
+    ],
+    "execution_and_review_facts_unchanged": true,
+    "test_rerun": false
+  }
 }
