@@ -55,16 +55,18 @@ function snapshot(input:unknown,maximum:number):Json {
   charge(2+Math.max(0,length-1),path);active.add(value);
   try{
    const names=array?Array.from({length},(_,index)=>String(index)):keys;
-   const out:Json[]|Fields=array?[]:Object.create(null);
+   const items:Json[]=[],entries:[string,Json][]=[];
    for(const key of names){
     need(typeof key==='string'&&key.length<=256&&!reserved.has(key),'INVALID_JSON',path,'Reserved or invalid property key.');
     const d=Object.getOwnPropertyDescriptor(value,key),child=at(path,key);
     need(d?.enumerable&&Object.hasOwn(d,'value'),'INVALID_JSON',child,'Only enumerable data properties are supported.');
     if(!array){string(key,child);charge(1,child);}
     const next=copy(d.value,child,depth+1);
-    if(array)(out as Json[]).push(next);else (out as Fields)[key]=next;
+    if(array)items.push(next);else entries.push([key,next]);
    }
-   return out;
+   // Construct from owned pairs rather than assigning caller keys onto an
+   // object. Keep the detached record free of inherited properties/hooks.
+   return array?items:Object.setPrototypeOf(Object.fromEntries(entries),null);
   }finally{active.delete(value);}
  }
  return copy(input,'',0);

@@ -127,6 +127,7 @@ class Controls(unittest.TestCase):
     def test_actual_standalone_and_nested_harnesses_preserve_overlay_precedence(self):
         # Run real Python helper composition to its subprocess leaf. No Docker
         # operation or native pass is simulated; only exact mounts are asserted.
+        (ROOT / '.local').mkdir(exist_ok=True, mode=0o700)
         for family in ('glossary','classification','reference','reference-quality'):
             gate=load('composition_'+family,ROOT/('scripts/runtime-test-'+family+'-upgrade.py'))
             with tempfile.TemporaryDirectory(dir=ROOT/'.local') as folder:
