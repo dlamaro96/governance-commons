@@ -42,6 +42,48 @@ def quality_measurement():
             "estimatedCost": 1, "estimatedBytes": 80}
 
 
+def complete_timeout_frame(raw):
+    """Only timeout tests may stop at a complete bounded HTTP message, not EOF.
+
+    The peer can still be writing when the absolute deadline closes the socket.
+    RST before the complete frame remains an error in request(); ordinary early
+    refusals retain their existing strict EOF behavior.
+    """
+    if len(raw) > 5120:
+        raise ValueError("timeout response size")
+    head, separator, body = raw.partition(b"\r\n\r\n")
+    if not separator:
+        if len(head) > 4096:
+            raise ValueError("timeout response headers")
+        return False
+    if len(head) > 4096:
+        raise ValueError("timeout response headers")
+    fields = head.split(b"\r\n")
+    status = fields[0].split(b" ", 2)
+    if len(status) != 3 or status[0] not in (b"HTTP/1.0", b"HTTP/1.1") or status[1] != b"408":
+        raise ValueError("timeout response status")
+    headers = []
+    for field in fields[1:]:
+        name, colon, value = field.partition(b":")
+        if not colon or not name or name[:1] in (b" ", b"\t"):
+            raise ValueError("timeout response header")
+        headers.append((name.lower(), value.strip()))
+    lengths = [v for k,v in headers if k == b"content-length"]
+    types = [v for k,v in headers if k == b"content-type"]
+    if (len(lengths) != 1 or not lengths[0].isdigit() or len(lengths[0]) > 4
+            or not 0 < int(lengths[0]) <= 1024 or types != [b"application/json"]
+            or any(k == b"transfer-encoding" for k,_ in headers)):
+        raise ValueError("timeout response framing")
+    length = int(lengths[0])
+    if len(body) > length:
+        raise ValueError("extra timeout response bytes")
+    if len(body) < length:
+        return False
+    if json.loads(body) != {"code": "REQUEST_TIMEOUT"}:
+        raise ValueError("timeout response body")
+    return True
+
+
 class WorkerHTTPTest(unittest.TestCase):
     def setUp(self):
         directory = tempfile.TemporaryDirectory()
@@ -80,7 +122,7 @@ class WorkerHTTPTest(unittest.TestCase):
             stream.write(document)
         replacement.replace(self.path)
 
-    def request(self, body=None, headers=None, *, length=None, half_close=False, trickle=False, path="/scan"):
+    def request(self, body=None, headers=None, *, length=None, half_close=False, trickle=False, path="/scan", framed_timeout=False):
         raw = json.dumps(self.payload).encode() if body is None else body
         headers = headers if headers is not None else [("Authorization", "Bearer " + TOKEN), ("Content-Type", "application/json")]
         fields = headers + [("Content-Length", str(len(raw) if length is None else length))]
@@ -108,6 +150,8 @@ class WorkerHTTPTest(unittest.TestCase):
                         if not block:
                             break
                         received.append(block)
+                        if framed_timeout and complete_timeout_frame(b"".join(received)):
+                            break
             except Exception as error:
                 errors.append(error)
 
@@ -123,6 +167,8 @@ class WorkerHTTPTest(unittest.TestCase):
         if errors:
             raise errors[0]
         response = b"".join(received)
+        if framed_timeout and not complete_timeout_frame(response):
+            raise ValueError("short timeout response")
         head, body = response.split(b"\r\n\r\n", 1)
         self.assertIn(b"Content-Type: application/json", head)
         return int(head.split(b" ", 2)[1]), json.loads(body)
@@ -334,7 +380,7 @@ class WorkerHTTPTest(unittest.TestCase):
 
     def test_trickled_request_cannot_reset_absolute_body_deadline(self):
         with patch.object(server, "REQUEST_SECONDS", 0.06), patch.object(server, "resolve") as resolve:
-            self.assertEqual(self.request(body=b'{', length=100, trickle=True), (408, {"code": "REQUEST_TIMEOUT"}))
+            self.assertEqual(self.request(body=b'{', length=100, trickle=True, framed_timeout=True), (408, {"code": "REQUEST_TIMEOUT"}))
             self.assertLess(self.server_elapsed, 0.14)
             resolve.assert_not_called()
 

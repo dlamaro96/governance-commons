@@ -5,6 +5,7 @@ import { NativeConnection, Worker } from '@temporalio/worker';
 import { fileURLToPath } from 'node:url';
 import {createApprovalActivities,dispatchApprovalEvent} from './approval-activities.ts';
 import {createQualityDispatcher} from './quality-activities.ts';
+import {createQualityMonitoringDispatcher} from './quality-monitoring-activities.ts';
 const address = process.env.TEMPORAL_ADDRESS ?? 'temporal:7233';
 const namespace = process.env.TEMPORAL_NAMESPACE ?? 'default';
 const api = process.env.API_URL ?? 'http://api:4310';
@@ -13,6 +14,7 @@ const tenants = (process.env.SITE_TENANTS ?? '').split(',').filter(Boolean);
 if (!token || tenants.length === 0) throw new Error('SITE_TOKEN and SITE_TENANTS are required');
 const approvals=createApprovalActivities({apiUrl:api,token});
 const quality=createQualityDispatcher({apiUrl:api,token});
+const monitors=createQualityMonitoringDispatcher({apiUrl:api,token});
 const connection = await Connection.connect({ address });
 const client = new Client({ connection, namespace });
 const workerConnection = await NativeConnection.connect({ address });
@@ -79,5 +81,17 @@ async function dispatch() {
     await new Promise(resolve => setTimeout(resolve, 1500));
   }
 }
-await Promise.all([worker.run(), dispatch()]);
+// Independent loop: a slow monitor command must never hold scan, approval or
+// queued quality dispatch behind its source-observation lifetime.
+async function monitorDispatch(){
+  while(!stopping){
+    for(const tenantId of tenants){
+      if(stopping)break;
+      try{await monitors.dispatchPass(tenantId,()=>stopping);}
+      catch{console.error(JSON.stringify({event:'quality_monitor_retry',code:'MONITOR_DISPATCH_FAILED'}));}
+    }
+    if(!stopping)await new Promise(resolve=>setTimeout(resolve,1500));
+  }
+}
+await Promise.all([worker.run(),dispatch(),monitorDispatch()]);
 health.close(); await connection.close(); await workerConnection.close();

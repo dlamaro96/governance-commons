@@ -9,7 +9,7 @@ export function createQualityTransport(config:{url:string;token:string;fetch?:ty
   typeof config.token!=='string'||!config.token||config.token.length>4096||/[\s\u0000-\u001f\u007f]/.test(config.token))throw new Error('QUALITY_CONFIG_INVALID');
  const base=url.origin,transport=config.fetch??fetch;
  return async function request(path:string,options:{tenantId?:string;body?:unknown;timeoutMs:number;maximum:number}):Promise<{status:number;body:unknown}>{
-  if(!/^\/(?:internal\/quality-runs\/(?:pending|[a-f0-9-]{36}\/(?:claim|finish))|quality)$/.test(path)||
+  if(!/^\/(?:internal\/quality-runs\/(?:pending|[a-f0-9-]{36}\/(?:claim|finish))|internal\/quality-monitors\/(?:work|[a-f0-9-]{36}\/(?:tick|reconcile))|quality)$/.test(path)||
    !Number.isInteger(options.timeoutMs)||options.timeoutMs<1||options.timeoutMs>40000||!Number.isInteger(options.maximum)||options.maximum<1||options.maximum>65536||options.maximum>32768&&!path.endsWith('/claim'))throw new Error('QUALITY_PROTOCOL_INVALID');
   if(options.tenantId!==undefined)try{qualityId(options.tenantId);}catch{throw new Error('QUALITY_PROTOCOL_INVALID');}
   const controller=new AbortController();let reader:ReadableStreamDefaultReader<Uint8Array>|undefined,expired=false,code='QUALITY_HTTP_UNAVAILABLE';

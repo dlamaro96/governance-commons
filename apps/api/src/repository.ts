@@ -33,6 +33,9 @@ export function visibleAudit(tx:Tx,p:Principal){return tx.selectFrom('audit').se
    WHERE qrun.tenant_id=audit.tenant_id AND qrun.id::text=audit.changes->>'runId'
     AND qr.id::text=audit.changes->>'ruleId' AND qr.column_asset_id::text=audit.resource_id
     AND public.gc_quality_run_visible(qrun.id,${p.id}::uuid)))`,
+ sql<boolean>`audit.action IN ('quality.monitor_published','quality.monitor_state_changed','quality.monitor_occurrence','quality.monitor_projected',
+  'quality.issue_opened','quality.issue_failed_again','quality.issue_acknowledged','quality.issue_assigned','quality.issue_recovery_available','quality.issue_recovery_invalidated','quality.issue_resolved','quality.issue_reopened','quality.issue_superseded','quality.notification_created','quality.notification_read')
+  AND public.gc_quality_monitoring_audit_visible(audit.action,audit.resource_id,audit.changes,${p.id}::uuid)`,
  sql<boolean>`audit.action='reference.published' AND EXISTS(SELECT 1 FROM reference_sets reference_target WHERE reference_target.tenant_id=audit.tenant_id AND reference_target.id::text=audit.resource_id AND public.gc_reference_visible(reference_target.id,${p.id}::uuid))`,
  sql<boolean>`audit.action='reference.structure_published' AND EXISTS(SELECT 1 FROM reference_structure_heads structure_target WHERE structure_target.tenant_id=audit.tenant_id AND structure_target.id::text=audit.resource_id AND public.gc_reference_structure_visible(structure_target.id,${p.id}::uuid))`,
  eb.and(['reference.%','classification.%','quality.%','approval.%','workflow.%','glossary.%','asset.%','relation.%','relation_participation.%','participation.%','relation_migration.%','relation_preparation.%','domain_type.%','domain.%','asset_domain_placement.%','domain_type_migration.%'].map(pattern=>eb('audit.action','not like',pattern))),

@@ -42,6 +42,9 @@ class Controls(unittest.TestCase):
                      'packages/domain/src/quality-service.ts', 'apps/api/src/quality.ts',
                      'apps/site-runner/src/quality-activity.ts', 'apps/workflow-worker/src/quality-http.ts']:
             self.write(name, '{}\n' if name.endswith('.json') else '')
+        self.write('scripts/qualification_quality_repository.py', '')
+        self.write(gate.repository.REPOSITORY, 'export const checkout = true;\n')
+        self.write(gate.repository.FIXTURE, (ROOT / gate.repository.FIXTURE).read_text())
         self.write('deploy/compose/compose.yaml', 'services:\n  postgres:\n    image: postgres:17\n')
         for name in gate.NAMES:
             self.write('packages/db/migrations/' + name, '-- synthetic host-only migration fixture\n')
@@ -73,6 +76,16 @@ class Controls(unittest.TestCase):
             return subprocess.CompletedProcess(args, 0, '{}', '')
         h.docker = docker
         return h
+
+    def test_declared_successors_never_enter_historical_prefix(self):
+        original = gate.sources()
+        for name in ['027_quality_monitoring.sql']:
+            self.write('packages/db/migrations/' + name, '-- later synthetic fixture, not executed by this gate')
+            self.assertEqual(gate.migrations(), gate.NAMES)
+            self.assertEqual(gate.sources(), original)
+        # Changing a later file cannot masquerade as executing it: it is absent
+        # from this historical gate; the separate successor gate binds its bytes.
+        self.assertFalse(any(row['path'].endswith('027_quality_monitoring.sql') for row in gate.sources()))
 
     def test_exact_current_migration_inventory(self):
         self.assertEqual(gate.migrations(), gate.NAMES)
@@ -142,8 +155,9 @@ class Controls(unittest.TestCase):
         h.helper(['node', '--test', gate.TEST], allow_failure=True)
         args, kwargs = h.calls[-1]
         mounts = [args[i + 1] for i, v in enumerate(args) if v == '--volume']
+        selected = gate.repository.select(self.root, h.frozen, gate.REPOSITORY_GATE, h.phase)
         for row in h.frozen:
-            self.assertIn(f'{self.root / row["path"]}:/app/{row["path"]}:ro', mounts)
+            self.assertIn(f'{gate.repository.mounted_path(self.root, row, selected)}:/app/{row["path"]}:ro', mounts)
         self.assertEqual(len(mounts), len(h.frozen) + 2)
         self.assertTrue(all(v.endswith(':ro') for v in mounts))
         self.assertIn('container:' + h.id, args)
@@ -154,6 +168,49 @@ class Controls(unittest.TestCase):
         self.assertEqual(h.report['sourceChecks'][0]['result'], 'PASS')
         self.assertEqual(h.owned, ['gc-owned-host-control-h1'])
         self.assertTrue(kwargs['allow_failure'])
+
+    def test_historical_repository_exact_phase_mount_and_effective_verifier(self):
+        for phase in sorted(gate.repository.PHASES[gate.REPOSITORY_GATE]):
+            h = self.harness(phase)
+            h.serial = 100 + len(h.calls) + list(sorted(gate.repository.PHASES[gate.REPOSITORY_GATE])).index(phase)
+            h.helper(['node', '--test', 'synthetic.test.ts'])
+            args = h.calls[-1][0]
+            mounts = [args[i+1] for i,v in enumerate(args) if v == '--volume']
+            target = '/app/' + gate.repository.REPOSITORY
+            actual = [m for m in mounts if m.endswith(':' + target + ':ro')]
+            self.assertEqual(actual, [str(self.root / gate.repository.FIXTURE) + ':' + target + ':ro'])
+            record = h.report['sourceChecks'][-1]
+            self.assertEqual(record['repositoryBinding']['sha256'], gate.repository.DIGEST)
+            self.assertEqual(record['repositoryBinding']['commit'], gate.repository.COMMIT)
+            effective = record['effectiveSources']
+            self.assertEqual(next(r['sha256'] for r in effective if r['path'] == gate.repository.REPOSITORY), gate.repository.DIGEST)
+            self.assertEqual([r for r in effective if r['path'] != gate.repository.REPOSITORY], [r for r in h.frozen if r['path'] != gate.repository.REPOSITORY])
+            verifier = next(m.rsplit(':',2)[0] for m in mounts if m.endswith(':' + gate.PROBE + ':ro'))
+            self.assertEqual(Path(verifier).read_text(), gate.verifier(effective, gate.sha(b'{}')))
+        h = self.harness('post027-monitoring-tests')
+        selected = gate.repository.select(self.root,h.frozen,'monitoring',h.phase)
+        self.assertIsNone(selected['override'])
+        self.assertEqual(selected['sources'], h.frozen)
+
+    def test_historical_repository_tamper_and_missing_binding_fail_closed(self):
+        phase = sorted(gate.repository.PHASES[gate.REPOSITORY_GATE])[0]
+        h = self.harness(phase)
+        with self.assertRaises(RuntimeError):
+            gate.repository.select(self.root,[r for r in h.frozen if r['path'] != gate.repository.FIXTURE],gate.REPOSITORY_GATE,phase)
+        (self.root / gate.repository.FIXTURE).write_text('not the immutable repository')
+        with self.assertRaisesRegex(RuntimeError,'hash differs'):
+            h.helper(['node','--test','synthetic.test.ts'])
+        self.assertEqual(h.calls,[])
+
+    def test_historical_readback_requires_effective_bytes_not_checkout_claim(self):
+        phase = sorted(gate.repository.PHASES[gate.REPOSITORY_GATE])[0]
+        h = self.harness(phase)
+        value = {'sources': h.frozen, 'configSha256': h.report['privateConfigSha256'],
+                 'node': {'version':'v24.22.3','sha256':'a'*64},'tsx':{'version':'4.20.0','entrySha256':'b'*64}}
+        h.helper = lambda *a,**k: SimpleNamespace(stdout=json.dumps(value))
+        with self.assertRaisesRegex(RuntimeError,'source bytes differ'):gate.readback(h)
+        value['sources'] = gate.repository.select(self.root,h.frozen,gate.REPOSITORY_GATE,phase)['sources']
+        self.assertEqual(gate.readback(h),value)
 
     def test_schema_prefix_mount_and_overlap_refusal(self):
         h = self.harness('schema-12')
@@ -187,7 +244,7 @@ class Controls(unittest.TestCase):
 
     def test_readback_checks_actual_sources_config_and_tools(self):
         h = self.harness()
-        value = {'sources': h.frozen, 'configSha256': h.report['privateConfigSha256'],
+        value = {'sources': gate.repository.select(self.root, h.frozen, gate.REPOSITORY_GATE, h.phase)['sources'], 'configSha256': h.report['privateConfigSha256'],
                  'node': {'version': 'v24.22.3', 'sha256': 'a' * 64}, 'tsx': {'version': '4.20.0', 'entrySha256': 'b' * 64}}
         h.helper = lambda *args, **kwargs: SimpleNamespace(stdout=json.dumps(value))
         self.assertEqual(gate.readback(h), value)

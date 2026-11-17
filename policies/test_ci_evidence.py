@@ -22,8 +22,8 @@ import protected_authn_evidence
 from test_authentication_evidence import fixture as authentication_fixture
 
 COLLECTOR = Path(__file__).with_name("ci_evidence.py")
-FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations", "business-domains", "source-connectors", "postgres-configuration", "approvals", "glossary", "quality", "lineage", "classification", "reference-data", "reference-quality", "reference-structures", "reference-import", "quality-uniqueness", "quality-range")
-STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade", "reference_quality_upgrade", "reference_quality_worker", "reference_structure_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "browser", "protected_authn")
+FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations", "business-domains", "source-connectors", "postgres-configuration", "approvals", "glossary", "quality", "lineage", "classification", "reference-data", "reference-quality", "reference-structures", "reference-import", "quality-uniqueness", "quality-range", "quality-monitoring")
+STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade", "reference_quality_upgrade", "reference_quality_worker", "reference_structure_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade", "browser", "protected_authn")
 QUALITY_TITLE = "DQ: real column completeness, immutable thresholds, aggregate outcomes and current read boundaries"
 LINEAGE_TITLE = "LIN-001/004/006: real PostgreSQL view dependencies, evidence, paged exploration and tenant isolation"
 
@@ -39,6 +39,7 @@ POSTGRES_CAPTURES = tuple(f"m8-postgres-configuration-{state}-{language}-{width}
 PNG = bytes.fromhex("89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000b49444154789c6360000200000500017a5eab3f0000000049454e44ae426082")
 
 
+MONITORING_TITLE = 'DQ-MONITOR: actual UTC scheduling deduplicates failures, verifies recovery and preserves reopened issue history'
 RANGE_TITLE = 'DQ-RANGE: exact inclusive integer bounds, immutable thresholds, no-data semantics and current read boundaries'
 UNIQUENESS_TITLE = 'DQ-UNI: exact duplicate groups, immutable thresholds, no-data semantics and current read boundaries'
 REFERENCE_IMPORT_TITLE = 'REF006: raw JSON and CSV import, complete reconciliation consent and independent publication'
@@ -49,9 +50,9 @@ CLASSIFICATION_TITLE = 'CLS: real metadata suggestion, independent application, 
 
 class EvidenceGateTests(unittest.TestCase):
     def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False, omitted_step=None, authn_mutation=None, omit_authn=False, protected_mutation=None, omit_protected=False, omitted_capture=None, symlink_capture=None, empty_capture=None, authority=False, authority_mutation=None, failed_outcome="failure"):
-        specs = [{"file": f"{name}.spec.ts", "line": line, "title": RANGE_TITLE if name == "quality-range" else UNIQUENESS_TITLE if name == "quality-uniqueness" else QUALITY_TITLE if name == "quality" else LINEAGE_TITLE if name == "lineage" else CLASSIFICATION_TITLE if name == "classification" else REFERENCE_TITLE if name == "reference-data" else REFERENCE_QUALITY_TITLE if name == "reference-quality" else REFERENCE_STRUCTURE_TITLE if name == "reference-structures" else REFERENCE_IMPORT_TITLE if name == "reference-import" else "PRIVATE_SYNTHETIC_TITLE",
+        specs = [{"file": f"{name}.spec.ts", "line": line, "title": MONITORING_TITLE if name == "quality-monitoring" else RANGE_TITLE if name == "quality-range" else UNIQUENESS_TITLE if name == "quality-uniqueness" else QUALITY_TITLE if name == "quality" else LINEAGE_TITLE if name == "lineage" else CLASSIFICATION_TITLE if name == "classification" else REFERENCE_TITLE if name == "reference-data" else REFERENCE_QUALITY_TITLE if name == "reference-quality" else REFERENCE_STRUCTURE_TITLE if name == "reference-structures" else REFERENCE_IMPORT_TITLE if name == "reference-import" else "PRIVATE_SYNTHETIC_TITLE",
                   "tests": [{"status": "expected", "results": [{"status": "passed", "duration": 1, "stdout": ["PRIVATE_SYNTHETIC_OUTPUT"]}]}]}
-                 for name in FILES for line in ((10, 20, 30) if name == "business-domains" else (10,) if name in ("source-connectors", "postgres-configuration", "approvals", "quality", "lineage", "classification", "reference-data", "reference-quality", "reference-structures", "reference-import", "quality-uniqueness", "quality-range") else (10, 20))]
+                 for name in FILES for line in ((10, 20, 30) if name == "business-domains" else (10,) if name in ("source-connectors", "postgres-configuration", "approvals", "quality", "lineage", "classification", "reference-data", "reference-quality", "reference-structures", "reference-import", "quality-uniqueness", "quality-range", "quality-monitoring") else (10, 20))]
         if mutation:
             mutation(specs)
         with tempfile.TemporaryDirectory(prefix="gc-ci-evidence-") as temporary:
@@ -96,7 +97,7 @@ class EvidenceGateTests(unittest.TestCase):
                 (source / "authority-authn-foundation.json").write_text(json.dumps(authn))
             # These native gates remain step claims only.
             # Their arbitrary private originals must never enter public artifacts.
-            for private_name in ("authority-foundation.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-upgrade.json", "quality-worker.json", "lineage-upgrade.json", "lineage-worker.json", "classification-upgrade.json", "reference-upgrade.json", "reference-quality-upgrade.json", "reference-quality-worker.json", "reference-structure-upgrade.json", "reference-import.json", "reference-import-upload.json", "reference-import-upload.csv", "quality-uniqueness-upgrade.json", "uniqueness-quality-worker.json", "quality-range-upgrade.json", "range-quality-worker.json"):
+            for private_name in ("authority-foundation.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-upgrade.json", "quality-worker.json", "lineage-upgrade.json", "lineage-worker.json", "classification-upgrade.json", "reference-upgrade.json", "reference-quality-upgrade.json", "reference-quality-worker.json", "reference-structure-upgrade.json", "reference-import.json", "reference-import-upload.json", "reference-import-upload.csv", "quality-uniqueness-upgrade.json", "uniqueness-quality-worker.json", "quality-range-upgrade.json", "range-quality-worker.json", "quality-monitoring-upgrade.json"):
                 value = authority_report if private_name == 'authority-foundation.json' and authority_report else {"PRIVATE_SYNTHETIC_NATIVE_REPORT": True}
                 (source / private_name).write_text(json.dumps(value))
             captures = root / "docs/verification/screenshots"
@@ -110,6 +111,7 @@ class EvidenceGateTests(unittest.TestCase):
             (captures / "reference-structures-unreviewed.png").write_bytes(b"PRIVATE_SYNTHETIC_IMAGE")
             (captures / "quality-uniqueness-unreviewed.png").write_bytes(b"PRIVATE_SYNTHETIC_IMAGE")
             (captures / "quality-range-unreviewed.png").write_bytes(b"PRIVATE_SYNTHETIC_IMAGE")
+            (captures / "quality-monitoring-unreviewed.png").write_bytes(b"PRIVATE_SYNTHETIC_IMAGE")
             for name in ("reference-import-duplicate-en-1440.png", "reference-import-complete-change-ar-390.png", "reference-import-removal-en-1440.png", "reference-import-published-ar-390.png"):
                 (captures / name).write_bytes(b"PRIVATE_SYNTHETIC_IMPORT_IMAGE")
             for name in CONNECTOR_CAPTURES + POSTGRES_CAPTURES:
@@ -138,8 +140,9 @@ class EvidenceGateTests(unittest.TestCase):
             self.assertFalse((root / ".local/ci-artifacts/reference-structures-unreviewed.png").exists())
             self.assertEqual(list((root / ".local/ci-artifacts").glob("*uniqueness*")), [])
             self.assertEqual(list((root / ".local/ci-artifacts").glob("*range*")), [])
+            self.assertEqual(list((root / ".local/ci-artifacts").glob("*monitoring*")), [])
             self.assertEqual(list((root / ".local/ci-artifacts").glob("reference-import*")), [])
-            for private_name in ("authority-foundation.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-upgrade.json", "quality-worker.json", "lineage-upgrade.json", "lineage-worker.json", "classification-upgrade.json", "reference-upgrade.json", "reference-quality-upgrade.json", "reference-quality-worker.json", "reference-structure-upgrade.json", "reference-import.json", "reference-import-upload.json", "reference-import-upload.csv", "quality-uniqueness-upgrade.json", "uniqueness-quality-worker.json", "quality-range-upgrade.json", "range-quality-worker.json"):
+            for private_name in ("authority-foundation.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-upgrade.json", "quality-worker.json", "lineage-upgrade.json", "lineage-worker.json", "classification-upgrade.json", "reference-upgrade.json", "reference-quality-upgrade.json", "reference-quality-worker.json", "reference-structure-upgrade.json", "reference-import.json", "reference-import-upload.json", "reference-import-upload.csv", "quality-uniqueness-upgrade.json", "uniqueness-quality-worker.json", "quality-range-upgrade.json", "range-quality-worker.json", "quality-monitoring-upgrade.json"):
                 self.assertFalse((root / ".local/ci-artifacts" / private_name).exists())
             for name in report["screenshots"]:
                 if name in CONNECTOR_CAPTURES + POSTGRES_CAPTURES:
@@ -157,13 +160,13 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(diagnostic['failed_phase'], 'authority_loader')
             return result.returncode, report
 
-    def test_all_thirty_two_required_journeys_are_accepted_and_private_payloads_omitted(self):
+    def test_all_thirty_four_required_journeys_are_accepted_and_private_payloads_omitted(self):
         code, report = self.collect()
         self.assertEqual(code, 0)
         self.assertEqual(report["outcome"], "PASS")
-        self.assertEqual(len(report["tests"]), 33)
+        self.assertEqual(len(report["tests"]), 34)
         self.assertEqual(set(report["screenshots"]), set(CONNECTOR_CAPTURES + POSTGRES_CAPTURES))
-        self.assertEqual(len(report["steps"]), 36)
+        self.assertEqual(len(report["steps"]), 37)
 
     def test_reference_quality_requires_one_reviewed_journey(self):
         def target(specs):
@@ -183,7 +186,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    self.assertEqual(len(report["tests"]), 32)
+                    self.assertEqual(len(report["tests"]), 33)
 
     def test_reference_import_requires_one_exact_unretried_success(self):
         def target(specs):
@@ -205,7 +208,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    self.assertEqual(len(report["tests"]), 32)
+                    self.assertEqual(len(report["tests"]), 33)
 
     def test_reference_import_native_step_must_be_present_and_successful(self):
         for outcome in ("failure", "cancelled", "skipped", "unknown"):
@@ -239,8 +242,8 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    # The previous complete 32-journey report cannot qualify.
-                    self.assertEqual(len(report["tests"]), 32)
+                    # The previous complete 33-journey report cannot qualify.
+                    self.assertEqual(len(report["tests"]), 33)
 
     def test_range_requires_one_exact_unretried_success(self):
         def target(specs):
@@ -262,11 +265,34 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    # The previous complete 32-journey report cannot qualify.
-                    self.assertEqual(len(report["tests"]), 32)
+                    # The previous complete 33-journey report cannot qualify.
+                    self.assertEqual(len(report["tests"]), 33)
+
+    def test_monitoring_requires_one_exact_unretried_success(self):
+        def target(specs):
+            return next(spec for spec in specs if spec["file"] == "quality-monitoring.spec.ts")
+        mutations = (
+            lambda specs: specs.remove(target(specs)),
+            lambda specs: specs.append({**target(specs), "line": 99}),
+            lambda specs: target(specs).update(title="PRIVATE_SYNTHETIC_SUBSTITUTE"),
+            lambda specs: target(specs).pop("title"),
+            lambda specs: target(specs)["tests"][0].update(status="skipped"),
+            lambda specs: target(specs)["tests"][0].update(results=[]),
+            lambda specs: target(specs)["tests"][0].update(results=[{"status": "passed"}, {"status": "passed"}]),
+            lambda specs: target(specs)["tests"][0].update(status="flaky"),
+            lambda specs: target(specs)["tests"][0].update(results=[{"status": "failed"}]),
+        )
+        for number, mutation in enumerate(mutations):
+            with self.subTest(mutation=number):
+                code, report = self.collect(mutation)
+                self.assertEqual(code, 1)
+                self.assertEqual(report["outcome"], "NOT_PASSED")
+                if number == 0:
+                    # The previous complete 33-journey report cannot qualify.
+                    self.assertEqual(len(report["tests"]), 33)
 
     def test_uniqueness_and_range_stages_require_current_success(self):
-        for step in ("uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker"):
+        for step in ("uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade"):
             for outcome in ("failure", "cancelled", "skipped", "unknown"):
                 with self.subTest(step=step, outcome=outcome):
                     code, report = self.collect(failed_step=step, failed_outcome=outcome)
@@ -296,7 +322,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    self.assertEqual(len(report["tests"]), 32)
+                    self.assertEqual(len(report["tests"]), 33)
 
     def test_reference_journey_requires_exactly_one_reviewed_success(self):
         mutations = (
@@ -341,7 +367,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_lineage_cancelled_skipped_or_unknown_stage_cannot_qualify(self):
-        for step in ("lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade", "reference_quality_upgrade", "reference_quality_worker", "reference_structure_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker"):
+        for step in ("lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade", "reference_quality_upgrade", "reference_quality_worker", "reference_structure_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade"):
             for outcome in ("cancelled", "skipped", "PRIVATE_SYNTHETIC_INVALID"):
                 with self.subTest(step=step, outcome=outcome):
                     code, report = self.collect(failed_step=step, failed_outcome=outcome)
@@ -402,7 +428,7 @@ class EvidenceGateTests(unittest.TestCase):
 
     def test_missing_source_connector_journey_cannot_qualify_complete_gate(self):
         code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "source-connectors.spec.ts"]))
-        self.assertEqual(len(report["tests"]), 32)
+        self.assertEqual(len(report["tests"]), 33)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
@@ -413,7 +439,7 @@ class EvidenceGateTests(unittest.TestCase):
 
     def test_missing_postgres_configuration_cannot_qualify_complete_gate(self):
         code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "postgres-configuration.spec.ts"]))
-        self.assertEqual(len(report["tests"]), 32)
+        self.assertEqual(len(report["tests"]), 33)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
@@ -446,19 +472,19 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_older_sixteen_test_gate_cannot_hide_missing_business_domain_journeys(self):
-        code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] not in ("business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts", "lineage.spec.ts", "classification.spec.ts", "reference-data.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts")]))
+        code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] not in ("business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts", "lineage.spec.ts", "classification.spec.ts", "reference-data.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts", "quality-monitoring.spec.ts")]))
         self.assertEqual(len(report["tests"]), 16)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_each_business_domain_journey_must_execute(self):
         code, report = self.collect(lambda specs: specs.remove(next(s for s in specs if s["file"] == "business-domains.spec.ts" and s["line"] == 30)))
-        self.assertEqual(len(report["tests"]), 32)
+        self.assertEqual(len(report["tests"]), 33)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_missing_business_domain_qualification_steps_fail_closed(self):
-        for step in ("business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade", "reference_quality_upgrade", "reference_quality_worker", "reference_structure_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker"):
+        for step in ("business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade", "reference_quality_upgrade", "reference_quality_worker", "reference_structure_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade"):
             with self.subTest(step=step):
                 code, report = self.collect(omitted_step=step)
                 self.assertEqual(code, 1)
@@ -476,14 +502,14 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
 
     def test_real_service_failure_cannot_be_overridden_by_successful_browser_results(self):
-        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade", "reference_quality_upgrade", "reference_quality_worker", "reference_structure_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker"):
+        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade", "reference_quality_upgrade", "reference_quality_worker", "reference_structure_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade"):
             with self.subTest(step=step):
                 code, report = self.collect(failed_step=step)
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_failed_assertion_coordinates_are_allowlisted_without_private_payloads(self):
-        for filename in ("relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "quality.spec.ts", "lineage.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts"):
+        for filename in ("relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "quality.spec.ts", "lineage.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts", "quality-monitoring.spec.ts"):
             with self.subTest(filename=filename):
                 failure = {"status": "failed", "duration": 3, "error": {
                     "message": "PRIVATE_SYNTHETIC_MESSAGE", "stack": (
@@ -530,7 +556,7 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(report["api_evidence"], "STEP_RESULT_MISMATCH")
 
     def test_authentication_native_gate_and_evidence_are_required(self):
-        self.assertEqual(len(STEPS), 36)
+        self.assertEqual(len(STEPS), 37)
         code, report = self.collect(omit_authn=True)
         self.assertEqual(code, 1)
         self.assertEqual(report["authentication_evidence"], "UNAVAILABLE_OR_INVALID")
@@ -715,6 +741,15 @@ class QualityCommandRoutingTests(unittest.TestCase):
             self.runtime.main()
         self.assertEqual(calls, ['local', ([sys.executable, 'scripts/runtime-test-quality-range-upgrade.py', '--run-local'], {'timeout': 900})])
 
+    def test_monitoring_upgrade_is_isolated_with_explicit_local_opt_in(self):
+        calls = []
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'monitoring-upgrade']), \
+                patch.object(self.runtime, 'require_local', side_effect=lambda: calls.append('local')), \
+                patch.object(self.runtime, 'require_bootstrap', side_effect=AssertionError('core bootstrap reached')), \
+                patch.object(self.runtime, 'run', side_effect=lambda args, **kw: calls.append((args, kw))):
+            self.runtime.main()
+        self.assertEqual(calls, ['local', ([sys.executable, 'scripts/runtime-test-quality-monitoring-upgrade.py', '--run-local'], {'timeout': 900})])
+
     def test_range_worker_requires_core_and_explicit_local_opt_in(self):
         calls = []
         with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'range-worker']), \
@@ -725,7 +760,7 @@ class QualityCommandRoutingTests(unittest.TestCase):
         self.assertEqual(calls, ['bootstrap', 'local', ([sys.executable, 'scripts/runtime-test-range-quality-worker.py', '--run-local'], {'timeout': 900})])
 
     def test_quality_gate_refusal_does_not_fall_through_or_launch(self):
-        for suite in ('quality-upgrade', 'quality-worker', 'reference-structure-upgrade', 'reference-import', 'uniqueness-upgrade', 'uniqueness-worker', 'range-upgrade', 'range-worker'):
+        for suite in ('quality-upgrade', 'quality-worker', 'reference-structure-upgrade', 'reference-import', 'uniqueness-upgrade', 'uniqueness-worker', 'range-upgrade', 'range-worker', 'monitoring-upgrade'):
             with self.subTest(suite=suite), \
                     patch.object(sys, 'argv', ['dev', 'test', '--suite', suite]), \
                     patch.object(self.runtime, 'require_bootstrap'), \

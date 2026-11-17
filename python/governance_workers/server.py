@@ -6,6 +6,8 @@ import json
 import math
 import os
 import re
+import socket
+import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from .deadline import deadline
 from .dispatch import scan
@@ -16,6 +18,8 @@ from .secrets import resolve
 MAX_REQUEST_BYTES = 16384
 MAX_REFERENCE_REQUEST_BYTES = 65536
 REQUEST_SECONDS = 30
+REJECT_DRAIN_BYTES = MAX_REFERENCE_REQUEST_BYTES + 1
+REJECT_DRAIN_SECONDS = 0.1
 
 
 class RequestSizeError(ValueError):
@@ -110,6 +114,7 @@ class Handler(BaseHTTPRequestHandler):
         # One absolute admission budget starts before the first request byte;
         # fresh bytes cannot extend it. The synchronous worker owns no timer
         # threads, and all EOF/error paths restore the process signal state.
+        self._admission_deadline = time.monotonic() + REQUEST_SECONDS
         self.connection.settimeout(REQUEST_SECONDS)
         try:
             with ExitStack() as admission:
@@ -132,12 +137,39 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+        if getattr(self, "_unread_request_body", False):
+            self._unread_request_body = False
+            self._drain_refused_body()
+
+    def _drain_refused_body(self):
+        # Closing a TCP socket with an unread request can reset an already sent
+        # refusal. Publish the response/FIN first, then discard a bounded suffix.
+        # Never parse it, retain it, or restart the original admission deadline.
+        self.wfile.flush()
+        try:
+            self.connection.shutdown(socket.SHUT_WR)
+            expires = min(self._admission_deadline, time.monotonic() + REJECT_DRAIN_SECONDS)
+            remaining_bytes = REJECT_DRAIN_BYTES
+            while remaining_bytes:
+                remaining_seconds = expires - time.monotonic()
+                if remaining_seconds <= 0:
+                    break
+                self.connection.settimeout(remaining_seconds)
+                discarded = self.connection.recv(min(8192, remaining_bytes))
+                if not discarded:
+                    break
+                remaining_bytes -= len(discarded)
+        except OSError:
+            # Timeout, peer reset and disconnected peers all finish this refusal.
+            # ScanFailure intentionally propagates to the original deadline guard.
+            pass
 
     def do_GET(self):
         self.reply(200 if self.path == "/health" else 404, {"status": "ready"} if self.path == "/health" else {"code": "NOT_FOUND"})
 
     def do_POST(self):
         self.close_connection = True
+        self._unread_request_body = True
         if self.path not in ("/scan", "/quality"):
             return self.reply(404, {"code": "NOT_FOUND"})
         authorization = self.headers.get_all("Authorization", [])
@@ -163,6 +195,7 @@ class Handler(BaseHTTPRequestHandler):
                 # The request line and headers already consumed part of this
                 # same admission budget; do not restart it for the body.
                 raw = self.rfile.read(size)
+                self._unread_request_body = False
             except (TimeoutError, ScanFailure):
                 return self.reply(408, {"code": "REQUEST_TIMEOUT"})
             if len(raw) != size:

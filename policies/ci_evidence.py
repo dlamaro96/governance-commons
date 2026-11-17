@@ -21,7 +21,7 @@ if any(DEST.iterdir()):
     raise SystemExit("Artifact staging must be empty; refusing to publish a mixed or stale directory")
 allowed_outcomes = {"success", "failure", "cancelled", "skipped"}
 outcomes = {}
-for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade", "reference_quality_upgrade", "reference_quality_worker", "reference_structure_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "browser", "protected_authn"):
+for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade", "reference_quality_upgrade", "reference_quality_worker", "reference_structure_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade", "browser", "protected_authn"):
     value = os.environ.get(f"GC_{step.upper()}_RESULT", "skipped")
     outcomes[step] = value if value in allowed_outcomes else "unknown"
 report = {
@@ -36,7 +36,7 @@ report = {
     "screenshots": [],
     "limitations": ["No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
                     "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification.",
-                    "Canonical authority success, source-connector upgrade, configurable PostgreSQL TLS, glossary upgrade, completeness, lineage, classification, reference-data, reference-quality, reference-structure, reference-import, uniqueness and range native gates remain CI step outcomes only; authority failures may include a separately source-bound, failure-only diagnostic. Raw native reports/logs and unreviewed completeness/lineage/classification/reference-data/reference-quality/reference-structure/reference-import/uniqueness/range captures and all raw import uploads remain private."],
+                    "Canonical authority success, source-connector upgrade, configurable PostgreSQL TLS, glossary upgrade, completeness, lineage, classification, reference-data, reference-quality, reference-structure, reference-import, uniqueness, range and monitoring native gates remain CI step outcomes only; authority failures may include a separately source-bound, failure-only diagnostic. Raw native reports/logs and unreviewed completeness/lineage/classification/reference-data/reference-quality/reference-structure/reference-import/uniqueness/range/monitoring captures and all raw import uploads remain private."],
 }
 # The API runner retains raw TAP privately. Only an independently revalidated,
 # exact-source report enters this staging directory; absence cannot turn a
@@ -130,6 +130,7 @@ def failure_locations(results, filename):
 
 source = ROOT / ".local/evidence/playwright-results.json"
 REVIEWED_TITLES = {
+    "quality-monitoring.spec.ts": 'DQ-MONITOR: actual UTC scheduling deduplicates failures, verifies recovery and preserves reopened issue history',
     "quality-range.spec.ts": 'DQ-RANGE: exact inclusive integer bounds, immutable thresholds, no-data semantics and current read boundaries',
     "quality-uniqueness.spec.ts": 'DQ-UNI: exact duplicate groups, immutable thresholds, no-data semantics and current read boundaries',
     "reference-import.spec.ts": 'REF006: raw JSON and CSV import, complete reconciliation consent and independent publication',
@@ -152,7 +153,7 @@ if source.is_file():
                     results = test.get("results", [])
                     status = test.get("status", "unknown")
                     filename = Path(str(spec.get("file", ""))).name
-                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts", "relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts", "lineage.spec.ts", "classification.spec.ts", "reference-data.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts"}:
+                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts", "relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts", "lineage.spec.ts", "classification.spec.ts", "reference-data.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts", "quality-monitoring.spec.ts"}:
                         continue
                     # Bind each new journey to its reviewed declaration, without
                     # exporting arbitrary titles or accepting a same-file substitute.
@@ -182,6 +183,7 @@ if outcomes["browser"] == "success":
     expected["tests/e2e/reference-import.spec.ts"] = 1
     expected["tests/e2e/quality-uniqueness.spec.ts"] = 1
     expected["tests/e2e/quality-range.spec.ts"] = 1
+    expected["tests/e2e/quality-monitoring.spec.ts"] = 1
     observed = {name: sum(test["file"] == name for test in report["tests"]) for name in expected}
     locations = {(test["file"], test["line"]) for test in report["tests"]}
     if observed != expected or len(locations) != sum(expected.values()) or any(test["status"] != "expected" or test["attempts"] != 1 for test in report["tests"]):

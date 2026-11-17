@@ -122,7 +122,7 @@ test('DQ: real column completeness, immutable thresholds, aggregate outcomes and
  const me=await domainBody<Session>(await page.request.get('/api/v1/me'));expect(me.permissions).toEqual(expect.arrayContaining(['catalog:read','catalog:write','quality:read','quality:write','quality:execute']));
  const {table,column}=await scannedColumn(page),target={tableAssetId:table.id,columnAssetId:column.id};
  await page.goto('/catalog/'+table.id+'?tab=quality');
- await expect(page.getByRole('heading',{name:'This asset does not support completeness checks',exact:true})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'This asset does not support source quality checks',exact:true})).toBeVisible();
  await page.getByRole('link',{name:'Open columns',exact:true}).click();
  await page.getByRole('table',{name:'Columns',exact:true}).getByRole('link',{name:'email',exact:true}).click();
  await expect(page).toHaveURL(new RegExp('/catalog/'+column.id+'$'));
