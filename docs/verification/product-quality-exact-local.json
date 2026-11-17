@@ -1,0 +1,530 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-17T04:33:58.201762+00:00",
+  "scope": "Exact bounded PostgreSQL uniqueness/range quality, immutable thresholds and scoped local acceptance.",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "implementation_commit": "17e5abb2ea4f10588bb1f2cbd65dbf3e0bbe9895",
+  "profile": "core",
+  "runtime": {
+    "result": "PASS",
+    "application_manifest": "sha256:3d9e6ca0f09dc1d287a6c286776619ee667943fe1f4910cabecd0cb6700f5f7a",
+    "worker_image": "sha256:2f1e63649d05dedd67aa6a6cf28cd17b0ab63368ce0f4f674abb60946c072bb2",
+    "application_source_binding": {
+      "files": 279,
+      "exact_worktree_hashes_match": true,
+      "matches_implementation_commit": "17e5abb2ea4f10588bb1f2cbd65dbf3e0bbe9895"
+    },
+    "migrations": [
+      {
+        "name": "001_foundation.sql",
+        "checksum": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "name": "002_audit_envelopes.sql",
+        "checksum": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "name": "003_governance_models.sql",
+        "checksum": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "name": "004_model_migrations.sql",
+        "checksum": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "name": "005_model_migration_integrity.sql",
+        "checksum": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "name": "006_inherited_asset_types.sql",
+        "checksum": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "name": "007_asset_type_migrations.sql",
+        "checksum": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "name": "008_constrained_relations.sql",
+        "checksum": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "name": "009_relation_participation.sql",
+        "checksum": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "name": "010_relation_scope_discovery.sql",
+        "checksum": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "name": "011_business_domains.sql",
+        "checksum": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+      },
+      {
+        "name": "012_authentication_foundation.sql",
+        "checksum": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77"
+      },
+      {
+        "name": "013_authority_foundation.sql",
+        "checksum": "4a9304cf02ab51fc085a6018cd22980e948bc6cd1167b3595ccb817b2cf41fbf"
+      },
+      {
+        "name": "014_source_connectors.sql",
+        "checksum": "5d43592b8120818db2a2d81e62652ffccdc9dde1a0c0111604bc373b8b2e1f4b"
+      },
+      {
+        "name": "015_approval_workflows.sql",
+        "checksum": "571e14b0b42fe2dc58d076e35e7e2a3bab0bca918042e4ef222c63b3be2f269d"
+      },
+      {
+        "name": "016_glossary_publication.sql",
+        "checksum": "26b03dd63077e0477da3ed80d2a099b2dc4e00390d9e11eeea2546a0d19aea57"
+      },
+      {
+        "name": "017_relation_scope_candidates.sql",
+        "checksum": "c22f0b6d35e75555e1c58b503a82d2bbf6f23ab404c3af618143178cc5baa47b"
+      },
+      {
+        "name": "018_glossary_nominal_candidates.sql",
+        "checksum": "60361c7b2ddee2f1f095d0e832116b4b97cc04fdbee6a88b398721e5bee13fea"
+      },
+      {
+        "name": "019_quality_execution.sql",
+        "checksum": "ed7fefe9f1598831b6feb5954ba688fd35073af20dc1717082cb5176bc576ab5"
+      },
+      {
+        "name": "020_native_lineage.sql",
+        "checksum": "b5e601a50fdad2417f6b497eade5d65da7c5dcdb7bde94e74694a04d208691b8"
+      },
+      {
+        "name": "021_classification_review.sql",
+        "checksum": "e8637511016f4e9cf6741c4d5718c14a8b47a97898b8769e2884a7ee2a3a294e"
+      },
+      {
+        "name": "022_reference_publication.sql",
+        "checksum": "5720d63ac78b9ad9781c3a46da00369c90d25cf5493cddb318fd8252b131c9d9"
+      },
+      {
+        "name": "023_reference_quality.sql",
+        "checksum": "92221543903d7069d34d9e946b18063be52b1dfa0a7423cdb1b9bd5ff8b5d3ee"
+      },
+      {
+        "name": "024_reference_structures.sql",
+        "checksum": "71a019163fec45a88fc91f4cb53839e582c23eb37db7615928ae5d7f888dcd2c"
+      },
+      {
+        "name": "025_quality_uniqueness.sql",
+        "checksum": "94a814af5b80baf9835eca83ad200e67bf6e5697f79ae99e7abb2a1f4c0a3f9e"
+      },
+      {
+        "name": "026_quality_range.sql",
+        "checksum": "7fda1bc5768525ff60449433b452da549063ee52f2d9cad01c0b26330c52bd8e"
+      }
+    ],
+    "readback": {
+      "private_record": ".local/product-quality-range-runtime-readback.json",
+      "sha256": "39b0a7f6b2ca0566daed01fa70a21f4f003bccc5ebb646caa285db91a31033d6"
+    }
+  },
+  "native_upgrade": {
+    "command": "./dev test --suite range-upgrade",
+    "result": "PASS",
+    "tests": 122,
+    "suites": [
+      {
+        "phase": "pre025-completeness-tests",
+        "path": "tests/qualification/quality.test.ts",
+        "tests": {
+          "tests": 15,
+          "suites": 0,
+          "pass": 15,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 1806.811626
+        },
+        "result": "PASS"
+      },
+      {
+        "phase": "pre025-reference-tests",
+        "path": "tests/api/reference-quality-storage.test.ts",
+        "tests": {
+          "tests": 21,
+          "suites": 0,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 10147.478588
+        },
+        "result": "PASS"
+      },
+      {
+        "phase": "pre025-uniqueness-tests",
+        "path": "tests/api/quality-uniqueness-storage.test.ts",
+        "tests": {
+          "tests": 16,
+          "suites": 0,
+          "pass": 16,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 3141.57746
+        },
+        "result": "PASS"
+      },
+      {
+        "phase": "post026-completeness-tests",
+        "path": "tests/qualification/quality.test.ts",
+        "tests": {
+          "tests": 15,
+          "suites": 0,
+          "pass": 15,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2236.017668
+        },
+        "result": "PASS"
+      },
+      {
+        "phase": "post026-reference-tests",
+        "path": "tests/api/reference-quality-storage.test.ts",
+        "tests": {
+          "tests": 21,
+          "suites": 0,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 10226.983713
+        },
+        "result": "PASS"
+      },
+      {
+        "phase": "post026-uniqueness-tests",
+        "path": "tests/api/quality-uniqueness-storage.test.ts",
+        "tests": {
+          "tests": 16,
+          "suites": 0,
+          "pass": 16,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2174.648875
+        },
+        "result": "PASS"
+      },
+      {
+        "phase": "post026-range-tests",
+        "path": "tests/api/quality-range-storage.test.ts",
+        "tests": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2473.889835
+        },
+        "result": "PASS"
+      }
+    ],
+    "source_binding": {
+      "files": 102,
+      "exact_worktree_hashes_match": true,
+      "matches_implementation_commit": "17e5abb2ea4f10588bb1f2cbd65dbf3e0bbe9895"
+    },
+    "migration_preservation": true,
+    "replay_preservation": true,
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "record": {
+      "private_record": ".local/quality-range-candidate/backend/host/tree/.local/evidence/quality-range-upgrade.json",
+      "sha256": "401a4e88db8459ed9c20f3a8ad62b3df122b6287505f3d0a10d72b88ff697dba"
+    }
+  },
+  "source_workers": [
+    {
+      "family": "uniqueness",
+      "command": "./dev test --suite uniqueness-worker",
+      "result": "PASS",
+      "checks": [
+        "canonical_20_rows_duplicate_members_oracle",
+        "canonical_all_null",
+        "text_and_varchar_exact_utf8_groups",
+        "case_spaces_unicode_empty_string_distinct",
+        "owned_all_null_and_empty",
+        "all_group_members_not_excess_copies",
+        "lowered_row_bound_and_100001_refusal",
+        "logical_value_and_total_bytes_refusal",
+        "actual_cumulative_plan_cost_and_bytes_refusal",
+        "all_eight_target_pins_refused_when_stale",
+        "integer_bpchar_domain_unsupported",
+        "rls_and_inheritance_unsupported",
+        "native_reader_role_and_read_only_default",
+        "native_reader_dml_denied",
+        "closed_aggregates_without_source_values",
+        "actual_lock_timeout_refusal"
+      ],
+      "measured_runs": 7,
+      "private_log": {
+        "private_record": ".local/product-uniqueness-worker-public-attempt-1.log",
+        "sha256": "ea623c596f200ffc40bb1e19aa21346cee938f47810ad7e78f2716dbe7c1bc92"
+      },
+      "limitations": [
+        "Real local PostgreSQL executor only; source/row/lock and estimate controls do not imply all wall-deadline/cancellation cases or vendor-live qualification."
+      ]
+    },
+    {
+      "family": "range",
+      "command": "./dev test --suite range-worker",
+      "result": "PASS",
+      "checks": [
+        "canonical_six_rows_inclusive_oracle",
+        "canonical_all_null",
+        "builtin_int2_int4_int8_exact",
+        "above_js_safe_integer_singleton",
+        "int64_extrema_and_equal_bounds",
+        "three_canonical_binding_hash_vectors",
+        "owned_all_null_and_empty",
+        "lowered_row_bound_and_100001_refusal",
+        "actual_plan_cost_and_bytes_refusal",
+        "all_eight_target_pins_refused_when_stale",
+        "numeric_float_money_text_domain_unsupported",
+        "rls_and_inheritance_unsupported",
+        "native_reader_role_and_read_only_default",
+        "native_reader_dml_denied",
+        "closed_aggregates_without_source_values",
+        "actual_lock_timeout_refusal"
+      ],
+      "measured_runs": 11,
+      "private_log": {
+        "private_record": ".local/product-range-worker-public-attempt-1.log",
+        "sha256": "b3a4edbc68839eebbb1228d2b0292775c72a81126e6fdc8ccef4d61445a37423"
+      },
+      "limitations": [
+        "Real local PostgreSQL executor only; source/row/lock and estimate controls do not imply all wall-deadline/cancellation cases or vendor-live qualification."
+      ]
+    }
+  ],
+  "targeted_browser": [
+    {
+      "family": "uniqueness",
+      "result": "PASS",
+      "tests": [
+        {
+          "file": "quality-uniqueness.spec.ts",
+          "line": 86,
+          "title": "DQ-UNI: exact duplicate groups, immutable thresholds, no-data semantics and current read boundaries",
+          "project": "quality-uniqueness",
+          "status": "expected",
+          "expected_status": "passed",
+          "attempts": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration": 27832
+            }
+          ]
+        }
+      ],
+      "counts": {
+        "startTime": "2026-11-17T03:37:25.974Z",
+        "duration": 29107.225000000002,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "captures": 8,
+      "visual_review": {
+        "private_record": ".local/evidence/product-quality-uniqueness-browser-attempt-2/visual-review.json",
+        "sha256": "2bbc94c6af4eba5c735114892f42013f42fd37e15316de2bcb1fe9bd03def0f8"
+      },
+      "execution": {
+        "private_record": ".local/evidence/product-quality-uniqueness-browser-attempt-2/execution.json",
+        "sha256": "d2f6b02178f0ab356dd3f1dfec5e23be78275b683061a23e7f05a023a16ee5bf"
+      },
+      "runtime_binding": "95201d37a450ff6f140efaefa8367b0777552b37c52f9321844809c71ba47766",
+      "source_count": 584,
+      "source_files_stable": true,
+      "screenshot_restoration": true,
+      "tool_versions": {
+        "node": "v24.22.3",
+        "pnpm": "10.32.1",
+        "chrome": "Google Chrome 157.0.8103.79"
+      },
+      "limitations": [
+        "Targeted journey only; full current suite remains separate.",
+        "All original frames viewed; viewport-only automated review, no independent human usability/linguistic certification."
+      ]
+    },
+    {
+      "family": "range",
+      "result": "PASS",
+      "tests": [
+        {
+          "file": "quality-range.spec.ts",
+          "line": 96,
+          "title": "DQ-RANGE: exact inclusive integer bounds, immutable thresholds, no-data semantics and current read boundaries",
+          "project": "quality-range",
+          "status": "expected",
+          "expected_status": "passed",
+          "attempts": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration": 27273
+            }
+          ]
+        }
+      ],
+      "counts": {
+        "startTime": "2026-11-17T04:04:10.706Z",
+        "duration": 28453.279,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "captures": 8,
+      "visual_review": {
+        "private_record": ".local/evidence/product-quality-range-browser-attempt-1/visual-review.json",
+        "sha256": "6631ada92e188467484423dddced43f9257e8c68d49a02633368e3d21c2109ae"
+      },
+      "execution": {
+        "private_record": ".local/evidence/product-quality-range-browser-attempt-1/execution.json",
+        "sha256": "5c7ea3135ea0eeb0bc308082a04732a76992f5f40a819256fe2b6ff86e19590a"
+      },
+      "runtime_binding": "39b0a7f6b2ca0566daed01fa70a21f4f003bccc5ebb646caa285db91a31033d6",
+      "source_count": 599,
+      "source_files_stable": true,
+      "screenshot_restoration": true,
+      "tool_versions": {
+        "node": "v24.22.3",
+        "pnpm": "10.32.1",
+        "chrome": "Google Chrome 157.0.8103.79"
+      },
+      "limitations": [
+        "Targeted journey only; full current suite remains separate.",
+        "All original frames viewed; viewport-only automated review, no independent human usability/linguistic certification."
+      ]
+    }
+  ],
+  "api_regression": {
+    "result": "PASS",
+    "command": "./dev test --suite security",
+    "counts": {
+      "tests": 168,
+      "suites": 0,
+      "pass": 168,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "test_source_files": 24,
+    "runtime_test_sources_match": true,
+    "record": {
+      "private_record": ".local/evidence/api-summary.json",
+      "sha256": "9c4cef9d41d6d5be485897d76205fd266506ec88d338113245003d2f4e6c4d52"
+    }
+  },
+  "host": {
+    "unit_tests": 975,
+    "failures": 0,
+    "root_types": "PASS",
+    "web_types": "PASS",
+    "policy_controls": 139,
+    "logs": [
+      {
+        "private_record": ".local/product-range-final-host-units.log",
+        "sha256": "2f7eaf10b2f0b34ca95d5c5225f6f7cbc5ce4cf36b078bc3d7fe22ddd4eca680"
+      },
+      {
+        "private_record": ".local/product-range-final-root-types.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "private_record": ".local/product-range-final-web-types.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "private_record": ".local/product-range-final-policy-tests.log",
+        "sha256": "44aded7b56ce0d8b8645f7428bf062762d7891649844e15b74261a3cab32c536"
+      }
+    ]
+  },
+  "security": {
+    "secrets_result": "PASS",
+    "tool": "gitleaks",
+    "version": "8.30.1",
+    "publishable_files": 1390,
+    "findings": 0,
+    "record": {
+      "private_record": ".local/product-range-final-secret-scan.json",
+      "sha256": "c7706ed93261512c11400740614c262a735acd2bf7c56dbb474f3c4496cded82"
+    },
+    "prior_hosted_source": {
+      "head": "28292a563759591d0d6eb9bcd7884816ca48fca3",
+      "run_id": 44010681828,
+      "result": "PASS",
+      "scope": "three CodeQL analyses with zero findings; previous head only",
+      "record": {
+        "private_record": ".local/uniqueness-hosted-28292a5/verification-receipt.json",
+        "sha256": "a1db043c7fe3f399512c044ff899b7c4c513b4231fd3a09b88dd9bdda9421417"
+      }
+    },
+    "prior_hosted_development": {
+      "run_id": 44010681888,
+      "result": "FAIL",
+      "stage": "authority-foundation loader 512-origin boundary",
+      "cause": "UNKNOWN",
+      "unchanged_local_reproduction": "PASS",
+      "correction": "Failure-only bounded phase diagnostics added; no budget or acceptance assertion changed. Fresh hosted run required."
+    }
+  },
+  "retained_failures": [
+    {
+      "scope": "full browser attempt11",
+      "result": "26 passed, 1 failed, 5 dependent journeys not run",
+      "cause": "Classification setup OIDC callback reached the existing global rate limit. Bounded login pre-admission now respects server quota; actual target classification assertions pass.",
+      "record": {
+        "private_record": ".local/evidence/product-full-browser-attempt-11/execution.json",
+        "sha256": "7a2ab6ce0e497024397a171eac2e974773e53777a109c57063d15c47572905ae"
+      }
+    },
+    {
+      "scope": "classification admission attempt1 launcher",
+      "result": "FAIL_OR_INCOMPLETE preserved",
+      "cause": "Copied final predicate checked the wrong project name; independent actual Playwright readback verifies1/1 no-retry pass.",
+      "readback": {
+        "private_record": ".local/evidence/product-classification-admission-browser-attempt-1/independent-readback.json",
+        "sha256": "f2950a60b108e2c270a93943c49e66e4ab92f814a2a56f23a0b4f2466f8cdde3"
+      },
+      "visual": {
+        "private_record": ".local/evidence/product-classification-admission-browser-attempt-1/visual-review.json",
+        "sha256": "9e236230eb9cbfc08cab44e149e50ee0868de8c6d21d1038383917e8a98fb9dc"
+      },
+      "capture_limit": "Six outcome frames showed page top rather than outcome section. Capture aiming corrected; fresh full33 run pending."
+    }
+  ],
+  "limitations": [
+    "Partial four-family quality implementation only; remaining families, filters/partitions, schedules/monitoring and full programme remain required.",
+    "Current full33 browser regression is running; no complete current-browser PASS claimed.",
+    "Current hosted Development/security qualification pending. Prior hosted failure is not overridden by a local pass.",
+    "Microsoft Entra and Unity vendor-live qualification still require external test infrastructure/credentials.",
+    "No whole-requirement, enterprise-profile, production or release qualification."
+  ]
+}

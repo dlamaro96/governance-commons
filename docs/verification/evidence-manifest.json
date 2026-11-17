@@ -1514,6 +1514,15 @@
         "evidence_sha256": "fffd10eac5f6c818b3df4f5dd9d4f1be3f28ea2738b6900f64738ce0a7684d45",
         "method": "Exact baked application and24migration readback; two real no-retry browser journeys and16original visual reviews. Earlier API168 scope remains separate."
       }
+    },
+    {
+      "path": "docs/verification/product-quality-exact-local.json",
+      "scope": "quality-uniqueness-range-local",
+      "source_binding": {
+        "implementation_commit": "17e5abb2ea4f10588bb1f2cbd65dbf3e0bbe9895",
+        "evidence_sha256": "df0680a7a403cf4bfe579111f55c222b8dbe06678012a24716569b60c5abedf5",
+        "method": "Exact279baked-source and102native-input comparison against committed tree;122isolated upgrade cases,16worker checks per family,2target browser journeys/16original frame reviews and168API regression."
+      }
     }
   ],
   "limitations": [
@@ -1521,5 +1530,5 @@
     "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "bound_at": "2026-11-16T06:35:28.291653+00:00"
+  "bound_at": "2026-11-17T04:33:58.201762+00:00"
 }
