@@ -51,7 +51,7 @@ REFERENCE_TITLE = 'REF: independent publication, complete bilingual downloads, s
 CLASSIFICATION_TITLE = 'CLS: real metadata suggestion, independent application, immutable pins, reviewed withdrawal and access boundaries'
 
 class EvidenceGateTests(unittest.TestCase):
-    def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False, omitted_step=None, authn_mutation=None, omit_authn=False, protected_mutation=None, omit_protected=False, omitted_capture=None, symlink_capture=None, empty_capture=None, authority=False, authority_mutation=None, failed_outcome="failure"):
+    def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False, omitted_step=None, authn_mutation=None, omit_authn=False, protected_mutation=None, omit_protected=False, omitted_capture=None, symlink_capture=None, empty_capture=None, authority=False, authority_mutation=None, failed_outcome="failure", shard=None, shard_environment=None, retained_foreign=None):
         specs = [{"file": f"{name}.spec.ts", "line": line, "title": FRESHNESS_MONITORING_TITLE if name == "quality-freshness-monitoring" else FRESHNESS_TITLE if name == "quality-freshness" else MONITORING_TITLE if name == "quality-monitoring" else RANGE_TITLE if name == "quality-range" else UNIQUENESS_TITLE if name == "quality-uniqueness" else QUALITY_TITLE if name == "quality" else LINEAGE_TITLE if name == "lineage" else CLASSIFICATION_TITLE if name == "classification" else REFERENCE_TITLE if name == "reference-data" else REFERENCE_QUALITY_TITLE if name == "reference-quality" else REFERENCE_STRUCTURE_TITLE if name == "reference-structures" else REFERENCE_IMPORT_TITLE if name == "reference-import" else "PRIVATE_SYNTHETIC_TITLE",
                   "tests": [{"status": "expected", "results": [{"status": "passed", "duration": 1, "stdout": ["PRIVATE_SYNTHETIC_OUTPUT"]}]}]}
                  for name in FILES for line in ((10, 20, 30) if name == "business-domains" else (10,) if name in ("source-connectors", "postgres-configuration", "approvals", "quality", "lineage", "classification", "reference-data", "reference-quality", "reference-structures", "reference-import", "quality-uniqueness", "quality-range", "quality-monitoring", "quality-freshness", "quality-freshness-monitoring") else (10, 20))]
@@ -59,8 +59,14 @@ class EvidenceGateTests(unittest.TestCase):
             mutation(specs)
         with tempfile.TemporaryDirectory(prefix="gc-ci-evidence-") as temporary:
             root = Path(temporary)
+            commit = "a" * 40
+            if shard is not None:
+                subprocess.run(['git','init','--quiet',str(root)],check=True,capture_output=True,timeout=10)
+                subprocess.run(['git','-c','user.name=Synthetic test','-c','user.email=synthetic@example.invalid','-c','commit.gpgsign=false','commit','--allow-empty','--quiet','-m','Synthetic shard identity'],cwd=root,check=True,capture_output=True,timeout=10)
+                commit=subprocess.run(['git','rev-parse','HEAD'],cwd=root,check=True,capture_output=True,text=True,timeout=10).stdout.strip()
             (root / "policies").mkdir()
             shutil.copyfile(COLLECTOR, root / "policies/ci_evidence.py")
+            shutil.copyfile(COLLECTOR.with_name("ci_shards.py"), root / "policies/ci_shards.py")
             shutil.copyfile(COLLECTOR.with_name("api_evidence.py"), root / "policies/api_evidence.py")
             shutil.copyfile(COLLECTOR.with_name("authentication_evidence.py"), root / "policies/authentication_evidence.py")
             shutil.copyfile(COLLECTOR.with_name("protected_authn_evidence.py"), root / "policies/protected_authn_evidence.py")
@@ -72,14 +78,16 @@ class EvidenceGateTests(unittest.TestCase):
             source = root / ".local/evidence"
             source.mkdir(parents=True)
             (source / "playwright-results.json").write_text(json.dumps({"suites": [{"specs": specs}]}))
-            api = collect_api(root, b"TAP version 13\nok 1 - synthetic API test\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n", 0, "a" * 40, True)
+            api = collect_api(root, b"TAP version 13\nok 1 - synthetic API test\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n", 0, commit, True)
             if api_mutation:
                 api_mutation(api)
             if not omit_api:
                 (source / "api-summary.json").write_text(json.dumps(api))
-            authn = authentication_fixture(root)
+            with patch.object(test_authentication_evidence, "COMMIT", commit):
+                authn = authentication_fixture(root)
             authority_report = test_authority_diagnostics.fixture(root) if authority else None
-            protected = test_protected_authn_evidence.fixture(root)
+            with patch.object(test_protected_authn_evidence, "COMMIT", commit):
+                protected = test_protected_authn_evidence.fixture(root)
             # Both source inventories overlap intentionally. Finish all synthetic
             # source preparation before recording either execution's hashes.
             authn["sources"] = authentication_evidence.source_inventory(root)
@@ -128,12 +136,22 @@ class EvidenceGateTests(unittest.TestCase):
                 else:
                     path.write_bytes(b"" if name == empty_capture else PNG)
             env = {**os.environ, **{f"GC_{step.upper()}_RESULT": "success" for step in STEPS},
-                   "GITHUB_SHA": "a" * 40, "GITHUB_REPOSITORY": "example/fixture", "GITHUB_RUN_ID": "1"}
+                   "GITHUB_SHA": commit, "GITHUB_RUN_ATTEMPT": "1", "GITHUB_REPOSITORY": "example/fixture", "GITHUB_RUN_ID": "1"}
+            if shard is not None:
+                import ci_shards
+                required=ci_shards.required_steps(shard)
+                for step in STEPS:
+                    if step not in required:env['GC_'+step.upper()+'_RESULT']='skipped'
+                for step,names in ci_shards.EVIDENCE.items():
+                    if step not in required:
+                        for name in names:
+                            if name != retained_foreign:(source/name).unlink(missing_ok=True)
+            if shard_environment:env.update(shard_environment)
             if failed_step:
                 env[f"GC_{failed_step.upper()}_RESULT"] = failed_outcome
             if omitted_step:
                 env.pop(f"GC_{omitted_step.upper()}_RESULT", None)
-            result = subprocess.run([sys.executable, str(root / "policies/ci_evidence.py")],
+            result = subprocess.run([sys.executable, str(root / "policies/ci_evidence.py"), *(["--shard",shard] if shard is not None else [])],
                                     env=env, capture_output=True, text=True, timeout=10)
             report = json.loads((root / ".local/ci-artifacts/behavior-summary.json").read_text())
             self.assertFalse((root / ".local/ci-artifacts/unreviewed-private.png").exists())

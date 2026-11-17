@@ -53,6 +53,8 @@ jobs:
         run: pnpm test
       - name: Fail-closed evidence collection
         run: python3 policies/test_ci_evidence.py
+      - name: Fixed behavior shard contract
+        run: python3 policies/test_ci_shards.py
       - name: Immutable application-image admission
         run: python3 scripts/test_protected_authn_image.py
       - name: Private authentication bootstrap permissions
@@ -154,8 +156,25 @@ jobs:
           test "$BEHAVIOR_RESULT" = success
   behavior:
     name: behavior
+    if: always()
+    needs: [behavior_shards]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+      - name: Require every fixed behavior shard to succeed
+        env:
+          SHARDS_RESULT: ${{ needs.behavior_shards.result }}
+        run: test "$SHARDS_RESULT" = success
+  behavior_shards:
+    name: behavior (${{ matrix.shard }})
     runs-on: ubuntu-24.04
     timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        shard: [foundation, governance, quality-basics, quality-freshness-volume, browser]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -174,6 +193,7 @@ jobs:
       - name: Install exact dependency lock
         run: pnpm install --frozen-lockfile
       - name: Install browser and Linux dependencies
+        if: success() && matrix.shard == 'browser'
         run: pnpm exec playwright install --with-deps chromium
       - name: Generate ephemeral synthetic credentials
         id: bootstrap
@@ -188,116 +208,153 @@ jobs:
         id: seed
         run: ./dev seed --dataset harbor-demo
       - name: Verify PostgreSQL connector against the live source
+        if: success() && matrix.shard == 'foundation'
         id: connectors
         run: ./dev test --suite connectors
       - name: Verify database isolation and API authorization
+        if: success() && matrix.shard == 'foundation'
         id: security
         run: ./dev test --suite security
       - name: Verify model receipt upgrade and rollback
+        if: success() && matrix.shard == 'foundation'
         id: model_upgrade
         run: ./dev test --suite model-upgrade
       - name: Verify inherited-type upgrade and storage invariants
+        if: success() && matrix.shard == 'foundation'
         id: asset_type_upgrade
         run: ./dev test --suite asset-type-upgrade
       - name: Verify complete type migration upgrade and principal locking
+        if: success() && matrix.shard == 'foundation'
         id: type_migration_upgrade
         run: ./dev test --suite type-migration-upgrade
       - name: Verify constrained relation upgrade and graph concurrency
+        if: success() && matrix.shard == 'foundation'
         id: relations_upgrade
         run: ./dev test --suite relations-upgrade
       - name: Verify required participation upgrade and atomic graph operations
+        if: success() && matrix.shard == 'foundation'
         id: relation_participation_upgrade
         run: ./dev test --suite relation-participation-upgrade
       - name: Verify business domain upgrade, placement and transaction deadlines
+        if: success() && matrix.shard == 'foundation'
         id: business_domains_upgrade
         run: ./dev test --suite business-domains-upgrade
       - name: Verify business domain seed recovery and provenance
+        if: success() && matrix.shard == 'browser'
         id: business_domain_seed
         run: ./dev test --suite business-domain-seed
       - name: Verify inactive authentication foundation and native role isolation
+        if: success() && matrix.shard == 'foundation'
         id: authority_authn_foundation
         run: ./dev test --suite authority-authn-foundation
       - name: Verify canonical authority storage and complete loader closure
+        if: success() && matrix.shard == 'foundation'
         id: authority_foundation
         run: ./dev test --suite authority-foundation
       - name: Verify source connector identity upgrade and preservation
+        if: success() && matrix.shard == 'foundation'
         id: source_connectors_upgrade
         run: ./dev test --suite source-connectors-upgrade
       - name: Verify approved PostgreSQL targets with real TLS
+        if: success() && matrix.shard == 'foundation'
         id: postgres_targets
         run: ./dev test --suite postgres-targets
       - name: Verify approval storage and atomic glossary publication upgrade
+        if: success() && matrix.shard == 'governance'
         id: glossary_upgrade
         run: ./dev test --suite glossary-upgrade
       - name: Verify complete graph scope and populated catalog publication
+        if: success() && matrix.shard == 'governance'
         id: relation_scope_upgrade
         run: ./dev test --suite relation-scope-upgrade
       - name: Verify multi-policy glossary publication on populated catalogs
+        if: success() && matrix.shard == 'governance'
         id: glossary_population_upgrade
         run: ./dev test --suite glossary-population-upgrade
       - name: Verify completeness storage upgrade and current authorization
+        if: success() && matrix.shard == 'quality-basics'
         id: quality_upgrade
         run: ./dev test --suite quality-upgrade
       - name: Verify completeness execution against the live synthetic source
+        if: success() && matrix.shard == 'quality-basics'
         id: quality_worker
         run: ./dev test --suite quality-worker
       - name: Verify PostgreSQL lineage upgrade, evidence and transaction boundaries
+        if: success() && matrix.shard == 'governance'
         id: lineage_upgrade
         run: ./dev test --suite lineage-upgrade
       - name: Verify PostgreSQL view dependency extraction against the live source
+        if: success() && matrix.shard == 'quality-basics'
         id: lineage_worker
         run: ./dev test --suite lineage-worker
       - name: Verify classification upgrade, immutable evidence and reviewed labels
+        if: success() && matrix.shard == 'governance'
         id: classification_upgrade
         run: ./dev test --suite classification-upgrade
       - name: Verify governed reference publication, effective history and immutable exports
+        if: success() && matrix.shard == 'quality-basics'
         id: reference_upgrade
         run: ./dev test --suite reference-upgrade
       - name: Verify reference quality upgrade, retained bindings and current authority
+        if: success() && matrix.shard == 'quality-basics'
         id: reference_quality_upgrade
         run: ./dev test --suite reference-quality-upgrade
       - name: Verify reference allowed values against the live synthetic source
+        if: success() && matrix.shard == 'quality-basics'
         id: reference_quality_worker
         run: ./dev test --suite reference-quality-worker
       - name: Verify temporal reference structures, immutable history and concurrent authorization
+        if: success() && matrix.shard == 'quality-basics'
         id: reference_structure_upgrade
         run: ./dev test --suite reference-structure-upgrade
       - name: Verify bounded reference import reconciliation and current authority
+        if: success() && matrix.shard == 'quality-basics'
         id: reference_import
         run: ./dev test --suite reference-import
       - name: Verify uniqueness upgrade, immutable measurements and retained quality families
+        if: success() && matrix.shard == 'quality-freshness-volume'
         id: uniqueness_upgrade
         run: ./dev test --suite uniqueness-upgrade
       - name: Verify exact duplicate groups against the live synthetic source
+        if: success() && matrix.shard == 'quality-freshness-volume'
         id: uniqueness_worker
         run: ./dev test --suite uniqueness-worker
       - name: Verify integer-range upgrade and retained quality families
+        if: success() && matrix.shard == 'quality-freshness-volume'
         id: range_upgrade
         run: ./dev test --suite range-upgrade
       - name: Verify exact inclusive bounds against the local PostgreSQL source
+        if: success() && matrix.shard == 'quality-freshness-volume'
         id: range_worker
         run: ./dev test --suite range-worker
       - name: Verify scheduled quality upgrade, issues and recovery
+        if: success() && matrix.shard == 'quality-freshness-volume'
         id: monitoring_upgrade
         run: ./dev test --suite monitoring-upgrade
       - name: Verify freshness upgrade and retained quality evidence
+        if: success() && matrix.shard == 'quality-freshness-volume'
         id: freshness_upgrade
         run: ./dev test --suite freshness-upgrade
       - name: Verify scheduled freshness age fencing and retained evidence
+        if: success() && matrix.shard == 'quality-freshness-volume'
         id: freshness_scheduling_upgrade
         run: ./dev test --suite freshness-scheduling-upgrade
       - name: Verify exact freshness source aggregates
+        if: success() && matrix.shard == 'quality-freshness-volume'
         id: freshness_worker
         run: ./dev test --suite freshness-worker
       - name: Verify browser acceptance and accessibility
+        if: success() && matrix.shard == 'browser'
         id: browser
         run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts tests/e2e/source-connectors.spec.ts tests/e2e/postgres-configuration.spec.ts tests/e2e/approvals.spec.ts tests/e2e/glossary.spec.ts tests/e2e/quality.spec.ts tests/e2e/lineage.spec.ts tests/e2e/classification.spec.ts tests/e2e/reference-data.spec.ts tests/e2e/reference-quality.spec.ts tests/e2e/reference-structures.spec.ts tests/e2e/reference-import.spec.ts tests/e2e/quality-uniqueness.spec.ts tests/e2e/quality-range.spec.ts tests/e2e/quality-monitoring.spec.ts tests/e2e/quality-freshness.spec.ts tests/e2e/quality-freshness-monitoring.spec.ts
       - name: Verify protected OIDC and session lifecycle on the exact built image
+        if: success() && matrix.shard == 'browser'
         id: protected_authn
         run: python3 scripts/runtime-protected-ci.py
       - name: Collect bounded redacted evidence
         if: always()
         env:
+          GC_BEHAVIOR_SHARD: ${{ matrix.shard }}
           GC_BOOTSTRAP_RESULT: ${{ steps.bootstrap.outcome }}
           GC_SERVICES_RESULT: ${{ steps.services.outcome }}
           GC_OBJECT_STORE_RESULT: ${{ steps.object_store.outcome }}
@@ -338,12 +395,12 @@ jobs:
           GC_FRESHNESS_WORKER_RESULT: ${{ steps.freshness_worker.outcome }}
           GC_BROWSER_RESULT: ${{ steps.browser.outcome }}
           GC_PROTECTED_AUTHN_RESULT: ${{ steps.protected_authn.outcome }}
-        run: python3 policies/ci_evidence.py
+        run: python3 policies/ci_evidence.py --shard "$GC_BEHAVIOR_SHARD"
       - name: Preserve only safe behavior summary and catalog screenshots
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: behavior-${{ github.sha }}
+          name: behavior-${{ matrix.shard }}-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: .local/ci-artifacts/
           include-hidden-files: true
           retention-days: 14

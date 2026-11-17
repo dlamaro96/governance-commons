@@ -3,6 +3,7 @@
 """Publish only test outcomes and explicit post-login synthetic catalog images."""
 from datetime import datetime, timezone
 import json
+import argparse
 import os
 import re
 from pathlib import Path
@@ -15,16 +16,24 @@ from authentication_evidence import read_file as bounded_read, strict_json as pr
 from authority_diagnostics import load_report as load_authority_diagnostic
 from glossary_population_diagnostics import load_report as load_population_diagnostic
 
+from ci_shards import STEPS, required_steps, collect_outcomes, checkout_identity, foreign_evidence
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--shard")
+arguments = parser.parse_args()
+SHARD = arguments.shard
+REQUIRED = required_steps(SHARD)
 ROOT = Path(__file__).resolve().parents[1]
+try:
+    shard_identity = checkout_identity(ROOT, os.environ, SHARD)
+except ValueError as error:
+    raise SystemExit(str(error)) from None
 DEST = ROOT / ".local/ci-artifacts"
 DEST.mkdir(parents=True, exist_ok=True)
 if any(DEST.iterdir()):
     raise SystemExit("Artifact staging must be empty; refusing to publish a mixed or stale directory")
-allowed_outcomes = {"success", "failure", "cancelled", "skipped"}
-outcomes = {}
-for step in ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_foundation", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "glossary_population_upgrade", "quality_upgrade", "quality_worker", "lineage_upgrade", "lineage_worker", "classification_upgrade", "reference_upgrade", "reference_quality_upgrade", "reference_quality_worker", "reference_structure_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade", "freshness_upgrade", "freshness_worker", "freshness_scheduling_upgrade", "browser", "protected_authn"):
-    value = os.environ.get(f"GC_{step.upper()}_RESULT", "skipped")
-    outcomes[step] = value if value in allowed_outcomes else "unknown"
+outcomes, outcomes_valid = collect_outcomes(os.environ, SHARD)
+foreign_outputs = foreign_evidence(ROOT, SHARD)
 report = {
     "schema_version": 1,
     "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -32,7 +41,9 @@ report = {
     "run_url": f"https://github.com/{os.environ.get('GITHUB_REPOSITORY', '')}/actions/runs/{os.environ.get('GITHUB_RUN_ID', '')}",
     "profile": "core / GitHub-hosted Ubuntu 24.04 / synthetic PostgreSQL",
     "steps": outcomes,
-    "outcome": "PASS" if all(value == "success" for value in outcomes.values()) else "NOT_PASSED",
+    "outcome": "PASS" if outcomes_valid and not foreign_outputs else "NOT_PASSED",
+    "shard": shard_identity,
+    "foreign_evidence": "REFUSED" if foreign_outputs else "NONE",
     "tests": [],
     "screenshots": [],
     "limitations": ["No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
@@ -44,7 +55,7 @@ report = {
 # claimed successful security step into verified behavior.
 api_source = ROOT / ".local/evidence/api-summary.json"
 api_report = None
-if api_source.is_file() and not api_source.is_symlink() and api_source.stat().st_size <= 4 * 1024 * 1024:
+if "security" in REQUIRED and api_source.is_file() and not api_source.is_symlink() and api_source.stat().st_size <= 4 * 1024 * 1024:
     try:
         api_report = safe_report(ROOT, json.loads(api_source.read_text()), os.environ.get("GITHUB_SHA"))
     except (OSError, ValueError):
@@ -60,7 +71,7 @@ if outcomes["security"] == "success" and (not api_report or api_report["outcome"
     report["outcome"] = "NOT_PASSED"
 # A successful native foundation step requires exact source/log/cleanup evidence.
 # Only the closed coordinate projection is staged; failed originals stay private.
-authn_report = load_authentication_report(ROOT, os.environ.get("GITHUB_SHA"))
+authn_report = load_authentication_report(ROOT, os.environ.get("GITHUB_SHA")) if "authority_authn_foundation" in REQUIRED else None
 authn_mismatch = bool(authn_report and outcomes["authority_authn_foundation"] != "success")
 if authn_mismatch:
     authn_report = None
@@ -71,7 +82,7 @@ if outcomes["authority_authn_foundation"] == "success" and not authn_report:
     report["outcome"] = "NOT_PASSED"
 # Diagnostics never qualify a successful gate. Preserve only an independently
 # source/log-bound failure projection and keep the required step failed.
-authority_diagnostic = load_authority_diagnostic(ROOT, os.environ.get("GITHUB_SHA"))
+authority_diagnostic = load_authority_diagnostic(ROOT, os.environ.get("GITHUB_SHA")) if "authority_foundation" in REQUIRED else None
 if authority_diagnostic and outcomes["authority_foundation"] in {"failure", "cancelled"}:
     (DEST / "authority-foundation-diagnostic.json").write_text(json.dumps(authority_diagnostic, indent=2) + "\n")
     report["authority_foundation_diagnostic"] = "FAILURE_DIAGNOSTIC_ONLY"
@@ -80,7 +91,7 @@ else:
 if authority_diagnostic and outcomes["authority_foundation"] == "success":
     report["outcome"] = "NOT_PASSED"
 # Population diagnostics are never a success qualification or raw-log upload.
-population_diagnostic = load_population_diagnostic(ROOT, os.environ.get("GITHUB_SHA"))
+population_diagnostic = load_population_diagnostic(ROOT, os.environ.get("GITHUB_SHA")) if "glossary_population_upgrade" in REQUIRED else None
 if population_diagnostic and outcomes["glossary_population_upgrade"] in {"failure", "cancelled"}:
     (DEST / "glossary-population-diagnostic.json").write_text(json.dumps(population_diagnostic, indent=2) + "\n")
     report["glossary_population_diagnostic"] = "FAILURE_DIAGNOSTIC_ONLY"
@@ -91,7 +102,7 @@ if population_diagnostic and outcomes["glossary_population_upgrade"] == "success
 # Protected transport is a separate required gate, never a replacement for
 # native foundation or the thirty-six core browser journeys. Hosted collection
 # requires the independently bound, baked image mode; local overlays refuse.
-protected_report = load_protected_report(ROOT, os.environ.get("GITHUB_SHA"))
+protected_report = load_protected_report(ROOT, os.environ.get("GITHUB_SHA")) if "protected_authn" in REQUIRED else None
 protected_mismatch = bool(protected_report and outcomes["protected_authn"] != "success")
 if protected_mismatch:
     protected_report = None
@@ -153,7 +164,7 @@ REVIEWED_TITLES = {
     "quality.spec.ts": "DQ: real column completeness, immutable thresholds, aggregate outcomes and current read boundaries",
     "lineage.spec.ts": "LIN-001/004/006: real PostgreSQL view dependencies, evidence, paged exploration and tenant isolation",
 }
-if source.is_file():
+if "browser" in REQUIRED and source.is_file():
     data = json.loads(source.read_text())
     def collect(suites):
         for suite in suites:
@@ -221,6 +232,12 @@ if outcomes["browser"] == "success":
             report["screenshots"].append(name)
         elif name in connector_captures | postgres_captures:
             report["outcome"] = "NOT_PASSED"
+# Ownership is explicit; missing owner evidence is never relabeled unassigned.
+for step, field in (("security", "api_evidence"), ("authority_authn_foundation", "authentication_evidence"),
+                    ("authority_foundation", "authority_foundation_diagnostic"), ("glossary_population_upgrade", "glossary_population_diagnostic"),
+                    ("protected_authn", "protected_authentication_evidence")):
+    if step not in REQUIRED:
+        report[field] = "NOT_IN_SHARD"
 (DEST / "behavior-summary.json").write_text(json.dumps(report, indent=2) + "\n")
 print(json.dumps({"outcome": report["outcome"], "test_records": len(report["tests"]), "screenshots": len(report["screenshots"])}))
 sys.exit(0 if report["outcome"] == "PASS" else 1)

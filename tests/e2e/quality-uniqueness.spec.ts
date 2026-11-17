@@ -5,6 +5,7 @@ import {test,expect,type Page,type TestInfo} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {randomUUID} from 'node:crypto';
 import {domainBody,domainHeaders,domainLogin,stewardIdentity} from '../fixtures/business-domains-browser.ts';
+import {waitForBrowserRateBudget} from '../fixtures/browser-rate-budget.ts';
 import type {Asset,AssetDetail,AssetList,Session} from '../../apps/web/src/types.ts';
 import type {QualityPublishInput,QualityRuleView,QualityRunInput,QualityRunView,UniquenessRuleDefinition} from '../../packages/domain/src/quality-contracts.ts';
 
@@ -84,7 +85,7 @@ async function captures(page:Page,info:TestInfo,name:string,run:QualityRunView){
  await language(page,'en');await page.setViewportSize({width:1440,height:960});
 }
 test('DQ-UNI: exact duplicate groups, immutable thresholds, no-data semantics and current read boundaries',async({page,browser},info)=>{
- test.setTimeout(720_000);await domainLogin(page);await language(page,'en');const me=await domainBody<Session>(await page.request.get('/api/v1/me'));expect(me.permissions).toEqual(expect.arrayContaining(['catalog:read','quality:read','quality:write','quality:execute']));
+ test.setTimeout(720_000);await waitForBrowserRateBudget(page.request,295);await domainLogin(page);await language(page,'en');const me=await domainBody<Session>(await page.request.get('/api/v1/me'));expect(me.permissions).toEqual(expect.arrayContaining(['catalog:read','quality:read','quality:write','quality:execute']));
  const {table,code,allNull}=await scannedColumns(page),target={tableAssetId:table.id,columnAssetId:code.id},name='Synthetic code uniqueness '+randomUUID();
  const definition:UniquenessRuleDefinition={formatVersion:1,kind:'uniqueness',target,name,purpose:'Count every source row in repeated exact byte groups, excluding SQL NULL.',ownerId:stewardIdentity,severity:'warning',maximumDuplicateBasisPoints:3749,comparison:'utf8-exact',nullPolicy:'exclude'};
  await page.goto('/catalog/'+code.id+'?tab=quality');await editor(page,definition);const first=await publish(page,definition),failed=await execute(page,first,'FAIL');await captures(page,info,'boundary-fail',failed);
@@ -93,7 +94,8 @@ test('DQ-UNI: exact duplicate groups, immutable thresholds, no-data semantics an
  const second=await publish(page,{...definition,maximumDuplicateBasisPoints:3750},first),passed=await execute(page,second,'PASS');await captures(page,info,'boundary-pass',passed);
  expect(await readRun(page,failed.id)).toEqual(failed);expect((await domainBody<{rule:QualityRuleView}>(await page.request.get('/api/v1/quality/rules/'+first.id+'?version=1'))).rule).toEqual({...first,currentVersion:2});
  await panel.getByRole('button',{name:'Previous version',exact:true}).click();await expect(panel.getByRole('button',{name:'Run check',exact:true})).toBeDisabled();await expect(panel.getByRole('button',{name:'Publish new version',exact:true})).toHaveCount(0);await panel.getByRole('button',{name:'Latest version',exact:true}).click();
- await panel.getByRole('button',{name:'View run '+failed.id,exact:true}).click();const old=page.getByRole('region',{name:'Run evidence',exact:true});await expect(old.getByTestId('quality-pinned-threshold')).toHaveText('37.49%');await expect(old.locator('.quality-outcomes').getByText('Fail',{exact:true})).toBeVisible();
+ const historicalRead=page.waitForResponse(response=>new URL(response.url()).pathname==='/api/v1/quality/runs/'+failed.id&&response.request().method()==='GET');
+ await panel.getByRole('button',{name:'View run '+failed.id,exact:true}).click();const historicalResponse=await historicalRead;expect(historicalResponse.status()).toBe(200);expect(await historicalResponse.json()).toEqual({run:failed});const old=page.getByRole('region',{name:'Run evidence',exact:true});await expect(old.getByTestId('quality-pinned-threshold')).toHaveText('37.49%');await expect(old.locator('.quality-outcomes').getByText('Fail',{exact:true})).toBeVisible();
  const noDataDefinition={...definition,target:{tableAssetId:table.id,columnAssetId:allNull.id},name:'Synthetic all-null uniqueness '+randomUUID(),maximumDuplicateBasisPoints:0};await page.goto('/catalog/'+allNull.id+'?tab=quality');await editor(page,noDataDefinition);const nullRule=await publish(page,noDataDefinition),empty=await execute(page,nullRule,'NO_DATA',true);
  await expect(page.getByRole('region',{name:'Run evidence',exact:true}).getByText('No non-null rows were observed. Nulls are excluded; this is not a pass.',{exact:true})).toBeVisible();expect(empty.verdict).not.toBe('PASS');
  const readerContext=await browser.newContext(),foreignContext=await browser.newContext();

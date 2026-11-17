@@ -91,9 +91,19 @@ class Controls(unittest.TestCase):
         import os
         for outcome in ('success','failure','cancelled','skipped'):
             dest=self.root/('artifact-'+outcome);dest.mkdir();report={'outcome':'PASS'}
-            env={'load_population_diagnostic':lambda *args:self.result(),'ROOT':self.root,'os':os,'outcomes':{'glossary_population_upgrade':outcome},'DEST':dest,'report':report,'json':json}
+            env={'load_population_diagnostic':lambda *args:self.result(),'ROOT':self.root,'os':os,'REQUIRED':{'glossary_population_upgrade'},'outcomes':{'glossary_population_upgrade':outcome},'DEST':dest,'report':report,'json':json}
             exec(code,env);self.assertEqual((dest/'glossary-population-diagnostic.json').exists(),outcome in ('failure','cancelled'))
             if outcome=='success':self.assertEqual(report['outcome'],'NOT_PASSED')
+    def test_unassigned_collector_does_not_load_or_export_population_evidence(self):
+        tree=ast.parse((ROOT/'policies/ci_evidence.py').read_text())
+        start=next(i for i,n in enumerate(tree.body) if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='population_diagnostic' for t in n.targets))
+        code=compile(ast.fix_missing_locations(ast.Module(body=tree.body[start:start+3],type_ignores=[])),'actual-collector-block','exec')
+        def forbidden(*args):raise AssertionError('Foreign diagnostic loaded')
+        import os
+        dest=self.root/'unassigned';dest.mkdir();report={'outcome':'PASS'}
+        exec(code,{'load_population_diagnostic':forbidden,'ROOT':self.root,'os':os,'REQUIRED':set(),'outcomes':{'glossary_population_upgrade':'NOT_IN_SHARD'},'DEST':dest,'report':report,'json':json})
+        self.assertEqual(list(dest.iterdir()),[])
+
     def test_actual_node_failed_tap_is_accepted_without_message_reflection(self):
         import shutil
         node=shutil.which('node');self.assertIsNotNone(node)
