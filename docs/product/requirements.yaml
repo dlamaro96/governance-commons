@@ -15636,13 +15636,20 @@
         "packages/db/migrations/025_quality_uniqueness.sql",
         "packages/db/migrations/026_quality_range.sql",
         "python/governance_workers/quality.py",
-        "apps/web/src/quality/AssetQuality.tsx"
+        "apps/web/src/quality/AssetQuality.tsx",
+        "packages/db/migrations/027_quality_monitoring.sql",
+        "packages/domain/src/quality-monitoring.ts",
+        "apps/workflow-worker/src/quality-monitoring-activities.ts",
+        "apps/web/src/quality/monitoring/Monitor.tsx"
       ],
       "test_ids": [
         "tests/api/quality-uniqueness-storage.test.ts",
         "tests/api/quality-range-storage.test.ts",
         "tests/e2e/quality-uniqueness.spec.ts",
-        "tests/e2e/quality-range.spec.ts"
+        "tests/e2e/quality-range.spec.ts",
+        "tests/api/quality-monitoring-storage.test.ts",
+        "tests/api/quality-monitoring-invariants.test.ts",
+        "tests/e2e/quality-monitoring.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -15652,7 +15659,8 @@
         "local": {
           "outcome": "NOT_RUN",
           "evidence": [
-            "docs/verification/product-quality-exact-local.json"
+            "docs/verification/product-quality-exact-local.json",
+            "docs/verification/product-quality-monitoring-local.json"
           ]
         },
         "vendor_live": {
@@ -15674,7 +15682,8 @@
         "evidence": []
       },
       "limitations": [
-        "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome."
+        "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome.",
+        "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged."
       ],
       "owner": "unassigned",
       "milestone": "M4"
@@ -15715,13 +15724,20 @@
         "packages/db/migrations/025_quality_uniqueness.sql",
         "packages/db/migrations/026_quality_range.sql",
         "python/governance_workers/quality.py",
-        "apps/web/src/quality/AssetQuality.tsx"
+        "apps/web/src/quality/AssetQuality.tsx",
+        "packages/db/migrations/027_quality_monitoring.sql",
+        "packages/domain/src/quality-monitoring.ts",
+        "apps/workflow-worker/src/quality-monitoring-activities.ts",
+        "apps/web/src/quality/monitoring/Monitor.tsx"
       ],
       "test_ids": [
         "tests/api/quality-uniqueness-storage.test.ts",
         "tests/api/quality-range-storage.test.ts",
         "tests/e2e/quality-uniqueness.spec.ts",
-        "tests/e2e/quality-range.spec.ts"
+        "tests/e2e/quality-range.spec.ts",
+        "tests/api/quality-monitoring-storage.test.ts",
+        "tests/api/quality-monitoring-invariants.test.ts",
+        "tests/e2e/quality-monitoring.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -15731,7 +15747,8 @@
         "local": {
           "outcome": "NOT_RUN",
           "evidence": [
-            "docs/verification/product-quality-exact-local.json"
+            "docs/verification/product-quality-exact-local.json",
+            "docs/verification/product-quality-monitoring-local.json"
           ]
         },
         "vendor_live": {
@@ -15753,7 +15770,8 @@
         "evidence": []
       },
       "limitations": [
-        "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome."
+        "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome.",
+        "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged."
       ],
       "owner": "unassigned",
       "milestone": "M4"
@@ -15794,13 +15812,20 @@
         "packages/db/migrations/025_quality_uniqueness.sql",
         "packages/db/migrations/026_quality_range.sql",
         "python/governance_workers/quality.py",
-        "apps/web/src/quality/AssetQuality.tsx"
+        "apps/web/src/quality/AssetQuality.tsx",
+        "packages/db/migrations/027_quality_monitoring.sql",
+        "packages/domain/src/quality-monitoring.ts",
+        "apps/workflow-worker/src/quality-monitoring-activities.ts",
+        "apps/web/src/quality/monitoring/Monitor.tsx"
       ],
       "test_ids": [
         "tests/api/quality-uniqueness-storage.test.ts",
         "tests/api/quality-range-storage.test.ts",
         "tests/e2e/quality-uniqueness.spec.ts",
-        "tests/e2e/quality-range.spec.ts"
+        "tests/e2e/quality-range.spec.ts",
+        "tests/api/quality-monitoring-storage.test.ts",
+        "tests/api/quality-monitoring-invariants.test.ts",
+        "tests/e2e/quality-monitoring.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -15810,7 +15835,8 @@
         "local": {
           "outcome": "NOT_RUN",
           "evidence": [
-            "docs/verification/product-quality-exact-local.json"
+            "docs/verification/product-quality-exact-local.json",
+            "docs/verification/product-quality-monitoring-local.json"
           ]
         },
         "vendor_live": {
@@ -15832,7 +15858,8 @@
         "evidence": []
       },
       "limitations": [
-        "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome."
+        "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome.",
+        "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged."
       ],
       "owner": "unassigned",
       "milestone": "M4"
@@ -16057,9 +16084,18 @@
         "One failing scheduled check creates one active incident across retried deliveries."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations/027_quality_monitoring.sql",
+        "packages/domain/src/quality-monitoring.ts",
+        "apps/workflow-worker/src/quality-monitoring-activities.ts",
+        "apps/web/src/quality/monitoring/Monitor.tsx"
+      ],
+      "test_ids": [
+        "tests/api/quality-monitoring-storage.test.ts",
+        "tests/api/quality-monitoring-invariants.test.ts",
+        "tests/e2e/quality-monitoring.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -16067,7 +16103,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/product-quality-monitoring-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -16087,7 +16125,9 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged."
+      ],
       "owner": "unassigned",
       "milestone": "M4"
     },
@@ -55922,13 +55962,20 @@
         "packages/db/migrations/025_quality_uniqueness.sql",
         "packages/db/migrations/026_quality_range.sql",
         "python/governance_workers/quality.py",
-        "apps/web/src/quality/AssetQuality.tsx"
+        "apps/web/src/quality/AssetQuality.tsx",
+        "packages/db/migrations/027_quality_monitoring.sql",
+        "packages/domain/src/quality-monitoring.ts",
+        "apps/workflow-worker/src/quality-monitoring-activities.ts",
+        "apps/web/src/quality/monitoring/Monitor.tsx"
       ],
       "test_ids": [
         "tests/api/quality-uniqueness-storage.test.ts",
         "tests/api/quality-range-storage.test.ts",
         "tests/e2e/quality-uniqueness.spec.ts",
-        "tests/e2e/quality-range.spec.ts"
+        "tests/e2e/quality-range.spec.ts",
+        "tests/api/quality-monitoring-storage.test.ts",
+        "tests/api/quality-monitoring-invariants.test.ts",
+        "tests/e2e/quality-monitoring.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -55938,7 +55985,8 @@
         "local": {
           "outcome": "NOT_RUN",
           "evidence": [
-            "docs/verification/product-quality-exact-local.json"
+            "docs/verification/product-quality-exact-local.json",
+            "docs/verification/product-quality-monitoring-local.json"
           ]
         },
         "vendor_live": {
@@ -55960,7 +56008,8 @@
         "evidence": []
       },
       "limitations": [
-        "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome."
+        "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome.",
+        "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged."
       ],
       "owner": "unassigned",
       "milestone": "M0"

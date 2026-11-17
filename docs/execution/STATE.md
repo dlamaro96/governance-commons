@@ -1,5 +1,11 @@
 # Current state — 2026-11-17
 
+## Product checkpoint — 2026-11-17T05:37Z
+
+Product remains the priority. Shared SQL001–027 is applied and immutable. UTC scheduled quality checks now create deduplicated incidents, in-app notifications and verified recovery/reopening history. Local native175, historical uniqueness88/range122, API168, host1040, types and production build pass. The real no-retry monitoring browser journey passes; all eight original English/Arabic frames were inspected. See `../verification/product-quality-monitoring-local.json` for exact source/image bindings and limitations.
+
+Full33 browser attempt12 remains failed24/1/8; the corrected heading target passes separately. Hosted Source44018142213 passes on629e475, while Development44018142157 fails at glossary population after passing authority; cause remains under diagnosis. Preserve those failures and require fresh full browser/hosted gates. Private freshness SQL028 passes232 native cases, real source18 checks/14 measurements and fixture26; integrate, rebuild and verify its UI before advancing it. SQL028 is not applied. Root remains the sole shared-runtime launcher. Continue all M0–M10 requirements; private dossiers, costs and presentation polish stay deferred. No enterprise or release claim.
+
 ## Product checkpoint — 2026-11-17T04:33Z
 
 Product implementation remains the priority. Shared core SQL001–026 is applied and immutable. Exact PostgreSQL uniqueness and integer range checks work through real source scans, Temporal and the browser. The range forward upgrade passes122 native cases with canonical-row preservation/replay; each worker passes16 checks. Both target browser journeys pass without retries/skips; all16 original captures were inspected. Current API regression passes168/168, host units975 and root/web types pass. See `../verification/product-quality-exact-local.json` for exact source, image, command and limitation bindings.

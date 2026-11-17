@@ -1,5 +1,7 @@
 # Execution plan
 
+Latest checkpoint — 2026-11-17T05:37Z: SQL001–027 monitoring is applied and locally qualified (native175/API168/host1040/one browser journey/eight frames). Integrate independently qualified freshness SQL028, run the real source/browser and full35 regression, diagnose hosted glossary population without weakening budgets, then continue scheduled freshness and the full programme. Preserve current full-browser/hosted failures. Product first; private reports remain deferred.
+
 Latest checkpoint — 2026-11-17T04:33Z: SQL001–026 is applied. Current168API/975host/types and scoped uniqueness/range native/worker/browser gates pass. Finish full33 browser attempt12 and fresh hosted diagnostics/security; preserve previous full-browser and hosted failures. In parallel qualify private SQL027 monitoring, issues/notifications and real source recovery; integrate only after native upgrade/authority/history gates pass. Continue remaining quality families, canonical authority cutover, connectors and all M0–M10 obligations. Product first; presentation/private cost reports stay deferred.
 
 Latest checkpoint — 2026-11-16T10:20Z: protected launch9 passes15native/2realbrowser/131 committed source hashes and8fresh frame reviews;14process/65publisher regressions pass. Publish this checked increment and qualify hosted immutable-image gates. Continue adopted canonical authority SQL013/repository/native qualification in its isolated worktree, then all subsequent authority and M0–M10 requirements. Preserve prior attempts and shared core.

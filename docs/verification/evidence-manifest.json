@@ -1523,6 +1523,15 @@
         "evidence_sha256": "df0680a7a403cf4bfe579111f55c222b8dbe06678012a24716569b60c5abedf5",
         "method": "Exact279baked-source and102native-input comparison against committed tree;122isolated upgrade cases,16worker checks per family,2target browser journeys/16original frame reviews and168API regression."
       }
+    },
+    {
+      "path": "docs/verification/product-quality-monitoring-local.json",
+      "scope": "quality-monitoring-local",
+      "source_binding": {
+        "implementation_commit": "a3d8f55620b4c762fb88473c222e5ba05c86b7c9",
+        "evidence_sha256": "9819d0b608fa3441efc1907d0a8ce887afedeb044d50462b45330153cf0e227c",
+        "method": "Exact committed native112 and baked293 source bindings;175 upgrade cases, real scheduled browser workflow/eight inspected frames,168 API and1040 host cases. Other scopes remain distinct."
+      }
     }
   ],
   "limitations": [
@@ -1530,5 +1539,5 @@
     "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
-  "bound_at": "2026-11-17T04:33:58.201762+00:00"
+  "bound_at": "2026-11-17T05:37:13.228363+00:00"
 }
