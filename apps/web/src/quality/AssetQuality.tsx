@@ -130,7 +130,7 @@ function RulePanel({id,canWrite,canExecute,edit}:{id:string;canWrite:boolean;can
    {rule.definition.kind==='uniqueness'&&<p>{c.uniquenessComparison}</p>}
    <div className="quality-actions">{canWrite&&rule.version===rule.currentVersion&&<button className="button secondary" disabled={command.locked} onClick={()=>edit(rule)}>{c.editRule}</button>}{canExecute&&<button className="button primary" disabled={command.locked||rule.version!==rule.currentVersion} onClick={requestRun}>{command.busy?c.sending:c.run}</button>}</div>
    <details><summary>{c.evidence}</summary><dl className="detail-list"><div><dt>{c.ruleId}</dt><dd className="mono break-all">{rule.id}</dd></div><div><dt>{c.hash}</dt><dd className="mono break-all">{rule.definitionHash}</dd></div><div><dt>{c.table}</dt><dd><Link href={'/catalog/'+rule.definition.target.tableAssetId}>{rule.definition.target.tableAssetId}</Link></dd></div><div><dt>{c.column}</dt><dd><Link href={'/catalog/'+rule.definition.target.columnAssetId}>{rule.definition.target.columnAssetId}</Link></dd></div></dl></details>
-   {rule.definition.kind==='freshness'?<Notice>{c.freshnessMonitoringUnavailable}</Notice>:<QualityRuleMonitoring rule={rule}/>}
+   <QualityRuleMonitoring rule={rule}/>
    <RunHistory ruleId={id} open={selectRun} selectedRunId={runId} observedVersion={observedRun?.id===runId?observedRun.version:null}/>
    {runId&&<RunInspector key={runId} id={runId} canExecute={canExecute} close={()=>selectRun(null)} observed={observeRun}/>}
   </>}

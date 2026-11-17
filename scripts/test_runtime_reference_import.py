@@ -82,13 +82,13 @@ class Controls(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             gate.migrations()
 
-    def test_current_schema_binds_all_28_migrations_including_freshness(self):
-        self.assertEqual(len(gate.NAMES), 28)
-        self.assertEqual(gate.NAMES[-1], '028_quality_freshness.sql')
+    def test_current_schema_binds_all_29_migrations_including_freshness_scheduling(self):
+        self.assertEqual(len(gate.NAMES), 29)
+        self.assertEqual(gate.NAMES[-1], '029_quality_freshness_scheduling.sql')
         before = {row['path']: row['sha256'] for row in gate.sources()}
         for name in gate.NAMES:
             self.assertIn('packages/db/migrations/' + name, before)
-        path = 'packages/db/migrations/028_quality_freshness.sql'
+        path = 'packages/db/migrations/029_quality_freshness_scheduling.sql'
         self.write(path, '-- changed current migration')
         after = {row['path']: row['sha256'] for row in gate.sources()}
         self.assertNotEqual(before[path], after[path])

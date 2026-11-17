@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import type {QualityMonitorDefinition,MonitorRulePin,MonitorWindow,MonitorObservation} from '../../../../../packages/domain/src/quality-monitoring-contracts.ts';
+import type {QualityMonitorDefinition,MonitorRulePin,MonitorWindow,MonitorObservation,QualityMonitorView} from '../../../../../packages/domain/src/quality-monitoring-contracts.ts';
 export function whole(value:string,min:number,max:number):number|null {if(!/^(0|[1-9][0-9]{0,9})$/.test(value))return null;const n=Number(value);return Number.isSafeInteger(n)&&n>=min&&n<=max?n:null;}
 export function utc(value:string):string|null {if(!/^(?!0000)\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)||!Number.isFinite(Date.parse(value)))return null;return new Date(value).toISOString()===value?value:null;}
 export function validWindows(rows:MonitorWindow[]):boolean{return rows.length<=32&&rows.every((w,i)=>!!utc(w.from)&&!!utc(w.until)&&w.from<w.until&&(i===0||rows[i-1].until<=w.from));}
@@ -16,3 +16,6 @@ export function buildMonitorDefinition(d:MonitorDraft,rule:MonitorRulePin,actorI
 }
 export function observationLabel(value:MonitorObservation):'unobserved'|'pending'|'PASS'|'FAIL'|'NO_DATA'|'EXECUTION_FAILED'|'CANCELLED'|'SKIPPED'|'STALE'|'BLOCKED' {return value.state==='conclusive'?value.verdict:value.state==='unknown'?value.reason:value.state;}
 export function observationTone(value:MonitorObservation):'verified'|'failed'|'unknown' {return value.state==='conclusive'?value.verdict==='PASS'?'verified':'failed':'unknown';}
+
+// Current eligibility is supplied by the server. Do not age evidence with a browser clock.
+export function retainedPassIsNotCurrent(m:Pick<QualityMonitorView,'lastConclusive'|'currentObservation'>):boolean {return m.lastConclusive?.verdict==='PASS'&&!(m.currentObservation.state==='conclusive'&&m.currentObservation.verdict==='PASS');}

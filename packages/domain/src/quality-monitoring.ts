@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import {createHash} from 'node:crypto';
 import {Problem} from '../../authz/src/index.ts';
+import {QUALITY_FRESHNESS_LIMITS as FRESHNESS_LIMITS} from './quality-contracts.ts';
 import {MONITOR_LIMITS as L,type QualityMonitorDefinition,type PublishMonitorInput,type MonitorStateInput,type MonitorRulePin,type MonitorDefinitionPin,type MonitorRunEvidence,type MonitorObservation,type QualityMonitorView,type MonitorDefinitionView,type QualityOccurrence,type QualityComparisonScope,type QualityIssueView,type QualityIssueEvent,type QualityNotification,type MonitoringPageQuery,type MonitorListQuery,type QualityIssueListQuery,type FixedUtcSchedule,type MonitorWindow,type MonitorSlotRange,type IssueVersionInput,type AssignQualityIssueInput,type ResolveQualityIssueInput,type SupersedeQualityIssueInput,type RequestQualityRecoveryInput} from './quality-monitoring-contracts.ts';
 export const monitoringInvalid=()=>new Problem(400,'MONITOR_INPUT_INVALID','Provide exactly the declared monitoring fields and values.');
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
@@ -116,10 +117,11 @@ export function parseOccurrence(input:unknown):QualityOccurrence{return checked(
  });}
 function comparison(x:unknown):QualityComparisonScope {
  const v=obj(x,['formatVersion','monitorId','executorId','rule','sourceId','sourceVersion','sourceConfigHash','schemaAssetId','tableAssetId','columnAssetId','targetHash','family']);need(v.formatVersion===1);
- const f=obj(v.family,['kind'],['comparison','nullPolicy','rangeHash','setId','version','publicationHash','codeStatus','codesHash']);let family:QualityComparisonScope['family'];
+ const f=obj(v.family,['kind'],['comparison','nullPolicy','rangeHash','freshnessHash','setId','version','publicationHash','codeStatus','codesHash']);let family:QualityComparisonScope['family'];
  if(f.kind==='completeness'){obj(f,['kind']);family={kind:'completeness'};}
  else if(f.kind==='uniqueness'){obj(f,['kind','comparison','nullPolicy']);need(f.comparison==='utf8-exact'&&f.nullPolicy==='exclude');family={kind:'uniqueness',comparison:'utf8-exact',nullPolicy:'exclude'};}
  else if(f.kind==='range'){obj(f,['kind','rangeHash']);family={kind:'range',rangeHash:hash(f.rangeHash)};}
+ else if(f.kind==='freshness'){obj(f,['kind','freshnessHash']);family={kind:'freshness',freshnessHash:hash(f.freshnessHash)};}
  else{obj(f,['kind','setId','version','publicationHash','codeStatus','codesHash']);need(f.kind==='reference-allowed-values'&&f.codeStatus==='active');family={kind:'reference-allowed-values',setId:id(f.setId),version:int(f.version),publicationHash:hash(f.publicationHash),codeStatus:'active',codesHash:hash(f.codesHash)};}
  const schemaAssetId=id(v.schemaAssetId),tableAssetId=id(v.tableAssetId),columnAssetId=id(v.columnAssetId);need(new Set([schemaAssetId,tableAssetId,columnAssetId]).size===3);
  return {formatVersion:1,monitorId:id(v.monitorId),executorId:id(v.executorId),rule:pin(v.rule),sourceId:id(v.sourceId),sourceVersion:int(v.sourceVersion),sourceConfigHash:hash(v.sourceConfigHash),schemaAssetId,tableAssetId,columnAssetId,targetHash:hash(v.targetHash),family};
@@ -172,3 +174,25 @@ export function planDueMonitorSlots(input:unknown):DueMonitorPlan {return checke
  }
  const after=start+index*period;return {records,nextSlotAt:after>=end||after>253402300799999?null:stampAt(index)};
  });}
+
+/** Exact time-only oracle for scheduled freshness. This grants no current authority:
+ * callers must also prove the immutable run/receipt and latest authorized scope.
+ * UTC epoch microseconds are strings, never rounded JavaScript numbers. */
+export interface MonitorFreshnessTimeDecision {
+ valid:boolean;reason:'eligible'|'expired'|'clock-before-recorded-marker'|'evidence-unavailable';
+ remainingAtObservationUs:string|null;validThroughUs:string|null;
+}
+export function monitorFreshnessTimeDecision(input:unknown):MonitorFreshnessTimeDecision{return checked(input,x=>{
+ const v=obj(x,['claimedAtUs','finishedAtUs','projectedAtUs','observedFinishedAtUs','evaluatedAtUs','measuredAgeUs','maximumAgeSeconds','recoveryMaximumAgeSeconds']);
+ const exact=(value:unknown,min:bigint,max:bigint):bigint=>{need(typeof value==='string'&&value.length<=19&&/^(?:0|-?[1-9][0-9]*)$/.test(value));const n=BigInt(value);need(n>=min&&n<=max);return n;};
+ const instant=(value:unknown)=>exact(value,BigInt(FRESHNESS_LIMITS.minimumEpochMicroseconds),BigInt(FRESHNESS_LIMITS.maximumEpochMicroseconds));
+ const C=instant(v.claimedAtUs),F=instant(v.finishedAtUs),P=instant(v.projectedAtUs),O=instant(v.observedFinishedAtUs),T=instant(v.evaluatedAtUs);
+ const a=exact(v.measuredAgeUs,-BigInt(FRESHNESS_LIMITS.maximumAbsoluteAgeMicroseconds),BigInt(FRESHNESS_LIMITS.maximumAbsoluteAgeMicroseconds));
+ const A=BigInt(int(v.maximumAgeSeconds,FRESHNESS_LIMITS.minimumAgeSeconds,FRESHNESS_LIMITS.maximumAgeSeconds))*1000000n,R=BigInt(int(v.recoveryMaximumAgeSeconds,L.minimumIntervalSeconds,L.maximumRecoveryAgeSeconds))*1000000n;
+ const B=A-(a>0n?a:0n);
+ if(B<0n||C>F)return {valid:false,reason:'evidence-unavailable',remainingAtObservationUs:null,validThroughUs:null};
+ const D=C+B<O+R?C+B:O+R;
+ // projected_at is retained at millisecond precision; never require F<=P.
+ const reason=T<C||T<F||T<P||T<O?'clock-before-recorded-marker':T-C>B||T-O>R?'expired':'eligible';
+ return {valid:reason==='eligible',reason,remainingAtObservationUs:String(B),validThroughUs:String(D)};
+});}

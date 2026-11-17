@@ -13,7 +13,7 @@ DO $freshness_quality_fixture$
 DECLARE target oid; source_owner oid; reader oid; columns jsonb; actual jsonb; expected jsonb; anchor timestamptz; step text;
 BEGIN
  step:=current_setting('gc.freshness_fixture_step');
- IF step NOT IN ('prepare','read','refresh') THEN RAISE EXCEPTION 'FRESHNESS_QUALITY_FIXTURE_STEP_REJECTED'; END IF;
+ IF step NOT IN ('prepare','read','refresh','stale') THEN RAISE EXCEPTION 'FRESHNESS_QUALITY_FIXTURE_STEP_REJECTED'; END IF;
  IF current_database()<>'harbor' OR session_user<>'source_admin' OR current_user<>'source_admin' THEN
   RAISE EXCEPTION 'FRESHNESS_QUALITY_FIXTURE_CONTEXT_REJECTED';
  END IF;
@@ -90,8 +90,8 @@ BEGIN
  SELECT jsonb_agg(jsonb_build_array(n,CASE WHEN n=6 THEN NULL ELSE anchor-(5-n)*interval '60 seconds' END,NULL) ORDER BY n)
  INTO expected FROM generate_series(1,6) n;
  IF actual IS DISTINCT FROM expected THEN RAISE EXCEPTION 'FRESHNESS_QUALITY_FIXTURE_ROWS_REJECTED'; END IF;
- IF step='refresh' THEN
-  anchor:=statement_timestamp()-interval '60 seconds';
+ IF step IN ('refresh','stale') THEN
+  anchor:=statement_timestamp()-CASE WHEN step='stale' THEN interval '180 seconds' ELSE interval '60 seconds' END;
   UPDATE public.freshness_quality_fixture SET observed_at=CASE WHEN id=6 THEN NULL ELSE anchor-(5-id)*interval '60 seconds' END;
  END IF;
 END $freshness_quality_fixture$;

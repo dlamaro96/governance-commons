@@ -376,6 +376,7 @@ def main():
   ./dev test --suite range-worker Verify inclusive integer bounds against the local PostgreSQL source
   ./dev test --suite monitoring-upgrade Verify scheduled quality, deduplicated issues and verified recovery
   ./dev test --suite freshness-upgrade Verify exact timestamp age storage and retained quality families
+  ./dev test --suite freshness-scheduling-upgrade Verify clock-bounded scheduled freshness and retained evidence
   ./dev test --suite freshness-worker Verify timestamp aggregates against the local PostgreSQL source
   ./dev authn-install --input FILE    Apply one private, typed inactive installation manifest
   ./dev test --suite relation-preparation-expiry Verify the original fifteen-minute lease and committed retries
@@ -418,6 +419,9 @@ Never use docker compose config output in public logs: it expands secrets.""")
     if args.command == "test" and args.suite == "glossary-population-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-glossary-population-upgrade.py"], timeout=1500); return
+    if args.command == "test" and args.suite == "freshness-scheduling-upgrade":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-quality-freshness-scheduling-upgrade.py", "--run-local"], timeout=900); return
     if args.command == "test" and args.suite == "freshness-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-quality-freshness-upgrade.py", "--run-local"], timeout=900); return

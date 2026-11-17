@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('quality_freshness_gate', ROOT / 'scripts/runtime-test-quality-freshness-upgrade.py')
 gate = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(gate)
+HISTORICAL_FRESHNESS_SHA256 = gate.HISTORICAL_FRESHNESS_SHA256
 
 
 def tap(passed=18, failed=0, skipped=0):
@@ -35,6 +36,8 @@ class Controls(unittest.TestCase):
         self.root = Path(self.temp.name).resolve()
         self.root_patch = patch.object(gate, 'ROOT', self.root)
         self.root_patch.start()
+        self.history_patch = patch.object(gate, 'HISTORICAL_FRESHNESS_SHA256', gate.sha(b''))
+        self.history_patch.start()
         for name in ['scripts/runtime-test-quality-freshness-upgrade.py', 'scripts/runtime-test-source-connectors-upgrade.py',
                      'scripts/runtime-test-authority-authn-foundation.py', 'scripts/authentication_roles.py',
                      'scripts/runtime-test-quality-monitoring-upgrade.py', 'scripts/qualification_quality_repository.py',
@@ -50,6 +53,7 @@ class Controls(unittest.TestCase):
             self.write('packages/db/migrations/' + name, '-- synthetic host-only migration fixture\n')
 
     def tearDown(self):
+        self.history_patch.stop()
         self.root_patch.stop()
         self.temp.cleanup()
 
@@ -88,8 +92,28 @@ class Controls(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             gate.migrations()
 
+    def test_immutable_sql028_fixture_hash_and_tamper_refusal(self):
+        self.assertEqual(gate.sha((ROOT / gate.HISTORICAL_FRESHNESS).read_bytes()), HISTORICAL_FRESHNESS_SHA256)
+        self.assertFalse(gate.HISTORICAL_FRESHNESS.endswith('.test.ts'))
+        before = gate.sources()
+        self.write(gate.HISTORICAL_FRESHNESS, 'changed historical assertion')
+        with self.assertRaisesRegex(RuntimeError, 'Immutable SQL028 freshness test differs'):
+            gate.sources()
+        self.write(gate.HISTORICAL_FRESHNESS, '')
+        self.assertEqual(gate.sources(), before)
+
+    def test_sql029_successor_excluded_and_unknown_suffix_refuses(self):
+        before = gate.sources()
+        self.write('packages/db/migrations/029_quality_freshness_scheduling.sql', '-- later scheduling')
+        self.assertEqual(gate.migrations(), gate.NAMES)
+        self.assertEqual(gate.sources(), before)
+        self.write('packages/db/migrations/029_quality_freshness_scheduling.sql', '-- changed later scheduling')
+        self.assertEqual(gate.sources(), before)
+        self.write('packages/db/migrations/030_undeclared.sql', '-- undeclared')
+        with self.assertRaises(RuntimeError): gate.migrations()
+
     def test_transitive_imports_and_missing_source_refusal(self):
-        self.write(gate.TESTS[0][0], "import {x} from '../../packages/domain/src/leaf.js';\nawait import('./side.ts');\n")
+        self.write(gate.TESTS[-1][0], "import {x} from '../../packages/domain/src/leaf.js';\nawait import('./side.ts');\n")
         self.write('packages/domain/src/leaf.ts', "export {x} from './deep/index.ts';\n")
         self.write('packages/domain/src/deep/index.ts', 'export const x=1;\n')
         self.write('tests/api/side.ts', 'export {};\n')
@@ -119,13 +143,13 @@ class Controls(unittest.TestCase):
         original = self.write('packages/domain/src/real.ts', 'export {};\n')
         link = self.root / 'packages/domain/src/link.ts'
         link.symlink_to(original)
-        self.write(gate.TESTS[0][0], "import '../../packages/domain/src/link.ts';\n")
+        self.write(gate.TESTS[-1][0], "import '../../packages/domain/src/link.ts';\n")
         with self.assertRaises(RuntimeError):
             gate.sources()
         link.unlink()
         directory = self.root / 'alias'
         directory.symlink_to(original.parent, target_is_directory=True)
-        self.write(gate.TESTS[0][0], "import '../../alias/real.ts';\n")
+        self.write(gate.TESTS[-1][0], "import '../../alias/real.ts';\n")
         with self.assertRaises(RuntimeError):
             gate.sources()
 
@@ -158,7 +182,7 @@ class Controls(unittest.TestCase):
 
     def test_native_helper_exact_readonly_mounts_and_owned_verifier(self):
         h = self.harness()
-        h.helper(['node', '--test', gate.TESTS[0][0]], allow_failure=True)
+        h.helper(['node', '--test', gate.TESTS[-1][0]], allow_failure=True)
         args, kwargs = h.calls[-1]
         mounts = [args[i + 1] for i, v in enumerate(args) if v == '--volume']
         for row in h.frozen:
@@ -168,7 +192,7 @@ class Controls(unittest.TestCase):
         self.assertIn('container:' + h.id, args)
         for option in ('--read-only', '--cap-drop', '--security-opt', '--pids-limit', '--memory', '--pull'):
             self.assertIn(option, args)
-        self.assertEqual(args[-5:], ('node', '--require', gate.PROBE, '--test', gate.TESTS[0][0]))
+        self.assertEqual(args[-5:], ('node', '--require', gate.PROBE, '--test', gate.TESTS[-1][0]))
         self.assertTrue(h.report['sourceChecks'][0]['sourceHashesMatched'])
         self.assertEqual(h.report['sourceChecks'][0]['result'], 'PASS')
         self.assertEqual(h.owned, ['gc-owned-host-control-h1'])
@@ -222,7 +246,7 @@ class Controls(unittest.TestCase):
         self.assertEqual(gate.totals(tap())['pass'], 18)
         self.assertIsNone(gate.totals(tap() + '# pass 18\n'))
         self.assertIsNone(gate.totals(tap().replace('# tests 18\n', '')))
-        self.write(gate.TESTS[0][0], ''.join(f"test('Synthetic native case {i}',()=>{{}});\n" for i in range(18)))
+        self.write(gate.TESTS[-1][0], ''.join(f"test('Synthetic native case {i}',()=>{{}});\n" for i in range(18)))
         cases=((tap(),0,True),(tap(0,18),1,False),(tap(17,0,1),0,False),
                (tap().replace('Synthetic native case 0','Substituted case'),0,False),
                (tap().replace('Synthetic native case 1\n','Synthetic native case 0\n'),0,False))
@@ -233,20 +257,20 @@ class Controls(unittest.TestCase):
                 h.helper = lambda *args, **kwargs: subprocess.CompletedProcess([], code, output, '')
                 with patch.object(gate, 'readback', return_value={'sourceProof': 'stable'}):
                     if good:
-                        gate.native_suite(h,'post028-freshness-tests',gate.TESTS[0][0],18)
+                        gate.native_suite(h,'post028-freshness-tests',gate.TESTS[-1][0],18)
                         self.assertEqual(h.report['nativeSuites'][0]['result'],'PASS')
                     else:
                         with self.assertRaises(RuntimeError):
-                            gate.native_suite(h,'post028-freshness-tests',gate.TESTS[0][0],18)
+                            gate.native_suite(h,'post028-freshness-tests',gate.TESTS[-1][0],18)
                         self.assertEqual(h.report['tests'],gate.totals(output))
                         self.assertEqual(h.report['testExitStatus'],code)
                         self.assertEqual(h.report['nativeSuites'][0]['result'],'FAIL')
 
     def test_suite_resets_previous_totals_before_readback_failure(self):
-        self.write(gate.TESTS[0][0], ''.join(f"test('Synthetic native case {i}',()=>{{}});\n" for i in range(18)))
+        self.write(gate.TESTS[-1][0], ''.join(f"test('Synthetic native case {i}',()=>{{}});\n" for i in range(18)))
         h=self.harness();h.report.update(tests={'pass':21},testExitStatus=0)
         with patch.object(gate,'readback',side_effect=RuntimeError('Synthetic readback failure')):
-            with self.assertRaises(RuntimeError):gate.native_suite(h,'post028-freshness-tests',gate.TESTS[0][0],18)
+            with self.assertRaises(RuntimeError):gate.native_suite(h,'post028-freshness-tests',gate.TESTS[-1][0],18)
         self.assertIsNone(h.report['tests']);self.assertIsNone(h.report['testExitStatus'])
         self.assertIsNone(h.report['nativeSuites'][0]['tests'])
 

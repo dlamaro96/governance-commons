@@ -37,5 +37,6 @@ export default defineConfig({
     { name: 'quality-range', testMatch: /quality-range\.spec\.ts/, dependencies: ['quality-uniqueness'] },
     { name: 'quality-monitoring', testMatch: /quality-monitoring\.spec\.ts/, dependencies: ['quality-range'] },
     { name: 'quality-freshness', testMatch: /quality-freshness\.spec\.ts/, dependencies: ['quality-monitoring'] },
+    { name: 'quality-freshness-monitoring', testMatch: /quality-freshness-monitoring\.spec\.ts/, dependencies: ['quality-freshness'] },
   ],
 });

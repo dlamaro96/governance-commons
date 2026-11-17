@@ -12,7 +12,7 @@ import runtime
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "deploy/compose/freshness-quality-fixture.sql"
-STEPS = frozenset(("prepare", "read", "refresh"))
+STEPS = frozenset(("prepare", "read", "refresh", "stale"))
 
 
 def run_step(step):
@@ -48,7 +48,7 @@ def run_step(step):
                 or value["result"] != "READY" or type(value["rows"]) is not int or value["rows"] != 6
                 or type(value["nullRows"]) is not int or value["nullRows"] != 1
                 or type(value["withinWindow"]) is not bool
-                or (step == "refresh" and not value["withinWindow"])):
+                or (step in ("refresh", "stale") and not value["withinWindow"])):
             raise ValueError("FRESHNESS_FIXTURE_REJECTED")
     except (UnicodeError, ValueError, TypeError):
         raise RuntimeError("FRESHNESS_FIXTURE_REJECTED") from None

@@ -25,7 +25,7 @@ sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / '.local/evidence/quality-freshness-upgrade.json'
 LEGACY = [('tests/qualification/quality.test.ts', 15), ('tests/api/reference-quality-storage.test.ts', 21), ('tests/api/quality-uniqueness-storage.test.ts', 16), ('tests/api/quality-range-storage.test.ts', 18), ('tests/api/quality-monitoring-storage.test.ts',31), ('tests/api/quality-monitoring-invariants.test.ts',4)]
-TESTS = [('tests/api/quality-freshness-storage.test.ts',18), ('tests/api/quality-freshness-invariants.test.ts',4)]
+TESTS = [('tests/api/quality-freshness-sql028.ts',18), ('tests/api/quality-freshness-invariants.test.ts',4)]
 FAMILIES = ('completeness', 'reference', 'uniqueness', 'range', 'monitoring', 'monitoring-invariants')
 PHASES = tuple(f'{stage}-{family}-tests' for stage in ('pre027', 'post028') for family in FAMILIES) + ('post028-freshness-tests', 'post028-freshness-invariants-tests')
 MIGRATION = '028_quality_freshness.sql'
@@ -42,8 +42,10 @@ NAMES = [*base.NAMES, '015_approval_workflows.sql', '016_glossary_publication.sq
 
 def migrations():
     actual = sorted(path.name for path in (ROOT / 'packages/db/migrations').glob('*.sql'))
-    require(actual == NAMES, 'Exact candidate SQL001–028 inventory required')
-    return actual
+    successors = ['029_quality_freshness_scheduling.sql']
+    suffix = actual[len(NAMES):]
+    require(actual[:len(NAMES)] == NAMES and suffix == successors[:len(suffix)], 'Exact SQL001–028 prefix and declared contiguous successors required')
+    return list(NAMES)
 
 
 def source_file(path):
@@ -54,7 +56,12 @@ def source_file(path):
     return path
 
 
+HISTORICAL_FRESHNESS = 'tests/api/quality-freshness-sql028.ts'
+HISTORICAL_FRESHNESS_SHA256 = '0fd65fd6a91d955cbc43e3f82df558369a88aba0af54acd448a2acf58f4f69cd'
+
+
 def sources():
+    require(sha(source_file(ROOT / HISTORICAL_FRESHNESS).read_bytes()) == HISTORICAL_FRESHNESS_SHA256, 'Immutable SQL028 freshness test differs')
     paths = {'scripts/runtime-test-quality-freshness-upgrade.py', 'scripts/runtime-test-source-connectors-upgrade.py',
              'scripts/runtime-test-authority-authn-foundation.py', 'scripts/authentication_roles.py',
                      'scripts/runtime-test-quality-monitoring-upgrade.py', 'scripts/qualification_quality_repository.py',

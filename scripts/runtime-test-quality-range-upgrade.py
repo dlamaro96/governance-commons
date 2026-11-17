@@ -47,7 +47,7 @@ def migrations():
     actual = sorted(path.name for path in (ROOT / 'packages/db/migrations').glob('*.sql'))
     # This historical upgrade executes only its exact migration prefix.
     # Later reviewed migrations are inventoried but never mounted or applied here.
-    successors = ['027_quality_monitoring.sql', '028_quality_freshness.sql']
+    successors = ['027_quality_monitoring.sql', '028_quality_freshness.sql', '029_quality_freshness_scheduling.sql']
     tail = actual[len(NAMES):]
     require(actual[:len(NAMES)] == NAMES and len(tail) <= len(successors)
             and tail == successors[:len(tail)], 'Exact SQL001–026 prefix and declared successor inventory required')

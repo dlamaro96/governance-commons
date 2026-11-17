@@ -36,7 +36,7 @@ class FreshnessFixtureTests(unittest.TestCase):
 
     def test_each_finite_step_uses_exact_source_bytes_and_psql_variable(self):
         raw = fixture.SOURCE.read_bytes()
-        for step in ('prepare', 'read', 'refresh'):
+        for step in ('prepare', 'read', 'refresh', 'stale'):
             order = []
             def execute(command, **kwargs):
                 order.append('execute')
@@ -65,7 +65,8 @@ class FreshnessFixtureTests(unittest.TestCase):
     def test_inert_prepare_and_read_allow_old_valid_anchor_but_refresh_requires_fresh_window(self):
         stale = {**READY, 'withinWindow': False}
         for step in ('prepare', 'read'): self.assertEqual(self.invoke(step, stale)['withinWindow'], False)
-        with self.assertRaisesRegex(RuntimeError, '^FRESHNESS_FIXTURE_REJECTED$'): self.invoke('refresh', stale)
+        for step in ('refresh','stale'):
+            with self.assertRaisesRegex(RuntimeError, '^FRESHNESS_FIXTURE_REJECTED$'): self.invoke(step, stale)
 
     def test_receipt_requires_exact_shape_counts_and_boolean_types(self):
         for patch_value in ({'result': 'OTHER'}, {'rows': 7}, {'rows': 6.0}, {'rows': True}, {'nullRows': 0}, {'nullRows': True}, {'withinWindow': 1}, {'withinWindow': 'true'}, {'private': 'value'}):
@@ -86,7 +87,7 @@ class FreshnessFixtureTests(unittest.TestCase):
                 self.assertEqual(e.exception.code, 2); execute.assert_not_called()
 
     def test_launcher_uses_exact_requested_finite_step(self):
-        for step in ('prepare', 'read', 'refresh'):
+        for step in ('prepare', 'read', 'refresh', 'stale'):
             output = io.StringIO()
             with patch.object(fixture, 'run_step', return_value=READY) as execute, contextlib.redirect_stdout(output):
                 self.assertEqual(fixture.main(['--run-core', '--step', step]), 0)

@@ -79,24 +79,24 @@ class Controls(unittest.TestCase):
 
     def test_declared_successors_never_enter_historical_prefix(self):
         original = gate.sources()
-        for name in ['026_quality_range.sql', '027_quality_monitoring.sql', '028_quality_freshness.sql']:
+        for name in ['026_quality_range.sql', '027_quality_monitoring.sql', '028_quality_freshness.sql', '029_quality_freshness_scheduling.sql']:
             self.write('packages/db/migrations/' + name, '-- later synthetic fixture, not executed by this gate')
             self.assertEqual(gate.migrations(), gate.NAMES)
             self.assertEqual(gate.sources(), original)
         # Changing a later file cannot masquerade as executing it: it is absent
         # from this historical gate; the separate successor gate binds its bytes.
-        self.assertFalse(any(row['path'].endswith('028_quality_freshness.sql') for row in gate.sources()))
+        self.assertFalse(any(row['path'].endswith('029_quality_freshness_scheduling.sql') for row in gate.sources()))
 
-    def test_sql028_successor_is_excluded_and_unknown_or_gapped_suffix_refuses(self):
+    def test_sql029_successor_is_excluded_and_unknown_or_gapped_suffix_refuses(self):
         original = gate.sources()
-        successors = ['026_quality_range.sql', '027_quality_monitoring.sql', '028_quality_freshness.sql']
+        successors = ['026_quality_range.sql', '027_quality_monitoring.sql', '028_quality_freshness.sql', '029_quality_freshness_scheduling.sql']
         for name in successors:
             self.write('packages/db/migrations/' + name, '-- declared successor, never executed here')
         self.assertEqual(gate.migrations(), gate.NAMES)
         self.assertEqual(gate.sources(), original)
-        self.write('packages/db/migrations/028_quality_freshness.sql', '-- changed successor stays outside prefix proof')
+        self.write('packages/db/migrations/029_quality_freshness_scheduling.sql', '-- changed successor stays outside prefix proof')
         self.assertEqual(gate.sources(), original)
-        extra = self.write('packages/db/migrations/029_undeclared.sql', '-- undeclared')
+        extra = self.write('packages/db/migrations/030_undeclared.sql', '-- undeclared')
         with self.assertRaises(RuntimeError):
             gate.migrations()
         extra.unlink()

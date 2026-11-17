@@ -4,7 +4,7 @@
 export type MonitorId = string; // canonical lower-case UUID
 export type MonitorHash = string; // lower-case SHA-256 over existing canonical JSON
 export type MonitorInstant = string; // real UTC YYYY-MM-DDTHH:mm:ss.sssZ; no coercion
-export type QualityFamily = 'completeness'|'reference-allowed-values'|'uniqueness'|'range';
+export type QualityFamily = 'completeness'|'reference-allowed-values'|'uniqueness'|'range'|'freshness';
 export interface MonitorRulePin {id:MonitorId;version:number;definitionHash:MonitorHash}
 export const MONITOR_LIMITS = Object.freeze({
   definitionBytes:32768, textName:240, textPurpose:4096, textReason:4096,
@@ -77,6 +77,7 @@ export interface QualityComparisonScope {
   family: {kind:'completeness'}
     |{kind:'uniqueness';comparison:'utf8-exact';nullPolicy:'exclude'}
     |{kind:'range';rangeHash:MonitorHash}
+    |{kind:'freshness';freshnessHash:MonitorHash} // immutable settings hash; clocks/age are observations, not scope
     |{kind:'reference-allowed-values';setId:MonitorId;version:number;publicationHash:MonitorHash;
       codeStatus:'active';codesHash:MonitorHash}; // exact sorted effective codes; EXCLUDES asOf only
 }
