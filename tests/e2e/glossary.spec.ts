@@ -172,9 +172,20 @@ test('GLS: real proposal, independent review, publication, amendment and restric
   const original=await readRequest(page,first.request.id);expect(original.status).toBe('succeeded');expect(original.payload).toEqual(publication);expect(original.result).toEqual(published.completed.result);expect(original.decisions).toEqual(published.completed.decisions);
 
   const consumer=await consumerContext.newPage();await domainLogin(consumer,'consumer');const consumerMe=await domainBody<Session>(await consumer.request.get('/api/v1/me'));expect(consumerMe.permissions).toContain('catalog:read');expect(consumerMe.permissions).not.toContain('catalog:write');
+  expect(consumerMe.permissions).toContain('reference:read');expect(consumerMe.permissions).not.toContain('reference:write');expect(consumerMe.permissions).not.toContain('reference:approve');
   const hidden=await domainBody<AssetList>(await consumer.request.get(`/api/v1/assets?${new URLSearchParams({q:amendedToken,type:'business_term',limit:'25'})}`));expect(hidden).toEqual({items:[],total:0,facets:[],nextCursor:null});
   const denied=await consumer.request.get(`/api/v1/glossary/terms/${republished.term.resourceId}`);expect(denied.status()).toBe(404);expect(await denied.text()).not.toContain(amendedToken);
-  const deniedRequest=await consumer.request.get(`/api/v1/approval-requests/${second.request.id}`);expect(deniedRequest.status()).toBe(403);expect((await deniedRequest.json()).code).toBe('FORBIDDEN');
+  // Reference readers can enter the generic approval reader; family and
+  // participant visibility still hide every private glossary request. Known
+  // hidden requests and a fresh absent UUID must expose the same safe problem.
+  const unavailableProblems:Record<string,unknown>[]=[];
+  for(const requestId of [second.request.id,first.request.id,randomUUID()]){
+   const deniedRequest=await consumer.request.get(`/api/v1/approval-requests/${requestId}`);expect(deniedRequest.status()).toBe(404);expect(deniedRequest.headers()['content-type']).toContain('application/problem+json');
+   const problem=await deniedRequest.json();expect(problem).toEqual({type:'about:blank',title:'Request rejected',status:404,code:'APPROVAL_UNAVAILABLE',detail:'The approval request or its referenced resources are unavailable.',correlationId:expect.any(String)});expect(problem.correlationId.length).toBeGreaterThan(0);
+   const text=JSON.stringify(problem);for(const hiddenValue of [first.request.id,second.request.id,republished.term.resourceId,first.request.proposalDigest,second.request.proposalDigest,amendedToken,amendedEnglish.name])expect(text).not.toContain(hiddenValue);
+   const {correlationId,...safeProblem}=problem;unavailableProblems.push(safeProblem);
+  }
+  expect(unavailableProblems[1]).toEqual(unavailableProblems[0]);expect(unavailableProblems[2]).toEqual(unavailableProblems[0]);
   await consumer.goto(`/glossary?${new URLSearchParams({q:amendedToken})}`);await expect(consumer.getByRole('heading',{name:'No terms found',exact:true})).toBeVisible();await expect(consumer.getByRole('link',{name:amendedEnglish.name,exact:true})).toHaveCount(0);await expect(consumer.getByRole('link',{name:'Propose a term',exact:true})).toHaveCount(0);
   await consumer.goto('/glossary/new');await expect(consumer.getByRole('heading',{name:'You do not have access to this view',exact:true})).toBeVisible();await expect(consumer.getByRole('button',{name:'Submit for approval',exact:true})).toHaveCount(0);
   const forbidden=await consumer.request.post('/api/v1/glossary/proposals',{headers:await domainHeaders(consumer),data:{...second.body,requestId:randomUUID()}});expect(forbidden.status()).toBe(403);expect((await forbidden.json()).code).toBe('FORBIDDEN');

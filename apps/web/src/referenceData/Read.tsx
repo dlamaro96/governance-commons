@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 import {useState,type FormEvent} from 'react';
 import {EmptyState,LoadingState,Notice} from '../../../../packages/ui/src';
-import {LIMITS,type PublishedBundle,type ReferenceEffectiveView,type ReferencePage,type ReferenceReleaseSummary,type ReferenceReleaseView,type ReferenceSetSummary,type ReferenceValue} from '../../../../packages/domain/src/reference-data-contracts';
-import {useResource} from '../api';
-import {PermissionDenied,RequestError} from '../components';
-import {useLocale} from '../i18n';
-import {Link,useNavigation} from '../navigation';
-import {usePermission} from '../session';
-import {exactTime,Field,Pager,Panel,useContextKey,useCopy} from './shared';
+import {LIMITS,type PublishedBundle,type ReferenceEffectiveView,type ReferencePage,type ReferenceReleaseSummary,type ReferenceReleaseView,type ReferenceSetSummary,type ReferenceValue} from '../../../../packages/domain/src/reference-data-contracts.ts';
+import {useResource} from '../api.ts';
+import {PermissionDenied,RequestError} from '../components.tsx';
+import {useLocale} from '../i18n.tsx';
+import {Link,useNavigation} from '../navigation.tsx';
+import {usePermission} from '../session.tsx';
+import {exactTime,Field,Pager,Panel,useContextKey,useCopy} from './shared.tsx';
+import {structureCopy} from './structures/messages.ts';
 import './reference-data.css';
 const base='/reference-data/sets/';
 export function ReferenceDataPage(){const key=useContextKey(),reference=usePermission('reference:read'),catalog=usePermission('catalog:read'),read=reference&&catalog;return read?<SetList key={key}/>:<PermissionDenied/>;}
@@ -15,7 +16,7 @@ function SetList(){
  const c=useCopy(),{locale,number}=useLocale(),write=usePermission('reference:write'),[draft,setDraft]=useState(''),[q,setQuery]=useState(''),[cursor,setCursor]=useState<string|null>(null);
  const resource=useResource<ReferencePage<ReferenceSetSummary>>('/reference-data/sets?limit=25&q='+encodeURIComponent(q)+(cursor?'&cursor='+encodeURIComponent(cursor):''));
  function search(event:FormEvent){event.preventDefault();setQuery(draft.normalize('NFC').trim());setCursor(null);}
- return <section className="reference-workspace"><header className="reference-heading"><div><h1 id="main-heading" tabIndex={-1}>{c.title}</h1><p>{c.intro}</p></div>{write&&<Link className="button primary" href="/reference-data/new">{c.newSet}</Link>}</header>{!write&&<Notice>{c.readOnly}</Notice>}
+ return <section className="reference-workspace"><header className="reference-heading"><div><h1 id="main-heading" tabIndex={-1}>{c.title}</h1><p>{c.intro}</p></div><div className="reference-actions"><Link className="button secondary" href="/reference-data/structures">{structureCopy[locale].structures}</Link>{write&&<Link className="button primary" href="/reference-data/new">{c.newSet}</Link>}</div></header>{!write&&<Notice>{c.readOnly}</Notice>}
   <form className="reference-form" onSubmit={search}><Field title={c.search}>{id=><input type="search" maxLength={200} aria-labelledby={id} value={draft} onChange={event=>setDraft(event.target.value)}/>}</Field><div className="reference-actions"><button className="button secondary">{c.search}</button><button className="button secondary" type="button" onClick={resource.reload}>{c.refresh}</button></div></form>
   {resource.error?<RequestError error={resource.error} retry={resource.reload}/>:resource.loading?<LoadingState label={c.loading}/>:resource.data?.items.length?<ul className="reference-records">{resource.data.items.map(set=><li key={set.id}><h2><Link href={'/reference-data/'+set.id}>{set.latest.labels[locale].label}</Link></h2><p className="reference-text">{set.latest.labels[locale].description}</p><p>{c.latest} {number(set.latest.version)} · {c[set.effective.phase]}</p></li>)}</ul>:<EmptyState title={c.empty}/>}
   <Pager cursor={cursor} next={resource.error?null:resource.data?.nextCursor??null} change={setCursor} disabled={resource.loading}/>

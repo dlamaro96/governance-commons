@@ -1496,6 +1496,15 @@
         "method": "Exact application source/image readback; isolated forward native18, existing API168, seed replay and one real no-retry browser workflow with12 original captures visually inspected.",
         "evidence_sha256": "badb7cc89ac0490eaefbcd91f68fca4580a7b78a92247d2eee337ce9617c911c"
       }
+    },
+    {
+      "path": "docs/verification/product-reference-integration-local.json",
+      "scope": "reference-integration-development",
+      "source_binding": {
+        "base_commit": "6b090767d3d7ca2a1645b81c97a96354d3b26358",
+        "evidence_sha256": "869f0f7d806ee254cd6cf7cb6a2aaf53a97caf9c7308b38df205c48de43da9ed",
+        "method": "Exact executed-source hashes and private native/browser/worker receipts with separate runtime and release statuses."
+      }
     }
   ],
   "limitations": [

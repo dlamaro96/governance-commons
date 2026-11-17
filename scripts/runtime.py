@@ -368,6 +368,8 @@ def main():
   ./dev test --suite reference-upgrade Verify governed code-list publication, effective dates and immutable downloads
   ./dev test --suite reference-quality-upgrade Verify immutable reference-backed quality storage and authority
   ./dev test --suite reference-quality-worker Verify byte-exact allowed values against the local PostgreSQL source
+  ./dev test --suite reference-structure-upgrade Verify temporal hierarchies, crosswalks and concurrent authority
+  ./dev test --suite reference-import Verify bounded code-row import against current-schema PostgreSQL
   ./dev authn-install --input FILE    Apply one private, typed inactive installation manifest
   ./dev test --suite relation-preparation-expiry Verify the original fifteen-minute lease and committed retries
   ./dev test --suite connectors       Run Python contract/source tests
@@ -409,6 +411,12 @@ Never use docker compose config output in public logs: it expands secrets.""")
     if args.command == "test" and args.suite == "glossary-population-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-glossary-population-upgrade.py"], timeout=1500); return
+    if args.command == "test" and args.suite == "reference-import":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-reference-import.py", "--run-local"], timeout=900); return
+    if args.command == "test" and args.suite == "reference-structure-upgrade":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-reference-structure-upgrade.py"], timeout=3000); return
     if args.command == "test" and args.suite == "reference-quality-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-reference-quality-upgrade.py"], timeout=2700); return

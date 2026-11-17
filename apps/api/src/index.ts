@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from 'fastify';
+import {apiErrorHandler} from './http-errors.ts';
 import cookie from '@fastify/cookie';import helmet from '@fastify/helmet';import rateLimit from '@fastify/rate-limit';import swagger from '@fastify/swagger';import fastifyStatic from '@fastify/static';
 import {Type} from '@sinclair/typebox';import {randomUUID} from 'node:crypto';import {existsSync} from 'node:fs';import {resolve} from 'node:path';
 import {db,scope,sql,lockTenantLedger} from '../../../packages/db/src/index.ts';
@@ -26,6 +27,8 @@ import {installApprovals} from './approvals.ts';
 import {installQuality} from './quality.ts';
 import {installClassification} from './classification.ts';
 import {installReferenceData} from './reference-data.ts';
+import {installReferenceStructures} from './reference-structure.ts';
+import {installReferenceImport} from './reference-import.ts';
 import {validatePinnedType} from '../../../packages/domain/src/asset-type-policy.ts';
 import {modelPersistence} from '../../../packages/domain/src/model-service.ts';
 export const app=Fastify({logger:{level:'info',redact:['req.headers.authorization','req.headers.cookie','req.url','res.headers.set-cookie']},bodyLimit:8*1024*1024,requestTimeout:20000,trustProxy:false,genReqId:()=>randomUUID()});
@@ -34,12 +37,7 @@ await app.register(helmet,{contentSecurityPolicy:{directives:{defaultSrc:["'self
 await app.register(rateLimit,{max:300,timeWindow:'1 minute'});
 await app.register(swagger,{openapi:{openapi:'3.1.0',info:{title:'Governance Commons',version:'0.1.0-dev.1'},servers:[{url:publicUrl}]}});
 app.addHook('onSend',async(req,reply,payload)=>{reply.header('X-Correlation-Id',req.id);reply.header('Cache-Control','no-store');return payload;});
-app.setErrorHandler((error,req,reply)=>{
- const e=error as any;const status=e instanceof Problem?e.status:e.validation?400:(e.statusCode>=400&&e.statusCode<500?e.statusCode:500);
- if(e instanceof Problem && e.status===503 && e.code==='RELATION_RETRY')reply.header('Retry-After','5');
- if(status===500)req.log.error({code:e.code??'INTERNAL',correlationId:req.id},'Request failed (details redacted)');
- reply.code(status).type('application/problem+json').send({type:'about:blank',title:status>=500?'Service unavailable':'Request rejected',status,code:e instanceof Problem?e.code:e.validation?'VALIDATION_FAILED':'INTERNAL_ERROR',detail:e instanceof Problem?e.message:e.validation?'Check the submitted fields.':'The request could not be completed. Use the correlation ID for support.',correlationId:req.id,...(e instanceof Problem&&e.issues?{issues:e.issues}:{})});
-});
+app.setErrorHandler(apiErrorHandler);
 app.get('/health/live',async()=>({status:'ok'}));
 app.get('/health/ready',async()=>{await sql`select 1`.execute(db);return {status:'ok',version:'0.1.0-dev.1'};});
 await installAuth(app);
@@ -56,6 +54,8 @@ await installSourceScans(app);
 await installQuality(app);
 await installClassification(app);
 await installReferenceData(app);
+await installReferenceStructures(app);
+await installReferenceImport(app);
 const params={params:Type.Object({id:Id})};
 app.get('/api/v1/me',async req=>{const a=await authenticate(req);return {user:{id:a.principal.id,name:a.principal.name},tenant:a.tenants.find(x=>x.id===a.principal.tenantId),tenants:a.tenants,permissions:a.principal.permissions,csrfToken:a.csrf};});
 app.post('/api/v1/session/tenant',{schema:{body:Type.Object({tenantId:Id},{additionalProperties:false})}},async req=>{const a=await authenticate(req),tenant=(req.body as any).tenantId;if(!a.tenants.some(x=>x.id===tenant))throw new Problem(403,'TENANT_DENIED','Organization access is not permitted.');await db.updateTable('sessions').set({tenant_id:tenant,csrf:random()}).where('id_hash','=',a.sessionHash).execute();return {changed:true};});

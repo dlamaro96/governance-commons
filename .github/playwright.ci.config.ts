@@ -31,5 +31,7 @@ export default defineConfig({
     { name: 'classification', testMatch: /classification\.spec\.ts/, dependencies: ['lineage'] },
     { name: 'reference-data', testMatch: /reference-data\.spec\.ts/, dependencies: ['classification'] },
     { name: 'reference-quality', testMatch: /reference-quality\.spec\.ts/, dependencies: ['reference-data'] },
+    { name: 'reference-structures', testMatch: /reference-structures\.spec\.ts/, dependencies: ['reference-quality'] },
+    { name: 'reference-import', testMatch: /reference-import\.spec\.ts/, dependencies: ['reference-structures'] },
   ],
 });

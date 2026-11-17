@@ -113,7 +113,7 @@ def run(h, inherited, args, *, root, mounts=(), **kwargs):
               'override': {'path': REPOSITORY, 'commit': COMMIT, 'gitBlob': BLOB, 'sha256': DIGEST,
                            'fixture': FIXTURE, 'checkoutSha256': current, 'privateFile': str(file.relative_to(root)),
                            'mountTarget': TARGET, 'readOnly': True, 'verifierSha256': probe_hash},
-              'scope': 'Only the repository is the immutable SQL018-compatible module; every other dependency and test uses recorded current checkout bytes.'}
+              'scope': 'Only the repository is bound by this record; a separate predecessorApprovalStages or outer classification source record may additionally bind the approval service. Other dependencies and tests retain recorded checkout bytes.'}
     h.report.setdefault('predecessorRepositoryStages', []).append(record)
     try:
         result = inherited([args[0], '--require', PROBE_TARGET, *args[1:]],

@@ -13,6 +13,8 @@ spec=importlib.util.spec_from_file_location('approval_upgrade_base',ROOT/'script
 base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
 repository_spec=importlib.util.spec_from_file_location('qualification_repository',ROOT/'scripts/qualification_repository.py')
 repository=importlib.util.module_from_spec(repository_spec);repository_spec.loader.exec_module(repository)
+approval_spec=importlib.util.spec_from_file_location('qualification_approval_service',ROOT/'scripts/qualification_approval_service.py')
+approval_binding=importlib.util.module_from_spec(approval_spec);approval_spec.loader.exec_module(approval_binding)
 REPORT=ROOT/'.local/evidence/approvals-upgrade.json'
 MIGRATION='015_approval_workflows.sql'
 TESTS=['tests/qualification/approvals-storage.test.ts','tests/qualification/glossary-submission.test.ts']
@@ -20,7 +22,7 @@ require,sha=base.require,base.sha
 
 def sources():
  paths={row['path'] for row in base.sources()}
- paths.update(['scripts/qualification_repository.py',repository.FIXTURE])
+ paths.update(['scripts/qualification_repository.py',repository.FIXTURE,'scripts/qualification_approval_service.py',approval_binding.FIXTURE])
  paths.update(['scripts/runtime-test-approvals-upgrade.py',*TESTS,'packages/domain/src/glossary-service.ts','packages/db/migrations/'+MIGRATION,'apps/api/src/repository.ts','packages/domain/src/approval-service.ts','packages/domain/src/approval.ts','packages/domain/src/approval-contracts.ts','packages/domain/src/glossary.ts','packages/domain/src/glossary-contracts.ts','packages/domain/src/model-service.ts','packages/domain/src/cursor.ts'])
  pending=[ROOT/name for name in paths if name.endswith(('.ts','.tsx'))]
  while pending:
@@ -41,7 +43,10 @@ class Harness(base.Harness):
   self.report.update(command='./dev test --suite approvals-upgrade',profile='isolated-approval-storage')
 
  def helper(self,args,*,mounts=(),**kwargs):
-  return repository.run(self,super().helper,args,root=ROOT,mounts=mounts,**kwargs)
+  inherited=super().helper
+  def with_approval(argv,*,mounts=(),**options):
+   return approval_binding.run(self,inherited,argv,root=ROOT,mounts=mounts,**options)
+  return repository.run(self,with_approval,args,root=ROOT,mounts=mounts,**kwargs)
 
 def execute(h):
  frozen=sources()

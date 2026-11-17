@@ -260,8 +260,11 @@ class Harness:
         self.owned = owned
 
     def targets(self):
+        # format_type is search-path-sensitive for domains and extension types.
+        # Match the scanner/worker catalog-only path so the pin describes the
+        # same type before unsupported-type refusal is exercised.
         names = ','.join("'"+name+"'" for name in self.names.values())
-        value = decode(self.sql(f"SELECT jsonb_object_agg(c.relname,jsonb_build_object('databaseOid',(SELECT oid::text FROM pg_database WHERE datname=current_database()),'schemaOid',n.oid::text,'relationOid',c.oid::text,'attributeNumber',a.attnum,'schemaName',n.nspname,'tableName',c.relname,'columnName',a.attname,'dataType',format_type(a.atttypid,a.atttypmod))) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace JOIN pg_attribute a ON a.attrelid=c.oid AND a.attnum=1 WHERE n.nspname='public' AND c.relname IN({names});"))
+        value = decode(self.sql(f"BEGIN; SET LOCAL search_path=pg_catalog; SELECT jsonb_object_agg(c.relname,jsonb_build_object('databaseOid',(SELECT oid::text FROM pg_database WHERE datname=current_database()),'schemaOid',n.oid::text,'relationOid',c.oid::text,'attributeNumber',a.attnum,'schemaName',n.nspname,'tableName',c.relname,'columnName',a.attname,'dataType',format_type(a.atttypid,a.atttypmod))) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace JOIN pg_attribute a ON a.attrelid=c.oid AND a.attnum=1 WHERE n.nspname='public' AND c.relname IN({names}); ROLLBACK;"))
         require(set(value)==set(self.names.values()))
         for name,target in value.items(): require(target['relationOid']==self.owned[name]['oid'])
         return {kind:value[name] for kind,name in self.names.items()}

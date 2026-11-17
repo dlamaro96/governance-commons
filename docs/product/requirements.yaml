@@ -20750,9 +20750,18 @@
         "Overlapping incompatible mappings are rejected or explicitly exceptioned."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations/024_reference_structures.sql",
+        "packages/domain/src/reference-structure-service.ts",
+        "apps/api/src/reference-structure.ts",
+        "apps/web/src/referenceData/structures/Read.tsx"
+      ],
+      "test_ids": [
+        "tests/api/reference-structure-storage.test.ts",
+        "tests/api/reference-structure-concurrency.test.ts",
+        "tests/e2e/reference-structures.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -20780,9 +20789,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "Scoped development implementation and tests are recorded separately. Full compound capability, all applicable profiles and release qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/product-reference-integration-local.json"
+      ]
     },
     {
       "id": "REF-003",
@@ -20965,9 +20979,16 @@
         "An invalid source code produces a DQ failure with a link to the correct published set."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/db/migrations/023_reference_quality.sql",
+        "packages/domain/src/quality-service.ts",
+        "python/governance_workers/quality.py"
+      ],
+      "test_ids": [
+        "tests/api/reference-quality-storage.test.ts",
+        "tests/e2e/reference-quality.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -20995,9 +21016,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "Scoped development implementation and tests are recorded separately. Full compound capability, all applicable profiles and release qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/product-reference-integration-local.json"
+      ]
     },
     {
       "id": "REF-006",
@@ -21028,9 +21054,17 @@
         "Import preview exposes duplicate codes and changed validity before commit."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "packages/domain/src/reference-import.ts",
+        "packages/domain/src/reference-import-service.ts",
+        "apps/api/src/reference-import.ts",
+        "apps/web/src/referenceData/Import.tsx"
+      ],
+      "test_ids": [
+        "tests/api/reference-import.test.ts",
+        "tests/e2e/reference-import.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -21058,9 +21092,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M2"
+      "limitations": [
+        "Scoped development implementation and tests are recorded separately. Full compound capability, all applicable profiles and release qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M2",
+      "partial_evidence": [
+        "docs/verification/product-reference-integration-local.json"
+      ]
     },
     {
       "id": "REF-006.01",
@@ -43714,7 +43753,7 @@
         "Correct as-of values, mappings and rule results."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
+      "implementation_status": "IN_PROGRESS",
       "implementation_paths": [],
       "test_ids": [],
       "verification": {
@@ -43744,9 +43783,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M10"
+      "limitations": [
+        "Scoped development implementation and tests are recorded separately. Full compound capability, all applicable profiles and release qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M10",
+      "partial_evidence": [
+        "docs/verification/product-reference-integration-local.json"
+      ]
     },
     {
       "id": "AT-AI-01",
@@ -54736,9 +54780,15 @@
         "Demonstrate every normative clause below with implementation and applicable automated/manual evidence; retain unexecuted qualifications as open."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
-      "test_ids": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "apps/api/src/upload-scanner.ts",
+        "apps/api/src/reference-import.ts"
+      ],
+      "test_ids": [
+        "tests/unit/upload-scanner.test.ts",
+        "tests/unit/reference-import-http.test.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -54766,9 +54816,14 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
-      "owner": "unassigned",
-      "milestone": "M0"
+      "limitations": [
+        "Scoped development implementation and tests are recorded separately. Full compound capability, all applicable profiles and release qualification remain open."
+      ],
+      "owner": "governance-commons maintainers",
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/product-reference-integration-local.json"
+      ]
     },
     {
       "id": "SYS-SEC-004.01",

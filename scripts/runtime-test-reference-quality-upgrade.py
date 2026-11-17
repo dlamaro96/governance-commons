@@ -77,6 +77,10 @@ class Harness(base.Harness):
         super().__init__()
         self.report.update(command='./dev test --suite reference-quality-upgrade', profile='isolated-postgresql-reference-quality')
 
+    def reference_quality_native_source_expectations(self, measured):
+        # Identity by default; later isolated gates may declare immutable predecessor overlays.
+        return measured
+
     def predecessor_expectations(self, measured, all_paths=False):
         stage = self.reference_quality_predecessor
         require(stage is not None and self.reference_quality_current is None, 'Undeclared reference quality predecessor readback')
@@ -107,12 +111,21 @@ class Harness(base.Harness):
         require(not (stage is not None and current is not None) and args and args[0] == 'node', 'Invalid reference quality source phase')
         mounts = list(mounts)
         paths = NON_REPOSITORY | ({REPOSITORY} if stage is not None and self.reference_current is not None else set())
-        targets = {'/app/' + p for p in paths} | {PROBE}
-        require(all(not (target == fixed or target.startswith(fixed + '/') or fixed.startswith(target.rstrip('/') + '/'))
-                    for _, target in mounts for fixed in targets), 'Conflicting reference quality source mount')
         fixtures()
         original = stage or current
         effective = effective_sources(original['sources'], paths) if stage is not None else [dict(row) for row in original['sources']]
+        if current is not None:
+            native = self.reference_quality_native_source_expectations([row for row in effective if row['path'].endswith('.ts')])
+            require([row['path'] for row in native] == [row['path'] for row in effective if row['path'].endswith('.ts')], 'Reference quality effective source paths differ')
+            changed = {row['path']: row['sha256'] for row in native}
+            effective = [{**row, 'sha256': changed.get(row['path'], row['sha256'])} for row in effective]
+        targets = {'/app/' + p for p in (paths | ({REPOSITORY} if current is not None else set()))} | {PROBE}
+        declared = {('/app/' + row['path']): row['sha256'] for row in effective if current is not None and row['sha256'] != next(item['sha256'] for item in original['sources'] if item['path'] == row['path'])}
+        for file, target in mounts:
+            for fixed in targets:
+                if target == fixed or target.startswith(fixed + '/') or fixed.startswith(target.rstrip('/') + '/'):
+                    require(target == fixed and target in declared, 'Conflicting reference quality source mount')
+                    base.base.read_exact(file, declared[target])
         selected = []
         if stage is not None:
             for row in PREDECESSORS:
@@ -164,8 +177,9 @@ def run_suite(h, frozen, phase, tests, expected, field):
         measured = [row for row in frozen if row['path'].endswith('.ts')]
         probe = "const fs=require('node:fs'),crypto=require('node:crypto');console.log(JSON.stringify(" + json.dumps([row['path'] for row in measured]) + ".map(path=>({path,sha256:crypto.createHash('sha256').update(fs.readFileSync(path)).digest('hex')}))));"
         observed = json.loads(h.helper(['node', '-e', probe]).stdout)
-        require(observed == measured, 'Actual reference quality native source bytes differ')
-        h.report[field + 'SourceReadback'] = {'result': 'PASS', 'files': len(measured), 'manifestSha256': sha(json.dumps(observed, sort_keys=True).encode())}
+        expected_sources = h.reference_quality_native_source_expectations(measured)
+        require(observed == expected_sources, 'Actual reference quality native source bytes differ')
+        h.report[field + 'SourceReadback'] = {'result': 'PASS', 'files': len(measured), 'checkoutManifestSha256': sha(json.dumps(measured, sort_keys=True).encode()), 'manifestSha256': sha(json.dumps(observed, sort_keys=True).encode())}
         count = sum(len(re.findall(r'^test\(', (ROOT / name).read_text(), re.MULTILINE)) for name in tests)
         require(count == expected, 'Reference quality case inventory differs')
         tested = h.helper(['node', '--import', 'tsx', '--test', '--test-reporter=tap', '--test-concurrency=1', *tests], timeout=300, allow_failure=True)

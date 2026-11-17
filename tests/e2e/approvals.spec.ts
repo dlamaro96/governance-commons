@@ -81,6 +81,7 @@ test('WF: real visual workflow publication, immutable versions, search, empty in
  try{
   const reader=await context.newPage();await domainLogin(reader,'consumer');const me=await domainBody<{permissions:string[]}>(await reader.request.get('/api/v1/me'));
   expect(me.permissions).toContain('models:read');expect(me.permissions).not.toContain('models:write');expect(me.permissions).not.toContain('catalog:write');
+  expect(me.permissions).toContain('reference:read');expect(me.permissions).not.toContain('reference:write');expect(me.permissions).not.toContain('reference:approve');
   await reader.goto(`/workflows/${id}?version=1`);await expect(reader.getByRole('heading',{level:1,name,exact:true})).toBeVisible();await expect(reader.getByRole('link',{name:'Publish a new version',exact:true})).toHaveCount(0);
   const read=await domainBody<{workflow:ApprovalDefinitionView}>(await reader.request.get(`/api/v1/workflow-definitions/${id}/versions/1`));expect(read.workflow).toEqual(old);
   await capture(reader,'readonly-en',1440);await language(reader,'ar');await capture(reader,'readonly-ar',390);await language(reader,'en');
@@ -88,9 +89,12 @@ test('WF: real visual workflow publication, immutable versions, search, empty in
   const deniedName=`Denied workflow ${unique}`;
   const refusedCreate=await reader.request.post('/api/v1/workflow-definitions',{headers:await domainHeaders(reader),data:{definition:{...definition,id:`denied_${unique}`,name:deniedName}}});expect(refusedCreate.status()).toBe(403);expect((await refusedCreate.json()).code).toBe('FORBIDDEN');
   await reader.goto(`/workflows/${id}/edit`);await expect(reader.getByRole('heading',{name:'You do not have access to this view',exact:true})).toBeVisible();await expect(reader.getByRole('button',{name:'Publish workflow',exact:true})).toHaveCount(0);
-  const deniedInbox=await reader.request.get('/api/v1/approval-requests');expect(deniedInbox.status()).toBe(403);expect((await deniedInbox.json()).code).toBe('FORBIDDEN');
-  await reader.goto('/approvals');await expect(reader.getByRole('heading',{name:'You do not have access to this view',exact:true})).toBeVisible();await expect(reader.getByRole('link',{name:'Approvals',exact:true})).toHaveCount(0);await expect(reader.locator('.approval-list')).toHaveCount(0);
-  await capture(reader,'denied-en',1440);await language(reader,'ar');await capture(reader,'denied-ar',390);
+  // Reference readers may inspect their participant-scoped inbox. This reader
+  // has no assigned proposals and cannot author, cancel, or approve a request.
+  const inbox=await reader.request.get('/api/v1/approval-requests');expect(inbox.status()).toBe(200);expect(await inbox.json()).toEqual({items:[],nextCursor:null});
+  await reader.setViewportSize({width:1440,height:960});await reader.goto('/approvals');await expect(reader.getByRole('heading',{name:'No approval requests',exact:true})).toBeVisible();await expect(reader.getByRole('link',{name:'Approvals',exact:true})).toHaveCount(1);await expect(reader.locator('.approval-list')).toHaveCount(0);
+  for(const action of ['Submit proposal','Approve','Reject','Cancel request'])await expect(reader.getByRole('button',{name:action,exact:true})).toHaveCount(0);
+  await capture(reader,'readonly-inbox-en',1440);await language(reader,'ar');await capture(reader,'readonly-inbox-ar',390);
   expect((await domainBody<{workflow:ApprovalDefinitionView}>(await page.request.get(`/api/v1/workflow-definitions/${id}`))).workflow).toEqual(published);
   expect((await domainBody<{items:ApprovalDefinitionView[]}>(await page.request.get(`/api/v1/workflow-definitions?q=${encodeURIComponent(deniedName)}`))).items).toEqual([]);
  }finally{await context.close();}

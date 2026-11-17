@@ -53,16 +53,19 @@ function snapshot(input:unknown):ValidationResult<unknown>{
     if(array&&keys.length!==length+1)fail('invalid_json',path,'Sparse arrays and extra array properties are not permitted.');
     charge(2+Math.max(0,length-1),path);active.add(value);
     try{
-      const output:unknown[]|Fields=array?[]:Object.create(null);
+      const items:unknown[]=[],entries:[string,unknown][]=[];
       for(const key of array?Array.from({length},(_,index)=>String(index)):keys){
         if(typeof key!=='string')fail('invalid_json',path,'Symbol keys are not JSON.');
         if(key.length>256||malformedUnicode.test(key))fail('limit',path,'Property names must be bounded, well-formed strings.');
         const child=at(path,key),descriptor=Object.getOwnPropertyDescriptor(value,key);
         if(!descriptor?.enumerable||!Object.hasOwn(descriptor,'value'))fail('invalid_json',child,'Only enumerable data properties are permitted.');
         if(!array)charge(encoder.encode(JSON.stringify(key)).length+1,path);
-        Object.defineProperty(output,key,{value:copy(descriptor.value,child,depth+1),enumerable:true,writable:true,configurable:true});
+        const next=copy(descriptor.value,child,depth+1);
+        if(array)items.push(next);else entries.push([key,next]);
       }
-      return output;
+      // Entries are owned tuples: no caller-controlled key is assigned to an
+      // existing object. Preserve the detached object's null prototype.
+      return array?items:Object.setPrototypeOf(Object.fromEntries(entries),null);
     }finally{active.delete(value);}
   };
   try{return parseBoundedJSONEnvelope(JSON.stringify(copy(input,'',0)));}

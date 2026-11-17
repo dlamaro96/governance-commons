@@ -53,16 +53,18 @@ function snapshot(input:unknown,maximum:number):Json {
   charge(2+Math.max(0,length-1),path);active.add(value);
   try{
    const names=array?Array.from({length},(_,index)=>String(index)):keys;
-   const out:Json[]|Fields=array?[]:Object.create(null);
+   const items:Json[]=[],entries:[string,Json][]=[];
    for(const key of names){
     need(typeof key==='string'&&key.length<=256&&!reserved.has(key),'INVALID_JSON',path,'Reserved or invalid property key.');
     const d=Object.getOwnPropertyDescriptor(value,key),child=at(path,key);
     need(d?.enumerable&&Object.hasOwn(d,'value'),'INVALID_JSON',child,'Only enumerable data properties are supported.');
     if(!array){string(key,child);charge(1,child);}
     const next=copy(d.value,child,depth+1);
-    if(array)(out as Json[]).push(next);else (out as Fields)[key]=next;
+    if(array)items.push(next);else entries.push([key,next]);
    }
-   return out;
+   // Construct from owned pairs rather than assigning caller keys onto an
+   // object. Keep the detached record free of inherited properties/hooks.
+   return array?items:Object.setPrototypeOf(Object.fromEntries(entries),null);
   }finally{active.delete(value);}
  }
  return copy(input,'',0);
@@ -91,15 +93,19 @@ function interval(from:string|null,until:string|null,path:string){need(from===nu
 function status(value:Json,path:string):'active'|'deprecated'{need(value==='active'||value==='deprecated','FORMAT',path,'Unknown reference status.');return value;}
 function localized(value:Json,path:string):LocalizedLabel {const v=fields(value,path,['label','description']);return {label:text(v.label,at(path,'label'),LIMITS.label),description:text(v.description,at(path,'description'),LIMITS.description,true)};}
 function labels(value:Json,path:string):Labels{const v=fields(value,path,['en','ar']);return {en:localized(v.en,at(path,'en')),ar:localized(v.ar,at(path,'ar'))};}
-function values(value:Json,path:string):ReferenceValue[]{
- const seen=new Set<string>();return list(value,path,LIMITS.values,1).map((row,index)=>{
-  const p=at(path,index),v=fields(row,p,['code','labels','ownerId','status','validFrom','validUntil']);
-  need(typeof v.code==='string'&&/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(v.code),'FORMAT',at(p,'code'),'Expected an exact code identifier.');
-  need(!seen.has(v.code),'DUPLICATE',at(p,'code'),'Duplicate exact code key.');seen.add(v.code);
-  const from=bound(v.validFrom,at(p,'validFrom')),until=bound(v.validUntil,at(p,'validUntil'));interval(from,until,p);
-  return {code:v.code,labels:labels(v.labels,at(p,'labels')),ownerId:uuid(v.ownerId,at(p,'ownerId')),status:status(v.status,at(p,'status')),validFrom:from,validUntil:until};
- }).sort((a,b)=>compare(a.code,b.code));
+function referenceValue(value:Json,path:string,seen?:Set<string>):ReferenceValue {
+ const v=fields(value,path,['code','labels','ownerId','status','validFrom','validUntil']);
+ need(typeof v.code==='string'&&/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(v.code),'FORMAT',at(path,'code'),'Expected an exact code identifier.');
+ if(seen){need(!seen.has(v.code),'DUPLICATE',at(path,'code'),'Duplicate exact code key.');seen.add(v.code);}
+ const from=bound(v.validFrom,at(path,'validFrom')),until=bound(v.validUntil,at(path,'validUntil'));interval(from,until,path);
+ return {code:v.code,labels:labels(v.labels,at(path,'labels')),ownerId:uuid(v.ownerId,at(path,'ownerId')),status:status(v.status,at(path,'status')),validFrom:from,validUntil:until};
 }
+function values(value:Json,path:string):ReferenceValue[]{
+ const seen=new Set<string>();return list(value,path,LIMITS.values,1).map((row,index)=>referenceValue(row,at(path,index),seen)).sort((a,b)=>compare(a.code,b.code));
+}
+/** Shared exact row grammar; this parser grants no owner or publication authority. */
+export const parseReferenceValue=(input:unknown):Result<ReferenceValue>=>run(()=>freeze(referenceValue(snapshot(input,LIMITS.releaseBytes),'')));
+
 function audience(value:Json,path:string):Audience{
  const v=fields(value,path,['visibility','allowedIdentityIds']);need(v.visibility==='tenant'||v.visibility==='restricted','FORMAT',at(path,'visibility'),'Unknown visibility.');
  const ids=list(v.allowedIdentityIds,at(path,'allowedIdentityIds'),LIMITS.principals).map((id,i)=>uuid(id,at(at(path,'allowedIdentityIds'),i)));

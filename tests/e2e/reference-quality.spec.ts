@@ -32,12 +32,18 @@ async function scannedColumn(page:Page){
  const {source}=await domainBody<{source:{id:string}}>(await page.request.post('/api/v1/sources',{headers:await domainHeaders(page),data:{name:'Synthetic reference quality '+randomUUID(),connectorId:'postgresql',host:'source-postgres',port:5432,database:'harbor',schema:'public',secretRef:'demo-postgres'}}),201);
  const {job}=await domainBody<{job:{id:string;sourceId:string}}>(await page.request.post('/api/v1/sources/'+source.id+'/scans',{headers:await domainHeaders(page),data:{}}),202);expect(job.sourceId).toBe(source.id);
  await expect.poll(async()=>(await domainBody<{job:{status:string}}>(await page.request.get('/api/v1/jobs/'+job.id))).job.status,{timeout:100_000,intervals:[1000,2000]}).toBe('succeeded');
- let table:Asset|undefined,cursor:string|null=null;const seen=new Set<string>();
- for(let count=0;count<100;count++){
-  const result:AssetList=await domainBody(await page.request.get('/api/v1/assets?'+new URLSearchParams({q:'reference_quality_fixture',type:'table',limit:'100',...(cursor?{cursor}:{})})));
-  table=result.items.find(item=>item.sourceId===source.id&&item.name==='reference_quality_fixture');if(table)break;
-  cursor=result.nextCursor;if(!cursor)break;expect(seen.has(cursor)).toBe(false);seen.add(cursor);
- }
+ let table:Asset|undefined;
+ // A successful canonical scan precedes its asynchronous search projection.
+ // Wait for this source's exact asset; never substitute another source or mock it.
+ await expect.poll(async()=>{
+  let cursor:string|null=null;const seen=new Set<string>();
+  for(let count=0;count<100;count++){
+   const result:AssetList=await domainBody(await page.request.get('/api/v1/assets?'+new URLSearchParams({q:'reference_quality_fixture',type:'table',limit:'100',...(cursor?{cursor}:{})})));
+   table=result.items.find(item=>item.sourceId===source.id&&item.name==='reference_quality_fixture');if(table)return true;
+   cursor=result.nextCursor;if(!cursor)return false;expect(seen.has(cursor)).toBe(false);seen.add(cursor);
+  }
+  throw new Error('Synthetic reference fixture exceeds the bounded catalog pagination profile');
+ },{timeout:30_000,intervals:[500,1000,2000]}).toBe(true);
  expect(table,'The admitted real PostgreSQL reference-quality fixture must be scanned').toBeDefined();
  const detail=await domainBody<AssetDetail>(await page.request.get('/api/v1/assets/'+table!.id));expect(detail.asset.metadata.scanId).toBe(job.id);
  const columns=detail.columns.filter(column=>column.name==='code');expect(columns).toHaveLength(1);
@@ -69,8 +75,8 @@ async function capture(page:Page,info:TestInfo,name:string,run:QualityRunView){
   await language(page,locale);await page.setViewportSize({width,height:960});const arabic=locale==='ar',evidence=page.getByRole('region',{name:arabic?'أدلة التنفيذ':'Run evidence',exact:true});
   await expect(evidence.getByText(run.id,{exact:true})).toHaveCount(1);await expect(evidence.getByText(arabic?'مكتمل':'Completed',{exact:true})).toBeVisible();await expect(evidence.getByText(run.verdict==='PASS'?(arabic?'ناجح':'Pass'):(arabic?'غير ناجح':'Fail'),{exact:true})).toBeVisible();
   const history=page.getByRole('table',{name:arabic?'سجل التنفيذ':'Run history',exact:true}).getByRole('row').filter({has:page.getByRole('button',{name:(arabic?'عرض التنفيذ':'View run')+' '+run.id,exact:true})});await expect(history).toHaveCount(1);await expect(history.getByText(arabic?'مكتمل':'Completed',{exact:true})).toBeVisible();await expect(history.getByText(run.verdict==='PASS'?(arabic?'ناجح':'Pass'):(arabic?'غير ناجح':'Fail'),{exact:true})).toBeVisible();
-  await evidence.evaluate(element=>element.scrollIntoView({block:'start'}));await expect.poll(()=>page.evaluate(()=>document.getAnimations().filter(animation=>animation.playState==='running'&&animation.playbackRate!==0&&Number.isFinite(animation.effect?.getComputedTiming().endTime)).length)).toBe(0);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations).toEqual([]);await page.screenshot({path:info.outputPath('reference-quality-'+name+'-binding-'+locale+'-'+width+'.png'),fullPage:false});
-  await evidence.locator('.quality-measurements').evaluate(element=>element.scrollIntoView({block:'start'}));await expect(evidence.getByTestId('quality-non-null-count')).toBeVisible();await expect(evidence.getByTestId('quality-invalid-count')).toBeVisible();await page.screenshot({path:info.outputPath('reference-quality-'+name+'-measurement-'+locale+'-'+width+'.png'),fullPage:false});
+  await evidence.evaluate(element=>element.scrollIntoView({block:'start',behavior:'instant'}));await expect.poll(()=>page.evaluate(()=>document.getAnimations().filter(animation=>animation.playState==='running'&&animation.playbackRate!==0&&Number.isFinite(animation.effect?.getComputedTiming().endTime)).length)).toBe(0);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations).toEqual([]);await page.screenshot({path:info.outputPath('reference-quality-'+name+'-binding-'+locale+'-'+width+'.png'),fullPage:false});
+  await evidence.locator('.quality-measurements').evaluate(element=>element.scrollIntoView({block:'start',behavior:'instant'}));await expect(evidence.getByTestId('quality-non-null-count')).toBeInViewport({ratio:1});await expect(evidence.getByTestId('quality-invalid-count')).toBeInViewport({ratio:1});await page.screenshot({path:info.outputPath('reference-quality-'+name+'-measurement-'+locale+'-'+width+'.png'),fullPage:false});
  }
  await language(page,'en');await page.setViewportSize({width:1440,height:960});
 }
