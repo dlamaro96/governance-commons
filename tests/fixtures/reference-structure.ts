@@ -91,4 +91,3 @@ export async function structureFixture(t:TestContext){
  const endpoint=async(extra:Partial<Proposal>={})=>{const done=await complete(proposal(extra));return {...done,pin:{setId:done.proposal.setId,version:done.view.release.version,publicationHash:done.view.publicationHash}};};
  return {structureCommand,structurePublish,structureReady,structureProposal,endpoint,owner,ownerTx,tenant,foreign,actor,reviewer,second,reader,outsider,principal,as,command,approval,workflow,definition,proposal,request,decide,tick,publish,ready,complete,state,unchanged,revoke,now,waitUntil};
 }
-
