@@ -177,3 +177,8 @@ test('publication receipt must match canonical request target/version before sta
   try{if(change==='valid'){assert.equal((await publish(tenant,requestId)).status,'succeeded');assert.deepEqual(order,['status','commit']);}else{await assert.rejects(publish(tenant,requestId),hasCode('REFERENCE_STORAGE_INVALID'));assert.deepEqual(order,['rollback']);}assert.equal(f.calls.some(q=>q.sql.includes('gc_reference_fail')),false);}finally{await f.close();}
  }
 });
+
+test('shared reference membership errors map to forbidden without masking unexpected database failures',()=>{
+ for(const message of ['Current membership does not permit this relation operation','Asserted relations require an authenticated member']){const error=referenceFailure({code:'42501',message});assert.equal(error.status,403);assert.equal(error.code,'REFERENCE_FORBIDDEN');assert.notEqual(error.message,message);}
+ assert.equal(referenceFailure({code:'42501',message:'permission denied for private object'}).status,500);
+});

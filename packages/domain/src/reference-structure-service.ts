@@ -32,7 +32,7 @@ export function structureFailure(error:unknown):Problem{
  const e=error as {code?:unknown;message?:unknown}|null,c=e?.code,m=e?.message;
  if(['55P03','40P01','57014'].includes(String(c)))return retry();
  if(c==='P0002'&&m==='reference structure resource not found')return unavailable();
- if(c==='42501'&&m==='reference structure forbidden')return new Problem(403,'REFERENCE_STRUCTURE_FORBIDDEN','Your current permissions do not allow this structure operation.');
+ if(c==='42501'&&(m==='reference structure forbidden'||m==='Current membership does not permit this relation operation'||m==='Asserted relations require an authenticated member'))return new Problem(403,'REFERENCE_STRUCTURE_FORBIDDEN','Your current permissions do not allow this structure operation.');
  if(c==='40001'){
   const codes:Record<string,string>={'reference structure version conflict':'VERSION_CONFLICT','reference structure schedule stale':'REFERENCE_STRUCTURE_SCHEDULE_STALE','reference structure endpoint changed':'REFERENCE_STRUCTURE_ENDPOINT_CHANGED','reference structure approval expired':'REFERENCE_STRUCTURE_EXPIRED','IDEMPOTENCY_CONFLICT':'IDEMPOTENCY_CONFLICT','WORKFLOW_PIN_STALE':'WORKFLOW_PIN_STALE'};
   return typeof m==='string'&&Object.hasOwn(codes,m)?new Problem(409,codes[m],'The structure state changed. Reload before continuing.'):retry();

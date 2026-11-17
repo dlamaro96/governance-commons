@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import {expect,type Page} from '@playwright/test';
+import {expect,type Browser,type Page} from '@playwright/test';
 import type {ApprovalDefinitionView} from '../../../packages/domain/src/approval-service.ts';
 
 /** Drive the real paginated picker. A missing loading indicator alone can still
@@ -41,4 +41,33 @@ export async function chooseReferenceWorkflow(page:Page,workflow:ApprovalDefinit
   expectedCursor=body.nextCursor??undefined;
  }
  throw new Error('Workflow fixture exceeds bounded discovery');
+}
+
+/** Start this request-heavy journey with the existing IP limiter's full window.
+ * Only the observed reset permits a wait; this never retries a product action. */
+export async function waitForReferenceBrowserBudget(browser:Browser){
+ const deadline=performance.now()+130_000,context=await browser.newContext();
+ try{
+  for(let attempt=0;attempt<4;attempt++){
+   const remainingTime=deadline-performance.now();
+   if(remainingTime<=0)throw new Error('Reference browser rate admission timed out');
+   const response=await context.request.get('/health/live',{timeout:Math.min(5000,remainingTime)});
+   let remaining:number,reset:number;
+   try{
+    expect([200,429]).toContain(response.status());
+    const headers=response.headers();
+    for(const key of ['x-ratelimit-limit','x-ratelimit-remaining','x-ratelimit-reset'])expect(headers[key]).toMatch(/^\d+$/);
+    expect(Number(headers['x-ratelimit-limit'])).toBe(300);
+    remaining=Number(headers['x-ratelimit-remaining']);reset=Number(headers['x-ratelimit-reset']);
+    expect(remaining).toBeGreaterThanOrEqual(0);expect(remaining).toBeLessThanOrEqual(300);
+    expect(reset).toBeGreaterThanOrEqual(0);expect(reset).toBeLessThanOrEqual(60);
+    if(response.status()===200&&remaining>=295)return;
+    expect(remaining).toBeLessThan(295);
+   }finally{await response.dispose();}
+   let delay=(reset+1)*1000;
+   if(performance.now()+delay>=deadline)throw new Error('Reference browser rate admission timed out');
+   while(delay>0){const step=Math.min(delay,30_000);await new Promise(resolve=>setTimeout(resolve,step));delay-=step;}
+  }
+  throw new Error('Reference browser rate admission unavailable');
+ }finally{await context.close();}
 }

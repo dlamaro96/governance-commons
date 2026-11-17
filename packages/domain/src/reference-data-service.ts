@@ -32,7 +32,7 @@ export function referenceFailure(error:unknown):Problem{
  const e=error as {code?:unknown;message?:unknown}|null,c=e?.code,m=e?.message;
  if(['55P03','40P01','57014'].includes(String(c)))return retry();
  if(c==='P0002'&&m==='reference resource not found')return unavailable();
- if(c==='42501'&&m==='reference forbidden')return new Problem(403,'REFERENCE_FORBIDDEN','Your current permissions do not allow this reference-data operation.');
+ if(c==='42501'&&(m==='reference forbidden'||m==='Current membership does not permit this relation operation'||m==='Asserted relations require an authenticated member'))return new Problem(403,'REFERENCE_FORBIDDEN','Your current permissions do not allow this reference-data operation.');
  if(c==='40001'){
   const codes:Record<string,string>={'reference version conflict':'VERSION_CONFLICT','reference schedule stale':'REFERENCE_SCHEDULE_STALE','IDEMPOTENCY_CONFLICT':'IDEMPOTENCY_CONFLICT','WORKFLOW_PIN_STALE':'WORKFLOW_PIN_STALE'};
   return typeof m==='string'&&Object.hasOwn(codes,m)?new Problem(409,codes[m],'The reference-data state changed. Reload before continuing.'):retry();
