@@ -57,22 +57,28 @@ async function scannedColumn(page:Page){
  const {job}=await domainBody<{job:{id:string;sourceId:string}}>(await page.request.post('/api/v1/sources/'+source.id+'/scans',{headers:await domainHeaders(page),data:{}}),202);
  expect(job.sourceId).toBe(source.id);
  await expect.poll(async()=>(await domainBody<{job:{status:string}}>(await page.request.get('/api/v1/jobs/'+job.id))).job.status,{timeout:100_000,intervals:[1000,2000]}).toBe('succeeded');
- let table:Asset|undefined;
- await expect.poll(async()=>{
-  let cursor:string|null=null;const seen=new Set<string>();
-  for(let visited=0;visited<100;visited++){
-   const result:AssetList=await domainBody(await page.request.get('/api/v1/assets?'+new URLSearchParams({q:'quality_fixture',type:'table',limit:'100',...(cursor?{cursor}:{})})));
-   table=result.items.find(item=>item.sourceId===source.id&&item.name==='quality_fixture');
-   if(table)return true;
-   cursor=result.nextCursor;if(!cursor)return false;expect(seen.has(cursor)).toBe(false);seen.add(cursor);
-  }throw new Error('Synthetic quality fixture exceeds the bounded catalog pagination profile');
- },{timeout:30_000,intervals:[500,1000,2000]}).toBe(true);
+ async function scannedAsset(name:string,type:'table'|'view'){
+  let asset:Asset|undefined;
+  await expect.poll(async()=>{
+   let cursor:string|null=null;const seen=new Set<string>();
+   for(let visited=0;visited<100;visited++){
+    const result:AssetList=await domainBody(await page.request.get('/api/v1/assets?'+new URLSearchParams({q:name,type,limit:'100',...(cursor?{cursor}:{})})));
+    asset=result.items.find(item=>item.sourceId===source.id&&item.name===name);
+    if(asset)return true;
+    cursor=result.nextCursor;if(!cursor)return false;expect(seen.has(cursor)).toBe(false);seen.add(cursor);
+   }throw new Error('Synthetic quality fixture exceeds the bounded catalog pagination profile');
+  },{timeout:30_000,intervals:[500,1000,2000]}).toBe(true);
+  expect(asset).toBeDefined();return asset!;
+ }
+ const table=await scannedAsset('quality_fixture','table'),view=await scannedAsset('customer_order_summary','view');
+ const viewDetail=await domainBody<AssetDetail>(await page.request.get('/api/v1/assets/'+view.id));
+ expect(viewDetail.asset.sourceId).toBe(source.id);expect(viewDetail.asset.metadata.scanId).toBe(job.id);expect(viewDetail.asset.type).toBe('view');
  expect(table).toBeDefined();const detail=await domainBody<AssetDetail>(await page.request.get('/api/v1/assets/'+table!.id));
  expect(detail.asset.sourceId).toBe(source.id);expect(detail.asset.metadata.scanId).toBe(job.id);
  const columns=detail.columns.filter(item=>item.name==='email');expect(columns).toHaveLength(1);
  const column=(await domainBody<AssetDetail>(await page.request.get('/api/v1/assets/'+columns[0].id))).asset;
  expect(column.type).toBe('column');expect(column.sourceId).toBe(source.id);expect(column.metadata.scanId).toBe(job.id);
- return {table:detail.asset,column};
+ return {table:detail.asset,column,view:viewDetail.asset};
 }
 async function publish(page:Page,body:QualityPublishInput,version:number){
  const dialog=page.getByRole('dialog',{name:version===1?'Create rule':'Publish new version',exact:true});
@@ -120,10 +126,24 @@ async function run(page:Page,rule:QualityRuleView,verdict:'PASS'|'FAIL'){
 test('DQ: real column completeness, immutable thresholds, aggregate outcomes and current read boundaries',async({page,browser},info)=>{
  test.setTimeout(480_000);await domainLogin(page);await language(page,'en');
  const me=await domainBody<Session>(await page.request.get('/api/v1/me'));expect(me.permissions).toEqual(expect.arrayContaining(['catalog:read','catalog:write','quality:read','quality:write','quality:execute']));
- const {table,column}=await scannedColumn(page),target={tableAssetId:table.id,columnAssetId:column.id};
- await page.goto('/catalog/'+table.id+'?tab=quality');
+ const {table,column,view}=await scannedColumn(page),target={tableAssetId:table.id,columnAssetId:column.id};
+ // Ordinary tables now support volume. A real scanned view retains the
+ // unsupported-target boundary and its usable column-navigation action.
+ await page.goto('/catalog/'+view.id+'?tab=quality');
+ expect(await domainBody<QualityAssetView>(await page.request.get('/api/v1/assets/'+view.id+'/quality'))).toEqual({assetId:view.id,eligibility:{supported:false,reason:'COLUMN_REQUIRED',tableAssetId:null,columnAssetId:null},items:[],nextCursor:null});
  await expect(page.getByRole('heading',{name:'This asset does not support source quality checks',exact:true})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Create rule',exact:true})).toHaveCount(0);
  await page.getByRole('link',{name:'Open columns',exact:true}).click();
+ await expect(page.getByRole('table',{name:'Columns',exact:true})).toBeVisible();
+ await page.goto('/catalog/'+table.id+'?tab=quality');
+ expect(await domainBody<QualityAssetView>(await page.request.get('/api/v1/assets/'+table.id+'/quality'))).toEqual({assetId:table.id,eligibility:{supported:true,reason:null,tableAssetId:table.id,columnAssetId:null},items:[],nextCursor:null});
+ await expect(page.getByRole('heading',{name:'No quality rules configured',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Create rule',exact:true}).click();
+ const tableEditor=page.getByRole('dialog',{name:'Create rule',exact:true});
+ await expect(tableEditor.getByRole('combobox',{name:'Check type',exact:true})).toHaveValue('volume');
+ await expect(tableEditor.getByRole('combobox',{name:'Check type',exact:true}).getByRole('option')).toHaveCount(1);
+ await tableEditor.getByRole('button',{name:'Cancel',exact:true}).click();
+ await page.getByRole('navigation',{name:'Details',exact:true}).getByRole('link',{name:/^Columns \(/}).click();
  await page.getByRole('table',{name:'Columns',exact:true}).getByRole('link',{name:'email',exact:true}).click();
  await expect(page).toHaveURL(new RegExp('/catalog/'+column.id+'$'));
  await page.getByRole('navigation',{name:'Details',exact:true}).getByRole('link',{name:'Quality',exact:true}).click();
