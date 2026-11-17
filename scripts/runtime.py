@@ -372,6 +372,8 @@ def main():
   ./dev test --suite reference-import Verify bounded code-row import against current-schema PostgreSQL
   ./dev test --suite uniqueness-upgrade Verify uniqueness storage, immutable counts and retained quality families
   ./dev test --suite uniqueness-worker Verify exact duplicate groups against the local PostgreSQL source
+  ./dev test --suite range-upgrade Verify exact integer-range storage and retained quality families
+  ./dev test --suite range-worker Verify inclusive integer bounds against the local PostgreSQL source
   ./dev authn-install --input FILE    Apply one private, typed inactive installation manifest
   ./dev test --suite relation-preparation-expiry Verify the original fifteen-minute lease and committed retries
   ./dev test --suite connectors       Run Python contract/source tests
@@ -413,6 +415,9 @@ Never use docker compose config output in public logs: it expands secrets.""")
     if args.command == "test" and args.suite == "glossary-population-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-glossary-population-upgrade.py"], timeout=1500); return
+    if args.command == "test" and args.suite == "range-upgrade":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-quality-range-upgrade.py", "--run-local"], timeout=900); return
     if args.command == "test" and args.suite == "uniqueness-upgrade":
         require_local()
         run([sys.executable, "scripts/runtime-test-quality-uniqueness-upgrade.py", "--run-local"], timeout=900); return
@@ -493,6 +498,7 @@ Never use docker compose config output in public logs: it expands secrets.""")
         run([sys.executable, "scripts/runtime-install-quality-fixture.py", "--run-core"], timeout=60)
         run([sys.executable, "scripts/runtime-install-quality-fixture.py", "--run-core", "--reference"], timeout=60)
         run([sys.executable, "scripts/runtime-install-quality-fixture.py", "--run-core", "--uniqueness"], timeout=60)
+        run([sys.executable, "scripts/runtime-install-quality-fixture.py", "--run-core", "--range"], timeout=60)
         run(COMPOSE + ["run", "--rm", "seed"], timeout=120)
     elif args.command == "status":
         output = capture(COMPOSE + ["ps", "--all", "--format", "json"], timeout=30)
@@ -509,6 +515,8 @@ Never use docker compose config output in public logs: it expands secrets.""")
             run([sys.executable, "scripts/runtime-test-connectors.py"], timeout=300)
         elif args.suite == "lineage-worker":
             run([sys.executable, "python/tests/test_postgres_lineage_conformance.py", "--run-core"], timeout=720)
+        elif args.suite == "range-worker":
+            run([sys.executable, "scripts/runtime-test-range-quality-worker.py", "--run-local"], timeout=900)
         elif args.suite == "uniqueness-worker":
             run([sys.executable, "scripts/runtime-test-uniqueness-quality-worker.py", "--run-local"], timeout=900)
         elif args.suite == "reference-quality-worker":

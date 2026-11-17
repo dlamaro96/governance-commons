@@ -30,16 +30,33 @@ export function referenceTimeInput(input:string,now=Date.now()):string|null {
 export function qualityEvidenceMatches(run:QualityRunView,rule:QualityRuleView):boolean {
  if(rule.id!==run.ruleId||rule.version!==run.ruleVersion||rule.definitionHash!==run.ruleHash)return false;
  if(rule.definition.target.columnAssetId!==run.columnAssetId||rule.definition.target.tableAssetId!==run.tableAssetId)return false;
- if(run.kind==='reference-allowed-values')return rule.definition.kind==='reference-allowed-values'&&run.reference.setId===rule.definition.reference.setId&&(!run.measurement||(run.measurement.kind==='reference-allowed-values'&&run.measurement.referenceBindingHash===run.reference.bindingHash));
- if(run.kind==='uniqueness')return !Object.hasOwn(run,'reference')&&rule.definition.kind==='uniqueness'&&(!run.measurement||run.measurement.kind==='uniqueness');
- return !Object.hasOwn(run,'kind')&&!Object.hasOwn(run,'reference')&&rule.definition.kind==='completeness'&&(!run.measurement||run.measurement.kind==='completeness');
+ if(run.kind==='reference-allowed-values')return !Object.hasOwn(run,'range')&&rule.definition.kind==='reference-allowed-values'&&run.reference.setId===rule.definition.reference.setId&&(!run.measurement||(run.measurement.kind==='reference-allowed-values'&&run.measurement.referenceBindingHash===run.reference.bindingHash));
+ if(run.kind==='uniqueness')return !Object.hasOwn(run,'range')&&!Object.hasOwn(run,'reference')&&rule.definition.kind==='uniqueness'&&(!run.measurement||run.measurement.kind==='uniqueness');
+ if(run.kind==='range'){
+  const definition=rule.definition,binding=run.range;
+  return !Object.hasOwn(run,'reference')&&definition.kind==='range'&&!!rangeBounds(binding.minimum,binding.maximum)&&
+   binding.minimum===definition.minimum&&binding.maximum===definition.maximum&&binding.comparison==='int64-inclusive'&&binding.nullPolicy==='exclude'&&
+   /^[a-f0-9]{64}$/.test(binding.rangeHash)&&(!run.measurement||run.measurement.kind==='range'&&run.measurement.rangeHash===binding.rangeHash);
+ }
+ return !Object.hasOwn(run,'range')&&!Object.hasOwn(run,'kind')&&!Object.hasOwn(run,'reference')&&rule.definition.kind==='completeness'&&(!run.measurement||run.measurement.kind==='completeness');
 }
 
 /** Read the selected immutable family's threshold; do not reinterpret history
  * using a later head's kind or borrow another family's similarly named field. */
 export function qualityThreshold(definition:QualityRuleDefinition):number {
- switch(definition.kind){case 'completeness':return definition.maximumNullBasisPoints;case 'reference-allowed-values':return definition.maximumInvalidBasisPoints;case 'uniqueness':return definition.maximumDuplicateBasisPoints;}
+ switch(definition.kind){case 'completeness':return definition.maximumNullBasisPoints;case 'reference-allowed-values':return definition.maximumInvalidBasisPoints;case 'uniqueness':return definition.maximumDuplicateBasisPoints;case 'range':return definition.maximumOutOfRangeBasisPoints;}
 }
-export function qualityThresholdKey(kind:QualityRuleDefinition['kind']):'maximumNull'|'maximumInvalid'|'maximumDuplicate' {
- return kind==='completeness'?'maximumNull':kind==='reference-allowed-values'?'maximumInvalid':'maximumDuplicate';
+export function qualityThresholdKey(kind:QualityRuleDefinition['kind']):'maximumNull'|'maximumInvalid'|'maximumDuplicate'|'maximumOutOfRange' {
+ return kind==='completeness'?'maximumNull':kind==='reference-allowed-values'?'maximumInvalid':kind==='range'?'maximumOutOfRange':'maximumDuplicate';
+}
+
+/** Bounds stay canonical ASCII decimal strings from input through submission.
+ * BigInt compares them exactly; no trim, localized-digit conversion or Number. */
+export function canonicalInt64(input:string):string|null {
+ if(input.length>20||!/^(?:0|-[1-9][0-9]*|[1-9][0-9]*)$/.test(input))return null;
+ const value=BigInt(input);
+ return value>=-9223372036854775808n&&value<=9223372036854775807n?input:null;
+}
+export function rangeBounds(minimum:string,maximum:string):{minimum:string;maximum:string}|null {
+ return canonicalInt64(minimum)!==null&&canonicalInt64(maximum)!==null&&BigInt(minimum)<=BigInt(maximum)?{minimum,maximum}:null;
 }

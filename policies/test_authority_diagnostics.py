@@ -65,6 +65,78 @@ class AuthorityDiagnosticTests(unittest.TestCase):
         for forbidden in ('PRIVATE_SYNTHETIC','.local/','error','stdout','password','privateConfig','commandLog'):
             self.assertNotIn(forbidden,json.dumps(value))
 
+
+    def test_only_failed_fixed_prefix_exports_closed_repository_refusal(self):
+        original=(self.root/self.report['private_logs'][0]['path']).read_text()
+        for code in evidence.FOUNDATION_REFUSALS:
+            with self.subTest(code=code):
+                text=original.replace('PostgreSQL rejected qualification operation (57014)',
+                    'Foundation repository refusal '+code+'; diagnostic ')
+                self.write_log(text)
+                value=self.validate();self.assertIsNotNone(value)
+                self.assertEqual(value['foundation_refusals'],[{'file':evidence.SUITES['authority_loader'],'line':1,'code':code}])
+                self.assertEqual(value['outcome'],'NOT_PASSED');self.assertNotIn('PRIVATE_SYNTHETIC',json.dumps(value))
+        for prefix in ('arbitrary AUTHORITY_FOUNDATION_DEADLINE; diagnostic ',
+                       'Foundation repository refusal PRIVATE_CODE; diagnostic ',
+                       'Foundation repository refusal AUTHORITY_FOUNDATION_SECRET; diagnostic ',
+                       'Foundation repository refusal AUTHORITY_FOUNDATION_DEADLINE_PRIVATE; diagnostic '):
+            self.write_log(original.replace('PostgreSQL rejected qualification operation (57014)',prefix))
+            self.assertEqual(self.validate()['foundation_refusals'],[])
+
+    def test_successful_skipped_or_unmapped_test_cannot_supply_refusal_code(self):
+        original=(self.root/self.report['private_logs'][0]['path']).read_text()
+        text=original.replace('PostgreSQL rejected qualification operation (57014)',
+            'Foundation repository refusal AUTHORITY_FOUNDATION_DEADLINE; diagnostic ')
+        for changed in (text.replace('not ok 1 - ','ok 1 - '),text.replace(TITLE,TITLE+' # SKIP reason'),text.replace(TITLE,'UNMAPPED')):
+            self.write_log(changed);self.assertEqual(self.validate()['foundation_refusals'],[])
+
+
+    def timing_log(self, timing, code='AUTHORITY_FOUNDATION_DEADLINE'):
+        payload=timing if type(timing) is str else json.dumps(timing,separators=(',',':'))
+        return (f'phase=authority_loader\nexit=1\nTAP version 13\nnot ok 1 - {TITLE}\n'
+                '  ---\n  error: |-\n'
+                f'    Foundation repository refusal {code}; diagnostic PRIVATE_SYNTHETIC_PROBE\n'
+                f'    {evidence.PHASE_MARKER}{payload}\n'
+                '  code: PRIVATE_SYNTHETIC_UNUSED\n  ...\n1..1\n# tests 1\n'+evidence.MARKER+'suite_failed\n')
+
+    def test_closed_timing_is_bound_to_exact_failed_test_with_numeric_values_only(self):
+        timing={'elapsedMs':30001,'phases':[
+            {'phase':'connect','startedMs':0,'elapsedMs':3,'outcome':'fulfilled'},
+            {'phase':'closure','startedMs':3,'elapsedMs':29998,'outcome':'rejected'}]}
+        self.write_log(self.timing_log(timing));value=self.validate();self.assertIsNotNone(value)
+        self.assertEqual(value['foundation_timings'],[{'file':evidence.SUITES['authority_loader'],'line':1,'code':'AUTHORITY_FOUNDATION_DEADLINE',**timing}])
+        self.assertNotIn('PRIVATE_SYNTHETIC',json.dumps(value));self.assertEqual(value['outcome'],'NOT_PASSED')
+        for boundary in ({'elapsedMs':0,'phases':[]},{'elapsedMs':3600000,'phases':[{'phase':'unclassified','startedMs':0,'elapsedMs':3600000,'outcome':'rejected'}]}):
+            self.write_log(self.timing_log(boundary));self.assertIsNotNone(self.validate())
+
+    def test_timing_rejects_unknown_fields_phases_coercion_nonfinite_duplicate_keys_and_overflow(self):
+        base={'elapsedMs':10,'phases':[{'phase':'closure','startedMs':0,'elapsedMs':10,'outcome':'rejected'}]}
+        changes=[{**base,'extra':'PRIVATE_SYNTHETIC'}, {**base,'elapsedMs':True}, {**base,'elapsedMs':10.5},
+                 {**base,'elapsedMs':'10'}, {**base,'elapsedMs':-1}, {**base,'elapsedMs':3600001},
+                 {**base,'phases':base['phases']*33}, {**base,'phases':{}},
+                 '{"elapsedMs":10,"elapsedMs":10,"phases":[]}', '{"elapsedMs":NaN,"phases":[]}',
+                 '{"elapsedMs":0,"phases":[]}'+' '*8192]
+        for update in ({'phase':'PRIVATE_SQL'},{'outcome':'PRIVATE_RESULT'},{'parameters':['PRIVATE_SYNTHETIC']},
+                       {'startedMs':False},{'startedMs':-1},{'startedMs':11},{'elapsedMs':-1},
+                       {'elapsedMs':3600001},{'elapsedMs':12},{'elapsedMs':'10'}):
+            changes.append({**base,'phases':[{**base['phases'][0],**update}]})
+        changes.append({'elapsedMs':10,'phases':[{'phase':'connect','startedMs':5,'elapsedMs':0,'outcome':'fulfilled'},{'phase':'closure','startedMs':4,'elapsedMs':1,'outcome':'rejected'}]})
+        for timing in changes:
+            with self.subTest(timing=timing):
+                self.write_log(self.timing_log(timing));self.assertIsNone(self.validate())
+
+    def test_timing_requires_one_marker_inside_error_block_and_one_closed_primary_refusal(self):
+        raw=self.timing_log({'elapsedMs':0,'phases':[]})
+        marker=evidence.PHASE_MARKER+'{"elapsedMs":0,"phases":[]}'
+        changes=[raw.replace('  code:', '    '+marker+'\n  code:'),
+                 raw.replace('    '+marker+'\n','').replace('  code:', '# '+marker+'\n  code:'),
+                 raw.replace('error: |-','stderr: |-'),raw.replace('Foundation repository refusal','arbitrary message'),
+                 raw.replace('AUTHORITY_FOUNDATION_DEADLINE','PRIVATE_CODE')]
+        for text in changes:
+            self.write_log(text);self.assertIsNone(self.validate())
+        for text in (raw.replace('not ok 1 -','ok 1 -'),raw.replace(TITLE,TITLE+' # SKIP reason'),raw.replace(TITLE,'UNMAPPED')):
+            self.write_log(text);self.assertEqual(self.validate()['foundation_timings'],[])
+
     def test_success_stale_revision_command_profile_phase_or_source_never_publishes(self):
         for change in ({'result':'PASS'},{'result':'RUNNING'},{'schema_version':True},{'commit':'b'*40},
                        {'command':'echo success'},{'profile':'core'},{'failed_phase':'upgrade'},

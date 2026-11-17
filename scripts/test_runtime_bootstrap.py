@@ -27,7 +27,7 @@ class BootstrapPersistenceTests(unittest.TestCase):
         (self.root/'scripts').mkdir()
         (self.root/'deploy/compose').mkdir(parents=True)
         shutil.copyfile(ROOT/'scripts/runtime-bootstrap.py',self.root/'scripts/runtime-bootstrap.py')
-        for filename in ('source-fixture.sql','reference-quality-fixture.sql','uniqueness-quality-fixture.sql'):
+        for filename in ('source-fixture.sql','reference-quality-fixture.sql','uniqueness-quality-fixture.sql','range-quality-fixture.sql'):
             shutil.copyfile(ROOT/'deploy/compose'/filename,self.root/'deploy/compose'/filename)
         self.local = self.root/'.local'
         self.provider = self.local/'source-credentials/secrets.json'
@@ -61,6 +61,15 @@ class BootstrapPersistenceTests(unittest.TestCase):
         state=json.loads((self.local/'bootstrap.json').read_text())
         self.assertEqual(self.parsed()['demo-postgres']['password'],state['SOURCE_READER_PASSWORD'])
         self.assertEqual(list(self.provider.parent.iterdir()),[self.provider])
+
+    def test_fresh_bootstrap_includes_each_closed_quality_profile_once(self):
+        self.run_bootstrap()
+        generated=(self.local/'source-init.sql').read_text()
+        for marker in ('QUALITY_FIXTURE_V1','REFERENCE_QUALITY_FIXTURE_V1','UNIQUENESS_QUALITY_FIXTURE_V1','RANGE_QUALITY_FIXTURE_V1'):
+            self.assertEqual(generated.count('-- BEGIN '+marker),1)
+            self.assertEqual(generated.count('-- END '+marker),1)
+        expected=(ROOT/'deploy/compose/range-quality-fixture.sql').read_text()
+        self.assertIn(expected,generated)
 
     def test_repeat_preserves_custom_uc_and_provider_bytes_inode_and_bootstrap_credentials(self):
         self.run_bootstrap()

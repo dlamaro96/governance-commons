@@ -15,6 +15,7 @@ import type {AtomicRequest, AuthorityDecisionRegistry, AuthorityGrant, Delegable
 import type {AuthorityHumanClosure, ClosureSelectors, ElevationUseRecord} from '../../packages/authority-storage/src/contracts.ts';
 import {createAuthorityFoundationRepository} from '../../packages/authority-storage/src/repository.ts';
 import {parseAuthorityHumanClosure} from '../../packages/authority-storage/src/loader.ts';
+import {observeOwnerPool} from './authority-load-diagnostic.ts';
 export {query,scalar,tx,extra,rejected,SqlFailure,uuid,digest,dbNow,waitBlocked,install,session,setMembership} from './authority-authn-foundation.ts';
 const {query,scalar,tx,uuid,dbNow}=authn;
 export const version=1 as Version;
@@ -34,16 +35,19 @@ export async function rawLoad(f:FoundationFixture,client=f.owner,text=JSON.strin
 }
 export async function load(f:FoundationFixture):Promise<AuthorityHumanClosure>{
  const pool=new pg.Pool({connectionString:authn.config.owner,max:1,connectionTimeoutMillis:5000});
- try{return await createAuthorityFoundationRepository(pool).loadHumanClosure({sessionHash:f.hash as Digest,selectors:selectors(f)});}
+ const observed=observeOwnerPool(pool);
+ try{return await createAuthorityFoundationRepository(observed.pool).loadHumanClosure({sessionHash:f.hash as Digest,selectors:selectors(f)});}
  catch(error){
   // A later fresh snapshot is diagnostic only: never substitute it for the failed
   // repository result. Keep raw closures, session hashes and identity rows private.
   const safeCode=(e:unknown)=>e!==null&&typeof e==='object'&&'code'in e&&typeof e.code==='string'&&/^(?:[0-9A-Z]{5}|AUTHORITY_FOUNDATION_[A-Z_]+)$/.test(e.code)?e.code:'UNCLASSIFIED';
+  // Freeze original-operation timings before any later diagnostic snapshot.
+  const timing=JSON.stringify(observed.snapshot());
   let diagnostic:string;
   try{const raw=await rawLoad(f),parsed=parseAuthorityHumanClosure(raw,JSON.stringify(f.registry));
    diagnostic=parsed.ok?'later-raw-snapshot-parser-accepted':JSON.stringify(parsed.issues.slice(0,3).map(issue=>({code:issue.code,path:issue.path.slice(0,240),message:issue.message.slice(0,240)})));
   }catch(probe){diagnostic='later-raw-snapshot-sqlstate='+safeCode(probe);}
-  throw Object.assign(new Error('Foundation repository refusal '+safeCode(error)+'; diagnostic '+diagnostic),{code:safeCode(error)});
+  throw Object.assign(new Error('Foundation repository refusal '+safeCode(error)+'; diagnostic '+diagnostic+'\nAUTHORITY_LOADER_PHASES_V1='+timing),{code:safeCode(error)});
  }finally{await pool.end();}
 }
 export function jsonMeasure(value:unknown):{bytes:number;nodes:number;depth:number;hash:Digest}{

@@ -6,6 +6,7 @@
 import {test,expect,type Browser,type Locator,type Page,type Response,type TestInfo} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {randomUUID} from 'node:crypto';
+import {classificationCopy} from '../../apps/web/src/classification/messages.ts';
 import {domainBody,domainHeaders,domainLogin,rescanDomainBrowserAsset,scanDomainBrowserAsset,stewardIdentity} from '../fixtures/business-domains-browser.ts';
 import type {Session} from '../../apps/web/src/types.ts';
 import type {ApprovalDefinition} from '../../packages/domain/src/approval-contracts.ts';
@@ -28,6 +29,11 @@ async function language(page:Page,locale:'en'|'ar'){
 }
 async function capture(page:Page,info:TestInfo,name:string,width:number){
  await page.setViewportSize({width,height:960});await page.evaluate(()=>window.scrollTo(0,0));
+ // Capture the asserted outcome even when existing synthetic rule pickers make
+ // the page long. This is ordinary scrolling, with no altered page content.
+ const locale=await page.locator('html').getAttribute('lang')==='ar'?'ar':'en';
+ const section=/^(applied|withdrawn)-/.test(name)?classificationCopy[locale].approved:/^suggestion-/.test(name)?classificationCopy[locale].suggestions:null;
+ if(section)await page.getByRole('heading',{name:section,exact:true}).evaluate(element=>element.scrollIntoView({block:'start',behavior:'instant'}));
  await expect.poll(()=>page.evaluate(()=>document.getAnimations().filter(animation=>animation.playState==='running'&&animation.playbackRate!==0&&Number.isFinite(animation.effect?.getComputedTiming().endTime)).length)).toBe(0);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations).toEqual([]);

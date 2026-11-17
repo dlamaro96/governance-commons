@@ -23,6 +23,35 @@ PHASES = frozenset(('admission', 'database-start', 'predecessor', 'upgrade-refus
 CATEGORIES = frozenset(('command_timeout', 'command_failed', 'suite_failed',
     'invariant_failed', 'interrupted', 'unknown'))
 MARKER = 'AUTHORITY_DIAGNOSTIC_V1='
+FOUNDATION_REFUSALS = frozenset(('AUTHORITY_FOUNDATION_INPUT_INVALID',
+    'AUTHORITY_FOUNDATION_EXECUTOR_REJECTED', 'AUTHORITY_FOUNDATION_SESSION_REJECTED',
+    'AUTHORITY_FOUNDATION_VERSION_CONFLICT', 'AUTHORITY_FOUNDATION_PROFILE_LIMIT',
+    'AUTHORITY_FOUNDATION_INTEGRITY', 'AUTHORITY_FOUNDATION_DEADLINE', 'UNCLASSIFIED'))
+PHASE_MARKER = 'AUTHORITY_LOADER_PHASES_V1='
+LOAD_PHASES = frozenset(('connect', 'statement-limit', 'lock-limit', 'idle-limit',
+    'begin', 'owner-check', 'closure', 'registry-measure', 'registry-body',
+    'commit', 'rollback', 'unclassified'))
+
+
+def load_timing(raw):
+    require(type(raw) is str and len(raw.encode('utf-8')) <= 8192)
+    value = strict_json(raw.encode('utf-8'))
+    exact(value, ('elapsedMs', 'phases'))
+    require(type(value['elapsedMs']) is int and 0 <= value['elapsedMs'] <= 3600000)
+    require(type(value['phases']) is list and 0 <= len(value['phases']) <= 32)
+    previous = 0
+    for row in value['phases']:
+        exact(row, ('phase', 'startedMs', 'elapsedMs', 'outcome'))
+        require(type(row['phase']) is str and row['phase'] in LOAD_PHASES)
+        require(type(row['outcome']) is str and row['outcome'] in ('fulfilled', 'rejected'))
+        require(type(row['startedMs']) is int and previous <= row['startedMs'] <= value['elapsedMs'])
+        require(type(row['elapsedMs']) is int and 0 <= row['elapsedMs'] <= 3600000)
+        # Independently rounded integer timestamps permit one millisecond.
+        require(row['startedMs'] + row['elapsedMs'] <= value['elapsedMs'] + 1)
+        previous = row['startedMs']
+    return value
+
+
 FIXED_SOURCES = (
     'scripts/runtime-test-authority-foundation.py', 'packages/db/migrations/013_authority_foundation.sql',
     'docs/execution/CANONICAL_AUTHORITY_FOUNDATION_CONTRACT.md',
@@ -48,10 +77,10 @@ def source_inventory(root):
 def _tap(root, phase, text):
     """Partial TAP is useful diagnostic evidence, but never counted as a pass."""
     if phase not in SUITES:
-        return [], False, False, [], []
+        return [], False, False, [], [], [], []
     expected = declarations(root, SUITES[phase])
     require(len(expected) <= 256)
-    records, states, locations = {}, set(), set()
+    records, states, locations, refusals, timings = {}, set(), set(), set(), []
     matches = list(re.finditer(r'^(ok|not ok) ([1-9][0-9]*) - ([^\r\n]*)$', text, re.M))
     unmapped = False
     for index, match in enumerate(matches):
@@ -71,6 +100,25 @@ def _tap(root, phase, text):
             # Only the fixture's fixed error prefix; arbitrary code/message fields
             # and successful/expected-refusal output do not supply SQLSTATEs.
             states.update(re.findall(r"^\s+(?:error: ['\"]?)?PostgreSQL rejected qualification operation \(([0-9A-Z]{5})\)", chunk, re.M))
+            # Only the fixture's exact fixed refusal prefix on a failed known test.
+            # Closed literals only; no later diagnostic text, arbitrary codes, or
+            # raw messages are exported. A later accepted probe is never success.
+            primary = re.findall(r"^\s+(?:error: ['\"]?)?Foundation repository refusal ([A-Z_]+); diagnostic ", chunk, re.M)
+            for code in primary:
+                if code in FOUNDATION_REFUSALS:
+                    refusals.add((expected[number-1]['file'], expected[number-1]['line'], code))
+            marked = [line for line in chunk.splitlines() if PHASE_MARKER in line]
+            if marked:
+                # The marker is inside the failed error's YAML literal block,
+                # never a free stdout/stderr line, successful test, or next probe.
+                require(phase == 'authority_loader' and status == 'failed')
+                require(len(primary) == 1 and primary[0] in FOUNDATION_REFUSALS and len(marked) == 1)
+                error = re.search(r'^([ ]+)error: \|-?\s*\n((?:\1[ ]+[^\n]*\n)+)', chunk, re.M)
+                require(error is not None)
+                payload = re.findall(r'^[ ]+'+PHASE_MARKER+r'(.*)$', error[2], re.M)
+                require(len(payload) == 1)
+                timings.append({'file':expected[number-1]['file'], 'line':expected[number-1]['line'],
+                    'code':primary[0], **load_timing(payload[0])})
             for name in (SUITES[phase], 'tests/fixtures/authority-foundation.ts', 'tests/fixtures/authority-authn-foundation.ts'):
                 lines = read_file(root, name, 4*MIB).decode('utf-8').splitlines()
                 for line, column in re.findall(r'(?:^|[/\\])' + re.escape(name) + r':([1-9][0-9]{0,5}):([1-9][0-9]{0,5})(?=[)\s]|$)', chunk, re.M):
@@ -84,7 +132,8 @@ def _tap(root, phase, text):
                 and re.findall(r'^1\.\.([0-9]+)$', text, re.M) == [str(len(expected))]
                 and re.findall(r'^# tests ([0-9]+)$', text, re.M) == [str(len(expected))])
     return tests, complete, unmapped, sorted(states)[:16], [
-        {'file': name, 'line': line, 'column': column} for name, line, column in sorted(locations)[:16]]
+        {'file': name, 'line': line, 'column': column} for name, line, column in sorted(locations)[:16]], [
+        {'file': name, 'line': line, 'code': code} for name, line, code in sorted(refusals)[:16]], timings[:16]
 
 
 def _safe_report(root, value, commit):
@@ -138,7 +187,7 @@ def _safe_report(root, value, commit):
             require(exit_code != 0)
         if category == 'suite_failed':
             require(phase in SUITES)
-    tests, complete, unmapped, states, locations = _tap(root, phase, text)
+    tests, complete, unmapped, states, locations, refusals, timings = _tap(root, phase, text)
     if phase in ('predecessor', 'upgrade', 'replay', 'authority-upgrade') and exit_code not in (None, 0):
         states = sorted(set(re.findall(r'^MIGRATION_FAILED ([0-9A-Z]{5})(?: |$)', text, re.M)))[:16]
     cleanup = value.get('cleanup', {})
@@ -150,12 +199,12 @@ def _safe_report(root, value, commit):
         'started_at': value['started_at'], 'recorded_at': value['recorded_at'],
         'failed_phase': phase, 'category': category, 'exit_code': exit_code,
         'command_log_sha256': command_digest, 'sqlstates': states, 'tests': tests,
-        'failure_locations': locations, 'tap_complete': complete, 'unmapped_test_output': unmapped,
+        'failure_locations': locations, 'foundation_refusals': refusals, 'foundation_timings': timings, 'tap_complete': complete, 'unmapped_test_output': unmapped,
         'command_log_available': selected is not None, 'cleanup': flags,
         'source_files': sources, 'source_inventory_sha256': digest(json.dumps(sources, sort_keys=True, separators=(',', ':')).encode()),
         'log_digests': log_digests,
         'limitations': ['Diagnostic evidence only; no successful test, migration, runtime or release qualification.',
-            'Only exact static test declarations and fixed tagged SQLSTATEs are exported; missing or incomplete output may leave the cause unknown.',
+            'Only exact static test declarations, fixed tagged SQLSTATEs, closed foundation refusal codes and finite failed-operation phase timings are exported; missing or incomplete output may leave the cause unknown.',
             'Raw logs, test titles, messages, SQL, credentials and private paths remain private; cleanup flags are runner observations.']}
 
 

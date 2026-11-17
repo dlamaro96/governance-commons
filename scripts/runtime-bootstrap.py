@@ -189,7 +189,7 @@ for database, role in [("governance", "gc_owner"), ("keycloak", "keycloak"), ("t
     sql += f"CREATE DATABASE {database} OWNER {role};\nREVOKE ALL ON DATABASE {database} FROM PUBLIC;\nGRANT CONNECT ON DATABASE {database} TO {role};\n"
 sql += "GRANT CONNECT ON DATABASE governance TO gc_app;\n\\connect governance\nREVOKE CREATE ON SCHEMA public FROM PUBLIC;\nALTER SCHEMA public OWNER TO gc_owner;\n"
 write(LOCAL / "postgres-init.sql", sql)
-source = (ROOT / "deploy/compose/source-fixture.sql").read_text() + "\n" + (ROOT / "deploy/compose/reference-quality-fixture.sql").read_text() + "\n" + (ROOT / "deploy/compose/uniqueness-quality-fixture.sql").read_text()
+source = (ROOT / "deploy/compose/source-fixture.sql").read_text() + "\n" + (ROOT / "deploy/compose/reference-quality-fixture.sql").read_text() + "\n" + (ROOT / "deploy/compose/uniqueness-quality-fixture.sql").read_text() + "\n" + (ROOT / "deploy/compose/range-quality-fixture.sql").read_text()
 source = f"CREATE ROLE harbor_reader LOGIN PASSWORD '{values['SOURCE_READER_PASSWORD']}' NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;\nALTER ROLE harbor_reader SET default_transaction_read_only=on;\n" + source
 write(LOCAL / "source-init.sql", source)
 print("Local secrets generated/preserved in .local (directory 0700, files 0600).")

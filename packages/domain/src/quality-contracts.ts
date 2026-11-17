@@ -14,7 +14,13 @@ export interface UniquenessRuleDefinition {
  name:string;purpose:string;ownerId:string;severity:'info'|'warning'|'critical';maximumDuplicateBasisPoints:number;
  comparison:'utf8-exact';nullPolicy:'exclude';
 }
-export type QualityRuleDefinition=CompletenessRuleDefinition|ReferenceAllowedValuesRuleDefinition|UniquenessRuleDefinition;
+export interface RangeRuleDefinition {
+ formatVersion:1;kind:'range';target:{tableAssetId:string;columnAssetId:string};
+ name:string;purpose:string;ownerId:string;severity:'info'|'warning'|'critical';maximumOutOfRangeBasisPoints:number;
+ minimum:string;maximum:string;comparison:'int64-inclusive';nullPolicy:'exclude';
+}
+export interface QualityRangeBinding {minimum:string;maximum:string;comparison:'int64-inclusive';nullPolicy:'exclude';rangeHash:string}
+export type QualityRuleDefinition=CompletenessRuleDefinition|ReferenceAllowedValuesRuleDefinition|UniquenessRuleDefinition|RangeRuleDefinition;
 export interface QualityReferenceMetadata {setId:string;version:number;publicationHash:string;asOf:string;codeStatus:'active';bindingHash:string}
 export interface QualityReferenceBinding extends QualityReferenceMetadata {codes:string[]}
 export interface QualityTarget {
@@ -27,7 +33,8 @@ export interface QualityUniquenessBudget extends QualityBudget {maximumValueByte
 export const QUALITY_UNIQUENESS_BUDGET:Readonly<QualityUniquenessBudget>=Object.freeze({...QUALITY_BUDGET,maximumValueBytes:4096,maximumTotalValueBytes:67108864});
 export type QualityExecution={formatVersion:1;kind:'completeness';target:QualityTarget;budget:QualityBudget}
  |{formatVersion:1;kind:'reference-allowed-values';target:QualityTarget;budget:QualityBudget;reference:QualityReferenceBinding}
- |{formatVersion:1;kind:'uniqueness';target:QualityTarget;budget:QualityUniquenessBudget};
+ |{formatVersion:1;kind:'uniqueness';target:QualityTarget;budget:QualityUniquenessBudget}
+ |{formatVersion:1;kind:'range';target:QualityTarget;budget:QualityBudget;range:QualityRangeBinding};
 export interface CompletenessMeasurement {
  formatVersion:1;kind:'completeness';strategy:'exact-bounded-role-scope';rowCount:number;nullCount:number;
  observedStartedAt:string;observedFinishedAt:string;elapsedMs:number;sourceVersion:string;adapterVersion:'1';
@@ -44,7 +51,12 @@ export interface UniquenessMeasurement {
  observedStartedAt:string;observedFinishedAt:string;elapsedMs:number;sourceVersion:string;adapterVersion:'1';
  queryTemplate:'postgresql-uniqueness-v1';estimatedCost:number;estimatedBytes:number;
 }
-export type QualityMeasurement=CompletenessMeasurement|ReferenceAllowedValuesMeasurement|UniquenessMeasurement;
+export interface RangeMeasurement {
+ formatVersion:1;kind:'range';strategy:'exact-bounded-role-scope';rowCount:number;nullCount:number;belowCount:number;aboveCount:number;rangeHash:string;
+ observedStartedAt:string;observedFinishedAt:string;elapsedMs:number;sourceVersion:string;adapterVersion:'1';
+ queryTemplate:'postgresql-range-v1';estimatedCost:number;estimatedBytes:number;
+}
+export type QualityMeasurement=CompletenessMeasurement|ReferenceAllowedValuesMeasurement|UniquenessMeasurement|RangeMeasurement;
 export type QualityStatus='queued'|'running'|'succeeded'|'failed'|'cancelled';
 export type QualityVerdict='PASS'|'FAIL'|'NO_DATA';
 export const QUALITY_ERRORS=['QUALITY_RESOURCE_LIMIT','QUALITY_TARGET_STALE','QUALITY_TARGET_UNSUPPORTED','QUALITY_SOURCE_FAILED','QUALITY_DEADLINE_EXCEEDED','QUALITY_AUTHORITY_REVOKED','QUALITY_ATTEMPTS_EXHAUSTED','QUALITY_CANCELLED','QUALITY_REFERENCE_UNAVAILABLE'] as const;
@@ -55,7 +67,7 @@ export interface QualityRunFields {
  status:QualityStatus;version:number;attempt:number;createdAt:string;startedAt:string|null;finishedAt:string|null;expiresAt:string;
  measurement:QualityMeasurement|null;verdict:QualityVerdict|null;errorCode:QualityError|null;
 }
-export type QualityRunView=QualityRunFields & ({kind?:never;reference?:never}|{kind:'reference-allowed-values';reference:QualityReferenceMetadata}|{kind:'uniqueness';reference?:never});
+export type QualityRunView=QualityRunFields & ({kind?:never;reference?:never;range?:never}|{kind:'reference-allowed-values';reference:QualityReferenceMetadata;range?:never}|{kind:'uniqueness';reference?:never;range?:never}|{kind:'range';range:QualityRangeBinding;reference?:never;measurement:RangeMeasurement|null});
 export interface QualityPageQuery {limit?:number;cursor?:string}
 export interface QualityPage<T>{items:T[];nextCursor:string|null}
 export interface QualityAssetView extends QualityPage<QualityRuleView>{

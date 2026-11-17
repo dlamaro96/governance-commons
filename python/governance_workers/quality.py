@@ -31,6 +31,8 @@ MAX_PLAN_BYTES = 65536
 MAX_PLAN_NODES = 64
 REFERENCE_KIND = 'reference-allowed-values'
 UNIQUENESS_KIND = 'uniqueness'
+RANGE_KIND = 'range'
+RANGE_KEYS = frozenset(('minimum', 'maximum', 'comparison', 'nullPolicy', 'rangeHash'))
 MAX_VALUE_BYTES = 4096
 MAX_TOTAL_VALUE_BYTES = 67108864
 MAX_REFERENCE_CODES = 256
@@ -119,6 +121,39 @@ def validate_reference_binding(value):
     return detached
 
 
+def validate_range_binding(value):
+    """Canonical signed-int64 strings and a closed, detached bound hash.
+
+    Python integers preserve every bit; floats and JSON numbers are never
+    admitted. The hash preimage is shared with the protected SQL/domain layer.
+    """
+    _keys(value, RANGE_KEYS)
+    bounds = []
+    for key in ('minimum', 'maximum'):
+        bound = value[key]
+        if (type(bound) is not str or len(bound) > 20
+                or not re.fullmatch(r'(?:0|-[1-9][0-9]*|[1-9][0-9]*)', bound)):
+            _fail()
+        integer = int(bound)
+        if not -9223372036854775808 <= integer <= 9223372036854775807:
+            _fail()
+        bounds.append(integer)
+    if bounds[0] > bounds[1]:
+        _fail()
+    if (type(value['comparison']) is not str or value['comparison'] != 'int64-inclusive'
+            or type(value['nullPolicy']) is not str or value['nullPolicy'] != 'exclude'
+            or type(value['rangeHash']) is not str or not re.fullmatch(r'[a-f0-9]{64}', value['rangeHash'])):
+        _fail()
+    detached = {key: value[key] for key in RANGE_KEYS if key != 'rangeHash'}
+    preimage = dict(detached, formatVersion=1, kind=RANGE_KIND)
+    encoded = json.dumps(preimage, sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode('utf-8')
+    expected = hashlib.sha256(encoded).hexdigest()
+    if not hmac.compare_digest(expected, value['rangeHash']):
+        _fail()
+    detached['rangeHash'] = expected
+    return detached
+
+
 def validate_execution(source, execution):
     """Closed fixed-shape JSON admission, before credentials or connection use."""
     _keys(source, ('connectorId', 'host', 'port', 'database', 'schema', 'secretRef'))
@@ -134,11 +169,14 @@ def validate_execution(source, execution):
         _fail()
     kind = execution['kind']
     _keys(execution, ('formatVersion', 'kind', 'target', 'budget', 'reference')
-          if kind == REFERENCE_KIND else ('formatVersion', 'kind', 'target', 'budget'))
-    if type(execution['formatVersion']) is not int or execution['formatVersion'] != 1 or kind not in ('completeness', REFERENCE_KIND, UNIQUENESS_KIND):
+          if kind == REFERENCE_KIND else ('formatVersion', 'kind', 'target', 'budget', 'range')
+          if kind == RANGE_KIND else ('formatVersion', 'kind', 'target', 'budget'))
+    if type(execution['formatVersion']) is not int or execution['formatVersion'] != 1 or kind not in ('completeness', REFERENCE_KIND, UNIQUENESS_KIND, RANGE_KIND):
         _fail()
     if kind == REFERENCE_KIND:
         validate_reference_binding(execution['reference'])
+    if kind == RANGE_KIND:
+        validate_range_binding(execution['range'])
     target, budget = execution['target'], execution['budget']
     _keys(target, TARGET_KEYS)
     ceilings = UNIQUENESS_BUDGETS if kind == UNIQUENESS_KIND else BUDGETS
@@ -302,7 +340,7 @@ def _measure_uniqueness(conn, relation, target, budget, deadline_at):
         'totalValueBytes': total, 'largestValueBytes': largest}
 
 
-def _measure(conn, target, budget, deadline_at, reference=None, *, uniqueness=False):
+def _measure(conn, target, budget, deadline_at, reference=None, *, uniqueness=False, range_binding=None):
     conn.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY')
     relation = sql.Identifier(target['schemaName'], target['tableName'])
     # Lock by safely quoted name, then independently prove that the lock belongs
@@ -348,7 +386,20 @@ def _measure(conn, target, budget, deadline_at, reference=None, *, uniqueness=Fa
             _fail('QUALITY_TARGET_UNSUPPORTED')
         rows, nulls, cost, estimated_bytes, metrics = _measure_uniqueness(conn, relation, target, budget, deadline_at)
         return rows, nulls, version, cost, estimated_bytes, metrics
-    if reference is not None:
+    if range_binding is not None:
+        # Exact built-in integer OIDs exclude domains and every source-defined
+        # cast/operator. Only bound parameters are cast to the fixed int8 type;
+        # the pinned source column is never cast or interpolated as SQL text.
+        if row['type_oid'] not in ('20', '21', '23'):
+            _fail('QUALITY_TARGET_UNSUPPORTED')
+        aggregate = sql.SQL(
+            'SELECT count(*) AS row_count, count(*) FILTER (WHERE value IS NULL) AS null_count, '
+            'count(*) FILTER (WHERE value OPERATOR(pg_catalog.<) %s::pg_catalog.int8) AS below_count, '
+            'count(*) FILTER (WHERE value OPERATOR(pg_catalog.>) %s::pg_catalog.int8) AS above_count '
+            'FROM (SELECT {} AS value FROM ONLY {} LIMIT %s) AS bounded').format(
+                sql.Identifier(target['columnName']), relation)
+        parameters = (range_binding['minimum'], range_binding['maximum'], budget['maximumRows'] + 1)
+    elif reference is not None:
         # Actual built-in OIDs, not a name/category check, exclude domains,
         # char padding, extension types and user-authored casts/operators.
         if row['type_oid'] not in ('25', '1043'):
@@ -369,7 +420,8 @@ def _measure(conn, target, budget, deadline_at, reference=None, *, uniqueness=Fa
                   parameters, budget, deadline_at).fetchone()
     cost, estimated_bytes = _estimates(plan.get('QUERY PLAN') if type(plan) is dict else None, budget)
     counts = _query(conn, aggregate, parameters, budget, deadline_at).fetchone()
-    expected_counts = {'row_count', 'null_count', 'invalid_count'} if reference is not None else {'row_count', 'null_count'}
+    expected_counts = ({'row_count', 'null_count', 'below_count', 'above_count'} if range_binding is not None
+                       else {'row_count', 'null_count', 'invalid_count'} if reference is not None else {'row_count', 'null_count'})
     if (type(counts) is not dict or set(counts) != expected_counts
             or type(counts['row_count']) is not int or type(counts['null_count']) is not int
             or not 0 <= counts['null_count'] <= counts['row_count'] <= budget['maximumRows'] + 1):
@@ -377,9 +429,16 @@ def _measure(conn, target, budget, deadline_at, reference=None, *, uniqueness=Fa
     if reference is not None and (type(counts['invalid_count']) is not int
             or not 0 <= counts['invalid_count'] <= counts['row_count'] - counts['null_count']):
         _fail('SOURCE_DATABASE_ERROR')
+    if range_binding is not None and (type(counts['below_count']) is not int or type(counts['above_count']) is not int
+            or counts['below_count'] < 0 or counts['above_count'] < 0
+            or counts['below_count'] + counts['above_count'] > counts['row_count'] - counts['null_count']):
+        _fail('SOURCE_DATABASE_ERROR')
     if counts['row_count'] > budget['maximumRows']:
         _fail('QUALITY_RESOURCE_LIMIT')
     result = (counts['row_count'], counts['null_count'], version, cost, estimated_bytes)
+    if range_binding is not None:
+        return result + ({'belowCount': counts['below_count'], 'aboveCount': counts['above_count'],
+                          'rangeHash': range_binding['rangeHash']},)
     return result + (counts['invalid_count'],) if reference is not None else result
 
 
@@ -388,6 +447,7 @@ def execute(source, secret, tenant_id, execution):
     source, target, budget = validate_execution(source, execution)
     reference = validate_reference_binding(execution['reference']) if execution['kind'] == REFERENCE_KIND else None
     uniqueness = execution['kind'] == UNIQUENESS_KIND
+    range_binding = validate_range_binding(execution['range']) if execution['kind'] == RANGE_KIND else None
     deadline_at = started + budget['maximumSeconds']
     try:
         with deadline(_remaining(deadline_at)):
@@ -402,20 +462,20 @@ def execute(source, secret, tenant_id, execution):
                         conn = psycopg.connect(**kwargs, row_factory=dict_row)
                         resources.own(conn.close)
                     set_json_loads(_plan_json, context=conn)
-                    measured = _measure(conn, target, budget, deadline_at, reference, uniqueness=uniqueness)
+                    measured = _measure(conn, target, budget, deadline_at, reference, uniqueness=uniqueness, range_binding=range_binding)
                     rows, nulls, version, cost, estimated_bytes = measured[:5]
             # Connection close (rollback) and CA cleanup are inside the original
             # wall deadline. No connection context manager can print DB details.
             _remaining(deadline_at)
-            result = {'formatVersion': 1, 'kind': UNIQUENESS_KIND if uniqueness else REFERENCE_KIND if reference is not None else 'completeness', 'strategy': 'exact-bounded-role-scope',
+            result = {'formatVersion': 1, 'kind': RANGE_KIND if range_binding is not None else UNIQUENESS_KIND if uniqueness else REFERENCE_KIND if reference is not None else 'completeness', 'strategy': 'exact-bounded-role-scope',
                     'rowCount': rows, 'nullCount': nulls, 'observedStartedAt': observed_started,
                     'observedFinishedAt': _stamp(), 'elapsedMs': math.floor((time.monotonic() - started) * 1000),
                     'sourceVersion': version, 'adapterVersion': '1',
-                    'queryTemplate': 'postgresql-uniqueness-v1' if uniqueness else 'postgresql-reference-allowed-values-v1' if reference is not None else 'postgresql-completeness-v1',
+                    'queryTemplate': 'postgresql-range-v1' if range_binding is not None else 'postgresql-uniqueness-v1' if uniqueness else 'postgresql-reference-allowed-values-v1' if reference is not None else 'postgresql-completeness-v1',
                     'estimatedCost': cost, 'estimatedBytes': estimated_bytes}
             if reference is not None:
                 result.update(invalidCount=measured[5], referenceBindingHash=reference['bindingHash'])
-            if uniqueness:
+            if uniqueness or range_binding is not None:
                 result.update(measured[5])
             return result
     except TargetPolicyError as error:
