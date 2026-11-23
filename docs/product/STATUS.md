@@ -1,7 +1,7 @@
 # Product status
 
 Updated 23 November 2026. Governance Commons is a working **development preview**, not a completed enterprise product or supported release. PR #39 merged normally as `fb1fd0e` after all 45 required development outcomes, source scanning and both native runtime image scans passed at `80101e0`. Its five behavior archives and exact source bindings are verified. PR #40's navigation/context increment passes all 46 outcomes at `4cbde6a` and merged normally as `ed0c6e4`. PR #41's SQL033 increment passes all 47 outcomes at `296d1e5` and merged normally as `1db2f71`. See [current state](../execution/STATE.md), [development evidence](../verification/hosted-checkpoint-296d1e5.json), [source evidence](../verification/source-security-296d1e5.json) and [image evidence](../verification/runtime-images-hosted-296d1e5.json).
-PR #42 dependency/startup changes pass all 47 outcomes and exact artifacts at `82859ad` and merged normally as `9e60da8`. [Latest hosted checkpoint](../verification/hosted-checkpoint-82859ad.json).
+PR #42 dependency/startup changes pass all 47 outcomes and exact artifacts at `82859ad` and merged normally as `9e60da8`. [PR #42 hosted checkpoint](../verification/hosted-checkpoint-82859ad.json).
 
 ## Implemented workflows with scoped local evidence
 
@@ -35,7 +35,7 @@ There are 354 named baseline requirements plus their detailed and supplemental t
 
 ## Immediate delivery gates
 
-1. PR #39 is merged normally after exact all 45-outcome and artifact verification. PR #40 is also merged after its exact 46-outcome qualification. PR #41 is merged after its exact 47-outcome qualification. PR #42 also passes all 47 outcomes, source security and both native image gates at `82859ad`, then merged normally as `9e60da8`. SQL034 stable label identities pass isolated and core local qualification, including 172 API cases and the expanded real browser journey; its separate 48-outcome hosted qualification remains open. [Local evidence](../verification/classification-label-identities-integrated-local.json).
+1. PR #39 is merged normally after exact all 45-outcome and artifact verification. PR #40 is also merged after its exact 46-outcome qualification. PR #41 is merged after its exact 47-outcome qualification. PR #42 also passes all 47 outcomes, source security and both native image gates at `82859ad`, then merged normally as `9e60da8`. SQL034 and SQL035 have scoped native and core evidence; their open hosted assignments retain their own outcomes. The superseded SQL035 `bc1f650` run is [cancelled](../verification/hosted-checkpoint-bc1f650-cancelled.json), not passed. SQL036 passes its separate local native and core checks below; its new 50-outcome hosted assignment remains required.
 2. Qualify the runtime-security aggregate for fork use before adding it to enforced branch requirements. No scan alone completes security or release acceptance.
 3. Preserve the separately scoped volume, freshness, authority, reference and import evidence. The authority-read foundation remains inactive across content APIs.
 4. Keep the README, canonical register, GitHub backlog and PR descriptions aligned with executed behavior. Merge through protected checks.
@@ -53,7 +53,16 @@ isolated native cases and 1,207 unit cases. Its new required CI outcome brings
 this development assignment to 49. All 172 core API cases and the selected real
 classification browser journey pass on the exact rebuilt images. Hosted
 qualification remains separate.
-This is inactive authorization provenance. SQL036 adds held composition and
-evaluation; its separate140-case native gate and1,257 unit cases pass. Core
-integration and full ingress activation remain required. [Scoped evidence](../verification/reviewed-classification-facts-local.json) and
-[integrated evidence](../verification/reviewed-classification-facts-integrated-local.json).
+This is inactive authorization provenance. [SQL035 native evidence](../verification/reviewed-classification-facts-local.json) and
+[integrated evidence](../verification/reviewed-classification-facts-integrated-local.json) retain their original scope.
+
+SQL036 aligns storage and evaluator scope checks and performs held metadata
+composition and evaluation. All 140 native cases and 1,257 unit cases pass.
+The rebuilt core passes all 172 API cases and one real classification browser
+journey, with 36 migration checksums and 349 source/image bindings verified;
+three of fourteen captures were inspected. The browser covers the existing
+classification workflow, not authority activation. The native gate separately
+qualifies the inactive evaluator. Fresh hosted scans and the 50-outcome pipeline,
+effect fencing and complete ingress activation remain required.
+[SQL036 native evidence](../verification/held-metadata-authority-local.json) and
+[integrated evidence](../verification/held-metadata-authority-integrated-local.json).

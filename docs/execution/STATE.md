@@ -145,7 +145,7 @@ complete development pass is claimed. The test now admits the existing real
 quota before its heavy phases, without retrying product requests or changing
 limits/deadlines. The selected real local journey passes with three of twelve
 captures inspected. [Correction evidence](../verification/reference-browser-rate-admission-local.json).
-The failed assignment is preserved in its [exact hosted record](../verification/hosted-checkpoint-a24af90-failed.json). At the repaired head `7b8babf`, [source security](../verification/source-security-7b8babf.json) passes with all 1,589 Git files and three stored analyses verified. All four native [image reports](../verification/runtime-images-hosted-7b8babf.json) pass the high/critical gate; lower application-image findings remain recorded. Its separate 48-outcome development run is still pending. No parent scan qualifies the subsequent SQL035 changes.
+The failed assignment is preserved in its [exact hosted record](../verification/hosted-checkpoint-a24af90-failed.json). At the repaired head `7b8babf`, [source security](../verification/source-security-7b8babf.json) passes with all 1,589 Git files and three stored analyses verified. All four native [image reports](../verification/runtime-images-hosted-7b8babf.json) pass the high/critical gate; lower application-image findings remain recorded. Its separate 48-outcome development run finished with 46 successes, one failure and one skip; the original timeout remains recorded in the [failed checkpoint](../verification/hosted-checkpoint-7b8babf-failed.json). No parent scan qualifies the subsequent SQL035 changes.
 
 ## Current corrections
 
@@ -157,7 +157,7 @@ Fresh immutable-image protected authentication at `5d9e501` passes **15 native H
 
 ## Product and runtime
 
-The current Docker Compose core runs real PostgreSQL, OpenSearch, Temporal, Keycloak and source workers with synthetic data. It contains SQL036 and the inactive held metadata evaluator. All36 migration checksums and349 source/image bindings match the rebuilt and running services. The isolated140-case gate passes; current core API/browser qualification is in progress. Earlier qualified SQL035 observations retain their original revisions and image/source bindings. Applied SQL001–036 migrations are immutable.
+The current Docker Compose core runs real PostgreSQL, OpenSearch, Temporal, Keycloak and source workers with synthetic data. It contains SQL036 and the inactive held metadata evaluator. All 36 migration checksums and 349 source/image bindings match the rebuilt images and four running application services; all ten services are healthy. All 172 API cases and one real classification browser journey pass without retries or skips, with three of fourteen captures inspected. The separate 140-case native gate qualifies the inactive authority behavior. Earlier observations retain their original source and image bindings. Applied SQL001–036 migrations are immutable. [Integrated evidence](../verification/held-metadata-authority-integrated-local.json).
 
 Usable workflows include tenant-scoped catalog/search/ownership/audit, operating models and graph migrations, glossary/reference publication and imports, reviewed classification, PostgreSQL view lineage, and six source-executed quality families. Scheduled quality incidents support notification, verified resolution and reopening; expired freshness evidence remains historical without authorizing a new resolution.
 
@@ -181,7 +181,7 @@ Earlier failed and passing attempts retain their original source bindings in the
 
 1. Completed: verify all 45 outcomes and artifacts at `80101e0`, then merge PR #39 normally as `fb1fd0e`.
 2. Completed: verify all 46 PR #40 outcomes at `4cbde6a`, then merge normally as `ed0c6e4`. Completed: PR #41 at `296d1e5` passed its separate 47-outcome pipeline and merged normally as `1db2f71`.
-3. Completed: PR #42 passes its exact 47 development outcomes, source and native runtime image qualification and merged normally as `9e60da8`. Finish the stable-classification-identity increment and its separate 48-outcome qualification, then implement trusted classification facts and a held-snapshot executor before canonical authority activation. Continue the remaining M0–M10 workstreams in the [delivery plan](PLAN.md).
+3. Completed: PR #42 passes its exact 47 development outcomes, source and native runtime image qualification and merged normally as `9e60da8`. Finish the separate hosted qualification for the open SQL034/SQL035 increments, then qualify SQL036 through its new 50-outcome assignment. Trusted classification facts and held metadata evaluation have scoped local evidence; effect fencing and complete ingress activation remain required. Continue the remaining M0–M10 workstreams in the [delivery plan](PLAN.md).
 4. Qualify fork behavior before adding the new runtime security aggregate to enforced branch requirements. Independent reviews and live vendor prerequisites retain their own open qualifications.
 
 [Issue #24](https://github.com/dlamaro96/governance-commons/issues/24) is closed for the scoped pipeline checkpoint. Issues #25–#33 retain the broader delivery workstreams; [backlog.json](backlog.json) maps all 1,106 requirements exactly once. Qualification issues #11–#13 remain open. PR #22 is closed unmerged and superseded by #23 without rewriting history. Scoped issue #10 is closed; broader model and authority obligations remain open. Dependency PRs #1, #2 and #5 are closed as superseded by the published updates.
@@ -214,8 +214,10 @@ services before API execution and after browser execution. All 172 API cases and
 the selected real classification browser journey pass without retries or skips.
 Three of fourteen captures were inspected; all ten services remain healthy.
 [Integrated evidence](../verification/reviewed-classification-facts-integrated-local.json).
-Fresh hosted source/image scans and the separate 49-outcome assignment remain
-required for this increment.
+PR #48 remains open. Its superseded `bc1f650` development run was cancelled,
+with 41 successful outcomes, two cancelled outcomes and six skips; the required
+aggregate did not pass. The fresh run at `7d91aae` retains its own qualification.
+[Cancelled checkpoint](../verification/hosted-checkpoint-bc1f650-cancelled.json).
 
 The first hosted SQL035 run at `4e0c5bb` exposed one stale host-control
 expectation: the relation-candidate historical gate correctly retained its
@@ -225,19 +227,35 @@ assertion. All 18 controls pass against the exact published source plus this
 one-line correction; the original hosted failure remains retained. Fresh hosted
 qualification is required for the corrected revision.
 
-The next held-evaluator integration exposed a literal scope-direction mismatch
-between canonical storage and the pure evaluator. A forward SQL036 repair must
-align own/onward/connected scope checks and parent time ceilings without changing
-SQL001–035 or silently rewriting retained grant history. Bounded atomic preflight
-must refuse incompatible active graphs pending explicit remediation. The
-candidate now composes and evaluates inside the held snapshot. All 1,257 unit
-cases, root/web types, ten new harness controls, 289 migration-admission controls
-and 219 affected CI/dev controls pass (overlapping counts are not additive).
-Its 140-case isolated native gate passes with all281 source bindings,147-table
-preservation, four replay phases and owned cleanup. The shared core now runs SQL036 with349 source/image hashes matched across
-all four application services. Its172-case API gate is running; the browser gate
-remains pending. The pipeline includes a separate 50th mandatory
-outcome while retaining the preceding 49 assignments. No content authority is
-activated. [Decision](../adr/0024-held-metadata-evaluation.md).
+## Held metadata evaluation increment
+
+SQL036 aligns canonical own, onward and connected scope checks and parent time
+ceilings with the pure evaluator. Its bounded atomic preflight refuses
+incompatible active graphs pending explicit remediation, preserving SQL001–035
+and retained grant history. Composition and evaluation now execute inside the
+protected repeatable-read snapshot; the returned diagnostic does not authorize
+a later effect.
+
+All 1,257 unit cases, root/web types, ten new harness controls, 289 migration
+admission controls and 219 affected CI/dev controls pass; these overlapping
+counts are not additive. The isolated gate passes all 140 native cases with
+281 exact source bindings, 147-table preservation, four migration replay phases
+and owned cleanup. The actual 2 MiB source-proof boundary is native-qualified;
+the complete 8 MiB and aggregate-node overflow controls remain unit-only.
+[Native evidence](../verification/held-metadata-authority-local.json).
+
+Normal core rebuild and SQL036 migration pass. All 36 checksums and 349 source
+bindings match the immutable images and four running application services
+before API execution and after browser execution. All 172 API cases and the
+selected real classification browser journey pass without retries or skips;
+three of fourteen captures were inspected. This browser journey covers the
+existing classification workflow, while the inactive evaluator retains its
+separate native qualification. [Integrated evidence](../verification/held-metadata-authority-integrated-local.json).
+
+The pipeline adds a 50th mandatory outcome while preserving the preceding 49.
+Fresh hosted qualification and source/image scans remain required. Runtime
+effect and revocation fencing, field projections, compiled-filter equivalence
+and all-ingress activation remain open. No content authority is activated.
+[Decision](../adr/0024-held-metadata-evaluation.md).
 
 Further snapshot transport batching passes the isolated SQL024 repaired chain: **263 native cases across 13 invocations**, 176 bound sources, preservation, replay and owned cleanup, in 332.580091 seconds within the unchanged 600-second lifecycle. Both original digest algorithms and all budgets remain unchanged; 56 affected host controls pass. This is one local observation. The earlier exact `7b8babf` hosted checkpoint remains **NOT_PASSED** (46 successes, one failure and one skip); the local pass does not replace fresh hosted qualification. [Transport evidence](../verification/reference-snapshot-transport-local.json) and [retained hosted failure](../verification/hosted-checkpoint-7b8babf-failed.json).

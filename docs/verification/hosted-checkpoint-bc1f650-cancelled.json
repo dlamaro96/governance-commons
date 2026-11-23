@@ -1,0 +1,295 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T11:23:44.799012+00:00",
+  "release_qualified": false,
+  "implementation_commit": "bc1f650445a291619209fdaa53691612821e965f",
+  "tested_merge_commit": "e397b63074fcb22f6bb8f9f80e3e73ac27ca1a90",
+  "same_tree_and_parent_verified": true,
+  "pull_request": "https://github.com/dlamaro96/governance-commons/pull/48",
+  "run_id": 45157663715,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45157663715",
+  "run_attempt": 1,
+  "result": "NOT_PASSED",
+  "workflow_conclusion": "cancelled",
+  "required_outcomes": 49,
+  "outcome_counts": {
+    "success": 41,
+    "cancelled": 2,
+    "skipped": 6
+  },
+  "outcomes": {
+    "connectors": "success",
+    "security": "success",
+    "model_upgrade": "success",
+    "asset_type_upgrade": "success",
+    "type_migration_upgrade": "success",
+    "relations_upgrade": "success",
+    "relation_participation_upgrade": "success",
+    "business_domains_upgrade": "success",
+    "authority_authn_foundation": "success",
+    "authority_read_original": "success",
+    "authority_read_current": "success",
+    "authority_asset_context": "cancelled",
+    "content_security_revision": "skipped",
+    "classification_label_identities": "skipped",
+    "reviewed_classification_facts": "skipped",
+    "source_connectors_upgrade": "skipped",
+    "postgres_targets": "skipped",
+    "relation_candidate_original": "success",
+    "relation_candidate_current": "success",
+    "glossary_upgrade": "success",
+    "relation_scope_upgrade": "success",
+    "glossary_population_repaired_upgrade": "success",
+    "lineage_repaired_upgrade": "success",
+    "classification_repaired_upgrade": "success",
+    "quality_repaired_upgrade": "success",
+    "quality_worker": "success",
+    "lineage_worker": "success",
+    "reference_repaired_upgrade": "success",
+    "reference_quality_repaired_upgrade": "success",
+    "reference_quality_worker": "success",
+    "reference_structure_repaired_upgrade": "success",
+    "reference_import": "success",
+    "uniqueness_upgrade": "success",
+    "uniqueness_worker": "success",
+    "range_upgrade": "success",
+    "range_worker": "success",
+    "monitoring_upgrade": "success",
+    "freshness_upgrade": "success",
+    "freshness_worker": "success",
+    "freshness_scheduling_upgrade": "success",
+    "volume_upgrade": "success",
+    "volume_worker": "success",
+    "business_domain_seed": "success",
+    "browser": "cancelled",
+    "protected_authn": "skipped",
+    "bootstrap": "success",
+    "services": "success",
+    "object_store": "success",
+    "seed": "success"
+  },
+  "verified_behavior_archives": 5,
+  "exported_files": 7,
+  "safe_evidence": [
+    {
+      "family": "api",
+      "actualTests": 172,
+      "sourceFiles": 25,
+      "sourceManifestSha256": "23d80dfc37497521b227de43985007aa1933a72949c33bf9d2af657d4f665f32",
+      "artifactSha256": "afaab895d11f2de011d1eae0ba1765d0c65f2857e1102fc85dd56f7ae82b0fa4"
+    },
+    {
+      "family": "inactive-authentication",
+      "actualTests": 35,
+      "sourceFiles": 177,
+      "migrations": 12,
+      "sourceManifestSha256": "48efff0546366f7fea68397dab79a37344eef70cb5eb87da3685490f8b924fac",
+      "artifactSha256": "2e418ff66a4a7a91b148c18373eefd1732d421d403ba81ff84fbd049f8a682a8",
+      "cleanupExportedBothTrue": true
+    },
+    {
+      "family": "inactive-canonical-asset-context",
+      "hostedStepOutcome": "cancelled",
+      "declaredNativeTests": 13,
+      "qualificationScope": {
+        "command": "./dev test --suite authority-asset-context",
+        "runner": "scripts/runtime-test-authority-asset-context.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-inactive-asset-context-sql032",
+        "report": "authority-asset-context.json",
+        "schemaScope": "Isolated SQL001\u2013030, then SQL031/032 with preservation and replay; current-source inactive canonical asset-context cases",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable declarations only; private 13-case report and its executed input/resource inventory are not exported."
+    },
+    {
+      "family": "inactive-content-security-revision",
+      "hostedStepOutcome": "skipped",
+      "declaredNewNativeTests": 20,
+      "declaredPrerequisiteTests": 27,
+      "declaredTotalNativeTests": 47,
+      "qualificationScope": {
+        "command": "./dev test --suite content-security-revision",
+        "runner": "scripts/runtime-test-content-security-revision.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-content-security-revision-sql033",
+        "report": "content-security-revision.json",
+        "schemaScope": "Populated SQL001\u2013032 to SQL033; private content revision, concurrency, snapshot, preservation and replay",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable 13+14+20 case declarations only; private native source inventory, preservation, concurrency and cleanup reports are not exported."
+    },
+    {
+      "family": "inactive-classification-label-identities",
+      "hostedStepOutcome": "skipped",
+      "declaredNewNativeTests": 23,
+      "declaredPrerequisiteTests": 27,
+      "declaredTotalNativeTests": 50,
+      "qualificationScope": {
+        "command": "./dev test --suite classification-label-identities",
+        "runner": "scripts/runtime-test-classification-label-identities.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-classification-label-identities-sql034",
+        "report": "classification-label-identities.json",
+        "schemaScope": "Populated SQL001\u2013033 to SQL034; current-pin identity baseline, terminal retirement, concurrency, preservation and replay",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable 13+14+23 case declarations only; private native source inventory, preservation, concurrency and cleanup reports are not exported."
+    },
+    {
+      "family": "inactive-reviewed-classification-facts",
+      "hostedStepOutcome": "skipped",
+      "declaredProducerBindingTests": 23,
+      "declaredReviewedFactTests": 25,
+      "declaredPrerequisiteTests": 50,
+      "declaredTotalNativeTests": 98,
+      "qualificationScope": {
+        "command": "./dev test --suite reviewed-classification-facts",
+        "runner": "scripts/runtime-test-reviewed-classification-producer.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-reviewed-classification-facts-sql035",
+        "report": "reviewed-classification-producer.json",
+        "schemaScope": "Populated SQL001\u2013034 to SQL035; private producer bindings and inactive reviewed classification facts, complete partition validation, preservation and replay",
+        "expectedNativeTests": {
+          "predecessor": 50,
+          "producerBinding": 23,
+          "reviewedFacts": 25,
+          "total": 98
+        },
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable50+23+25 case declarations only; private native reports, mounted-source inventory and cleanup are not exported."
+    }
+  ],
+  "browser": null,
+  "jobs": [
+    {
+      "name": "secrets",
+      "id": 137635179531,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (foundation)",
+      "id": 137635179968,
+      "status": "completed",
+      "conclusion": "cancelled",
+      "failedSteps": [
+        "Collect bounded redacted evidence"
+      ]
+    },
+    {
+      "name": "behavior (quality-freshness-volume)",
+      "id": 137635180167,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "quality",
+      "id": 137635180182,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (governance)",
+      "id": 137635180190,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (browser)",
+      "id": 137635180262,
+      "status": "completed",
+      "conclusion": "cancelled",
+      "failedSteps": [
+        "Collect bounded redacted evidence"
+      ]
+    },
+    {
+      "name": "behavior (quality-basics)",
+      "id": 137635180609,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior",
+      "id": 137656559270,
+      "status": "completed",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Require every fixed behavior shard to succeed"
+      ]
+    },
+    {
+      "name": "required",
+      "id": 137656606189,
+      "status": "completed",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Require every mandatory child to succeed"
+      ]
+    }
+  ],
+  "verification_receipt_sha256": "74f21ea538e2b18db1563aab22299805f10f74815e7608b614aff8d730cf6a1c",
+  "source_security": "docs/verification/source-security-bc1f650.json",
+  "runtime_security": "docs/verification/runtime-images-hosted-bc1f650.json",
+  "supersession": {
+    "replacement_commit": "7d91aaedf986e3634c2e23673ddd937f30d347fa",
+    "status": "Separate fresh-head qualification required; the cancelled attempt is not relabelled.",
+    "scope": "Foundation and main browser were cancelled; their final collectors failed and the required aggregate did not pass. Three other behavior shards plus quality and secrets passed."
+  },
+  "pull_request_association": {
+    "initial_pr_head": "bc1f650445a291619209fdaa53691612821e965f",
+    "observed_mutable_pr_head": "7d91aaedf986e3634c2e23673ddd937f30d347fa",
+    "initial_pr_base": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+    "observed_mutable_pr_base": "bc8dd26c8b9bd4f11022b707af71a4763b9f1296",
+    "anchor_sha256": "245e81dd78c5966a68d05ac3056a2a67698f2ec30a0644cb2bc6889515e5cd1e",
+    "scope": "Immutable run, jobs, archives and tested merge remain bound to the original head/base. Nested PR metadata reflects later branch updates."
+  },
+  "visual_review": {
+    "status": "NOT_PERFORMED",
+    "inspected": [],
+    "observations": [],
+    "limitations": [
+      "No browser report or capture bytes were exported by the cancelled browser step; no browser case execution count or visual review is claimed."
+    ]
+  },
+  "limitations": [
+    "Aggregate PASS requires all49 exact outcomes, five verified archives and completed quality/secrets/behavior/required jobs; pending or failed work never implies success.",
+    "Authenticated archives and declared source maps are checked against exact Git; private native TAP and mounted-source/resource inventory proofs are not exported unless explicitly noted.",
+    "Browser screenshot bytes are hashed, not visually reviewed.",
+    "No source-security requalification, runtime execution or GitHub mutation performed.",
+    "Cancelled main browser step exported no native browser report or captures; no executed browser case, retry or visual claim is made.",
+    "Nested PR metadata follows repaired head 24c3814 and merge-resolved head 7d91aae/base bc8dd26 after publication. The original authenticated association is separately retained; immutable run.head_sha, all jobs, archives and tested merge remain bound to bc1f650. This superseded run does not qualify the new head."
+  ],
+  "merged": null
+}
