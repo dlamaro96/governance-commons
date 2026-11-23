@@ -217,6 +217,14 @@ Three of fourteen captures were inspected; all ten services remain healthy.
 Fresh hosted source/image scans and the separate 49-outcome assignment remain
 required for this increment.
 
+The first hosted SQL035 run at `4e0c5bb` exposed one stale host-control
+expectation: the relation-candidate historical gate correctly retained its
+SQL031 baseline, but its test still expected the current transport to end at
+SQL034. The correction expects SQL035 while preserving every historical-prefix
+assertion. All 18 controls pass against the exact published source plus this
+one-line correction; the original hosted failure remains retained. Fresh hosted
+qualification is required for the corrected revision.
+
 The next held-evaluator integration exposed a literal scope-direction mismatch
 between canonical storage and the pure evaluator. A forward SQL036 repair must
 align own/onward/connected scope checks and parent time ceilings without changing
