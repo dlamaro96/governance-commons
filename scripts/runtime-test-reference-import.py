@@ -223,7 +223,10 @@ def setup(h):
         for name in names[:count]:
             shutil.copyfile(ROOT / 'packages/db/migrations' / name, folder / name)
         h.phase = 'schema-' + str(count)
-        if count in (12, 13):
+        # Each prefix finishes its deployment permissions before the next one.
+        # SQL037 also transfers a function to the protected definer, so its
+        # current-schema stage needs the same bounded SET-only preparation.
+        if count in (12, 13, 37):
             try:
                 h.sql(roles.prepare_sql(base.base.OWNER, base.base.DATABASE))
                 h.migrate(folder)
@@ -251,7 +254,7 @@ def execute(h):
     frozen = sources()
     h.frozen = frozen
     h.report.update(sources=frozen, commit=h.command(['git', 'rev-parse', 'HEAD'], sensitive=True).stdout.strip(),
-                    limitations=['Fresh current SQL001–036 plus five real PostgreSQL import service cases only; not authority scope-alignment behavior, upgrade or predecessor qualification.',
+                    limitations=['Fresh current SQL001–037 plus five real PostgreSQL import service cases only; not authority scope-alignment behavior, upgrade or predecessor qualification.',
                                  'Cached dependency image with exact current source mounts; no shared services, HTTP, scanner engine, Temporal or browser execution.'])
     setup(h)
     h.phase = 'native-import-tests'

@@ -14,6 +14,7 @@ import {assetView,sourceView,jobView,auditView,visibleAssets,visibleAudit,record
 import {startProjector} from './search.ts';
 import {searchAssets,type AssetSearchQuery} from './asset-search.ts';
 import {readAuditIntegrity} from './audit-reader.ts';
+import {readOverview} from './overview.ts';
 import {installModels} from './models.ts';
 import {installAssetTypes} from './asset-types.ts';
 import {installAssetTypeMigrations} from './asset-type-migrations.ts';
@@ -97,7 +98,7 @@ app.get('/api/v1/jobs',async req=>{const {principal:p}=await authenticate(req);r
 app.get('/api/v1/jobs/:id',{schema:params},async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'sources:read');return scope(p.tenantId,p.id,async tx=>{const j=await tx.selectFrom('jobs').selectAll().where('id','=',(req.params as any).id).executeTakeFirst();if(!j)throw new Problem(404,'JOB_NOT_FOUND','Job is unavailable.');return {job:jobView(j)};});});
 app.get('/api/v1/audit',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'audit:read');return scope(p.tenantId,p.id,async tx=>({items:(await visibleAudit(tx,p).orderBy('sequence','desc').limit(200).execute()).map(auditView)}));});
 app.get('/api/v1/audit/integrity',async req=>{const {principal,sessionHash}=await authenticate(req);return readAuditIntegrity(principal,sessionHash);});
-app.get('/api/v1/overview',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'catalog:read');return scope(p.tenantId,p.id,async tx=>{const a=await visibleAssets(tx,p).where('assets.status','=','active').execute();const sources=p.permissions.includes('sources:read')?await tx.selectFrom('sources').select('id').execute():[];const jobs=p.permissions.includes('sources:read')?await tx.selectFrom('jobs').select('id').execute():[];const recent=p.permissions.includes('audit:read')?await visibleAudit(tx,p).orderBy('sequence','desc').limit(8).execute():[];return {assetCount:a.length,sourceCount:sources.length,ownedCount:a.filter(x=>x.owner_id).length,jobCount:jobs.length,recentAudit:recent.map(auditView)};});});
+app.get('/api/v1/overview',async req=>readOverview((await authenticate(req)).principal));
 app.get('/api/v1/capabilities',async req=>{await authenticate(req);return {release:'development',items:connectorInventory(),aiEnabled:false};});
 const web=resolve('apps/web/dist');
 if(existsSync(web)){await app.register(fastifyStatic,{root:web,prefix:'/'});app.setNotFoundHandler(async(req,reply)=>{if(req.url.startsWith('/api/')||req.url.startsWith('/internal/')||req.url.startsWith('/auth/'))return reply.code(404).send({code:'NOT_FOUND'});return reply.sendFile('index.html');});}

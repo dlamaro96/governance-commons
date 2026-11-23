@@ -16,7 +16,7 @@ function fixture(step:'prepare'|'read'|'repair'|'fail'){
 }
 const post=(p:Page,path:string)=>p.waitForResponse(r=>new URL(r.url()).pathname===path&&r.request().method()==='POST');
 async function readMonitor(p:Page,id:string){return (await domainBody<{monitor:QualityMonitorView}>(await p.request.get('/api/v1/quality/monitors/'+id))).monitor;}
-async function issues(p:Page,id:string){const value=await domainBody<MonitoringPage<QualityIssueView>>(await p.request.get('/api/v1/quality/issues?monitorId='+id+'&limit=100'));expect(value.nextCursor).toBeNull();return value.items;}
+async function issues(p:Page,id:string){const value=await domainBody<MonitoringPage<QualityIssueView>>(await p.request.get('/api/v1/quality/issues?monitorId='+id+'&limit=100',{maxRetries:1}));expect(value.nextCursor).toBeNull();return value.items;}
 async function readIssue(p:Page,id:string){return (await domainBody<{issue:QualityIssueView}>(await p.request.get('/api/v1/quality/issues/'+id))).issue;}
 async function language(p:Page,locale:'en'|'ar'){await p.locator('#language').selectOption(locale);await expect(p.locator('html')).toHaveAttribute('lang',locale);await expect(p.locator('html')).toHaveAttribute('dir',locale==='ar'?'rtl':'ltr');}
 async function scan(p:Page){

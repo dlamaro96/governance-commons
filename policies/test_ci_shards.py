@@ -118,6 +118,26 @@ class WorkflowTests(unittest.TestCase):
     def test_current_workflow_matches_static_reviewed_contract(self):
         self.assertTrue(policy.validate_workflow((ROOT/'.github/workflows/ci.yml').read_text()))
 
+    def test_only_foundation_has_the_expanded_job_wall_clock_budget(self):
+        text=(ROOT/'.github/workflows/ci.yml').read_text()
+        reviewed="    timeout-minutes: ${{ matrix.shard == 'foundation' && 120 || 90 }}\n"
+        self.assertEqual(text.count(reviewed),1)
+        self.assertTrue(policy.validate_workflow(text))
+        # Only the outer foundation job grows. All other shards retain90m;
+        # the exact reviewed expression cannot admit inputs or a wider budget.
+        for changed in (
+                '    timeout-minutes: 90\n',
+                '    timeout-minutes: 120\n',
+                reviewed.replace('&& 120','&& 121'),
+                reviewed.replace('&& 120','&& 119'),
+                reviewed.replace('|| 90','|| 120'),
+                reviewed.replace("'foundation'","'browser'"),
+                '    timeout-minutes: ${{ inputs.timeout }}\n',
+                reviewed+reviewed,
+                ''):
+            with self.subTest(timeout=changed),self.assertRaises(ValueError):
+                policy.validate_workflow(text.replace(reviewed,changed))
+
     def test_mutations_cannot_omit_reroute_mask_or_import_evidence(self):
         text=(ROOT/'.github/workflows/ci.yml').read_text()
         replacements=[

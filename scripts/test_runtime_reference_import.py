@@ -239,26 +239,41 @@ class Controls(unittest.TestCase):
                     self.assertEqual(h.report['testExitStatus'], code)
 
     def test_prepare_finally_finishes_roles_after_migration_failure(self):
-        h = self.harness('admission')
-        h.memory_admission = lambda: {}
-        h.inventory = lambda: {'containers': []}
-        h.private_values, h.created = [], False
-        calls = []
-        def docker(*args, **kwargs):
-            out = json.dumps([{'Endpoints': {'docker': {'Host': 'unix:///owned-control'}}}]) if args[:2] == ('context', 'inspect') else 'sha256:' + 'a' * 64
-            return subprocess.CompletedProcess(args, 0, out, '')
-        h.docker = docker
-        h.sql = lambda statement, **kwargs: calls.append(statement)
-        def migrate(folder):
-            calls.append(folder.name)
-            if folder.name == 'migrations-12':
-                raise RuntimeError('Synthetic migration failure')
-        h.migrate = migrate
-        roles = SimpleNamespace(prepare_sql=lambda *a: 'PREPARE', finish_sql=lambda *a: 'FINISH')
-        with patch.object(gate.base.base, 'module', return_value=roles), patch.dict(os.environ, {'DOCKER_HOST': ''}):
-            with self.assertRaisesRegex(RuntimeError, 'Synthetic migration'):
-                gate.setup(h)
-        self.assertEqual(calls[-3:], ['PREPARE', 'migrations-12', 'FINISH'])
+        for stage in (12, 13, 37):
+            with self.subTest(stage=stage):
+                h = self.harness('admission')
+                h.folder = h.folder / ('stage-' + str(stage))
+                h.folder.mkdir()
+                h.memory_admission = lambda: {}
+                h.inventory = lambda: {'containers': []}
+                h.private_values, h.created = [], False
+                calls, prepared = [], False
+                def docker(*args, **kwargs):
+                    out = json.dumps([{'Endpoints': {'docker': {'Host': 'unix:///owned-control'}}}]) if args[:2] == ('context', 'inspect') else 'sha256:' + 'a' * 64
+                    return subprocess.CompletedProcess(args, 0, out, '')
+                h.docker = docker
+                def sql(statement, **kwargs):
+                    nonlocal prepared
+                    calls.append(statement)
+                    if statement == 'PREPARE':
+                        self.assertFalse(prepared)
+                        prepared = True
+                    elif statement == 'FINISH':
+                        self.assertTrue(prepared)
+                        prepared = False
+                h.sql = sql
+                def migrate(folder):
+                    calls.append(folder.name)
+                    self.assertEqual(prepared, folder.name != 'migrations-11')
+                    if folder.name == 'migrations-' + str(stage):
+                        raise RuntimeError('Synthetic migration failure')
+                h.migrate = migrate
+                roles = SimpleNamespace(prepare_sql=lambda *a: 'PREPARE', finish_sql=lambda *a: 'FINISH')
+                with patch.object(gate.base.base, 'module', return_value=roles), patch.dict(os.environ, {'DOCKER_HOST': ''}):
+                    with self.assertRaisesRegex(RuntimeError, 'Synthetic migration'):
+                        gate.setup(h)
+                self.assertEqual(calls[-3:], ['PREPARE', 'migrations-' + str(stage), 'FINISH'])
+                self.assertFalse(prepared)
 
     def test_main_cleanup_on_failure_and_inventory_change(self):
         for fail_execute, inventory_changed in ((True, False), (False, True), (False, False)):

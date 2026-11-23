@@ -199,6 +199,65 @@ async function contextBudget(page:Page){
  expect(Number.isFinite(remaining)&&remaining>=0&&Number.isFinite(reset)&&reset>=0&&reset<=60).toBe(true);
  if(remaining<180)await new Promise(resolve=>setTimeout(resolve,(reset+1)*1000));
 }
+async function openLinkedTermEditor(page:Page,info:TestInfo,term:Term){
+ // CI deliberately excludes credential-bearing traces. Preserve only bounded
+ // status/shape diagnostics if this real navigation cannot render its links.
+ const path=`/api/v1/glossary/terms/${term.resourceId}`;
+ const responses:{route:'session'|'term';status:number;code:string|null;links:number|null}[]=[];
+ const pending:Promise<void>[]=[];let requestFailures=0,pageErrors=0,collecting=true;
+ const response=(value:import('@playwright/test').Response)=>{
+  const pathname=new URL(value.url()).pathname;
+  if(pending.length>=8||value.request().method()!=='GET'||!['/api/v1/me',path].includes(pathname))return;
+  pending.push((async()=>{
+   const body=await value.json().catch(()=>null);
+   if(!collecting)return;responses.push({route:pathname===path?'term':'session',status:value.status(),
+    code:typeof body?.code==='string'&&/^[A-Z][A-Z0-9_]{0,79}$/.test(body.code)?body.code:null,
+    links:pathname===path&&Array.isArray(body?.publication?.links)?body.publication.links.length:null});
+  })());
+ };
+ const requestFailed=(value:import('@playwright/test').Request)=>{if(['/api/v1/me',path].includes(new URL(value.url()).pathname))requestFailures++;};
+ const pageError=()=>{pageErrors++;};
+ const stop=()=>{page.off('response',response);page.off('requestfailed',requestFailed);page.off('pageerror',pageError);};
+ page.on('response',response);page.on('requestfailed',requestFailed);page.on('pageerror',pageError);
+ try{
+  await page.goto(`/glossary/${term.resourceId}/edit`);
+  await expect(page.getByRole('button',{name:'Remove link',exact:true})).toHaveCount(term.publication.links.length);
+ }catch(error){
+  stop();let timer:ReturnType<typeof setTimeout>|undefined;
+  try{await Promise.race([Promise.allSettled(pending),new Promise<void>(resolve=>{timer=setTimeout(resolve,2000);})]);}
+  finally{if(timer!==undefined)clearTimeout(timer);collecting=false;}
+  const diagnostic={kind:'glossary-edit-navigation',responses,requestFailures,pageErrors,
+   language:await page.locator('html').getAttribute('lang').catch(()=>null),
+   forms:await page.locator('.glossary-form').count(),alerts:await page.getByRole('alert').count(),
+   definitions:await page.getByLabel('Definition 1',{exact:true}).count()};
+  const body=JSON.stringify(diagnostic);
+  await info.attach('glossary-edit-navigation',{body,contentType:'application/json'});
+  console.error(body);throw error;
+ }finally{stop();collecting=false;}
+}
+// Each linked journey owns an exact nominal subtype. Repeated runs must not
+// enroll every historical business_term relationship in one growing cohort.
+async function linkedTermType(page:Page,token:string):Promise<PublishedAssetType>{
+ const parent=await starter(page);
+ const definition:AssetTypeDefinition={formatVersion:1,id:`gls_term_${token}`,version:1,
+  parents:[{id:parent.id,version:parent.version}],attributes:{},overrideAttributes:[],requiredOwner:true,lifecycle:null};
+ const type=(await domainBody<{type:PublishedAssetType}>(await page.request.post('/api/v1/asset-types',{headers:await domainHeaders(page),data:{definition}}),201)).type;
+ expect(type.resolved.dependencies).toContainEqual({id:parent.id,version:parent.version});
+ expect(type.resolved.model.attributes).toEqual(parent.resolved.model.attributes);
+ expect(type.resolved.requiredOwner).toBe(true);expect(type.resolved.lifecycle).toEqual(parent.resolved.lifecycle);
+ return type;
+}
+async function chooseLinkedTermType(page:Page,type:PublishedAssetType){
+ const picker=page.getByRole('region',{name:'Term type',exact:true});
+ await picker.getByLabel('Search: Term type',{exact:true}).fill(type.id);
+ const searched=page.waitForResponse(response=>{const url=new URL(response.url());return url.pathname==='/api/v1/asset-types'&&url.searchParams.get('q')===type.id&&response.request().method()==='GET';});
+ await picker.getByRole('button',{name:'Search',exact:true}).click();expect((await searched).status()).toBe(200);
+ await expect(picker.getByRole('combobox',{name:'Term type',exact:true}).locator(`option[value="${type.id}"]`)).toHaveCount(1);
+ const loaded=responseFor(page,`/api/v1/asset-types/${type.id}`,'GET');
+ await picker.getByRole('combobox',{name:'Term type',exact:true}).selectOption(type.id);expect((await loaded).status()).toBe(200);
+ await expect(picker.getByRole('combobox',{name:'Term type',exact:true})).toHaveValue(type.id);
+ await expect(page.locator('.glossary-pins').filter({hasText:type.typeId})).toBeVisible();
+}
 async function physicalGlossaryTarget(page:Page,token:string){
  const definition:AssetTypeDefinition={formatVersion:1,id:`gls_target_${token}`,version:1,parents:[],attributes:{},overrideAttributes:[],requiredOwner:false,
   lifecycle:{initial:'active',states:['active','retired'],transitions:[{from:'active',to:'retired'}]}};
@@ -271,7 +330,7 @@ async function contextCapture(page:Page,info:TestInfo,locale:'en'|'ar',width:num
 // physical target, canonical defines edge, real approvals and worker publication.
 test('GLS: approved definitions reach the linked asset and respect amendments, removal and visibility',async({page,browser},info)=>{
  test.setTimeout(720_000);await page.setViewportSize({width:1440,height:960});await domainLogin(page);await contextBudget(page);
- const token=randomUUID().replaceAll('-',''),termType=await starter(page),target=await physicalGlossaryTarget(page,token);
+ const token=randomUUID().replaceAll('-',''),termType=await linkedTermType(page,token),target=await physicalGlossaryTarget(page,token);
  const bad=await definesPolicy(page,token,termType,target.type,true),relation=await definesPolicy(page,token,termType,target.type,false);
  const contextViewer=await page.context().newPage();
  const definition:ApprovalDefinition={formatVersion:1,id:`gls_context_${token}`,version:1,name:`Synthetic linked term review ${token}`,separationOfDuties:true,
@@ -284,6 +343,7 @@ test('GLS: approved definitions reach the linked asset and respect amendments, r
   expect((await domainBody<{asset:Asset}>(await consumer.request.get(`/api/v1/assets/${target.asset.id}`))).asset.id).toBe(target.asset.id);
   expect(await readContext(page,target.asset.id)).toEqual({assetId:target.asset.id,items:[],nextCursor:null});
   await contextBudget(page);await page.goto('/glossary/new');await expect(page.getByRole('combobox',{name:'Term type',exact:true})).toHaveValue('business_term');
+  await chooseLinkedTermType(page,termType);
   await page.getByLabel('Owner',{exact:true}).selectOption(reviewerId);await page.getByLabel('Visibility',{exact:true}).selectOption('restricted');
   const audience=page.getByRole('group',{name:'Allowed members',exact:true});await audience.getByRole('checkbox',{name:'Harbor Steward',exact:true}).check();await audience.getByRole('checkbox',{name:'Harbor Owner',exact:true}).check();
   const english:GlossaryTranslation={locale:'en',name:`Accepted order ${token}`,definition:'An order approved for synthetic fulfilment.',synonyms:[],abbreviations:[],examples:[]};
@@ -321,7 +381,7 @@ test('GLS: approved definitions reach the linked asset and respect amendments, r
 
   await contextViewer.goto(`/catalog/${target.asset.id}`);let livePanel=contextViewer.getByRole('region',{name:'Business meaning',exact:true});
   await expect(livePanel.getByText(english.definition,{exact:true})).toBeVisible();
-  await contextBudget(page);await page.goto(`/glossary/${published.term.resourceId}/edit`);
+  await contextBudget(page);await openLinkedTermEditor(page,info,published.term);
   const amendedEnglish={...english,definition:'An order approved after the current synthetic quality checks.'},amendedArabic={...arabic,definition:'طلب اجتاز فحوص الجودة الاصطناعية الحالية.'};
   await expect(page.getByRole('button',{name:'Remove link',exact:true})).toHaveCount(1);await page.getByLabel('Definition 1',{exact:true}).fill(amendedEnglish.definition);await page.getByLabel('Definition 2',{exact:true}).fill(amendedArabic.definition);await chooseWorkflow(page,workflow);
   const amended={...publication,attributes:{translations:[amendedEnglish,amendedArabic]}},second=await submit(page,amended,workflow,published.term);
@@ -335,7 +395,7 @@ test('GLS: approved definitions reach the linked asset and respect amendments, r
   expect(amendedContext).toEqual({assetId:target.asset.id,items:[{...link,relationId:amendedRelationId,termVersion:2,definition:amendedEnglish.definition}],nextCursor:null});
   await language(contextViewer,'ar');await expect(contextViewer.getByRole('region',{name:'المعنى التجاري',exact:true}).getByText(amendedArabic.definition,{exact:true})).toBeVisible();await language(contextViewer,'en');
   livePanel=contextViewer.getByRole('region',{name:'Business meaning',exact:true});await expect(livePanel.getByText(amendedEnglish.definition,{exact:true})).toBeVisible();
-  await contextBudget(page);await page.goto(`/glossary/${published.term.resourceId}/edit`);
+  await contextBudget(page);await openLinkedTermEditor(page,info,republished.term);
   await page.getByRole('button',{name:'Remove link',exact:true}).click();await expect(page.getByText('No links proposed.',{exact:true})).toBeVisible();await chooseWorkflow(page,workflow);
   const third=await submit(page,{...amended,links:[]},workflow,republished.term);
   expect(await readContext(page,target.asset.id)).toEqual(amendedContext);

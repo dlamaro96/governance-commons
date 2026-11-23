@@ -2277,6 +2277,43 @@
         "base_commit": "663fee960c8c83a98ced2c69e60b206e70b180dd",
         "working_tree_dirty": true
       }
+    },
+    {
+      "path": "docs/verification/source-security-053a61c.json",
+      "scope": "Prior-head source security qualification; zero findings.",
+      "source_binding": {
+        "method": "Exact prior-head hosted artifacts or individually hashed local source/runtime/test receipts; no result substitutes for later source.",
+        "evidence_sha256": "dfa38c6a5400f04fdd9fd67a67f3f0318e587a34a804cc45ef8187786d08d61c",
+        "implementation_commit": "053a61c0e3646ee5bb802847c279ab275912cd76"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-053a61c.json",
+      "scope": "Prior-head native amd64 and arm64 runtime security gates; lower findings retained.",
+      "source_binding": {
+        "method": "Exact prior-head hosted artifacts or individually hashed local source/runtime/test receipts; no result substitutes for later source.",
+        "evidence_sha256": "eb6d0b3da2ea88100eae31e6416d5d2de8a2cc8e8a08f158c23dd00b6f8be5a1",
+        "implementation_commit": "053a61c0e3646ee5bb802847c279ab275912cd76"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-053a61c-partial-failed.json",
+      "scope": "Prior-head partial failed 52-outcome development snapshot; four authenticated archives.",
+      "source_binding": {
+        "method": "Exact prior-head hosted artifacts or individually hashed local source/runtime/test receipts; no result substitutes for later source.",
+        "evidence_sha256": "342843088f1d8ca9f5a4a0e22b115dcee8dd96bca274e7ee5e12c59010789889",
+        "implementation_commit": "053a61c0e3646ee5bb802847c279ab275912cd76"
+      }
+    },
+    {
+      "path": "docs/verification/consolidated-browser-overview-local.json",
+      "scope": "Scoped overview allocation, native import and browser corrections; historical and pending qualification kept separate.",
+      "source_binding": {
+        "method": "Exact prior-head hosted artifacts or individually hashed local source/runtime/test receipts; no result substitutes for later source.",
+        "evidence_sha256": "820293b64b86cbc008a2d1c6a0f61f2bdcbe25a4836d35a4069127cc2abe2551",
+        "base_commit": "053a61c0e3646ee5bb802847c279ab275912cd76",
+        "working_tree_dirty": true
+      }
     }
   ],
   "limitations": [

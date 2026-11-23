@@ -1,0 +1,1369 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T14:40:40.895832+00:00",
+  "status": "SCOPED_LOCAL_PASSES_WITH_REMAINING_GATES",
+  "release_qualified": false,
+  "scope": "Scoped local overview, native import and browser corrections. All affected focused cases pass at their separately recorded source scopes; complete fresh hosted qualification remains required.",
+  "source_files": [
+    {
+      "path": "apps/api/src/index.ts",
+      "sha256": "8cf5484f8dd39d89371fd24894bf95d379826b7f301cf2216cd0d3a80db8d29c"
+    },
+    {
+      "path": "apps/api/src/overview.ts",
+      "sha256": "754fb03456bbcf1d490e165b1dacbb5b68d1f960fc4a7d6d4b12af3f81527701"
+    },
+    {
+      "path": "scripts/runtime-test-reference-import.py",
+      "sha256": "5ddfdd08722dc3b41eceacf62be8bab3f6d19a3dc9a467cee91d3533a457a051"
+    },
+    {
+      "path": "tests/e2e/classification.spec.ts",
+      "sha256": "35bcb63ae27955b09d0875b490451446da4f03d7b8656290ebc0e80970c87ec1"
+    },
+    {
+      "path": "tests/e2e/glossary.spec.ts",
+      "sha256": "66525c3421fc8d5811ec8ffff1c2187a1b16845b8fc5466bc423b4cf32873d53"
+    },
+    {
+      "path": "tests/e2e/quality-monitoring.spec.ts",
+      "sha256": "c1d73c2c778d81b680a1e2314f8ce9c40ad91615cd9db520cc8a0de74dc1753b"
+    },
+    {
+      "path": "tests/e2e/quality-volume.spec.ts",
+      "sha256": "280d5fdf571c17b5675b18b76fb59b6687677109455ba222a76abb361ed5d178"
+    },
+    {
+      "path": "tests/e2e/reference-data.spec.ts",
+      "sha256": "b7276ac21ecc6a60678e636dfc6385567161e2a585cfaed93923461726ba0255"
+    },
+    {
+      "path": "tests/e2e/reference-quality.spec.ts",
+      "sha256": "6806d7186741b0263fd8c1682836ca42e836ad9c946fd15f04e662cf7d98df50"
+    },
+    {
+      "path": "tests/integration/overview.test.ts",
+      "sha256": "944fc520c585322eff4ff5ec48b6c86d87a1db51e0525cd2b69aaa040e722fac"
+    }
+  ],
+  "overview": {
+    "implementation_status": "IMPLEMENTED",
+    "verification_status": "LOCAL_REAL_HTTP_POSTGRESQL_PASS",
+    "behavior": "PostgreSQL aggregates replace complete catalog/source/job materialization while retaining tenant RLS, existing asset visibility/ownership semantics, permission-gated source/job totals and eight recent visible audit records.",
+    "api_tests": {
+      "command": "node --import tsx --test --test-concurrency=1 tests/integration/overview.test.ts",
+      "counts": {
+        "tests": 2,
+        "suites": 0,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 17804.005467
+      },
+      "proof": {
+        "path": ".local/protected-core-deployment/overview-aggregate/api-tests.log",
+        "sha256": "73863f5a5703a38b2870586cb2f0623e2ae9933c7cfdc6ca891f6ada823af234"
+      },
+      "coverage": [
+        "Active asset count and any non-null assigned owner",
+        "Restricted asset ACL changes and tenant isolation",
+        "Source/job permission boundaries",
+        "Eight most recent visible audit records; no audit without permission",
+        "Missing authentication denied"
+      ],
+      "authentication": "Fresh native protected sessions with existing explicit installation; no owner credentials, legacy session acceptance or persisted negative-control renewal. This is not a live OIDC exchange test."
+    },
+    "source_binding": {
+      "source_files": [
+        {
+          "path": "apps/api/src/index.ts",
+          "sha256": "8cf5484f8dd39d89371fd24894bf95d379826b7f301cf2216cd0d3a80db8d29c"
+        },
+        {
+          "path": "apps/api/src/overview.ts",
+          "sha256": "754fb03456bbcf1d490e165b1dacbb5b68d1f960fc4a7d6d4b12af3f81527701"
+        },
+        {
+          "path": "tests/integration/overview.test.ts",
+          "sha256": "944fc520c585322eff4ff5ec48b6c86d87a1db51e0525cd2b69aaa040e722fac"
+        }
+      ],
+      "validation_proof": {
+        "path": ".local/protected-core-deployment/overview-aggregate/validation.json",
+        "sha256": "0baf8889f1727a8c6d572644b23a91958b9a957d8b897d703150f7b1515716cc"
+      },
+      "current_hashes_match": true,
+      "note": "The earlier validation file records the API test as pending; the subsequent api-tests.log supersedes that field. Later exact runtime/image source readback matched the three overview files and all 37 ledger checksums.",
+      "runtime_readback": {
+        "path": ".local/protected-core-deployment/overview-aggregate/test-ledger-readback.json",
+        "sha256": "55945eca13e4e9e31fae014b671cf78c1eae4ef58e8b7ecc92036df78466b178"
+      }
+    },
+    "limits": [
+      "Two new overview cases passed separately; the full existing API suite has not been rerun as a combined 174-case suite on this correction.",
+      "Tests ran against real shared core services with unique mutable fixtures and fresh sessions; append-only audit history is retained."
+    ]
+  },
+  "unit_and_type_checks": {
+    "units": {
+      "command": "node --import tsx --test tests/unit/*.test.ts",
+      "counts": {
+        "tests": 1301,
+        "suites": 0,
+        "pass": 1301,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 24308.479209
+      },
+      "proof": {
+        "path": ".local/protected-core-deployment/overview-aggregate/units-native.log",
+        "sha256": "632314fab07960a2980df81345e2ea2894a445139a093d39fc34a1616ada05d2"
+      }
+    },
+    "types": {
+      "command": "pnpm typecheck",
+      "status": "PASSED",
+      "node_version": "24.22.3",
+      "proof": {
+        "path": ".local/protected-core-deployment/overview-aggregate/typecheck.log",
+        "sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+      }
+    },
+    "limits": [
+      "The successful native unit log is used; the separate earlier units.log is not counted as successful evidence.",
+      "Checks do not qualify hosted CI or external integrations."
+    ],
+    "evidence_controls": {
+      "command": "PYTHONPATH=policies python3 -m unittest policies.test_api_evidence policies.test_ci_evidence",
+      "passed": 164,
+      "failed": 0,
+      "duration_seconds": 64.295,
+      "proof": {
+        "path": ".local/protected-core-deployment/overview-aggregate/evidence-controls-corrected.log",
+        "sha256": "576cb8e5b892f6c627112bd74bda5faf766f1701317dbedce2de4ebd4209d0f5"
+      },
+      "limits": [
+        "The earlier evidence-controls.log invocation failed on imports because PYTHONPATH was missing; it did not execute tests and is not counted as successful evidence."
+      ]
+    }
+  },
+  "memory_observation": {
+    "before": {
+      "recorded_at": "2026-11-23T14:16:40.800Z",
+      "image_id": "sha256:78f8f834ca82ac28cc316b1b627198eb950081b22411580bcb83d5db55d4b00a",
+      "initial_post_gc_heap_used_bytes": 93933776,
+      "response_counts": {
+        "assetCount": 28209,
+        "sourceCount": 743,
+        "ownedCount": 3021,
+        "jobCount": 994
+      },
+      "batches": [
+        {
+          "batch": 1,
+          "requests": 10,
+          "duration_ms": 24260,
+          "pre_gc_heap_used_bytes": 171673096,
+          "post_gc_heap_used_bytes": 93097760,
+          "pre_gc_rss_bytes": 319692800,
+          "heap_rise_from_preceding_gc_bytes": 77739320
+        },
+        {
+          "batch": 2,
+          "requests": 10,
+          "duration_ms": 24053,
+          "pre_gc_heap_used_bytes": 171104928,
+          "post_gc_heap_used_bytes": 93109824,
+          "pre_gc_rss_bytes": 316579840,
+          "heap_rise_from_preceding_gc_bytes": 78007168
+        },
+        {
+          "batch": 3,
+          "requests": 10,
+          "duration_ms": 24677,
+          "pre_gc_heap_used_bytes": 171092352,
+          "post_gc_heap_used_bytes": 93106104,
+          "pre_gc_rss_bytes": 316305408,
+          "heap_rise_from_preceding_gc_bytes": 77982528
+        }
+      ],
+      "synthetic_session_revoked": true
+    },
+    "after": {
+      "recorded_at": "2026-11-23T14:21:49.525Z",
+      "image_id": "sha256:ab077b0bb73d9865f10c1ae4d34668fc6cdf57e111da6dad8e69dc1cf236a16e",
+      "initial_post_gc_heap_used_bytes": 56823736,
+      "response_counts": {
+        "assetCount": 28209,
+        "sourceCount": 743,
+        "ownedCount": 3021,
+        "jobCount": 994
+      },
+      "batches": [
+        {
+          "batch": 1,
+          "requests": 10,
+          "duration_ms": 23563,
+          "pre_gc_heap_used_bytes": 60911024,
+          "post_gc_heap_used_bytes": 56965368,
+          "pre_gc_rss_bytes": 166404096,
+          "heap_rise_from_preceding_gc_bytes": 4087288
+        },
+        {
+          "batch": 2,
+          "requests": 10,
+          "duration_ms": 22857,
+          "pre_gc_heap_used_bytes": 60424584,
+          "post_gc_heap_used_bytes": 57061528,
+          "pre_gc_rss_bytes": 166076416,
+          "heap_rise_from_preceding_gc_bytes": 3459216
+        },
+        {
+          "batch": 3,
+          "requests": 10,
+          "duration_ms": 22497,
+          "pre_gc_heap_used_bytes": 61024768,
+          "post_gc_heap_used_bytes": 57094168,
+          "pre_gc_rss_bytes": 166060032,
+          "heap_rise_from_preceding_gc_bytes": 3963240
+        }
+      ],
+      "synthetic_session_revoked": true
+    },
+    "before_proof": {
+      "path": ".local/protected-core-deployment/heap-diagnosis/overview-before-correction.json",
+      "sha256": "034e34c507407314b2eb0c21427ffa300566e270f405f4a07a861eef15392b51"
+    },
+    "after_proof": {
+      "path": ".local/protected-core-deployment/heap-diagnosis/overview-after-correction.json",
+      "sha256": "0171c03e2e5c2d85eb55adab4378485afa6da19b6501902f4d05e84707163092"
+    },
+    "measurement_script_sha256": "499cd19b85916feca5ff521275132eb26dcdf17988efca54d33254b7258ab0b7",
+    "finding": "Across three ten-request batches per version, response totals were identical. The observed heap rise above the preceding explicit-GC baseline fell from about 77.7\u201378.0 MB to 3.5\u20134.1 MB; ten-request wall durations improved modestly from 24.1\u201324.7 s to 22.5\u201323.6 s.",
+    "cleanup": {
+      "purpose": "Remove temporary loopback numeric debugger after measurements",
+      "apiReady": true,
+      "inspectorClosed": true,
+      "mechanism": "Deliberate API-only restart after probes and session revocation"
+    },
+    "cleanup_proof": {
+      "path": ".local/protected-core-deployment/heap-diagnosis/cleanup.json",
+      "sha256": "a445d9d09d49338e183eabfc2411891102607e00e1e1ba90fe41c95603d10cf6"
+    },
+    "limits": [
+      "Point-in-time numeric measurements, explicit GC and separate API process/image lifetimes; this is not an allocation profiler, leak proof, retained-object diagnosis or load/capacity qualification.",
+      "A local JavaScript heap fatal was observed during the original browser run. These samples support the overview allocation correction; they do not establish the sole cause of every failure or prove a hosted-CI OOM.",
+      "Both probe sessions were revoked; the temporary unpublished loopback inspector was closed through a deliberate API-only restart."
+    ]
+  },
+  "focused_browser_corrections": {
+    "verification_status": "PASS_ON_RECORDED_SOURCES",
+    "stats": {
+      "startTime": "2026-11-23T13:58:58.850Z",
+      "duration": 939032.9029999999,
+      "expected": 7,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "file": "classification.spec.ts",
+        "title": "CLS: real metadata suggestion, independent application, immutable pins, reviewed withdrawal and access boundaries",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 68532,
+            "retry": 0
+          }
+        ]
+      },
+      {
+        "file": "glossary.spec.ts",
+        "title": "GLS: real proposal, independent review, publication, amendment and restricted discovery",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 34553,
+            "retry": 0
+          }
+        ]
+      },
+      {
+        "file": "glossary.spec.ts",
+        "title": "GLS: approved definitions reach the linked asset and respect amendments, removal and visibility",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 128405,
+            "retry": 0
+          }
+        ]
+      },
+      {
+        "file": "quality-monitoring.spec.ts",
+        "title": "DQ-MONITOR: actual UTC scheduling deduplicates failures, verifies recovery and preserves reopened issue history",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 182480,
+            "retry": 0
+          }
+        ]
+      },
+      {
+        "file": "quality-volume.spec.ts",
+        "title": "DQ-VOLUME: exact table counts, immutable thresholds, scheduled recovery and reopened issue history",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 197943,
+            "retry": 0
+          }
+        ]
+      },
+      {
+        "file": "reference-data.spec.ts",
+        "title": "REF: independent publication, complete bilingual downloads, scheduled successor and current access boundaries",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 220269,
+            "retry": 0
+          }
+        ]
+      },
+      {
+        "file": "reference-quality.spec.ts",
+        "title": "REF-DQ: approved allowed values, exact non-null thresholds, historical reference pins and current source observations",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 104552,
+            "retry": 0
+          }
+        ]
+      }
+    ],
+    "test_retries": 0,
+    "transport_retry_scope": "Three named GET reads allow one ECONNRESET retry; actual transport retry count not exposed. No POST, HTTP-status or whole-test retry.",
+    "source_binding": {
+      "base_commit_label": "053a61c0e3646ee5bb802847c279ab275912cd76",
+      "source_count": 57,
+      "before_and_after_hashes_match": true,
+      "current_source_mismatches": [
+        "tests/e2e/glossary.spec.ts"
+      ],
+      "tested_files": [
+        {
+          "path": "tests/e2e/classification.spec.ts",
+          "sha256": "35bcb63ae27955b09d0875b490451446da4f03d7b8656290ebc0e80970c87ec1"
+        },
+        {
+          "path": "tests/e2e/glossary.spec.ts",
+          "sha256": "147411a444dc340f7ed4d417a494d8f07a5d0be18068e992421c42eda0e11b47"
+        },
+        {
+          "path": "tests/e2e/quality-monitoring.spec.ts",
+          "sha256": "c1d73c2c778d81b680a1e2314f8ce9c40ad91615cd9db520cc8a0de74dc1753b"
+        },
+        {
+          "path": "tests/e2e/quality-volume.spec.ts",
+          "sha256": "280d5fdf571c17b5675b18b76fb59b6687677109455ba222a76abb361ed5d178"
+        },
+        {
+          "path": "tests/e2e/reference-data.spec.ts",
+          "sha256": "b7276ac21ecc6a60678e636dfc6385567161e2a585cfaed93923461726ba0255"
+        },
+        {
+          "path": "tests/e2e/reference-quality.spec.ts",
+          "sha256": "6806d7186741b0263fd8c1682836ca42e836ad9c946fd15f04e662cf7d98df50"
+        }
+      ],
+      "before_proof": {
+        "path": ".local/protected-core-deployment/browser-corrections/before.json",
+        "sha256": "713360fb458c070fae44fa17b19061d1f75b935d33dfdeac79df7c77a55f5f9c"
+      },
+      "completion_proof": {
+        "path": ".local/protected-core-deployment/browser-corrections/completion.json",
+        "sha256": "b889585b5f33f14fd04b589234d642f2faba2a65f8994da27f824e1aa2049508"
+      }
+    },
+    "report": {
+      "path": ".local/protected-core-deployment/browser-corrections/playwright-results.json",
+      "sha256": "576dabfad3cf65f585a245e2f7285f00c14854fa7e54a78c27f49abd109944ac"
+    },
+    "visual_review": {
+      "method": "Actual view_image inspection of two completed-run captures",
+      "captures": [
+        {
+          "path": ".local/protected-core-deployment/browser-corrections/results/glossary-GLS-approved-defi-dc150-ents-removal-and-visibility/glossary-linked-context-en-1440.png",
+          "sha256": "9a5e2e1c581c91afae35bbf1eee9677c9857cdc2d6086c47b105da6a1ca1b980"
+        },
+        {
+          "path": ".local/protected-core-deployment/browser-corrections/results/glossary-GLS-approved-defi-dc150-ents-removal-and-visibility/glossary-linked-context-ar-390.png",
+          "sha256": "8a008b67b5c1045d8c71303d1fc03474ff139ebf37e3c796d11431cc315d25e1"
+        }
+      ],
+      "findings": [
+        "English desktop linked-definition text and controls readable with no observed overlap.",
+        "Arabic 390px RTL linked definition and paging remain within the viewport; preview translation notice visible."
+      ],
+      "proof": {
+        "path": ".local/protected-core-deployment/browser-corrections/visual-review.json",
+        "sha256": "11f28b104a5dc690645e596629572dbf4158370fe00cb37da95ae58e71436c06"
+      },
+      "limits": [
+        "Two frames only; not whole-application visual qualification, accessibility conformance or translation signoff."
+      ]
+    },
+    "limits": [
+      "Seven cases passed on their recorded source snapshot before the overview correction.",
+      "The current glossary spec differs from the recorded seven-case run; the subsequent four-case glossary/vertical run is recorded separately and failed one glossary case.",
+      "One bounded ECONNRESET retry exists only on three specified GET reads. Actual transport retry count is not exposed; POSTs, HTTP failures and complete tests are not retried."
+    ]
+  },
+  "reference_import": {
+    "status": "PASS",
+    "command": "python3 scripts/runtime-test-reference-import.py --run-local",
+    "profile": "fresh-current-schema-reference-import",
+    "tests": {
+      "tests": 5,
+      "suites": 0,
+      "pass": 5,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 1448.66925
+    },
+    "host_controls": {
+      "passed": 16,
+      "failed": 0
+    },
+    "source_correction": {
+      "path": "scripts/runtime-test-reference-import.py",
+      "sha256": "5ddfdd08722dc3b41eceacf62be8bab3f6d19a3dc9a467cee91d3533a457a051"
+    },
+    "source_count": 116,
+    "all_recorded_sources_still_match": true,
+    "proof": {
+      "path": ".local/protected-core-deployment/reference-import-correction.proposal.json",
+      "sha256": "a7d3d248e1d56e386b2e9d2acbd7fe53e624a1520a91204d7293906f604e4dcb"
+    },
+    "private_report_sha256": "87a8e9f3da203e1d07460b21b5a159f4240f289dc7e014d52a1bb283f0025712",
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "limitations": [
+      "Fresh current SQL001\u2013037 plus five real PostgreSQL import service cases only; not authority scope-alignment behavior, upgrade or predecessor qualification.",
+      "Cached dependency image with exact current source mounts; no shared services, HTTP, scanner engine, Temporal or browser execution."
+    ],
+    "original_hosted_attempt": {
+      "run_id": 45183421761,
+      "outcome": "NOT_PASSED",
+      "reference_import": "failed; inner phase was not exported"
+    },
+    "release_qualified": false
+  },
+  "migration_immutability": {
+    "count": 37,
+    "current_sql_matches_retained_fresh_import_run": true,
+    "changes_in_this_correction": 0,
+    "source_files": [
+      {
+        "path": "packages/db/migrations/001_foundation.sql",
+        "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "path": "packages/db/migrations/002_audit_envelopes.sql",
+        "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "path": "packages/db/migrations/003_governance_models.sql",
+        "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "path": "packages/db/migrations/004_model_migrations.sql",
+        "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "path": "packages/db/migrations/005_model_migration_integrity.sql",
+        "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "path": "packages/db/migrations/006_inherited_asset_types.sql",
+        "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "path": "packages/db/migrations/007_asset_type_migrations.sql",
+        "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "path": "packages/db/migrations/008_constrained_relations.sql",
+        "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "path": "packages/db/migrations/009_relation_participation.sql",
+        "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+        "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "path": "packages/db/migrations/011_business_domains.sql",
+        "sha256": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+      },
+      {
+        "path": "packages/db/migrations/012_authentication_foundation.sql",
+        "sha256": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77"
+      },
+      {
+        "path": "packages/db/migrations/013_authority_foundation.sql",
+        "sha256": "4a9304cf02ab51fc085a6018cd22980e948bc6cd1167b3595ccb817b2cf41fbf"
+      },
+      {
+        "path": "packages/db/migrations/014_source_connectors.sql",
+        "sha256": "5d43592b8120818db2a2d81e62652ffccdc9dde1a0c0111604bc373b8b2e1f4b"
+      },
+      {
+        "path": "packages/db/migrations/015_approval_workflows.sql",
+        "sha256": "571e14b0b42fe2dc58d076e35e7e2a3bab0bca918042e4ef222c63b3be2f269d"
+      },
+      {
+        "path": "packages/db/migrations/016_glossary_publication.sql",
+        "sha256": "26b03dd63077e0477da3ed80d2a099b2dc4e00390d9e11eeea2546a0d19aea57"
+      },
+      {
+        "path": "packages/db/migrations/017_relation_scope_candidates.sql",
+        "sha256": "c22f0b6d35e75555e1c58b503a82d2bbf6f23ab404c3af618143178cc5baa47b"
+      },
+      {
+        "path": "packages/db/migrations/018_glossary_nominal_candidates.sql",
+        "sha256": "60361c7b2ddee2f1f095d0e832116b4b97cc04fdbee6a88b398721e5bee13fea"
+      },
+      {
+        "path": "packages/db/migrations/019_quality_execution.sql",
+        "sha256": "ed7fefe9f1598831b6feb5954ba688fd35073af20dc1717082cb5176bc576ab5"
+      },
+      {
+        "path": "packages/db/migrations/020_native_lineage.sql",
+        "sha256": "b5e601a50fdad2417f6b497eade5d65da7c5dcdb7bde94e74694a04d208691b8"
+      },
+      {
+        "path": "packages/db/migrations/021_classification_review.sql",
+        "sha256": "e8637511016f4e9cf6741c4d5718c14a8b47a97898b8769e2884a7ee2a3a294e"
+      },
+      {
+        "path": "packages/db/migrations/022_reference_publication.sql",
+        "sha256": "5720d63ac78b9ad9781c3a46da00369c90d25cf5493cddb318fd8252b131c9d9"
+      },
+      {
+        "path": "packages/db/migrations/023_reference_quality.sql",
+        "sha256": "92221543903d7069d34d9e946b18063be52b1dfa0a7423cdb1b9bd5ff8b5d3ee"
+      },
+      {
+        "path": "packages/db/migrations/024_reference_structures.sql",
+        "sha256": "71a019163fec45a88fc91f4cb53839e582c23eb37db7615928ae5d7f888dcd2c"
+      },
+      {
+        "path": "packages/db/migrations/025_quality_uniqueness.sql",
+        "sha256": "94a814af5b80baf9835eca83ad200e67bf6e5697f79ae99e7abb2a1f4c0a3f9e"
+      },
+      {
+        "path": "packages/db/migrations/026_quality_range.sql",
+        "sha256": "7fda1bc5768525ff60449433b452da549063ee52f2d9cad01c0b26330c52bd8e"
+      },
+      {
+        "path": "packages/db/migrations/027_quality_monitoring.sql",
+        "sha256": "b50fc5375c9a992e55fd196cf3e745b667b1b11dff045a88cb5899d493b4f35a"
+      },
+      {
+        "path": "packages/db/migrations/028_quality_freshness.sql",
+        "sha256": "d1157374269dad9a2d43dd2e6fbe2bf67ab8b487c67db9f3f30ae266cefd41ef"
+      },
+      {
+        "path": "packages/db/migrations/029_quality_freshness_scheduling.sql",
+        "sha256": "ae29e6ff984b0a48dead1c9a99eb3c1ea69b7e530e7a0f2ff3a16ffcd5266026"
+      },
+      {
+        "path": "packages/db/migrations/030_quality_volume.sql",
+        "sha256": "d870f176bf3e1f6fef39e32ee5a5d01d17a56bff4ecf6333c5922b6affc4bc45"
+      },
+      {
+        "path": "packages/db/migrations/031_authority_read_grants.sql",
+        "sha256": "f8e824ec39a32005f4c687d4db6abd3563459ed869f75384a295124864f87a3d"
+      },
+      {
+        "path": "packages/db/migrations/032_relation_candidate_validation.sql",
+        "sha256": "7837d2c9484c539330cb567cd550a4e19ee769360e0c9118d45837ded4f918b5"
+      },
+      {
+        "path": "packages/db/migrations/033_content_security_revisions.sql",
+        "sha256": "c178380ccd70033e9c1810519416f951057f8d726dfb5e1864222c0184ec1e4a"
+      },
+      {
+        "path": "packages/db/migrations/034_classification_label_identities.sql",
+        "sha256": "c181fb06af18973cb8b3f8039f95b57c1692a1fa420f4bcbea563f28c1a06614"
+      },
+      {
+        "path": "packages/db/migrations/035_reviewed_classification_producer.sql",
+        "sha256": "4a3f72e424770e61560c55171775869ab20be7f5afd1735033888b0a94220f93"
+      },
+      {
+        "path": "packages/db/migrations/036_authority_scope_alignment.sql",
+        "sha256": "5c03e2cc221bc785d24b51a7b25a913ad38c4759726c9292c9e3ce8d16426569"
+      },
+      {
+        "path": "packages/db/migrations/037_application_authentication_bridge.sql",
+        "sha256": "fe5dae5d1be5067bcbc99edb349d97f9d7898e12810d278afdd93594de0e317d"
+      }
+    ],
+    "comparison_proof": {
+      "path": ".local/protected-core-deployment/reference-import-correction.proposal.json",
+      "sha256": "a7d3d248e1d56e386b2e9d2acbd7fe53e624a1520a91204d7293906f604e4dcb"
+    },
+    "limits": [
+      "Checksum comparison and already-retained fresh import gate only; no new 37-migration execution was performed while assembling this record."
+    ]
+  },
+  "original_full_browser_run": {
+    "status": "FAILED_RETAINED",
+    "stats": {
+      "startTime": "2026-11-23T13:19:16.857Z",
+      "duration": 2315987.672,
+      "expected": 32,
+      "skipped": 0,
+      "unexpected": 6,
+      "flaky": 0
+    },
+    "failed_files": [
+      "classification.spec.ts",
+      "quality-monitoring.spec.ts",
+      "quality-volume.spec.ts",
+      "reference-data.spec.ts",
+      "reference-quality.spec.ts",
+      "vertical-slice.spec.ts"
+    ],
+    "report": {
+      "path": ".local/protected-core-deployment/full-browser-final/completed-artifacts/.local/evidence/playwright-results.json",
+      "sha256": "469b8c48505599a13acf9f221c5c204dff8ec3d413e5947f306ebbc7a671c8f5"
+    },
+    "local_api_heap_fatal": {
+      "path": ".local/protected-core-deployment/full-browser-final/additional-failure-diagnosis/vertical-slice-fatal-classification.json",
+      "sha256": "6bc54d2f0af0df8436025d6dc6b3418668f382f11c42e7f61de1fc2525db6083"
+    },
+    "sanitized_diagnosis": {
+      "path": ".local/protected-core-deployment/full-browser-final/additional-failure-diagnosis/diagnosis.json",
+      "sha256": "b129109bc2c5ec4864dd933342613719d0f5fc2a05550eb470c06e47eed989c4"
+    },
+    "limits": [
+      "The original 32 pass / 6 fail outcome remains failed. Focused passes are not combined into a claimed 38/38 rerun.",
+      "Raw traces/error contexts may contain session cookies and remain private; this proposal includes only safe metadata and digest references."
+    ]
+  },
+  "pending": [
+    "Fresh complete 52-outcome hosted development qualification, including all174 API cases and38 main browser journeys.",
+    "Fresh source security and both native image security gates for the corrected commit; no earlier head substitutes.",
+    "Complete product programme and release gates remain open."
+  ],
+  "privacy": {
+    "contains_credentials": false,
+    "contains_cookies_or_headers": false,
+    "contains_raw_error_contexts_or_traces": false,
+    "contains_personal_paths": false,
+    "private_artifacts_are_hash_references_only": true
+  },
+  "runtime_source_and_ledger_readback": {
+    "status": "PASS",
+    "checked_at": "2026-11-23T14:29:03.145136+00:00",
+    "snapshot_bindings": 369,
+    "all_snapshot_hashes_match_current": true,
+    "services": {
+      "api": {
+        "imageId": "sha256:ab077b0bb73d9865f10c1ae4d34668fc6cdf57e111da6dad8e69dc1cf236a16e",
+        "status": "running",
+        "startedAt": "2026-11-23T14:23:49.656913965Z",
+        "sourcesMatched": 325,
+        "checks": [
+          "package-manifests",
+          "selected-runtime-imports"
+        ]
+      },
+      "workflow-worker": {
+        "imageId": "sha256:ab077b0bb73d9865f10c1ae4d34668fc6cdf57e111da6dad8e69dc1cf236a16e",
+        "status": "running",
+        "startedAt": "2026-11-23T14:19:03.843106513Z",
+        "sourcesMatched": 325,
+        "checks": [
+          "package-manifests",
+          "selected-runtime-imports"
+        ]
+      },
+      "site-runner": {
+        "imageId": "sha256:ab077b0bb73d9865f10c1ae4d34668fc6cdf57e111da6dad8e69dc1cf236a16e",
+        "status": "running",
+        "startedAt": "2026-11-23T14:19:03.845766305Z",
+        "sourcesMatched": 325,
+        "checks": [
+          "package-manifests",
+          "selected-runtime-imports"
+        ]
+      },
+      "python-worker": {
+        "imageId": "sha256:7d3f920baba8c453712965b5fd98ce88cace506a0732ebedd0d92d781385d469",
+        "status": "running",
+        "startedAt": "2026-11-23T14:18:57.530094885Z",
+        "sourcesMatched": 33,
+        "checks": [
+          "python-parse",
+          "project-lock-parse",
+          "psycopg-import"
+        ]
+      }
+    },
+    "proof": {
+      "path": ".local/protected-core-deployment/overview-aggregate/core-source-readback.json",
+      "sha256": "cec7301a95627e87548022d55130cacbbd7dd830a2dee2543d780cd5a36864c3"
+    },
+    "exact_overview_runtime_sources": [
+      {
+        "path": "apps/api/src/index.ts",
+        "sha256": "8cf5484f8dd39d89371fd24894bf95d379826b7f301cf2216cd0d3a80db8d29c"
+      },
+      {
+        "path": "apps/api/src/overview.ts",
+        "sha256": "754fb03456bbcf1d490e165b1dacbb5b68d1f960fc4a7d6d4b12af3f81527701"
+      },
+      {
+        "path": "tests/integration/overview.test.ts",
+        "sha256": "944fc520c585322eff4ff5ec48b6c86d87a1db51e0525cd2b69aaa040e722fac"
+      }
+    ],
+    "test_ledger_proof": {
+      "path": ".local/protected-core-deployment/overview-aggregate/test-ledger-readback.json",
+      "sha256": "55945eca13e4e9e31fae014b671cf78c1eae4ef58e8b7ecc92036df78466b178"
+    },
+    "migration_ledger_entries": 37,
+    "all_ledger_checksums_match_current": true,
+    "services_observed": {
+      "total": 17,
+      "running_healthy": 13,
+      "one_shot_exited_zero": 4
+    },
+    "limits": [
+      "Current source bytes matched both immutable unmounted images and four running application services. This does not independently reconstruct installed dependency bytes or compiled web output; frozen build and browser evidence are separate.",
+      "Image source readback and real read-only migration ledger query; no production deployment or vendor-live qualification."
+    ]
+  },
+  "api_suite_declaration_inventory": {
+    "source_files": 109,
+    "test_declarations": 174,
+    "declaration_files": 26,
+    "flags": [],
+    "collector": {
+      "path": "policies/api_evidence.py",
+      "sha256": "7fda2a522bfa6c8db22bd18e945597b15cc5d0aa90bcd93cf2c08a3aea2d1404"
+    },
+    "inventory_manifest_sha256": "d96b783f6495238ebcc3547330aff157d9543457e6f1f5d4c497dfc97e6d0fe4",
+    "scope": "Static declaration/source inventory only; not a completed combined 174-case API execution."
+  },
+  "overview_browser_followup": {
+    "status": "FAILED_RETAINED",
+    "stats": {
+      "startTime": "2026-11-23T14:27:19.230Z",
+      "duration": 230078.213,
+      "expected": 3,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "file": "glossary.spec.ts",
+        "line": 130,
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 35430,
+            "retry": 0
+          }
+        ]
+      },
+      {
+        "file": "glossary.spec.ts",
+        "line": 308,
+        "status": "unexpected",
+        "results": [
+          {
+            "status": "failed",
+            "duration_ms": 169648,
+            "retry": 0
+          }
+        ]
+      },
+      {
+        "file": "vertical-slice.spec.ts",
+        "line": 17,
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 20747,
+            "retry": 0
+          }
+        ]
+      },
+      {
+        "file": "vertical-slice.spec.ts",
+        "line": 145,
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 1732,
+            "retry": 0
+          }
+        ]
+      }
+    ],
+    "source_hashes_match": true,
+    "source_count": 58,
+    "before_proof": {
+      "path": ".local/protected-core-deployment/overview-browser/before.json",
+      "sha256": "0df1505b9e186aa2568bf61b3cbcb1c26113dc2fa04648276f6870677df4a1b0"
+    },
+    "completion_proof": {
+      "path": ".local/protected-core-deployment/overview-browser/completion.json",
+      "sha256": "be7cd9082640d9b1449e0ec31e79e2d3a550e64c34a73f352570a501cd8b24c7"
+    },
+    "report": {
+      "path": ".local/protected-core-deployment/overview-browser/playwright-results.json",
+      "sha256": "0c6e8d54e56bccdf36215d461b3c00b0972917f0a0e01df121636d84eba3e745"
+    },
+    "findings": [
+      "Both vertical-slice cases and the first glossary case passed on the corrected running image.",
+      "The second glossary case failed; separate investigation is in progress. No cause is assigned by this evidence record.",
+      "Subsequent trace review identifies canonical GLOSSARY_LIMIT during the first linked publication; the editor navigation was not reached. Exact underlying size/count bound remains under investigation."
+    ],
+    "limits": [
+      "This is not a four-case pass or a full 38-case rerun.",
+      "Only status, duration, source coordinates and proof hashes are included; raw error context and session-bearing traces remain private."
+    ],
+    "visual_review": {
+      "reviewed": [
+        {
+          "path": "generated-captures/docs/verification/screenshots/asset-en-light-1440.png",
+          "sha256": "1178bb9b67c70e5e6480e98b64bb7515720aae09639b2aa3aac9553799fa9f9b",
+          "review": "Rendered ownership and synthetic source details visible; no overlapping controls observed at this capture. Horizontal tab and metadata overflow are not certified by a still image."
+        },
+        {
+          "path": "generated-captures/docs/verification/screenshots/asset-en-light-390.png",
+          "sha256": "9635d0b53eef71f57f1439a96d04b6ce2f25ec256433578df4616439bbc85014",
+          "review": "Rendered ownership and synthetic source details visible; no overlapping controls observed at this capture. Horizontal tab and metadata overflow are not certified by a still image."
+        }
+      ],
+      "method": "Actual captured images opened and visually inspected",
+      "limitations": [
+        "Two still images only; no full accessibility, translation, release UI or unpictured workflow claim."
+      ]
+    },
+    "visual_review_proof_sha256": "a0ec600872a54892712a2cba02da2982ea688ccb2dd273b0acef9aaa2ce38478"
+  },
+  "source_binding_note": "Top-level source_files retain the earlier snapshot, including the pre-isolation glossary file. final_glossary_qualification and foundation_job_allowance bind subsequent changes separately.",
+  "final_glossary_qualification": {
+    "recordedAt": "2026-11-23T14:40:40.894661+00:00",
+    "status": "PASS",
+    "command": "pnpm exec playwright test tests/e2e/glossary.spec.ts --output=.local/protected-core-deployment/glossary-isolated-browser/results",
+    "stats": {
+      "startTime": "2026-11-23T14:37:15.424Z",
+      "duration": 142868.747,
+      "expected": 2,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "file": "glossary.spec.ts",
+        "line": 130,
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration": 39305,
+            "retry": 0
+          }
+        ]
+      },
+      {
+        "file": "glossary.spec.ts",
+        "line": 331,
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration": 101833,
+            "retry": 0
+          }
+        ]
+      }
+    ],
+    "testRetries": 0,
+    "sourceHashesMatch": true,
+    "sourceFiles": [
+      {
+        "path": "playwright.config.ts",
+        "sha256": "b6487b1f235b35482b13a5eb43872ab684e0985109b89c1c77e975afa9185c51"
+      },
+      {
+        "path": "tests/e2e/approvals.spec.ts",
+        "sha256": "8bee1c4a4955585fdb50d71883772173db1b4c207918653949ceb6742151c02a"
+      },
+      {
+        "path": "tests/e2e/asset-type-migrations.spec.ts",
+        "sha256": "2ec609812d36c29ddd1365cc96a4b18760a95590e2656fef18c6d34c994e8996"
+      },
+      {
+        "path": "tests/e2e/asset-types.spec.ts",
+        "sha256": "2388075e40c2865f486b7ce66de3b494bde3f498cd0c734bf330221976b698c3"
+      },
+      {
+        "path": "tests/e2e/business-domains.spec.ts",
+        "sha256": "8d6556f30510ba42eb2d7a537004060fbbf0b9f2714f3f09b8c26d31d25005f6"
+      },
+      {
+        "path": "tests/e2e/catalog-sorting.spec.ts",
+        "sha256": "8326984a3d1d988b171a95c765ec2c20f94554fd399d353b30342c13ffcaaac4"
+      },
+      {
+        "path": "tests/e2e/classification.spec.ts",
+        "sha256": "35bcb63ae27955b09d0875b490451446da4f03d7b8656290ebc0e80970c87ec1"
+      },
+      {
+        "path": "tests/e2e/glossary.spec.ts",
+        "sha256": "03c6c66cfb3f7a4959cd14191fed76698020c11cbb536e0e336be0f16f46d9f9"
+      },
+      {
+        "path": "tests/e2e/lineage.spec.ts",
+        "sha256": "36ea229cafef469ec45e014d87b5f3e095fb813999b00ce70d948563efe3dace"
+      },
+      {
+        "path": "tests/e2e/model-migrations.spec.ts",
+        "sha256": "4580fedfa9e785e77283372e44195a82d71ae2b84a7bb03753de7516edf65ace"
+      },
+      {
+        "path": "tests/e2e/models.spec.ts",
+        "sha256": "28b7386a7f945025fc89397e946ecea5d83fd2896d2af078bba66444696bb18b"
+      },
+      {
+        "path": "tests/e2e/postgres-configuration.spec.ts",
+        "sha256": "dc4167fc59d8bed5e456fbbf9925c0c98f5a1deee1987a1efd86c7e4a5935c79"
+      },
+      {
+        "path": "tests/e2e/quality-freshness-monitoring.spec.ts",
+        "sha256": "d7a5ac75d7303976ff66415e1debbaf1a5616907d369b9aa18bc4b5241a8295c"
+      },
+      {
+        "path": "tests/e2e/quality-freshness.spec.ts",
+        "sha256": "feff9b73d8a87886330cd2c3876a275c108c1f3359053a5367cc9248d6b0cc27"
+      },
+      {
+        "path": "tests/e2e/quality-monitoring.spec.ts",
+        "sha256": "c1d73c2c778d81b680a1e2314f8ce9c40ad91615cd9db520cc8a0de74dc1753b"
+      },
+      {
+        "path": "tests/e2e/quality-range.spec.ts",
+        "sha256": "1e61a6dbf68cd7c7219cc12d9db52dd381cf58450412a4ff43c5968a8907608c"
+      },
+      {
+        "path": "tests/e2e/quality-uniqueness.spec.ts",
+        "sha256": "9c74880bfffc304f455ef60d9c0643db5ae9f00fb074e29a4587d9092eab57fe"
+      },
+      {
+        "path": "tests/e2e/quality-volume.spec.ts",
+        "sha256": "280d5fdf571c17b5675b18b76fb59b6687677109455ba222a76abb361ed5d178"
+      },
+      {
+        "path": "tests/e2e/quality.spec.ts",
+        "sha256": "634f1c13a940f5bb4ea7a9525291c612a6040a6ee407a2f8c31f7742071bf545"
+      },
+      {
+        "path": "tests/e2e/reference-data.spec.ts",
+        "sha256": "b7276ac21ecc6a60678e636dfc6385567161e2a585cfaed93923461726ba0255"
+      },
+      {
+        "path": "tests/e2e/reference-import.spec.ts",
+        "sha256": "23d6877d9d9791888d44bb6c3bb43f148ca70d2292f8ace67cdd9dea7fdcc9dc"
+      },
+      {
+        "path": "tests/e2e/reference-quality.spec.ts",
+        "sha256": "6806d7186741b0263fd8c1682836ca42e836ad9c946fd15f04e662cf7d98df50"
+      },
+      {
+        "path": "tests/e2e/reference-structures.spec.ts",
+        "sha256": "63232bccf1f2b26e85c3d52853570d32e9ed706fb9070cf0378c9a9678b39c98"
+      },
+      {
+        "path": "tests/e2e/relation-migrations.spec.ts",
+        "sha256": "067eb99dbb1156db4ad649c2958261144fc020a0b1a98bdfc5247e36f4e7fccf"
+      },
+      {
+        "path": "tests/e2e/relations.spec.ts",
+        "sha256": "15d2a753836f576ae97f3285eebf06632f55b535632c9f9b8db5e59d41370211"
+      },
+      {
+        "path": "tests/e2e/source-connectors.spec.ts",
+        "sha256": "3772cc177e4b8b37334e54ddf032961bf69b9ca53abbb67aeb1c7e9e6cf9e6b2"
+      },
+      {
+        "path": "tests/e2e/support/reference-workflow.ts",
+        "sha256": "327cce7106ec580bc0b7310e480136974083d484dc054f67558e2cd20edd4d80"
+      },
+      {
+        "path": "tests/e2e/ui-accessibility.spec.ts",
+        "sha256": "415234c14c5f34ee50958771295508964ae7c91b57c4361b4e30f3440022be81"
+      },
+      {
+        "path": "tests/e2e/vertical-slice.spec.ts",
+        "sha256": "26735ada04bdd12e9623c3ea2ce89c31b25875db2aed9af20e897f44bca59122"
+      },
+      {
+        "path": "tests/fixtures/application-authn-bridge.ts",
+        "sha256": "395bb2c156dff5b7501c827ef6a32f82232ef40342fb9c1d72998cd14fa13bc2"
+      },
+      {
+        "path": "tests/fixtures/authority-authn-foundation.ts",
+        "sha256": "41d0ed6abfb3825334d88549be2c680104c3c98f2d236fdd94c7dc8e1ce4249f"
+      },
+      {
+        "path": "tests/fixtures/authority-foundation.ts",
+        "sha256": "6d30dfd59cbfb7fab67e55f3daf5e6c98a4ac63d1e4e401ad6760979737ae211"
+      },
+      {
+        "path": "tests/fixtures/authority-load-diagnostic.ts",
+        "sha256": "2939b0f334ed1242f5f7c51f294952817e1e17d39d14e76c402a1fa050319c6c"
+      },
+      {
+        "path": "tests/fixtures/authority-scope-fixture.ts",
+        "sha256": "b2a800b025638034b1c107496e87a1ed56c4216133b3d11408fe108d29d18788"
+      },
+      {
+        "path": "tests/fixtures/authority-scope-legacy.ts",
+        "sha256": "d3363b9fd7abe16a3921bf5e999049f032d8c6a589983f350a39c2632c124053"
+      },
+      {
+        "path": "tests/fixtures/authority-scope-probes.ts",
+        "sha256": "482936002acf1e965255be478cf5ef9d3c6af9cb4ccef0add5883521e7ed0310"
+      },
+      {
+        "path": "tests/fixtures/browser-rate-budget.ts",
+        "sha256": "4b1f22a52782449ccb44d4162812c11a0cb1b4c75dc098d158af5efe6f280e2a"
+      },
+      {
+        "path": "tests/fixtures/business-domains-browser.ts",
+        "sha256": "ad88ba1a50f2eb93117098d7950ccea176550c1fa4517c28c90b45ee919fe30a"
+      },
+      {
+        "path": "tests/fixtures/business-domains.ts",
+        "sha256": "b239c5fe41d9261e8d2067fd8e364a5cb9a49d1a82fb23cce188ca49ae8ffeb3"
+      },
+      {
+        "path": "tests/fixtures/glossary-population-diagnostic.ts",
+        "sha256": "13f125ba0763180fea54b2ae9769f81326153975717a3499c694f000b83ac192"
+      },
+      {
+        "path": "tests/fixtures/held-metadata-evaluation.ts",
+        "sha256": "3f322ec0566120a1b49e56c7e49579a1b9ec8bb8ab26d9a275645a43d30b3b91"
+      },
+      {
+        "path": "tests/fixtures/http-budget.ts",
+        "sha256": "d0d772ca40196ef90b7f570bcf19123c8f53543ed664e716139e30a4f4682e95"
+      },
+      {
+        "path": "tests/fixtures/manual-scan.ts",
+        "sha256": "23b28b2cbf33bcc6c779ed16e940287d3918d9e2153deace925021edfb726979"
+      },
+      {
+        "path": "tests/fixtures/protected-core-authentication.ts",
+        "sha256": "0e7955756d285b76895711976da210f7e6bf443dfc56bd7796f163db2ec762e6"
+      },
+      {
+        "path": "tests/fixtures/protected-core-tenants.ts",
+        "sha256": "29e3ab4ad1c6e56daa29b8c5bf75314247e1c039faa43638a29f10cca4a915b9"
+      },
+      {
+        "path": "tests/fixtures/quality-freshness-monitoring.ts",
+        "sha256": "b250ada61eb805d3585d58998db0749dc413a02a4379b55b92a3ac8b38c70edd"
+      },
+      {
+        "path": "tests/fixtures/quality-freshness.ts",
+        "sha256": "a3c97e5a869711261bf667234aa6f64fc2f15c1dd7488587afe41509de8fd573"
+      },
+      {
+        "path": "tests/fixtures/quality-monitoring.ts",
+        "sha256": "5d74a58f066c6e9207b283c6d5a56183e645746fcf3b21bb15d7290c121558a7"
+      },
+      {
+        "path": "tests/fixtures/quality-range-hash-vectors.json",
+        "sha256": "e6fe154e83a0076a91f08adcebc370a26242c065b27d77d6d4bc65e7a10748ad"
+      },
+      {
+        "path": "tests/fixtures/quality-volume.ts",
+        "sha256": "615565af41931e9e2bc8a74b8b73cc392111e86e4b2cf2ccc827086e772c1331"
+      },
+      {
+        "path": "tests/fixtures/reference-quality.ts",
+        "sha256": "abd4123bfc02c2e234772bf0cbcccd6cf6b0121724d7ea479ba04f612f17ed7b"
+      },
+      {
+        "path": "tests/fixtures/reference-structure-concurrency.ts",
+        "sha256": "2e5cdb420ba40f58affdcf7961adff9eea392938fc51f8e49c497e99411eef6f"
+      },
+      {
+        "path": "tests/fixtures/reference-structure.ts",
+        "sha256": "92471a7b0f43feadf7de776e4a0d420e8dbad6b14725c23ba837afe96f0e5916"
+      },
+      {
+        "path": "tests/fixtures/relation-candidate.ts",
+        "sha256": "0c7df5e4dde926aab50c6bb0444e64368be5743a11fd53e8539b31618cbefc74"
+      },
+      {
+        "path": "tests/fixtures/relation-migration-api.ts",
+        "sha256": "e68e89aff887339a035364f124f1ae8888d740b92cf55ff8466c687324a2e65f"
+      },
+      {
+        "path": "tests/fixtures/relation-participation.ts",
+        "sha256": "209132979d10001c59e464c5b9a43e63ea82135962a46bfe0b6329a1b243f6e8"
+      },
+      {
+        "path": "tests/fixtures/reviewed-classification-facts.ts",
+        "sha256": "94ba547dcc55f758caca4de6d4a708b7deaffe88992737a828549db83d6f7d08"
+      },
+      {
+        "path": "tests/fixtures/search-tenants.ts",
+        "sha256": "52379d69d3ca72340b9da069406f7ff48664abe702369c8f5595716c719282d6"
+      }
+    ],
+    "proofSha256": "de953df50bd9cd81ae903a976ff6fbe9dbb44a8eb939641bde0174ddbd3ac3a8",
+    "typecheck": {
+      "status": "PASS",
+      "command": "pnpm typecheck",
+      "proofSha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+    },
+    "limits": [
+      "Two real glossary journeys only; prior failed attempt remains separate. No full 38-case pass or vendor-live SSO claim.",
+      "Synthetic linked publication now uses a unique pinned descendant of business_term, with inherited model/owner/lifecycle asserted and real UI selection. All prior approval, amendment, removal and tenant/ACL checks remain."
+    ]
+  },
+  "glossary_limit_diagnosis": {
+    "observedFailureCode": "GLOSSARY_LIMIT",
+    "stage": "First linked publication before editor navigation",
+    "readOnlyCurrentNumericProbe": {
+      "status": "PASS",
+      "kind": "current-readonly-scope-measurement",
+      "counts": {
+        "edge_count": 1,
+        "binding_count": 0,
+        "request_count": 1,
+        "principal_count": 2,
+        "relation_type_count": 34,
+        "asset_identity_count": 51,
+        "existing_asset_count": 50,
+        "direct_asset_max_bytes": 1025,
+        "snapshot_admission_bytes": 82993,
+        "graph_capture_existing_body_revision_bytes": 178520
+      },
+      "exceeded": [],
+      "elapsedMs": 2269,
+      "historicalExactFailureProven": false,
+      "laterStagedProofMeasured": false,
+      "writeExecuted": false
+    },
+    "probeSourceHashes": [
+      {
+        "path": ".local/glossary-linked-isolation/measure-scope.cjs",
+        "sha256": "92fb8606e72a17bf506977e0a70ec514ef25572c1b93bc555d2f246bf0abf462"
+      },
+      {
+        "path": ".local/glossary-linked-isolation/measure-scope.sql",
+        "sha256": "4e767ca469ce416ecd6274d1655097637d648c06a41b112fc629f59bd5dbde5d"
+      }
+    ],
+    "limits": [
+      "Numeric current-scope probe did not exceed early SQL bounds. Later staged/source-proof bytes and the exact historical limiting check are not established.",
+      "Isolation avoids accumulated shared exact-type fixture cohorts without changing product limits. The passing rerun does not prove a precise historical limit mechanism."
+    ]
+  },
+  "foundation_job_allowance": {
+    "candidate_report": {
+      "schema_version": 1,
+      "recorded_at": "2026-11-23T14:39:15.200162+00:00",
+      "status": "PRIVATE_CANDIDATE_HOST_CHECKS_PASS",
+      "public_sources_modified": false,
+      "release_qualified": false,
+      "proposal": {
+        "foundation_timeout_minutes": 120,
+        "other_behavior_shards_timeout_minutes": 90,
+        "expression": "${{ matrix.shard == 'foundation' && 120 || 90 }}",
+        "changed_files": [
+          {
+            "path": ".github/workflows/ci.yml",
+            "before_sha256": "c534d82b8bc53f030667d3a27dc6ac254d4c46ec5c70a26f2f2c0606f4b21db8",
+            "candidate_sha256": "8dadb1d4556073a8f0703c5ea98950e81997c1b24a81408ddb04eb0cfb954ad5"
+          },
+          {
+            "path": "policies/ci_shards.py",
+            "before_sha256": "18df2123e593654819fbbc91ad0f1606cd7faa58b56be44d4ef0681c968a93b6",
+            "candidate_sha256": "124df39fc35f16270dc39e50b225161201df5ba75904ad27652217f296117928"
+          },
+          {
+            "path": "policies/test_ci_shards.py",
+            "before_sha256": "6a6791a4ca2d0dda53dec7702f956d278993e3dda60f1e99794ae01b0dcd95de",
+            "candidate_sha256": "bcb29dde6b0bd4632588c7e53e26e7c9dace27e968cbb58340185904faf4f05b"
+          }
+        ],
+        "patch": {
+          "path": ".local/github-delivery/private/foundation-timeout-proposal/foundation-timeout.patch",
+          "sha256": "d47e1cfd41e72cb39e0b3aab9ca53709bbceb6b7444898fa9dfc65ef0fff85c6"
+        }
+      },
+      "rationale": {
+        "timing_proof": {
+          "path": ".local/github-delivery/private/pre-push-foundation-review/review.json",
+          "sha256": "86e8bc6b7835806129c473fac8f47df71b7297bade81feb6d46932eb6d5c1302"
+        },
+        "snapshot_status": "in_progress",
+        "observed_timeout_failure": false,
+        "observed_seconds_to_reviewed_facts": 3998,
+        "prior_remaining_seconds": 1144,
+        "estimated_seconds_before_new_bridge": 5142,
+        "old_job_ceiling_seconds": 5400,
+        "old_headroom_before_new_bridge_seconds": 258,
+        "unchanged_bridge_wrapper_seconds": 900,
+        "prior_remaining_plus_bridge_wrapper_estimate_seconds": 6042,
+        "new_job_ceiling_seconds": 7200,
+        "headroom_above_that_estimate_seconds": 1158,
+        "interpretation": "The metadata snapshot shows progress, not a proven job timeout. 85m42s using prior remaining time leaves only 4m18s before the new bridge; reserving its unchanged 15-minute wrapper reaches 100m42s. A 120-minute foundation ceiling leaves 19m18s for runner variability and final evidence/cleanup. This is workload allowance, not a claim that a failing native gate passed."
+      },
+      "preserved_controls": {
+        "all_required_outcomes": 52,
+        "closed_assignment_digest_unchanged": "9822fd2fa730032671b143150aa6ecbd33b7efc1968cf63ef224ec79f2196f7e",
+        "workflow_only_change": "One job-level timeout expression; all steps, conditions, matrix members, outcome mappings, aggregate requirements, artifact handling and cleanup are byte-identical.",
+        "native_gate_bounds": {
+          "execution_seconds": 780,
+          "cleanup_seconds": 90,
+          "wrapper_seconds": 900,
+          "wrapper_reserve_seconds": 30
+        },
+        "unchanged_source_files": [
+          {
+            "path": "scripts/runtime.py",
+            "sha256": "f823914b45bde77ed317e716758c862a677c3341325f4e64e5ceca8ad1333bf0"
+          },
+          {
+            "path": "scripts/runtime-test-application-authn-bridge.py",
+            "sha256": "7341a37ed0ce4ed74c02a36d7d97708643896a16a3f1ed60c3a181f3efbe4d26"
+          },
+          {
+            "path": "scripts/runtime-test-content-security-revision.py",
+            "sha256": "7330678b22fdb99df1cb0d1bedc446d5a2a12eb7a648ef30dcdea634b3fbf2d2"
+          },
+          {
+            "path": "scripts/runtime-test-reviewed-classification-producer.py",
+            "sha256": "2af333d89e68fba9c27a3c8d63b10dd134260be1a0c2e24b715fd56ede415e22"
+          },
+          {
+            "path": "scripts/runtime-test-held-metadata-authority.py",
+            "sha256": "f3eae0d774e17f78527a41689b9881946c30d60086d4f7897eab9625f741bbce"
+          },
+          {
+            "path": "scripts/test_application_authn_bridge.py",
+            "sha256": "9aaaeb1ea18c317e1c847618f8b4bd5cc7b8545cfca596022e257abacfaa0fbc"
+          },
+          {
+            "path": "scripts/test_runtime_routing.py",
+            "sha256": "6f7bc9eaaaf02e8761b65c5d7d305f44624e5ff39f05b6edc063d82075be001f"
+          }
+        ],
+        "no_steps_skipped": true,
+        "no_continue_on_error_added": true,
+        "no_gate_deadline_extended": true,
+        "other_jobs_unchanged": true
+      },
+      "host_tests": [
+        {
+          "command": "PYTHONPATH=policies python3 -m unittest test_ci_shards",
+          "passed": 69,
+          "failed": 0,
+          "duration_seconds": 36.011,
+          "scope": "All pipeline shard controls executed from the private candidate, including new ceiling refusal cases and existing 52-outcome requirements.",
+          "log": {
+            "path": ".local/github-delivery/private/foundation-timeout-proposal/candidate-ci-shards.log",
+            "sha256": "94ac23e3060255c0cba6e91225f3dd2590547d4bcaf842c49ae6fcff7b3a6939"
+          }
+        },
+        {
+          "command": "PYTHONPATH=scripts python3 -m unittest test_application_authn_bridge.BudgetControls test_runtime_routing.RuntimeRoutingTests",
+          "passed": 17,
+          "failed": 0,
+          "duration_seconds": 0.029,
+          "scope": "Unchanged native deadline and launcher routing controls executed from original source; subprocess/native services mocked by existing host controls.",
+          "log": {
+            "path": ".local/github-delivery/private/foundation-timeout-proposal/unchanged-native-budget-controls.log",
+            "sha256": "6cc5b549f8cc71ccc70253d1bd997485b60bf942c19efd893cad624952beae52"
+          }
+        }
+      ],
+      "workflow_lint": {
+        "command": "actionlint -shellcheck= -pyflakes= <private-candidate>/.github/workflows/ci.yml",
+        "version": "1.7.12",
+        "exit_code": 0,
+        "log": {
+          "path": ".local/github-delivery/private/foundation-timeout-proposal/candidate-actionlint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "scope": "GitHub Actions workflow syntax, expression and context checks; optional shellcheck/pyflakes integrations disabled."
+      },
+      "official_syntax_references": [
+        {
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts",
+          "supports": "matrix context is allowed in jobs.<job_id>.timeout-minutes"
+        },
+        {
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idtimeout-minutes",
+          "supports": "job timeout is a maximum elapsed allowance before automatic cancellation"
+        }
+      ],
+      "limits": [
+        "No hosted run was started or modified; current in-flight job retains its original 90-minute ceiling.",
+        "No Docker/core/native gate executed for this proposal. Host controls do not replace native qualification.",
+        "The 120-minute proposal does not guarantee every hosted stage will pass or finish; all native failures remain failures.",
+        "Timing extrapolates from one prior completed run and one current metadata snapshot, not a capacity benchmark."
+      ]
+    },
+    "applied_root": {
+      "status": "PASS",
+      "sourceHashesMatch": true,
+      "controlsPassed": 69,
+      "command": "PYTHONPATH=policies python3 -m unittest policies.test_ci_shards",
+      "proofSha256": "da5d701fbd0d014ab1d562c7b00e01e34434101a8ac5bea83f838bf3e0913790"
+    },
+    "limit": "Only the outer foundation job grows to120minutes for expanded required work; all other shards remain90 and all native gate deadlines/outcomes remain unchanged."
+  }
+}

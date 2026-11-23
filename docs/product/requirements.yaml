@@ -54177,7 +54177,11 @@
         "docs/verification/protected-authentication-local-attempt-10.json",
         "docs/verification/protected-authentication-visual-review-attempt-10.json",
         "docs/verification/application-authentication-bridge-local.json",
-        "docs/verification/migrator-import-compatibility-local.json"
+        "docs/verification/migrator-import-compatibility-local.json",
+        "docs/verification/source-security-053a61c.json",
+        "docs/verification/runtime-images-hosted-053a61c.json",
+        "docs/verification/hosted-checkpoint-053a61c-partial-failed.json",
+        "docs/verification/consolidated-browser-overview-local.json"
       ]
     },
     {
@@ -54266,7 +54270,11 @@
         "docs/verification/protected-authentication-local-attempt-10.json",
         "docs/verification/protected-authentication-visual-review-attempt-10.json",
         "docs/verification/application-authentication-bridge-local.json",
-        "docs/verification/migrator-import-compatibility-local.json"
+        "docs/verification/migrator-import-compatibility-local.json",
+        "docs/verification/source-security-053a61c.json",
+        "docs/verification/runtime-images-hosted-053a61c.json",
+        "docs/verification/hosted-checkpoint-053a61c-partial-failed.json",
+        "docs/verification/consolidated-browser-overview-local.json"
       ]
     },
     {
@@ -58909,7 +58917,11 @@
         "docs/verification/reference-structure-hosted-timeout-b08b88d.json",
         "docs/verification/protected-linux-tool-admission-local.json",
         "docs/verification/hosted-checkpoint-b08b88d.json",
-        "docs/verification/protected-authentication-tool-admission-local.json"
+        "docs/verification/protected-authentication-tool-admission-local.json",
+        "docs/verification/source-security-053a61c.json",
+        "docs/verification/runtime-images-hosted-053a61c.json",
+        "docs/verification/hosted-checkpoint-053a61c-partial-failed.json",
+        "docs/verification/consolidated-browser-overview-local.json"
       ]
     },
     {

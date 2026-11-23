@@ -436,7 +436,7 @@ def validate_workflow(text):
     required = '    name: required\n    if: always()\n    needs: [quality, secrets, behavior]\n    runs-on: ubuntu-24.04\n    timeout-minutes: 2\n    permissions: {}\n    steps:\n      - name: Require every mandatory child to succeed\n        env:\n          QUALITY_RESULT: ${{ needs.quality.result }}\n          SECRETS_RESULT: ${{ needs.secrets.result }}\n          BEHAVIOR_RESULT: ${{ needs.behavior.result }}\n        run: |\n          test "$QUALITY_RESULT" = success\n          test "$SECRETS_RESULT" = success\n          test "$BEHAVIOR_RESULT" = success\n'
     require(blocks['required']==required)
     body=blocks['behavior_shards']
-    header = "    name: behavior (${{ matrix.shard }})\n    runs-on: ubuntu-24.04\n    timeout-minutes: 90\n    strategy:\n      fail-fast: false\n      max-parallel: 5\n      matrix:\n        shard: ["+', '.join(SHARDS)+"]\n    steps:\n"
+    header = "    name: behavior (${{ matrix.shard }})\n    runs-on: ubuntu-24.04\n    timeout-minutes: ${{ matrix.shard == 'foundation' && 120 || 90 }}\n    strategy:\n      fail-fast: false\n      max-parallel: 5\n      matrix:\n        shard: ["+', '.join(SHARDS)+"]\n    steps:\n"
     require(body.startswith(header))
     require('continue-on-error:' not in body and 'download-artifact' not in body and 'permissions:' not in body)
     steps=re.split(r'^      - ',body[len(header):],flags=re.M)[1:]
