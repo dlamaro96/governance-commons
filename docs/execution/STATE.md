@@ -239,3 +239,5 @@ all four application services. Its172-case API gate is running; the browser gate
 remains pending. The pipeline includes a separate 50th mandatory
 outcome while retaining the preceding 49 assignments. No content authority is
 activated. [Decision](../adr/0024-held-metadata-evaluation.md).
+
+Further snapshot transport batching passes the isolated SQL024 repaired chain: **263 native cases across 13 invocations**, 176 bound sources, preservation, replay and owned cleanup, in 332.580091 seconds within the unchanged 600-second lifecycle. Both original digest algorithms and all budgets remain unchanged; 56 affected host controls pass. This is one local observation. The earlier exact `7b8babf` hosted checkpoint remains **NOT_PASSED** (46 successes, one failure and one skip); the local pass does not replace fresh hosted qualification. [Transport evidence](../verification/reference-snapshot-transport-local.json) and [retained hosted failure](../verification/hosted-checkpoint-7b8babf-failed.json).
