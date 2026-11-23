@@ -33,18 +33,37 @@ def sources():
 
 
 def canonical_snapshot(h,tables):
- """Hash the same sorted canonical row JSON in PostgreSQL, before returning it.
+ """Keep the original complete sorted-row JSON digest, batching transport only.
 
- The real predecessor leaves more than eleven thousand assets and revisions.
- Returning their complete arrays would breach the inherited 4MiB command cap;
- compact counts/digests preserve every row without increasing that cap.
+ Each bounded batch uses one read-only repeatable-read database snapshot. The
+ original aggregate retains every row and duplicate; only compact counts and
+ digests cross the inherited 4MiB output cap. Command/lifecycle limits stay fixed.
  """
- result={}
+ require(type(tables) is list and len(tables)<=512,'Invalid fixed snapshot table inventory')
  for table in tables:
-  require(re.fullmatch(r'[a-z_]+\.[a-z_]+',table),'Invalid fixed snapshot table')
-  result[table]=json.loads(h.sql(f"SELECT jsonb_build_object('rows',count(*),'sha256',encode(sha256(convert_to(coalesce(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text),'[]')::text,'UTF8')),'hex')) FROM {table} r;"))
-  row=result[table]
-  require(set(row)=={'rows','sha256'} and type(row['rows']) is int and row['rows']>=0 and re.fullmatch(r'[a-f0-9]{64}',row['sha256']),'Invalid canonical snapshot')
+  require(isinstance(table,str) and re.fullmatch(r'[a-z_]+\.[a-z_]+',table),'Invalid fixed snapshot table')
+ require(len(set(tables))==len(tables),'Invalid fixed snapshot table inventory')
+ def closed_object(pairs):
+  row={}
+  for key,value in pairs:
+   require(key not in row,'Invalid canonical snapshot')
+   row[key]=value
+  return row
+ result={}
+ for offset in range(0,len(tables),16):
+  batch=tables[offset:offset+16]
+  queries=[f"SELECT jsonb_build_object('table','{table}','rows',count(*),'sha256',encode(sha256(convert_to(coalesce(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text),'[]')::text,'UTF8')),'hex')) FROM {table} r;" for table in batch]
+  # sql() fails on any command error, including errors after earlier rows were
+  # emitted. Never permit a successful prefix to become a partial snapshot.
+  lines=h.sql('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY;\n'+'\n'.join(queries)+'\nCOMMIT;').splitlines()
+  require(len(lines)==len(batch),'Invalid canonical snapshot count')
+  for table,line in zip(batch,lines):
+   try:row=json.loads(line,object_pairs_hook=closed_object)
+   except (ValueError,TypeError):raise RuntimeError('Invalid canonical snapshot') from None
+   require(isinstance(row,dict) and set(row)=={'table','rows','sha256'} and row['table']==table
+           and type(row['rows']) is int and row['rows']>=0 and isinstance(row['sha256'],str)
+           and re.fullmatch(r'[a-f0-9]{64}',row['sha256']),'Invalid canonical snapshot')
+   result[table]={'rows':row['rows'],'sha256':row['sha256']}
  return result
 
 

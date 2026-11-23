@@ -53,13 +53,32 @@ def after(h, prior, current, original, migration):
     return True
 
 def snapshot(h,tables):
-    out={}
+    """Batch transport while preserving the original row-digest multiset exactly."""
+    require(type(tables) is list and len(tables)<=512, 'Unsafe fixed snapshot inventory')
     for table in tables:
-        require(re.fullmatch(r'(?:public|gc_authn|gc_authority)\.[a-z_]+',table), 'Unsafe fixed snapshot table')
-        row=json.loads(h.sql(f"WITH rows AS MATERIALIZED(SELECT sha256(convert_to(to_jsonb(r)::text,'UTF8')) value FROM {table} r) SELECT jsonb_build_object('rows',count(*),'sha256',encode(sha256(coalesce(string_agg(value,''::bytea ORDER BY value),''::bytea)),'hex')) FROM rows;"))
-        require(type(row) is dict and set(row)=={'rows','sha256'} and type(row['rows']) is int and row['rows']>=0
-                and isinstance(row['sha256'],str) and re.fullmatch('[a-f0-9]{64}',row['sha256']), 'Malformed canonical snapshot')
-        out[table]=row
+        require(isinstance(table,str) and re.fullmatch(r'(?:public|gc_authn|gc_authority)\.[a-z_]+',table), 'Unsafe fixed snapshot table')
+    require(len(set(tables))==len(tables), 'Unsafe fixed snapshot inventory')
+    def closed_object(pairs):
+        row={}
+        for key,value in pairs:
+            require(key not in row, 'Malformed canonical snapshot')
+            row[key]=value
+        return row
+    out={}
+    for offset in range(0,len(tables),16):
+        batch=tables[offset:offset+16]
+        queries=[f"WITH rows AS MATERIALIZED(SELECT sha256(convert_to(to_jsonb(r)::text,'UTF8')) value FROM {table} r) SELECT jsonb_build_object('table','{table}','rows',count(*),'sha256',encode(sha256(coalesce(string_agg(value,''::bytea ORDER BY value),''::bytea)),'hex')) FROM rows;" for table in batch]
+        # Keep the inherited command/lifecycle/output limits and default refusal
+        # on SQL errors; an earlier successful batch can never supply a result.
+        lines=h.sql('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY;\n'+'\n'.join(queries)+'\nCOMMIT;').splitlines()
+        require(len(lines)==len(batch), 'Malformed canonical snapshot count')
+        for table,line in zip(batch,lines):
+            try:row=json.loads(line,object_pairs_hook=closed_object)
+            except (ValueError,TypeError):raise RuntimeError('Malformed canonical snapshot') from None
+            require(type(row) is dict and set(row)=={'table','rows','sha256'} and row['table']==table
+                    and type(row['rows']) is int and row['rows']>=0 and isinstance(row['sha256'],str)
+                    and re.fullmatch('[a-f0-9]{64}',row['sha256']), 'Malformed canonical snapshot')
+            out[table]={'rows':row['rows'],'sha256':row['sha256']}
     return out
 
 def apply(h, original):

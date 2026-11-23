@@ -238,4 +238,60 @@ class Controls(unittest.TestCase):
    first=dict(h.report['failure_diagnostic']);h.cleanup=lambda:(_ for _ in ()).throw(TimeoutError());h.resources_before=None;h.save=lambda **kw:None
    self.assertTrue(g.finish(h,False));self.assertEqual(h.report['failure_diagnostic'],first);self.assertEqual(h.report['failed_phase'],'reference-native-tests');self.assertFalse(h.secret_path.exists())
 
+class RelationSpliceSnapshotControls(unittest.TestCase):
+ @classmethod
+ def setUpClass(cls):cls.repaired=g.load('018').repaired
+ class SQL:
+  def __init__(self,outputs):self.outputs=iter(outputs);self.queries=[]
+  def sql(self,query,**kwargs):
+   self.queries.append((query,kwargs));output=next(self.outputs)
+   if isinstance(output,Exception):raise output
+   return output
+ @staticmethod
+ def row(table,rows=1,digest='a'*64):return {'table':table,'rows':rows,'sha256':digest}
+ @staticmethod
+ def output(*rows):return '\n'.join(json.dumps(row) for row in rows)
+ @staticmethod
+ def tables(count):return ['public.table_'+chr(97+n//26)+chr(97+n%26) for n in range(count)]
+ def test_original_row_digest_multiset_expression_is_exact(self):
+  tables=['public.assets','gc_authn.identity_links','gc_authority.write_bindings']
+  h=self.SQL([self.output(self.row(tables[0],11001),self.row(tables[1],0,'b'*64),self.row(tables[2],2))])
+  self.assertEqual(self.repaired.snapshot(h,tables),{tables[0]:{'rows':11001,'sha256':'a'*64},tables[1]:{'rows':0,'sha256':'b'*64},tables[2]:{'rows':2,'sha256':'a'*64}})
+  self.assertEqual(len(h.queries),1);query,kwargs=h.queries[0];self.assertEqual(kwargs,{})
+  expected=[f"WITH rows AS MATERIALIZED(SELECT sha256(convert_to(to_jsonb(r)::text,'UTF8')) value FROM {table} r) SELECT jsonb_build_object('table','{table}','rows',count(*),'sha256',encode(sha256(coalesce(string_agg(value,''::bytea ORDER BY value),''::bytea)),'hex')) FROM rows;" for table in tables]
+  self.assertEqual(query,'BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY;\n'+'\n'.join(expected)+'\nCOMMIT;')
+  self.assertNotRegex(query,r'(?i)\b(DISTINCT|LIMIT|WHERE|jsonb_agg)\b')
+ def test_all_identifiers_and_closed_inventory_checked_before_sql(self):
+  for tables in (None,('public.assets',),['public.assets']*2,self.tables(513),['public.assets',None],['public.assets',[]],['public.assets','other.assets'],['public.assets','assets'],['public.assets','public.assets;DELETE'],['public.assets','public."assets"']):
+   with self.subTest(tables=str(tables)[:80]):
+    h=self.SQL([])
+    with self.assertRaisesRegex(RuntimeError,'Unsafe fixed snapshot'):self.repaired.snapshot(h,tables)
+    self.assertEqual(h.queries,[])
+ def test_boundaries_cover_every_table_once_in_order_and_no_empty_command(self):
+  for count in (0,1,16,17,32,33,512):
+   with self.subTest(count=count):
+    tables=self.tables(count);h=self.SQL([self.output(*(self.row(t) for t in tables[n:n+16])) for n in range(0,count,16)])
+    self.assertEqual(list(self.repaired.snapshot(h,tables)),tables);self.assertEqual(len(h.queries),(count+15)//16)
+    self.assertEqual([query.count('WITH rows AS MATERIALIZED(') for query,_ in h.queries],[len(tables[n:n+16]) for n in range(0,count,16)])
+ def test_missing_extra_duplicate_reordered_foreign_or_malformed_output_refuses(self):
+  first,second=self.row('public.assets'),self.row('public.audit')
+  outputs=[self.output(*rows) for rows in ([first],[first,second,second],[first,first],[second,first],[first,self.row('public.unknown')])]
+  outputs.extend(['',self.output(first)+'\n\n'+self.output(second),self.output(first)+'\nnot-json'])
+  for output in outputs:
+   with self.subTest(output=output),self.assertRaisesRegex(RuntimeError,'Malformed canonical snapshot'):
+    self.repaired.snapshot(self.SQL([output]),['public.assets','public.audit'])
+ def test_closed_fields_counts_digests_and_duplicate_json_keys(self):
+  rows=[self.row('public.assets',True),self.row('public.assets',-1),self.row('public.assets',1.0),self.row('public.assets',1,None),self.row('public.assets',1,'A'*64),self.row('public.assets',1,'a'*63),{**self.row('public.assets'),'extra':True},[],None,{'rows':1,'sha256':'a'*64}]
+  outputs=[json.dumps(row) for row in rows]+['{"table":"public.assets","rows":0,"rows":1,"sha256":"'+'a'*64+'"}']
+  for output in outputs:
+   with self.subTest(output=output),self.assertRaisesRegex(RuntimeError,'Malformed canonical snapshot'):
+    self.repaired.snapshot(self.SQL([output]),['public.assets'])
+ def test_failed_or_partial_second_batch_never_returns_a_partial_snapshot(self):
+  tables=self.tables(33);first=self.output(*(self.row(t) for t in tables[:16]))
+  for second in (RuntimeError('synthetic command failure'),self.output(self.row(tables[16]))):
+   with self.subTest(second=str(second)):
+    h=self.SQL([first,second])
+    with self.assertRaises(RuntimeError):self.repaired.snapshot(h,tables)
+    self.assertEqual(len(h.queries),2)
+
 if __name__=='__main__':unittest.main()

@@ -116,4 +116,88 @@ class Controls(unittest.TestCase):
         self.assertEqual(run.returncode,1);self.write('phase=population-native-tests\nexit=1\n'+run.stdout+evidence.MARKER+'suite_failed\n')
         result=self.result();self.assertIsNotNone(result);self.assertEqual(result['population_timings'][0]['queries'][-1]['sqlstate'],'57014');self.assertNotIn('PRIVATE_',json.dumps(result))
 
+class CanonicalSnapshotControls(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        spec=importlib.util.spec_from_file_location('population_snapshot_controls',ROOT/'scripts/runtime-test-glossary-population-upgrade.py')
+        cls.runner=importlib.util.module_from_spec(spec);spec.loader.exec_module(cls.runner)
+
+    class SQL:
+        def __init__(self,outputs):self.outputs=iter(outputs);self.queries=[]
+        def sql(self,query,**kwargs):
+            self.queries.append((query,kwargs));output=next(self.outputs)
+            if isinstance(output,Exception):raise output
+            return output
+
+    @staticmethod
+    def row(table,rows=1,digest='a'*64):return {'table':table,'rows':rows,'sha256':digest}
+    @staticmethod
+    def output(*rows):return '\n'.join(json.dumps(row) for row in rows)
+    @staticmethod
+    def tables(count):return ['public.table_'+chr(97+n//26)+chr(97+n%26) for n in range(count)]
+
+    def test_original_complete_json_digest_expression_and_multiplicity_are_unchanged(self):
+        tables=['public.asset_revisions','gc_authority.write_lock_claims']
+        h=self.SQL([self.output(self.row(tables[0],11001),self.row(tables[1],0,'b'*64))])
+        result=self.runner.canonical_snapshot(h,tables)
+        self.assertEqual(result,{tables[0]:{'rows':11001,'sha256':'a'*64},tables[1]:{'rows':0,'sha256':'b'*64}})
+        self.assertEqual(len(h.queries),1);query,kwargs=h.queries[0];self.assertEqual(kwargs,{})
+        digest="encode(sha256(convert_to(coalesce(jsonb_agg(to_jsonb(r) ORDER BY to_jsonb(r)::text),'[]')::text,'UTF8')),'hex')"
+        expected=[f"SELECT jsonb_build_object('table','{table}','rows',count(*),'sha256',{digest}) FROM {table} r;" for table in tables]
+        self.assertEqual(query,'BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY;\n'+'\n'.join(expected)+'\nCOMMIT;')
+        self.assertNotRegex(query,r'(?i)\b(DISTINCT|LIMIT|WHERE|row_hashes)\b')
+
+    def test_inventory_is_fully_validated_before_first_command(self):
+        for tables in (None,('public.assets',),['public.assets']*2,self.tables(513),
+                       ['public.assets',None],['public.assets',[]],['public.assets','assets'],
+                       ['public.assets','public.assets; DELETE FROM public.assets'],
+                       ['public.assets','public."assets"'],['public.assets','public.assets extra']):
+            with self.subTest(tables=str(tables)[:80]):
+                h=self.SQL([])
+                with self.assertRaisesRegex(RuntimeError,'Invalid fixed snapshot table'):self.runner.canonical_snapshot(h,tables)
+                self.assertEqual(h.queries,[])
+
+    def test_exact_batch_bound_preserves_all_tables_and_empty_inventory(self):
+        for count in (0,1,16,17,32,33,512):
+            with self.subTest(count=count):
+                tables=self.tables(count);h=self.SQL([self.output(*(self.row(t) for t in tables[n:n+16])) for n in range(0,count,16)])
+                self.assertEqual(list(self.runner.canonical_snapshot(h,tables)),tables)
+                self.assertEqual(len(h.queries),(count+15)//16)
+                self.assertEqual([query.count('SELECT jsonb_build_object(') for query,_ in h.queries],[len(tables[n:n+16]) for n in range(0,count,16)])
+
+    def test_missing_extra_duplicate_reordered_foreign_or_blank_rows_refuse(self):
+        first,second=self.row('public.assets'),self.row('public.audit')
+        outputs=[self.output(*rows) for rows in ([first],[first,second,second],[first,first],[second,first],[first,self.row('public.unknown')])]
+        outputs.extend(['',self.output(first)+'\n\n'+self.output(second),self.output(first)+'\nnot-json'])
+        for output in outputs:
+            with self.subTest(output=output):
+                with self.assertRaisesRegex(RuntimeError,'Invalid canonical snapshot'):
+                    self.runner.canonical_snapshot(self.SQL([output]),['public.assets','public.audit'])
+
+    def test_closed_count_digest_and_json_key_schema_refuses_invalid_values(self):
+        rows=[self.row('public.assets',True),self.row('public.assets',-1),self.row('public.assets',1.0),
+              self.row('public.assets',1,None),self.row('public.assets',1,'A'*64),self.row('public.assets',1,'a'*63),
+              {**self.row('public.assets'),'extra':True},[],None,{'rows':1,'sha256':'a'*64}]
+        outputs=[json.dumps(row) for row in rows]
+        outputs.append('{"table":"public.assets","rows":0,"rows":1,"sha256":"'+'a'*64+'"}')
+        for output in outputs:
+            with self.subTest(output=output):
+                with self.assertRaisesRegex(RuntimeError,'Invalid canonical snapshot'):
+                    self.runner.canonical_snapshot(self.SQL([output]),['public.assets'])
+
+    def test_later_command_error_or_partial_batch_never_returns_partial_snapshot(self):
+        tables=self.tables(33);first=self.output(*(self.row(t) for t in tables[:16]))
+        for second in (RuntimeError('synthetic command failure'),self.output(self.row(tables[16]))):
+            with self.subTest(second=str(second)):
+                h=self.SQL([first,second])
+                with self.assertRaises(RuntimeError):self.runner.canonical_snapshot(h,tables)
+                self.assertEqual(len(h.queries),2)
+
+    def test_runner_is_already_bound_and_has_no_external_batch_helper(self):
+        path='scripts/runtime-test-glossary-population-upgrade.py'
+        self.assertIn(path,evidence.FIXED)
+        tree=ast.parse((ROOT/path).read_text())
+        function=next(node for node in tree.body if isinstance(node,ast.FunctionDef) and node.name=='canonical_snapshot')
+        self.assertFalse(any(isinstance(node,(ast.Import,ast.ImportFrom)) for node in ast.walk(function)))
+
 if __name__=='__main__':unittest.main()
