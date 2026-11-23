@@ -33,7 +33,7 @@ There are 354 named baseline requirements plus their detailed and supplemental t
 
 ## Immediate delivery gates
 
-1. PR #39 is merged normally after exact all 45-outcome and artifact verification. PR #40 is also merged after its exact 46-outcome qualification. PR #41 is merged after its exact 47-outcome qualification. Publish and qualify the local dependency/startup increment next.
+1. PR #39 is merged normally after exact all 45-outcome and artifact verification. PR #40 is also merged after its exact 46-outcome qualification. PR #41 is merged after its exact 47-outcome qualification. The local dependency/startup increment is published in PR #42 for its own hosted qualification.
 2. Qualify the runtime-security aggregate for fork use before adding it to enforced branch requirements. No scan alone completes security or release acceptance.
 3. Preserve the separately scoped volume, freshness, authority, reference and import evidence. The authority-read foundation remains inactive across content APIs.
 4. Keep the README, canonical register, GitHub backlog and PR descriptions aligned with executed behavior. Merge through protected checks.

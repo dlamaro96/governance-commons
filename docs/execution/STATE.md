@@ -97,7 +97,10 @@ a real missing-receipt refusal. Both final startup modes pass; all ten services
 are healthy and all 33 migration checksums match. Candidate functional tests and
 final rebuilt-image startup/scans retain their different image IDs.
 [Integrated evidence](../verification/runtime-security-patches-integrated-local.json).
-Hosted qualification for this new increment remains pending. The
+[PR #42](https://github.com/dlamaro96/governance-commons/pull/42) publishes this
+increment. All346 executed application/build-control and launcher source entries
+match its implementation commit `69e361a`. Its fresh hosted qualification remains
+pending; earlier PR results do not substitute. The
 [local operations guide](../operations/local-core.md) documents supported commands
 and recovery boundaries.
 
@@ -135,7 +138,7 @@ Earlier failed and passing attempts retain their original source bindings in the
 
 1. Completed: verify all 45 outcomes and artifacts at `80101e0`, then merge PR #39 normally as `fb1fd0e`.
 2. Completed: verify all 46 PR #40 outcomes at `4cbde6a`, then merge normally as `ed0c6e4`. Completed: PR #41 at `296d1e5` passed its separate 47-outcome pipeline and merged normally as `1db2f71`.
-3. Publish and qualify the locally tested dependency/startup increment, then implement stable classification identities, trusted classification facts and a held-snapshot executor before canonical authority activation. Continue the remaining M0–M10 workstreams in the [delivery plan](PLAN.md).
+3. Qualify the published dependency/startup increment in PR #42, then implement stable classification identities, trusted classification facts and a held-snapshot executor before canonical authority activation. Continue the remaining M0–M10 workstreams in the [delivery plan](PLAN.md).
 4. Qualify fork behavior before adding the new runtime security aggregate to enforced branch requirements. Independent reviews and live vendor prerequisites retain their own open qualifications.
 
 [Issue #24](https://github.com/dlamaro96/governance-commons/issues/24) is closed for the scoped pipeline checkpoint. Issues #25–#33 retain the broader delivery workstreams; [backlog.json](backlog.json) maps all 1,106 requirements exactly once. Qualification issues #11–#13 remain open. PR #22 is closed unmerged and superseded by #23 without rewriting history. Scoped issue #10 is closed; broader model and authority obligations remain open. Dependency PRs #1, #2 and #5 are closed as superseded by the published updates.

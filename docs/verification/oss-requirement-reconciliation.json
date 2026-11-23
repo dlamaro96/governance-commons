@@ -864,5 +864,7 @@
     "All5530 per-record verification outcomes remain unchanged. This is an implementation audit, not new execution of those controls.",
     "Private project conduct contact, independent human approvals, signed releases, complete operations/deployment and full product capability remain open."
   ],
-  "evidence_index_note": "The evidence manifest indexes this record and is deliberately not self-hashed here. All other listed implementation inputs are hashed separately."
+  "evidence_index_note": "The evidence manifest indexes this record and is deliberately not self-hashed here. All other listed implementation inputs are hashed separately.",
+  "published_source_commit": "69e361a3bafc4853baae838be6ca01d4204cf838",
+  "source_binding_note": "Listed implementation inputs match exact69e361a Git blobs. Subsequent current-state documentation updates do not relabel the original review."
 }

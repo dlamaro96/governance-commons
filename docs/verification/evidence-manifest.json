@@ -1963,7 +1963,8 @@
         "base_commit": "296d1e59abb8f7103390efca371921593415b219",
         "dirty": true,
         "method": "Exact source/image and execution bindings retained in the evidence; no entire product or release qualification inferred.",
-        "evidence_sha256": "5a01d05881ddfd4353e7a9e0df412e4f32d92c256d8e9b8fcce5be3c86eb9718"
+        "evidence_sha256": "ef6727eaec250cc51a362ae94643e89f0b71d797bdf6aa22349d11809a950148",
+        "implementation_commit": "69e361a3bafc4853baae838be6ca01d4204cf838"
       }
     },
     {
@@ -1973,7 +1974,8 @@
         "base_commit": "1db2f71c21bebe6e00b673066e909990ef71fa08",
         "dirty": true,
         "method": "Clause/file implementation review only; no verification outcome or baseline parent completion changed.",
-        "evidence_sha256": "4f8604aacc16b58396af472cae1c190f94cae41862ed92926113d75d0ddda357"
+        "evidence_sha256": "d818560ac4d3d3ecde2857bfbf64c6caa4eb25d68d1caed41d3eeb2f2cd234b1",
+        "implementation_commit": "69e361a3bafc4853baae838be6ca01d4204cf838"
       }
     }
   ],
