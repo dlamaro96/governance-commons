@@ -1754,6 +1754,23 @@
         "method": "Five authenticated archives, exact requested/merge tree, all45 outcome names and API/authentication/browser source coordinates verified; both failures and the dependent skip retained.",
         "evidence_sha256": "622b7e17bbb17e20003d9377ac4b47604b7e166f64eca68842dd1bcdfd0befcb"
       }
+    },
+    {
+      "path": "docs/verification/source-security-e51e8ec.json",
+      "scope": "published-source-security-e51e8ec",
+      "source_binding": {
+        "method": "Three authenticated archives,1530 committed files and three stored CodeQL analyses verified.",
+        "evidence_sha256": "b98ff8e94120f4164875592c1ca6fa7401cb70899af23e04d1e65eb692a49e8c",
+        "implementation_commit": "e51e8ec24bc9b5e29c16f290d6ccb2f91f1be83e"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-local.json",
+      "scope": "minimal-runtime-images-local",
+      "source_binding": {
+        "method": "Exact local image IDs, source digests, pinned scanner/database,285 worker tests,12 TLS checks,171 API cases and2 browser journeys; dirty provenance and original runner failure retained.",
+        "evidence_sha256": "10cafcd32155614f21b0cd3577f5d84af244165a5b3ca08acbe43c4166353f65"
+      }
     }
   ],
   "limitations": [

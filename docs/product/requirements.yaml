@@ -68312,7 +68312,12 @@
         ".github",
         "LICENSE",
         "NOTICE",
-        "CONTRIBUTING.md"
+        "CONTRIBUTING.md",
+        "Dockerfile",
+        "python/Dockerfile",
+        ".github/workflows/runtime-security.yml",
+        "policies/scan_images.py",
+        "docs/security/RUNTIME_IMAGES.md"
       ],
       "test_ids": [],
       "verification": {
@@ -68322,7 +68327,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/runtime-images-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -68343,7 +68350,8 @@
         "evidence": []
       },
       "limitations": [
-        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
+        "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -68617,8 +68625,14 @@
         "- **Security:** secrets detection, dependency vulnerabilities, dependency licensing, SAST and workflow/IaC checks appropriate to the actual stack."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "Dockerfile",
+        "python/Dockerfile",
+        ".github/workflows/runtime-security.yml",
+        "policies/scan_images.py",
+        "docs/security/RUNTIME_IMAGES.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -68627,7 +68641,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/runtime-images-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -68647,7 +68663,9 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
+      ],
       "owner": "unassigned",
       "milestone": "M0"
     },
@@ -68675,8 +68693,14 @@
         "- **Packaging:** Docker builds, production startup/health checks, image vulnerability scan and dependency inventory."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "Dockerfile",
+        "python/Dockerfile",
+        ".github/workflows/runtime-security.yml",
+        "policies/scan_images.py",
+        "docs/security/RUNTIME_IMAGES.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -68685,7 +68709,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/runtime-images-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -68705,7 +68731,9 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
+      ],
       "owner": "unassigned",
       "milestone": "M0"
     },
@@ -69081,8 +69109,14 @@
         "Pin release-tool and container-image versions/digests, verify downloaded tools, and record resolved versions. Do not hard-code made-up SHAs. Disable persisted checkout credentials for jobs that do not need subsequent Git writes. Pass untrusted event fields through environment variables or structured APIs, not interpolated shell source. Give caches separate trust scopes, and never let a release consume an attacker-writable cache or executable artifact without independent validation. [OSS-S12]"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "Dockerfile",
+        "python/Dockerfile",
+        ".github/workflows/runtime-security.yml",
+        "policies/scan_images.py",
+        "docs/security/RUNTIME_IMAGES.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -69091,7 +69125,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/runtime-images-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -69111,7 +69147,9 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
+      ],
       "owner": "unassigned",
       "milestone": "M0"
     },
@@ -69146,7 +69184,12 @@
         ".github",
         "LICENSE",
         "NOTICE",
-        "CONTRIBUTING.md"
+        "CONTRIBUTING.md",
+        "Dockerfile",
+        "python/Dockerfile",
+        ".github/workflows/runtime-security.yml",
+        "policies/scan_images.py",
+        "docs/security/RUNTIME_IMAGES.md"
       ],
       "test_ids": [],
       "verification": {
@@ -69156,7 +69199,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/runtime-images-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -69178,7 +69223,8 @@
       },
       "limitations": [
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
-        "Dependabot security-fix proposals are enabled with authenticated readback (enabled true, paused false); existing dependency PRs and merge policies are preserved. SAST, portable/private entitlement alternatives, findings triage qualification and the complete OSS-007/release gates remain open."
+        "Dependabot security-fix proposals are enabled with authenticated readback (enabled true, paused false); existing dependency PRs and merge policies are preserved. SAST, portable/private entitlement alternatives, findings triage qualification and the complete OSS-007/release gates remain open.",
+        "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -69395,8 +69441,14 @@
         "Define vulnerability triage by exploitability, exposure and affected component as well as severity. Block release for applicable unresolved critical/high issues unless a specific reviewed, time-bounded exception records why the release remains acceptable. Do not treat every scanner hit as exploitable, or every missing patch as permission to suppress it. Record false-positive evidence and risk acceptance with owner and expiry. Scheduled rescans must detect vulnerabilities disclosed after a release; pinning a dependency does not make it permanently safe."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "Dockerfile",
+        "python/Dockerfile",
+        ".github/workflows/runtime-security.yml",
+        "policies/scan_images.py",
+        "docs/security/RUNTIME_IMAGES.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -69405,7 +69457,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/runtime-images-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -69425,7 +69479,9 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
+      ],
       "owner": "unassigned",
       "milestone": "M0"
     },

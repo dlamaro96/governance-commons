@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T04:35:10.410441+00:00",
+  "result": "SCOPED_LOCAL_PASS",
+  "release_qualified": false,
+  "execution_base_commit": "e51e8ec24bc9b5e29c16f290d6ccb2f91f1be83e",
+  "source_provenance": "Dirty working tree; exact runtime image IDs, source digests and retained report hashes identify this local execution. No clean-commit or whole-product qualification claim.",
+  "profile": "macOS arm64 host; local Linux arm64 Docker Compose core; synthetic PostgreSQL source",
+  "controls": [
+    {
+      "path": "Dockerfile",
+      "sha256": "1235dfacb327c700737a13262fa5416e692dcf0f1834831f1df2f022b63b484c"
+    },
+    {
+      "path": "python/Dockerfile",
+      "sha256": "a7b0af2d545e91d74c5e128525fc0de3624ea9c51df3ee174444cf69362e8d0e"
+    },
+    {
+      "path": "policies/scan_images.py",
+      "sha256": "1e6c39157d630cb837440677534b750092ba560e6ea47ec0ced25a00611712e9"
+    },
+    {
+      "path": "policies/security-tools.json",
+      "sha256": "e97fde903e5cdf1bde08c8ee16678172a59b0901b460985c878912a05726c779"
+    },
+    {
+      "path": "policies/test_scan_images.py",
+      "sha256": "942973c7efd0a5a3d7d5aa8a064055702e4823005e04138c6016958774aeec51"
+    },
+    {
+      "path": "policies/api_evidence.py",
+      "sha256": "cdcce78f64fd7cd0f753107e374883cb6b9b6a8eb4933a3ec7b15e21841da669"
+    },
+    {
+      "path": "policies/test_api_supervisor.py",
+      "sha256": "85cf43e1a08aaaa7d46993cb8a6af0a1778dd6232d7b7e29be6b5cdb817bdc57"
+    },
+    {
+      "path": "scripts/test-image-security.sh",
+      "sha256": "c7fd223dafa2077e1156a5ef96e253b10e8b3299f85d174dc7b74d43ac9ce799"
+    },
+    {
+      "path": "scripts/runtime.py",
+      "sha256": "47682f452b39cd9f24140856ac712ba6a19fcd14c3d58170b97674e5aa66dc2b"
+    },
+    {
+      "path": ".github/workflows/runtime-security.yml",
+      "sha256": "750966db2c31dcdb6847fbce1076be172e50b7d8fd20a6a4ca29f32bcc8af1ba"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "e87abfa14750e5e8aa06ed3f171775d4b56e63ced6b9d5fe8f080fb5fad4cd94"
+    }
+  ],
+  "images": [
+    {
+      "profile": "application",
+      "image_id": "sha256:eefb3bb97cc4cc643de1f32aec9a5f1fd574b99496f33198c0f91e3115abd718",
+      "scanner_version": "0.74.0",
+      "scanner_sha256": "0ed07c205ca9ecc1065dc57b9f9f77adc79393bb469d9d1de9ec90c8c94ffc2f",
+      "database_updated_at": "2026-11-23T01:05:17.578400694Z",
+      "database_sha256": "182fa9dec2269abf8ea913ea849accae3d72cb24393d2ba635114c89ba17e3ce",
+      "counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 14,
+        "MEDIUM": 22,
+        "UNKNOWN": 3
+      },
+      "inventoried_packages": 692,
+      "full_report_sha256": "aefd96665446af56e5c610a3ec329bc66f4bc89725a070996bb2fbc0356399cc",
+      "execution_summary_sha256": "b9f634bfafb60da1ae85d745b654f0f364ff7f8babd2dad9e6f658f82ad0bb97"
+    },
+    {
+      "profile": "python-worker",
+      "image_id": "sha256:ef8d9a3d3d345dd7bc4b155ba4eddf9fcad880bb9435e1d55780c80b60a5e89a",
+      "scanner_version": "0.74.0",
+      "scanner_sha256": "0ed07c205ca9ecc1065dc57b9f9f77adc79393bb469d9d1de9ec90c8c94ffc2f",
+      "database_updated_at": "2026-11-23T01:05:17.578400694Z",
+      "database_sha256": "182fa9dec2269abf8ea913ea849accae3d72cb24393d2ba635114c89ba17e3ce",
+      "counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 4,
+        "MEDIUM": 7,
+        "UNKNOWN": 0
+      },
+      "inventoried_packages": 32,
+      "full_report_sha256": "439817807861c5b827d2a15c6cfdae37829f9521029d21b44c896b95c79e4ad3",
+      "execution_summary_sha256": "c91ab2dfabd7318ccdff7585ee7e7669025a8e3df7a71e293aec516b61534178"
+    }
+  ],
+  "worker_compatibility": {
+    "postgresql_tls": {
+      "checks": [
+        "mounted-source-and-runtime",
+        "verify-full-tls-and-pinned-address",
+        "metadata-only-scan",
+        "wrong-hostname-refused",
+        "wrong-ca-refused",
+        "cidr-refused-before-connection",
+        "tenant-scope-reference-refused",
+        "atomic-policy-rotation",
+        "atomic-credential-rotation",
+        "privileged-role-refused",
+        "reduced-select-fails-completeness",
+        "stalled-ssl-negotiation-bounded"
+      ],
+      "runtime": {
+        "python": "3.14.10",
+        "psycopg": "3.3.3",
+        "libpq": 180000
+      },
+      "cleanup": {
+        "ownedRemoved": true,
+        "generatedSecretsRemoved": true,
+        "preexistingInventoryPreserved": true
+      },
+      "report_sha256": "5b3dbd03b0ed0c096b4732d82faeeb0139fb2520c0ce224ce31d0a959ffdf7fc"
+    },
+    "core_worker_unit_tests": 285,
+    "core_worker_skips": 0,
+    "source_conformance_checks": 7,
+    "log_sha256": "1dafbdff3c6eae14978ac9c086f7b170cccaa2476b7ead1e97787149591ee7cc",
+    "test_source_readback": {
+      "files": 20,
+      "match_running_image_and_committed_sources": true,
+      "report_sha256": "bdf3ff9cdef76cee3f1ff8ae52692cf1d678cfad849389f3ee324f504415fee5"
+    }
+  },
+  "runtime_readback": {
+    "application_files": 300,
+    "worker_files": 13,
+    "migration_rows": 32,
+    "healthy_application_services": 4,
+    "report_sha256": "1242c7fffe908a4f28a3bcdeef7d702f670fbebfc58a89e7b14833fb7110e270"
+  },
+  "limitations": [
+    "Only these two application images and this scanner/database are covered. Infrastructure images and independent reviews remain unqualified.",
+    "Full inventories include package metadata and bundled manifests, not a deduplicated count of loaded libraries. No vulnerability suppression or reviewed exception is applied.",
+    "The first API attempt executed zero cases because the image has no GNU timeout; its failure remains retained alongside the successful Node-supervisor rerun.",
+    "Candidate no-network worker tests declared three skips; the running-core worker suite passed all285 without skips.",
+    "Pinned tool asset digests were checked against official GitHub release metadata. No independent signing or release certification is inferred."
+  ],
+  "api": {
+    "cases": 171,
+    "counts": {
+      "tests": 171,
+      "suites": 0,
+      "pass": 171,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "runtime_test_sources_match": true,
+    "test_source_files": 25,
+    "source_manifest_sha256": "852153047ac99a782de488c630f5729d33c8178785fe00f296cf020ab2945019",
+    "summary_sha256": "03a5124dd14507ad8b146a0b37e5f5cfe19c64e0f822cafc1f39089bcf3c6c8d"
+  },
+  "browser": {
+    "journeys": 2,
+    "retries": 0,
+    "skips": 0,
+    "report_sha256": "ff700e39e586a579cc73f8cfb216db576ee4bc8463c98f7e740cb825941b31a6",
+    "captures": [
+      {
+        "name": "asset-en-light-1440.png",
+        "sha256": "aecb2b94202336b4827b6ea8fddf176afce2a17a5edc904fe1bed7132ad58d39",
+        "bytes": 230022
+      },
+      {
+        "name": "asset-en-light-390.png",
+        "sha256": "bb547b341daa2e56fed696610a5ba90d45c25fc789801041c2e08dbd9641aefb",
+        "bytes": 165866
+      },
+      {
+        "name": "catalog-history.png",
+        "sha256": "e494f5a93a4b2aa96c73de5c325263e791d6aa9e9d2b20a8d67cecf23adf08d1",
+        "bytes": 92164
+      }
+    ],
+    "visual_review": "All3 captures inspected:1440px asset overview,390px mobile overview and desktop audit history. No new rendering regression observed; this is not full accessibility or all-screen qualification."
+  },
+  "host_controls": {
+    "image_scanner": 6,
+    "api_supervisor": 7,
+    "api_evidence": 15,
+    "ci_shard_contract": 28
+  },
+  "developer_command": {
+    "command": "./dev test --suite image-security",
+    "result": "PASS",
+    "log_sha256": "47e0be35658588850dea16235e5925f7e0cb637fa2fdcb741f906e5f8473706d"
+  },
+  "retained_failure": {
+    "scope": "first hardened smoke attempt",
+    "api_cases_executed": 0,
+    "exit_code": 126,
+    "cause": "GNU timeout executable absent from the minimal image",
+    "log_sha256": "d56a5f7fe5e198f37caf24c5d4db139b96ecbcf60cb6c89ba17dc3b7a87e9717",
+    "resolution": "Node supervisor retains original1740-second deadline,10-second grace and1800-second host bound; subsequent171 API and2 browser cases pass."
+  },
+  "retained_report_validation": {
+    "outcome": "PASS",
+    "reports": 2,
+    "command": "scan_images.assess(read_json(image.json), exact_image_id, profile)",
+    "controls": [
+      {
+        "path": "policies/scan_images.py",
+        "sha256": "235f059fd90f903a173a22a83a157c52f6e5a4e006a60ea635f71dec1b1951b7"
+      },
+      {
+        "path": "policies/test_scan_images.py",
+        "sha256": "39895044fdcb4dc3b4f6330d32e8d24e8dca2d0db01cd77c4e388aba1567fdb8"
+      }
+    ],
+    "scope": "Revalidated the two retained full scanner reports with strict package identities, scanner version and metadata types. No new scanner execution is inferred."
+  }
+}

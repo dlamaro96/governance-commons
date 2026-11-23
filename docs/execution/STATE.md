@@ -1,8 +1,30 @@
 # Current state
 
-Updated 23 November 2026. **Development preview; the complete product programme and release qualification remain open.** The latest implementation checkpoint is `5d9e501`, on the branch for [PR #23](https://github.com/dlamaro96/governance-commons/pull/23). It batches canonical preservation reads and supports the installed Linux browser in protected-login qualification. The PR remains draft until fresh hosted checks pass.
+Updated 23 November 2026. **Development preview; the complete product programme and release qualification remain open.** The latest implementation checkpoint is `5d9e501`, on the branch for [PR #23](https://github.com/dlamaro96/governance-commons/pull/23). It batches canonical preservation reads and supports the installed Linux browser in protected-login qualification. The PR remains draft until fresh hosted checks pass. Source security at the published
+`e51e8ec` checkpoint verifies all 1,530 files and three stored analyses with zero
+findings; the remaining development checks are still running. [Source record](../verification/source-security-e51e8ec.json).
 
 The preceding `b08b88d` development run completed with **42 successful outcomes, two failures and one dependent skip** across the exact 45-outcome assignment. All 171 API cases, 35 inactive-authentication cases and 37 main browser journeys pass. SQL024 exhausted its inherited 600-second lifecycle; protected login stopped during admission. Five authenticated archives, exact Git sources and static test coordinates are verified. [Completed hosted record](../verification/hosted-checkpoint-b08b88d.json).
+
+## Runtime security increment in validation
+
+The separate `codex/runtime-image-security` branch follows published checkpoint
+`e51e8ec`. Its minimal Node and Python images run a healthy core stack. The exact
+local images pass pinned Trivy scans with zero high/critical findings; all 39
+lower/unknown application findings and 11 lower worker findings remain visible.
+Real PostgreSQL TLS passes 12 checks; all 285 worker tests and seven source
+conformance checks pass in the running worker. These are local arm64 observations.
+
+The first API smoke attempt could not start because the minimal image lacks GNU
+`timeout`; no API cases ran or passed in that attempt. A Node supervisor now keeps
+the original 1,740-second deadline, ten-second termination grace and 1,800-second
+host limit. Seven real process controls pass; the rerun passes all 171 API cases and both real
+Keycloak/source-scan browser journeys. All three captures were inspected.
+[Scoped local evidence](../verification/runtime-images-local.json).
+The new [image-security workflow](../../.github/workflows/runtime-security.yml),
+dependency audit and [developer command](../security/RUNTIME_IMAGES.md) are
+implemented; hosted execution and required-check qualification remain pending.
+This increment is not yet release qualified. [Runtime decision](../adr/0019-minimal-runtime-images.md).
 
 ## Current corrections
 
