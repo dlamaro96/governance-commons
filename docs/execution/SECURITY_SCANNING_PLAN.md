@@ -1,10 +1,12 @@
 # Security scanning qualification plan
 
-Status: **PLANNED — NOT IMPLEMENTED OR EXECUTED.** Read-only research and GitHub
-inspection on 16 November 2026 (Asia/Dubai). Track implementation in
-[issue 11](https://github.com/dlamaro96/governance-commons/issues/11), on a separate
-`codex/sast-qualification` branch after the current increment. This document
-changes no workflow, repository setting, requirement status or execution evidence.
+**Historical planning record, 16 November 2026.** The source-scanning implementation
+and subsequent hosted qualification supersede the initial repository observations
+below. Use [Source security scanning](../security/SAST.md), the
+[current execution state](STATE.md) and
+[issue 11](https://github.com/dlamaro96/governance-commons/issues/11) for current
+behavior and remaining qualification. This record preserves the original research;
+it is not a statement that scanning is still unimplemented.
 
 Scope: the SAST part of BUILD_SPEC OSS-006/007. Read SECURITY.md, the threat model,
 release readiness and current STATE. Hosted services must complement a documented

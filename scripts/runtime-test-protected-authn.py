@@ -7,7 +7,6 @@ historical screenshot overwrite. Native SQL tests and real browser journeys are
 reported separately. A failed run is preserved and never automatically retried.
 """
 from datetime import datetime, timezone
-import hashlib
 import importlib.util
 import json
 import os
@@ -73,12 +72,20 @@ def migration_ledger(h, phase):
 
 
 def binary_sha(path):
-    require(path.is_file() and path.stat().st_size <= 256*MIB, 'Bounded existing tool binary required')
-    digest = hashlib.sha256()
-    with path.open('rb') as stream:
-        for block in iter(lambda: stream.read(MIB), b''):
-            digest.update(block)
-    return digest.hexdigest()
+    # Admission, launch and exit use the same bounded streaming implementation.
+    return browser_process.digest(path)
+
+
+def failure_phase(report):
+    """Public output is a closed phase only, never exception text or private data."""
+    phases = {'admission', 'tool-hash-admission', 'image-inventory',
+        'immutable-image-admission', 'owned-postgres', 'private-volume-preparation',
+        'native-migration', 'canonical-seed', 'explicit-installation', 'dual-tenant-fixture',
+        'keycloak-services', 'native-http-tests', 'served-source-binding', 'real-browser',
+        'cleanup', 'resource-readback', 'service-diagnostics'}
+    failure = report.get('failure')
+    phase = failure.get('phase') if type(failure) is dict else None
+    return phase if isinstance(phase, str) and phase in phases else 'unavailable'
 
 
 def private_configuration(path):
@@ -535,7 +542,9 @@ def execute(h):
     h.report['hostNode'] = {'path': str(node.resolve()), 'version': h.command([str(node), '--version']).stdout.strip()}
     require(h.report['hostNode']['version'] == 'v24.22.3', 'Host browser runner requires pinned Node24.22.3')
     h.report['browserVersion'] = h.command([str(chrome), '--version']).stdout.strip()
+    h.phase = 'tool-hash-admission'
     h.report['toolHashes'] = {'node': binary_sha(node), 'browser': binary_sha(chrome)}
+    h.phase = 'image-inventory'
     #2GiB available plus1GiB daemon reserve covers 384+640+576+384MiB, never an unlimited default.
     for port in (4314, 4315):
         with socket.socket() as probe:
@@ -732,7 +741,10 @@ def main():
         h.report['evidence_directory'] = str(h.folder.relative_to(ROOT))
         h.report['privateLogs'] = [{'path': str(p.relative_to(ROOT)), 'sha256': sha(p.read_bytes())} for p in sorted(h.folder.glob('*.log'))]
         h.save(final=True)
-    print(json.dumps({'result': h.report['result'], 'report': str(REPORT.relative_to(ROOT)), 'evidenceDirectory': str(h.folder.relative_to(ROOT))}))
+    result = {'result': h.report['result'], 'report': str(REPORT.relative_to(ROOT)), 'evidenceDirectory': str(h.folder.relative_to(ROOT))}
+    if h.report['result'] == 'FAIL':
+        result['failurePhase'] = failure_phase(h.report)
+    print(json.dumps(result))
     return 0 if h.report['result'] == 'PASS' else 1
 
 if __name__ == '__main__':

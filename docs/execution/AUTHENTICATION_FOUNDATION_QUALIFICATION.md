@@ -1,6 +1,6 @@
 # Inactive authentication foundation: real PostgreSQL qualification design
 
-Status: VERIFICATION DESIGN / NOT EXECUTED. Recorded 2026-11-16. Private engineering handoff; no source, DDL, role, runtime, Git, requirement or release status change. Root must adopt the final protocol and this execution profile before implementation/execution. SQL001–011 and all previous evidence remain immutable. The planned namespace is `gc_authn`; a migration number is intentionally not allocated here.
+Status: VERIFICATION DESIGN / NOT EXECUTED. Recorded 2026-11-16. Private engineering handoff; no source, DDL, role, runtime, Git, requirement or release status change. The final protocol and execution profile must be adopted before implementation/execution. SQL001–011 and all previous evidence remain immutable. The planned namespace is `gc_authn`; a migration number is intentionally not allocated here.
 
 ## Required scope and trust boundary
 
@@ -12,7 +12,7 @@ Detached private sessions are essential: legacy public.sessions has mutable rows
 
 ## Proposed new low-disk execution profile
 
-Do not alter the existing two-GiB floors or reinterpret their historical results. A separately named `authn-foundation-tmpfs` profile can be feasible, subject to root adoption and fresh admission checks:
+Do not alter the existing two-GiB floors or reinterpret their historical results. A separately named `authn-foundation-tmpfs` profile can be feasible, subject to design approval and fresh admission checks:
 
 * Reuse exact already-present image IDs, `--pull never`, no build/install/download, no named/anonymous volume, no Compose changes, no host published ports. PostgreSQL runs `--network none`; one helper at a time joins its network namespace. Both root filesystems are read-only and both log drivers are `none`.
 * PostgreSQL: memory512MiB, memory-swap512MiB, CPU1, pids128, cap-drop ALL, no-new-privileges, user `postgres`. Mount tmpfs `/var/lib/postgresql/data`256MiB mode1777, `/tmp`16MiB mode1777, `/var/run/postgresql`4MiB mode1777. Set PGDATA to the child `/var/lib/postgresql/data/pgdata` created by postgres; do not place the data directory at the writable-root mount itself. Verify mount type/size and no anonymous volumes after start. Use shared_buffers32MiB, work_mem2MiB, maintenance_work_mem16MiB, max_connections16, min_wal_size32MiB/max_wal_size64MiB, max_prepared_transactions0, fsync/full_page_writes/synchronous_commit ON. The profile fails if these limits cannot hold the real predecessor fixtures; it never disables durability or silently shrinks the fixture.

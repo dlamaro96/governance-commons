@@ -425,7 +425,7 @@
     },
     {
       "path": "docs/verification/relation-participation-upgrade-security-regression.json",
-      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001–010 unchanged; prior executions retained."
+      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001\u2013010 unchanged; prior executions retained."
     },
     {
       "path": "docs/verification/m2-relation-participation-api-final.json",
@@ -443,7 +443,7 @@
     },
     {
       "path": "docs/verification/relation-participation-graph-copy-upgrade.json",
-      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001–010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
+      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001\u2013010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
       "source_binding": {
         "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
         "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
@@ -1111,7 +1111,7 @@
     },
     {
       "path": "docs/verification/authority-admission-budget-alignment.json",
-      "scope": "Generic admission proposed dependency-depth alignment8→16;18 focused and313 combined host unit cases/types. No semantic engine or runtime claim.",
+      "scope": "Generic admission proposed dependency-depth alignment8\u219216;18 focused and313 combined host unit cases/types. No semantic engine or runtime claim.",
       "implementation_status": "IN_PROGRESS",
       "verification_status": "PASS_FOCUSED_AND_COMBINED_HOST_UNIT_AND_TYPECHECK_SCOPE",
       "source_binding": {
@@ -1233,7 +1233,7 @@
       "release_qualified": false,
       "editorial_redaction": {
         "recorded_at": "2026-11-16T11:32:05.039407+00:00",
-        "reason": "Remove local account paths and unrelated project references at the owner’s request. Original execution outcomes and source binding are unchanged. Original evidence remains in private archive and Git history.",
+        "reason": "Remove local account paths and unrelated project references at the owner\u2019s request. Original execution outcomes and source binding are unchanged. Original evidence remains in private archive and Git history.",
         "original_evidence_sha256": "05c45ff1f8d5c883abef56a5d7f89b60d4d411effadbdd022f6cb5636e6a7d0e",
         "redacted_evidence_sha256": "1ae2c6bbb126f3f4bbf1d334cf49007a8037678848023fe325ad09d4fd9ae1f5"
       }
@@ -1389,7 +1389,7 @@
       "release_qualified": false,
       "editorial_redaction": {
         "recorded_at": "2026-11-16T11:32:05.042226+00:00",
-        "reason": "Remove local account paths and unrelated project references at the owner’s request. Original execution outcomes and source binding are unchanged. Original evidence remains in private archive and Git history.",
+        "reason": "Remove local account paths and unrelated project references at the owner\u2019s request. Original execution outcomes and source binding are unchanged. Original evidence remains in private archive and Git history.",
         "original_evidence_sha256": "ac3f41617053e65973adda8dabaf5eab1d7cdb229a53491b63a49cf0a4255d23",
         "redacted_evidence_sha256": "1145e9af123a8accb70525071e4ac13197b8fba55ba3b6aa8bef903b7dfaff7a"
       }
@@ -1678,11 +1678,68 @@
         "method": "Exact source and retained artifact hashes reviewed; dirty candidate differences, historical failures and unexecuted scopes remain explicit in the record.",
         "evidence_sha256": "f70d9c6aba7199b726ac373a65fc9da1e2f1565554c447e24e6ca141b1fd23f4"
       }
+    },
+    {
+      "path": "docs/verification/protected-authentication-sql032-local.json",
+      "scope": "immutable-image-protected-authentication-sql032",
+      "source_binding": {
+        "implementation_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+        "method": "Exact203 Git-source inputs, immutable unmounted image, native/browser records, full32-migration ledger and retained artifact/cleanup proofs revalidated.",
+        "verified_files": 203,
+        "evidence_sha256": "ee596d570a5b34a08670023bde0cbf142194ad03de0c36ef2746d54e504ee681"
+      }
+    },
+    {
+      "path": "docs/verification/source-security-b08b88d.json",
+      "scope": "published-source-security-b08b88d",
+      "source_binding": {
+        "implementation_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+        "method": "Authenticated attempt2 archives, exact1,522 Git-source bytes and three stored analyses independently matched; original installer failure retained.",
+        "verified_files": 1522,
+        "evidence_sha256": "4d4d60298992414cdfb18586b8ab6b323de99723782ed699c6871a9180efa03e"
+      }
+    },
+    {
+      "path": "docs/verification/reference-prefix-composition-b08b88d.json",
+      "scope": "independent-reference-prefix-composition",
+      "source_binding": {
+        "implementation_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+        "method": "Three independent native reports and retained process/source/ledger/cleanup evidence revalidated; every measured input matched to b08b88d without changing original run provenance.",
+        "evidence_sha256": "c4a290d4ed83906b4aefdb3072e6f3ebbf2b6a04c5d52a3c1fb7ff2187e33bf4"
+      }
+    },
+    {
+      "path": "docs/verification/reference-structure-hosted-timeout-b08b88d.json",
+      "scope": "published-sql024-lifecycle-timeout",
+      "source_binding": {
+        "implementation_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+        "method": "Authenticated archive hash, all176 Git source inputs, declared pinned mounts and all30 static test coordinates verified. Failure-only projection; completed source-process readback is not inferred.",
+        "verified_files": 176,
+        "evidence_sha256": "61db70d990a0687a27115e52ac9566b88d5e7a3db6073168c5fee269af377267"
+      }
+    },
+    {
+      "path": "docs/verification/reference-snapshot-batching-local.json",
+      "scope": "bounded-batched-canonical-preservation",
+      "source_binding": {
+        "implementation_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+        "method": "Original dirty-candidate provenance retained with exact implementation hashes, command outputs and retained evidence readback; clean Git execution is not inferred.",
+        "evidence_sha256": "e0ad29d67fb4a7a2c7190bf4f5ebb29836c609f41e7f4ce1d20f485a4283aed1"
+      }
+    },
+    {
+      "path": "docs/verification/protected-linux-tool-admission-local.json",
+      "scope": "linux-browser-tool-admission",
+      "source_binding": {
+        "implementation_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+        "method": "Original dirty-candidate provenance retained with exact implementation hashes, command outputs and retained evidence readback; clean Git execution is not inferred.",
+        "evidence_sha256": "cb4489e3a2f3918b12a141d316921ec3b210330cb2436db074cbd78bd2a6cb79"
+      }
     }
   ],
   "limitations": [
     "Passing scoped development gates does not complete compound baseline requirements.",
-    "M1 core local journey passes; full M0 repository/release and M2–M10 programme remain open.",
+    "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
   "bound_at": "2026-11-17T06:53:28.598978+00:00"

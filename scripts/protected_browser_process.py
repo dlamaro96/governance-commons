@@ -25,6 +25,9 @@ import time
 
 CAP = 4*1024*1024
 MAX_PROCESSES = 4096
+# Chromium159's pinned Linux executable is311,672,136 bytes. Hash a bounded
+# regular file in1MiB chunks; this limit is not a process memory/output budget.
+MAX_EXECUTABLE_BYTES = 512*1024*1024
 
 
 def require(ok):
@@ -33,12 +36,25 @@ def require(ok):
 
 
 def digest(path):
-    require(path.is_file() and path.stat().st_size <= 256*1024*1024)
-    h = hashlib.sha256()
-    with path.open('rb') as stream:
-        for block in iter(lambda: stream.read(1024*1024), b''):
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        before = os.fstat(fd)
+        require(stat.S_ISREG(before.st_mode) and 0 < before.st_size <= MAX_EXECUTABLE_BYTES)
+        h, total = hashlib.sha256(), 0
+        while True:
+            block = os.read(fd, min(1024*1024, before.st_size-total+1))
+            if not block:
+                break
+            total += len(block)
+            require(total <= before.st_size)
             h.update(block)
-    return h.hexdigest()
+        after = os.fstat(fd)
+        require(total == before.st_size and
+                (before.st_size, before.st_mtime_ns, before.st_ctime_ns) ==
+                (after.st_size, after.st_mtime_ns, after.st_ctime_ns))
+        return h.hexdigest()
+    finally:
+        os.close(fd)
 
 
 def identity(pid):

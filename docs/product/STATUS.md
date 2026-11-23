@@ -1,6 +1,6 @@
 # Product status
 
-Updated 23 November 2026. Governance Commons is a working **development preview**, not a completed enterprise product or supported release. Published checkpoint `5d37594` includes the targeted quality browser repair, SQL032 relation-validation repair and 45-outcome CI configuration. SQL032 is running locally, and exact-source security evidence is verified. All 171 current API cases pass. Hosted development CI completed with 39 successes, two failures and four skips; the main browser suite passes all 37 journeys without retries. Reference022 and protected-authentication fixes are under fresh qualification. `main` can lag until protected CI and review permit merging.
+Updated 23 November 2026. Governance Commons is a working **development preview**, not a completed enterprise product or supported release. Published checkpoint `b08b88d` corrects reference-prefix qualification and the protected-login schema boundary. The independent local reference022/023/024 scopes pass 158/194/263 native cases; protected authentication passes 15 native and 2 browser cases. Source security is verified with zero findings across 1,522 files. The new pipeline has confirmed SQL024 and protected-login failures, with the foundation job active; `main` can lag until protected CI and review permit merging. The preceding checkpoint passes 171 API cases and all 37 main browser journeys, while its two other gate failures remain recorded.
 
 ## Implemented workflows with scoped local evidence
 
@@ -23,7 +23,7 @@ Each item is narrower than its complete baseline requirement. Consult the [evide
 | Identity and authorization | Canonical authority activation across every ingress, policy/admin tooling, delegated operator access, service identities, identity synchronization and live Microsoft Entra qualification. |
 | Discovery and collaboration | More source object types, incremental/recovery ingestion, saved searches/views, subscriptions/comments, governed samples and complete bulk metadata interchange. |
 | Governance | Visual workflow/form designer and declared BPMN subset; broader approvals, policies/controls/risks/assessments, delegation/escalation and email/webhook delivery. |
-| Quality, lineage and semantics | The hosted 37-journey browser suite passes; the overall pipeline still has two failed gates. Schema/distribution drift, remaining rule families, filters/partition scope, anomaly baselines and aggregation remain; broader SQL/OpenLineage/column lineage and semantic modelling remain. |
+| Quality, lineage and semantics | The hosted 37-journey browser suite passes; the preceding aggregate failed two gates, and the corrected revision exposes a SQL024 lifecycle timeout under repair. Schema/distribution drift, remaining rule families, filters/partition scope, anomaly baselines and aggregation remain; broader SQL/OpenLineage/column lineage and semantic modelling remain. |
 | Contracts, products and access | Contract lifecycle, data-product marketplace, source grant/revoke/expiry/drift reconciliation and bounded SQL notebooks. |
 | AI and MCP | AI registry/evaluations, permission-filtered context assistant, authenticated MCP server and governed tool gateway. |
 | Documents and privacy | Document/version/ACL/delete propagation, privacy registers and assessments, cross-system evidence and complete portable migration. |
@@ -42,4 +42,6 @@ There are 354 named baseline requirements plus their detailed and supplemental t
 
 External vendor accounts, licensed infrastructure and independent human reviews are explicit qualification prerequisites. They do not excuse missing adapter code or locally executable work. Optional runtime activation also does not make required implementation optional.
 
-The reference022 correction now passes all 158 native cases with 163 exact candidate inputs, 26 process startup/exit proofs, preservation/replay and owned cleanup verified. All 270 affected host controls pass. Fresh SQL023/024 hosted and protected immutable-image execution remain pending. [Scoped correction evidence](../verification/pipeline-prefix-repair-local.json).
+The reference022 correction now passes all 158 native cases with 163 exact candidate inputs, 26 process startup/exit proofs, preservation/replay and owned cleanup verified. All 270 affected host controls pass. Independent SQL023/024 and protected immutable-image runs now pass; the full hosted aggregate remains pending. [Scoped correction evidence](../verification/pipeline-prefix-repair-local.json).
+
+Latest correction evidence: [independent reference prefixes](../verification/reference-prefix-composition-b08b88d.json), [immutable protected login](../verification/protected-authentication-sql032-local.json), and [published source security](../verification/source-security-b08b88d.json). These do not activate the canonical content-authority foundation or complete the remaining capability programme.

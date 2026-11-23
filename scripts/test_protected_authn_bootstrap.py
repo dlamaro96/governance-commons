@@ -36,6 +36,15 @@ def shell(name, output):
 
 
 class PrivateBootstrapTests(unittest.TestCase):
+    def test_failure_output_never_uses_arbitrary_phase_or_exception_text(self):
+        private = 'private callback or credential must not be exported'
+        self.assertEqual(runner.failure_phase({'failure':{'phase':'tool-hash-admission','message':private}}),'tool-hash-admission')
+        for failure in ({'phase':private,'message':private},{'phase':[private]},private,None):
+            self.assertEqual(runner.failure_phase({'failure':failure}),'unavailable')
+
+    def test_admission_and_browser_launch_share_one_hash_boundary(self):
+        self.assertEqual(runner.binary_sha(Path(__file__)),runner.browser_process.digest(Path(__file__)))
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix='gc-private-bootstrap-')
         self.addCleanup(self.temp.cleanup)

@@ -1,0 +1,419 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T03:13:16.281778+00:00",
+  "implementation_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+  "result": "PASS",
+  "release_qualified": false,
+  "scope": "Three independently executed repaired reference prefixes, with their original assertion counts and deadlines.",
+  "prefixes": [
+    {
+      "through": "022",
+      "profile": "isolated-governance-repaired-sql022",
+      "result": "PASS",
+      "recorded_base_commit": "5d37594396511e41004562a82db97ca57877d6d1",
+      "source_files": 163,
+      "sources_match_published_b08b88d": true,
+      "source_equivalence_note": "Exact input hashes matched against b08b88d after execution; the original recorded base and dirty provenance remain unchanged.",
+      "source_manifest_sha256": "8be24be6eef2ebf24786f96499b5c98e40acf5aea1cf513fd6464081ab76ee6b",
+      "native_tests": {
+        "tests": 158,
+        "suites": 0,
+        "pass": 158,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "suite_invocations": 8,
+      "observed_processes": 26,
+      "startup_and_exit_verified": true,
+      "private_logs_rehashed": 3309,
+      "preservation": true,
+      "replay": true,
+      "stages": [
+        {
+          "prefix": "018",
+          "ledgerEntries": 19,
+          "ledgerSha256": "6109f756f975bb8ee2f27ae7b47f9682844f39b9846b40c1b756e231bbf50cd8",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 26,
+            "pass": 26,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 30592.293014
+          }
+        },
+        {
+          "prefix": "019",
+          "ledgerEntries": 20,
+          "ledgerSha256": "d4323c1513f24c056767e52efd83e372cd2d0dd2624224d3777b7418c515f33b",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 15,
+            "pass": 15,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 2012.396793
+          }
+        },
+        {
+          "prefix": "020",
+          "ledgerEntries": 21,
+          "ledgerSha256": "520f46538ed4e0c31f2886041d71b5bdbafa2cdfbc8c2202a8c8f6a75cd1e44f",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 13,
+            "pass": 13,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 1880.446751
+          }
+        },
+        {
+          "prefix": "021",
+          "ledgerEntries": 22,
+          "ledgerSha256": "36a5c9090e8581214c0f74454c81b5adb887ab2e9cc55f2856989f98d0b12d32",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 14,
+            "pass": 14,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 3586.867336
+          }
+        },
+        {
+          "prefix": "022",
+          "ledgerEntries": 23,
+          "ledgerSha256": "1565872c7d34d8db35ca63bbcff46f595441c779191c149e97c14bf07e3c5f3f",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 18,
+            "pass": 18,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 17117.02905
+          }
+        }
+      ],
+      "cleanup": {
+        "ownedRemoved": true,
+        "resourceInventoryPreserved": true,
+        "generatedCredentialsRemoved": true,
+        "privateConfigAbsentOnReadback": true,
+        "recordedCommands": 45,
+        "exit0Commands": 7,
+        "redactedAllowFailureInspectExit1": 38
+      },
+      "report_sha256": "dcfa8f90e77e8f81fff59cfe702705dfc3df71b5c54a105b43e26acb4ffb99a5",
+      "readback_sha256": "64b812ffaf41701d97861bc2d2ee7f64b396aed187878b19340a617fc5904a62"
+    },
+    {
+      "through": "023",
+      "profile": "isolated-governance-repaired-sql023",
+      "result": "PASS",
+      "recorded_base_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+      "source_files": 169,
+      "sources_match_published_b08b88d": true,
+      "source_equivalence_note": "Exact input hashes matched against b08b88d after execution; the original recorded base and dirty provenance remain unchanged.",
+      "source_manifest_sha256": "1c34fb9b6ebf848d7d38503f2d1c86f7ff0b57f6b3811727500132cccd68f2b0",
+      "native_tests": {
+        "tests": 194,
+        "suites": 0,
+        "pass": 194,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "suite_invocations": 10,
+      "observed_processes": 30,
+      "startup_and_exit_verified": true,
+      "private_logs_rehashed": 3706,
+      "preservation": true,
+      "replay": true,
+      "stages": [
+        {
+          "prefix": "018",
+          "ledgerEntries": 19,
+          "ledgerSha256": "db303e8a6207e12efff55c3545c47897c4a3a6a9e2cd70f421bcda8e109ba137",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 26,
+            "pass": 26,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 27757.959138
+          }
+        },
+        {
+          "prefix": "019",
+          "ledgerEntries": 20,
+          "ledgerSha256": "76a37941b81a456584bb7b260c7312995161b2fb37a325934273efcb8c42eed3",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 15,
+            "pass": 15,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 2018.779459
+          }
+        },
+        {
+          "prefix": "020",
+          "ledgerEntries": 21,
+          "ledgerSha256": "289d6b66f1484f82ec54eab73d0dc5041c59197f897170ad54f164a854745022",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 13,
+            "pass": 13,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 1880.990001
+          }
+        },
+        {
+          "prefix": "021",
+          "ledgerEntries": 22,
+          "ledgerSha256": "de1bf9cce25196a5dbebd0ea312bacd628b3fa5e48cff81da57f9168fe5dc9ca",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 14,
+            "pass": 14,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 2822.40446
+          }
+        },
+        {
+          "prefix": "022",
+          "ledgerEntries": 23,
+          "ledgerSha256": "a54c13d76fdb057a0815b63c5e940a4943d8e375bd03bf0d09997acff1e9902f",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 18,
+            "pass": 18,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 17053.801216
+          }
+        },
+        {
+          "prefix": "023",
+          "ledgerEntries": 24,
+          "ledgerSha256": "27b33e16b3b83cb44590015a765424f9bc62c0c613c85682558b3a6b8acf0941",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 21,
+            "pass": 21,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 9940.918839
+          }
+        }
+      ],
+      "cleanup": {
+        "ownedRemoved": true,
+        "resourceInventoryPreserved": true,
+        "generatedCredentialsRemoved": true,
+        "privateConfigAbsentOnReadback": true,
+        "recordedCommands": 51,
+        "exit0Commands": 7,
+        "redactedAllowFailureInspectExit1": 44
+      },
+      "report_sha256": "6d9b4d240d0ce2a74c42e1a2ef696c5f327d94bb2d10fbb163ee3bd041b8cf7c",
+      "readback_sha256": "ffe38ea0fc1da6f43a0d0d52b21744a8a25e950c882fbd08c31fa553ac1b15cc"
+    },
+    {
+      "through": "024",
+      "profile": "isolated-governance-repaired-sql024",
+      "result": "PASS",
+      "recorded_base_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+      "source_files": 176,
+      "sources_match_published_b08b88d": true,
+      "source_equivalence_note": "Exact input hashes matched against b08b88d after execution; the original recorded base and dirty provenance remain unchanged.",
+      "source_manifest_sha256": "2f324039c36ef3ae4a6f796378d7324cf376eb7b3a65514a06b9d9942413771f",
+      "native_tests": {
+        "tests": 263,
+        "suites": 0,
+        "pass": 263,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "suite_invocations": 13,
+      "observed_processes": 37,
+      "startup_and_exit_verified": true,
+      "private_logs_rehashed": 4114,
+      "preservation": true,
+      "replay": true,
+      "stages": [
+        {
+          "prefix": "018",
+          "ledgerEntries": 19,
+          "ledgerSha256": "8af14528794b480b8b0196238a55e5186a52631bcc27868b7ccee79dd52dbc30",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 26,
+            "pass": 26,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 27730.531638
+          }
+        },
+        {
+          "prefix": "019",
+          "ledgerEntries": 20,
+          "ledgerSha256": "a17547b3171e1fde68a017812f22996b12d75ff0c6a2a3fa440f6798d97f9d44",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 15,
+            "pass": 15,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 1841.60371
+          }
+        },
+        {
+          "prefix": "020",
+          "ledgerEntries": 21,
+          "ledgerSha256": "3e835dfee3af132d7267e4c2fa15943eb915a5f1fd64cda96c489883eade2179",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 13,
+            "pass": 13,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 1630.084833
+          }
+        },
+        {
+          "prefix": "021",
+          "ledgerEntries": 22,
+          "ledgerSha256": "b8101a93695b50d9f4f8e48182f62b22e382420d46f23aa2a7c59842a1e9d6d9",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 14,
+            "pass": 14,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 2698.906709
+          }
+        },
+        {
+          "prefix": "022",
+          "ledgerEntries": 23,
+          "ledgerSha256": "65d625c57f6f647f15204a9b694170592b2c7a322611f2671d38d28a6861771a",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 18,
+            "pass": 18,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 16933.341257
+          }
+        },
+        {
+          "prefix": "023",
+          "ledgerEntries": 24,
+          "ledgerSha256": "8c1d4900e1a5ddd0553ae6df110530e9dcb29691e2a858b869837c6c5eae4af7",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 21,
+            "pass": 21,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 9748.482463
+          }
+        },
+        {
+          "prefix": "024",
+          "ledgerEntries": 25,
+          "ledgerSha256": "9d4366f683439d6fd558b2450dbae1b344b3df3548f911a745d2f47bd2949996",
+          "priorLedgerPreserved": true,
+          "repairEntryPreserved": true,
+          "lastNativeTests": {
+            "tests": 30,
+            "pass": 30,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "duration_ms": 13041.431589
+          }
+        }
+      ],
+      "cleanup": {
+        "ownedRemoved": true,
+        "resourceInventoryPreserved": true,
+        "generatedCredentialsRemoved": true,
+        "privateConfigAbsentOnReadback": true,
+        "recordedCommands": 59,
+        "exit0Commands": 7,
+        "redactedAllowFailureInspectExit1": 52
+      },
+      "report_sha256": "cc547cbbb80ec85ca4ab446ebc8d68f5c6bb5277ae550d9800fb05e5559e03ca",
+      "readback_sha256": "69c77bb52f90f083b21cabab7b20dbb894ebb54a47befc361e25bcbd43f73d6b"
+    }
+  ],
+  "limitations": [
+    "The scopes overlap;158+194+263 are independent invocation counts, not a count of unique product assertions.",
+    "SQL022 ran on a dirty5d37594 base; its163 actual input hashes match b08b88d. SQL023 and024 ran on b08b88d and all their inputs match that exact commit.",
+    "No changed applied SQL migration or product TypeScript behavior; qualification selects fixed compatible predecessor modules.",
+    "These storage gates do not qualify HTTP, Temporal, vendor sources, browsers or full release readiness.",
+    "Earlier failed local and hosted attempts remain recorded; a later pass does not relabel them."
+  ]
+}

@@ -156,14 +156,23 @@ def canonical_snapshot(h,tables):
  row to 32 bytes first preserves multiset content/count comparisons without
  that unbounded intermediate JSON tree. Duplicate rows remain duplicated.
  """
- result={}
+ # Each batch uses one psql process and one read-only database snapshot. The
+ # row-digest SQL and every table remain unchanged; only transport is batched.
+ # Keep the inherited 120s command / 600s lifecycle / 4MiB output limits.
+ require(type(tables) is list and len(tables)<=512,'Invalid fixed snapshot table inventory')
  for table in tables:
-  require(re.fullmatch(r'[a-z_]+\.[a-z_]+',table),'Invalid fixed snapshot table')
-  query=f"""WITH row_hashes AS MATERIALIZED (
+  require(isinstance(table,str) and re.fullmatch(r'[a-z_]+\.[a-z_]+',table),'Invalid fixed snapshot table')
+ require(len(set(tables))==len(tables),'Invalid fixed snapshot table inventory')
+ result={}
+ for offset in range(0,len(tables),16):
+  batch=tables[offset:offset+16]
+  queries=[]
+  for table in batch:
+   queries.append(f"""WITH row_hashes AS MATERIALIZED (
    SELECT sha256(convert_to(to_jsonb(r)::text,'UTF8')) AS value FROM {table} r
-  ) SELECT jsonb_build_object('rows',count(*),'sha256',encode(sha256(
-   coalesce(string_agg(value,''::bytea ORDER BY value),''::bytea)),'hex')) FROM row_hashes;"""
-  observed=h.sql_result(query,allow_failure=True)
+  ) SELECT jsonb_build_object('table','{table}','rows',count(*),'sha256',encode(sha256(
+   coalesce(string_agg(value,''::bytea ORDER BY value),''::bytea)),'hex')) FROM row_hashes;""")
+  observed=h.sql_result('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY;\n'+'\n'.join(queries)+'\nCOMMIT;',allow_failure=True)
   if observed.returncode:
    category='SQL_COMMAND_FAILED'
    for code,pattern in (
@@ -173,12 +182,18 @@ def canonical_snapshot(h,tables):
     ('PERMISSION_DENIED',r'permission denied'),
    ):
     if re.search(pattern,observed.stderr,re.IGNORECASE):category=code;break
-   h.report['qualitySnapshotFailure']={'table':table,'exitStatus':observed.returncode,'category':category}
+   # A failed batch never supplies a snapshot, even when earlier statements
+   # succeeded. Report only its fixed inventory, never raw SQL/result/error text.
+   h.report['qualitySnapshotFailure']={'tables':batch,'exitStatus':observed.returncode,'category':category}
    require(False,'Quality canonical snapshot failed; safe category retained')
-  row=json.loads(observed.stdout.strip())
-  require(isinstance(row,dict) and set(row)=={'rows','sha256'} and type(row['rows']) is int and row['rows']>=0
-          and isinstance(row['sha256'],str) and re.fullmatch(r'[a-f0-9]{64}',row['sha256']),'Invalid canonical snapshot')
-  result[table]=row
+  lines=observed.stdout.splitlines()
+  require(len(lines)==len(batch),'Invalid canonical snapshot count')
+  for table,line in zip(batch,lines):
+   row=json.loads(line)
+   require(isinstance(row,dict) and set(row)=={'table','rows','sha256'} and row['table']==table
+           and type(row['rows']) is int and row['rows']>=0 and isinstance(row['sha256'],str)
+           and re.fullmatch(r'[a-f0-9]{64}',row['sha256']),'Invalid canonical snapshot')
+   result[table]={'rows':row['rows'],'sha256':row['sha256']}
  return result
 
 

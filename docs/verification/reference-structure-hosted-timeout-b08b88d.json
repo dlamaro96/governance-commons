@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "head": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+  "tested_merge": "f2ecf0599e20174d2a6cb774cbbfaf2cd2e4880b",
+  "run_id": 45102259563,
+  "result": "VERIFIED_FAILURE_DIAGNOSTIC",
+  "archive_sha256": "2c2d4019a434616471eee795763673089f148e20a300dc887544fa26cdfe9c37",
+  "diagnostic_sha256": "2b001aede0c3db1c085628a10696d8aa81b1424c12c59ee56010f5d46cb70ffe",
+  "source_files": 176,
+  "declared_effective_sources": 176,
+  "declared_mounts_only": true,
+  "failed_phase": "structure-native-tests",
+  "category": "command_timeout",
+  "last_command_ms": 5197,
+  "gate_elapsed_seconds": 602.071338,
+  "inherited_lifecycle_seconds": 600,
+  "observed_passes": 8,
+  "not_observed": 22,
+  "cleanup": {
+    "ownedRemoved": true,
+    "resourceInventoryPreserved": true
+  },
+  "limitations": [
+    "Failure diagnostics only; no successful qualification is inferred.",
+    "Only known phases, finite counters, exact static declaration coordinates and closed code classes are exported. Missing or unmapped output leaves the cause unknown.",
+    "Raw test titles, messages, SQL, values, stack traces, private paths and credentials remain private. Original assertions and deadlines are unchanged.",
+    "Effective source hashes are admitted mount declarations; completed startup/exit readback and schema application are not inferred from this failure projection."
+  ],
+  "release_qualified": false,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45102259563",
+  "verification_receipt_sha256": "08d3417430465d8e67a54b49fb95e11b6489c69cb8fbe379525db334107c7d25",
+  "interpretation": "The inherited 600-second lifecycle bound leaves 5.197 seconds for the final 30-case native suite. Eight coordinates pass; 22 are not observed. The complete gate fails; no aggregate or native-suite pass is inferred.",
+  "repair": "Candidate batches the unchanged per-table fixed-width digest queries in groups of 16 inside a read-only repeatable-read transaction. All assertions and original command/lifecycle/output limits remain mandatory. Candidate native qualification is pending."
+}

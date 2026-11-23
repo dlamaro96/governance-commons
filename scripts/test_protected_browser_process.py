@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Real isolated host subprocesses only; no Docker, browser, services or name kills."""
 import json
+import hashlib
 import os
 from pathlib import Path
 import signal
@@ -44,6 +45,42 @@ class BrowserProcessTests(unittest.TestCase):
         return owned.run([str(PYTHON), '-c', code], cwd=self.root, folder=self.root/'control',
             executable=PYTHON, expected_hash=owned.digest(PYTHON), deadline=time.monotonic()+15,
             admit=lambda: None, timeout=timeout)
+
+    def test_linux_browser_sized_regular_file_is_hashed_without_loading_it_all(self):
+        path = self.root/'synthetic-browser'
+        size = 311672136  # Exact installed Chromium159 Linux executable size.
+        with path.open('wb') as stream:
+            stream.truncate(size)
+        expected = hashlib.sha256()
+        chunk = b'\0'*(1024*1024)
+        for _ in range(size//len(chunk)):
+            expected.update(chunk)
+        expected.update(chunk[:size%len(chunk)])
+        self.assertEqual(owned.digest(path), expected.hexdigest())
+
+    def test_tool_hash_refuses_nonregular_empty_symlink_and_oversized_files(self):
+        empty = self.root/'empty';empty.touch()
+        regular = self.root/'regular';regular.write_bytes(b'12345')
+        link = self.root/'link';link.symlink_to(regular)
+        fifo = self.root/'fifo';os.mkfifo(fifo)
+        with patch.object(owned,'MAX_EXECUTABLE_BYTES',4):
+            for path in (empty,regular,link,fifo,self.root):
+                with self.subTest(kind=path.name),self.assertRaises((RuntimeError,OSError)):
+                    owned.digest(path)
+
+    def test_tool_change_during_streaming_hash_refuses(self):
+        path = self.root/'changing';path.write_bytes(b'original')
+        read = owned.os.read
+        changed = False
+        def mutate(fd,size):
+            nonlocal changed
+            data = read(fd,size)
+            if not changed:
+                changed = True
+                with path.open('ab') as stream:stream.write(b'changed')
+            return data
+        with patch.object(owned.os,'read',side_effect=mutate),self.assertRaises(RuntimeError):
+            owned.digest(path)
 
     def test_kernel_identity_has_actual_group_and_owner(self):
         actual = owned.identity(os.getpid())

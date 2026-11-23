@@ -4221,7 +4221,8 @@
         "docs/verification/business-domains-ui-visual-review.json",
         "docs/verification/business-domains-ui-full.json",
         "docs/verification/business-domains-ui-full-visual-review.json",
-        "docs/verification/business-domains-hosted-attempt-2.json"
+        "docs/verification/business-domains-hosted-attempt-2.json",
+        "docs/verification/protected-authentication-sql032-local.json"
       ]
     },
     {
@@ -58616,7 +58617,13 @@
       "milestone": "M0",
       "partial_evidence": [
         "docs/verification/pipeline-prefix-repair-local.json",
-        "docs/verification/hosted-checkpoint-5d37594.json"
+        "docs/verification/hosted-checkpoint-5d37594.json",
+        "docs/verification/protected-authentication-sql032-local.json",
+        "docs/verification/source-security-b08b88d.json",
+        "docs/verification/reference-prefix-composition-b08b88d.json",
+        "docs/verification/reference-snapshot-batching-local.json",
+        "docs/verification/reference-structure-hosted-timeout-b08b88d.json",
+        "docs/verification/protected-linux-tool-admission-local.json"
       ]
     },
     {
@@ -58874,7 +58881,11 @@
         "docs/verification/participation-hosted-attempt-3.json",
         "docs/verification/participation-main.json",
         "docs/verification/pipeline-prefix-repair-local.json",
-        "docs/verification/hosted-checkpoint-5d37594.json"
+        "docs/verification/hosted-checkpoint-5d37594.json",
+        "docs/verification/reference-prefix-composition-b08b88d.json",
+        "docs/verification/reference-snapshot-batching-local.json",
+        "docs/verification/reference-structure-hosted-timeout-b08b88d.json",
+        "docs/verification/protected-linux-tool-admission-local.json"
       ]
     },
     {
@@ -68337,7 +68348,11 @@
         "docs/verification/participation-hosted-attempt-2.json",
         "docs/verification/participation-audit-fixture-correction.json",
         "docs/verification/participation-hosted-attempt-3.json",
-        "docs/verification/participation-main.json"
+        "docs/verification/participation-main.json",
+        "docs/verification/source-security-b08b88d.json",
+        "docs/verification/reference-snapshot-batching-local.json",
+        "docs/verification/reference-structure-hosted-timeout-b08b88d.json",
+        "docs/verification/protected-linux-tool-admission-local.json"
       ]
     },
     {
@@ -69167,7 +69182,8 @@
         "docs/verification/participation-hosted-attempt-2.json",
         "docs/verification/participation-audit-fixture-correction.json",
         "docs/verification/participation-hosted-attempt-3.json",
-        "docs/verification/participation-main.json"
+        "docs/verification/participation-main.json",
+        "docs/verification/source-security-b08b88d.json"
       ]
     },
     {

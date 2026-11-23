@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T03:35:55.758761+00:00",
+  "result": "PASS",
+  "release_qualified": false,
+  "execution_base_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+  "source_provenance": "Executed on the recorded base commit with explicitly listed dirty source differences; not represented as an exact Git checkout.",
+  "source_differences": [
+    {
+      "path": "scripts/runtime-test-quality-upgrade.py",
+      "gitSha256": "029130f14d42844eac3a03e8f95814df468f512e0ebe24900534d98e907a1882",
+      "runSha256": "bffe02a08cdcb8cd53df17669c8a764b7209257214aaf6a37e56795a7e7d4141"
+    }
+  ],
+  "command": "./dev test --suite reference-structure-repaired-upgrade",
+  "profile": "isolated-governance-repaired-sql024",
+  "native": {
+    "tests": {
+      "tests": 263,
+      "suites": 0,
+      "pass": 263,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "invocations": 13,
+    "source_files": 176,
+    "observed_processes": 37,
+    "all_process_startup_and_exit": true
+  },
+  "preservation": {
+    "canonical_tables": 112,
+    "original_ledger_preserved": true,
+    "sql032_replay": true
+  },
+  "cleanup": {
+    "ownedRemoved": true,
+    "resourceInventoryPreserved": true,
+    "generatedCredentialsRemoved": true
+  },
+  "readback_sha256": "2a55e4a0506fa1ec936e39781c0f3d4b38a2f0d71edd6d7bef29e33503441486",
+  "private_report_sha256": "8595a9cb7dfe523799b1495e280767feb1d4ee0aaf867b016717d4462bc233a3",
+  "private_logs_rehashed": 2407,
+  "local_elapsed_comparison": {
+    "prior_seconds": 545.104865,
+    "candidate_seconds": 387.125355,
+    "prior_private_command_logs": 4114,
+    "candidate_private_command_logs": 2407,
+    "limitations": "Single local observations under the same 600-second lifecycle bound; not a hosted performance or capacity claim."
+  },
+  "transport": {
+    "batch_tables": 16,
+    "inventory_bound": 512,
+    "transaction": "REPEATABLE READ READ ONLY",
+    "digest": "Unchanged sorted fixed-width SHA256 row digests plus exact count; duplicate multiplicity retained.",
+    "fail_closed": [
+      "invalid or duplicate identifiers",
+      "missing, extra, reordered or duplicated result rows",
+      "any SQL failure including partial output",
+      "malformed count or digest"
+    ],
+    "unchanged_limits": {
+      "lifecycle_seconds": 600,
+      "command_seconds": 120,
+      "diagnostic_bytes": 4194304
+    }
+  },
+  "host_controls": {
+    "command": "python3 -m unittest scripts.test_quality_upgrade_snapshot scripts.test_governance_repaired_chain scripts.test_reference_structure_upgrade policies.test_quality_upgrade_diagnostics",
+    "tests": 77,
+    "result": "PASS",
+    "log_sha256": "c3c6c7059442bd882f4fc1fed1b9b8e18a5232a5d0c433d7b761fa936fc451d7"
+  },
+  "limitations": [
+    "Read-only retained-evidence review; no native or Docker command rerun.",
+    "Only the stated repaired invocation is qualified; no inference that other top-level repaired profiles executed.",
+    "Node TAP reports zero nested suites; suiteInvocations denotes separately executed native suite invocations.",
+    "Canonical full-row preservation/replay and resource inventory equality are checked by the exact Git-bound harness during the run; private SQL results and resource identities are intentionally redacted, so this review revalidates their source assertions, retained digest summaries, successful phase logs and final outcome rather than reconstructing the deleted database.",
+    "Sensitive cleanup inspection output is redacted; absent-helper exit1 counts are retained separately from successful subprocesses. The exact harness separately refuses failed removal/nonempty residuals and compares the original resource inventory.",
+    "Historical018-only failure evidence is not relabeled; no core/API/browser/worker qualification is inferred.",
+    "The source diff is bound explicitly; no clean-checkout execution is inferred. Independent top-level modes and fresh hosted CI remain required."
+  ]
+}
