@@ -97,7 +97,10 @@ test('wire parser refuses duplicate keys, coercion, unknown query filters and ov
  for(const raw of ['{"id":1,"id":2}','{"id":1,"\\u0069d":2}','{"__proto__":{}}',' '.repeat(32769)+'{}'])assert.throws(()=>parseMonitoringRequestJSON(raw),code('MONITOR_INPUT_INVALID'));
  assert.deepEqual(parseMonitoringRequestJSON('{"expectedVersion":1}'),{expectedVersion:1});assert.ok(Value.Check(monitoringHttp.monitor,monitor));assert.equal(Value.Check(monitoringHttp.monitor,{...monitor,secretRef:'private'}),false);
 });
-test('actual installed internal routes enforce site tenant before parsing and close admitted command envelopes',async()=>{
+test('actual installed internal routes enforce site tenant before parsing and close admitted command envelopes',async t=>{
+ const authKeys=['AUTHN_ENVIRONMENT','PUBLIC_AUTHN_ORIGIN','PUBLIC_URL'] as const,authBefore=Object.fromEntries(authKeys.map(key=>[key,process.env[key]]));
+ process.env.AUTHN_ENVIRONMENT='isolated-test';process.env.PUBLIC_AUTHN_ORIGIN='http://127.0.0.1:4310';process.env.PUBLIC_URL=process.env.PUBLIC_AUTHN_ORIGIN;
+ t.after(()=>{for(const key of authKeys){if(authBefore[key]===undefined)delete process.env[key];else process.env[key]=authBefore[key];}});
  const previous={token:process.env.SITE_TOKEN,tenants:process.env.SITE_TENANTS};process.env.SITE_TOKEN='synthetic-monitoring-site-token-32';process.env.SITE_TENANTS=principal.tenantId;
  const app=Fastify({logger:false});await app.register(cookie);let admitted=0;app.addHook('preHandler',async(_req,reply)=>{admitted++;reply.code(204).send();});await installQualityMonitoring(app);
  const url='/internal/quality-monitors/'+monitor.id+'/tick',headers={authorization:'Bearer '+process.env.SITE_TOKEN,'x-tenant-id':principal.tenantId,'content-type':'application/json'};

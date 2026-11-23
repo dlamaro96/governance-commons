@@ -78,13 +78,13 @@ def doctor():
             running = capture(COMPOSE + ["ps", "--services", "--status", "running"]).splitlines()
         except subprocess.SubprocessError:
             pass
-    for port, service in ((4310, "api"), (4311, "keycloak")):
+    for port, service in ((4310, "authn-edge"), (4311, "keycloak")):
         try:
             with socket.socket() as sock:
                 sock.bind(("127.0.0.1", port))
             check(f"port_{port}", True, "available")
         except OSError:
-            check(f"port_{port}", service in running, "owned by active project service" if service in running else "in use by another process")
+            check(f"port_{port}", (service in running or (port == 4310 and "api" in running)), "owned by active project service" if (service in running or (port == 4310 and "api" in running)) else "in use by another process")
     result = {"timestamp": datetime.now(timezone.utc).isoformat(), "host": platform.system(), "checks": checks,
         "resource_qualification": "provisional floors only; full profile and benchmark qualification pending", "passed": all(c["passed"] for c in checks)}
     print(json.dumps(result, indent=2))
@@ -106,11 +106,26 @@ INTEGRITY_MAX_SOURCE_BYTES = 128 * 1024**2
 INTEGRITY_MAX_OUTPUT = 4 * 1024**2
 INTEGRITY_PROFILES = {
     'api': {'image': 'governance-commons:dev', 'root': '/app', 'user': '1000:1000',
-            'roots': ('apps', 'packages'), 'files': ('package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml')},
+            'roots': ('apps', 'packages'),
+            # These entry points run from this image during explicit protected
+            # installation and API qualification. Their scripts/fixture imports
+            # are outside the application/package roots and must be read back.
+            'files': ('package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', 'tsconfig.json',
+                      'scripts/authentication-install-core.ts', 'scripts/authentication-install-demo.ts',
+                      'scripts/authentication-install.ts', 'scripts/application-authentication-install.ts',
+                      'scripts/protected-core-test-fixture.ts', 'tests/fixtures/protected-core-authentication.ts',
+                      'tests/fixtures/protected-core-tenants.ts')},
     'python-worker': {'image': 'governance-commons-python:dev', 'root': '/worker', 'user': '10001:10001',
                       'roots': ('python/governance_workers', 'python/tests'), 'files': ('python/pyproject.toml', 'python/uv.lock')},
 }
-INTEGRITY_CONTROLS = ('Dockerfile', 'python/Dockerfile', '.dockerignore', 'deploy/compose/compose.yaml')
+INTEGRITY_CONTROLS = (
+    'Dockerfile', 'python/Dockerfile', '.dockerignore', 'deploy/compose/compose.yaml',
+    # Host orchestration is part of the local receipt even though these bytes
+    # are not claimed as executed image entry points.
+    'scripts/runtime.py', 'scripts/runtime-bootstrap.py', 'scripts/runtime-authentication-roles.py',
+    'scripts/authentication_roles.py', 'scripts/runtime-keycloak-client.py', 'scripts/test-security.sh',
+    'policies/api_evidence.py',
+)
 INTEGRITY_EXCLUDED = frozenset(('node_modules', 'dist', '__pycache__', '.venv'))
 
 
@@ -427,7 +442,7 @@ def authentication_bootstrap():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", nargs="?", default="help", choices=["help", "doctor", "bootstrap", "up", "seed", "status", "test", "authn-install", "benchmark", "k8s-smoke", "backup", "restore", "export-support-bundle", "down"])
+    parser.add_argument("command", nargs="?", default="help", choices=["help", "doctor", "bootstrap", "up", "seed", "status", "test", "authn-install", "application-authn-install", "authn-core-install", "benchmark", "k8s-smoke", "backup", "restore", "export-support-bundle", "down"])
     parser.add_argument("--profile", default="core")
     parser.add_argument("--dataset", default="harbor-demo")
     parser.add_argument("--suite", default="smoke")
@@ -442,6 +457,8 @@ def main():
     if args.command == "help":
         print("""Governance Commons local development
   ./dev doctor                        Verify local Docker, capacity and ports (JSON)
+  ./dev authn-core-install            Explicitly install the local protected login; exact replay never renews it
+  ./dev application-authn-install --input FILE  Apply an explicit private SQL037 install/revoke manifest
   ./dev bootstrap                     Generate/preserve random local secrets
   ./dev up --profile core             Build and start real core dependencies and app
   ./dev up --profile core --no-build  Verify existing local images and start without build or pull
@@ -475,6 +492,7 @@ def main():
   ./dev test --suite classification-label-identities Verify stable label identities and permanent retirement
   ./dev test --suite reviewed-classification-facts Verify private producer bindings and inactive reviewed facts
   ./dev test --suite held-metadata-authority Verify scope alignment and held inactive metadata decisions
+  ./dev test --suite application-authn-bridge Verify protected application authentication bridge
   ./dev test --suite protected-authn  Verify isolated real OIDC and protected session lifecycle
   ./dev test --suite image-security   Scan exact built application images and retain full findings
   ./dev test --suite source-connectors-upgrade Verify source storage upgrade and native tenant isolation
@@ -598,6 +616,9 @@ Never use docker compose config output in public logs: it expands secrets.""")
     if args.command == "test" and args.suite == "authority-read-current":
         require_local()
         run([sys.executable, "scripts/runtime-test-authority-read-upgrade.py", "--run-local", "--scope", "current"], timeout=1800); return
+    if args.command == "test" and args.suite == "application-authn-bridge":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-application-authn-bridge.py", "--run-local"], timeout=900); return
     if args.command == "test" and args.suite == "held-metadata-authority":
         require_local()
         run([sys.executable, "scripts/runtime-test-held-metadata-authority.py", "--run-local"], timeout=900); return
@@ -675,10 +696,15 @@ Never use docker compose config output in public logs: it expands secrets.""")
             # Remove the SET-only transfer grant even when migration fails.
             run([sys.executable, "scripts/runtime-authentication-roles.py", "finish"], timeout=90)
         run([sys.executable, "scripts/runtime-authentication-roles.py", "executors"], timeout=90)
-        run(startup + ["-d", "--no-build", "--wait", "--wait-timeout", "240", "api", "workflow-worker", "site-runner", "python-worker"], timeout=360)
+        run(startup + ["-d", "--no-build", "--wait", "--wait-timeout", "240", "authn-edge", "workflow-worker", "site-runner", "python-worker"], timeout=360)
         run([sys.executable, "scripts/runtime-test-object-store.py", "--readiness"], timeout=60)
-        print("Core stack is ready at http://localhost:4310. Run ./dev seed --dataset harbor-demo.")
-    elif args.command == "authn-install":
+        print("Core stack is ready at http://127.0.0.1:4310. Run ./dev seed --dataset harbor-demo, then ./dev authn-core-install for explicit protected local login.")
+    elif args.command == "authn-core-install":
+        authentication_bootstrap()
+        run([sys.executable, "scripts/runtime-keycloak-client.py"], timeout=90)
+        run(COMPOSE + ["run", "--rm", "--no-deps", "-T", "authn-install-state"], timeout=60)
+        run(COMPOSE + ["run", "--rm", "--no-deps", "-T", "authn-install"], timeout=180)
+    elif args.command in ("authn-install", "application-authn-install"):
         if not args.input:
             raise SystemExit('A private installation manifest is required: --input FILE')
         path = Path(args.input)
@@ -690,7 +716,7 @@ Never use docker compose config output in public logs: it expands secrets.""")
         if len(manifest) > 65536:
             raise SystemExit('Installation manifest exceeds its 64KiB limit.')
         run(COMPOSE + ['run', '--rm', '--no-deps', '-T', 'migrate', 'node', '--import', 'tsx',
-            'scripts/authentication-install.ts', '--stdin'], input=manifest, timeout=60)
+            'scripts/authentication-install.ts' if args.command == 'authn-install' else 'scripts/application-authentication-install.ts', '--stdin'], input=manifest, timeout=60)
     elif args.command == "seed":
         if args.dataset != "harbor-demo":
             raise SystemExit("Only the independently authored harbor-demo dataset is implemented.")

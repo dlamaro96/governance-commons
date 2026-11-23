@@ -14,20 +14,21 @@ ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('authority_read_gate',ROOT/'scripts/runtime-test-authority-read-upgrade.py')
 g=importlib.util.module_from_spec(spec);spec.loader.exec_module(g)
 class Controls(unittest.TestCase):
- def test_declared036_inventory_preserves_exact031_target_and_rejects_gaps_or_unknown_names(self):
+ def test_declared037_inventory_preserves_exact031_target_and_rejects_gaps_or_unknown_names(self):
   historical=g.sources();paths={row['path'] for row in historical}
   self.assertNotIn('packages/db/migrations/036_authority_scope_alignment.sql',paths)
+  self.assertNotIn('packages/db/migrations/037_application_authentication_bridge.sql',paths)
   self.assertEqual(sorted(p.rsplit('/',1)[-1] for p in paths if p.startswith('packages/db/migrations/') and p.endswith('.sql')),g.NAMES)
   with tempfile.TemporaryDirectory() as directory:
    root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)
    for name in g.NAMES:(folder/name).write_text('-- immutable historical prefix')
    with patch.object(g,'ROOT',root):
-    for name in ['032_relation_candidate_validation.sql', '033_content_security_revisions.sql', '034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql']:
+    for name in ['032_relation_candidate_validation.sql', '033_content_security_revisions.sql', '034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql']:
      path=folder/name;path.write_text('-- declared successor, never applied here')
      self.assertEqual(g.migrations(),g.NAMES);self.assertEqual(len(g.migrations()),31)
      path.write_text('-- changed successor bytes are outside the historical migration set')
      self.assertEqual(g.migrations(),g.NAMES)
-    for name in ('036_undeclared.sql','037_undeclared.sql'):
+    for name in ('036_undeclared.sql','037_undeclared.sql','038_undeclared.sql'):
      extra=folder/name;extra.write_text('-- unreviewed')
      with self.assertRaises(RuntimeError):g.migrations()
      extra.unlink()

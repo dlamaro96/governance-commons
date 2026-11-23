@@ -11,6 +11,7 @@ import subprocess
 import tempfile
 from types import SimpleNamespace
 import unittest
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('protected_bootstrap_runner', ROOT/'scripts/runtime-test-protected-authn.py')
@@ -36,6 +37,14 @@ def shell(name, output):
 
 
 class PrivateBootstrapTests(unittest.TestCase):
+    def test_root_cookie_app_host_is_distinct_from_provider_and_health_hosts_match(self):
+        self.assertEqual(runner.ORIGIN, 'http://127.0.0.1:4314')
+        self.assertEqual(runner.ISSUER, 'http://localhost:4315/realms/governance')
+        self.assertNotEqual(urlparse(runner.ORIGIN).hostname, urlparse(runner.ISSUER).hostname)
+        for name in ('login-broker', 'session-api', 'authn-edge'):
+            self.assertIn("headers:{Host:'" + urlparse(runner.ORIGIN).netloc + "'}", service(name))
+        self.assertIn('PUBLIC_AUTHN_ORIGIN: ' + runner.ORIGIN, service('authn-edge'))
+
     def test_failure_output_never_uses_arbitrary_phase_or_exception_text(self):
         private = 'private callback or credential must not be exported'
         self.assertEqual(runner.failure_phase({'failure':{'phase':'tool-hash-admission','message':private}}),'tool-hash-admission')

@@ -3,7 +3,7 @@ import {createHash,createHmac,timingSafeEqual} from 'node:crypto';
 import {pool} from '../../../packages/db/src/index.ts';
 import {Problem} from '../../../packages/authz/src/index.ts';
 import {parseBoundedJSONEnvelope} from '../../../packages/domain/src/model.ts';
-import type {Auth} from './security.ts';
+import {readProtectedSession,type Auth} from './security.ts';
 import {assetView} from './repository.ts';
 
 export type AssetSearchQuery={q?:string;type?:string;limit?:number;cursor?:string;sort?:'name'|'name-desc'|'updated'};
@@ -151,16 +151,16 @@ export function createAssetSearch(deps:AssetSearchDependencies){
       const acquisition=deps.connect().then(value=>{client=value;if(budget.controller.signal.aborted||now()>=budget.until){release(true);throw limited();}return value;});
       await budget.wait(acquisition);
       await sql('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
-      await sql("SELECT set_config('gc.tenant_id',$1,true),set_config('gc.actor_id',$2,true),set_config('statement_timeout',$3,true),set_config('lock_timeout','2000',true),set_config('idle_in_transaction_session_timeout','15000',true)",[tenant,actor,String(budget.remaining())]);
+      await sql("SELECT set_config('statement_timeout',$1,true),set_config('lock_timeout','2000',true),set_config('idle_in_transaction_session_timeout','15000',true)",[String(budget.remaining())]);
       // Authenticate again inside this exact primary snapshot; caller permissions
       // and indexed ACLs never establish authority. Concurrent reads linearize here.
-      const sessions=await sql(`SELECT m.permissions,extract(epoch FROM s.expires_at)::double precision*1000 AS expires_ms
-        FROM sessions s JOIN identities i ON i.id=s.identity_id
-        JOIN memberships m ON m.tenant_id=s.tenant_id AND m.identity_id=s.identity_id
-        WHERE s.id_hash=$1 AND s.identity_id=$2::uuid AND s.tenant_id=$3::uuid
-          AND s.expires_at>clock_timestamp() AND i.active AND m.active`,[auth.sessionHash,actor,tenant]);
-      if(sessions.length!==1)throw new Problem(401,'SESSION_EXPIRED','Your session has expired. Sign in again.');
-      if(!Array.isArray(sessions[0].permissions)||!sessions[0].permissions.includes('catalog:read'))throw new Problem(403,'FORBIDDEN','Your current permissions do not allow this action.');
+      const session=await readProtectedSession({query:async(text,values)=>({rows:await sql(text,values)})},auth.sessionHash);
+      if(session.identityId!==actor||session.selectedTenantId!==tenant)throw new Problem(401,'SESSION_EXPIRED','Your session has expired. Sign in again.');
+      await sql("SELECT set_config('gc.tenant_id',$1,true),set_config('gc.actor_id',$2,true)",[session.selectedTenantId,session.identityId]);
+      const memberships=await sql(`SELECT permissions FROM memberships
+        WHERE tenant_id=$1::uuid AND identity_id=$2::uuid AND active`,[session.selectedTenantId,session.identityId]);
+      if(memberships.length!==1)throw new Problem(401,'SESSION_EXPIRED','Your session has expired. Sign in again.');
+      if(!Array.isArray(memberships[0].permissions)||!memberships[0].permissions.includes('catalog:read'))throw new Problem(403,'FORBIDDEN','Your current permissions do not allow this action.');
       const created=await request('/'+INDEX+'/_search/point_in_time?keep_alive=30s&allow_partial_pit_creation=false','POST',undefined,budget);
       if(!object(created))throw unavailable();let currentPit=pit(created.pit_id);shards(created._shards);
       const seen=new Set<string>(),facets=new Map<string,number>(),eligible:string[]=[];
@@ -236,7 +236,7 @@ export function createAssetSearch(deps:AssetSearchDependencies){
         const map=new Map(hydrated.map(row=>[row.id,row]));if(hydrated.length!==selected.length||map.size!==selected.length||selected.some(id=>!map.has(id)))throw unavailable();
         items=selected.map(id=>assetView(map.get(id)));if(Buffer.byteLength(JSON.stringify(items))>ASSET_SEARCH_LIMITS.hydrationBytes)throw limited();
       }
-      const expiry=await sql('SELECT $1::double precision > extract(epoch FROM clock_timestamp())::double precision*1000 AS live',[sessions[0].expires_ms]);
+      const expiry=await sql('SELECT $1::timestamptz > clock_timestamp() AS live',[session.expiresAt]);
       if(expiry.length!==1||expiry[0].live!==true)throw new Problem(401,'SESSION_EXPIRED','Your session has expired. Sign in again.');
       result={items,total,nextCursor:offset+items.length<total?cursorWrite(offset+items.length,bound,deps.cursorKey):null,
         facets:[...facets].map(([type,count])=>({type,count})).sort((a,b)=>b.count-a.count||Buffer.compare(Buffer.from(a.type),Buffer.from(b.type))).slice(0,ASSET_SEARCH_LIMITS.facetResults)};

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
+import {domainLogin} from '../fixtures/business-domains-browser.ts';
 import {test,expect,type Page} from '@playwright/test';
-import {mkdirSync,readFileSync} from 'node:fs';
+import {mkdirSync} from 'node:fs';
 import type {Asset,AssetList} from '../../apps/web/src/types.ts';
 
-const credentials=JSON.parse(readFileSync('.local/bootstrap.json','utf8'));
 const compareId=(a:Asset,b:Asset)=>a.id<b.id?-1:a.id>b.id?1:0;
 const comparator=(sort:string)=>(a:Asset,b:Asset)=>(sort==='updated'?Date.parse(b.updatedAt)-Date.parse(a.updatedAt):
   (sort==='name-desc'?-1:1)*Buffer.compare(Buffer.from(a.name),Buffer.from(b.name)))||compareId(a,b);
@@ -22,9 +22,7 @@ async function rendered(page:Page,sort:string,cursor:string,action:()=>Promise<u
 
 test('UX-04: catalog sorting spans real source results and resets cursor after changing order',async({page})=>{
   test.setTimeout(240_000);
-  await page.goto('/auth/login');await page.locator('input[name="username"]').fill('steward');
-  await page.locator('input[name="password"]').fill(credentials.personas.steward);
-  await page.getByRole('button',{name:'Sign In',exact:true}).click();await expect(page).toHaveURL('http://localhost:4310/');
+  await domainLogin(page);
   const me=await (await page.request.get('/api/v1/me')).json();
   const baseline=await (await page.request.get('/api/v1/assets?limit=1')).json() as AssetList;
   // Two genuine PostgreSQL scans guarantee more than one50-row page even on a

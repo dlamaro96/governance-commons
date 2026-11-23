@@ -1,16 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
+import {domainLogin} from '../fixtures/business-domains-browser.ts';
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { mkdirSync, readFileSync } from 'node:fs';
+import { mkdirSync } from 'node:fs';
 
-const credentials = JSON.parse(readFileSync('.local/bootstrap.json', 'utf8'));
 async function login(page: Page) {
-  await page.goto('/auth/login');
-  await page.locator('input[name="username"]').fill('steward');
-  await page.locator('input[name="password"]').fill(credentials.personas.steward);
-  await page.getByRole('button', { name: 'Sign In', exact: true }).click();
-  await expect(page).toHaveURL('http://localhost:4310/');
-  await expect(page.getByRole('heading', { name: 'Harbor Retail', exact: true })).toBeVisible();
+  await domainLogin(page);
 }
 async function accessible(page: Page) {
   // Theme changes animate button backgrounds. Audit the settled rendered state,

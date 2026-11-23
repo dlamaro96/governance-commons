@@ -15,6 +15,8 @@ export type VerifiedIdentityToken = {
 export type AuthnEnvironment = 'isolated-test' | 'local-development' | 'production';
 export type PublicAuthnConfig = { readonly publicOrigin: string; readonly environment: AuthnEnvironment };
 export type BrokerOidcConfig = PublicAuthnConfig & {
+ /** Fixed server-owned destination; no request-supplied redirect is accepted. */
+ readonly postLoginPath?: '/' | '/authn/';
  readonly provider?: 'keycloak' | 'microsoft-entra';
  /** Entra directory identity boundary only; never an application tenant selector. */
  readonly directoryTenantId?: string;

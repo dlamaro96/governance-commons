@@ -70,6 +70,25 @@ class RuntimeRoutingTests(unittest.TestCase):
                 with self.assertRaises(SystemExit): runtime.main()
                 run.assert_not_called()
 
+    def test_application_authn_bridge_gate_requires_local_context_before_exact_isolated_runner(self):
+        calls = []
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'application-authn-bridge']), \
+                patch.object(runtime, 'require_local', side_effect=lambda: calls.append('local')), \
+                patch.object(runtime, 'require_bootstrap', side_effect=AssertionError('core bootstrap reached')), \
+                patch.object(runtime, 'run', side_effect=lambda args, **kw: calls.append((args, kw))):
+            runtime.main()
+        self.assertEqual(calls, ['local', ([sys.executable, 'scripts/runtime-test-application-authn-bridge.py', '--run-local'], {'timeout': 900})])
+
+    def test_application_authn_bridge_gate_refuses_remote_or_unavailable_local_context(self):
+        for override, endpoint in (('tcp://remote.invalid:2375', 'unix:///local.sock'), ('', 'ssh://remote.invalid'), ('', None)):
+            with self.subTest(endpoint=endpoint), patch.object(sys, 'argv', ['dev', 'test', '--suite', 'application-authn-bridge']), \
+                    patch.dict(os.environ, {'DOCKER_HOST': override}), \
+                    patch.object(runtime, 'capture', return_value=json.dumps([{'Endpoints': {'docker': {'Host': endpoint}}}]) if endpoint else 'invalid'), \
+                    patch.object(runtime, 'require_bootstrap', side_effect=AssertionError('core bootstrap reached')), \
+                    patch.object(runtime, 'run') as run:
+                with self.assertRaises(SystemExit): runtime.main()
+                run.assert_not_called()
+
     def test_postgres_target_gate_checks_local_context_without_bootstrap(self):
         calls = []
         def capture(args, timeout=15):
@@ -124,6 +143,7 @@ class RuntimeRoutingTests(unittest.TestCase):
         self.assertIn('./dev test --suite authority-read-current', output.getvalue())
         self.assertIn('./dev test --suite authority-foundation', output.getvalue())
         self.assertIn('./dev test --suite held-metadata-authority', output.getvalue())
+        self.assertIn('./dev test --suite application-authn-bridge', output.getvalue())
         capture.assert_not_called()
         run.assert_not_called()
 
@@ -217,6 +237,40 @@ class RepairedRelationRoutingTests(unittest.TestCase):
             runtime.main()
         for suite,_,_ in self.ROUTES:self.assertEqual(output.getvalue().count('./dev test --suite '+suite+' '),1)
         capture.assert_not_called();run.assert_not_called()
+
+
+
+class CoreAuthenticationInstallRoutingTests(unittest.TestCase):
+    def test_explicit_setup_guards_then_runs_only_fixed_installer_steps(self):
+        calls=[]
+        with patch.object(sys,'argv',['dev','authn-core-install']), \
+                patch.object(runtime,'require_bootstrap',side_effect=lambda:calls.append('bootstrap')), \
+                patch.object(runtime,'require_local',side_effect=lambda:calls.append('local')), \
+                patch.object(runtime,'authentication_bootstrap',side_effect=lambda:calls.append('authentication')), \
+                patch.object(runtime,'run',side_effect=lambda args,**kw:calls.append((args,kw))):
+            runtime.main()
+        self.assertEqual(calls,['bootstrap','local','authentication',
+            ([sys.executable,'scripts/runtime-keycloak-client.py'],{'timeout':90}),
+            (runtime.COMPOSE+['run','--rm','--no-deps','-T','authn-install-state'],{'timeout':60}),
+            (runtime.COMPOSE+['run','--rm','--no-deps','-T','authn-install'],{'timeout':180})])
+
+    def test_setup_guard_and_command_failures_do_not_continue_or_retry(self):
+        for guard in ('require_bootstrap','require_local','authentication_bootstrap'):
+            with patch.object(sys,'argv',['dev','authn-core-install']), \
+                    patch.object(runtime,'require_bootstrap'),patch.object(runtime,'require_local'),patch.object(runtime,'authentication_bootstrap'), \
+                    patch.object(runtime,guard,side_effect=SystemExit('synthetic admission refusal')),patch.object(runtime,'run') as run:
+                with self.assertRaises(SystemExit):runtime.main()
+                run.assert_not_called()
+        for failed in range(3):
+            calls=[]
+            def run(args,**kwargs):
+                calls.append(args)
+                if len(calls)==failed+1:raise RuntimeError('synthetic setup refusal')
+            with patch.object(sys,'argv',['dev','authn-core-install']), \
+                    patch.object(runtime,'require_bootstrap'),patch.object(runtime,'require_local'),patch.object(runtime,'authentication_bootstrap'), \
+                    patch.object(runtime,'run',side_effect=run):
+                with self.assertRaisesRegex(RuntimeError,'synthetic setup refusal'):runtime.main()
+            self.assertEqual(len(calls),failed+1)
 
 if __name__ == '__main__':
     unittest.main()

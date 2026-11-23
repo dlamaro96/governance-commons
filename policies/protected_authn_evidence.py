@@ -52,6 +52,7 @@ MIGRATIONS = (
     '034_classification_label_identities.sql',
     '035_reviewed_classification_producer.sql',
     '036_authority_scope_alignment.sql',
+    '037_application_authentication_bridge.sql',
 )
 FIXED_SOURCES = (
     'CONTRIBUTING.md', 'dev', 'scripts/runtime.py', 'scripts/authentication_roles.py',
@@ -79,7 +80,7 @@ CAPTURES = tuple(sorted(name+'.png' for name in (
 SERVED = {'html': 'served/index.html', 'css': 'served/ui.css', 'js': 'served/ui.js'}
 ROLES = {'login-broker', 'session-api', 'authn-edge', 'owner-tool', 'helper'}
 CHECKS = [
-    'Native owner applied exact001–033 with temporary definer grant removed; canonical seed and exact13-manifest replay preserved all six original memberships; full migration ledger remained unchanged',
+    'Native owner applied exact SQL001–037 with temporary definer grant removed; canonical seed and exact13-manifest replay preserved all six original memberships; full migration ledger remained unchanged',
     'Real Keycloak protected public client readback confirms exact callback/origin, S256,RS256 and built-in basic/auth_time mapper',
     'Actual bounded signed-token HTTP probes and native SCRAM SQL lifecycle/privilege/concurrency cases passed with no skipped cases',
     'Two real Keycloak browser journeys passed: fresh code+PKCE, exact private provenance, CSRF/version switch, stale/cross-tenant/unbound denial, member-revoked logout, keyboard/axe EN/AR desktop/mobile; eight fresh captures retained',
@@ -216,7 +217,7 @@ def installation_plan(plan,receipt_hashes):
     exact(plan,('version','config','target','manifests'))
     require(type(plan['version']) is int and plan['version']==1)
     config=plan['config'];exact(config,('issuer','publicOrigin','environment'))
-    require(config=={'issuer':'http://localhost:4315/realms/governance','publicOrigin':'http://localhost:4314','environment':'isolated-test'})
+    require(config=={'issuer':'http://localhost:4315/realms/governance','publicOrigin':'http://127.0.0.1:4314','environment':'isolated-test'})
     target=plan['target'];exact(target,('databaseOid','ownerRoleOid','loginRoleOid','apiRoleOid'))
     for value in target.values():integer(value,1,4294967295)
     require(len({target[k] for k in ('ownerRoleOid','loginRoleOid','apiRoleOid')})==3)
@@ -254,7 +255,7 @@ def installation_plan(plan,receipt_hashes):
 def keycloak_readback(value):
     """Independently bind the isolated provider's required live client settings."""
     exact(value, ('client','defaultScopes','authTimeMapper','discovery'))
-    origin='http://localhost:4314'; issuer='http://localhost:4315/realms/governance'
+    origin='http://127.0.0.1:4314'; issuer='http://localhost:4315/realms/governance'
     client=value['client']
     expected={'clientId':'governance-protected-web','enabled':True,'publicClient':True,
         'standardFlowEnabled':True,'implicitFlowEnabled':False,'directAccessGrantsEnabled':False,

@@ -37,7 +37,7 @@ PHASES=(*predecessor.PHASES,PHASE,FACT_PHASE)
 
 def migrations():
  actual=sorted(p.name for p in (ROOT/'packages/db/migrations').glob('*.sql'))
- successors=['036_authority_scope_alignment.sql'];suffix=actual[len(NAMES):]
+ successors=['036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql'];suffix=actual[len(NAMES):]
  require(actual[:len(NAMES)]==NAMES and suffix==successors[:len(suffix)],'Exact immutable SQL001–035 prefix and declared036 successor required')
  return list(NAMES)
 

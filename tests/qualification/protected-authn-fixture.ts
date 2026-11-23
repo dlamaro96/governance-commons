@@ -21,7 +21,7 @@ export const config=JSON.parse(readFileSync(path,'utf8')) as {owner:string;admin
 let nextSlot=0;
 export const hash=(value:string)=>createHash('sha256').update(value).digest('hex');
 export const random=()=>randomBytes(32).toString('base64url');
-export const origin='http://localhost:4314';
+export const origin='http://127.0.0.1:4314';
 export type ProbeFixture={owner:pg.Client;login:pg.Client;api:pg.Client;legacy:pg.Client;loginPool:pg.Pool;apiPool:pg.Pool;apiUrl:string;tenant:string;otherTenant:string;identity:string;issuerId:string;bindingId:string;loginId:string;apiId:string;issuer:string;expiry:string;config:BrokerOidcConfig};
 export async function fixture(t:TestContext,expiryMs=3_600_000):Promise<ProbeFixture>{
  const slot=config.slots[nextSlot++];assert.ok(slot,'Native fixture roles exhausted');
@@ -91,7 +91,7 @@ export async function request(url:string,path:string,init:RequestInit={}):Promis
  const target=new URL(url+path),base=new URL(url);
  assert.ok(target.protocol==='http:'&&target.hostname==='127.0.0.1'&&target.origin===base.origin&&!target.username&&!target.password&&!target.hash,'Explicit isolated loopback HTTP endpoint required');
  assert.ok(init.body==null||typeof init.body==='string','Qualification request body must be a string');
- const headers=new Headers(init.headers);if(!headers.has('host'))headers.set('host','localhost:4314');
+ const headers=new Headers(init.headers);if(!headers.has('host'))headers.set('host','127.0.0.1:4314');
  // Node fetch does not transmit a caller-supplied Host. Use the native HTTP client
  // to exercise the product's unchanged exact Host admission on ephemeral servers.
  return new Promise<Response>((resolve,reject)=>{

@@ -13,13 +13,20 @@ const reply=(hits:unknown[]=[],extra:Record<string,unknown>={})=>({_shards:shard
 const json=(value:unknown,status=200)=>new Response(JSON.stringify(value),{status,headers:{'Content-Type':'application/json'}});
 type Hit=ReturnType<typeof hit>;
 function fixture(options:{hits?:Hit[];allow?:(id:string)=>boolean;type?:(id:string)=>string;permissions?:string[];
-  search?:(body:any,index:number)=>unknown|Response;create?:unknown;close?:unknown;expires?:boolean;measure?:number;orderedIds?:string[]}={}){
+  search?:(body:any,index:number)=>unknown|Response;create?:unknown;close?:unknown;expires?:boolean;measure?:number;orderedIds?:string[];descriptor?:Record<string,unknown>;finalLive?:boolean}={}){
   const sql:{text:string;values:any[]}[]=[],requests:{path:string;method:string;body:any;signal:AbortSignal;headers:Headers}[]=[],releases:boolean[]=[];
   let now=0,searches=0;
   const client:AssetSearchClient={release(destroy){releases.push(!!destroy);},async query(config){
     sql.push({text:config.text,values:config.values??[]});
-    if(config.text.includes('FROM sessions'))return {rows:options.expires===false?[]:[{permissions:options.permissions??['catalog:read'],expires_ms:Date.now()+60000}]};
-    if(config.text.startsWith('SELECT $1::double'))return {rows:[{live:true}]};
+    if(config.text.includes('gc_app_protected_session_v1')){
+      if(options.expires===false)throw Object.assign(new Error('raw-database-error'),{code:'28000'});
+      return {rows:[{format_version:1,session_id:id(90),session_version:3,identity_id:auth.principal.id,
+        selected_tenant_id:auth.principal.tenantId,issuer_id:id(91),identity_binding_id:id(92),
+        authenticated_at:new Date(Date.now()-60_000).toISOString(),expires_at:new Date(Date.now()+60_000).toISOString(),
+        generation:1,tenant_fence_epoch:1,authority_mode:'inactive',content_authority:false,...options.descriptor}]};
+    }
+    if(config.text.startsWith('SELECT permissions FROM memberships'))return {rows:[{permissions:options.permissions??['catalog:read']}]};
+    if(config.text.startsWith('SELECT $1::timestamptz'))return {rows:[{live:options.finalLive??true}]};
     if(config.text.startsWith('SELECT a.id,a.type'))return {rows:config.values![1].filter((value:string)=>options.allow?.(value)??true)
       .map((value:string)=>({id:value,type:options.type?.(value)??'table'})).filter((row:{type:string})=>!config.values![3]||row.type===config.values![3])};
     if(config.text.startsWith('SELECT a.id FROM assets'))return {rows:(options.orderedIds??config.values![1]).slice(config.values![5],config.values![5]+config.values![4]).map((id:string)=>({id}))};
@@ -48,7 +55,11 @@ test('current snapshot authorization precedes PIT; canonical SQL scopes batches 
   assert.equal(result.total,2);assert.deepEqual(result.items.map(x=>x.id),[id(10)]);
   assert.deepEqual(result.facets,[{type:'table',count:1},{type:'view',count:1}]);assert.ok(result.nextCursor);
   assert.match(f.sql[0]!.text,/BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY/);
-  const check=f.sql.find(q=>q.text.includes('FROM sessions'))!;assert.deepEqual(check.values,[auth.sessionHash,auth.principal.id,auth.principal.tenantId]);
+  const check=f.sql.find(q=>q.text.includes('gc_app_protected_session_v1'))!;assert.deepEqual(check.values,[auth.sessionHash,null]);
+  const context=f.sql.find(q=>q.text.includes("set_config('gc.tenant_id'"))!;
+  assert.deepEqual(context.values,[auth.principal.tenantId,auth.principal.id]);
+  assert.ok(f.sql.indexOf(check)<f.sql.indexOf(context),'Protected identity is validated before caller context is set');
+  assert.equal(f.sql.some(q=>/FROM sessions|login_states/.test(q.text)),false);
   const batch=f.sql.find(q=>q.text.startsWith('SELECT a.id,a.type'))!;
   assert.match(batch.text,/a\.tenant_id=\$1::uuid/);assert.match(batch.text,/a\.status='active'/);assert.match(batch.text,/a\.allowed_identities @>/);
   assert.deepEqual(batch.values,[auth.principal.tenantId,[id(10),id(11),id(12)],JSON.stringify([auth.principal.id]),'']);
@@ -246,4 +257,21 @@ test('canonical page order wins over index order and unexpected ordered identifi
     const invalid=fixture();await assert.rejects(invalid.run(auth,{sort:sort as never}),error('VALIDATION_FAILED'));
     assert.equal(invalid.sql.length,0);assert.equal(invalid.requests.length,0);
   }
+});
+
+
+test('protected search descriptor binds exact identity and selected tenant before any index request',async()=>{
+ for(const descriptor of [{identity_id:id(99)},{selected_tenant_id:id(99)}]){
+  const f=fixture({descriptor});await assert.rejects(f.run(auth,{}),error('SESSION_EXPIRED'));
+  assert.equal(f.requests.length,0);assert.equal(f.sql.some(q=>q.text.includes("set_config('gc.tenant_id'")),false);
+ }
+});
+test('malformed protected descriptors and active authority claims fail closed without index access',async()=>{
+ for(const descriptor of [{session_version:0},{content_authority:true},{authority_mode:'active'},{untrusted_permissions:['catalog:read']}]){
+  const f=fixture({descriptor});await assert.rejects(f.run(auth,{}),error('AUTHN_UNAVAILABLE'));assert.equal(f.requests.length,0);
+ }
+});
+test('held search snapshot cannot return data after protected wall-clock expiry',async()=>{
+ const f=fixture({hits:[hit(10)],finalLive:false});await assert.rejects(f.run(auth,{}),error('SESSION_EXPIRED'));
+ assert.equal(f.sql.some(q=>q.text==='COMMIT'),false);assert.equal(f.requests.at(-1)?.method,'DELETE');assert.deepEqual(f.releases,[true]);
 });

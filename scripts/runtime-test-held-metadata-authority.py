@@ -42,8 +42,15 @@ SIGNATURES={'source_guard':'gc_authority.source_guard()',
  'validate_grant':'gc_authority.validate_grant(uuid,uuid,boolean)',
  'validate_read_grants_v1':'gc_authority.validate_read_grants_v1(uuid,uuid[])'}
 
+def migrations():
+ actual=sorted(p.name for p in (ROOT/'packages/db/migrations').glob('*.sql'))
+ successors=['037_application_authentication_bridge.sql'];suffix=actual[len(NAMES):]
+ require(actual[:len(NAMES)]==NAMES and suffix==successors[:len(suffix)],
+  'Exact immutable SQL001–036 prefix and declared contiguous037 successor required')
+ return list(NAMES)
+
 def sources():
- require(sorted(p.name for p in (ROOT/'packages/db/migrations').glob('*.sql'))==NAMES,'Exactly immutable SQL001–036 required')
+ migrations()
  paths={r['path'] for r in _original_sources()}|{PREFLIGHT,SEED,SCOPE,HELD,
   'scripts/runtime-test-held-metadata-authority.py','scripts/test_held_metadata_authority.py',
   'packages/db/migrations/'+MIGRATION}

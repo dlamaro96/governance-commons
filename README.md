@@ -50,12 +50,13 @@ pnpm exec playwright install chromium
 ./dev bootstrap
 ./dev up --profile core
 ./dev seed --dataset harbor-demo
+./dev authn-core-install
 ./dev test --suite smoke
 ```
 
 On Linux, install browser system libraries with `pnpm exec playwright install-deps chromium` before running acceptance tests. You can use an existing compatible browser by setting `GC_BROWSER_EXECUTABLE` to its executable path.
 
-Open **http://localhost:4310**. Bootstrap generates synthetic development credentials in ignored local storage. `./dev down` stops the project while preserving data. The core requires no cloud account, paid service or LLM key. Profiles still under implementation fail explicitly instead of reporting an unexecuted success.
+Open **http://127.0.0.1:4310**. Bootstrap generates synthetic development credentials in ignored local storage. The explicit `authn-core-install` step installs protected local sign-in with a fixed 24-hour lifetime from creation of its persisted installation plan. Repeating it replays that exact plan; restarting the stack does not renew or reactivate it. See [local operations](docs/operations/local-core.md) for explicit installation and revocation. `./dev down` stops the project while preserving data. The core requires no cloud account, paid service or LLM key. Profiles still under implementation fail explicitly instead of reporting an unexecuted success.
 
 ## Built for transparent engineering
 

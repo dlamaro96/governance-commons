@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+import {domainLogin,domainHeaders} from '../fixtures/business-domains-browser.ts';
 /** Real OIDC, source scan, REST and rendered UI journeys. No response stubs. */
 import { test, expect, type APIResponse, type Browser, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
@@ -9,24 +10,15 @@ import type { GraphChangeSet, RelationMigrationContext, RelationMigrationPreview
 import { authoredDefinition, contextRequest, emptyChange, exactAmount, jointCreation, plan, positiveDefinition,
   repairChange, samePairReplacement, type Endpoint } from '../fixtures/relation-migration-api.ts';
 
-const credentials = JSON.parse(readFileSync('.local/bootstrap.json', 'utf8'));
-const base = process.env.GC_BROWSER_BASE_URL || 'http://localhost:4310', origin = new URL(base).origin;
+const base = process.env.GC_BROWSER_BASE_URL || 'http://127.0.0.1:4310', origin = new URL(base).origin;
 const actor = '10000000-0000-4000-8000-000000000001';
-const csrf = new WeakMap<Page, string>();
 const consent = 'I reviewed the complete affected graph, zero-degree assets, owner and state changes, dispositions and this exact preview digest.';
 async function login(page: Page, username = 'steward') {
   page.on('response', response => { if (response.status() === 429 || response.status() >= 500)
     console.info(JSON.stringify({ diagnostic: 'graph_browser_http', method: response.request().method(), status: response.status(), path: new URL(response.url()).pathname })); });
-  await page.goto('/auth/login'); await page.locator('input[name="username"]').fill(username);
-  await page.locator('input[name="password"]').fill(credentials.personas[username]);
-  await page.getByRole('button', { name: 'Sign In', exact: true }).click();
-  await expect(page).toHaveURL(`${origin}/`);
-  await expect(page.getByRole('heading', { level: 1, name: username === 'summit' ? 'Summit Logistics' : 'Harbor Retail' })).toBeVisible();
+  await domainLogin(page, username);
 }
-async function headers(page: Page) {
-  if (!csrf.has(page)) { const response = await page.request.get('/api/v1/me'); expect(response.status()).toBe(200); csrf.set(page, (await response.json()).csrfToken); }
-  return { 'X-CSRF-Token': csrf.get(page)!, Origin: origin, 'Idempotency-Key': crypto.randomUUID() };
-}
+const headers = domainHeaders;
 async function body<T = any>(response: APIResponse, status = 200): Promise<T> {
   expect(response.status(), await response.text()).toBe(status); return response.json();
 }

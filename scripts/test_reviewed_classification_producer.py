@@ -55,7 +55,7 @@ class PreservationControls(unittest.TestCase):
     elif fault=='extra_function':x[5].append({'signature':'gc_authority.escape()'})
     elif fault=='missing_guard':x[7].pop()
     with self.assertRaises(RuntimeError):g.preserve_installation(*x)
- def test_declared036_successor_is_excluded_and_gapped_or_unknown_inventory_refuses(self):
+ def test_declared037_successor_is_excluded_and_gapped_or_unknown_inventory_refuses(self):
      with tempfile.TemporaryDirectory() as directory:
          root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)
          for name in g.NAMES:(folder/name).write_text('-- historical prefix')
@@ -63,14 +63,14 @@ class PreservationControls(unittest.TestCase):
              path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text('')
          with patch.object(g,'ROOT',root),patch.object(g.volume,'ROOT',root),patch.object(g,'_original_sources',return_value=[]):
              before=g.sources();self.assertEqual(len(g.migrations()),35)
-             suffix=['036_authority_scope_alignment.sql']
+             suffix=['036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql']
              for name in suffix:
                  path=folder/name;path.write_text('-- declared successor only')
                  self.assertEqual(g.migrations(),g.NAMES);self.assertEqual(g.sources(),before)
                  self.assertNotIn('packages/db/migrations/'+name,{row['path'] for row in before})
                  path.write_text('-- successor content never belongs to this historical profile')
                  self.assertEqual(g.sources(),before)
-             for name in ('036_undeclared.sql','037_undeclared.sql'):
+             for name in ('036_undeclared.sql','037_undeclared.sql','038_undeclared.sql'):
                  extra=folder/name;extra.write_text('-- unreviewed')
                  with self.assertRaises(RuntimeError):g.sources()
                  extra.unlink()

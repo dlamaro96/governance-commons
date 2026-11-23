@@ -80,6 +80,8 @@ jobs:
         run: python3 scripts/test_reviewed_classification_producer.py
       - name: Held metadata authority qualification controls
         run: python3 scripts/test_held_metadata_authority.py
+      - name: Application authentication bridge qualification controls
+        run: python3 scripts/test_application_authn_bridge.py
       - name: Explicit relation-candidate upgrade controls
         run: python3 scripts/test_relation_candidate_upgrade.py
       - name: Repaired governance chain controls
@@ -95,7 +97,9 @@ jobs:
       - name: Authentication deployment role boundaries
         run: python3 scripts/test_authentication_roles.py
       - name: Source credential persistence
-        run: python3 scripts/test_runtime_bootstrap.py
+        run: |
+          python3 scripts/test_runtime_bootstrap.py
+          python3 scripts/test_runtime_keycloak_client.py
       - name: Synthetic reference quality fixture admission
         run: python3 scripts/test_reference_quality_fixture.py
       - name: Owned reference-quality worker qualification controls
@@ -252,6 +256,9 @@ jobs:
       - name: Seed independent synthetic tenants
         id: seed
         run: ./dev seed --dataset harbor-demo
+      - name: Explicitly install protected core authentication
+        id: core_authentication_install
+        run: ./dev authn-core-install
       - name: Verify PostgreSQL connector against the live source
         if: success() && matrix.shard == 'foundation'
         id: connectors
@@ -320,6 +327,10 @@ jobs:
         if: success() && matrix.shard == 'foundation'
         id: held_metadata_authority
         run: ./dev test --suite held-metadata-authority
+      - name: Verify protected application authentication bridge and preservation
+        if: success() && matrix.shard == 'foundation'
+        id: application_authn_bridge
+        run: ./dev test --suite application-authn-bridge
       - name: Verify source connector identity upgrade and preservation
         if: success() && matrix.shard == 'foundation'
         id: source_connectors_upgrade
@@ -444,6 +455,7 @@ jobs:
           GC_SERVICES_RESULT: ${{ steps.services.outcome }}
           GC_OBJECT_STORE_RESULT: ${{ steps.object_store.outcome }}
           GC_SEED_RESULT: ${{ steps.seed.outcome }}
+          GC_CORE_AUTHENTICATION_INSTALL_RESULT: ${{ steps.core_authentication_install.outcome }}
           GC_CONNECTORS_RESULT: ${{ steps.connectors.outcome }}
           GC_SECURITY_RESULT: ${{ steps.security.outcome }}
           GC_MODEL_UPGRADE_RESULT: ${{ steps.model_upgrade.outcome }}
@@ -461,6 +473,7 @@ jobs:
           GC_CLASSIFICATION_LABEL_IDENTITIES_RESULT: ${{ steps.classification_label_identities.outcome }}
           GC_REVIEWED_CLASSIFICATION_FACTS_RESULT: ${{ steps.reviewed_classification_facts.outcome }}
           GC_HELD_METADATA_AUTHORITY_RESULT: ${{ steps.held_metadata_authority.outcome }}
+          GC_APPLICATION_AUTHN_BRIDGE_RESULT: ${{ steps.application_authn_bridge.outcome }}
           GC_SOURCE_CONNECTORS_UPGRADE_RESULT: ${{ steps.source_connectors_upgrade.outcome }}
           GC_POSTGRES_TARGETS_RESULT: ${{ steps.postgres_targets.outcome }}
           GC_RELATION_CANDIDATE_ORIGINAL_RESULT: ${{ steps.relation_candidate_original.outcome }}

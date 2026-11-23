@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+import {createProtectedCoreSession,closeProtectedCoreSessions} from '../fixtures/protected-core-authentication.ts';
 import { pacedFetch as fetch } from '../fixtures/http-budget.ts';
 import assert from 'node:assert/strict';
 import { after, test } from 'node:test';
@@ -46,10 +47,7 @@ async function publish(input: AssetTypeDefinition) {
   return scope(tenant, steward, tx => publishAssetType(tx, principal, randomUUID(), input.id, input.version - 1, input, check.previewDigest, hooks));
 }
 async function session(actor = steward, organization = tenant) {
-  const token = randomUUID() + randomUUID(), csrf = randomUUID();
-  await db.insertInto('sessions').values({ id_hash: createHash('sha256').update(token).digest('hex'), identity_id: actor,
-    tenant_id: organization, csrf, expires_at: new Date(Date.now() + 120_000) }).execute();
-  return { Cookie: `gc_session=${token}`, 'X-CSRF-Token': csrf, Origin: origin, 'Content-Type': 'application/json' };
+  return (await createProtectedCoreSession(actor, organization)).headers;
 }
 const request = (path: string, headers: Record<string, string>, method = 'GET', body?: unknown) =>
   fetch(base + '/api/v1' + path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body) });
@@ -335,4 +333,4 @@ test('late lifecycle journal failure restores the canonical state, optimistic ve
   assert.equal(result.state, 'active'); assert.equal(result.assetVersion, 3);
 });
 
-after(async () => { await db.destroy(); });
+after(async () => { await closeProtectedCoreSessions(); await db.destroy(); });

@@ -82,13 +82,13 @@ class Controls(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             gate.migrations()
 
-    def test_current_schema_binds_all_36_migrations_including_authority_scope_alignment(self):
-        self.assertEqual(len(gate.NAMES), 36)
-        self.assertEqual(gate.NAMES[-3:], ['034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql'])
+    def test_current_schema_binds_all_37_migrations_including_application_authentication_bridge(self):
+        self.assertEqual(len(gate.NAMES), 37)
+        self.assertEqual(gate.NAMES[-4:], ['034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql'])
         before = {row['path']: row['sha256'] for row in gate.sources()}
         for name in gate.NAMES:
             self.assertIn('packages/db/migrations/' + name, before)
-        path = 'packages/db/migrations/036_authority_scope_alignment.sql'
+        path = 'packages/db/migrations/037_application_authentication_bridge.sql'
         self.write(path, '-- changed current migration')
         after = {row['path']: row['sha256'] for row in gate.sources()}
         self.assertNotEqual(before[path], after[path])
@@ -97,12 +97,12 @@ class Controls(unittest.TestCase):
             gate.sources()
 
     def test_current_schema_refuses_renamed_or_unreviewed_successor(self):
-        path = self.root / 'packages/db/migrations/036_authority_scope_alignment.sql'
-        renamed = path.with_name('036_undeclared.sql')
+        path = self.root / 'packages/db/migrations/037_application_authentication_bridge.sql'
+        renamed = path.with_name('037_undeclared.sql')
         path.rename(renamed)
         with self.assertRaises(RuntimeError): gate.sources()
         renamed.rename(path)
-        self.write('packages/db/migrations/037_undeclared.sql', '-- unreviewed successor')
+        self.write('packages/db/migrations/038_undeclared.sql', '-- unreviewed successor')
         with self.assertRaises(RuntimeError): gate.sources()
 
     def test_transitive_imports_and_missing_source_refusal(self):

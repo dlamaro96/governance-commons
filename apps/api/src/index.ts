@@ -9,7 +9,7 @@ import {Id,SourceInput,SourceListInput,AssetEdit,ScanCompletion} from '../../../
 import {sourceStorage,sourceConfiguration,mayReconcileAbsence,validateSourceInput} from '../../../packages/connectors/src/sources.ts';
 import {listSources,type SourceListQuery} from '../../../packages/connectors/src/source-list.ts';
 import {connectorInventory} from '../../../packages/connectors/src/capabilities.ts';
-import {authenticate,installAuth,siteTenant,random,publicUrl} from './security.ts';
+import {authenticate,installAuth,siteTenant,publicUrl} from './security.ts';
 import {assetView,sourceView,jobView,auditView,visibleAssets,visibleAudit,record,once} from './repository.ts';
 import {startProjector} from './search.ts';
 import {searchAssets,type AssetSearchQuery} from './asset-search.ts';
@@ -59,8 +59,7 @@ await installReferenceData(app);
 await installReferenceStructures(app);
 await installReferenceImport(app);
 const params={params:Type.Object({id:Id})};
-app.get('/api/v1/me',async req=>{const a=await authenticate(req);return {user:{id:a.principal.id,name:a.principal.name},tenant:a.tenants.find(x=>x.id===a.principal.tenantId),tenants:a.tenants,permissions:a.principal.permissions,csrfToken:a.csrf};});
-app.post('/api/v1/session/tenant',{schema:{body:Type.Object({tenantId:Id},{additionalProperties:false})}},async req=>{const a=await authenticate(req),tenant=(req.body as any).tenantId;if(!a.tenants.some(x=>x.id===tenant))throw new Problem(403,'TENANT_DENIED','Organization access is not permitted.');await db.updateTable('sessions').set({tenant_id:tenant,csrf:random()}).where('id_hash','=',a.sessionHash).execute();return {changed:true};});
+app.get('/api/v1/me',async req=>{const a=await authenticate(req);return {user:{id:a.principal.id,name:a.principal.name},tenant:a.tenants.find(x=>x.id===a.principal.tenantId),tenants:a.tenants,permissions:a.principal.permissions,csrfToken:a.csrf,sessionVersion:a.sessionVersion};});
 app.get('/api/v1/openapi',async req=>{await authenticate(req);return app.swagger();});
 app.get('/api/v1/members',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'catalog:write');return scope(p.tenantId,p.id,async tx=>({items:await tx.selectFrom('memberships').innerJoin('identities','identities.id','memberships.identity_id').select(['identities.id','identities.name','memberships.role']).where('memberships.active','=',true).where('identities.active','=',true).where('memberships.tenant_id','=',p.tenantId).execute()}));});
 app.get('/api/v1/assets',{schema:{querystring:Type.Object({q:Type.Optional(Type.String({maxLength:200})),type:Type.Optional(Type.String({maxLength:64})),limit:Type.Optional(Type.Integer({minimum:1,maximum:100})),cursor:Type.Optional(Type.String({maxLength:2048})),sort:Type.Optional(Type.Union([Type.Literal('name'),Type.Literal('name-desc'),Type.Literal('updated')]))},{additionalProperties:false})}},async req=>{

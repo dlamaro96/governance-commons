@@ -39,10 +39,10 @@ NAMES = [*read.NAMES, '032_relation_candidate_validation.sql']
 
 def migrations():
     actual = sorted(p.name for p in (ROOT / 'packages/db/migrations').glob('*.sql'))
-    successors = ['033_content_security_revisions.sql', '034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql']
+    successors = ['033_content_security_revisions.sql', '034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql']
     suffix = actual[len(NAMES):]
     require(actual[:len(NAMES)] == NAMES and suffix == successors[:len(suffix)],
-            'Exact immutable SQL001–032 prefix and declared contiguous033–036 successors required')
+            'Exact immutable SQL001–032 prefix and declared contiguous033–037 successors required')
     return list(NAMES)
 
 def sources():

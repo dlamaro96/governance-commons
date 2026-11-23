@@ -61,7 +61,7 @@ export async function buildLoginBroker({config:input,authentication,oidc,readine
    if(signal.aborted)return loginInvalid();
    // No cookies on uncertain COMMIT, no retry of one-use token issuance, no implicit legacy login.
    setAuthnCookie(reply,config,'session',session,issued.expiresAt);setAuthnCookie(reply,config,'csrf',csrf,issued.expiresAt);
-   return reply.code(302).header('location','/authn/').send();
+   return reply.code(302).header('location',config.postLoginPath??'/authn/').send();
   }catch(error){return sendAuthnError(reply,mapAuthenticationError(error,'login'));}
  });
  return app;

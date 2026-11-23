@@ -6,20 +6,21 @@ from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('candidate_gate',ROOT/'scripts/runtime-test-relation-candidate-upgrade.py');g=importlib.util.module_from_spec(spec);spec.loader.exec_module(g)
 class Controls(unittest.TestCase):
- def test_declared036_inventory_preserves_exact032_target_and_rejects_gaps_or_unknown_names(self):
+ def test_declared037_inventory_preserves_exact032_target_and_rejects_gaps_or_unknown_names(self):
   historical=g.sources();paths={row['path'] for row in historical}
   self.assertNotIn('packages/db/migrations/036_authority_scope_alignment.sql',paths)
+  self.assertNotIn('packages/db/migrations/037_application_authentication_bridge.sql',paths)
   self.assertEqual(sorted(p.rsplit('/',1)[-1] for p in paths if p.startswith('packages/db/migrations/') and p.endswith('.sql')),g.NAMES)
   with tempfile.TemporaryDirectory() as directory:
    root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)
    for name in g.NAMES:(folder/name).write_text('-- immutable historical prefix')
    with patch.object(g,'ROOT',root):
-    for name in ['033_content_security_revisions.sql', '034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql']:
+    for name in ['033_content_security_revisions.sql', '034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql']:
      path=folder/name;path.write_text('-- declared successor, never applied here')
      self.assertEqual(g.migrations(),g.NAMES);self.assertEqual(len(g.migrations()),32)
      path.write_text('-- changed successor bytes are outside the historical migration set')
      self.assertEqual(g.migrations(),g.NAMES)
-    for name in ('036_undeclared.sql','037_undeclared.sql'):
+    for name in ('036_undeclared.sql','037_undeclared.sql','038_undeclared.sql'):
      extra=folder/name;extra.write_text('-- unreviewed')
      with self.assertRaises(RuntimeError):g.migrations()
      extra.unlink()
@@ -32,7 +33,7 @@ class Controls(unittest.TestCase):
   self.assertNotIn('tests/fixtures/business-domains.ts',paths)
   self.assertEqual(g.sha((ROOT/'packages/db/migrations/018_glossary_nominal_candidates.sql').read_bytes()),'60361c7b2ddee2f1f095d0e832116b4b97cc04fdbee6a88b398721e5bee13fea')
  def test_fixed031_baseline_does_not_follow_current_import033(self):
-  self.assertEqual(len(g.transport.NAMES),36);self.assertEqual(g.transport.NAMES[-1],'036_authority_scope_alignment.sql')
+  self.assertEqual(len(g.transport.NAMES),37);self.assertEqual(g.transport.NAMES[-1],'037_application_authentication_bridge.sql')
   self.assertEqual(len(g.BASE_NAMES),31);self.assertEqual(g.BASE_NAMES[-1],'031_authority_read_grants.sql')
   self.assertEqual(g.NAMES,[*g.BASE_NAMES,g.MIGRATION]);self.assertEqual(g.NAMES.count(g.MIGRATION),1)
   self.assertEqual(g.migrations(),g.NAMES)

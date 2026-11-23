@@ -93,19 +93,27 @@ function appendCookie(reply: FastifyReply, value: string): void {
  // Fastify appends Set-Cookie itself; supplying earlier values would duplicate them.
  reply.header('set-cookie', value);
 }
-function cookieBase(config: PublicAuthnConfig, kind: CookieKind, value: string): string {
+function cookieBase(config: PublicAuthnConfig, kind: CookieKind, value: string, path = config.environment === 'production' || kind !== 'attempt' ? '/' : '/authn'): string {
  const names = cookieNames(config);
- return `${names[kind]}=${value}; Path=${config.environment === 'production' ? '/' : '/authn'}; HttpOnly; SameSite=Lax${config.environment === 'production' ? '; Secure' : ''}`;
+ return `${names[kind]}=${value}; Path=${path}; HttpOnly; SameSite=Lax${config.environment === 'production' ? '; Secure' : ''}`;
 }
 export function setAuthnCookie(reply: FastifyReply, config: PublicAuthnConfig, kind: CookieKind, value: string, expiresAt: string): void {
  if (reply.sent || requestAbortSignal(reply.request).aborted) throw new AuthnHttpError('AUTHN_UNAVAILABLE');
  if (!(kind === 'attempt' ? attemptPattern : secretPattern).test(value)) throw new AuthnHttpError('AUTHN_UNAVAILABLE');
  const expiry = Date.parse(expiresAt), remaining = Math.floor((expiry - Date.now()) / 1000);
  if (!Number.isFinite(expiry) || remaining < 1 || remaining > (kind === 'attempt' ? 300 : 1800)) throw new AuthnHttpError('AUTHN_UNAVAILABLE');
+ // Retire the old local path before issuing a root-scoped application cookie.
+ if (config.environment !== 'production' && kind !== 'attempt') clearLegacyCookie(reply, config, kind);
  appendCookie(reply, `${cookieBase(config, kind, value)}; Max-Age=${remaining}; Expires=${new Date(expiry).toUTCString()}`);
 }
+function clearLegacyCookie(reply: FastifyReply, config: PublicAuthnConfig, kind: CookieKind): void {
+ appendCookie(reply, `${cookieBase(config, kind, '', '/authn')}; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT`);
+}
 export function clearAuthnCookies(reply: FastifyReply, config: PublicAuthnConfig, kinds: readonly CookieKind[]): void {
- for (const kind of kinds) appendCookie(reply, `${cookieBase(config, kind, '')}; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT`);
+ for (const kind of kinds) {
+  if (config.environment !== 'production' && kind !== 'attempt') clearLegacyCookie(reply, config, kind);
+  appendCookie(reply, `${cookieBase(config, kind, '')}; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT`);
+ }
 }
 export const randomSecret = (): string => randomBytes(32).toString('base64url');
 export const sha256 = (value: string): Digest => createHash('sha256').update(value, 'utf8').digest('hex') as Digest;

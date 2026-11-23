@@ -10,7 +10,7 @@ async function login(page: Page, username: string) {
   await page.locator('input[name="username"]').fill(username);
   await page.locator('input[name="password"]').fill(credentials.personas[username]);
   await page.getByRole('button', { name: 'Sign In', exact: true }).click();
-  await expect(page).toHaveURL('http://localhost:4310/');
+  await expect(page).toHaveURL('http://127.0.0.1:4310/');
   await expect(page.getByRole('heading', { level: 1, name: username === 'summit' ? 'Summit Logistics' : 'Harbor Retail' })).toBeVisible();
 }
 
@@ -150,7 +150,7 @@ test('E2E-03: consumer restrictions and cross-tenant catalog isolation use real 
   expect(me.permissions).not.toContain('sources:write');
   await expect(page.getByRole('link', { name: 'Sources & scans', exact: true })).toHaveCount(0);
   const denied = await page.request.post('/api/v1/sources', {
-    headers: { 'X-CSRF-Token': me.csrfToken, Origin: 'http://localhost:4310', 'Idempotency-Key': crypto.randomUUID() },
+    headers: { 'X-CSRF-Token': me.csrfToken, Origin: 'http://127.0.0.1:4310', 'Idempotency-Key': crypto.randomUUID() },
     data: { name: 'Forbidden synthetic source', host: 'source-postgres', port: 5432, database: 'harbor', schema: 'public', secretRef: 'demo-postgres' },
   });
   expect(denied.status()).toBe(403);
