@@ -231,3 +231,5 @@ align own/onward/connected scope checks and parent time ceilings without changin
 SQL001–035 or silently rewriting retained grant history. Bounded atomic preflight
 must refuse incompatible active graphs pending explicit remediation. Pure
 composition is being prepared separately; it has no runtime activation claim.
+
+Further snapshot transport batching passes the isolated SQL024 repaired chain: **263 native cases across 13 invocations**, 176 bound sources, preservation, replay and owned cleanup, in 332.580091 seconds within the unchanged 600-second lifecycle. Both original digest algorithms and all budgets remain unchanged; 56 affected host controls pass. This is one local observation. The earlier exact `7b8babf` hosted checkpoint remains **NOT_PASSED** (46 successes, one failure and one skip); the local pass does not replace fresh hosted qualification. [Transport evidence](../verification/reference-snapshot-transport-local.json) and [retained hosted failure](../verification/hosted-checkpoint-7b8babf-failed.json).

@@ -2103,6 +2103,27 @@
         "verified_files": 347,
         "evidence_sha256": "8fec1b8800eb71d595f17c1e95707d50bd7f2960e693c883d7fc8a5afdee9280"
       }
+    },
+    {
+      "path": "docs/verification/reference-snapshot-transport-local.json",
+      "scope": "Isolated repaired SQL024 snapshot transport: 263 native cases across 13 invocations, full preservation/replay/cleanup and 56 host controls; hosted qualification remains separate.",
+      "source_binding": {
+        "base_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+        "dirty": true,
+        "method": "Exact 176-source execution inventory, two explicit source differences, independent retained-log/source readback and unchanged 600-second lifecycle.",
+        "verified_files": 176,
+        "evidence_sha256": "97df901f9e356bdef90c6e43c1b60e1699aeb99d776d489ef0e42e9846483416"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-7b8babf-failed.json",
+      "scope": "Retained exact 7b8babf hosted Development checkpoint: 46 success, one failure and one skip; result remains NOT_PASSED.",
+      "source_binding": {
+        "implementation_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+        "tested_merge_commit": "771a039853c05cf8934611887fe8a3635fd7d509",
+        "method": "Authenticated exact-head/merge-parent/same-tree verification and all 48 mandatory outcomes; original failure and missing source-proof disclosures retained.",
+        "evidence_sha256": "33f0b8538eef878d401aecce79e57838a09a2ab45ed0470f9d9b99317703b01a"
+      }
     }
   ],
   "limitations": [
