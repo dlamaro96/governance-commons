@@ -90,6 +90,16 @@ def tap_summary(output, expected):
     return result
 
 
+class QualificationDeadlineExceeded(RuntimeError):
+    """Explicit origin of an unchanged qualification deadline."""
+    def __init__(self, budget, stage, phase):
+        if budget not in ('execution', 'command', 'cleanup') or stage not in ('admission', 'running'):
+            raise ValueError('Invalid qualification deadline marker')
+        self.budget, self.stage, self.phase = budget, stage, phase
+        super().__init__('Bounded qualification lifecycle deadline exceeded' if stage == 'admission'
+                         else 'Bounded qualification command timed out')
+
+
 class Harness:
     def __init__(self):
         os.umask(0o077)
@@ -130,7 +140,9 @@ class Harness:
         if not cleanup:
             self.admission()
         budget_end = self.cleanup_deadline if cleanup else self.deadline
-        require(budget_end is not None and time.monotonic() < budget_end, 'Bounded qualification lifecycle deadline exceeded')
+        require(budget_end is not None, 'Bounded qualification lifecycle deadline exceeded')
+        if time.monotonic() >= budget_end:
+            raise QualificationDeadlineExceeded('cleanup' if cleanup else 'execution', 'admission', self.phase)
         self.serial += 1
         label = f'{self.serial:03d}-{self.phase}'
         process = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=ROOT)
@@ -149,12 +161,14 @@ class Harness:
         poll.register(process.stdout, selectors.EVENT_READ, 'stdout')
         poll.register(process.stderr, selectors.EVENT_READ, 'stderr')
         data = {'stdout': bytearray(), 'stderr': bytearray()}
-        deadline = min(time.monotonic() + timeout, budget_end)
+        command_deadline = time.monotonic() + timeout
+        deadline = min(command_deadline, budget_end)
+        deadline_budget = ('cleanup' if cleanup else 'execution') if budget_end <= command_deadline else 'command'
         failure = None
         try:
             while poll.get_map():
                 if time.monotonic() >= deadline:
-                    raise RuntimeError('Bounded qualification command timed out')
+                    raise QualificationDeadlineExceeded(deadline_budget, 'running', self.phase)
                 if not cleanup:
                     self.admission()
                 for key, _ in poll.select(.2):

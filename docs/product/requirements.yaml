@@ -54580,7 +54580,8 @@
         "docs/verification/reviewed-classification-facts-local.json",
         "docs/verification/reviewed-classification-facts-integrated-local.json",
         "docs/verification/held-metadata-authority-local.json",
-        "docs/verification/held-metadata-authority-integrated-local.json"
+        "docs/verification/held-metadata-authority-integrated-local.json",
+        "docs/verification/authority-snapshot-diagnostics-local.json"
       ]
     },
     {
@@ -54707,7 +54708,8 @@
         "docs/verification/reviewed-classification-facts-local.json",
         "docs/verification/reviewed-classification-facts-integrated-local.json",
         "docs/verification/held-metadata-authority-local.json",
-        "docs/verification/held-metadata-authority-integrated-local.json"
+        "docs/verification/held-metadata-authority-integrated-local.json",
+        "docs/verification/authority-snapshot-diagnostics-local.json"
       ]
     },
     {
@@ -55153,7 +55155,8 @@
         "docs/verification/reviewed-classification-facts-local.json",
         "docs/verification/reviewed-classification-facts-integrated-local.json",
         "docs/verification/held-metadata-authority-local.json",
-        "docs/verification/held-metadata-authority-integrated-local.json"
+        "docs/verification/held-metadata-authority-integrated-local.json",
+        "docs/verification/authority-snapshot-diagnostics-local.json"
       ]
     },
     {
@@ -55294,7 +55297,8 @@
         "docs/verification/reviewed-classification-facts-local.json",
         "docs/verification/reviewed-classification-facts-integrated-local.json",
         "docs/verification/held-metadata-authority-local.json",
-        "docs/verification/held-metadata-authority-integrated-local.json"
+        "docs/verification/held-metadata-authority-integrated-local.json",
+        "docs/verification/authority-snapshot-diagnostics-local.json"
       ]
     },
     {

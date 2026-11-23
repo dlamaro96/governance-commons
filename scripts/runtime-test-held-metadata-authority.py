@@ -190,11 +190,46 @@ def execute(h):
    'One780-second execution deadline includes source admission and all schemas;90-second owned cleanup inside900-second wrapper.',
    'Cached dependencies and exact current read-only mounts; no live-vendor or release qualification.'])
 
+# Closed stdout projection only. Raw reports, logs and exception text stay private.
+DIAGNOSTIC_PHASES=frozenset(PHASES)|frozenset({
+ 'admission','database-start','cleanup','schema-11','schema-12','schema-13','schema-30',
+ 'classification-label-install032','classification-label-before033','classification-label-install033',
+ 'classification-label-seed-history','classification-label-before034','classification-label-upgrade',
+ 'classification-label-replay-before','classification-label-populated-replay',
+ 'reviewed-producer-test-principals','reviewed-producer-before035','reviewed-producer-install035',
+ 'reviewed-producer-replay-before','reviewed-producer-populated-replay','held-metadata-test-principals',
+ 'scope-alignment-before036','scope-alignment-install036','scope-alignment-replay-before','held-metadata-populated-replay'})
+DIAGNOSTIC_PHASES=DIAGNOSTIC_PHASES|frozenset('schema-'+phase for phase in DIAGNOSTIC_PHASES)
+
+def safe_failure(error,phase):
+ result={'phase':'none' if error is None else 'unknown','category':'none' if error is None else 'other_failure',
+         'deadlineBudget':'none','deadlineStage':'none'}
+ if error is None:return result
+ if isinstance(error,authority.base.QualificationDeadlineExceeded):
+  if error.budget in ('execution','command','cleanup') and error.stage in ('admission','running'):
+   result.update(category='deadline_exceeded',deadlineBudget=error.budget,deadlineStage=error.stage)
+   phase=error.phase
+ elif isinstance(error,KeyboardInterrupt):result['category']='interrupted'
+ elif type(error) is RuntimeError and error.args==('Qualification command failed; retained bounded diagnostic',):
+  result['category']='command_failed'
+ elif type(error) is RuntimeError and error.args==('Native suite failed; inspect retained private TAP',):
+  result['category']='native_failed'
+ result['phase']=phase if type(phase) is str and phase in DIAGNOSTIC_PHASES else 'unknown'
+ return result
+
+def safe_diagnostics(execution_failure,cleanup_failure,cleanup):
+ cleanup=cleanup if type(cleanup) is dict else {}
+ return {'execution':safe_failure(*(execution_failure or (None,'none'))),
+         'cleanup':{'failure':safe_failure(*(cleanup_failure or (None,'none'))),
+                    **{key:cleanup.get(key) if type(cleanup.get(key)) is bool else None
+                       for key in ('ownedRemoved','resourceInventoryPreserved','generatedCredentialsRemoved')}}}
+
 def main():
  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-local',action='store_true');args=parser.parse_args()
- require(args.run_local,'Explicit --run-local required');h=Harness();failed=False
+ require(args.run_local,'Explicit --run-local required');h=Harness();failed=False;execution_failure=None;cleanup_failure=None
  try:execute(h)
  except BaseException as error:
+  execution_failure=(error,h.phase)
   failed=True;h.report.update(failed_phase=h.phase,error_type=type(error).__name__,error='Inspect bounded private evidence')
  finally:
   try:
@@ -202,13 +237,16 @@ def main():
    if h.resources_before is not None:
     observed=h.inventory();(h.folder/'resources-after.json').write_text(json.dumps(observed,sort_keys=True)+'\n')
     require(observed==h.resources_before,'Preexisting resource inventory changed');h.report['cleanup']['resourceInventoryPreserved']=True
-  except BaseException as error:failed=True;h.report['cleanupErrorType']=type(error).__name__
+  except BaseException as error:
+   failed=True;cleanup_failure=(error,'cleanup');h.report['cleanupErrorType']=type(error).__name__
   finally:
    try:
     h.secret_path.unlink(missing_ok=True);require(not h.secret_path.exists(),'Generated credential cleanup refused');h.report.setdefault('cleanup',{})['generatedCredentialsRemoved']=True
    except BaseException as error:
     failed=True;h.report.setdefault('cleanup',{})['generatedCredentialsRemoved']=False;h.report['credentialCleanupErrorType']=type(error).__name__
+    if cleanup_failure is None:cleanup_failure=(error,'cleanup')
   h.report.update(result='FAIL' if failed else 'PASS',recorded_at=datetime.now(timezone.utc).isoformat(),evidence_directory=str(h.folder.relative_to(ROOT)))
   h.report['private_logs']=[{'path':str(p.relative_to(ROOT)),'sha256':sha(p.read_bytes())} for p in sorted(h.folder.glob('*.log'))];h.save(final=True)
- print(json.dumps({'result':h.report['result'],'report':str(REPORT.relative_to(ROOT))}));return int(failed)
+ print(json.dumps({'result':h.report['result'],'report':str(REPORT.relative_to(ROOT)),
+  'diagnostics':safe_diagnostics(execution_failure,cleanup_failure,h.report.get('cleanup'))}));return int(failed)
 if __name__=='__main__':raise SystemExit(main())

@@ -189,7 +189,7 @@ const result=await alternate(f,{});assert.equal(installs,1);assert.equal(f.regis
   self.assertEqual(g.volume.predecessor_pins(),[])
   with self.assertRaises(RuntimeError):g.volume.effective_sources(rows,'undeclared')
  def test_snapshot_includes_complete_table_target(self):
-  calls=[];h=types.SimpleNamespace(sql=lambda text:(calls.append(text) or '{"rows":2,"sha256":"'+'a'*64+'"}'))
+  calls=[];h=types.SimpleNamespace(sql=lambda text:(calls.append(text) or '{"table":"public.quality_rules","rows":2,"sha256":"'+'a'*64+'"}'))
   self.assertEqual(g.snapshot(h,['public.quality_rules'])['public.quality_rules']['rows'],2)
   self.assertIn('to_jsonb(r)::text',calls[0]);self.assertNotIn("-'table_asset_id'",calls[0])
  def apply_fixture(self,prefix,tamper=None):

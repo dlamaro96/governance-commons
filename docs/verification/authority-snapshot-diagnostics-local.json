@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "result": "PASS_SCOPED_LOCAL",
+  "release_qualified": false,
+  "recorded_at": "2026-11-23T16:46:10.714809+00:00",
+  "base_commit": "86e076e0e62d7bbc96947d5465f326cb311b67fb",
+  "working_tree_dirty": true,
+  "scope": "Canonical snapshot transport and bounded held-authority diagnostics; application behavior and all native deadlines unchanged.",
+  "changes": [
+    "Batch at most 16 complete canonical table hashes in one read-only repeatable-read PostgreSQL transaction; preserve exact original sorted row-hash expression.",
+    "Refuse malformed, duplicate, reordered, missing or surplus snapshot results and any SQL-error prefix.",
+    "Mark the existing execution, command and cleanup deadline origins explicitly; emit only allowlisted phases/categories and cleanup booleans/null. Raw reports, logs, exception text and credentials stay private.",
+    "Invoke the new 23-case snapshot control suite in quality; preserve all 52 behavior owners and individual deadlines."
+  ],
+  "inputs": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "a1f5c11475643f9643001a95883ea06878c3f3f3e1db24e85b000e902715e2bd"
+    },
+    {
+      "path": "scripts/runtime-test-authority-authn-foundation.py",
+      "sha256": "f4d2699f134eb5284e28dff1e5482f9cae3719ccd29ead8e16d618953dced4ce"
+    },
+    {
+      "path": "scripts/runtime-test-authority-read-upgrade.py",
+      "sha256": "0d783979eaa80d1489fe02e8ed12a995412c2fcbfc0637ad6659ba0527be4cd5"
+    },
+    {
+      "path": "scripts/runtime-test-held-metadata-authority.py",
+      "sha256": "82f8f4073bfb45ace2c6d3966754c335ce2c3923fedade8d65ddb066d7c7c4fb"
+    },
+    {
+      "path": "scripts/test_authority_read_upgrade.py",
+      "sha256": "8084d471edf8bef891bd43ece90b8e12b1d6f8fa288ff00e92a30988f412b547"
+    },
+    {
+      "path": "scripts/test_authority_snapshot_batching.py",
+      "sha256": "eda705e8193bb4bfce6e837fe0abb0ff4e4f514b01249538beb12d2300c389a4"
+    },
+    {
+      "path": "scripts/test_held_metadata_authority.py",
+      "sha256": "a5fd472d969e89f67cd4995ed6ad6a4399cc4927f19af26b8b2f6cbab5270934"
+    }
+  ],
+  "sql_equivalence": {
+    "result": "PASS",
+    "checks": 18,
+    "tables": 33,
+    "namespaces": [
+      "public",
+      "gc_authn",
+      "gc_authority"
+    ],
+    "old_calls": 33,
+    "new_calls": 3,
+    "cases": [
+      "empty tables",
+      "NULL fields",
+      "Unicode/JSON/timestamps/arrays/bytea",
+      "identical duplicate rows",
+      "insertion-order change",
+      "duplicate addition and removal",
+      "first/later batch SQL failure after successful prefixes",
+      "read-only write refusal",
+      "empty inventory"
+    ],
+    "tools": {
+      "python": "3.14.5",
+      "docker": "27.3.1",
+      "postgres": "17.11 (Debian 17.11-1.pgdg12+2)"
+    },
+    "postgres_image": "sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+    "owned_cleanup": true,
+    "receipt_sha256": "6e22bce7073d99038cab369365654ee16b6c78427841fa36b6153a425e0dfa89",
+    "limitations": "AST-extracted exact functions against disposable synthetic fixtures; not a performance benchmark or an application authorization test."
+  },
+  "held_authority": {
+    "result": "PASS",
+    "command": "python3 scripts/runtime-test-held-metadata-authority.py --run-local",
+    "profile": "isolated-held-metadata-authority-sql036",
+    "started_at": "2026-11-23T16:38:00.694363+00:00",
+    "recorded_at": "2026-11-23T16:42:36.975529+00:00",
+    "tests": {
+      "tests": 140,
+      "pass": 140,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "source_files": 290,
+    "source_manifest_sha256": "41d5ae69ccf8936926d3a8846a1895e780d9d32cdd56201cd9788360e9ae48f7",
+    "source_changes_from_base": [
+      {
+        "path": ".github/workflows/ci.yml",
+        "sha256": "a1f5c11475643f9643001a95883ea06878c3f3f3e1db24e85b000e902715e2bd"
+      },
+      {
+        "path": "scripts/runtime-test-authority-authn-foundation.py",
+        "sha256": "f4d2699f134eb5284e28dff1e5482f9cae3719ccd29ead8e16d618953dced4ce"
+      },
+      {
+        "path": "scripts/runtime-test-authority-read-upgrade.py",
+        "sha256": "0d783979eaa80d1489fe02e8ed12a995412c2fcbfc0637ad6659ba0527be4cd5"
+      },
+      {
+        "path": "scripts/runtime-test-held-metadata-authority.py",
+        "sha256": "82f8f4073bfb45ace2c6d3966754c335ce2c3923fedade8d65ddb066d7c7c4fb"
+      },
+      {
+        "path": "scripts/test_held_metadata_authority.py",
+        "sha256": "f31d8750e42dc49520924425d5fd060b12658abd2f953eee2a8004d16d6e4a49"
+      }
+    ],
+    "images": {
+      "postgres": "sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+      "application": "sha256:ab077b0bb73d9865f10c1ae4d34668fc6cdf57e111da6dad8e69dc1cf236a16e"
+    },
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "report_sha256": "6bbe94882253d836348473d387b4f44bbbe40720d4c9f099a453a16e8077956d",
+    "private_log_hashes_verified": 401
+  },
+  "application_bridge": {
+    "result": "PASS",
+    "command": "python3 scripts/runtime-test-application-authn-bridge.py --run-local",
+    "profile": "isolated-application-authn-bridge-sql037",
+    "started_at": "2026-11-23T16:43:21.327853+00:00",
+    "recorded_at": "2026-11-23T16:43:57.660253+00:00",
+    "tests": {
+      "tests": 26,
+      "pass": 26,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "source_files": 283,
+    "source_manifest_sha256": "86f046a4edadb0096710e3437411f3c6e978f4eee798ef5cdec399c9ef284953",
+    "source_changes_from_base": [
+      {
+        "path": ".github/workflows/ci.yml",
+        "sha256": "a1f5c11475643f9643001a95883ea06878c3f3f3e1db24e85b000e902715e2bd"
+      },
+      {
+        "path": "scripts/runtime-test-authority-authn-foundation.py",
+        "sha256": "f4d2699f134eb5284e28dff1e5482f9cae3719ccd29ead8e16d618953dced4ce"
+      },
+      {
+        "path": "scripts/runtime-test-authority-read-upgrade.py",
+        "sha256": "0d783979eaa80d1489fe02e8ed12a995412c2fcbfc0637ad6659ba0527be4cd5"
+      }
+    ],
+    "images": {
+      "postgres": "sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+      "application": "sha256:ab077b0bb73d9865f10c1ae4d34668fc6cdf57e111da6dad8e69dc1cf236a16e"
+    },
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "report_sha256": "b6be7b4896ebcebe3f495229882574c2312bbfcdb591fbf311193ba94792b127",
+    "private_log_hashes_verified": 148
+  },
+  "host_controls": {
+    "result": "PASS",
+    "cases": 185,
+    "commands": [
+      {
+        "command": [
+          "python3",
+          "-B",
+          "-W",
+          "error",
+          "scripts/test_authority_snapshot_batching.py"
+        ],
+        "exitStatus": 0,
+        "tests": 23,
+        "sourceSha256": "eda705e8193bb4bfce6e837fe0abb0ff4e4f514b01249538beb12d2300c389a4",
+        "logSha256": "93ac8fc9821a401cb9f2b020d7075ad8227f3e662d499adb9f716d19e6afd2f8",
+        "durationSeconds": 0.065
+      },
+      {
+        "command": [
+          "python3",
+          "-B",
+          "-W",
+          "error",
+          "scripts/test_authority_read_upgrade.py"
+        ],
+        "exitStatus": 0,
+        "tests": 21,
+        "sourceSha256": "8084d471edf8bef891bd43ece90b8e12b1d6f8fa288ff00e92a30988f412b547",
+        "logSha256": "e4b3f63940dc03afd0a6e3a5b54f277181ece74cfe98169414e72e14016e2687",
+        "durationSeconds": 1.194
+      },
+      {
+        "command": [
+          "python3",
+          "-B",
+          "-W",
+          "error",
+          "scripts/test_held_metadata_authority.py"
+        ],
+        "exitStatus": 0,
+        "tests": 21,
+        "sourceSha256": "a5fd472d969e89f67cd4995ed6ad6a4399cc4927f19af26b8b2f6cbab5270934",
+        "logSha256": "d5ead80c4c68487e728868a923141d5fa6a6935415a037ccc78bb1c9cb602d10",
+        "durationSeconds": 2.371
+      },
+      {
+        "command": [
+          "python3",
+          "-B",
+          "-W",
+          "error",
+          "scripts/test_classification_label_identities.py"
+        ],
+        "exitStatus": 0,
+        "tests": 12,
+        "sourceSha256": "1d4c261736077fe229e05efc2726c10bcf85347e0ecb9fa5232d6b59cef8fa56",
+        "logSha256": "8ffa5975dbde749685ff98587bd42d81c65a4fbb8cdb7823318908026d6cecb9",
+        "durationSeconds": 0.128
+      },
+      {
+        "command": [
+          "python3",
+          "-B",
+          "-W",
+          "error",
+          "scripts/test_content_security_revision.py"
+        ],
+        "exitStatus": 0,
+        "tests": 8,
+        "sourceSha256": "eddcf33b81d6ac551a78501f2c02308bb8946fc46e288ad9e1f6ebf3fa9f4c96",
+        "logSha256": "a0f4118b266d1b2e81f01bc13f32228de040de181429cff3366e1df13ed2001e",
+        "durationSeconds": 0.12
+      },
+      {
+        "command": [
+          "python3",
+          "-B",
+          "-W",
+          "error",
+          "scripts/test_application_authn_bridge.py"
+        ],
+        "exitStatus": 0,
+        "tests": 14,
+        "sourceSha256": "9aaaeb1ea18c317e1c847618f8b4bd5cc7b8545cfca596022e257abacfaa0fbc",
+        "logSha256": "8777cb731b1a6ae3a27988c29fc6e486f626a4f2e0e31dccafa16ba6dd8417c5",
+        "durationSeconds": 1.076
+      },
+      {
+        "command": [
+          "python3",
+          "-B",
+          "-W",
+          "error",
+          "policies/test_authority_diagnostics.py"
+        ],
+        "exitStatus": 0,
+        "tests": 17,
+        "sourceSha256": "b44f9e2de8240f8839685ffded3de4213f8c850bdb79d03d20e2f9bb7bd696d1",
+        "logSha256": "711d230602599054a2a67a407efe03c6e4f1a904acae6a8e0533c7aaa55c23e3",
+        "durationSeconds": 1.421
+      },
+      {
+        "command": [
+          "python3",
+          "-B",
+          "-W",
+          "error",
+          "policies/test_ci_shards.py"
+        ],
+        "exitStatus": 0,
+        "tests": 69,
+        "sourceSha256": "bcb29dde6b0bd4632588c7e53e26e7c9dace27e968cbb58340185904faf4f05b",
+        "logSha256": "e902c8942607e362dcc905e9c93e99ea3f94463a92c04b8a38801b30858c1593",
+        "durationSeconds": 30.983
+      }
+    ],
+    "receipt_sha256": "e09e9476073a9fbf54d19b1aeb59ab9d29c60d90e33e8759144bdfe2b0d80533"
+  },
+  "held_test_only_followup": {
+    "path": "scripts/test_held_metadata_authority.py",
+    "native_input_sha256": "f31d8750e42dc49520924425d5fd060b12658abd2f953eee2a8004d16d6e4a49",
+    "final_sha256": "a5fd472d969e89f67cd4995ed6ad6a4399cc4927f19af26b8b2f6cbab5270934",
+    "change": "After native execution, three synthetic subprocess test budgets changed from20ms to250ms to reduce scheduler sensitivity. No production or native assertion changed; all21 final host controls reran successfully.",
+    "native_inputs_still_matching_final": 289,
+    "native_inputs_total": 290
+  },
+  "retained_failures": [
+    {
+      "scope": "Hosted86e development",
+      "evidence": "docs/verification/hosted-checkpoint-86e076e.json",
+      "result": "48 success /1 failure /3 skipped; precise held phase/cause/cleanup unavailable."
+    },
+    {
+      "scope": "First local integration host controls",
+      "result": "Authority-read21 cases: one fake transport result lacked the newly required table identity; shard69 cases: one failure/eight errors after inserting the new quality step inside an existing required adjacency.",
+      "correction": "Updated the fake result and placed the new command after the existing quality sequence; final185 controls all pass. These were control-integration failures, not native product results."
+    }
+  ],
+  "limitations": [
+    "The prior hosted13m05 failure is compatible with its780-second internal budget, but its published evidence cannot prove a timeout.",
+    "Local held execution took about276 seconds with unchanged780-second execution/90-second cleanup/900-second wrapper budgets; no hosted timing or capacity guarantee is inferred.",
+    "Native source/log digests were verified before the explicitly recorded host-test-only adjustment; only the separate26-case bridge has all final source bindings locally.",
+    "Fresh hosted qualification is required for both authority-read scopes, all dependent native gates, all52 outcomes, source security and native image security.",
+    "No live Microsoft Entra/Databricks, enterprise deployment, independent review sign-off or release qualification is implied."
+  ]
+}

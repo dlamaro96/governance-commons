@@ -119,4 +119,84 @@ class MarkerControls(unittest.TestCase):
     elif fault=='refusal_count':value['grants'][0]['mustRefuse']=False
     with self.assertRaises(RuntimeError):g.marker_from_tap('# GC_SCOPE_LEGACY_V1='+json.dumps(value))
 
+class SafeDiagnosticControls(unittest.TestCase):
+ def test_exact_closed_success_shape(self):
+  result=g.safe_diagnostics(None,None,{'ownedRemoved':True,'resourceInventoryPreserved':True,'generatedCredentialsRemoved':True,'secret':'PRIVATE'})
+  self.assertEqual(result,{'execution':{'phase':'none','category':'none','deadlineBudget':'none','deadlineStage':'none'},
+   'cleanup':{'failure':{'phase':'none','category':'none','deadlineBudget':'none','deadlineStage':'none'},'ownedRemoved':True,'resourceInventoryPreserved':True,'generatedCredentialsRemoved':True}})
+ def test_unobserved_or_wrong_typed_cleanup_values_are_unknown(self):
+  for cleanup in (None,[],{'ownedRemoved':1,'resourceInventoryPreserved':'PRIVATE','generatedCredentialsRemoved':False}):
+   result=g.safe_diagnostics(None,None,cleanup)['cleanup']
+   self.assertIsNone(result['ownedRemoved']);self.assertIsNone(result['resourceInventoryPreserved'])
+   self.assertIs(result['generatedCredentialsRemoved'],False if type(cleanup) is dict else None)
+ def test_private_exception_text_and_phase_never_escape(self):
+  for error in (RuntimeError('PRIVATE_SECRET'),OSError('PRIVATE_PATH'),ValueError('PRIVATE_INPUT')):
+   result=g.safe_failure(error,'PRIVATE_SECRET')
+   self.assertEqual(result,{'phase':'unknown','category':'other_failure','deadlineBudget':'none','deadlineStage':'none'})
+   self.assertNotIn('PRIVATE',json.dumps(result))
+ def test_plain_message_cannot_forge_explicit_deadline(self):
+  for message in ('Bounded qualification lifecycle deadline exceeded','Bounded qualification command timed out'):
+   self.assertEqual(g.safe_failure(RuntimeError(message),'scope-alignment-before036'),
+    {'phase':'scope-alignment-before036','category':'other_failure','deadlineBudget':'none','deadlineStage':'none'})
+ def test_deadline_marker_carries_original_phase_after_unwind(self):
+  for budget in ('execution','command','cleanup'):
+   for stage in ('admission','running'):
+    error=g.authority.base.QualificationDeadlineExceeded(budget,stage,'schema-scope-alignment-install036')
+    result=g.safe_failure(error,'cleanup')
+    self.assertEqual(result,{'phase':'schema-scope-alignment-install036','category':'deadline_exceeded','deadlineBudget':budget,'deadlineStage':stage})
+ def test_invalid_or_untrusted_marker_data_never_escape(self):
+  error=g.authority.base.QualificationDeadlineExceeded('execution','running','PRIVATE_PHASE')
+  self.assertEqual(g.safe_failure(error,'cleanup')['phase'],'unknown')
+  error.budget='PRIVATE_BUDGET';error.stage='PRIVATE_STAGE'
+  result=g.safe_failure(error,'PRIVATE_PHASE')
+  self.assertEqual(result,{'phase':'unknown','category':'other_failure','deadlineBudget':'none','deadlineStage':'none'})
+ def test_known_categories_do_not_copy_exception_messages(self):
+  for error,category in [(KeyboardInterrupt('PRIVATE'),'interrupted'),
+    (RuntimeError('Qualification command failed; retained bounded diagnostic'),'command_failed'),
+    (RuntimeError('Native suite failed; inspect retained private TAP'),'native_failed')]:
+   self.assertEqual(g.safe_failure(error,g.HELD_PHASE)['category'],category)
+ def test_explicit_admission_deadline_refuses_before_subprocess(self):
+  for cleanup in (False,True):
+   with base.Controls.harness(self,0) as (h,clock,calls,process):
+    if cleanup:h.phase='cleanup';h.cleanup_deadline=clock[0]
+    else:clock[0]=h.deadline
+    with patch.object(h,'admission'),self.assertRaises(g.authority.base.QualificationDeadlineExceeded) as caught:
+     h.command(['forbidden-process'],cleanup=cleanup)
+    self.assertEqual(caught.exception.budget,'cleanup' if cleanup else 'execution')
+    self.assertEqual(caught.exception.stage,'admission');process.assert_not_called()
+ def test_actual_subprocess_marks_which_unchanged_deadline_limited_it(self):
+  import sys,time
+  for budget in ('execution','command','cleanup'):
+   with self.subTest(budget=budget),tempfile.TemporaryDirectory() as directory:
+    h=object.__new__(g.authority.base.Harness);h.folder=Path(directory);h.phase='scope-alignment-before036'
+    h.serial=0;h.output_bytes=0;h.private_values=[];h.admission=lambda:None
+    now=time.monotonic();h.deadline=now+(.25 if budget=='execution' else 5)
+    h.cleanup_deadline=now+.25 if budget=='cleanup' else None
+    deadline=h.deadline
+    with self.assertRaises(g.authority.base.QualificationDeadlineExceeded) as caught:
+     h.command([sys.executable,'-c','import time; time.sleep(2)'],timeout=.25 if budget=='command' else 5,cleanup=budget=='cleanup')
+    self.assertEqual((caught.exception.budget,caught.exception.stage),(budget,'running'))
+    self.assertEqual(str(caught.exception),'Bounded qualification command timed out');self.assertEqual(h.deadline,deadline)
+ def test_main_preserves_execution_failure_and_reports_cleanup_separately(self):
+  import contextlib,io,sys,types
+  for cleanup_fails in (False,True):
+   with self.subTest(cleanup_fails=cleanup_fails),tempfile.TemporaryDirectory(dir=ROOT/'.local') as directory:
+    folder=Path(directory);secret=folder/'private-config.json';secret.write_text('synthetic-private-input')
+    h=types.SimpleNamespace(phase='scope-alignment-before036',report={},resources_before=None,folder=folder,secret_path=secret)
+    def cleanup():
+     if cleanup_fails:raise g.authority.base.QualificationDeadlineExceeded('cleanup','running','cleanup')
+     h.report['cleanup']={'ownedRemoved':True}
+    h.cleanup=cleanup;h.save=lambda **kwargs:None
+    failure=g.authority.base.QualificationDeadlineExceeded('execution','running','scope-alignment-before036')
+    output=io.StringIO()
+    with patch.object(g,'Harness',return_value=h),patch.object(g,'execute',side_effect=failure),patch.object(sys,'argv',['runner','--run-local']),contextlib.redirect_stdout(output):
+     self.assertEqual(g.main(),1)
+    data=json.loads(output.getvalue());self.assertEqual(set(data),{'result','report','diagnostics'});self.assertEqual(data['result'],'FAIL')
+    self.assertEqual(data['report'],str(g.REPORT.relative_to(ROOT)))
+    self.assertEqual(data['diagnostics']['execution'],{'phase':'scope-alignment-before036','category':'deadline_exceeded','deadlineBudget':'execution','deadlineStage':'running'})
+    cleaned=data['diagnostics']['cleanup'];self.assertTrue(cleaned['generatedCredentialsRemoved']);self.assertIsNone(cleaned['resourceInventoryPreserved'])
+    self.assertEqual(cleaned['failure']['deadlineBudget'],'cleanup' if cleanup_fails else 'none')
+    self.assertIs(cleaned['ownedRemoved'],None if cleanup_fails else True)
+    self.assertLess(len(output.getvalue().encode()),2048);self.assertNotIn('synthetic-private-input',output.getvalue())
+
 if __name__=='__main__':unittest.main()

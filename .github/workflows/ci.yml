@@ -160,6 +160,8 @@ jobs:
         run: python3 policies/test_quality_upgrade_diagnostics.py
       - name: Repository publication policy
         run: python3 scripts/github/bootstrap check-local
+      - name: Exact canonical snapshot batching and failure controls
+        run: python3 scripts/test_authority_snapshot_batching.py
   secrets:
     name: secrets
     runs-on: ubuntu-24.04

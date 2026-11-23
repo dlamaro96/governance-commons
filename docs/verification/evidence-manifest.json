@@ -2314,6 +2314,43 @@
         "base_commit": "053a61c0e3646ee5bb802847c279ab275912cd76",
         "working_tree_dirty": true
       }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-86e076e.json",
+      "scope": "Exact failed 52-outcome development attempt; 48 success, one failure and three skipped; five authenticated archives.",
+      "source_binding": {
+        "method": "Authenticated hosted archives and immutable Git input closure independently verified; exact prior-head scopes only.",
+        "evidence_sha256": "4a4bee66b935912d03f2a2bb3dad1d5d7181aace61675fedfa15650542a4aa34",
+        "implementation_commit": "86e076e0e62d7bbc96947d5465f326cb311b67fb"
+      }
+    },
+    {
+      "path": "docs/verification/source-security-86e076e.json",
+      "scope": "Exact prior-head source security; zero findings with separately verified Git and artifact bindings.",
+      "source_binding": {
+        "method": "Authenticated hosted archives and immutable Git input closure independently verified; exact prior-head scopes only.",
+        "evidence_sha256": "b91e8b7fc08d728eadc3b6c6717cf9af149b49d6f14b61043f5115601c833fa9",
+        "implementation_commit": "86e076e0e62d7bbc96947d5465f326cb311b67fb"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-86e076e.json",
+      "scope": "Exact prior-head native amd64/arm64 runtime images; high/critical gate passes with lower findings retained.",
+      "source_binding": {
+        "method": "Authenticated hosted archives and immutable Git input closure independently verified; exact prior-head scopes only.",
+        "evidence_sha256": "dbf0374715842b2ad27bac983d95a9bdb4f16f9ba2b4bc56b98ad828978cb117",
+        "implementation_commit": "86e076e0e62d7bbc96947d5465f326cb311b67fb"
+      }
+    },
+    {
+      "path": "docs/verification/authority-snapshot-diagnostics-local.json",
+      "scope": "Canonical snapshot transport and bounded held-authority diagnostics; application behavior and all native deadlines unchanged.",
+      "source_binding": {
+        "base_commit": "86e076e0e62d7bbc96947d5465f326cb311b67fb",
+        "working_tree_dirty": true,
+        "method": "Individually hashed local source, actual PostgreSQL equality/native reports and host controls; exact native/test-only followup scopes recorded separately.",
+        "evidence_sha256": "6f1455c15d3a65c98cb400f3a32ff67b10c981bbcd9b47282d344b248238c7c4"
+      }
     }
   ],
   "limitations": [
