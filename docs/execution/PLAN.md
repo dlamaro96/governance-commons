@@ -4,6 +4,8 @@ Updated 23 November 2026. The complete M0–M10 programme remains required. [Pro
 
 ## Active delivery sequence
 
+Current publication: consolidate the latest protected application SSO and preceding open increments into one normally reviewed and checked main merge, then continue from main. The SQL037 isolated gate passes 26 cases; rebuilt-core API/browser qualification and the new 52-outcome hosted run must retain their separate results.
+
 1. Completed: all 45 development outcomes and source security pass at `e51e8ec`; five behavior archives and three stored analyses are verified. PR #23 merged normally as `0fc25d4`. Historical failures remain recorded.
 2. Completed: PR #39 at `80101e0` passes all 45 development outcomes, source security and both native image scans. Five authenticated behavior archives verified before normal merge `fb1fd0e`; historical failures remain preserved.
 3. Completed: PR #40 publishes the catalog navigation fix and inactive canonical asset-context reader. All 46 outcomes at exact head `4cbde6a` and authenticated artifacts pass; it merged normally as `ed0c6e4`. The 38 browser journeys and historical authority profiles remain separate.

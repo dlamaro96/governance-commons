@@ -950,7 +950,6 @@ class ApplicationAuthnBridgeGateTests(unittest.TestCase):
             run.assert_not_called()
 
 
-if __name__=='__main__':unittest.main()
 
 
 class CoreAuthenticationSetupTests(unittest.TestCase):
@@ -1005,3 +1004,6 @@ class CoreAuthenticationSetupTests(unittest.TestCase):
                      workflow.replace('./dev authn-core-install','./dev test --suite application-authn-bridge'),
                      workflow.replace(env,''),workflow.replace(env,env.replace('steps.core_authentication_install.outcome','steps.seed.outcome'))):
             with self.assertRaises(ValueError):policy.validate_workflow(text)
+
+
+if __name__=='__main__':unittest.main()

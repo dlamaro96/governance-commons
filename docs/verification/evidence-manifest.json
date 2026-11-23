@@ -2185,6 +2185,24 @@
         "method": "Authenticated GitHub run/artifact and exact source verification; normal merge 5aeb5401613a1559580c41309332c89f25b38f57 at 2026-11-23T12:13:23Z.",
         "evidence_sha256": "2604012fc3963f735418cdb512b1e3d9e9d1945973b94eea156da769a089833c"
       }
+    },
+    {
+      "path": "docs/verification/application-authentication-bridge-local.json",
+      "scope": "Explicit protected application authentication bridge on populated SQL001\u2013036; native SQL037 qualification only.",
+      "source_binding": {
+        "implementation_commit": "da1777e9dac541e9e06acce1ef420f889c2e8e4b",
+        "method": "281 exact source hashes, populated predecessor, native migration/reader/owner installer checks, two preservation replays and owned cleanup.",
+        "evidence_sha256": "5cd639a81afa3abc16dfadb26c501faf79b1da82d3f79ef7fdc0971c243ac7c8"
+      }
+    },
+    {
+      "path": "docs/verification/protected-application-core-initial-local.json",
+      "scope": "Initial SQL037 integrated core startup and two real protected-login catalog browser journeys",
+      "source_binding": {
+        "implementation_commit": "da1777e9dac541e9e06acce1ef420f889c2e8e4b",
+        "method": "Root source startup admission, real core services, retained browser JSON and three visually inspected exact capture hashes. Complete integrated source/readback evidence remains separate.",
+        "evidence_sha256": "992998720a6b3aa4d24e76bbc782639faac94193cbdac0902731c9478e212c33"
+      }
     }
   ],
   "limitations": [

@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T12:33:49.115Z",
+  "scope": "Initial SQL037 integrated core startup and two real protected-login catalog browser journeys",
+  "outcome": "PASS",
+  "release_qualified": false,
+  "implementation_commit": "da1777e9dac541e9e06acce1ef420f889c2e8e4b",
+  "profile": "core/local-development",
+  "commands": [
+    "./dev bootstrap",
+    "./dev up --profile core",
+    "./dev seed --dataset harbor-demo",
+    "./dev authn-core-install",
+    "pnpm exec playwright test tests/e2e/vertical-slice.spec.ts"
+  ],
+  "runtime": {
+    "healthy_services": 13,
+    "successful_init_services": 4,
+    "migration": "037_application_authentication_bridge.sql",
+    "explicit_authentication_installation": "COMMITTED",
+    "renewed": false,
+    "content_authority": false
+  },
+  "browser": {
+    "tests": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "duration_ms": 23619.078999999998,
+    "private_report_sha256": "d6e7d4b135bcfb5961f40251a1bc7c14e8c104295245a3f730df905a8ff85c84",
+    "capture_review": "All three actual captures visually inspected: desktop and mobile asset details plus audit history. No overlap or missing content observed; empty optional feature states remain explicit."
+  },
+  "captures": [
+    {
+      "path": "docs/verification/screenshots/asset-en-light-1440.png",
+      "sha256": "9d99ce3ec6ea64d7724c63d8d3db50844a9cdfa62d7e1770a84e6308fa9a0e94"
+    },
+    {
+      "path": "docs/verification/screenshots/asset-en-light-390.png",
+      "sha256": "72a7371925d2f4bb84acf662584542701bf0353035fca954964dbe3a3364e3a2"
+    },
+    {
+      "path": "docs/verification/screenshots/catalog-history.png",
+      "sha256": "7be93ae5fb171949160cd1859853ea005440cd10d78a1065731c7b333f313733"
+    }
+  ],
+  "limits": [
+    "Full 172-case API suite and complete 38-journey browser matrix remain pending at this checkpoint.",
+    "Two journeys exercise real Keycloak login, UI source registration, PostgreSQL scan, searchable assets, ownership/audit, consumer restrictions and cross-tenant isolation.",
+    "This is initial local workflow evidence, not complete immutable-image/ingress qualification, Entra live qualification or enterprise release readiness."
+  ]
+}

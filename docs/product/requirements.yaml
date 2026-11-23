@@ -54119,11 +54119,16 @@
         "apps/login-broker/src/app.ts",
         "apps/session-api/src/server.ts",
         "apps/authn-edge/src/server.ts",
-        "packages/authn/src/transport.ts"
+        "packages/authn/src/transport.ts",
+        "packages/authn/src/application-bridge.ts",
+        "packages/db/migrations/037_application_authentication_bridge.sql",
+        "scripts/application-authentication-install.ts"
       ],
       "test_ids": [
         "tests/qualification/protected-authn-http.test.ts",
-        "tests/e2e-protected/protected-authn.spec.ts"
+        "tests/e2e-protected/protected-authn.spec.ts",
+        "tests/qualification/application-authn-bridge.test.ts",
+        "tests/unit/protected-api-authentication.test.ts"
       ],
       "verification": {
         "fixture": {
@@ -54154,7 +54159,8 @@
       },
       "limitations": [
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
-        "Dedicated protected OIDC/session/edge increment only:484 host units/types,15 native HTTP/SQL cases and2 real Keycloak browser journeys pass;8 original frames reviewed. Source-mounted isolated loopback execution does not qualify immutable images, production TLS, integrated content authority, group mapping, break-glass, SCIM, all ingress/content rendering controls or full profile/release obligations. All failed attempts and source scopes are retained."
+        "Dedicated protected OIDC/session/edge increment only:484 host units/types,15 native HTTP/SQL cases and2 real Keycloak browser journeys pass;8 original frames reviewed. Source-mounted isolated loopback execution does not qualify immutable images, production TLS, integrated content authority, group mapping, break-glass, SCIM, all ingress/content rendering controls or full profile/release obligations. All failed attempts and source scopes are retained.",
+        "SQL037 protected application-reader installation passes 26 native cases with preservation/replay and cleanup. The integrated core cutover is under qualification; held authentication is not commit-linearized content authority. Whole-profile verification remains NOT_RUN."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -54169,7 +54175,8 @@
         "docs/verification/protected-authentication-hosted-source-attempt-1.json",
         "docs/verification/protected-authentication-rate-limit-host.json",
         "docs/verification/protected-authentication-local-attempt-10.json",
-        "docs/verification/protected-authentication-visual-review-attempt-10.json"
+        "docs/verification/protected-authentication-visual-review-attempt-10.json",
+        "docs/verification/application-authentication-bridge-local.json"
       ]
     },
     {
@@ -54201,11 +54208,16 @@
         "apps/login-broker/src/app.ts",
         "apps/session-api/src/server.ts",
         "apps/authn-edge/src/server.ts",
-        "packages/authn/src/transport.ts"
+        "packages/authn/src/transport.ts",
+        "packages/authn/src/application-bridge.ts",
+        "packages/db/migrations/037_application_authentication_bridge.sql",
+        "scripts/application-authentication-install.ts"
       ],
       "test_ids": [
         "tests/qualification/protected-authn-http.test.ts",
-        "tests/e2e-protected/protected-authn.spec.ts"
+        "tests/e2e-protected/protected-authn.spec.ts",
+        "tests/qualification/application-authn-bridge.test.ts",
+        "tests/unit/protected-api-authentication.test.ts"
       ],
       "verification": {
         "fixture": {
@@ -54235,7 +54247,8 @@
         "evidence": []
       },
       "limitations": [
-        "Dedicated protected OIDC/session/edge increment only:484 host units/types,15 native HTTP/SQL cases and2 real Keycloak browser journeys pass;8 original frames reviewed. Source-mounted isolated loopback execution does not qualify immutable images, production TLS, integrated content authority, group mapping, break-glass, SCIM, all ingress/content rendering controls or full profile/release obligations. All failed attempts and source scopes are retained."
+        "Dedicated protected OIDC/session/edge increment only:484 host units/types,15 native HTTP/SQL cases and2 real Keycloak browser journeys pass;8 original frames reviewed. Source-mounted isolated loopback execution does not qualify immutable images, production TLS, integrated content authority, group mapping, break-glass, SCIM, all ingress/content rendering controls or full profile/release obligations. All failed attempts and source scopes are retained.",
+        "SQL037 protected application-reader installation passes 26 native cases with preservation/replay and cleanup. The integrated core cutover is under qualification; held authentication is not commit-linearized content authority. Whole-profile verification remains NOT_RUN."
       ],
       "owner": "unassigned",
       "milestone": "M0",
@@ -54250,7 +54263,8 @@
         "docs/verification/protected-authentication-hosted-source-attempt-1.json",
         "docs/verification/protected-authentication-rate-limit-host.json",
         "docs/verification/protected-authentication-local-attempt-10.json",
-        "docs/verification/protected-authentication-visual-review-attempt-10.json"
+        "docs/verification/protected-authentication-visual-review-attempt-10.json",
+        "docs/verification/application-authentication-bridge-local.json"
       ]
     },
     {
