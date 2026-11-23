@@ -61,6 +61,7 @@ class BuildAdmissionTests(unittest.TestCase):
             stack.enter_context(patch.object(runtime, 'integrity_source_snapshot', return_value={}))
             stack.enter_context(patch.object(runtime, 'verify_built_image', return_value='sha256:'+'1'*64))
             stack.enter_context(patch.object(runtime, 'verify_build_snapshot'))
+            stack.enter_context(patch.object(runtime, 'write_build_receipt'))
             disk = stack.enter_context(patch.object(runtime.shutil, 'disk_usage', side_effect=[SimpleNamespace(free=n) for n in free]))
             stack.enter_context(patch.object(runtime, 'run', side_effect=run))
             stack.enter_context(patch.object(runtime, 'capture', side_effect=AssertionError('Real command forbidden')))

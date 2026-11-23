@@ -304,6 +304,108 @@ def verify_build_snapshot(snapshot, images):
         integrity_require(integrity_image_id(service) == selected)
 
 
+def require_cached_images():
+    """Refuse missing core images without downloading or starting services."""
+    try:
+        names = sorted(set(integrity_command(COMPOSE + ['config', '--images'], timeout=30).decode('ascii').splitlines()))
+        integrity_require(0 < len(names) <= 64 and all(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._/:@-]{0,511}', name) for name in names))
+        identifiers = integrity_command(['docker', 'image', 'inspect', '--format', '{{.Id}}', *names], timeout=30).decode('ascii').splitlines()
+        integrity_require(len(identifiers) == len(names) and all(re.fullmatch(r'sha256:[a-f0-9]{64}', value) for value in identifiers))
+    except UnicodeError:
+        integrity_require(False)
+
+
+BUILD_RECEIPT_NAME = 'build-receipt.json'
+BUILD_RECEIPT_MAX_BYTES = 4 * 1024**2
+
+
+def build_receipt_document(snapshot, images):
+    integrity_require(type(images) is dict and set(images) == set(INTEGRITY_PROFILES) and
+                      all(type(value) is str and re.fullmatch(r'sha256:[a-f0-9]{64}', value) for value in images.values()))
+    return {'formatVersion': 1, 'kind': 'local-build-integrity-receipt', 'snapshot': snapshot, 'images': images}
+
+
+def build_receipt_bytes(document):
+    raw = (json.dumps(document, sort_keys=True, separators=(',', ':'), ensure_ascii=True, allow_nan=False)+'\n').encode('ascii')
+    integrity_require(len(raw) <= BUILD_RECEIPT_MAX_BYTES)
+    return raw
+
+
+def build_receipt_directory():
+    descriptor = os.open(LOCAL, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        info = os.fstat(descriptor)
+        integrity_require(stat.S_ISDIR(info.st_mode) and stat.S_IMODE(info.st_mode) == 0o700 and info.st_uid == os.geteuid())
+        return descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def read_build_receipt(snapshot):
+    """Only completed local builds can attest recipe bytes absent from images."""
+    directory = None
+    try:
+        directory = build_receipt_directory()
+        descriptor = os.open(BUILD_RECEIPT_NAME, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory)
+        with os.fdopen(descriptor, 'rb') as stream:
+            before = os.fstat(stream.fileno())
+            integrity_require(stat.S_ISREG(before.st_mode) and stat.S_IMODE(before.st_mode) == 0o600 and
+                              before.st_uid == os.geteuid() and before.st_nlink == 1 and 0 < before.st_size <= BUILD_RECEIPT_MAX_BYTES)
+            raw = stream.read(BUILD_RECEIPT_MAX_BYTES+1)
+            after = os.fstat(stream.fileno())
+            named = os.stat(BUILD_RECEIPT_NAME, dir_fd=directory, follow_symlinks=False)
+            identity = lambda info: (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+            integrity_require(len(raw) == before.st_size and identity(before) == identity(after) == identity(named))
+        def exact_object(pairs):
+            value = {}
+            for key, item in pairs:
+                integrity_require(key not in value)
+                value[key] = item
+            return value
+        def invalid_constant(_value):
+            raise ValueError('Non-finite receipt value')
+        value = json.loads(raw.decode('ascii'), object_pairs_hook=exact_object, parse_constant=invalid_constant)
+        integrity_require(type(value) is dict and type(value.get('formatVersion')) is int)
+        expected = build_receipt_document(snapshot, value.get('images'))
+        integrity_require(value == expected and raw == build_receipt_bytes(expected))
+        return expected['images']
+    except (OSError, UnicodeError, ValueError, TypeError, RecursionError):
+        integrity_require(False)
+    finally:
+        if directory is not None:
+            os.close(directory)
+
+
+def write_build_receipt(snapshot, images):
+    """Publish a private receipt only after both builds and exact verification."""
+    directory, temporary = None, None
+    try:
+        raw = build_receipt_bytes(build_receipt_document(snapshot, images))
+        directory = build_receipt_directory()
+        candidate = '.build-receipt-'+uuid.uuid4().hex+'.tmp'
+        descriptor = os.open(candidate, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+                             0o600, dir_fd=directory)
+        temporary = candidate
+        with os.fdopen(descriptor, 'wb') as stream:
+            os.fchmod(stream.fileno(), 0o600)
+            stream.write(raw)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, BUILD_RECEIPT_NAME, src_dir_fd=directory, dst_dir_fd=directory)
+        temporary = None
+        os.fsync(directory)
+    except (OSError, UnicodeError, ValueError, TypeError, RecursionError):
+        integrity_require(False)
+    finally:
+        if directory is not None:
+            try:
+                if temporary is not None:
+                    os.unlink(temporary, dir_fd=directory)
+            finally:
+                os.close(directory)
+
+
 def require_bootstrap():
     if not (LOCAL / "runtime.env").exists():
         raise SystemExit("Run ./dev bootstrap first. Credentials will be generated locally.")
@@ -333,12 +435,16 @@ def main():
     parser.add_argument("--input")
     parser.add_argument("--target")
     parser.add_argument("--redact", action="store_true")
+    parser.add_argument("--no-build", action="store_true", help="For up only: verify and reuse existing local images; never build or pull")
     args = parser.parse_args()
+    if args.no_build and args.command != "up":
+        parser.error("--no-build is supported only with up")
     if args.command == "help":
         print("""Governance Commons local development
   ./dev doctor                        Verify local Docker, capacity and ports (JSON)
   ./dev bootstrap                     Generate/preserve random local secrets
   ./dev up --profile core             Build and start real core dependencies and app
+  ./dev up --profile core --no-build  Verify existing local images and start without build or pull
   ./dev seed --dataset harbor-demo    Seed two tenants, six personas and typed domain trees
   ./dev status                        Show project service status
   ./dev test --suite smoke            Run locally configured smoke acceptance gate
@@ -532,22 +638,32 @@ Never use docker compose config output in public logs: it expands secrets.""")
             raise SystemExit("Doctor failed; correct the reported prerequisite before startup.")
         run(COMPOSE + ["config", "--quiet"], timeout=30)
         integrity_snapshot = integrity_source_snapshot()
+        if args.no_build:
+            recorded_images = read_build_receipt(integrity_snapshot)
+            require_cached_images()
         checked_images = {}
         for service in ("api", "python-worker"):
-            require_build_disk(service)
-            run(COMPOSE + ["build", service], timeout=1800, env={**os.environ, "COMPOSE_PARALLEL_LIMIT": "1"})
+            if not args.no_build:
+                require_build_disk(service)
+                run(COMPOSE + ["build", service], timeout=1800, env={**os.environ, "COMPOSE_PARALLEL_LIMIT": "1"})
             checked_images[service] = verify_built_image(service, integrity_snapshot)
         verify_build_snapshot(integrity_snapshot, checked_images)
-        run(COMPOSE + ["up", "-d", "--no-build", "--wait", "--wait-timeout", "120", "postgres"], timeout=180)
+        if args.no_build:
+            integrity_require(checked_images == recorded_images)
+        else:
+            write_build_receipt(integrity_snapshot, checked_images)
+            verify_build_snapshot(integrity_snapshot, checked_images)
+        startup = COMPOSE + ["up"] + (["--pull", "never"] if args.no_build else [])
+        run(startup + ["-d", "--no-build", "--wait", "--wait-timeout", "120", "postgres"], timeout=180)
         try:
             run([sys.executable, "scripts/runtime-authentication-roles.py", "prepare"], timeout=90)
-            run(COMPOSE + ["up", "--no-build", "--no-deps", "--force-recreate",
+            run(startup + ["--no-build", "--no-deps", "--force-recreate",
                 "--abort-on-container-exit", "--exit-code-from", "migrate", "migrate"], timeout=180)
         finally:
             # Remove the SET-only transfer grant even when migration fails.
             run([sys.executable, "scripts/runtime-authentication-roles.py", "finish"], timeout=90)
         run([sys.executable, "scripts/runtime-authentication-roles.py", "executors"], timeout=90)
-        run(COMPOSE + ["up", "-d", "--no-build", "--wait", "--wait-timeout", "240", "api", "workflow-worker", "site-runner", "python-worker"], timeout=360)
+        run(startup + ["-d", "--no-build", "--wait", "--wait-timeout", "240", "api", "workflow-worker", "site-runner", "python-worker"], timeout=360)
         run([sys.executable, "scripts/runtime-test-object-store.py", "--readiness"], timeout=60)
         print("Core stack is ready at http://localhost:4310. Run ./dev seed --dataset harbor-demo.")
     elif args.command == "authn-install":

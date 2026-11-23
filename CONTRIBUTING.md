@@ -29,6 +29,16 @@ python3 scripts/github/bootstrap check-local
 ./dev test --suite smoke
 ```
 
+After a successful normal `./dev up --profile core`, you can restart those images
+with `./dev up --profile core --no-build`. This requires the private local build
+receipt created by that normal build and verifies both exact image IDs, shipped
+source and build recipes before migrations. Every Compose image must already be
+present; this mode never builds or pulls and retains the 4 GiB admission floor.
+Run the normal command again after changing shipped source, dependencies or a
+build recipe, or if the receipt is missing. Do not edit or copy build receipts.
+See the [local operations guide](docs/operations/local-core.md) for health,
+diagnostics and recovery boundaries.
+
 On Linux, run `pnpm exec playwright install-deps chromium` to install required
 browser system libraries. An existing compatible browser can be selected through
 `GC_BROWSER_EXECUTABLE`; record the actual version in execution evidence.
@@ -97,8 +107,9 @@ independent review remains an explicit qualification gap.
 
 The [fixed CI groups](docs/adr/0016-fixed-ci-shards.md) run on separate hosts.
 Every assigned outcome remains mandatory; missing or skipped work cannot pass.
-The local 45-outcome configuration still needs hosted qualification. Publish
-only the collector's bounded diagnostic artifacts, never raw database logs,
+The current assignment has 47 required outcomes, qualified at the exact revision
+in the [hosted record](docs/verification/hosted-checkpoint-296d1e5.json). A change
+requires its own checks. Publish only the collector's bounded diagnostic artifacts, never raw database logs,
 source values or generated credentials.
 
 ## Contribution certification and attribution

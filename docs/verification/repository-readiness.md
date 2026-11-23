@@ -1,6 +1,18 @@
 # Repository readiness
 
-Current checkpoint, 17 November 2026: the project remains a development preview. [Product status](../product/STATUS.md), [delivery plan](../execution/PLAN.md) and [release readiness](../release/READINESS.md) describe the active implementation. Delivery issues #24–#33 are created and verified; [the mapping](../execution/backlog.json) covers all1,106 requirements. PR #23 targets main and supersedes closed #22 with every commit preserved; it remains draft. Latest published source security passes, but integration CI fails the authority-loader deadline after168 passing API cases. No merge or release qualification is claimed.
+Current checkpoint, 23 November 2026: the project remains a development preview.
+[Product status](../product/STATUS.md), [delivery plan](../execution/PLAN.md) and
+[release readiness](../release/READINESS.md) describe the active implementation.
+The [backlog mapping](../execution/backlog.json) covers all 1,106 requirements.
+PR #23 and the later PRs #39 and #40 merged normally after their exact required
+checks and authenticated artifacts passed. PR #40's 46-outcome checkpoint is
+[recorded separately](hosted-checkpoint-4cbde6a.json). PR #41's SQL033 increment
+also merged normally as `1db2f71` after all 47 outcomes and its exact source and
+native image scans passed. Its [record](hosted-checkpoint-296d1e5.json) retains
+the distinction between exported evidence and native step outcomes.
+Issue #24 is closed for its scoped pipeline checkpoint; the broader delivery and
+release issues remain open. Earlier failures below retain their original dates
+and scope; they are not the current integration result.
 
 ## Historical repository bootstrap — 15 November 2026
 
@@ -24,11 +36,13 @@ available; full repository, security and release qualification incomplete**.
 | Installed dependency licensing | 297 installed host-profile packages, zero unresolved decisions after exact package/version/profile decisions and verified missing-license evidence. SPDX parser self-test: 9 cases passed. This is not a release/image SBOM or vulnerability scan. | [Inventory](../legal/dependency-inventory.json), [policy](../../policies/dependencies.yml) |
 | Bootstrap publication policy | Recorded local run passed on 137 publishable files and 105 historical blobs. No private identity or token values are published by findings. | [Scoped local policy evidence](repository-readiness-local.json) |
 
-The enhanced workflow now has mandatory `quality`, `secrets` and `behavior` jobs
+The bootstrap workflow introduced mandatory `quality`, `secrets` and `behavior` jobs
 and an always-running `required` aggregate. `behavior` builds/starts real core
 Compose services, seeds synthetic tenants, runs connector conformance and
 isolation tests, then browser acceptance/accessibility. This new workflow is
-**not marked passing until an actual run succeeds at its published commit**.
+qualified only by an actual run at its published commit. The current workflow
+uses independently assigned behavior shards and an always-running aggregate;
+the exact successful checkpoints are linked above.
 Browser CI disables traces, videos and automatic failure screenshots; only a
 bounded outcome summary and explicit successful post-login synthetic catalog
 screenshots may be uploaded. Bootstrap files and raw browser reports are excluded.
@@ -67,13 +81,16 @@ unassigned. Platform abuse reporting is distinct from project conduct handling.
 
 ## Outstanding acceptance gates
 
-- Publish and pass the enhanced workflow on the coherent integration PR, evaluate
-  its final SHA and record the merge result; existing failed bot PRs demonstrate
-  blocked state only, not a completed successful integration.
+- Qualify the new runtime-image aggregate on real fork runs before adding it to
+  enforced branch requirements. Exact hosted development, source security and
+  native image results are recorded per revision; they do not certify every
+  future commit or fork configuration.
 - Complete independent review, contribution certification and an actual private
   conduct/escalation route. Do not invent a person, mailbox or sign-off.
-- Qualify hosted and portable SAST, dependency vulnerability checks, final
-  artifact/OS/Python/driver license inventories, SBOMs and license notices.
+- Complete final artifact/OS/Python/driver license inventories, release SBOMs and
+  notices, and remaining deployment/security profiles. Hosted SAST, dependency
+  audits and both application-image scans have scoped evidence; they do not
+  replace exploitability review or independent security qualification.
 - Implement and test trusted release build/sign/verify/attest, immutable release
   publication, offline verification and recovery. There is no supported release
   or independent security certification yet.

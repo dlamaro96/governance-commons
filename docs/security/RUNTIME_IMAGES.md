@@ -4,6 +4,12 @@ The application uses a pinned minimal Debian runtime with Node 24.22.3 and its
 required C++ libraries. The source worker uses pinned Python 3.14.10/Alpine 3.24.
 Both retain package inventories, source and tests. See the [decision](../adr/0019-minimal-runtime-images.md).
 
+The Temporal SDK family is pinned together at 1.26.0, including its Rustls
+0.23.46 dependency. The Python build and runtime share OpenSSL packages
+3.5.9-r1 and zlib 1.4-r0. The [local comparison](../verification/runtime-security-patches-local.json)
+records the removed findings and retains every remaining Debian finding.
+Compatibility checks and hosted scans qualify their own exact images and revisions.
+
 The `Runtime image security` workflow builds both images on native Linux amd64 and
 arm64, checks shipped source and runtime imports, runs the Python worker tests and
 scans the exact image IDs. It runs for pull requests, main, manual dispatch and

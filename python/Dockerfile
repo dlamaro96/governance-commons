@@ -1,12 +1,15 @@
 # SPDX-License-Identifier: Apache-2.0
 FROM ghcr.io/astral-sh/uv:0.11.14@sha256:1025398289b62de8269e70c45b91ffa37c373f38118d7da036fb8bb8efc85d97 AS uv
-FROM python:3.14.10-alpine3.24@sha256:5862d971d1f0ae26b258cefa4e893556b1d3aba81bd2ff30888704ad378bab67 AS dependencies
+FROM python:3.14.10-alpine3.24@sha256:5862d971d1f0ae26b258cefa4e893556b1d3aba81bd2ff30888704ad378bab67 AS runtime-base
+RUN apk add --no-cache --upgrade libcrypto3=3.5.9-r1 libssl3=3.5.9-r1 zlib=1.4-r0
+
+FROM runtime-base AS dependencies
 COPY --from=uv /uv /usr/local/bin/uv
 WORKDIR /worker
 COPY python/pyproject.toml python/uv.lock ./
 RUN UV_PYTHON_DOWNLOADS=never uv sync --frozen --no-dev --no-cache
 
-FROM python:3.14.10-alpine3.24@sha256:5862d971d1f0ae26b258cefa4e893556b1d3aba81bd2ff30888704ad378bab67 AS runtime
+FROM runtime-base AS runtime
 WORKDIR /worker
 # Runtime executes the frozen venv; package installers are build-only.
 RUN rm -rf /usr/local/lib/python3.14/site-packages/pip /usr/local/lib/python3.14/site-packages/pip-*.dist-info /usr/local/lib/python3.14/ensurepip \

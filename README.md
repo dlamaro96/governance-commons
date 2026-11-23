@@ -2,7 +2,7 @@
 
 <p align="center"><a href="#run-it-locally">Run locally</a> · <a href="docs/product/STATUS.md">Product status</a> · <a href="docs/execution/PLAN.md">Delivery plan</a> · <a href="CONTRIBUTING.md">Contribute</a> · <a href="SECURITY.md">Security</a></p>
 
-Governance Commons brings technical metadata, business context, ownership and change history into one self-hosted workspace. It is an independent Apache-2.0 project with original code and synthetic examples.
+Governance Commons brings technical metadata, business context, ownership and change history into one self-hosted workspace. It is an independent [Apache-2.0](LICENSE) project with original code and synthetic examples.
 
 **Development preview.** The core catalog and governance workflows run against real services. The broader programme and enterprise release gates remain in progress. See the [capability register](docs/product/requirements.yaml) and [release readiness](docs/release/READINESS.md) for exact implementation and verification status.
 
