@@ -474,6 +474,7 @@ def main():
   ./dev test --suite content-security-revision Verify private content revisions, concurrent writes and snapshots
   ./dev test --suite classification-label-identities Verify stable label identities and permanent retirement
   ./dev test --suite reviewed-classification-facts Verify private producer bindings and inactive reviewed facts
+  ./dev test --suite held-metadata-authority Verify scope alignment and held inactive metadata decisions
   ./dev test --suite protected-authn  Verify isolated real OIDC and protected session lifecycle
   ./dev test --suite image-security   Scan exact built application images and retain full findings
   ./dev test --suite source-connectors-upgrade Verify source storage upgrade and native tenant isolation
@@ -597,6 +598,9 @@ Never use docker compose config output in public logs: it expands secrets.""")
     if args.command == "test" and args.suite == "authority-read-current":
         require_local()
         run([sys.executable, "scripts/runtime-test-authority-read-upgrade.py", "--run-local", "--scope", "current"], timeout=1800); return
+    if args.command == "test" and args.suite == "held-metadata-authority":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-held-metadata-authority.py", "--run-local"], timeout=900); return
     if args.command == "test" and args.suite == "reviewed-classification-facts":
         require_local()
         run([sys.executable, "scripts/runtime-test-reviewed-classification-producer.py", "--run-local"], timeout=900); return

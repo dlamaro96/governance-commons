@@ -53,6 +53,7 @@ isolated native cases and 1,207 unit cases. Its new required CI outcome brings
 this development assignment to 49. All 172 core API cases and the selected real
 classification browser journey pass on the exact rebuilt images. Hosted
 qualification remains separate.
-This is inactive authorization provenance, with held execution and full ingress
-activation still required. [Scoped evidence](../verification/reviewed-classification-facts-local.json) and
+This is inactive authorization provenance. SQL036 adds held composition and
+evaluation; its separate140-case native gate and1,257 unit cases pass. Core
+integration and full ingress activation remain required. [Scoped evidence](../verification/reviewed-classification-facts-local.json) and
 [integrated evidence](../verification/reviewed-classification-facts-integrated-local.json).

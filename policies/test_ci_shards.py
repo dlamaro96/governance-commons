@@ -30,7 +30,7 @@ class AssignmentTests(unittest.TestCase):
         self.assertEqual(len(assigned),len(set(assigned)))
         self.assertFalse(set(assigned)&set(policy.COMMON))
         self.assertEqual(set((*policy.COMMON,*assigned)),set(policy.STEPS))
-        self.assertEqual(len(policy.STEPS),49)
+        self.assertEqual(len(policy.STEPS),50)
 
     def test_each_shard_requires_all_its_results(self):
         for shard in policy.SHARDS:
@@ -630,7 +630,7 @@ class ReviewedClassificationGateTests(unittest.TestCase):
         self.assertEqual(policy.EVIDENCE[self.STEP], ('reviewed-classification-producer.json',))
         assigned = policy.SHARDS['foundation']
         self.assertEqual(assigned[assigned.index(self.STEP)-1:assigned.index(self.STEP)+2],
-                         ('classification_label_identities', self.STEP, 'source_connectors_upgrade'))
+                         ('classification_label_identities', self.STEP, 'held_metadata_authority'))
         digest = policy.assignment_hash()
         for field, value in [('profile', 'isolated-classification-label-identities-sql034'),
                              ('report', 'classification-label-identities.json'),
@@ -643,8 +643,8 @@ class ReviewedClassificationGateTests(unittest.TestCase):
     def test_all_previous_forty_eight_assignments_and_scope_records_are_unchanged(self):
         historical = {
             'common': policy.COMMON,
-            'shards': {name: tuple(step for step in steps if step != self.STEP) for name, steps in policy.SHARDS.items()},
-            'commands': {step: command for step, command in policy.COMMANDS.items() if step != self.STEP},
+            'shards': {name: tuple(step for step in steps if step not in (self.STEP, 'held_metadata_authority')) for name, steps in policy.SHARDS.items()},
+            'commands': {step: command for step, command in policy.COMMANDS.items() if step not in (self.STEP, 'held_metadata_authority')},
             'superseded': policy.SUPERSEDED, 'authorityScopes': policy.AUTHORITY_SCOPES,
             'assetContextScopes': policy.ASSET_CONTEXT_SCOPES,
             'contentRevisionScopes': policy.CONTENT_REVISION_SCOPES,
@@ -713,6 +713,114 @@ class ReviewedClassificationGateTests(unittest.TestCase):
         spec = importlib.util.spec_from_file_location('reviewed_classification_runtime_refusal', ROOT/'scripts/runtime.py')
         runtime = importlib.util.module_from_spec(spec); spec.loader.exec_module(runtime)
         with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'reviewed-classification-facts']), \
+                patch.object(runtime, 'require_local', side_effect=SystemExit('synthetic local refusal')), \
+                patch.object(runtime, 'run') as run:
+            with self.assertRaisesRegex(SystemExit, '^synthetic local refusal$'):
+                runtime.main()
+            run.assert_not_called()
+
+
+class HeldMetadataGateTests(unittest.TestCase):
+    STEP = 'held_metadata_authority'
+
+    def test_distinct_inactive_source_scope_and_expected_native_partition(self):
+        scope = policy.HELD_METADATA_SCOPES[self.STEP]
+        self.assertEqual(scope, {
+            'command': './dev test --suite held-metadata-authority',
+            'runner': 'scripts/runtime-test-held-metadata-authority.py',
+            'arguments': ['--run-local'],
+            'profile': 'isolated-held-metadata-authority-sql036',
+            'report': 'held-metadata-authority.json',
+            'schemaScope': 'Populated SQL001–035 to SQL036; corrected scope and lifetime admission, retained-history preflight, held inactive metadata composition, preservation and replay',
+            'expectedNativeTests': {'predecessor': 98, 'preflight': 8, 'legacySeed': 1, 'scopeAlignment': 16, 'heldMetadata': 17, 'total': 140},
+            'outerTimeoutSeconds': 900, 'contentAuthority': False, 'evidence': 'STEP_OUTCOME_ONLY'})
+        self.assertEqual(policy.EVIDENCE[self.STEP], ('held-metadata-authority.json',))
+        assigned = policy.SHARDS['foundation']
+        self.assertEqual(assigned[assigned.index(self.STEP)-1:assigned.index(self.STEP)+2],
+                         ('reviewed_classification_facts', self.STEP, 'source_connectors_upgrade'))
+        digest = policy.assignment_hash()
+        for field, value in [('profile', 'isolated-reviewed-classification-facts-sql035'),
+                             ('report', 'reviewed-classification-producer.json'),
+                             ('arguments', []), ('outerTimeoutSeconds', 901),
+                             ('contentAuthority', True), ('evidence', 'VERIFIED_PASS'),
+                             ('expectedNativeTests', {'predecessor': 98, 'preflight': 8, 'legacySeed': 1, 'scopeAlignment': 16, 'heldMetadata': 0, 'total': 123})]:
+            with self.subTest(field=field), patch.dict(scope, {field: value}):
+                self.assertNotEqual(policy.assignment_hash(), digest)
+
+    def test_all_previous_forty_nine_assignments_and_scope_records_are_unchanged(self):
+        historical = {
+            'common': policy.COMMON,
+            'shards': {name: tuple(step for step in steps if step != self.STEP) for name, steps in policy.SHARDS.items()},
+            'commands': {step: command for step, command in policy.COMMANDS.items() if step != self.STEP},
+            'superseded': policy.SUPERSEDED, 'authorityScopes': policy.AUTHORITY_SCOPES,
+            'assetContextScopes': policy.ASSET_CONTEXT_SCOPES,
+            'contentRevisionScopes': policy.CONTENT_REVISION_SCOPES,
+            'classificationLabelScopes': policy.CLASSIFICATION_LABEL_SCOPES,
+            'reviewedClassificationScopes': policy.REVIEWED_CLASSIFICATION_SCOPES,
+            'relationScopes': policy.RELATION_SCOPES}
+        self.assertEqual(len(historical['commands']), 49)
+        self.assertEqual(hashlib.sha256(json.dumps(historical, sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
+                         'b7e9001db1c5d56e4f42bee0fb4486b6d5faf34e410a8e69cdb25cb674665350')
+
+    def test_missing_or_failed_held_metadata_cannot_use_a_successful_predecessor_or_raw_report(self):
+        collect = evidence_tests.EvidenceGateTests(methodName='runTest').collect
+        for shard in (None, 'foundation'):
+            for outcome in (None, 'failure', 'cancelled', 'skipped', 'NOT_IN_SHARD', ''):
+                options = {'omitted_step': self.STEP} if outcome is None else {'failed_step': self.STEP, 'failed_outcome': outcome}
+                with self.subTest(shard=shard, outcome=outcome):
+                    code, report = collect(shard=shard, **options)
+                    self.assertEqual(code, 1)
+                    self.assertEqual(report['reviewed_classification_qualifications']['reviewed_classification_facts']['outcome'], 'success')
+                    self.assertNotEqual(report['held_metadata_qualifications'][self.STEP]['outcome'], 'success')
+        for shard in policy.SHARDS:
+            code, report = collect(shard=shard)
+            self.assertEqual(code, 0)
+            expected = 'success' if shard == 'foundation' else 'NOT_IN_SHARD'
+            self.assertEqual(report['held_metadata_qualifications'], {
+                self.STEP: {**policy.HELD_METADATA_SCOPES[self.STEP], 'outcome': expected}})
+
+    def test_workflow_refuses_omission_substitution_reordering_and_disabled_controls(self):
+        workflow = (ROOT/'.github/workflows/ci.yml').read_text()
+        block = ('      - name: Verify held inactive metadata authority and scope alignment\n'
+                 "        if: success() && matrix.shard == 'foundation'\n"
+                 '        id: held_metadata_authority\n'
+                 '        run: ./dev test --suite held-metadata-authority\n')
+        control = ('      - name: Held metadata authority qualification controls\n'
+                   '        run: python3 scripts/test_held_metadata_authority.py\n')
+        anchor = '        run: ./dev test --suite content-security-revision\n'
+        env = '          GC_HELD_METADATA_AUTHORITY_RESULT: ${{ steps.held_metadata_authority.outcome }}\n'
+        mutations = [workflow.replace(block, ''), workflow.replace(block, block+block),
+                     workflow.replace(block, '').replace(anchor, anchor+block),
+                     workflow.replace(block, block.replace("matrix.shard == 'foundation'", "matrix.shard == 'browser'")),
+                     workflow.replace(block, block+'        continue-on-error: true\n'),
+                     workflow.replace('run: ./dev test --suite held-metadata-authority', 'run: ./dev test --suite reviewed-classification-facts'),
+                     workflow.replace(env, ''), workflow.replace(env, env+env),
+                     workflow.replace(env, env.replace('steps.held_metadata_authority.outcome', 'steps.reviewed_classification_facts.outcome')),
+                     workflow.replace(control, ''), workflow.replace(control, control+control),
+                     workflow.replace(control, control.replace('        run:', '        if: false\n        run:')),
+                     workflow.replace(control, control+'        continue-on-error: true\n'),
+                     workflow.replace(control, control.replace('python3 scripts/test_held_metadata_authority.py', 'true'))]
+        self.assertTrue(policy.validate_workflow(workflow))
+        for index, mutation in enumerate(mutations):
+            with self.subTest(index=index), self.assertRaises(ValueError):
+                policy.validate_workflow(mutation)
+
+    def test_local_route_uses_isolated_runner_with_fixed_timeout_and_propagates_failure(self):
+        spec = importlib.util.spec_from_file_location('held_metadata_runtime', ROOT/'scripts/runtime.py')
+        runtime = importlib.util.module_from_spec(spec); spec.loader.exec_module(runtime)
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'held-metadata-authority']), \
+                patch.object(runtime, 'require_local') as local, \
+                patch.object(runtime, 'require_bootstrap', side_effect=AssertionError('unexpected shared runtime')), \
+                patch.object(runtime, 'run', side_effect=RuntimeError('synthetic held-metadata refusal')) as run:
+            with self.assertRaisesRegex(RuntimeError, '^synthetic held-metadata refusal$'):
+                runtime.main()
+            local.assert_called_once_with()
+            run.assert_called_once_with([sys.executable, 'scripts/runtime-test-held-metadata-authority.py', '--run-local'], timeout=900)
+
+    def test_local_admission_refusal_never_reaches_runner(self):
+        spec = importlib.util.spec_from_file_location('held_metadata_runtime_refusal', ROOT/'scripts/runtime.py')
+        runtime = importlib.util.module_from_spec(spec); spec.loader.exec_module(runtime)
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'held-metadata-authority']), \
                 patch.object(runtime, 'require_local', side_effect=SystemExit('synthetic local refusal')), \
                 patch.object(runtime, 'run') as run:
             with self.assertRaisesRegex(SystemExit, '^synthetic local refusal$'):

@@ -23,6 +23,7 @@ SHARDS = {'foundation': ('connectors',
                 'content_security_revision',
                 'classification_label_identities',
                 'reviewed_classification_facts',
+                'held_metadata_authority',
                 'source_connectors_upgrade',
                 'postgres_targets'),
  'governance': ('relation_candidate_original',
@@ -70,6 +71,7 @@ COMMANDS = {'bootstrap': './dev bootstrap',
  'content_security_revision': './dev test --suite content-security-revision',
  'classification_label_identities': './dev test --suite classification-label-identities',
  'reviewed_classification_facts': './dev test --suite reviewed-classification-facts',
+ 'held_metadata_authority': './dev test --suite held-metadata-authority',
  'source_connectors_upgrade': './dev test --suite source-connectors-upgrade',
  'postgres_targets': './dev test --suite postgres-targets',
  'relation_candidate_original': './dev test --suite relation-candidate-original',
@@ -166,6 +168,17 @@ REVIEWED_CLASSIFICATION_SCOPES = {'reviewed_classification_facts': {
     'report': 'reviewed-classification-producer.json',
     'schemaScope': 'Populated SQL001–034 to SQL035; private producer bindings and inactive reviewed classification facts, complete partition validation, preservation and replay',
     'expectedNativeTests': {'predecessor': 50, 'producerBinding': 23, 'reviewedFacts': 25, 'total': 98},
+    'outerTimeoutSeconds': 900,
+    'contentAuthority': False,
+    'evidence': 'STEP_OUTCOME_ONLY'}}
+HELD_METADATA_SCOPES = {'held_metadata_authority': {
+    'command': './dev test --suite held-metadata-authority',
+    'runner': 'scripts/runtime-test-held-metadata-authority.py',
+    'arguments': ['--run-local'],
+    'profile': 'isolated-held-metadata-authority-sql036',
+    'report': 'held-metadata-authority.json',
+    'schemaScope': 'Populated SQL001–035 to SQL036; corrected scope and lifetime admission, retained-history preflight, held inactive metadata composition, preservation and replay',
+    'expectedNativeTests': {'predecessor': 98, 'preflight': 8, 'legacySeed': 1, 'scopeAlignment': 16, 'heldMetadata': 17, 'total': 140},
     'outerTimeoutSeconds': 900,
     'contentAuthority': False,
     'evidence': 'STEP_OUTCOME_ONLY'}}
@@ -325,6 +338,7 @@ EVIDENCE = {'security': ('api-summary.json',),
  'content_security_revision': ('content-security-revision.json',),
  'classification_label_identities': ('classification-label-identities.json',),
  'reviewed_classification_facts': ('reviewed-classification-producer.json',),
+ 'held_metadata_authority': ('held-metadata-authority.json',),
  'glossary_population_repaired_upgrade': ('glossary-population-repaired-upgrade.json',),
  'quality_repaired_upgrade': ('quality-repaired-upgrade.json',),
  'lineage_repaired_upgrade': ('lineage-repaired-upgrade.json',),
@@ -345,7 +359,7 @@ def required_steps(shard):
     return frozenset((*COMMON, *SHARDS[shard]))
 
 def assignment_hash():
-    return hashlib.sha256(json.dumps({'common':COMMON,'shards':SHARDS,'commands':COMMANDS,'superseded':SUPERSEDED,'authorityScopes':AUTHORITY_SCOPES,'assetContextScopes':ASSET_CONTEXT_SCOPES,'contentRevisionScopes':CONTENT_REVISION_SCOPES,'classificationLabelScopes':CLASSIFICATION_LABEL_SCOPES,'reviewedClassificationScopes':REVIEWED_CLASSIFICATION_SCOPES,'relationScopes':RELATION_SCOPES},sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    return hashlib.sha256(json.dumps({'common':COMMON,'shards':SHARDS,'commands':COMMANDS,'superseded':SUPERSEDED,'authorityScopes':AUTHORITY_SCOPES,'assetContextScopes':ASSET_CONTEXT_SCOPES,'contentRevisionScopes':CONTENT_REVISION_SCOPES,'classificationLabelScopes':CLASSIFICATION_LABEL_SCOPES,'reviewedClassificationScopes':REVIEWED_CLASSIFICATION_SCOPES,'heldMetadataScopes':HELD_METADATA_SCOPES,'relationScopes':RELATION_SCOPES},sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 def collect_outcomes(environment, shard):
     required = required_steps(shard)
@@ -452,6 +466,7 @@ def validate_workflow(text):
  '          GC_CONTENT_SECURITY_REVISION_RESULT: ${{ steps.content_security_revision.outcome }}\n'
  '          GC_CLASSIFICATION_LABEL_IDENTITIES_RESULT: ${{ steps.classification_label_identities.outcome }}\n'
  '          GC_REVIEWED_CLASSIFICATION_FACTS_RESULT: ${{ steps.reviewed_classification_facts.outcome }}\n'
+ '          GC_HELD_METADATA_AUTHORITY_RESULT: ${{ steps.held_metadata_authority.outcome }}\n'
  '          GC_SOURCE_CONNECTORS_UPGRADE_RESULT: ${{ steps.source_connectors_upgrade.outcome }}\n'
  '          GC_POSTGRES_TARGETS_RESULT: ${{ steps.postgres_targets.outcome }}\n'
  '          GC_RELATION_CANDIDATE_ORIGINAL_RESULT: ${{ steps.relation_candidate_original.outcome }}\n'
@@ -539,10 +554,16 @@ def validate_workflow(text):
                        blocks['quality'], re.M | re.S) == [reviewed_control])
     require(text.count('run: python3 scripts/test_reviewed_classification_producer.py') == 1)
     require(identity_control + reviewed_control in blocks['quality'])
+    held_control = ('      - name: Held metadata authority qualification controls\n'
+                    '        run: python3 scripts/test_held_metadata_authority.py\n')
+    require(re.findall(r'^      - name: Held metadata authority qualification controls\n.*?(?=^      - |\Z)',
+                       blocks['quality'], re.M | re.S) == [held_control])
+    require(text.count('run: python3 scripts/test_held_metadata_authority.py') == 1)
+    require(reviewed_control + held_control in blocks['quality'])
     for step in SUPERSEDED:
         require('GC_'+step.upper()+'_RESULT' not in body and 'id: '+step+'\n' not in body)
     for control in ('test_relation_candidate_upgrade.py','test_governance_repaired_chain.py','test_runtime_routing.py'):
         require('run: python3 scripts/'+control in blocks['quality'])
-    require(body.index('id: authority_authn_foundation\n')<body.index('id: authority_read_original\n')<body.index('id: authority_read_current\n')<body.index('id: authority_asset_context\n')<body.index('id: content_security_revision\n')<body.index('id: classification_label_identities\n')<body.index('id: reviewed_classification_facts\n')<body.index('id: source_connectors_upgrade\n'))
+    require(body.index('id: authority_authn_foundation\n')<body.index('id: authority_read_original\n')<body.index('id: authority_read_current\n')<body.index('id: authority_asset_context\n')<body.index('id: content_security_revision\n')<body.index('id: classification_label_identities\n')<body.index('id: reviewed_classification_facts\n')<body.index('id: held_metadata_authority\n')<body.index('id: source_connectors_upgrade\n'))
     require(body.index('id: browser\n')<body.index('id: protected_authn\n')<body.index('name: Collect bounded redacted evidence')<body.index('name: Stop only this Compose'))
     return True

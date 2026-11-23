@@ -81,7 +81,7 @@ export function validateClosureConsistency(c:AuthorityHumanClosure,r:AuthorityDe
   const expectedKind=g.kind==='ordinary-role'||g.kind==='responsibility'?'grant':g.kind;if(g.ref.kind!==expectedKind)fail('Grant kind and ref differ.');
   if(g.ceiling.actions.some(a=>service.has(a))||g.ceiling.resourceKinds.length===0||g.ceiling.actions.length===0)fail('Human effect ceiling is invalid.');
   for(const list of [g.ceiling.fields,'delegable'in g?g.delegable?.fields:null])if(list&&list.some(x=>!r.fields.includes(x)))fail('Unregistered ceiling field.');
-  if(!inside(g.ceiling.validity,g.validity))fail('Effect validity widens grant.');literalScopeInside(g.ceiling.scope,g.scope);
+  if(!inside(g.ceiling.validity,g.validity))fail('Effect validity widens grant.');literalScopeInside(g.scope,g.ceiling.scope);
   if('delegable'in g&&g.delegable){if(!subset(g.delegable.actions,g.ceiling.actions)||!fieldsInside(g.delegable.fields,g.ceiling.fields)||!inside(g.delegable.validity,g.validity)||!inside(g.delegable.validity,g.ceiling.validity))fail('Onward ceiling widens effect.');literalScopeInside(g.delegable.scope,g.scope);literalScopeInside(g.delegable.scope,g.ceiling.scope);}
   if(g.kind==='ordinary-role')originPolicies.set(grantKey(g.ref),role(g.role).content.policies.map(policyKey));
   if(g.kind==='responsibility'){
@@ -104,9 +104,10 @@ export function validateClosureConsistency(c:AuthorityHumanClosure,r:AuthorityDe
    if(edge.viaMembership===null)fail('Group parent requires membership.');const m=needed(memberships.get(versionKey(edge.viaMembership)),'Missing exact historical membership.');
    if(m.identityId!==child.issuer.id||m.groupId!==parent.beneficiary.id)fail('Disconnected group parent.');viaIds.add(versionKey(m.ref));
   }else{if(edge.viaMembership!==null||parent.beneficiary.id!==child.issuer.id)fail('Disconnected human parent.');}
-  if(!subset(child.ceiling.actions,parent.ceiling.actions)||!subset(child.ceiling.actions,onward.actions)||!subset(child.ceiling.resourceKinds,parent.ceiling.resourceKinds)||!fieldsInside(child.ceiling.fields,parent.ceiling.fields)||!fieldsInside(child.ceiling.fields,onward.fields)||!inside(child.validity,parent.validity)||!inside(child.validity,parent.ceiling.validity)||!inside(child.validity,onward.validity))fail('Connected ceiling widens parent.');
+  if(!subset(child.ceiling.actions,parent.ceiling.actions)||!subset(child.ceiling.actions,onward.actions)||!subset(child.ceiling.resourceKinds,parent.ceiling.resourceKinds)||!fieldsInside(child.ceiling.fields,parent.ceiling.fields)||!fieldsInside(child.ceiling.fields,onward.fields)||!inside(child.validity,parent.validity)||!inside(child.validity,parent.ceiling.validity)||!inside(child.validity,onward.validity)||!inside(child.ceiling.validity,parent.ceiling.validity)||!inside(child.ceiling.validity,onward.validity))fail('Connected ceiling widens parent.');
   if(child.ceiling.actions.some(a=>!compatible.has(a)&&!admin.has(a)))fail('Connected grants cannot introduce field actions.');
   literalScopeInside(child.scope,parent.scope);literalScopeInside(child.scope,parent.ceiling.scope);literalScopeInside(child.scope,onward.scope);
+  literalScopeInside(child.ceiling.scope,parent.ceiling.scope);literalScopeInside(child.ceiling.scope,onward.scope);
   if(child.kind==='delegation'&&(onward.remainingDepth<1||child.delegable!==null&&child.delegable.remainingDepth>=onward.remainingDepth))fail('Delegation depth widens parent.');
  }
  for(const m of c.memberships){if(m.ref.version!==1)fail('Membership issuance version differs.');needed(groups.get(m.groupId),'Missing membership group.');expectedPrincipals.add(m.identityId);expectedGroups.add(m.groupId);}

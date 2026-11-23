@@ -78,6 +78,8 @@ jobs:
         run: python3 scripts/test_classification_label_identities.py
       - name: Reviewed classification producer and fact qualification controls
         run: python3 scripts/test_reviewed_classification_producer.py
+      - name: Held metadata authority qualification controls
+        run: python3 scripts/test_held_metadata_authority.py
       - name: Explicit relation-candidate upgrade controls
         run: python3 scripts/test_relation_candidate_upgrade.py
       - name: Repaired governance chain controls
@@ -314,6 +316,10 @@ jobs:
         if: success() && matrix.shard == 'foundation'
         id: reviewed_classification_facts
         run: ./dev test --suite reviewed-classification-facts
+      - name: Verify held inactive metadata authority and scope alignment
+        if: success() && matrix.shard == 'foundation'
+        id: held_metadata_authority
+        run: ./dev test --suite held-metadata-authority
       - name: Verify source connector identity upgrade and preservation
         if: success() && matrix.shard == 'foundation'
         id: source_connectors_upgrade
@@ -454,6 +460,7 @@ jobs:
           GC_CONTENT_SECURITY_REVISION_RESULT: ${{ steps.content_security_revision.outcome }}
           GC_CLASSIFICATION_LABEL_IDENTITIES_RESULT: ${{ steps.classification_label_identities.outcome }}
           GC_REVIEWED_CLASSIFICATION_FACTS_RESULT: ${{ steps.reviewed_classification_facts.outcome }}
+          GC_HELD_METADATA_AUTHORITY_RESULT: ${{ steps.held_metadata_authority.outcome }}
           GC_SOURCE_CONNECTORS_UPGRADE_RESULT: ${{ steps.source_connectors_upgrade.outcome }}
           GC_POSTGRES_TARGETS_RESULT: ${{ steps.postgres_targets.outcome }}
           GC_RELATION_CANDIDATE_ORIGINAL_RESULT: ${{ steps.relation_candidate_original.outcome }}

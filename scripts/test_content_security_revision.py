@@ -18,6 +18,30 @@ spec.loader.exec_module(g)
 
 
 class Controls(unittest.TestCase):
+    def test_declared036_successor_is_excluded_and_gapped_or_unknown_inventory_refuses(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)
+            for name in g.NAMES:(folder/name).write_text('-- historical prefix')
+            for name in (g.NEW_TEST,'scripts/runtime-test-content-security-revision.py','scripts/test_content_security_revision.py','tests/api/classification-storage.test.ts',):
+                path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text('')
+            with patch.object(g,'ROOT',root),patch.object(g.volume,'ROOT',root),patch.object(g,'_original_sources',return_value=[]):
+                before=g.sources();self.assertEqual(len(g.migrations()),33)
+                suffix=['034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql']
+                for name in suffix:
+                    path=folder/name;path.write_text('-- declared successor only')
+                    self.assertEqual(g.migrations(),g.NAMES);self.assertEqual(g.sources(),before)
+                    self.assertNotIn('packages/db/migrations/'+name,{row['path'] for row in before})
+                    path.write_text('-- successor content never belongs to this historical profile')
+                    self.assertEqual(g.sources(),before)
+                for name in ('036_undeclared.sql','037_undeclared.sql'):
+                    extra=folder/name;extra.write_text('-- unreviewed')
+                    with self.assertRaises(RuntimeError):g.sources()
+                    extra.unlink()
+                missing=folder/'035_reviewed_classification_producer.sql'
+                old=missing.read_bytes();missing.unlink()
+                with self.assertRaises(RuntimeError):g.sources()
+                missing.write_bytes(old);self.assertEqual(g.sources(),before)
+
     def test_exact033_inventory_binds_controls_and_admits_only_unexecuted034(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)

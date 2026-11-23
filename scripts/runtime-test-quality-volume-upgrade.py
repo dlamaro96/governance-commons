@@ -48,7 +48,7 @@ NAMES = [*base.NAMES, '015_approval_workflows.sql', '016_glossary_publication.sq
 
 def migrations():
     actual = sorted(path.name for path in (ROOT / 'packages/db/migrations').glob('*.sql'))
-    successors = ['031_authority_read_grants.sql', '032_relation_candidate_validation.sql', '033_content_security_revisions.sql', '034_classification_label_identities.sql', '035_reviewed_classification_producer.sql']
+    successors = ['031_authority_read_grants.sql', '032_relation_candidate_validation.sql', '033_content_security_revisions.sql', '034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql']
     suffix = actual[len(NAMES):]
     require(actual[:len(NAMES)] == NAMES and suffix == successors[:len(suffix)],
             'Exact SQL001–030 prefix and declared contiguous successors required')

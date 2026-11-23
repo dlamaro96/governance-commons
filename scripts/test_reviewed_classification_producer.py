@@ -55,6 +55,30 @@ class PreservationControls(unittest.TestCase):
     elif fault=='extra_function':x[5].append({'signature':'gc_authority.escape()'})
     elif fault=='missing_guard':x[7].pop()
     with self.assertRaises(RuntimeError):g.preserve_installation(*x)
+ def test_declared036_successor_is_excluded_and_gapped_or_unknown_inventory_refuses(self):
+     with tempfile.TemporaryDirectory() as directory:
+         root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)
+         for name in g.NAMES:(folder/name).write_text('-- historical prefix')
+         for name in (g.NEW_TEST,g.FACT_TEST,'tests/fixtures/reviewed-classification-facts.ts','scripts/runtime-test-reviewed-classification-producer.py','scripts/test_reviewed_classification_producer.py',):
+             path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text('')
+         with patch.object(g,'ROOT',root),patch.object(g.volume,'ROOT',root),patch.object(g,'_original_sources',return_value=[]):
+             before=g.sources();self.assertEqual(len(g.migrations()),35)
+             suffix=['036_authority_scope_alignment.sql']
+             for name in suffix:
+                 path=folder/name;path.write_text('-- declared successor only')
+                 self.assertEqual(g.migrations(),g.NAMES);self.assertEqual(g.sources(),before)
+                 self.assertNotIn('packages/db/migrations/'+name,{row['path'] for row in before})
+                 path.write_text('-- successor content never belongs to this historical profile')
+                 self.assertEqual(g.sources(),before)
+             for name in ('036_undeclared.sql','037_undeclared.sql'):
+                 extra=folder/name;extra.write_text('-- unreviewed')
+                 with self.assertRaises(RuntimeError):g.sources()
+                 extra.unlink()
+             missing=folder/'035_reviewed_classification_producer.sql'
+             old=missing.read_bytes();missing.unlink()
+             with self.assertRaises(RuntimeError):g.sources()
+             missing.write_bytes(old);self.assertEqual(g.sources(),before)
+
  def test_source_admission_exact035_and_declared_prefix(self):
   with tempfile.TemporaryDirectory() as directory:
    root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)

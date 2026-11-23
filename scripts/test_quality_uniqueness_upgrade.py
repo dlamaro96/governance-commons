@@ -91,6 +91,24 @@ class Controls(unittest.TestCase):
         h.docker = docker
         return h
 
+    def test_sql036_successor_requires_complete_prefix_and_never_enters_historical_sources(self):
+        before = gate.sources()
+        for name in ['025_quality_uniqueness.sql', '026_quality_range.sql', '027_quality_monitoring.sql', '028_quality_freshness.sql', '029_quality_freshness_scheduling.sql', '030_quality_volume.sql', '031_authority_read_grants.sql', '032_relation_candidate_validation.sql', '033_content_security_revisions.sql', '034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql']:
+            if name not in gate.NAMES:
+                self.write('packages/db/migrations/' + name, '-- declared but not executed')
+        self.assertEqual(gate.migrations(), gate.NAMES)
+        self.assertEqual(gate.sources(), before)
+        path = 'packages/db/migrations/036_authority_scope_alignment.sql'
+        self.assertNotIn(path, {row['path'] for row in before})
+        self.write(path, '-- changing an unexecuted successor cannot rewrite historical evidence')
+        self.assertEqual(gate.sources(), before)
+        for name in ('036_undeclared.sql', '037_undeclared.sql'):
+            extra = self.write('packages/db/migrations/' + name, '-- unreviewed')
+            with self.assertRaises(RuntimeError): gate.sources()
+            extra.unlink()
+        (self.root/'packages/db/migrations/035_reviewed_classification_producer.sql').unlink()
+        with self.assertRaises(RuntimeError): gate.sources()
+
     def test_declared_successors_never_enter_historical_prefix(self):
         original = gate.sources()
         for name in ['026_quality_range.sql', '027_quality_monitoring.sql', '028_quality_freshness.sql', '029_quality_freshness_scheduling.sql']:

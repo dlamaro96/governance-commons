@@ -35,8 +35,14 @@ _original_sources=predecessor.sources
 NAMES=[*predecessor.NAMES,MIGRATION]
 PHASES=(*predecessor.PHASES,PHASE,FACT_PHASE)
 
+def migrations():
+ actual=sorted(p.name for p in (ROOT/'packages/db/migrations').glob('*.sql'))
+ successors=['036_authority_scope_alignment.sql'];suffix=actual[len(NAMES):]
+ require(actual[:len(NAMES)]==NAMES and suffix==successors[:len(suffix)],'Exact immutable SQL001–035 prefix and declared036 successor required')
+ return list(NAMES)
+
 def sources():
- require(sorted(p.name for p in (ROOT/'packages/db/migrations').glob('*.sql'))==NAMES,'Exactly immutable SQL001–035 required')
+ migrations()
  paths={r['path'] for r in _original_sources()}|{NEW_TEST,FACT_TEST,'tests/fixtures/reviewed-classification-facts.ts',
   'scripts/runtime-test-reviewed-classification-producer.py','scripts/test_reviewed_classification_producer.py','packages/db/migrations/'+MIGRATION}
  pending=[ROOT/p for p in paths if p.endswith(('.ts','.tsx'))]

@@ -51,6 +51,25 @@ class RuntimeRoutingTests(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, '^synthetic gate failure$'): runtime.main()
                 run.assert_called_once_with([sys.executable, 'scripts/runtime-test-authority-read-upgrade.py', '--run-local', '--scope', scope], timeout=1800)
 
+    def test_held_metadata_gate_requires_local_context_before_exact_isolated_runner(self):
+        calls = []
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'held-metadata-authority']), \
+                patch.object(runtime, 'require_local', side_effect=lambda: calls.append('local')), \
+                patch.object(runtime, 'require_bootstrap', side_effect=AssertionError('core bootstrap reached')), \
+                patch.object(runtime, 'run', side_effect=lambda args, **kw: calls.append((args, kw))):
+            runtime.main()
+        self.assertEqual(calls, ['local', ([sys.executable, 'scripts/runtime-test-held-metadata-authority.py', '--run-local'], {'timeout': 900})])
+
+    def test_held_metadata_gate_refuses_remote_or_unavailable_local_context(self):
+        for override, endpoint in (('tcp://remote.invalid:2375', 'unix:///local.sock'), ('', 'ssh://remote.invalid'), ('', None)):
+            with self.subTest(endpoint=endpoint), patch.object(sys, 'argv', ['dev', 'test', '--suite', 'held-metadata-authority']), \
+                    patch.dict(os.environ, {'DOCKER_HOST': override}), \
+                    patch.object(runtime, 'capture', return_value=json.dumps([{'Endpoints': {'docker': {'Host': endpoint}}}]) if endpoint else 'invalid'), \
+                    patch.object(runtime, 'require_bootstrap', side_effect=AssertionError('core bootstrap reached')), \
+                    patch.object(runtime, 'run') as run:
+                with self.assertRaises(SystemExit): runtime.main()
+                run.assert_not_called()
+
     def test_postgres_target_gate_checks_local_context_without_bootstrap(self):
         calls = []
         def capture(args, timeout=15):
@@ -104,6 +123,7 @@ class RuntimeRoutingTests(unittest.TestCase):
         self.assertIn('./dev test --suite authority-read-original', output.getvalue())
         self.assertIn('./dev test --suite authority-read-current', output.getvalue())
         self.assertIn('./dev test --suite authority-foundation', output.getvalue())
+        self.assertIn('./dev test --suite held-metadata-authority', output.getvalue())
         capture.assert_not_called()
         run.assert_not_called()
 

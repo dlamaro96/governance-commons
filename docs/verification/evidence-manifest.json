@@ -2103,6 +2103,17 @@
         "verified_files": 347,
         "evidence_sha256": "8fec1b8800eb71d595f17c1e95707d50bd7f2960e693c883d7fc8a5afdee9280"
       }
+    },
+    {
+      "path": "docs/verification/held-metadata-authority-local.json",
+      "scope": "isolated-held-metadata-authority-sql036",
+      "source_binding": {
+        "base_commit": "bc1f650445a291619209fdaa53691612821e965f",
+        "dirty": true,
+        "method": "Exact281-source isolated populated SQL035 to036 upgrade with140 native case executions;147-table preservation, four replays and owned cleanup. Core and hosted qualification remain separate; content authority remains inactive.",
+        "verified_files": 281,
+        "evidence_sha256": "1d23ba2239071da217afbb97145748e9e36a876163fd1625c6356c01a671ab2f"
+      }
     }
   ],
   "limitations": [

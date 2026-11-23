@@ -157,7 +157,7 @@ Fresh immutable-image protected authentication at `5d9e501` passes **15 native H
 
 ## Product and runtime
 
-The healthy Docker Compose core runs real PostgreSQL, OpenSearch, Temporal, Keycloak and source workers with synthetic data. The current core contains SQL034, stable classification label identities, the navigation increment and locally qualified dependency fixes. Its candidate functional tests, final rebuilt-image checks and isolated authority gates retain their own image/source bindings. Earlier observations retain their original revisions. Applied SQL001–034 migrations are immutable.
+The current Docker Compose core runs real PostgreSQL, OpenSearch, Temporal, Keycloak and source workers with synthetic data. It contains SQL036 and the inactive held metadata evaluator. All36 migration checksums and349 source/image bindings match the rebuilt and running services. The isolated140-case gate passes; current core API/browser qualification is in progress. Earlier qualified SQL035 observations retain their original revisions and image/source bindings. Applied SQL001–036 migrations are immutable.
 
 Usable workflows include tenant-scoped catalog/search/ownership/audit, operating models and graph migrations, glossary/reference publication and imports, reviewed classification, PostgreSQL view lineage, and six source-executed quality families. Scheduled quality incidents support notification, verified resolution and reopening; expired freshness evidence remains historical without authorizing a new resolution.
 
@@ -229,5 +229,13 @@ The next held-evaluator integration exposed a literal scope-direction mismatch
 between canonical storage and the pure evaluator. A forward SQL036 repair must
 align own/onward/connected scope checks and parent time ceilings without changing
 SQL001–035 or silently rewriting retained grant history. Bounded atomic preflight
-must refuse incompatible active graphs pending explicit remediation. Pure
-composition is being prepared separately; it has no runtime activation claim.
+must refuse incompatible active graphs pending explicit remediation. The
+candidate now composes and evaluates inside the held snapshot. All 1,257 unit
+cases, root/web types, ten new harness controls, 289 migration-admission controls
+and 219 affected CI/dev controls pass (overlapping counts are not additive).
+Its 140-case isolated native gate passes with all281 source bindings,147-table
+preservation, four replay phases and owned cleanup. The shared core now runs SQL036 with349 source/image hashes matched across
+all four application services. Its172-case API gate is running; the browser gate
+remains pending. The pipeline includes a separate 50th mandatory
+outcome while retaining the preceding 49 assignments. No content authority is
+activated. [Decision](../adr/0024-held-metadata-evaluation.md).
