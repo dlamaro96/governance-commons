@@ -1,0 +1,526 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-17T06:51:10.059696+00:00",
+  "scope": "Manual exact PostgreSQL latest-observation freshness rules, immutable versions and historical results. Scheduled expiry is separately qualified.",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "implementation_commit": "fca6bb94a8bd87965c4bf614ae492b85235f4ea9",
+  "profile": "core",
+  "runtime": {
+    "result": "PASS",
+    "application_image": "sha256:df783163ecf2d96eb8b44bda6a3a8f6f15f8f8fff89769c5e27855f66c5c988b",
+    "worker_image": "sha256:b0fe8d867e31e2b5d54f142c93fa003c6118e938c465879be1811b93bfb39293",
+    "application_source_binding": {
+      "files": 295,
+      "exact_committed_source_hashes_match": true,
+      "implementation_commit": "fca6bb94a8bd87965c4bf614ae492b85235f4ea9"
+    },
+    "migrations": [
+      {
+        "name": "001_foundation.sql",
+        "checksum": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "name": "002_audit_envelopes.sql",
+        "checksum": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "name": "003_governance_models.sql",
+        "checksum": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "name": "004_model_migrations.sql",
+        "checksum": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "name": "005_model_migration_integrity.sql",
+        "checksum": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "name": "006_inherited_asset_types.sql",
+        "checksum": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "name": "007_asset_type_migrations.sql",
+        "checksum": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "name": "008_constrained_relations.sql",
+        "checksum": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "name": "009_relation_participation.sql",
+        "checksum": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "name": "010_relation_scope_discovery.sql",
+        "checksum": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "name": "011_business_domains.sql",
+        "checksum": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+      },
+      {
+        "name": "012_authentication_foundation.sql",
+        "checksum": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77"
+      },
+      {
+        "name": "013_authority_foundation.sql",
+        "checksum": "4a9304cf02ab51fc085a6018cd22980e948bc6cd1167b3595ccb817b2cf41fbf"
+      },
+      {
+        "name": "014_source_connectors.sql",
+        "checksum": "5d43592b8120818db2a2d81e62652ffccdc9dde1a0c0111604bc373b8b2e1f4b"
+      },
+      {
+        "name": "015_approval_workflows.sql",
+        "checksum": "571e14b0b42fe2dc58d076e35e7e2a3bab0bca918042e4ef222c63b3be2f269d"
+      },
+      {
+        "name": "016_glossary_publication.sql",
+        "checksum": "26b03dd63077e0477da3ed80d2a099b2dc4e00390d9e11eeea2546a0d19aea57"
+      },
+      {
+        "name": "017_relation_scope_candidates.sql",
+        "checksum": "c22f0b6d35e75555e1c58b503a82d2bbf6f23ab404c3af618143178cc5baa47b"
+      },
+      {
+        "name": "018_glossary_nominal_candidates.sql",
+        "checksum": "60361c7b2ddee2f1f095d0e832116b4b97cc04fdbee6a88b398721e5bee13fea"
+      },
+      {
+        "name": "019_quality_execution.sql",
+        "checksum": "ed7fefe9f1598831b6feb5954ba688fd35073af20dc1717082cb5176bc576ab5"
+      },
+      {
+        "name": "020_native_lineage.sql",
+        "checksum": "b5e601a50fdad2417f6b497eade5d65da7c5dcdb7bde94e74694a04d208691b8"
+      },
+      {
+        "name": "021_classification_review.sql",
+        "checksum": "e8637511016f4e9cf6741c4d5718c14a8b47a97898b8769e2884a7ee2a3a294e"
+      },
+      {
+        "name": "022_reference_publication.sql",
+        "checksum": "5720d63ac78b9ad9781c3a46da00369c90d25cf5493cddb318fd8252b131c9d9"
+      },
+      {
+        "name": "023_reference_quality.sql",
+        "checksum": "92221543903d7069d34d9e946b18063be52b1dfa0a7423cdb1b9bd5ff8b5d3ee"
+      },
+      {
+        "name": "024_reference_structures.sql",
+        "checksum": "71a019163fec45a88fc91f4cb53839e582c23eb37db7615928ae5d7f888dcd2c"
+      },
+      {
+        "name": "025_quality_uniqueness.sql",
+        "checksum": "94a814af5b80baf9835eca83ad200e67bf6e5697f79ae99e7abb2a1f4c0a3f9e"
+      },
+      {
+        "name": "026_quality_range.sql",
+        "checksum": "7fda1bc5768525ff60449433b452da549063ee52f2d9cad01c0b26330c52bd8e"
+      },
+      {
+        "name": "027_quality_monitoring.sql",
+        "checksum": "b50fc5375c9a992e55fd196cf3e745b667b1b11dff045a88cb5899d493b4f35a"
+      },
+      {
+        "name": "028_quality_freshness.sql",
+        "checksum": "d1157374269dad9a2d43dd2e6fbe2bf67ab8b487c67db9f3f30ae266cefd41ef"
+      }
+    ],
+    "readback": {
+      "private_record": ".local/product-quality-freshness-runtime-readback.json",
+      "sha256": "2d76bf48bed23d1b055ea06b3af66f5de20927cbada0afee937265200db390fc"
+    }
+  },
+  "native_upgrade": {
+    "result": "PASS",
+    "command": "./dev test --suite freshness-upgrade",
+    "tests": 232,
+    "phases": [
+      {
+        "phase": "pre027-completeness-tests",
+        "path": "tests/qualification/quality.test.ts",
+        "expected": 15,
+        "tests": {
+          "tests": 15,
+          "suites": 0,
+          "pass": 15,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2003.131126
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre027-reference-tests",
+        "path": "tests/api/reference-quality-storage.test.ts",
+        "expected": 21,
+        "tests": {
+          "tests": 21,
+          "suites": 0,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 9796.601463
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre027-uniqueness-tests",
+        "path": "tests/api/quality-uniqueness-storage.test.ts",
+        "expected": 16,
+        "tests": {
+          "tests": 16,
+          "suites": 0,
+          "pass": 16,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 3327.478918
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre027-range-tests",
+        "path": "tests/api/quality-range-storage.test.ts",
+        "expected": 18,
+        "tests": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2413.640334
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre027-monitoring-tests",
+        "path": "tests/api/quality-monitoring-storage.test.ts",
+        "expected": 31,
+        "tests": {
+          "tests": 31,
+          "suites": 0,
+          "pass": 31,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 50398.556772
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "pre027-monitoring-invariants-tests",
+        "path": "tests/api/quality-monitoring-invariants.test.ts",
+        "expected": 4,
+        "tests": {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 5589.309752
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post028-completeness-tests",
+        "path": "tests/qualification/quality.test.ts",
+        "expected": 15,
+        "tests": {
+          "tests": 15,
+          "suites": 0,
+          "pass": 15,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 1764.195959
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post028-reference-tests",
+        "path": "tests/api/reference-quality-storage.test.ts",
+        "expected": 21,
+        "tests": {
+          "tests": 21,
+          "suites": 0,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 9955.14088
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post028-uniqueness-tests",
+        "path": "tests/api/quality-uniqueness-storage.test.ts",
+        "expected": 16,
+        "tests": {
+          "tests": 16,
+          "suites": 0,
+          "pass": 16,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2136.336917
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post028-range-tests",
+        "path": "tests/api/quality-range-storage.test.ts",
+        "expected": 18,
+        "tests": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2329.38171
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post028-monitoring-tests",
+        "path": "tests/api/quality-monitoring-storage.test.ts",
+        "expected": 31,
+        "tests": {
+          "tests": 31,
+          "suites": 0,
+          "pass": 31,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 50436.88844
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post028-monitoring-invariants-tests",
+        "path": "tests/api/quality-monitoring-invariants.test.ts",
+        "expected": 4,
+        "tests": {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 5546.087502
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post028-freshness-tests",
+        "path": "tests/api/quality-freshness-storage.test.ts",
+        "expected": 18,
+        "tests": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2685.317167
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      },
+      {
+        "phase": "post028-freshness-invariants-tests",
+        "path": "tests/api/quality-freshness-invariants.test.ts",
+        "expected": 4,
+        "tests": {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 877.501167
+        },
+        "exitStatus": 0,
+        "result": "PASS",
+        "sourceHashesMatched": true
+      }
+    ],
+    "source_binding": {
+      "files": 117,
+      "exact_committed_source_hashes_match": true,
+      "implementation_commit": "fca6bb94a8bd87965c4bf614ae492b85235f4ea9"
+    },
+    "upgrade_preservation": true,
+    "replay_preservation": true,
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "record": {
+      "private_record": ".local/evidence/quality-freshness-upgrade.json",
+      "sha256": "8ed6abcdb7e24283831711ed32c3c807234789083ae37b7485471714cbd7775c"
+    }
+  },
+  "source_worker": {
+    "result": "PASS",
+    "command": "./dev test --suite freshness-worker",
+    "checks": 18,
+    "measurements": 14,
+    "cleanup": "owned_helper_tables_domain_and_lock_session_absent_and_catalog_inventory_preserved",
+    "source_binding": {
+      "files": 18,
+      "exact_committed_source_hashes_match": true,
+      "implementation_commit": "fca6bb94a8bd87965c4bf614ae492b85235f4ea9"
+    },
+    "record": {
+      "private_record": ".local/product-freshness-worker-native-attempt-1.log",
+      "sha256": "8d36d539a71b9402199e5f2bf9fdd3a50941c983eea9d9eb0d1360c154ed7365"
+    }
+  },
+  "targeted_browser": {
+    "result": "PASS",
+    "command": "Source-bound Playwright target; public full equivalent ./dev test --suite e2e",
+    "counts": {
+      "startTime": "2026-11-17T05:45:19.990Z",
+      "duration": 36891.522,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "versions": {
+      "node": "v24.22.3",
+      "pnpm": "10.32.1",
+      "chrome": "Google Chrome 157.0.8103.79"
+    },
+    "source_binding": {
+      "files": 653,
+      "exact_committed_source_hashes_match": true,
+      "implementation_commit": "fca6bb94a8bd87965c4bf614ae492b85235f4ea9"
+    },
+    "captures": 24,
+    "execution": {
+      "private_record": ".local/evidence/product-quality-freshness-browser-attempt-1/execution.json",
+      "sha256": "5c64342de3ae8de390e78ffecebca9373e84b4263763b39d7f3b80bddfa3af90"
+    },
+    "visual_review": {
+      "private_record": ".local/evidence/product-quality-freshness-browser-attempt-1/visual-review.json",
+      "sha256": "ed55b2d8e6d5a270cad1b644fba2dcb90455e09a6ccc8f01d01096e2939dea76"
+    },
+    "limitations": [
+      "Viewport review only; below-fold portions outside these captures are not visually certified.",
+      "Not comprehensive accessibility or Arabic linguistic certification.",
+      "Automation and visual review remain separate; original execution result is preserved."
+    ]
+  },
+  "full_browser": {
+    "result": "FAIL",
+    "counts": {
+      "startTime": "2026-11-17T05:49:42.599Z",
+      "duration": 1261319.5,
+      "expected": 27,
+      "skipped": 7,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "execution": {
+      "private_record": ".local/evidence/product-full-browser-attempt-13/execution.json",
+      "sha256": "a70550e605f04a42bfc3b6d7fc5afac5e85644089563a967c9a6c72c87b5d368"
+    },
+    "failure": "Reference workflow pagination clicked a detached button;27 passed,1 failed,7 skipped. Repaired target and subsequent full run are separate records."
+  },
+  "host": {
+    "units": 1079,
+    "types": "PASS",
+    "production_build": "PASS",
+    "python_quality_transport": 114,
+    "records": [
+      {
+        "private_record": ".local/product-freshness-units-attempt-1.log",
+        "sha256": "c14597851198c4802f04381efafad94b4f8ac2d4b56e8d99ca6414193f09cfb2"
+      },
+      {
+        "private_record": ".local/product-freshness-types-attempt-1.log",
+        "sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+      },
+      {
+        "private_record": ".local/product-freshness-build-attempt-1.log",
+        "sha256": "1e445b524a5b84e072032abade1cc81ec87dfd30fb8f995a55394e81fdef2a1e"
+      },
+      {
+        "private_record": ".local/product-freshness-python-all-attempt-2.log",
+        "sha256": "2a8e5eb3d2e949557b89aa7101743f0bf7568294cb0ce710c5e2fe33610ff2a4"
+      }
+    ]
+  },
+  "published_source_security": {
+    "result": "PASS",
+    "run": 44027780524,
+    "commit": "fca6bb94a8bd87965c4bf614ae492b85235f4ea9",
+    "receipt": {
+      "private_record": ".local/freshness-hosted-fca6bb9/verification-receipt.json",
+      "sha256": "cdc0a633bd3687cecc0567bebb5e6a1928ea701974b067a9391d070bc014d265"
+    },
+    "scope": "JavaScript/TypeScript, Python and Actions; not dependency/container/enterprise qualification."
+  },
+  "published_development": {
+    "result": "FAIL",
+    "run": 44027780537,
+    "api_passed": 168,
+    "failure": "Authority-loader512 boundary exceeds existing25-second SQL closure deadline; later stages unexecuted."
+  },
+  "limitations": [
+    "Local development scope only; compound quality, vendor-live, enterprise and release qualification remain open.",
+    "Source-clock skew envelope is bounded evidence, not NTP or universal clock correctness proof.",
+    "Full35 failed and is retained; a targeted pass does not replace full regression.",
+    "Remaining families, row filters/partition scope and broader programme capabilities remain required."
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-17T03:23:10.737309+00:00",
+  "scope": "Local governed reference hierarchy/crosswalk and bulk import acceptance after authorization mapping repair.",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "implementation_commit": "ff8519b26ce552234ce26a74feb12c86c00638cd",
+  "profile": "core",
+  "runtime": {
+    "result": "PASS",
+    "application_manifest": "sha256:cf78643dab9f75603dea8d56f3297efe182b3db7965c2ea882d402bcb18c4695",
+    "application_source_count": 275,
+    "migration_count": 24,
+    "migration_checksums": [
+      {
+        "name": "001_foundation.sql",
+        "checksum": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "name": "002_audit_envelopes.sql",
+        "checksum": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "name": "003_governance_models.sql",
+        "checksum": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "name": "004_model_migrations.sql",
+        "checksum": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "name": "005_model_migration_integrity.sql",
+        "checksum": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "name": "006_inherited_asset_types.sql",
+        "checksum": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "name": "007_asset_type_migrations.sql",
+        "checksum": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "name": "008_constrained_relations.sql",
+        "checksum": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "name": "009_relation_participation.sql",
+        "checksum": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "name": "010_relation_scope_discovery.sql",
+        "checksum": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "name": "011_business_domains.sql",
+        "checksum": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+      },
+      {
+        "name": "012_authentication_foundation.sql",
+        "checksum": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77"
+      },
+      {
+        "name": "013_authority_foundation.sql",
+        "checksum": "4a9304cf02ab51fc085a6018cd22980e948bc6cd1167b3595ccb817b2cf41fbf"
+      },
+      {
+        "name": "014_source_connectors.sql",
+        "checksum": "5d43592b8120818db2a2d81e62652ffccdc9dde1a0c0111604bc373b8b2e1f4b"
+      },
+      {
+        "name": "015_approval_workflows.sql",
+        "checksum": "571e14b0b42fe2dc58d076e35e7e2a3bab0bca918042e4ef222c63b3be2f269d"
+      },
+      {
+        "name": "016_glossary_publication.sql",
+        "checksum": "26b03dd63077e0477da3ed80d2a099b2dc4e00390d9e11eeea2546a0d19aea57"
+      },
+      {
+        "name": "017_relation_scope_candidates.sql",
+        "checksum": "c22f0b6d35e75555e1c58b503a82d2bbf6f23ab404c3af618143178cc5baa47b"
+      },
+      {
+        "name": "018_glossary_nominal_candidates.sql",
+        "checksum": "60361c7b2ddee2f1f095d0e832116b4b97cc04fdbee6a88b398721e5bee13fea"
+      },
+      {
+        "name": "019_quality_execution.sql",
+        "checksum": "ed7fefe9f1598831b6feb5954ba688fd35073af20dc1717082cb5176bc576ab5"
+      },
+      {
+        "name": "020_native_lineage.sql",
+        "checksum": "b5e601a50fdad2417f6b497eade5d65da7c5dcdb7bde94e74694a04d208691b8"
+      },
+      {
+        "name": "021_classification_review.sql",
+        "checksum": "e8637511016f4e9cf6741c4d5718c14a8b47a97898b8769e2884a7ee2a3a294e"
+      },
+      {
+        "name": "022_reference_publication.sql",
+        "checksum": "5720d63ac78b9ad9781c3a46da00369c90d25cf5493cddb318fd8252b131c9d9"
+      },
+      {
+        "name": "023_reference_quality.sql",
+        "checksum": "92221543903d7069d34d9e946b18063be52b1dfa0a7423cdb1b9bd5ff8b5d3ee"
+      },
+      {
+        "name": "024_reference_structures.sql",
+        "checksum": "71a019163fec45a88fc91f4cb53839e582c23eb37db7615928ae5d7f888dcd2c"
+      }
+    ],
+    "baked_source_readback_sha256": "d17a13070bf21965f999872bddeb09ad0d842cac57075dfe0cf8c50a8f436e2c"
+  },
+  "browser": {
+    "outcome": "PASS",
+    "command": "python3 .local/browser-launchers/reference-structures.py --suite target --attempt product-reference-structures-browser-attempt-4 --runtime-readback .local/product-reference-browser-pacing-runtime-readback.json",
+    "versions": {
+      "node": "v24.22.3",
+      "pnpm": "10.32.1",
+      "chrome": "Google Chrome 157.0.8103.79"
+    },
+    "counts": {
+      "startTime": "2026-11-17T03:15:56.192Z",
+      "duration": 207006.959,
+      "expected": 2,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "file": "reference-structures.spec.ts",
+        "line": 33,
+        "title": "REF-STRUCT: independent hierarchy and crosswalk publication, temporal gaps, immutable history and endpoint visibility",
+        "project": "reference-structures",
+        "status": "expected",
+        "expected_status": "passed",
+        "attempts": [
+          {
+            "status": "passed",
+            "retry": 0,
+            "duration": 133533
+          }
+        ]
+      },
+      {
+        "file": "reference-import.spec.ts",
+        "line": 47,
+        "title": "REF006: raw JSON and CSV import, complete reconciliation consent and independent publication",
+        "project": "reference-import",
+        "status": "expected",
+        "expected_status": "passed",
+        "attempts": [
+          {
+            "status": "passed",
+            "retry": 0,
+            "duration": 71447
+          }
+        ]
+      }
+    ],
+    "source_count": 571,
+    "source_manifest_sha256": "d193d7a47e4b591dae6d83bdc7bccac3d95af7e1b34c921ee6ddb4284e95cff5",
+    "sources_unchanged": true,
+    "execution_receipt_sha256": "bafc82fc6d9a3b718eff83d881c8d090cc21931b6acb92ff79d2b6b6378289c1",
+    "original_captures": 16,
+    "capture_manifest_sha256": "d5c7cce9af848c636982d74b65bda891e351be0800f68c0652b2e7dbb8181fcd",
+    "visual_review_sha256": "3eefcaccd89f867c46c7b0c72446d50e550b502a967224a20577823b3f6e614f",
+    "visual_scope": "All16 original desktop/mobile English/Arabic frames viewed, hashes reconciled; viewport review with no blocking visible layout issue. Minor text/header wrapping observations retained.",
+    "cleanup": {
+      "schema_version": 1,
+      "scope": "registered-posix-groups-and-observed-descendants",
+      "result": "PASS",
+      "trigger": "normal",
+      "registeredBrowserGroups": 2,
+      "trackedProcesses": 76,
+      "termSignals": 0,
+      "killSignals": 0,
+      "remainingLive": 0,
+      "identityConflicts": 0,
+      "unresolvedGroups": 0,
+      "registryClosed": true
+    }
+  },
+  "authorization_repair": {
+    "known_membership_denials": "HTTP403",
+    "unexpected_privilege_errors": "redactedHTTP500",
+    "focused_host_tests": 37,
+    "outcome": "PASS",
+    "host_log_sha256": "36ccaf6cfa1bb5efd57f8b7dce119b76dd91e3ddbc514f329d400b174243c2d0"
+  },
+  "earlier_api_regression": {
+    "commit": "6cb9d6b1ef12d30ade54952a50c5c76c23c8d664",
+    "counts": {
+      "tests": 168,
+      "suites": 0,
+      "pass": 168,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "outcome": "PASS",
+    "receipt_sha256": "49dc1427467b092243216c00dfff05187afd62264ac43880b6942cf6a4404e0d",
+    "limitation": "Executed before later authorization repair; not substituted for current-head full regression."
+  },
+  "previous_target_attempts": [
+    {
+      "attempt": 1,
+      "outcome": "FAIL",
+      "cause": "Workflow picker pagination test race"
+    },
+    {
+      "attempt": 2,
+      "outcome": "FAIL",
+      "cause": "Product membership denial mapping and import assertion/request quota"
+    },
+    {
+      "attempt": 3,
+      "outcome": "FAIL",
+      "cause": "Structures final workflow exceeded current request quota; import passed"
+    }
+  ],
+  "limitations": [
+    "Full31-browser/current-head API and fresh hosted qualification remain pending.",
+    "Optional ClamAV adapter exists; actual antivirus engine qualification remains NOT_RUN.",
+    "Local automated evidence is not a human sign-off or complete requirement/profile/release qualification.",
+    "No vendor-live or paid/production deployment qualification."
+  ]
+}

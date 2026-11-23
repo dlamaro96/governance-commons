@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "scope": "Native PostgreSQL view-dependency extraction against the bundled synthetic source",
+  "implementation_status": "IN_PROGRESS",
+  "verification_level": "V2",
+  "release_qualified": false,
+  "command": "./dev test --suite lineage-worker",
+  "result": "PASS",
+  "profile": "core synthetic local PostgreSQL",
+  "source_version": "17.11 (Debian 17.11-1.pgdg12+2)",
+  "worker_image": "sha256:df0557c5f3e168010f775d09690c7fa1295bed92879802784b2e2f1b1ec9c740",
+  "source_image": "sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+  "checks": [
+    "native_reader_catalog_and_real_scan",
+    "harbor_exact_oid_rewrite_and_attnum_witnesses",
+    "all_scanned_views_and_dependencies_have_admitted_endpoints",
+    "constant_view_has_collected_empty_dependencies",
+    "external_relation_and_routine_are_closed_gaps",
+    "table_and_column_rename_preserve_oid_attnum_and_lineage",
+    "owned_fixture_cleanup_preserves_catalog_acl_and_scan"
+  ],
+  "source_files": [
+    {
+      "path": "deploy/compose/compose.yaml",
+      "sha256": "ccfe01ffdc3a4deb2b5dc1a5e324be121f5e6c726b2b9dfe8d50c3e414b761c5"
+    },
+    {
+      "path": "python/Dockerfile",
+      "sha256": "14b22e5698b860053a7defd47357189b346c26b5a712aca059b5cb291b54fe98"
+    },
+    {
+      "path": "python/governance_workers/__init__.py",
+      "sha256": "6c6ec57de9f82ef42d82760f144a4571cb16b3cd6de33aaa7aa9fd65e8ab1fa1"
+    },
+    {
+      "path": "python/governance_workers/deadline.py",
+      "sha256": "2dcecedc356298f52fa7441df31d76ff92d414117e1e72ea87b4cb3c3d828ce0"
+    },
+    {
+      "path": "python/governance_workers/dispatch.py",
+      "sha256": "c2b5edc9c8df89da6aecb6aab9bdcd8863e6a619e75f8611ddc5a5ea00b8987f"
+    },
+    {
+      "path": "python/governance_workers/oauth.py",
+      "sha256": "249dc65de4d1056cdc1332997634cc2ee63409eb1150c5ae325878575b3fb7a3"
+    },
+    {
+      "path": "python/governance_workers/postgres_lineage.py",
+      "sha256": "e8d3f41d8b6fc85deea134ba806f8e7439ac0efa5b3bfb2d19dd41a7d72379f5"
+    },
+    {
+      "path": "python/governance_workers/postgres_targets.py",
+      "sha256": "19ffef3d5ad69084852a53151b99680f057076810e6fd372249d9cbc979e82e8"
+    },
+    {
+      "path": "python/governance_workers/postgresql.py",
+      "sha256": "cb930a534a323543b60ece506f5280f4b1733a1dd1e3d7fc9ced25df2217f895"
+    },
+    {
+      "path": "python/governance_workers/quality.py",
+      "sha256": "f5d787c1ec190fa80070591c849db1a70a2365773007cad085d3b4d86c198f58"
+    },
+    {
+      "path": "python/governance_workers/secrets.py",
+      "sha256": "0663aef5eb2c1778a0d3187ea5d70c32a1e4453ac5403610db61b3cf1022685b"
+    },
+    {
+      "path": "python/governance_workers/server.py",
+      "sha256": "9278edd62dd947855775dd679b91b9517af7e39a1ffd74d3f689b7a2c98c0e18"
+    },
+    {
+      "path": "python/governance_workers/unity_catalog.py",
+      "sha256": "dfe71a10174326fb52d463e7ed340091ed7d04aede88a5f5021fcf4cd3f28d64"
+    },
+    {
+      "path": "python/pyproject.toml",
+      "sha256": "d25c50c349ba164af85f9e381f4345f371338b3fddf29ce857c82d9fafb8359a"
+    },
+    {
+      "path": "python/tests/test_postgres_lineage_conformance.py",
+      "sha256": "cf7df168314d0e7ca36a9c1a13cd4579778105c15da28f91b9e932229ffc0902"
+    },
+    {
+      "path": "python/uv.lock",
+      "sha256": "7df05ec5afb240c8eeb25b63dc37bed1bdc72965a173d627177053ecd2c73674"
+    }
+  ],
+  "raw_result_sha256": "5de073a8b5141d8d62e0c4e216c521d69ef978ca79d72d7040947f9965f3741f",
+  "cleanup_confirmed": true,
+  "earlier_attempts": [
+    {
+      "attempt": 1,
+      "result": "FAIL",
+      "phase": "harbor_native_oracle"
+    },
+    {
+      "attempt": 2,
+      "result": "FAIL",
+      "phase": "harbor_native_oracle"
+    }
+  ],
+  "correction": "Invoke the worker qualification module with -m to retain the installed application package path. No extraction assertion or timeout was relaxed.",
+  "limitations": [
+    "synthetic local source; direct adapter and catalog only",
+    "empty dependency view, not an entirely empty schema",
+    "catalog/ACL and metadata preservation, not business-row checksums",
+    "no external TLS, ingestion, API, Temporal, UI, column mapping or SQL-body analysis claim",
+    "API/UI acceptance and hosted security checks are separate; this record does not qualify the full connector requirement."
+  ]
+}

@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-17T09:53:27.318788+00:00",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "implementation_commit": "f7fc21307b4562a04812f5a3bd782dce3fea3a13",
+  "tested_merge": "4482a7e7982f91abf5b97cb9873b583ba54e0103",
+  "same_tree_and_parent_verified": true,
+  "source_security": {
+    "runId": 44052452668,
+    "status": "SUCCESS_VERIFIED",
+    "receiptSha256": "84571c052c3c29500f0d2c5a3128aee1ba26c96ebde38b32ce5e82006b459fa6",
+    "sourceFiles": 1502,
+    "everySourceByteMatchesRequestedCommit": true,
+    "languages": {
+      "javascript-typescript": {
+        "expectedFiles": 474,
+        "queryCount": 105,
+        "findings": 0,
+        "storedAnalysisId": 2184575964
+      },
+      "python": {
+        "expectedFiles": 146,
+        "queryCount": 52,
+        "findings": 0,
+        "storedAnalysisId": 2184567051
+      },
+      "actions": {
+        "expectedFiles": 2,
+        "queryCount": 24,
+        "findings": 0,
+        "storedAnalysisId": 2184563117
+      }
+    },
+    "archiveDigestsVerified": 3,
+    "url": "https://github.com/dlamaro96/governance-commons/actions/runs/44052452668",
+    "verificationRecord": "docs/verification/source-security-f7fc213.json"
+  },
+  "development": {
+    "runId": 44052452645,
+    "status": "FAILURE",
+    "attempt": 1,
+    "closedAssignedOutcomes": {
+      "success": 30,
+      "failure": 3,
+      "skipped": 10
+    },
+    "all43ExactOutcomeNamesVerified": true,
+    "assignmentSha256": "fe7b87ea8efbc60facda9c88d71fc1005766897451ab030e72f5a27255125312",
+    "commonSetupSucceededOnAll5": true,
+    "artifactArchivesVerified": 5,
+    "failedOutcomes": [
+      "glossary_population_upgrade",
+      "quality_upgrade",
+      "browser"
+    ],
+    "skippedOutcomes": [
+      "lineage_upgrade",
+      "classification_upgrade",
+      "quality_worker",
+      "lineage_worker",
+      "reference_upgrade",
+      "reference_quality_upgrade",
+      "reference_quality_worker",
+      "reference_structure_upgrade",
+      "reference_import",
+      "protected_authn"
+    ],
+    "governanceFailure": {
+      "phase": "population-native-tests",
+      "tests": {
+        "passed": 25,
+        "failed": 1
+      },
+      "failedCase": "tests/qualification/glossary-population.test.ts:124",
+      "publicationElapsedMs": 41083,
+      "code": "RELATION_RETRY",
+      "lastRejectedQuery": {
+        "phase": "publication",
+        "query": "settings",
+        "startedMs": 27568,
+        "elapsedMs": 13510,
+        "outcome": "rejected",
+        "sqlstate": "57014"
+      },
+      "sourceFilesVerified": 109,
+      "cleanup": {
+        "ownedRemoved": true,
+        "resourceInventoryPreserved": true
+      }
+    },
+    "qualityBasicsFailure": {
+      "step": "quality_upgrade",
+      "reportedResult": "FAIL",
+      "nativeCause": "UNKNOWN: detailed raw native report/log not exported; no substitution of governance failure cause."
+    },
+    "browser": {
+      "counts": {
+        "passed": 24,
+        "failed": 1,
+        "notRun": 12
+      },
+      "failedCase": "tests/e2e/quality.spec.ts:120",
+      "failureSite": [
+        "tests/e2e/quality.spec.ts:125:112"
+      ],
+      "error": "The obsolete ordinary-table unsupported-heading assertion timed out after 15 seconds; table-volume support is implemented.",
+      "notRun": [
+        "tests/e2e/lineage.spec.ts",
+        "tests/e2e/classification.spec.ts",
+        "tests/e2e/reference-data.spec.ts",
+        "tests/e2e/reference-quality.spec.ts",
+        "tests/e2e/reference-structures.spec.ts",
+        "tests/e2e/reference-import.spec.ts",
+        "tests/e2e/quality-uniqueness.spec.ts",
+        "tests/e2e/quality-range.spec.ts",
+        "tests/e2e/quality-monitoring.spec.ts",
+        "tests/e2e/quality-freshness.spec.ts",
+        "tests/e2e/quality-freshness-monitoring.spec.ts",
+        "tests/e2e/quality-volume.spec.ts"
+      ],
+      "retries": 0
+    },
+    "foundation": {
+      "apiCounts": {
+        "tests": 171,
+        "suites": 0,
+        "pass": 171,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "apiSourceFilesVerified": 25,
+      "authenticationCounts": {
+        "tests": {
+          "tests": 21,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 5824.153017
+        },
+        "concurrency_tests": {
+          "tests": 14,
+          "pass": 14,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2448.522623
+        }
+      },
+      "authenticationSourceFilesVerified": 175,
+      "authenticationMigrationsVerified": 12,
+      "authorityReadOriginal": "STEP_SUCCESS; the SQL013-to031 qualification is explicit, and its raw native report was not exported or independently revalidated here.",
+      "authorityReadCurrent": "STEP_SUCCESS; the populated SQL030-to031 qualification is explicit, and its raw native report was not exported or independently revalidated here."
+    },
+    "url": "https://github.com/dlamaro96/governance-commons/actions/runs/44052452645"
+  },
+  "jobs": [
+    {
+      "name": "quality",
+      "status": "completed",
+      "conclusion": "success",
+      "durationMinutes": 5.37,
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (governance)",
+      "status": "completed",
+      "conclusion": "failure",
+      "durationMinutes": 13.85,
+      "failedSteps": [
+        "Verify multi-policy glossary publication on populated catalogs",
+        "Collect bounded redacted evidence"
+      ]
+    },
+    {
+      "name": "behavior (foundation)",
+      "status": "completed",
+      "conclusion": "success",
+      "durationMinutes": 44.87,
+      "failedSteps": []
+    },
+    {
+      "name": "secrets",
+      "status": "completed",
+      "conclusion": "success",
+      "durationMinutes": 0.43,
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (quality-freshness-volume)",
+      "status": "completed",
+      "conclusion": "success",
+      "durationMinutes": 22.6,
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (browser)",
+      "status": "completed",
+      "conclusion": "failure",
+      "durationMinutes": 19.88,
+      "failedSteps": [
+        "Verify browser acceptance and accessibility",
+        "Collect bounded redacted evidence"
+      ]
+    },
+    {
+      "name": "behavior (quality-basics)",
+      "status": "completed",
+      "conclusion": "failure",
+      "durationMinutes": 9.83,
+      "failedSteps": [
+        "Verify completeness storage upgrade and current authorization",
+        "Collect bounded redacted evidence"
+      ]
+    },
+    {
+      "name": "behavior",
+      "status": "completed",
+      "conclusion": "failure",
+      "durationMinutes": 0.05,
+      "failedSteps": [
+        "Require every fixed behavior shard to succeed"
+      ]
+    },
+    {
+      "name": "required",
+      "status": "completed",
+      "conclusion": "failure",
+      "durationMinutes": 0.1,
+      "failedSteps": [
+        "Require every mandatory child to succeed"
+      ]
+    }
+  ],
+  "receipt_sha256": "ff992040a8ec868f699027dd01b473fd15f285e028894145cdb547188630ec5e",
+  "source_input_receipt_sha256": "aeaf35b67bb2480d981fdb50413b5a3bbced4d42bb678f5da60626fc31300395",
+  "verification_method": "Automated independent authenticated artifact, exact-source and outcome readback; no human review is claimed.",
+  "limitations": [
+    "Only the exact published f7fc213 source and its merge tree are qualified by this record. Later targeted repairs and the new CI45 run are separate evidence.",
+    "Source security covers configured analyses and verified extraction coverage. Zero findings does not establish absence of vulnerabilities, container security, penetration testing or enterprise readiness.",
+    "Native gates without exported validated records retain step-only evidence. The completeness-upgrade cause remains unknown.",
+    "API and inactive-authentication safe coordinates and exact source hashes were verified. Their private TAP and resource inventory logs were not uploaded.",
+    "All 43 mandatory outcomes are retained: 30 passed, 3 failed and 10 were skipped. Both behavior and required aggregate checks failed.",
+    "The browser run retained 24 passes, one failure, 12 unrun journeys and zero retries. Later successful targeted repairs do not change this failed result."
+  ]
+}

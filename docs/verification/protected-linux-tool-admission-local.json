@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "result": "HOST_CONTROLS_PASS",
+  "release_qualified": false,
+  "execution_base_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+  "source_provenance": "Dirty candidate; file digests identify the exact implementation and tests. Immutable-image native/browser qualification remains pending.",
+  "source_files": [
+    {
+      "path": "scripts/protected_browser_process.py",
+      "sha256": "c001ef0ca36ff1a252c59321d99043910c13fbff7a88b15c913a2f3906d2012b"
+    },
+    {
+      "path": "scripts/runtime-test-protected-authn.py",
+      "sha256": "a22c412bba12a35e0ccd42ff8f7e46f9de6418e3ac8b2159af0529051c1ecd54"
+    },
+    {
+      "path": "scripts/test_protected_browser_process.py",
+      "sha256": "b50dfe7d8df02505a72d8f2a747e643904813bf8b12f02579fa8e30ccea0df0c"
+    },
+    {
+      "path": "scripts/test_protected_authn_bootstrap.py",
+      "sha256": "8b7d80903cea07d37bda281ba4e240f2e7d09b2606837751ec0d9c4bc8e1398d"
+    }
+  ],
+  "observed_download_metadata": {
+    "url": "https://cdn.playwright.dev/builds/cft/159.0.8154.6/linux64/chrome-linux64.zip",
+    "headers": {
+      "Content-Range": "bytes 208922279-208987835/208987836",
+      "ETag": "\"b87d3ee87bef61b7ba106c40da0e0283\"",
+      "Last-Modified": "Wed, 11 Nov 2026 23:33:44 GMT"
+    },
+    "central_directory_bytes": 33038,
+    "selected_entries": [
+      {
+        "name": "chrome-linux64/chrome",
+        "uncompressed_bytes": 311672136
+      },
+      {
+        "name": "chrome-linux64/chrome-wrapper",
+        "uncompressed_bytes": 4510
+      }
+    ],
+    "archive_downloaded": false
+  },
+  "hosted_failure": {
+    "run_id": 45102259563,
+    "job_id": 137455553143,
+    "result": "FAIL",
+    "duration_after_runner_start_seconds_approximate": 1.5,
+    "original_failure_phase": "UNAVAILABLE",
+    "interpretation": "The exact Linux browser is larger than the old 256MiB cap, a deterministic admission incompatibility. The original private report was not exported, so the first failing admission check is not proven."
+  },
+  "repair": {
+    "executable_bound_bytes": 536870912,
+    "stream_block_bytes": 1048576,
+    "single_descriptor": true,
+    "refuse_symlinks_nonregular_empty_growing_or_changed_files": true,
+    "shared_admission_launch_exit_hash_implementation": true,
+    "closed_failure_phase_output": true,
+    "process_memory_output_and_time_limits_unchanged": true
+  },
+  "host_controls": [
+    {
+      "suite": "owned-browser-process",
+      "tests": 17,
+      "result": "PASS",
+      "log_sha256": "63c644e59c9c6ae6ea4c8256b23dbdb1561e80c835c8eb97f1016eee963466f3"
+    },
+    {
+      "suite": "protected-bootstrap",
+      "tests": 12,
+      "result": "PASS",
+      "log_sha256": "c59d3eef6cb915010c6f67f4f9abb4d82b5d1323b5761296a75a3969808e97ec"
+    },
+    {
+      "suite": "protected-publication",
+      "tests": 27,
+      "result": "PASS",
+      "log_sha256": "ac880bb0642cbb74063020f2b4f8adec14838191c8fab21cc55b670a78030c2f"
+    }
+  ],
+  "prior_attempt": {
+    "result": "FAIL",
+    "reason": "Sandboxed process inspection refused five lifecycle controls; no digest control failed. Authorized rerun passes all17.",
+    "log_sha256": "5856ad3feb8943c9833d3969dd6df154914dcc46520fa4ac0df39bb74ee6b4b0"
+  },
+  "limitations": [
+    "The official archive central directory was inspected with bounded HTTP ranges; no archive was downloaded or executable installed.",
+    "A synthetic sparse file of the observed311,672,136-byte size proves streaming-hash compatibility, not Linux browser execution.",
+    "Native protected login and complete fresh hosted qualification remain required."
+  ]
+}

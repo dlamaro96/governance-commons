@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T02:53:10.486895+00:00",
+  "implementation_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+  "result": "PASS",
+  "release_qualified": false,
+  "command": "./dev test --suite protected-authn",
+  "profile": "isolated-protected-authn",
+  "evidence_mode": "immutable-image",
+  "immutable_image": "sha256:4523153067c37a3cff3d11d8dd0f4d3535acefd8cd822dc1fc728df04807ce79",
+  "exact_git_source_files": 203,
+  "native_http": {
+    "tests": 15,
+    "pass": 15,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 11389.522214
+  },
+  "browser": {
+    "startTime": "2026-11-23T02:51:10.317Z",
+    "duration": 8727.141000000001,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "migration_ledger": {
+    "rows": 32,
+    "unchanged": true,
+    "digests": {
+      "before": "d2e1bc6b1b9ba027b4cc33d37c0a8fd5584f65d64dc3d3341a0d3586ad48c8d5",
+      "after": "d2e1bc6b1b9ba027b4cc33d37c0a8fd5584f65d64dc3d3341a0d3586ad48c8d5"
+    }
+  },
+  "tools": {
+    "node": {
+      "version": "v24.22.3",
+      "sha256": "ba7073582822078d8c90bca3facacc46690bc5366fab4b815aeef9148cd6e854"
+    },
+    "browser": {
+      "version": "Google Chrome 157.0.8103.79",
+      "sha256": "23010a3aeff294b54c6e8dc9a88e61388ec4655e2c10216c8a4ae2c050bfcb1b"
+    },
+    "docker": "27.3.1",
+    "compose": "2.29.7-desktop.1"
+  },
+  "runtime": {
+    "node": "v24.22.3",
+    "pg": "8.23.1",
+    "jose": "6.2.17",
+    "tsx": "4.23.15",
+    "packageSha256": "2ffbe91a4d738c36174481d01add77a1a1e1c239fc9e8eb276f3a36b69bcb860",
+    "lockSha256": "f1b463cb91ca5d7eafab95defa355eeefea766a2c9179beaf360c4b72a906210"
+  },
+  "cleanup": {
+    "ownedRemoved": true,
+    "generatedCredentialsRemoved": true,
+    "ownedHostProcessesRemoved": true,
+    "resourceInventoryPreserved": true
+  },
+  "readback_sha256": "5ddff9d8d02934f3a3e3c0d34af7b0a0c247d101cd0615bc6687c82cfbc0a599",
+  "private_report_sha256": "3900041537b923bcda58ca03cbde70eeab69555bab7413d7b6ca89341e71976f",
+  "private_logs_rehashed": 145,
+  "captures": [
+    {
+      "name": "protected-revoked-ar-mobile.png",
+      "sha256": "e069fc43894ada9575e19ff47c9cb7ea84d28af3e0c6467f2b30c8ed10cbd85d",
+      "bytes": 68083,
+      "width": 390,
+      "height": 1385
+    },
+    {
+      "name": "protected-selected-ar-desktop.png",
+      "sha256": "0edf4194e67b87e138f4f71d5e2d1ebee66e50f5955fcfd880e341c8a725b0f3",
+      "bytes": 82685,
+      "width": 1440,
+      "height": 1161
+    },
+    {
+      "name": "protected-selected-ar-mobile.png",
+      "sha256": "7d1e20bd6c6ba7d33420b65c8d5e262f0d46d9d43e1a75e8264dc59204cf1eae",
+      "bytes": 72661,
+      "width": 390,
+      "height": 1407
+    },
+    {
+      "name": "protected-selected-en-desktop.png",
+      "sha256": "88bd6ac035aa9769dd4ce8e5ef00a4cd96735dfa0a6c0d36dd57613e3a5ee140",
+      "bytes": 85154,
+      "width": 1440,
+      "height": 1140
+    },
+    {
+      "name": "protected-session-en-desktop.png",
+      "sha256": "ef2ea3e4747bc455cb886918f5e9cc4ecd893a36ff95fa495ffd744f55c120d4",
+      "bytes": 81923,
+      "width": 1440,
+      "height": 1140
+    },
+    {
+      "name": "protected-steward-en-mobile.png",
+      "sha256": "b9384c41e21d991306c3c652c1268efca8ba2b01d71fea1a02969875ee836241",
+      "bytes": 72581,
+      "width": 390,
+      "height": 1340
+    },
+    {
+      "name": "protected-tenant-denied-en-mobile.png",
+      "sha256": "70aa412378f587b69e0c967a376fdb42cdee9fd927fb6e3bffec62f851b8fe62",
+      "bytes": 72553,
+      "width": 390,
+      "height": 1383
+    },
+    {
+      "name": "protected-unbound-denied-en-desktop.png",
+      "sha256": "c1c3fb5c835b939e9d0509aa36641d337693f90409141fd13ed730dbed427ddc",
+      "bytes": 78298,
+      "width": 1440,
+      "height": 1158
+    }
+  ],
+  "visual_review": {
+    "reviewed": 4,
+    "total": 8,
+    "names": [
+      "protected-selected-en-desktop.png",
+      "protected-selected-ar-mobile.png",
+      "protected-tenant-denied-en-mobile.png",
+      "protected-unbound-denied-en-desktop.png"
+    ],
+    "observations": [
+      "English desktop session details, tenant selection and logout controls render without overlap.",
+      "Arabic mobile session details and controls fit the captured layout; the synthetic tenant identifier wraps.",
+      "Denied mobile and unbound desktop states hide session details and disable mutation controls."
+    ],
+    "limitations": [
+      "Foundation session-management UI only; content authority remains inactive.",
+      "Fixed capture review is not complete linguistic or accessibility certification."
+    ]
+  },
+  "core_runtime": {
+    "result": "PASS",
+    "application_sources": 300,
+    "worker_sources": 13,
+    "migrations": 32,
+    "application_image": "sha256:4523153067c37a3cff3d11d8dd0f4d3535acefd8cd822dc1fc728df04807ce79",
+    "worker_image": "sha256:7a7b6a10ee8fd8cd9a6d25addc2ebec238843a50ec93994ebe215fe36ec8007a",
+    "readback_sha256": "d249458e1f9d85ede6f593140e25e3bed558896cd5caf6aaae5073eb6e7fe285"
+  },
+  "limitations": [
+    "Isolated fresh PostgreSQL and Keycloak over explicit loopback HTTP; no production TLS, shared-core ingress, content authority activation or release qualification.",
+    "Controlled signed-token native HTTP cases and two real Keycloak browser journeys are separate executions; neither is substituted for the other.",
+    "Only reviewed source coordinates, counters, source/image/tool hashes and allowlisted capture references are exported. Raw titles, errors, logs, identities, sessions, credentials and installation manifests remain private.",
+    "Executable hashes identify the selected Node and browser binaries, not every browser installation file. Resource observations do not guarantee host or Docker VM swap behavior.",
+    "Automated accessibility/assertion results and capture hashes do not assert visual inspection or human/linguistic accessibility approval."
+  ]
+}

@@ -5,10 +5,9 @@ hosted attempt and its separate failure are recorded in
 `SAST_HOSTED_QUALIFICATION.md`; neither record overrides the other.
 
 Status: the final local source analysis, findings gate and artifact-hygiene checks
-**PASS** on the isolated `codex/sast-qualification`
-worktree based on `8d9c9c701d1f0ea49df13671088cbc8b1e294832`. Exact dirty
+**PASS** on the isolated qualification checkout based on `8d9c9c701d1f0ea49df13671088cbc8b1e294832`. Exact dirty
 snapshots are identified by their source manifests; no result claims that
-unchanged base HEAD or the newer root application was scanned. No report has
+unchanged base HEAD or the later integrated application was scanned. No report has
 been uploaded and the triage register is empty.
 
 ## Evidence and boundaries
@@ -114,7 +113,7 @@ Twelve completed product extracted-database caches were removed after journaling
 17,620 file hashes; all 80 retained report/coverage/query hashes were verified
 unchanged. Snapshots, manifests, original SARIF, decoded coverage, query outputs,
 diagnostics and logs remain. Cache re-extraction is reproducible using the pinned
-toolchain and exact snapshots. No unrelated/Hive Citadel resources were changed.
+toolchain and exact snapshots. No unrelated/unrelated local projects resources were changed.
 
 Physical free space initially remained approximately 4.33 GiB, so execution
 waited. Exact-ID pruning of 16 obsolete, non-shared Governance Commons COPY/build
@@ -125,21 +124,17 @@ prune was used. The final run then passed its unchanged admission check and
 finished above the hard floor. Cleanup journals and proof digests are summarized
 in `sast-evidence/resource-cleanup.json`.
 
-## Resume and integration
+## Subsequent integration
 
-1. Root reviews the source, final `product-5` evidence and original attempts.
-   Preserve the final artifacts and their separate analysis/findings/hygiene
-   status; no additional isolated rerun is implied.
-2. Root integrates tracked-file patches, preserving newer root
-   changes in `model.ts`, runtime dispatch and shared interfaces. New files may be
-   added directly; whole older-base files must not overwrite newer source.
-3. Re-run the integrated root source and hosted PR/default-branch jobs. Read back
-   all three commit/category analyses, then exercise public fork and Dependabot
-   permissions. Configure the observed stable `sast-required` gate only after
-   qualification. No commits, pushes, settings changes or uploads were performed
-   from this isolated workstream.
+The original local results above remain unchanged. Later integration and hosted
+results are indexed in [the current execution state](../execution/STATE.md),
+[the evidence manifest](../verification/evidence-manifest.json) and
+[issue 11](https://github.com/dlamaro96/governance-commons/issues/11). Exact-source
+analysis, findings, upload/ingestion, fork permissions and release readiness remain
+separate qualifications.
 
-Native platforms, hosted ingestion/read-back, fork/Dependabot behavior and the
-integrated root revision remain unqualified. CodeQL is the licensed public-OSS
-route, not an unrestricted private fallback. SQL/RLS, dependency/image/general-IaC
-scanning, independent review and the rest of OSS-007 remain separate requirements.
+These local runs alone do not qualify other native platforms, hosted ingestion,
+fork/Dependabot behavior or a later integrated revision. CodeQL is the licensed
+public-OSS route, not an unrestricted private fallback. SQL/RLS, dependency,
+image and general IaC scanning, independent review and the rest of OSS-007 remain
+separate requirements.

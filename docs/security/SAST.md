@@ -23,6 +23,10 @@ ingests a report; this implementation does not invoke Action `init` or `analyze`
 and does not enable CodeQL default setup. The prior research plan proposed those
 Actions before this shared-runner decision.
 
+Current integration results are indexed in the [execution state](../execution/STATE.md)
+and [evidence manifest](../verification/evidence-manifest.json). The historical
+counts above remain scoped to their recorded revisions.
+
 ## Tool and source contract
 
 `policies/sast-policy.json` pins CodeQL 2.27.4 and the three bundled query packs:
@@ -143,7 +147,7 @@ space; the 2 GiB watchdog remains mandatory during every CLI command. macOS's 1.
 larger than the 679 MB Linux arm64 bundle. A 16 November 2026 metadata inspection of
 the verified Linux arm64 archive measured 1,298,284,624 regular-file bytes across
 40,452 archive members; this is installation sizing, not scan evidence. Existing
-Hive Citadel/unrelated images, volumes, source and caches must be preserved.
+unrelated local projects/unrelated images, volumes, source and caches must be preserved.
 
 ## Findings and publication
 
@@ -195,7 +199,7 @@ it, no repository secrets, no privileged fork follow-up, explicit timeouts and
 per-ref cancellation. `sast-required` requires every language and policy job to
 succeed; failure, cancellation and unexpected skip fail. Public fork and
 Dependabot permission behavior remains unqualified until actual events are
-observed. Root integrates required-check/ruleset changes after qualification.
+observed. Maintainers apply required-check/ruleset changes after qualification.
 
 ## Real negative control and next qualification actions
 
@@ -213,10 +217,10 @@ Resume in this order:
 1. Consult `SAST_QUALIFICATION.md` for the actual local attempts and exact source
    evidence. Preserve failures and blocked findings with their original status.
 2. Scan the final integrated source again; the isolated worktree scan does not
-   qualify a different root revision. Record source/config/query/bundle/report
+   qualify a different integrated revision. Record source/config/query/bundle/report
    hashes, runtime image, coverage and measured resources. Remediate or explicitly
    triage actual findings; do not manufacture approvals.
-3. Root reviews and integrates the branch. Execute ordinary hosted PR and trusted
+3. Maintainers review and integrate the change. Execute ordinary hosted PR and trusted
    default-branch scans, then read back all three analyses for their exact commits
    and categories. Exercise a public fork and Dependabot contribution path.
 4. Only then update requirement/evidence/readiness records and require the

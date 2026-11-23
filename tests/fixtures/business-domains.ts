@@ -3,6 +3,7 @@
  * the independent pure engine; tests never read/write private operation claims. */
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
+import type { OperationNodeSource } from 'kysely';
 import { scope, sql, type Tx } from '../../packages/db/src/index.ts';
 import type { Principal } from '../../packages/authz/src/index.ts';
 import { resolveDomainType } from '../../packages/domain/src/business-domain-type.ts';
@@ -181,13 +182,32 @@ export async function fixture(options:{principal?:Principal;definition?:Partial<
   await tx.insertInto('asset_revisions').values({tenant_id:p.tenantId,asset_id:id,version:row.version,snapshot:JSON.stringify(assetView(row))}).execute();return row;
  });return {principal:p,type,domains,asset};
 }
+/** Cache each full-row digest once; stable hash ties retain the original query order. */
+export function sortSnapshotRows<T>(rows:readonly T[],hash:(row:T)=>string=typeHash):T[]{
+ return rows.map(row=>({row,key:hash(row)})).sort((a,b)=>a.key.localeCompare(b.key)).map(entry=>entry.row);
+}
+/** Hash each complete selected row inside PostgreSQL. Only fixed-size digests cross
+ * the client boundary; duplicate rows remain duplicate digests. No tenant-visible
+ * rows are filtered, sampled or truncated. This helper changes test snapshots only. */
+export async function snapshotRowDigests(tx:Tx,rows:OperationNodeSource):Promise<string[]>{
+ const result=await sql<{digest:string}>`
+  SELECT snapshot_digest.digest FROM (
+   SELECT pg_catalog.encode(pg_catalog.sha256(pg_catalog.convert_to(pg_catalog.to_jsonb(snapshot_row)::text,'UTF8')),'hex') digest
+   FROM (${rows}) AS snapshot_row
+  ) AS snapshot_digest ORDER BY snapshot_digest.digest COLLATE "C"`.execute(tx);
+ return result.rows.map(row=>row.digest);
+}
+export const snapshotTables=['domain_types','domain_type_versions','domain_type_dependencies','domains','domain_revisions','asset_domain_placements','asset_domain_placement_revisions','domain_type_migrations','domain_type_migration_domains','audit','outbox','idempotency'] as const;
+export type SnapshotTable=typeof snapshotTables[number];
+export function snapshotTableDigests(tx:Tx,table:SnapshotTable):Promise<string[]>{
+ // Delivery bookkeeping changes independently in the live outbox worker. Compare
+ // every immutable event field so rollback checks still detect inserts or edits.
+ const rows=table==='outbox'
+  ?tx.selectFrom(table).select(['tenant_id','id','event_type','resource_id','resource_version','payload','created_at'])
+  :tx.selectFrom(table).selectAll();
+ return snapshotRowDigests(tx,rows);
+}
 export async function snapshot(p=principal){return scope(p.tenantId,p.id,async tx=>{
- const result:Row={};for(const table of ['domain_types','domain_type_versions','domain_type_dependencies','domains','domain_revisions','asset_domain_placements','asset_domain_placement_revisions','domain_type_migrations','domain_type_migration_domains','audit','outbox','idempotency']){
-  // Delivery bookkeeping changes independently in the live outbox worker. Compare
-  // every immutable event field so rollback checks still detect inserts or edits.
-  const rows=table==='outbox'
-   ?await tx.selectFrom(table).select(['tenant_id','id','event_type','resource_id','resource_version','payload','created_at']).execute()
-   :await tx.selectFrom(table).selectAll().execute();
-  result[table]=rows.sort((a,b)=>typeHash(a).localeCompare(typeHash(b)));}
+ const result:Row={};for(const table of snapshotTables)result[table]=await snapshotTableDigests(tx,table);
  result.epoch=(await sql<{value:string}>`SELECT gc_domain_scope_epoch() value`.execute(tx)).rows[0]!.value;return result;
 });}

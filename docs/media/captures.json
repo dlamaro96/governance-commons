@@ -1,0 +1,58 @@
+{
+  "recordedAt": "2026-11-16T11:30:21.369Z",
+  "scope": "Actual current shared core, freshly scanned synthetic PostgreSQL source and API-persisted ownership/descriptions. Real screenshot pixels, no DOM mocks or image retouching. Presentation capture, not a complete browser acceptance gate.",
+  "captures": [
+    {
+      "name": "catalog",
+      "path": "catalog.png",
+      "sha256": "e8f3d1f7dbf88ea03a731387aa49d7d55337acef92b54901e895d610a3ca7baf",
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "pageOverflow": false
+    },
+    {
+      "name": "asset-columns",
+      "path": "asset-columns.png",
+      "sha256": "ef579610aedfb86834e9bd2727d0bf8c0629a8e21a2bdbc74099c0dc71db583d",
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "pageOverflow": false
+    },
+    {
+      "name": "audit-history",
+      "path": "audit-history.png",
+      "sha256": "885ff02b0baf4043a6eb63c56a17bba95cffb3e48811ca091318e32171bd0541",
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "pageOverflow": false
+    },
+    {
+      "name": "business-domain",
+      "path": "business-domain.png",
+      "sha256": "6e6e8c3da68849e31ffb55bfb99db8fe409795322e0e716a472ae1203878ad49",
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "pageOverflow": false
+    },
+    {
+      "name": "catalog-dark",
+      "path": "catalog-dark.png",
+      "sha256": "1d44d8434a9e052945aad2ce699c4d66dda40403a31e571aa5098fe11cfa93bc",
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "pageOverflow": false
+    }
+  ],
+  "runtime_image": "sha256:b82f4d0b692cf9c7dbf338068eec5cded03909e76f1ffbb89f4187edc9d1d6b1",
+  "visual_review": "All five captures inspected; no horizontal overflow. Business-domain viewport omits below-fold controls and displays synthetic stable identifiers."
+}

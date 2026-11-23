@@ -1,0 +1,529 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-17T10:05:44.402635+00:00",
+  "implementation_commit": "fabc708a74c78fe5e68e66ba9516f22e48ecbf62",
+  "implementation_status": "IN_PROGRESS",
+  "release_qualified": false,
+  "scope": [
+    "SQL032 materializes nominal tenant candidates before exact eligibility in the population count and required-participation queries.",
+    "All remaining relation validation, forced RLS, visibility refusal, cardinality limits, locks and original deadlines remain unchanged.",
+    "Seven separately named repaired-chain CI profiles preserve original downstream declarations; two standalone profiles check original/current prefixes. Historical commands and their failures remain distinct."
+  ],
+  "migration": {
+    "path": "packages/db/migrations/032_relation_candidate_validation.sql",
+    "sha256": "7837d2c9484c539330cb567cd550a4e19ee769360e0c9118d45837ded4f918b5",
+    "immutable_predecessors": 31
+  },
+  "standalone_native": {
+    "original": {
+      "result": "PASS",
+      "tests": {
+        "tests": 37,
+        "pass": 37,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "suites": 0
+      },
+      "source_files_rehashed": 113,
+      "source_readbacks": 21,
+      "native_suites": 7,
+      "tables_preserved": 112,
+      "prior_ledger_count": 18,
+      "upgraded_ledger_count": 19,
+      "preservation": true,
+      "replay": true,
+      "cleanup": {
+        "ownedRemoved": true,
+        "resourceInventoryPreserved": true,
+        "generatedCredentialsRemoved": true
+      },
+      "command": "python3 scripts/runtime-test-relation-candidate-upgrade.py --run-local --scope original",
+      "profile": "isolated-relation-candidate-original",
+      "report_sha256": "bc5aa2b33fd01de41c126f1fdf3e9c3aae8fbbd00a73797179d61250531b9aec"
+    },
+    "current": {
+      "result": "PASS",
+      "tests": {
+        "tests": 37,
+        "pass": 37,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "suites": 0
+      },
+      "source_files_rehashed": 113,
+      "source_readbacks": 21,
+      "native_suites": 7,
+      "tables_preserved": 141,
+      "prior_ledger_count": 31,
+      "upgraded_ledger_count": 32,
+      "preservation": true,
+      "replay": true,
+      "cleanup": {
+        "ownedRemoved": true,
+        "resourceInventoryPreserved": true,
+        "generatedCredentialsRemoved": true
+      },
+      "command": "python3 scripts/runtime-test-relation-candidate-upgrade.py --run-local --scope current",
+      "profile": "isolated-relation-candidate-current",
+      "report_sha256": "6423febb63d007b581b0c7a0b8953dbf02fc6f885fb40981d64717a2f48a2335"
+    }
+  },
+  "standalone_native_readback": {
+    "private_record": ".local/relation-population-repair-candidate/backend/root-native-readback.json",
+    "sha256": "8bde96435a11b8e5b6c8a7a09f3e19fe383d0a916a4403c0b74d25c02a4eb8dc"
+  },
+  "repaired019_frozen_native": {
+    "recorded_at": "2026-11-17T09:42:52.354162+00:00",
+    "result": "PASS",
+    "profile": "isolated-governance-repaired-sql019",
+    "through": "019",
+    "tests": 113,
+    "suites": [
+      {
+        "phase": "approval-native-tests",
+        "pass": 26,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "glossary-native-tests",
+        "pass": 21,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "scope-native-tests",
+        "pass": 25,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "population-native-tests",
+        "pass": 26,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "quality-native-tests",
+        "pass": 15,
+        "mounted_source_startup_and_exit": true
+      }
+    ],
+    "source_files_rehashed": 130,
+    "source_scope": "Frozen revision2 execution tree; final composed132-source019 is not inferred.",
+    "sql032_preservation_and_replay": true,
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "report_sha256": "dd01249f1e576feeacdbfbd64454d43ef51060281a4c2c076edf2617617dd85f",
+    "freeze_sha256": "d2d9a430426c55f20717f9e1c96eb554854b11dec0a007dea8dfc0e4406f7fbd",
+    "limitations": [
+      "Predecessor SQL001–018 tests mount the exact recorded immutable repository module; SQL019 tests bind exact ee21065 service/parser/contracts/repository with mounted readback and startup/exit checks. Outer predecessor module overlays retain their verified precedence; other dependencies/tests use the recorded checkout bytes.",
+      "Approved quality execution storage and production domain-service paths; API/browser and Temporal restart qualification remain separate.",
+      "Canonical content authority remains inactive. No shared runtime or external infrastructure was modified.",
+      "Explicit repaired chain: SQL032 executes after original SQL017→018 preservation/replay and before all26 original population assertions; later prefixes retain the same032 ledger row. This does not relabel historical018-only failures.",
+      "Every inherited stage executes with its exact original test declarations and product budgets; immutable source-module overrides retain their existing precedence. No shared runtime, source worker, API or browser qualification is inferred."
+    ],
+    "readback": {
+      "private_record": ".local/relation-population-repair-candidate/repaired-chain/revision-2/root-native019-readback.json",
+      "sha256": "f41aabb54127bb7c70fea8a5c7ab7a8ac11e3b710f012867927f1d1e3b6ce13e"
+    }
+  },
+  "previous_repaired019_attempt": {
+    "outcome": "FAIL",
+    "native_passed": 47,
+    "unexecuted": 66,
+    "cause": "The runner incorrectly required test-file output order to match argv order. Exact title membership, pass totals and mounted source proofs succeeded; the later correction retains strict uniqueness, membership, numbering and failure refusal.",
+    "readback": {
+      "private_record": ".local/relation-population-repair-candidate/repaired-chain/review/attempt-1-readback.json",
+      "sha256": "57f5645fa610be8a9a0f990899324401d5e6fbdfdc27d49c47cb9b0019b4804f"
+    }
+  },
+  "source_equivalence": [
+    {
+      "scope": "standalone-candidate113",
+      "frozenManifest": ".local/relation-population-repair-candidate/backend/host/source-manifest.json",
+      "frozenManifestSha256": "85857bceaa756de1903699c978f0e4c4f28545621dd28c35cfd6c3c6093f5afb",
+      "frozenInputs": 113,
+      "changedExistingInputs": [
+        {
+          "path": "scripts/runtime-test-reference-import.py",
+          "beforeSha256": "50e944470b73ad7168053d0596f5c0077a3c4726d3c03038614e2ffb1d0632cd",
+          "sha256": "b3c8bb33512115091cc98293b3f419ce99b44b1345d369fb1280f73716595d6e",
+          "finalLayer": "fixed-prefix-inventories"
+        },
+        {
+          "path": "scripts/runtime-test-relation-candidate-upgrade.py",
+          "beforeSha256": "39765242b1f7d64309bd1b57276dd7bacd41597ada668d3214d8c5b7ae138b49",
+          "sha256": "77a77cc5046fea8f833e04d937329f4ada769c32330f8eea09f12f521db6d464",
+          "finalLayer": "fixed-prefix-inventories"
+        }
+      ],
+      "nativeProductSqlOrTypeScriptChanged": false
+    },
+    {
+      "scope": "repaired019-130",
+      "frozenManifest": ".local/relation-population-repair-candidate/repaired-chain/revision-2/sources-019.json",
+      "frozenManifestSha256": "e756541b53b8b865a8c9416814d87734c33485f6f91f1764715f6c875851182a",
+      "frozenInputs": 130,
+      "changedExistingInputs": [
+        {
+          "path": "policies/ci_evidence.py",
+          "beforeSha256": "663864eb9afd3242f38d24007c6910db4756cb7439ee9b0ad724dbb9b03f2165",
+          "sha256": "1c45c87722b2ebb81a89323425d9fdc16c29d340b9dd99d1f712feb5be3b3eff",
+          "finalLayer": "failure-diagnostic-revision3"
+        },
+        {
+          "path": "scripts/runtime-test-quality-upgrade.py",
+          "beforeSha256": "9adf80e62cfde22f3b0ac83f562c47f4a7c23d933ca4810e0288c180ec74dc50",
+          "sha256": "029130f14d42844eac3a03e8f95814df468f512e0ebe24900534d98e907a1882",
+          "finalLayer": "failure-diagnostic-revision3"
+        }
+      ],
+      "nativeProductSqlOrTypeScriptChanged": false,
+      "addedInputs": [
+        {
+          "path": "policies/api_evidence.py",
+          "sha256": "7e7d11869b393624f9adb672e4a645b8e33890c1421f83a7abe2b2347812beb9"
+        },
+        {
+          "path": "policies/quality_upgrade_diagnostics.py",
+          "sha256": "ae8bd80ee4f3e14c59091b35195496a147f66d9b66f13fab4b89a4557e5b4cf1"
+        }
+      ],
+      "composedInputs": 132
+    }
+  ],
+  "host_composition": {
+    "outcome": "PASS",
+    "controls": 457,
+    "suites": 17,
+    "skipped": 0,
+    "composed_files": 43,
+    "immutable_migrations": 31,
+    "before_after_hashes_match": true,
+    "execution": {
+      "private_record": ".local/relation-population-repair-candidate/composition/host-root-attempt-1/execution.json",
+      "sha256": "6a03192a5fc566089afa89a6ee9e5ea8caf0624d04d6a995eeb9c6cd9bdc0930"
+    },
+    "composition": {
+      "private_record": ".local/relation-population-repair-candidate/composition/root-composition-readback.json",
+      "sha256": "5907848184ed0bf052ac974784d362511627d2b11cc2ecb8509d0464002e57cc"
+    }
+  },
+  "types": {
+    "outcome": "PASS",
+    "command": "pnpm typecheck",
+    "log": {
+      "private_record": ".local/product-relation-composition-types-attempt-1.log",
+      "sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+    }
+  },
+  "current_composed024": {
+    "outcome": "PASS",
+    "command": "./dev test --suite reference-structure-repaired-upgrade",
+    "profile": "isolated-governance-repaired-sql024",
+    "implementation_commit": "fabc708a74c78fe5e68e66ba9516f22e48ecbf62",
+    "qualification": "EXPLICIT_REPAIRED_CHAIN",
+    "historical_outcome": "HISTORICAL_NOT_EXECUTED",
+    "tests": {
+      "tests": 263,
+      "suites": 0,
+      "pass": 263,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "native_suites": 13,
+    "source_files": 176,
+    "exact_git_source_bytes": true,
+    "checkout_hashes_before_after_match": true,
+    "source_and_effective_mounted_startup_exit": true,
+    "observed_processes": 37,
+    "suites": [
+      {
+        "phase": "approval-native-tests",
+        "tests": 26,
+        "pass": 26,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "glossary-native-tests",
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "scope-native-tests",
+        "tests": 25,
+        "pass": 25,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "population-native-tests",
+        "tests": 26,
+        "pass": 26,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "quality-native-tests",
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "lineage-native-tests",
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "classification-native-tests",
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "reference-native-tests",
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "reference-quality-completeness-tests",
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "reference-quality-native-tests",
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "structure-reference-tests",
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "structure-reference-quality-tests",
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "structure-native-tests",
+        "tests": 30,
+        "pass": 30,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      }
+    ],
+    "sql032": {
+      "tables_preserved": 112,
+      "preservation": true,
+      "replay": true,
+      "prior_ledger_count": 18,
+      "initial_repaired_ledger_count": 19,
+      "final_repaired_ledger_count": 25,
+      "final_schema": "SQL001–024 plus SQL032",
+      "repair_checksum_and_applied_at_preserved": true
+    },
+    "completed_prefixes": [
+      "018",
+      "019",
+      "020",
+      "021",
+      "022",
+      "023",
+      "024"
+    ],
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "report_sha256": "5ee1195e8629946949b56d1034f4b63dc0b3d996cf57e3e91d042418b912236e",
+    "readback": {
+      "private_record": ".local/relation-population-repair-candidate/composition/root024-readback.json",
+      "sha256": "14c4b68cad8ec26953a1e32edbc6fb727483fe6ac248cead459cc4a749708352"
+    },
+    "limitations": [
+      "Only the independently named repaired024 invocation is qualified by this result. Its nested stages do not establish execution of the other six top-level repaired profiles.",
+      "All original native declarations and deadlines remain in force; historical source overlays are fixed and individually bound by the retained effective-source proofs.",
+      "Canonical-state and resource-inventory checks ran in the exact source-bound harness; the independent readback rehashed retained digests and safe phase logs rather than reconstructing the cleaned-up database."
+    ]
+  },
+  "current_import32": {
+    "outcome": "PASS",
+    "command": "python3 scripts/runtime-test-reference-import.py --run-local",
+    "profile": "fresh-current-schema-reference-import",
+    "implementation_commit": "5d37594396511e41004562a82db97ca57877d6d1",
+    "tests": {
+      "tests": 5,
+      "suites": 0,
+      "pass": 5,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 1238.355125
+    },
+    "source_files": 103,
+    "exact_git_source_bytes": true,
+    "source_hashes_matched": true,
+    "applied_migrations": "SQL001–032",
+    "ledger_entries": 32,
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "report_sha256": "a070006521757172cd49d82ed9ff1a5d5b20cf45471267c7399f76eb25fea785",
+    "readback": {
+      "private_record": ".local/relation-population-repair-candidate/composition/current-import32-readback.json",
+      "sha256": "06dfe10e662932ead4e682acc8917603f579474cd85f7ddd96534be2fb7f349e"
+    },
+    "limitations": [
+      "Fresh current SQL001–032 database with five real PostgreSQL import service cases; not an upgrade or predecessor qualification.",
+      "The retained native report/readback inherited a stale SQL001–024 limitation sentence; the actual 32-entry ledger and exact migration hashes establish the scope recorded here.",
+      "Cached dependency image with exact current source mounts; no shared service, HTTP, scanner-engine, Temporal or browser execution is inferred."
+    ]
+  },
+  "current_core": {
+    "outcome": "PASS",
+    "profile": "core",
+    "implementation_commit": "5d37594396511e41004562a82db97ca57877d6d1",
+    "applied_migrations": "SQL001–032",
+    "ledger_entries": 32,
+    "application_source_files": 300,
+    "worker_source_files": 13,
+    "application_image_manifest": "sha256:22cca072113c962ebd853da1cd9154f927330a8a9a97f36e85d096a71fb69144",
+    "worker_image": "sha256:e586cf56dd0da7be601ac272983847e271030267af3d90a437c1f3e25bfaee3e",
+    "healthy_services": [
+      "api",
+      "site-runner",
+      "workflow-worker"
+    ],
+    "readback": {
+      "private_record": ".local/product-relation-runtime-readback.json",
+      "sha256": "7eecd0c988b07ac77ba081c815bec08450d31db96f052031461cc9c2b2d2e77d"
+    },
+    "limitations": [
+      "Current image/source, applied migration ledger and listed service health readback only; API and complete browser qualification remain separate.",
+      "SQL001–031 remain immutable. Shared SQL032 adoption does not qualify the other independently named repaired-chain profiles."
+    ]
+  },
+  "hosted45": {
+    "outcome": "FAIL",
+    "mandatory_outcomes": 45,
+    "browser_journeys": 37,
+    "success": 39,
+    "failure": 2,
+    "skipped": 4,
+    "record": "docs/verification/hosted-checkpoint-5d37594.json"
+  },
+  "limitations": [
+    "Frozen standalone113-source and repaired019130-source passes retain their exact execution scopes. Later runner/diagnostic changes do not become native passes by source review.",
+    "The selected maximal024 run cannot qualify the other six independently named repaired profiles; all seven remain mandatory in CI.",
+    "Current core image/source/schema health is recorded separately from native gates. No current API/browser, live vendor, enterprise-security, performance-scale or supported-release qualification is inferred.",
+    "The historical SQL018-only deadline failure and first runner-order failure remain retained."
+  ],
+  "independently_named_repaired_profiles": [
+    {
+      "through": "018",
+      "command": "./dev test --suite glossary-population-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql018",
+      "final_composed_outcome": "NOT_RUN",
+      "expected_tests": 98,
+      "source_files": 119
+    },
+    {
+      "through": "019",
+      "command": "./dev test --suite quality-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql019",
+      "final_composed_outcome": "NOT_RUN",
+      "expected_tests": 113,
+      "source_files": 132,
+      "scope_note": "Frozen130-source019 PASS is retained separately; it is not a final132-source invocation."
+    },
+    {
+      "through": "020",
+      "command": "./dev test --suite lineage-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql020",
+      "final_composed_outcome": "NOT_RUN",
+      "expected_tests": 126,
+      "source_files": 141
+    },
+    {
+      "through": "021",
+      "command": "./dev test --suite classification-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql021",
+      "final_composed_outcome": "NOT_RUN",
+      "expected_tests": 140,
+      "source_files": 154
+    },
+    {
+      "through": "022",
+      "command": "./dev test --suite reference-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql022",
+      "final_composed_outcome": "NOT_RUN",
+      "expected_tests": 158,
+      "source_files": 160
+    },
+    {
+      "through": "023",
+      "command": "./dev test --suite reference-quality-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql023",
+      "final_composed_outcome": "NOT_RUN",
+      "expected_tests": 194,
+      "source_files": 167
+    },
+    {
+      "through": "024",
+      "command": "./dev test --suite reference-structure-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql024",
+      "final_composed_outcome": "PASS",
+      "expected_tests": 263,
+      "source_files": 176,
+      "evidence_field": "current_composed024"
+    }
+  ],
+  "subsequent_prefix_repair": {
+    "record": "docs/verification/pipeline-prefix-repair-local.json",
+    "reference022_native_result": "PASS",
+    "tests": 158,
+    "source_files": 163,
+    "historical_original_prefix_failure_preserved": true
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "encoding": "UTF-8; ASCII fixed keys and string bounds; lexicographic key order, compact JSON, no whitespace",
+  "vectors": [
+    {
+      "preimage": {
+        "formatVersion": 1,
+        "kind": "range",
+        "minimum": "0",
+        "maximum": "10",
+        "comparison": "int64-inclusive",
+        "nullPolicy": "exclude"
+      },
+      "canonicalUtf8": "{\"comparison\":\"int64-inclusive\",\"formatVersion\":1,\"kind\":\"range\",\"maximum\":\"10\",\"minimum\":\"0\",\"nullPolicy\":\"exclude\"}",
+      "rangeHash": "d9d1c5de1d8da97b52234be367e92343b365e59e7f3bde85748db969b857d161"
+    },
+    {
+      "preimage": {
+        "formatVersion": 1,
+        "kind": "range",
+        "minimum": "-9223372036854775808",
+        "maximum": "9223372036854775807",
+        "comparison": "int64-inclusive",
+        "nullPolicy": "exclude"
+      },
+      "canonicalUtf8": "{\"comparison\":\"int64-inclusive\",\"formatVersion\":1,\"kind\":\"range\",\"maximum\":\"9223372036854775807\",\"minimum\":\"-9223372036854775808\",\"nullPolicy\":\"exclude\"}",
+      "rangeHash": "0834cdeae46a46f1b6859649b262c0a5eeb23b019d513dbabfe889fa657829f1"
+    },
+    {
+      "preimage": {
+        "formatVersion": 1,
+        "kind": "range",
+        "minimum": "9007199254740993",
+        "maximum": "9007199254740993",
+        "comparison": "int64-inclusive",
+        "nullPolicy": "exclude"
+      },
+      "canonicalUtf8": "{\"comparison\":\"int64-inclusive\",\"formatVersion\":1,\"kind\":\"range\",\"maximum\":\"9007199254740993\",\"minimum\":\"9007199254740993\",\"nullPolicy\":\"exclude\"}",
+      "rangeHash": "d79dbdaffccf16bd9c113a103e3ec9e6c018392d7974daa5c5c8cbce1a43dab4"
+    }
+  ]
+}

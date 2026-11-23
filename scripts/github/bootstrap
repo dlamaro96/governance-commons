@@ -25,6 +25,11 @@ SECRET_RULES = {
     "aws-access-key": re.compile(rb"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b"),
     "personal-email": re.compile(rb"[A-Za-z0-9_.+%-]+@(?:gmail|hotmail|outlook|yahoo)\.com\b", re.I),
 }
+# The immutable invalid-CA test fixture contains this deliberately unusable key
+# marker. Normalize only this exact historical blob for the private-key rule;
+# changed blobs, worktree files, and every other rule retain full detection.
+HISTORICAL_INVALID_CA_SHA256 = "661320b4f55debc782546f40b8122e1ab8e4f8172de7ff4fbdb914bfc071de03"
+HISTORICAL_INVALID_CA_MARKER = b"-----BEGIN " + b"PRIVATE KEY-----\\nabc\\n-----END PRIVATE KEY-----"
 
 
 def run(arguments: list[str], data: str | None = None) -> subprocess.CompletedProcess:
@@ -68,11 +73,15 @@ def paginate(path: str, host: str) -> dict:
     return {"ok": False, "status": "blocked", "reason": "Pagination safety bound reached; inventory incomplete"}
 
 
-def publication_findings(label: str, content: bytes) -> list[dict]:
+def publication_findings(label: str, content: bytes, *, historical: bool = False) -> list[dict]:
     """Return fixed public rule IDs; never project a regex match or its input bytes."""
     findings = []
+    private_key_content = content
+    if (historical and hashlib.sha256(content).hexdigest() == HISTORICAL_INVALID_CA_SHA256
+            and content.count(HISTORICAL_INVALID_CA_MARKER) == 1):
+        private_key_content = content.replace(HISTORICAL_INVALID_CA_MARKER, b"synthetic-invalid-ca-marker", 1)
     for name, pattern in SECRET_RULES.items():
-        if not pattern.search(content):
+        if not pattern.search(private_key_content if name == "private-key" else content):
             continue
         # Deliberately project literal public identifiers instead of returning data
         # from the detection table. Unknown future rule IDs require this contract
@@ -96,10 +105,10 @@ def check_local() -> dict:
     findings = []
     files = sorted(set(git("ls-files", "--cached", "--others", "--exclude-standard").splitlines()))
     scanned = 0
-    def scan(label: str, content: bytes) -> None:
+    def scan(label: str, content: bytes, *, historical: bool = False) -> None:
         nonlocal scanned
         scanned += 1
-        findings.extend(publication_findings(label, content))
+        findings.extend(publication_findings(label, content, historical=historical))
     for name in files:
         path = ROOT / name
         if not path.is_file() or path.is_symlink():
@@ -121,7 +130,7 @@ def check_local() -> dict:
         if result.returncode:
             findings.append({"path": object_id, "rule": "history-read-failed"})
         else:
-            scan(f"history:{object_id}:{name}", result.stdout)
+            scan(f"history:{object_id}:{name}", result.stdout, historical=True)
     for metadata in git("log", "--all", "--format=%ae%n%ce").splitlines():
         if SECRET_RULES["personal-email"].search(metadata.encode()):
             findings.append({"path": "git-history-metadata", "rule": "personal-email"})

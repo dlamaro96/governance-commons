@@ -195,7 +195,17 @@ test('committed protected outbox cannot be renamed into a legacy family or have 
  const event=await scope(tenant,actor,tx=>tx.selectFrom('outbox').selectAll().where('resource_id','=',f.domains[0]!.id).where('event_type','=','domain.created').executeTakeFirstOrThrow());
  for(const patch of [{event_type:'legacy.synthetic'},{event_type:'legacy.synthetic',payload:JSON.stringify({...event.payload,type:'legacy.synthetic'})},{resource_id:randomUUID()}])
   await assert.rejects(()=>scope(tenant,actor,tx=>tx.updateTable('outbox').set(patch).where('id','=',event.id).execute()),sqlCode('23514'));
- assert.deepEqual(await scope(tenant,actor,tx=>tx.selectFrom('outbox').selectAll().where('id','=',event.id).executeTakeFirstOrThrow()),event);
+ // SQL011 deliberately permits delivery bookkeeping to change while the live
+ // projector runs. Every other field remains part of the immutable envelope.
+ const envelope=(row:typeof event)=>{const {processed_at,attempts,...immutable}=row;return immutable;};
+ assert.deepEqual(envelope(await scope(tenant,actor,tx=>tx.selectFrom('outbox').selectAll().where('id','=',event.id).executeTakeFirstOrThrow())),envelope(event));
+ // Exercise the permitted path deterministically, rather than relying on the
+ // background projector to happen to deliver this event during the test.
+ const deliveredAt=new Date(),attempts=event.attempts+1;
+ const delivered=await scope(tenant,actor,tx=>tx.updateTable('outbox').set({processed_at:deliveredAt,attempts}).where('id','=',event.id).returningAll().executeTakeFirstOrThrow());
+ assert.equal(new Date(delivered.processed_at).toISOString(),deliveredAt.toISOString());assert.equal(delivered.attempts,attempts);
+ assert.deepEqual(envelope(delivered),envelope(event));
+ assert.deepEqual(envelope(await scope(tenant,actor,tx=>tx.selectFrom('outbox').selectAll().where('id','=',event.id).executeTakeFirstOrThrow())),envelope(event));
 });
 
 

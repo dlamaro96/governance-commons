@@ -2,9 +2,13 @@
 # SPDX-License-Identifier: Apache-2.0
 """Generate local-only credentials; never print credential values."""
 import json
+import math
 import os
+import re
+import stat
 from pathlib import Path
 import secrets
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCAL = ROOT / ".local"
@@ -15,6 +19,126 @@ STATE = LOCAL / "bootstrap.json"
 def write(path, value):
     path.write_text(value, encoding="utf-8")
     os.chmod(path, 0o600)
+
+def source_error():
+    raise SystemExit("Source credential provider is invalid or changed; no provider data was overwritten.")
+
+
+def provider_stamp(info):
+    return (info.st_dev, info.st_ino, info.st_mode, info.st_uid, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+
+
+def parse_provider(raw):
+    def pairs(items):
+        result = {}
+        for key, value in items:
+            if key in result:
+                source_error()
+            result[key] = value
+        return result
+    depth, quoted, escaped = 0, False, False
+    for byte in raw:
+        if quoted:
+            if escaped: escaped = False
+            elif byte == 92: escaped = True
+            elif byte == 34: quoted = False
+        elif byte == 34: quoted = True
+        elif byte in (91, 123):
+            depth += 1
+            if depth > 16: source_error()
+        elif byte in (93, 125): depth -= 1
+    value = json.loads(raw.decode("utf-8"), object_pairs_hook=pairs,
+                       parse_constant=lambda _: source_error())
+    pending, nodes = [value], 0
+    while pending:
+        item = pending.pop(); nodes += 1
+        if nodes > 32768: source_error()
+        if isinstance(item, dict):
+            if any(not key or len(key.encode("utf-8")) > 256 for key in item): source_error()
+            pending.extend(item.values())
+        elif isinstance(item, list): pending.extend(item)
+        elif isinstance(item, str):
+            if len(item.encode("utf-8")) > 65536: source_error()
+        elif isinstance(item, float) and not math.isfinite(item): source_error()
+    if not isinstance(value, dict): source_error()
+    for ref, entry in value.items():
+        if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", ref) or not isinstance(entry, dict): source_error()
+        tenants = entry.get("tenantIds")
+        if (not isinstance(tenants, list) or not 1 <= len(tenants) <= 256
+                or any(not isinstance(t, str) or not 1 <= len(t) <= 128 for t in tenants)
+                or len(set(tenants)) != len(tenants)):
+            source_error()
+        # Preserve provider entries for future adapters too; dispatch, not
+        # bootstrap, owns which connector implementations are executable.
+        connector = entry.get("connectorId", "postgresql")
+        if not isinstance(connector, str) or not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", connector): source_error()
+    return value
+
+
+def read_provider(path, *, legacy=False):
+    fd = None
+    try:
+        # Only this explicit one-time legacy import follows an operator's old
+        # symlink. The old file and its target are never changed or chmodded.
+        selected = path.resolve(strict=True) if legacy else path
+        fd = os.open(selected, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
+        before = os.fstat(fd)
+        if (not stat.S_ISREG(before.st_mode) or before.st_mode & 0o077
+                or (not legacy and stat.S_IMODE(before.st_mode) != 0o600)
+                or before.st_uid not in (0, os.geteuid()) or not 0 < before.st_size <= 1024*1024): source_error()
+        with os.fdopen(fd, 'rb', closefd=False) as stream: raw = stream.read(1024*1024+1)
+        if len(raw) != before.st_size or provider_stamp(before) != provider_stamp(os.fstat(fd)): source_error()
+        return parse_provider(raw), provider_stamp(before)
+    except (OSError, ValueError, TypeError, RecursionError, OverflowError):
+        source_error()
+    finally:
+        if fd is not None: os.close(fd)
+
+
+CREDENTIALS = LOCAL / "source-credentials"
+PROVIDER = CREDENTIALS / "secrets.json"
+LEGACY_PROVIDER = LOCAL / "source-secrets.json"
+# Validate before rewriting any bootstrap outputs. An existing new directory
+# with a missing/invalid file never falls back to the stale legacy provider.
+if os.path.lexists(CREDENTIALS):
+    info = CREDENTIALS.lstat()
+    if (not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid()
+            or stat.S_IMODE(info.st_mode) != 0o700): source_error()
+    provider_entries, provider_before = read_provider(PROVIDER)
+elif os.path.lexists(LEGACY_PROVIDER):
+    provider_entries, _ = read_provider(LEGACY_PROVIDER, legacy=True)
+    provider_before = None
+else:
+    provider_entries, provider_before = {}, None
+
+
+def publish_provider(demo):
+    if provider_before is not None and provider_entries.get("demo-postgres") == demo:
+        # Ordinary repeat bootstrap preserves even custom formatting and inode.
+        return
+    merged = {**provider_entries, "demo-postgres": demo}
+    raw = (json.dumps(merged, indent=2) + "\n").encode("utf-8")
+    if len(raw) > 1024*1024: source_error()
+    parse_provider(raw)
+    path = None
+    try:
+        if provider_before is None:
+            CREDENTIALS.mkdir(mode=0o700)
+        elif provider_stamp(PROVIDER.lstat()) != provider_before:
+            source_error()
+        fd, name = tempfile.mkstemp(prefix=".secrets-", dir=CREDENTIALS)
+        path = Path(name)
+        with os.fdopen(fd, 'wb') as stream:
+            os.fchmod(stream.fileno(), 0o600)
+            stream.write(raw); stream.flush(); os.fsync(stream.fileno())
+        if provider_before is not None and provider_stamp(PROVIDER.lstat()) != provider_before: source_error()
+        os.replace(path, PROVIDER)
+        path = None
+    except (OSError, ValueError):
+        source_error()
+    finally:
+        if path is not None: path.unlink(missing_ok=True)
+
 
 if STATE.exists():
     values = json.loads(STATE.read_text())
@@ -38,9 +162,8 @@ env = {key: value for key, value in values.items()
        if key not in ('personas', 'GC_AUTHN_LOGIN_PASSWORD', 'GC_AUTHN_API_PASSWORD')}
 env.update({"LOCAL_UID": str(os.getuid()), "LOCAL_GID": str(os.getgid()), "SITE_TENANTS": ",".join(tenants)})
 write(LOCAL / "runtime.env", "".join(f"{key}={value}\n" for key, value in env.items()))
-write(LOCAL / "source-secrets.json", json.dumps({"demo-postgres": {
-    "tenantIds": [tenants[0]], "host": "source-postgres", "port": 5432, "database": "harbor", "schema": "public",
-    "username": "harbor_reader", "password": values["SOURCE_READER_PASSWORD"]}}, indent=2) + "\n")
+publish_provider({"tenantIds": [tenants[0]], "host": "source-postgres", "port": 5432,
+    "database": "harbor", "schema": "public", "username": "harbor_reader", "password": values["SOURCE_READER_PASSWORD"]})
 write(LOCAL / "seaweed-s3.json", json.dumps({"identities": [{"name": "governance-local", "credentials": [{
     "accessKey": values["S3_ACCESS_KEY_ID"], "secretKey": values["S3_SECRET_ACCESS_KEY"]}], "actions": ["Admin", "Read", "Write", "List", "Tagging"]}]}, indent=2) + "\n")
 users = []
@@ -66,7 +189,7 @@ for database, role in [("governance", "gc_owner"), ("keycloak", "keycloak"), ("t
     sql += f"CREATE DATABASE {database} OWNER {role};\nREVOKE ALL ON DATABASE {database} FROM PUBLIC;\nGRANT CONNECT ON DATABASE {database} TO {role};\n"
 sql += "GRANT CONNECT ON DATABASE governance TO gc_app;\n\\connect governance\nREVOKE CREATE ON SCHEMA public FROM PUBLIC;\nALTER SCHEMA public OWNER TO gc_owner;\n"
 write(LOCAL / "postgres-init.sql", sql)
-source = (ROOT / "deploy/compose/source-fixture.sql").read_text()
+source = (ROOT / "deploy/compose/source-fixture.sql").read_text() + "\n" + (ROOT / "deploy/compose/reference-quality-fixture.sql").read_text() + "\n" + (ROOT / "deploy/compose/uniqueness-quality-fixture.sql").read_text() + "\n" + (ROOT / "deploy/compose/range-quality-fixture.sql").read_text()
 source = f"CREATE ROLE harbor_reader LOGIN PASSWORD '{values['SOURCE_READER_PASSWORD']}' NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;\nALTER ROLE harbor_reader SET default_transaction_read_only=on;\n" + source
 write(LOCAL / "source-init.sql", source)
 print("Local secrets generated/preserved in .local (directory 0700, files 0600).")

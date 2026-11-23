@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "result": "PASS_SCOPED_STATIC_VISUAL_REVIEW",
+  "execution_report": "docs/verification/protected-authentication-local-attempt-10.json",
+  "execution_report_sha256": "d3657c3d9b1e2023759227a5b8bc7ded8ea4cbb75bfe85c1abfa321e96e95e40",
+  "reviewed_at": "2026-11-16T10:50:32.078860+00:00",
+  "reviewer": "root-agent",
+  "method": "Inspected all eight original-resolution PNGs with view_image after fresh passing native/browser execution.",
+  "captures": [
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-10/protected-revoked-ar-mobile.png",
+      "sha256": "e069fc43894ada9575e19ff47c9cb7ea84d28af3e0c6467f2b30c8ed10cbd85d",
+      "width": 390,
+      "height": 1385,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Legible labels and controls; English/Arabic layout direction maintained. Signed-out/denied states clear session details and disable mutations. No blocking overlap or page-level horizontal overflow observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-10/protected-selected-ar-desktop.png",
+      "sha256": "95e4e34234eb8ea5d4e837f24b0feb22099ec9968366dcaa201d2c0f3f706c10",
+      "width": 1440,
+      "height": 1161,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Legible labels and controls; English/Arabic layout direction maintained. Signed-out/denied states clear session details and disable mutations. No blocking overlap or page-level horizontal overflow observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-10/protected-selected-ar-mobile.png",
+      "sha256": "f33da8fb65fe9e23eda6e4b3e138ef2d7fe0f25667295258737dfb7467892487",
+      "width": 390,
+      "height": 1407,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Legible labels and controls; English/Arabic layout direction maintained. Signed-out/denied states clear session details and disable mutations. No blocking overlap or page-level horizontal overflow observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-10/protected-selected-en-desktop.png",
+      "sha256": "291361fbe2a4ef602df2203e4a081e5d74364060f263574eac35aab9f0678538",
+      "width": 1440,
+      "height": 1140,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Legible labels and controls; English/Arabic layout direction maintained. Signed-out/denied states clear session details and disable mutations. No blocking overlap or page-level horizontal overflow observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-10/protected-session-en-desktop.png",
+      "sha256": "8bea0ef610e1a2cb821c2cd1e64c50be2e682912888708090b1d8c6093a5a4f9",
+      "width": 1440,
+      "height": 1140,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Legible labels and controls; English/Arabic layout direction maintained. Signed-out/denied states clear session details and disable mutations. No blocking overlap or page-level horizontal overflow observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-10/protected-steward-en-mobile.png",
+      "sha256": "fd4af23dddd3c447275c79f8a5803503200aa922a799d6ae4dadb02e01cac0ca",
+      "width": 390,
+      "height": 1340,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Legible labels and controls; English/Arabic layout direction maintained. Signed-out/denied states clear session details and disable mutations. No blocking overlap or page-level horizontal overflow observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-10/protected-tenant-denied-en-mobile.png",
+      "sha256": "70aa412378f587b69e0c967a376fdb42cdee9fd927fb6e3bffec62f851b8fe62",
+      "width": 390,
+      "height": 1383,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Legible labels and controls; English/Arabic layout direction maintained. Signed-out/denied states clear session details and disable mutations. No blocking overlap or page-level horizontal overflow observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-10/protected-unbound-denied-en-desktop.png",
+      "sha256": "c1c3fb5c835b939e9d0509aa36641d337693f90409141fd13ed730dbed427ddc",
+      "width": 1440,
+      "height": 1158,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Legible labels and controls; English/Arabic layout direction maintained. Signed-out/denied states clear session details and disable mutations. No blocking overlap or page-level horizontal overflow observed."
+    }
+  ],
+  "limitations": [
+    "Static inspection does not provide Arabic linguistic certification or human accessibility sign-off.",
+    "The narrow mobile UUID field scrolls internally; all characters are not visible simultaneously.",
+    "Protected lifecycle remains separate from catalog content authority."
+  ]
+}

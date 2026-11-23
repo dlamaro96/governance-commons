@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T02:36:45.996901+00:00",
+  "implementation_commit": "5d37594396511e41004562a82db97ca57877d6d1",
+  "tested_merge": "20e3ea2f7e150982f601bf27017f65e030534a2e",
+  "outcome": "FAIL",
+  "release_qualified": false,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/44059579089",
+  "closed_required_outcomes": {
+    "success": 39,
+    "failure": 2,
+    "skipped": 4
+  },
+  "all45_exact_outcome_names_verified": true,
+  "authenticated_archives_verified": 5,
+  "exact_requested_merge_tree_verified": true,
+  "failed_steps": [
+    "reference_repaired_upgrade",
+    "protected_authn"
+  ],
+  "skipped_steps": [
+    "reference_quality_repaired_upgrade",
+    "reference_quality_worker",
+    "reference_structure_repaired_upgrade",
+    "reference_import"
+  ],
+  "core_browser": {
+    "passed": 37,
+    "failed": 0,
+    "unexecuted": 0,
+    "retries": 0,
+    "published_screenshots": 22,
+    "visual_review": {
+      "outcome": "SAMPLE_REVIEWED",
+      "captures_reviewed": 3,
+      "captures_total": 22,
+      "captures": [
+        "catalog-en-light-1440.png",
+        "catalog-ar-dark-390.png",
+        "m8-postgres-configuration-form-en-1440.png"
+      ],
+      "observations": [
+        "Desktop catalog shows populated synthetic assets and filters; the final status column is clipped at the viewport edge.",
+        "Arabic dark mobile catalog is right-to-left and readable within the captured viewport; the wider table requires horizontal scrolling.",
+        "PostgreSQL configuration modal shows complete fields, credential-reference guidance and action buttons; test-generated names remain visible."
+      ],
+      "limitations": [
+        "Fixed screenshots only; no independent interaction or linguistic certification.",
+        "These test captures are not newly curated README showcase assets."
+      ]
+    }
+  },
+  "source_security_record": "docs/verification/source-security-5d37594.json",
+  "readback_sha256": "8aae3434f33817e0e37f3465d4d57d339106b4609d75f6655429f713bbd1eaa7",
+  "failure_scope": {
+    "reference_upgrade": "Hosted artifact gives no native cause; a separate exact local reproduction failed17of18 reference cases on unavailable SQL024 functions while testing SQL022. Earlier140cases passed.",
+    "protected_authentication": "Hosted report was unavailable. Code inspection proves the source admission still required exactly SQL001–014 and rejects this32-migration checkout; no actual protected lifecycle pass is inferred."
+  },
+  "limitations": [
+    "At least one required outcome failed; no overall PASS implied. Missing/not-run evidence remains explicit.",
+    "Authenticated archives and declared source maps are checked against exact Git; private native TAP and mounted-source/resource inventory proofs are not exported unless explicitly noted.",
+    "Three of 22 authenticated screenshot artifacts were visually inspected; no complete visual or linguistic approval is claimed.",
+    "No source-security requalification, runtime execution or GitHub mutation performed."
+  ]
+}

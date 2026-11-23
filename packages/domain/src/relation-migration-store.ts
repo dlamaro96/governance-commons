@@ -7,6 +7,7 @@ import { previewModelUpgrade, validateAttributes, type ValidationIssue } from '.
 import { discoverTypeMigration } from './asset-type-migration-service.ts';
 import { projectGraphAssetChanges } from './graph-asset-preparation.ts';
 import { relationPolicyChanges } from './relation-migration.ts';
+import { parseGlossaryGraphSourceProof, validateGlossaryGraphSource, type GlossaryGraphSourceProof } from './relation-glossary-source.ts';
 import { structuralProjection, validateFinalRelationGraphConstraints, policyKey } from './relation-participation.ts';
 import { authorizeRelationRepairReference, getRelationPreparation } from './relation-migration-read.ts';
 import { relationDefinition, relationQuery, lockRelationScope, lockRelationPrincipals, endpointState,
@@ -30,11 +31,14 @@ export function graphRequest(changeSet: GraphChangeSet): RelationMigrationContex
 
 /** One SQL closure, reused for authorization, scalar bounds and capture. Scope
  * projection resolves only nominal pins/lifecycles; attribute transformation is
- * deliberately later, so an invalid repair cannot conceal zero-degree assets. */
-function scopeCTE(p: Principal, request: RelationMigrationContextRequest, changeSet?: GraphChangeSet) {
+ * deliberately later, so an invalid repair cannot conceal zero-degree assets.
+ * Materialized nominal candidates only avoid unrelated eligibility calls. Exact
+ * eligibility still uses pinned ancestry/state; explicit and incident assets
+ * enter independently, including untyped or currently ineligible endpoints. */
+function scopeCTE(p: Principal, request: RelationMigrationContextRequest, changeSet?: GraphChangeSet, sourceProof?: GlossaryGraphSourceProof) {
   const targets = request.relationTargets, direct = request.assetChanges.map(row => row.assetId), models = request.assetTypeMigrations.map(row => row.definition.id);
   const body = JSON.stringify({ changeSet: { ...request, relationTargets: [] } });
-  const extra = changeSet?.relationTargets.flatMap(target => target.plan.creations.flatMap(row => [row.sourceAssetId, row.targetAssetId])) ?? [];
+  const extra = [...(changeSet?.relationTargets.flatMap(target => target.plan.creations.flatMap(row => [row.sourceAssetId, row.targetAssetId])) ?? []), ...(sourceProof ? [sourceProof.afterEndpoint.assetId] : [])];
   return sql`WITH explicit_targets AS MATERIALIZED (
     SELECT (x->>'relationTypeId')::uuid AS type_id, h.current_version,
       v.definition AS before_definition, CASE WHEN x->>'kind'='repair' THEN v.definition ELSE x->'definition' END AS after_definition
@@ -49,21 +53,35 @@ function scopeCTE(p: Principal, request: RelationMigrationContextRequest, change
     SELECT h.type_id,h.current_version,v.definition,v.definition FROM relation_types h
     JOIN relation_type_versions v ON v.tenant_id=h.tenant_id AND v.relation_type_id=h.type_id AND v.version=h.current_version
     WHERE h.tenant_id=${p.tenantId}::uuid AND NOT EXISTS(SELECT 1 FROM explicit_targets x WHERE x.type_id=h.type_id)
-    AND EXISTS(SELECT 1 FROM changed_assets a WHERE
+    AND (h.type_id=ANY(${sourceProof?.relationTypeIds ?? []}::uuid[]) OR EXISTS(SELECT 1 FROM changed_assets a WHERE
       public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,a.id,v.definition,'source') OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,a.id,v.definition,'target')
       OR public.gc_relation_projected_eligible(a.proposed,v.definition,'source') OR public.gc_relation_projected_eligible(a.proposed,v.definition,'target')
       OR EXISTS(SELECT 1 FROM relations r WHERE r.tenant_id=h.tenant_id AND r.relation_type_id=h.type_id AND r.status='active' AND a.id IN(r.source_asset_id,r.target_asset_id))
-      OR EXISTS(SELECT 1 FROM relation_participations b WHERE b.tenant_id=h.tenant_id AND b.relation_type_id=h.type_id AND b.status='active' AND b.asset_id=a.id))
+      OR EXISTS(SELECT 1 FROM relation_participations b WHERE b.tenant_id=h.tenant_id AND b.relation_type_id=h.type_id AND b.status='active' AND b.asset_id=a.id)))
   ), all_edges AS MATERIALIZED (
     SELECT r.id,r.source_asset_id,r.target_asset_id FROM relations r WHERE r.tenant_id=${p.tenantId}::uuid AND r.status='active' AND r.relation_type_id IN(SELECT type_id FROM all_types)
   ), all_bindings AS MATERIALIZED (
     SELECT b.id,b.asset_id FROM relation_participations b WHERE b.tenant_id=${p.tenantId}::uuid AND b.status='active' AND b.relation_type_id IN(SELECT type_id FROM all_types)
+  ), eligibility_rules AS MATERIALIZED (
+    SELECT DISTINCT (rule->>'typeId')::uuid AS type_id, rule->>'includeDescendants'='true' AS descendants
+    FROM all_types t CROSS JOIN LATERAL jsonb_array_elements(
+      coalesce(t.before_definition->'sourceTypes','[]'::jsonb) || coalesce(t.before_definition->'targetTypes','[]'::jsonb)
+      || coalesce(t.after_definition->'sourceTypes','[]'::jsonb) || coalesce(t.after_definition->'targetTypes','[]'::jsonb)) rules(rule)
+  ), nominal_assets AS MATERIALIZED (
+    SELECT a.id FROM eligibility_rules r JOIN governance_models m ON m.tenant_id=${p.tenantId}::uuid AND m.type_id=r.type_id
+      JOIN assets a ON a.tenant_id=m.tenant_id AND a.model_id=m.id
+    UNION
+    SELECT a.id FROM eligibility_rules r JOIN governance_models ancestor ON ancestor.tenant_id=${p.tenantId}::uuid AND ancestor.type_id=r.type_id
+      JOIN asset_type_dependencies d ON d.tenant_id=ancestor.tenant_id AND d.dependency_model_id=ancestor.id
+      JOIN assets a ON a.tenant_id=d.tenant_id AND a.model_id=d.model_id AND a.model_version=d.version WHERE r.descendants
+  ), eligible_assets AS MATERIALIZED (
+    SELECT n.id FROM nominal_assets n WHERE EXISTS(SELECT 1 FROM all_types t WHERE
+      public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,n.id,t.before_definition,'source') OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,n.id,t.before_definition,'target')
+      OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,n.id,t.after_definition,'source') OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,n.id,t.after_definition,'target'))
   ), all_assets AS MATERIALIZED (
     SELECT a.id FROM assets a WHERE a.tenant_id=${p.tenantId}::uuid AND (a.id IN(SELECT id FROM changed_assets)
       OR a.id=ANY(${extra}::uuid[]) OR a.id IN(SELECT source_asset_id FROM all_edges UNION SELECT target_asset_id FROM all_edges UNION SELECT asset_id FROM all_bindings)
-      OR EXISTS(SELECT 1 FROM all_types t WHERE
-        public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,a.id,t.before_definition,'source') OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,a.id,t.before_definition,'target')
-        OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,a.id,t.after_definition,'source') OR public.gc_relation_endpoint_eligible(${p.tenantId}::uuid,a.id,t.after_definition,'target')))
+      OR a.id IN(SELECT id FROM eligible_assets))
   )`;
 }
 
@@ -88,11 +106,11 @@ function referencedPrincipals(request: RelationMigrationContextRequest, changeSe
   return ids;
 }
 
-export async function captureRelationMigration(tx: Tx, p: Principal, request: RelationMigrationContextRequest, changeSet?: GraphChangeSet) {
+async function captureMigration(tx: Tx, p: Principal, request: RelationMigrationContextRequest, changeSet?: GraphChangeSet, sourceProof?: GlossaryGraphSourceProof) {
   await lockRelationScope(tx, p, GRAPH_WRITE);
   // Direct subjects have a uniform404; complete implicit cohorts have a uniform
   // scope refusal. Both precede target diagnostics or hidden materialization bounds.
-  const direct = [...new Set([...request.assetChanges.map(row => row.assetId), ...(changeSet?.relationTargets.flatMap(row => row.plan.creations.flatMap(item => [item.sourceAssetId, item.targetAssetId])) ?? [])])];
+  const direct = [...new Set([...(sourceProof ? [sourceProof.afterEndpoint.assetId] : []), ...request.assetChanges.map(row => row.assetId), ...(changeSet?.relationTargets.flatMap(row => row.plan.creations.flatMap(item => [item.sourceAssetId, item.targetAssetId])) ?? [])])];
   if (direct.length) {
     const absent = await relationQuery(tx, () => sql`select 1 from unnest(${direct}::uuid[]) x(id) LEFT JOIN assets a
       ON a.tenant_id=${p.tenantId}::uuid AND a.id=x.id AND (a.visibility='tenant' OR a.allowed_identities @> ${JSON.stringify([p.id])}::jsonb) WHERE a.id IS NULL LIMIT 1`.execute(tx));
@@ -118,7 +136,7 @@ export async function captureRelationMigration(tx: Tx, p: Principal, request: Re
     }
     if (target.definition) await endpointTypeIdentities(tx, p, relationDefinition(target.definition));
   }
-  const cte = scopeCTE(p, request, changeSet), member = JSON.stringify([p.id]);
+  const cte = scopeCTE(p, request, changeSet, sourceProof), member = JSON.stringify([p.id]);
   const hidden = await relationQuery(tx, () => sql`${cte} SELECT 1 FROM assets a JOIN all_assets s ON s.id=a.id
     WHERE a.tenant_id=${p.tenantId}::uuid AND NOT(a.visibility='tenant' OR a.allowed_identities @> ${member}::jsonb)
     UNION ALL SELECT 1 FROM relations r JOIN all_edges scope ON scope.id=r.id WHERE r.tenant_id=${p.tenantId}::uuid AND NOT(r.visibility='tenant' OR r.allowed_identities @> ${member}::jsonb) LIMIT 1`.execute(tx));
@@ -134,7 +152,7 @@ export async function captureRelationMigration(tx: Tx, p: Principal, request: Re
         LEFT JOIN relation_participation_revisions h ON h.tenant_id=b.tenant_id AND h.binding_id=b.id AND h.version=b.version WHERE b.tenant_id=${p.tenantId}::uuid),0)
       +coalesce((SELECT sum(coalesce(octet_length(before_definition::text),0)+octet_length(after_definition::text)) FROM all_types),0))::text AS bytes`.execute(tx));
   const counts = size.rows[0];
-  if (Number(counts.assets) > 2000 || Number(counts.changes) > 1000 || Number(counts.edges) > 1000 || Number(counts.bindings) > 4000 || Number(counts.bytes) + Buffer.byteLength(JSON.stringify(changeSet ?? request)) > 524288) throw profileLimit();
+  if (Number(counts.assets) > 2000 || Number(counts.changes) > 1000 || Number(counts.edges) > 1000 || Number(counts.bindings) > 4000 || Number(counts.bytes) + Buffer.byteLength(JSON.stringify(sourceProof ? { request: changeSet ?? request, sourceProof } : changeSet ?? request)) > 524288) throw profileLimit();
   const ids = (await relationQuery(tx, () => sql<{ id: string }>`${cte} SELECT id FROM all_assets ORDER BY id`.execute(tx))).rows.map(row => row.id);
   const types = (await relationQuery(tx, () => sql<{ type_id: string; current_version: number | null }>`${cte} SELECT type_id,current_version FROM all_types ORDER BY type_id`.execute(tx))).rows;
   const typeIds = types.map(row => row.type_id);
@@ -177,7 +195,7 @@ export async function captureRelationMigration(tx: Tx, p: Principal, request: Re
   const before = { heads: types.filter(row => row.current_version !== null).map(row => ({ relationTypeId: row.type_id, version: row.current_version! })),
     endpoints, edges: edges.map(row => edgeSnapshot(row, byAsset)), bindings: bindings.map(row => bindingSnapshot(row, byAsset)) };
   const policies = [...policyMap.values()].sort((a, b) => a.relationTypeId.localeCompare(b.relationTypeId) || a.definition.version - b.definition.version);
-  const sourceGraph = validateFinalRelationGraphConstraints({ graph: before, policies });
+  const sourceGraph = sourceProof ? validateGlossaryGraphSource({ before, policies, sourceProof }) : validateFinalRelationGraphConstraints({ graph: before, policies });
   if (!sourceGraph.ok) { if (sourceGraph.issues.some(row => row.code === 'limit')) throw profileLimit(); throw graphStorage(); }
   // A repair may fix a real inactive required owner. Corrupt source values,
   // fabricated provenance or missing immutable history are not repair consent.
@@ -280,4 +298,25 @@ export async function captureRelationMigration(tx: Tx, p: Principal, request: Re
   }
   await graphPhysicalBudget(tx, context);
   return { context, assets, edges, bindings, activity };
+}
+
+/** Ordinary graph API: invalid current source graphs remain inadmissible. */
+export async function captureRelationMigration(tx: Tx, p: Principal, request: RelationMigrationContextRequest, changeSet?: GraphChangeSet) {
+  return captureMigration(tx, p, request, changeSet);
+}
+
+/** Internal publication capture. There is no caller-supplied source proof; the
+ * fixed SQL016 helper binds the same transaction, actor and publication. */
+export async function captureGlossaryRelationMigration(tx: Tx, p: Principal, publicationId: string, request: RelationMigrationContextRequest, changeSet?: GraphChangeSet) {
+  await lockRelationScope(tx, p, GRAPH_WRITE);
+  const row = (await relationQuery(tx, () => sql<{ value: unknown }>`SELECT public.gc_glossary_graph_source_evidence(${publicationId}::uuid) AS value`.execute(tx))).rows[0];
+  const parsed = parseGlossaryGraphSourceProof(row?.value);
+  if (!parsed.ok) { if (parsed.issues.some(issue => issue.code === 'limit')) throw profileLimit(); throw graphStorage(); }
+  const sourceProof = parsed.value;
+  if (sourceProof.publicationId !== publicationId || sourceProof.tenantId !== p.tenantId || sourceProof.actorId !== p.id ||
+      request.assetChanges.length || request.assetTypeMigrations.length || request.repairsReceiptId !== null ||
+      request.relationTargets.some(target => target.kind !== 'repair' || !sourceProof.relationTypeIds.includes(target.relationTypeId))) throw graphStorage();
+  const captured = await captureMigration(tx, p, request, changeSet, sourceProof);
+  await graphPhysicalBudget(tx, { context: captured.context, sourceProof });
+  return { ...captured, sourceProof };
 }

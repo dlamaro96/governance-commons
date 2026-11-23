@@ -20,9 +20,9 @@ let nextSlot=config.suiteOffset;
 export const uuid=()=>randomUUID();
 export const digest=()=>createHash('sha256').update(randomBytes(32)).digest('hex');
 export const iso=(value:unknown)=>new Date(value as string).toISOString();
-export class SqlFailure extends Error {constructor(readonly code:string){super(`PostgreSQL rejected qualification operation (${code})`);}}
+export class SqlFailure extends Error {constructor(readonly code:string,diagnostic=''){super(`PostgreSQL rejected qualification operation (${code})${diagnostic}`);}}
 export async function query(client:pg.Client,sql:string,values:unknown[]=[]):Promise<pg.QueryResult<Row>>{
- try{return await client.query(sql,values);}catch(error){throw new SqlFailure(typeof(error as {code?:unknown}).code==='string'?(error as {code:string}).code:'CONNECTION_FAILURE');}
+ try{return await client.query(sql,values);}catch(error){const e=error as {code?:unknown;message?:unknown;where?:unknown};const column=typeof e.message==='string'?/^column reference "([a-z_.]{1,90})" is ambiguous$/.exec(e.message)?.[1]:undefined;const fn=typeof e.where==='string'?/PL\/pgSQL function ([a-z_][a-z_0-9.]{0,90})\(/.exec(e.where)?.[1]:undefined;throw new SqlFailure(typeof e.code==='string'?e.code:'CONNECTION_FAILURE',`${column?' ambiguousColumn='+column:''}${fn?' function='+fn:''}`);}
 }
 export const rejected=(...codes:string[])=>(error:unknown)=>error instanceof SqlFailure&&codes.includes(error.code);
 export async function connect(url:string):Promise<pg.Client>{

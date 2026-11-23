@@ -1,8 +1,8 @@
 # Scoped authority administration candidate
 
-Status: **DRAFT FOR ROOT ADOPTION — NOT IMPLEMENTED, ACTIVATED OR VERIFIED.** Prepared 2026-11-16 in the root `codex/scoped-authority` checkout. This proposes the missing administration adapters for the already selected **21** actions. It adds no action, runtime permission, migration, approved installation, reviewer sign-off or release claim. The complete [BUILD_SPEC](../product/BUILD_SPEC.md), [requirements](../product/requirements.yaml) and [STATE](STATE.md) remain authoritative. In particular, CORE-004/005/006/007 and SYS-SEC-002 require configurable authority, separation from content access, and recorded concurrent changes.
+Status: **DRAFT FOR DESIGN REVIEW — NOT IMPLEMENTED, ACTIVATED OR VERIFIED.** Prepared 2026-11-16. This proposes the missing administration adapters for the already selected **21** actions. It adds no action, runtime permission, migration, approved installation, reviewer sign-off or release claim. The complete [BUILD_SPEC](../product/BUILD_SPEC.md), [requirements](../product/requirements.yaml) and [STATE](STATE.md) remain authoritative. In particular, CORE-004/005/006/007 and SYS-SEC-002 require configurable authority, separation from content access, and recorded concurrent changes.
 
-The following frozen candidates were read from the isolated business-domains checkout; their relative links become valid when root integrates those documents. Their exact SHA-256 identities are the reference, rather than a claim that they are already present in this branch:
+The following table records the candidate versions inspected for this historical proposal. The hashes identify those original versions; linked documents may have subsequent revisions:
 
 | Input | SHA-256 | Reused contract |
 |---|---|---|
@@ -11,7 +11,7 @@ The following frozen candidates were read from the isolated business-domains che
 | [Projection catalog](SCOPED_AUTHORITY_PROJECTIONS_CANDIDATE.md) | `c0fe7d452e4b07a84810577c657e1625eaf371bc29ae3a83ac9cce42dec04eae` | Canonical semantic fields, narrow references, required-field denial and protected resource-wide intent |
 | [Budget baseline](SCOPED_AUTHORITY_BUDGET_BASELINE.md) | `432da20390e76b0e94041ea2955a00b8d20a90eecb5735d44e5f53e5013f6fe0` | Existing profiles are separate; no inferred tenant population or authority fan-out limit |
 
-The root-adopted [pure contract](SCOPED_AUTHORITY_PURE_CONTRACT.md) permits only parser/action-map work. This document does not extend that implementation permission. Applied SQL001–011 and all existing identity, revision, receipt and audit bytes remain immutable. No application or runtime source was changed for this proposal.
+The selected [pure contract](SCOPED_AUTHORITY_PURE_CONTRACT.md) permits only parser/action-map work. This document does not extend that implementation permission. Applied SQL001–011 and all existing identity, revision, receipt and audit bytes remain immutable. No application or runtime source was changed for this proposal.
 
 ## 1. Decisions proposed for adoption
 
@@ -225,7 +225,7 @@ The installer refuses a stale digest, wrong tenant/generation, expired/consumed 
 
 ## 8. Genuine shared dependencies and required gates
 
-This document fixes proposed route/DTO, assignment, control, retirement and provenance semantics; the following shared contracts still require root adoption before implementation:
+This document fixes proposed route/DTO, assignment, control, retirement and provenance semantics; the following shared contracts still require design approval before implementation:
 
 - Add the protected control/issuance intersection, ordinary-versus-delegated provenance, exact group/elevation child revision references and these projection/event variants to the shared types and SQL protocol. The existing pure policy AST alone cannot represent an administration mandate, and a JSON flag must not stand in for one. Adopt or revise the proposed new-admin record/lifetime limits explicitly.
 - Freeze aggregate applicable-policy/grant/group/role/field/principal/compiled-memory/deadline budgets with the budget workstream. The 2,001 principal lock ceiling is not a group-size or tenant population limit. Complete reverse dependency/effect analysis, including sparse schemas and many denies, needs equivalent bounded SQL/TypeScript behavior; a first-N query or generic 512-KiB copied envelope is not a solution.

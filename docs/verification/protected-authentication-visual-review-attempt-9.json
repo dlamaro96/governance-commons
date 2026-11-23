@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "result": "PASS_SCOPED_STATIC_VISUAL_REVIEW",
+  "execution_report": "docs/verification/protected-authentication-local-attempt-9.json",
+  "execution_report_sha256": "20db58d0b1427fd28f103e1829426865189d876ee6bf4d876f85c56b9fe600c0",
+  "reviewed_at": "2026-11-16T10:24:01.800250+00:00",
+  "reviewer": "root-agent",
+  "method": "Inspected all eight original-resolution PNGs using view_image after the real passing browser gate.",
+  "captures": [
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-9/protected-revoked-ar-mobile.png",
+      "sha256": "e069fc43894ada9575e19ff47c9cb7ea84d28af3e0c6467f2b30c8ed10cbd85d",
+      "width": 390,
+      "height": 1385,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Language direction, labels, session values and controls are legible at this viewport; signed-out/denied states clear session descriptor values and disable mutations. No blocking overlap observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-9/protected-selected-ar-desktop.png",
+      "sha256": "1fceaff9a7051c4b9d25c4fc19723a0b4765a48aa5d0db276e6e93ce00a79908",
+      "width": 1440,
+      "height": 1161,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Language direction, labels, session values and controls are legible at this viewport; signed-out/denied states clear session descriptor values and disable mutations. No blocking overlap observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-9/protected-selected-ar-mobile.png",
+      "sha256": "a749187094ad84535a2ecc6e8d4ee43b359dae543f04d86f4d4c5265c1ffbb74",
+      "width": 390,
+      "height": 1407,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Language direction, labels, session values and controls are legible at this viewport; signed-out/denied states clear session descriptor values and disable mutations. No blocking overlap observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-9/protected-selected-en-desktop.png",
+      "sha256": "c50a52fe08887491807334796de9896a1787908f9355f133492f0a0ef6f1580f",
+      "width": 1440,
+      "height": 1140,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Language direction, labels, session values and controls are legible at this viewport; signed-out/denied states clear session descriptor values and disable mutations. No blocking overlap observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-9/protected-session-en-desktop.png",
+      "sha256": "435ae171e52f2d0068a719ee36b52145006204bf3358ff9fb0063a24a0693a0a",
+      "width": 1440,
+      "height": 1140,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Language direction, labels, session values and controls are legible at this viewport; signed-out/denied states clear session descriptor values and disable mutations. No blocking overlap observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-9/protected-steward-en-mobile.png",
+      "sha256": "1f0524cfe3e675156557df084c791d918e0a07f81636c412da2340d86b67a5aa",
+      "width": 390,
+      "height": 1340,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Language direction, labels, session values and controls are legible at this viewport; signed-out/denied states clear session descriptor values and disable mutations. No blocking overlap observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-9/protected-tenant-denied-en-mobile.png",
+      "sha256": "70aa412378f587b69e0c967a376fdb42cdee9fd927fb6e3bffec62f851b8fe62",
+      "width": 390,
+      "height": 1383,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Language direction, labels, session values and controls are legible at this viewport; signed-out/denied states clear session descriptor values and disable mutations. No blocking overlap observed."
+    },
+    {
+      "path": "docs/verification/protected-authentication-captures-attempt-9/protected-unbound-denied-en-desktop.png",
+      "sha256": "c1c3fb5c835b939e9d0509aa36641d337693f90409141fd13ed730dbed427ddc",
+      "width": 1440,
+      "height": 1158,
+      "result": "NO_VIEWPORT_BLOCKER_OBSERVED",
+      "observations": "Language direction, labels, session values and controls are legible at this viewport; signed-out/denied states clear session descriptor values and disable mutations. No blocking overlap observed."
+    }
+  ],
+  "limitations": [
+    "Static inspection is not Arabic linguistic certification or human accessibility sign-off.",
+    "Long tenant UUID text in the narrow input uses internal horizontal scrolling; every character is not simultaneously visible. No page-level horizontal overflow or blocking overlap was observed.",
+    "The isolated protected lifecycle UI does not authorize catalog content."
+  ]
+}

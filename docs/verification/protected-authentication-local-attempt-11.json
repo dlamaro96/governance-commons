@@ -1,0 +1,843 @@
+{
+  "schema_version": 1,
+  "purpose": "PROTECTED_AUTHENTICATION_COORDINATES_ONLY",
+  "outcome": "PASS",
+  "commit": "bbc32aa835dbc379f5d9966741b20a097feddcc3",
+  "started_at": "2026-11-16T12:03:58.176581+00:00",
+  "recorded_at": "2026-11-16T12:05:01.262062+00:00",
+  "command": "./dev test --suite protected-authn",
+  "profile": "isolated-protected-authn",
+  "evidence_mode": "mounted-source",
+  "baked_image_verified": false,
+  "native_http": {
+    "counts": {
+      "tests": 15,
+      "pass": 15,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 11222.714422
+    },
+    "tests": [
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 11,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 21,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 29,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 37,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 44,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 52,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 60,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 64,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 68,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 75,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 84,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 91,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 97,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 103,
+        "status": "passed"
+      },
+      {
+        "file": "tests/qualification/protected-authn-http.test.ts",
+        "line": 109,
+        "status": "passed"
+      }
+    ]
+  },
+  "browser": {
+    "stats": {
+      "startTime": "2026-11-16T12:04:52.416Z",
+      "duration": 6103.804,
+      "expected": 2,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "file": "tests/e2e-protected/protected-authn.spec.ts",
+        "line": 33,
+        "status": "passed",
+        "attempts": 1,
+        "duration_ms": 2870
+      },
+      {
+        "file": "tests/e2e-protected/protected-authn.spec.ts",
+        "line": 45,
+        "status": "passed",
+        "attempts": 1,
+        "duration_ms": 2325
+      }
+    ]
+  },
+  "captures": [
+    {
+      "name": "protected-revoked-ar-mobile.png",
+      "sha256": "e069fc43894ada9575e19ff47c9cb7ea84d28af3e0c6467f2b30c8ed10cbd85d",
+      "bytes": 68083,
+      "width": 390,
+      "height": 1385
+    },
+    {
+      "name": "protected-selected-ar-desktop.png",
+      "sha256": "5799a40ef08fd287a8e9b14a6b9fe375f7687ad486f098b1554fde5cf5331b38",
+      "bytes": 82959,
+      "width": 1440,
+      "height": 1161
+    },
+    {
+      "name": "protected-selected-ar-mobile.png",
+      "sha256": "0639cc9e8f86382f5138cb6444c46ba211c3a812cfc8c9db5309df2dbe164b5e",
+      "bytes": 72655,
+      "width": 390,
+      "height": 1407
+    },
+    {
+      "name": "protected-selected-en-desktop.png",
+      "sha256": "5dd01ddc080681414af7477c6891e9a61085496508185ddab07da8ff7d8b4f8c",
+      "bytes": 85062,
+      "width": 1440,
+      "height": 1140
+    },
+    {
+      "name": "protected-session-en-desktop.png",
+      "sha256": "0f5d11457c6d8f6eae960dd35e8a886e11c8146e31be33143e60ee58d4638abb",
+      "bytes": 81833,
+      "width": 1440,
+      "height": 1140
+    },
+    {
+      "name": "protected-steward-en-mobile.png",
+      "sha256": "c9f108509d7ad18ea51a2daa3623bc0f20f34c477361d6ec5f2e7639fe9a0f55",
+      "bytes": 72572,
+      "width": 390,
+      "height": 1340
+    },
+    {
+      "name": "protected-tenant-denied-en-mobile.png",
+      "sha256": "70aa412378f587b69e0c967a376fdb42cdee9fd927fb6e3bffec62f851b8fe62",
+      "bytes": 72553,
+      "width": 390,
+      "height": 1383
+    },
+    {
+      "name": "protected-unbound-denied-en-desktop.png",
+      "sha256": "c1c3fb5c835b939e9d0509aa36641d337693f90409141fd13ed730dbed427ddc",
+      "bytes": 78298,
+      "width": 1440,
+      "height": 1158
+    }
+  ],
+  "served_assets": {
+    "html": "13df9c73d80737bc0a77a393a6e3db3bbb4900734c8bc70b49bc29ed85bbfd73",
+    "css": "ac0fb72dd7198ef9d1087717ae5a0e2a25b115df938d41d003bdd89b75eb3f93",
+    "js": "17af28239a3647686971ff9e1fd0303ccb2e52b9e85bd90d6457278650ff7f87"
+  },
+  "sources": [
+    {
+      "path": ".dockerignore",
+      "sha256": "c865503e879c0d5f8ddf85648726a533ebc0313ca9f905e30b68b23ed4c1f014"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "8bfbd9b2272df01ea396c63c0106073b5d1d252a4ecbfeb23c1bf3d943335ff5"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha256": "776d487541564c758408ffea4664262b1a8a6895c5a855fc3c85156fdc44638b"
+    },
+    {
+      "path": "Dockerfile",
+      "sha256": "adb54fba1b5da9f18528ca367d87c32fd736050877e1de36bde5600005ff41b0"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ad3db4122ae9a83a1b858b8d2f38be944d13fbfa0787ff421b231e00a9519c5d"
+    },
+    {
+      "path": "apps/api/src/asset-type-migrations.ts",
+      "sha256": "02f530c3715801c222f4f98d65807f06d0b58d0193b05c6c4e9f3f0b78a00c92"
+    },
+    {
+      "path": "apps/api/src/asset-types.ts",
+      "sha256": "847e1a9492b79d45de5143aa80ff6e9f3e04fd898d934a2b15b8a46637902ac3"
+    },
+    {
+      "path": "apps/api/src/audit-reader.ts",
+      "sha256": "27f13130b1902bc7c9aa9656a1eebc9e680c906b977ac9e002f74c57355aea8e"
+    },
+    {
+      "path": "apps/api/src/audit.ts",
+      "sha256": "2cb9c47405c4c1dd0c1bc5f82b8a87ca7fe0456c4c0ec6a5b0ad2decce04c27c"
+    },
+    {
+      "path": "apps/api/src/business-domain-http.ts",
+      "sha256": "4d2f80dc0028363b2a295904d01d696eed2f66c23c71383113b9a15fdfad60b8"
+    },
+    {
+      "path": "apps/api/src/business-domains.ts",
+      "sha256": "cc4342f40e277611a337039415c3a8f2968123c563785e6ac596dc13b5cd678d"
+    },
+    {
+      "path": "apps/api/src/index.ts",
+      "sha256": "b8704fcf2be3ba757d1e0a51c85c1de1fa1fe7dafbac346be577a49e8a5171e7"
+    },
+    {
+      "path": "apps/api/src/model-http.ts",
+      "sha256": "78d176145b8713c5aca2797fad741653698c6f2439817fbf069d4842afcc5938"
+    },
+    {
+      "path": "apps/api/src/model-migrations.ts",
+      "sha256": "3d116bf6bc64ac3723f5aadef63d414f7920c584824a114e8bb6c2708d7129ad"
+    },
+    {
+      "path": "apps/api/src/models.ts",
+      "sha256": "d6212e6723236030f672cd67ce2f2de43b1e8f67216309f1a16c18dd257a0387"
+    },
+    {
+      "path": "apps/api/src/relation-migrations.ts",
+      "sha256": "f30df94c238f409afd303ea9e9dbd55a863e19702dc244798861dfc2b9aaa224"
+    },
+    {
+      "path": "apps/api/src/relations.ts",
+      "sha256": "0124c9190396dbcddf14ebb3fae67128ebaa97865aba97dc6b46000654f2b974"
+    },
+    {
+      "path": "apps/api/src/repository.ts",
+      "sha256": "78b98548857cc519e174813e4a3501d0f70462c4d9a31bae4eec421b342445a5"
+    },
+    {
+      "path": "apps/api/src/search.ts",
+      "sha256": "cb92be5eb719102d4b5a9903d747c67bced7a35856efcfb5ccb4f2c8eca7085d"
+    },
+    {
+      "path": "apps/api/src/security.ts",
+      "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+    },
+    {
+      "path": "apps/authn-edge/src/index.ts",
+      "sha256": "292efd9d55f021da79fde0ac08cc9345cafa29e1b547bc275efde4d36e6f04e1"
+    },
+    {
+      "path": "apps/authn-edge/src/server.ts",
+      "sha256": "82d103757655cb12b80e4bf59795580141d7ca909ebfb3529102f768d4ddd957"
+    },
+    {
+      "path": "apps/login-broker/src/app.ts",
+      "sha256": "f23bf527503c7cb643b7b7064c8d14ce208ae1ec15e5e751b2dc07424efdfc88"
+    },
+    {
+      "path": "apps/login-broker/src/index.ts",
+      "sha256": "688ad4b4e5598c1efa249cadce1a884bed75477a8b83357f9952f6ffcf326d28"
+    },
+    {
+      "path": "apps/session-api/src/index.ts",
+      "sha256": "1dbae88c0fbcff5c322c0bb56a569967c4ae2ea4ef5245e29f5926927f007e62"
+    },
+    {
+      "path": "apps/session-api/src/server.ts",
+      "sha256": "a8c7a64a1dd61ce5dc750aa726c7747f23c2c5662f88faf208b059df53890b25"
+    },
+    {
+      "path": "apps/session-api/src/ui.ts",
+      "sha256": "d428feb04bae93eb9b9bd53da8bbeb208f32b2e5f9f57cc860bdd74001bf0a79"
+    },
+    {
+      "path": "apps/web/package.json",
+      "sha256": "cf72e592f6444959c257e304abb0c455fd28d4e297a4e2601339ea38fd427b3c"
+    },
+    {
+      "path": "deploy/protected-authn/compose.yaml",
+      "sha256": "2acbfd7719baa92a3fb7e73e2a0e39b2f43cfd93719659a14ed823cf594d5c35"
+    },
+    {
+      "path": "dev",
+      "sha256": "3933fa6fdbbca26f1af4f1ad9b299cc651b6c7a51448c1cfcfa3468c933a26a5"
+    },
+    {
+      "path": "docs/development/protected-authentication.md",
+      "sha256": "510f6808927ff020ed34fe13d1afd6d534a8171bfb99206f8fb8d715cd0f6de4"
+    },
+    {
+      "path": "docs/execution/AUTHENTICATION_FOUNDATION_CONTRACT.md",
+      "sha256": "7795a8114e3ea9969757a92d879788ff15e933c3b9438c469c97ff1a3cb23ee6"
+    },
+    {
+      "path": "docs/execution/PROTECTED_BROKER_CONTRACT.md",
+      "sha256": "fdd2af410f139c4f86ea7e8ee77bb5615c9c4b28872eaaad487a8247379698a1"
+    },
+    {
+      "path": "docs/execution/authentication-legacy-function-census.json",
+      "sha256": "a2affa4c201bd03c23bdf91ed7f765fcbcde0cb3c351c13607be405ba3cfb51e"
+    },
+    {
+      "path": "package.json",
+      "sha256": "35f8994b074066cf23fb633578619462e3b1e98374cbbb03f9f682b5ee7cc388"
+    },
+    {
+      "path": "packages/authn/src/contracts.ts",
+      "sha256": "881f03ae89220d659feb25155e846ff1f1d9d155d39ea7d018d5686612297fb2"
+    },
+    {
+      "path": "packages/authn/src/oidc.ts",
+      "sha256": "265a16c640771c5a6fe6c7eefe613e5137b890b3d5b1260686d49b2bb2cd687c"
+    },
+    {
+      "path": "packages/authn/src/pool.ts",
+      "sha256": "fd0e9bac683e11eb750e17fa419d6985cb379d7dd5f8ebac56d1d088e8349932"
+    },
+    {
+      "path": "packages/authn/src/transport.ts",
+      "sha256": "dc6cd510e991d9d8c036834726089db84c9372596823b99024518d66c9a982ba"
+    },
+    {
+      "path": "packages/authority/src/actions.ts",
+      "sha256": "203e81870496129a7914bcadb5c6f0c268612449d59319e1450350d250604a95"
+    },
+    {
+      "path": "packages/authority/src/admission.ts",
+      "sha256": "1ef4989d22310cc902d7529c7ea55e4b1b0024b182501615ff84742187a67668"
+    },
+    {
+      "path": "packages/authority/src/authentication-installation.ts",
+      "sha256": "b085eaa0757f3a35971602ad7bfbc38d2c164918711d092c1e0930e680a385fa"
+    },
+    {
+      "path": "packages/authority/src/authentication.ts",
+      "sha256": "80d1ca07499e60917aae2e11aa5e5eefe61568279bb037b8f19cb65de5cf612d"
+    },
+    {
+      "path": "packages/authority/src/decision-budget.ts",
+      "sha256": "86573476d60818a4fb94c0a61a829fc68b0386a1bdd9dcd40c8da30bce860b10"
+    },
+    {
+      "path": "packages/authority/src/decision-chains.ts",
+      "sha256": "4a148825a0592e6fd97afbc31a76fd21047bb337871680004896cc169b79e9ea"
+    },
+    {
+      "path": "packages/authority/src/decision-context.ts",
+      "sha256": "91d9f4ad7d5e916c17f9f77c0d985ffdfd2831beae1d1ea0a8ee8f2bf91c0119"
+    },
+    {
+      "path": "packages/authority/src/decision-identity.ts",
+      "sha256": "aeb3b1d96361f6ba6d9a421c5deecb4979ae130a1ec26448290f7c82e4d7339c"
+    },
+    {
+      "path": "packages/authority/src/decision-schema.ts",
+      "sha256": "fad37ccba9fd677127e20b870853d183d57a67d2c0fbeb9a8c926799a90edfba"
+    },
+    {
+      "path": "packages/authority/src/decision-types.ts",
+      "sha256": "768f06dee9602e46a7f626d851f47f97ee1eb660ea658faa1bf1f886c332412a"
+    },
+    {
+      "path": "packages/authority/src/decisions.ts",
+      "sha256": "9ff3da94bf8e7ab2b9b11ff2c0ba119c8cf7409377c0f8ac7bc2345eef03c97c"
+    },
+    {
+      "path": "packages/authority/src/expressions.ts",
+      "sha256": "7e88e6fa8436d9d282a518fe460d6d8a96a782d1ef364523a3c0b4764edb62e1"
+    },
+    {
+      "path": "packages/authority/src/policy.ts",
+      "sha256": "914a45dcdd74abfa9805f9414ccffb6bf1ddbce47d615ed6e57a49d21ff030ec"
+    },
+    {
+      "path": "packages/authority/src/types.ts",
+      "sha256": "044e1ecf9ddb03a5a77ecbf71ae170aac6965690f4bc8522709609c688178164"
+    },
+    {
+      "path": "packages/authz/src/index.ts",
+      "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+    },
+    {
+      "path": "packages/db/migrations/001_foundation.sql",
+      "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+    },
+    {
+      "path": "packages/db/migrations/002_audit_envelopes.sql",
+      "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+    },
+    {
+      "path": "packages/db/migrations/003_governance_models.sql",
+      "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+    },
+    {
+      "path": "packages/db/migrations/004_model_migrations.sql",
+      "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+    },
+    {
+      "path": "packages/db/migrations/005_model_migration_integrity.sql",
+      "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+    },
+    {
+      "path": "packages/db/migrations/006_inherited_asset_types.sql",
+      "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+    },
+    {
+      "path": "packages/db/migrations/007_asset_type_migrations.sql",
+      "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+    },
+    {
+      "path": "packages/db/migrations/008_constrained_relations.sql",
+      "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+    },
+    {
+      "path": "packages/db/migrations/009_relation_participation.sql",
+      "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+    },
+    {
+      "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+      "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+    },
+    {
+      "path": "packages/db/migrations/011_business_domains.sql",
+      "sha256": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+    },
+    {
+      "path": "packages/db/migrations/012_authentication_foundation.sql",
+      "sha256": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77"
+    },
+    {
+      "path": "packages/db/src/index.ts",
+      "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+    },
+    {
+      "path": "packages/db/src/migrate.ts",
+      "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+    },
+    {
+      "path": "packages/db/src/seed-business-domains.ts",
+      "sha256": "382a9968582d3dfc54b6f60c1a3c1eefaac564d2c6db62469bc301ab753ffe7b"
+    },
+    {
+      "path": "packages/db/src/seed.ts",
+      "sha256": "6e0e2d71e64f60a825231587bca88ca03f59398c2f77ab2173d68229433c9a9a"
+    },
+    {
+      "path": "packages/domain/src/asset-type-migration-contracts.ts",
+      "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+    },
+    {
+      "path": "packages/domain/src/asset-type-migration-service.ts",
+      "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+    },
+    {
+      "path": "packages/domain/src/asset-type-migration.ts",
+      "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+    },
+    {
+      "path": "packages/domain/src/asset-type-policy.ts",
+      "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+    },
+    {
+      "path": "packages/domain/src/asset-type-service.ts",
+      "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+    },
+    {
+      "path": "packages/domain/src/asset-type.ts",
+      "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+    },
+    {
+      "path": "packages/domain/src/business-domain-contracts.ts",
+      "sha256": "b43ecced92ec6dd20392afc06a4f8e466819d98148e2b4bbce39ed91ec56edf1"
+    },
+    {
+      "path": "packages/domain/src/business-domain-migration.ts",
+      "sha256": "ca5396dc13234e6aa5be9f4087c3cad5bcbea2f05bcd88bb8873f70881972d99"
+    },
+    {
+      "path": "packages/domain/src/business-domain-preview.ts",
+      "sha256": "cc05d1567dd9d84b67245b9fa1b1d6bbd451c2ae8aa2f9cf38b54e44a2147478"
+    },
+    {
+      "path": "packages/domain/src/business-domain-read.ts",
+      "sha256": "29ef7892ca3c2e581679b269558af238246a77044d0153c61e47d8456e279b14"
+    },
+    {
+      "path": "packages/domain/src/business-domain-service-contracts.ts",
+      "sha256": "ba82f0ca537c67c96614dc97c7b3f3f6c1a201304713c2bae2c40a57e83832b6"
+    },
+    {
+      "path": "packages/domain/src/business-domain-service.ts",
+      "sha256": "5215ce759fbcf1f85327893476f213d009a0caa5f82acc4aa1df9723769a5cb4"
+    },
+    {
+      "path": "packages/domain/src/business-domain-store.ts",
+      "sha256": "ddfd6cd5c9846818c81093062132c27800717e10efd110a76a7cb54a1300d974"
+    },
+    {
+      "path": "packages/domain/src/business-domain-type.ts",
+      "sha256": "19c4a82916ba81f5d236c3e46e1edad94e7b747f68643556a6f98af53677885e"
+    },
+    {
+      "path": "packages/domain/src/business-domain-write.ts",
+      "sha256": "e6225dd90ca9ccadaa01d54c709ec4b32a182d52841e7208c4b7430b7671b067"
+    },
+    {
+      "path": "packages/domain/src/cursor.ts",
+      "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+    },
+    {
+      "path": "packages/domain/src/graph-asset-persistence.ts",
+      "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+    },
+    {
+      "path": "packages/domain/src/graph-asset-preparation.ts",
+      "sha256": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49"
+    },
+    {
+      "path": "packages/domain/src/model-migration-service.ts",
+      "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+    },
+    {
+      "path": "packages/domain/src/model-migration.ts",
+      "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+    },
+    {
+      "path": "packages/domain/src/model-service.ts",
+      "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+    },
+    {
+      "path": "packages/domain/src/model.ts",
+      "sha256": "ebf90e8d24a0cf969d0ebe3c915d5b5113574d354a6e5963d5bc9cd285bc79ad"
+    },
+    {
+      "path": "packages/domain/src/relation-contracts.ts",
+      "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+    },
+    {
+      "path": "packages/domain/src/relation-endpoint-guard.ts",
+      "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+    },
+    {
+      "path": "packages/domain/src/relation-graph.ts",
+      "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+    },
+    {
+      "path": "packages/domain/src/relation-migration-contracts.ts",
+      "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+    },
+    {
+      "path": "packages/domain/src/relation-migration-read.ts",
+      "sha256": "bf5dc16ff794343dbc68d2992644e840e07846f791f6c119a8a168bc53142ff7"
+    },
+    {
+      "path": "packages/domain/src/relation-migration-service.ts",
+      "sha256": "f7687e93f3a223921f6ada873bce704837f920e1e09e124fe91c71464b3842d2"
+    },
+    {
+      "path": "packages/domain/src/relation-migration-store.ts",
+      "sha256": "7fc1ffadfc3465f6c329f334d1910fb60093fafa3d1dc770341cb75d77988287"
+    },
+    {
+      "path": "packages/domain/src/relation-migration.ts",
+      "sha256": "64ae2b60bbcbebdc21e0045ad4a081eb04b96a74fe2ae875f85205d85b4b2fd6"
+    },
+    {
+      "path": "packages/domain/src/relation-participation-read.ts",
+      "sha256": "bc70e22f0010960cde0756151e65e8c26673eef4d538875a7d84812011af3673"
+    },
+    {
+      "path": "packages/domain/src/relation-participation.ts",
+      "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+    },
+    {
+      "path": "packages/domain/src/relation-service.ts",
+      "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+    },
+    {
+      "path": "packages/domain/src/relation-store.ts",
+      "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+    },
+    {
+      "path": "packages/domain/src/relation.ts",
+      "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+    },
+    {
+      "path": "packages/ui/package.json",
+      "sha256": "749924710147d652fad712f4298c681b38de73f913f4e75accca8590bf8a97a0"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+    },
+    {
+      "path": "pnpm-workspace.yaml",
+      "sha256": "3d0651c8ee104733339c15831fc93e2429ddadf64b25c65f7d8040c5a6aa43bf"
+    },
+    {
+      "path": "policies/api_evidence.py",
+      "sha256": "2f438835e7e6f01ca0eb5dafe986696d4bdd4726bd691b2436e7858652a078b2"
+    },
+    {
+      "path": "policies/authentication_evidence.py",
+      "sha256": "aff4165182b6a89eb16e7d54f435c78a4ba33573295a99294f80f658addc23eb"
+    },
+    {
+      "path": "policies/ci_evidence.py",
+      "sha256": "db42034c975070916e501ce700c8bd74095089e3f0e3ea4a0312b78ff6b3643d"
+    },
+    {
+      "path": "policies/protected_authn_evidence.py",
+      "sha256": "e0a36f664908151624b61818821880b0290583a3d1be18d37cc8a28eb4176d01"
+    },
+    {
+      "path": "policies/test_ci_evidence.py",
+      "sha256": "b3af75a90a53e5d63ec799adb6233c01d5eed4f37d2d6bdf6c92691c98600d02"
+    },
+    {
+      "path": "policies/test_protected_authn_evidence.py",
+      "sha256": "6bd946583cf7a22959735a31c7b8bc7dc4f8a4d2c6c610550a675556d47bfe24"
+    },
+    {
+      "path": "scripts/authentication-install-demo.ts",
+      "sha256": "11531d7f554711b589318ed56a039b47fba76c9326b5120621b1e405095693b4"
+    },
+    {
+      "path": "scripts/authentication-install.ts",
+      "sha256": "5c00fa1781a203a83d4046fe7326b45f632ee35d06ce9e02e0547bc8f480590d"
+    },
+    {
+      "path": "scripts/authentication_roles.py",
+      "sha256": "927296900dff8cbf87f6e93c4ea0d198ced2be2ace66efa75671c43d8527c152"
+    },
+    {
+      "path": "scripts/protected_authn_image.py",
+      "sha256": "d89580c77b19505d1ed6963a3dd55e5282caf57ca0044e4826079cecbb82f9fb"
+    },
+    {
+      "path": "scripts/protected_browser_process.py",
+      "sha256": "ccfc4a02d71b20329881a1feafe8e9ca674fcae750304f8713913b521efff188"
+    },
+    {
+      "path": "scripts/runtime-protected-ci.py",
+      "sha256": "3631e8bfcd8ca9f09275b9a662b15f6b616e1b9e9ef5d43fbd2c41cdc1678a49"
+    },
+    {
+      "path": "scripts/runtime-test-authority-authn-foundation.py",
+      "sha256": "60b5ad51d757851de74a11f4cac4a7c98ebcdcb8ec7b764f715b2f249f2df9fe"
+    },
+    {
+      "path": "scripts/runtime-test-protected-authn.py",
+      "sha256": "b4fe4e7d7f124ae45bea62509bed0cafd7bfcee12d0b4a2d89378c1f41007ba9"
+    },
+    {
+      "path": "scripts/runtime.py",
+      "sha256": "a0d4ba459d4c8c9a87d040522f88a1850c214abbe294005c740b994f64348b47"
+    },
+    {
+      "path": "scripts/test_protected_authn_bootstrap.py",
+      "sha256": "2b02dab5bb63bbba431f90b848d281a81f3b37584bc1d84be3d94c959e2994f1"
+    },
+    {
+      "path": "scripts/test_protected_authn_image.py",
+      "sha256": "fad06a8c9aef9d0b49ad331ed7563371f48a71237bcf29046e145f6e22130f8e"
+    },
+    {
+      "path": "scripts/test_protected_browser_process.py",
+      "sha256": "9ed8ae98a5472e5dd502bf835518ff7f405f0fbb5693d0834394a3d9153a8474"
+    },
+    {
+      "path": "tests/e2e-protected/playwright.config.ts",
+      "sha256": "ba6a2c11f75ac2acae8cd4254b5f8cb10f5fb2c66dc1dbc765e2597e6f3977ae"
+    },
+    {
+      "path": "tests/e2e-protected/protected-authn.spec.ts",
+      "sha256": "ca149cfcb96f80b0e6910f09d6e1ab6b91753b97f3279e31388077f22e26fb6d"
+    },
+    {
+      "path": "tests/fixtures/authority-authn-foundation.ts",
+      "sha256": "cf3303f4875441d445a440cc0782fa10cbcf4e9bbd643ced2a4418917e774787"
+    },
+    {
+      "path": "tests/qualification/protected-authn-fixture.ts",
+      "sha256": "3772f38417194939ae003247b280385e9ff3c74e6b11c2e7e6a4e3897f99e610"
+    },
+    {
+      "path": "tests/qualification/protected-authn-http.test.ts",
+      "sha256": "71b7340e1b08f991c65a05f59a381df78d60c2fcf3036e9249c6300dfe5d7e2f"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "2ecec96335c5f3160d019dde4d3edd73ce0d5d328d7641441aa1485058853aab"
+    }
+  ],
+  "migrations": [
+    {
+      "name": "001_foundation.sql",
+      "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+    },
+    {
+      "name": "002_audit_envelopes.sql",
+      "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+    },
+    {
+      "name": "003_governance_models.sql",
+      "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+    },
+    {
+      "name": "004_model_migrations.sql",
+      "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+    },
+    {
+      "name": "005_model_migration_integrity.sql",
+      "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+    },
+    {
+      "name": "006_inherited_asset_types.sql",
+      "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+    },
+    {
+      "name": "007_asset_type_migrations.sql",
+      "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+    },
+    {
+      "name": "008_constrained_relations.sql",
+      "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+    },
+    {
+      "name": "009_relation_participation.sql",
+      "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+    },
+    {
+      "name": "010_relation_scope_discovery.sql",
+      "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+    },
+    {
+      "name": "011_business_domains.sql",
+      "sha256": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+    },
+    {
+      "name": "012_authentication_foundation.sql",
+      "sha256": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77"
+    }
+  ],
+  "images": {
+    "application": "sha256:b82f4d0b692cf9c7dbf338068eec5cded03909e76f1ffbb89f4187edc9d1d6b1",
+    "postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5": "sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+    "quay.io/keycloak/keycloak:26.8.1@sha256:3f3c5f8e03c614774b4bd9173b88391fefa4153bfc010d8012d59ad825377332": "sha256:3f3c5f8e03c614774b4bd9173b88391fefa4153bfc010d8012d59ad825377332"
+  },
+  "container_image_counts": {
+    "authn-edge": 1,
+    "helper": 6,
+    "login-broker": 1,
+    "owner-tool": 1,
+    "session-api": 1
+  },
+  "runtime": {
+    "node": "v24.22.3",
+    "pg": "8.23.1",
+    "jose": "6.2.17",
+    "tsx": "4.23.15",
+    "packageSha256": "35f8994b074066cf23fb633578619462e3b1e98374cbbb03f9f682b5ee7cc388",
+    "lockSha256": "e7ea33ce7fa62d44d093f05cf2ba9ede506ea72a70157d04bafdbdc585fdb829"
+  },
+  "tools": {
+    "node": {
+      "version": "v24.22.3",
+      "sha256": "ba7073582822078d8c90bca3facacc46690bc5366fab4b815aeef9148cd6e854"
+    },
+    "browser": {
+      "version": "Google Chrome 157.0.8103.51",
+      "sha256": "c9a0f292a25c3771f1895ec3397d2cbbee3ce07ce967acd35f34a38978b4aacd"
+    },
+    "docker": "27.3.1",
+    "compose": "2.29.7-desktop.1"
+  },
+  "cleanup": {
+    "ownedRemoved": true,
+    "generatedCredentialsRemoved": true,
+    "ownedHostProcessesRemoved": true,
+    "resourceInventoryPreserved": true
+  },
+  "preserved_resource_counts": {
+    "containers": 14,
+    "running": 10,
+    "images": 13,
+    "volumes": 34,
+    "networks": 11
+  },
+  "resource_inventory_digests": [
+    "ef0487bcc22bcb4f4f68d1eca95ec1643d6360d020494a6ae8342382f95150c1",
+    "ef0487bcc22bcb4f4f68d1eca95ec1643d6360d020494a6ae8342382f95150c1"
+  ],
+  "host_browser_cleanup": {
+    "scope": "registered-posix-groups-and-observed-descendants",
+    "counts": {
+      "registeredBrowserGroups": 1,
+      "trackedProcesses": 32,
+      "termSignals": 0,
+      "killSignals": 0,
+      "remainingLive": 0,
+      "identityConflicts": 0,
+      "unresolvedGroups": 0
+    },
+    "sha256": "f3399bcfae97bfc8cce1749c0d6573fb3942ac09c352b963d259689e39a1e0fc"
+  },
+  "test_log_digests": {
+    "nativeHttp": "1d216d1e44d2ae7ff3434e2ac5a33e92138bb3efd18ce33daf71d0e313d2e308",
+    "browser": "11b4373a37286b2c5c0417599d718673e7dd1c2a73e030a4d5881a8aed6ab60c"
+  },
+  "limitations": [
+    "Isolated fresh PostgreSQL and Keycloak over explicit loopback HTTP; no production TLS, shared-core ingress, content authority activation or release qualification.",
+    "Controlled signed-token native HTTP cases and two real Keycloak browser journeys are separate executions; neither is substituted for the other.",
+    "Only reviewed source coordinates, counters, source/image/tool hashes and allowlisted capture references are exported. Raw titles, errors, logs, identities, sessions, credentials and installation manifests remain private.",
+    "Executable hashes identify the selected Node and browser binaries, not every browser installation file. Resource observations do not guarantee host or Docker VM swap behavior.",
+    "Automated accessibility/assertion results and capture hashes do not assert visual inspection or human/linguistic accessibility approval.",
+    "Mounted-source local execution only; no baked application-image or hosted qualification."
+  ]
+}

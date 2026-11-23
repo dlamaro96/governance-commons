@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T02:46:42.596073+00:00",
+  "implementation_base_commit": "5d37594396511e41004562a82db97ca57877d6d1",
+  "worktree_dirty": true,
+  "implementation_status": "IMPLEMENTED_WITH_SCOPED_VERIFICATION",
+  "release_qualified": false,
+  "scope": [
+    "Exact immutable source bindings for standalone SQL022 and SQL023 native qualification; SQL024 retains its independent composition.",
+    "Closed failure diagnostics for each of seven repaired commands, with original assertions/deadlines preserved.",
+    "Protected-login gate explicitly adopts the exact SQL001–032 schema; host admission checks only until fresh runtime execution."
+  ],
+  "reference022": {
+    "command": "./dev test --suite reference-repaired-upgrade",
+    "profile": "isolated-governance-repaired-sql022",
+    "result": "PASS",
+    "native_tests": {
+      "tests": 158,
+      "suites": 0,
+      "pass": 158,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "source_files": 163,
+    "source_manifest_sha256": "8be24be6eef2ebf24786f96499b5c98e40acf5aea1cf513fd6464081ab76ee6b",
+    "differences_from_base_commit": [
+      {
+        "path": "policies/ci_evidence.py",
+        "gitSha256": "1c45c87722b2ebb81a89323425d9fdc16c29d340b9dd99d1f712feb5be3b3eff",
+        "runSha256": "d04739d43202d058d85d4d541fa6852ba864309f9c2e57586bdd9a7b9b851c5c"
+      },
+      {
+        "path": "policies/quality_upgrade_diagnostics.py",
+        "gitSha256": "ae8bd80ee4f3e14c59091b35195496a147f66d9b66f13fab4b89a4557e5b4cf1",
+        "runSha256": "bff2e92a9bd18cb0bbd2bde2f1d37b3d77642e82f2c0161f52a6caaca6cb43ed"
+      },
+      {
+        "path": "scripts/runtime-test-governance-repaired-upgrade.py",
+        "gitSha256": "367fc7f5385f4a05e1c5a023a99b09080e8d263a2bd188f86606f5fd4175652b",
+        "runSha256": "68f99a3f9c92632eb429bea97942028bff9d62182562445d5af6a33fb160e6e0"
+      },
+      {
+        "path": "scripts/runtime-test-reference-upgrade.py",
+        "gitSha256": "981fd8131643863eb3da3240044bf90cf7785220b3786ac202932d637e46fd29",
+        "runSha256": "b8c62dbe4a4303a71fd9ef78f84f4b33b09d83f9fc82e65af700fb0af577aaab"
+      }
+    ],
+    "native_invocations": 8,
+    "startup_and_exit_processes": 26,
+    "private_logs_rehashed": 3309,
+    "repair_preservation": true,
+    "repair_replay": true,
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "readback_sha256": "64b812ffaf41701d97861bc2d2ee7f64b396aed187878b19340a617fc5904a62",
+    "report_sha256": "dcfa8f90e77e8f81fff59cfe702705dfc3df71b5c54a105b43e26acb4ffb99a5"
+  },
+  "host_controls": {
+    "passed": 270,
+    "node_version": "24.22.3",
+    "suites": [
+      {
+        "scope": "reference-prefix composition",
+        "command": "python3 scripts/test_reference_structure_upgrade.py",
+        "passed": 22,
+        "log_sha256": "d96fc4081272bab93659348cde4352facea7149b4053f42c04593f957840a8a1"
+      },
+      {
+        "scope": "repaired-chain wrapper",
+        "command": "python3 scripts/test_governance_repaired_chain.py",
+        "passed": 22,
+        "log_sha256": "7b6149ede7758eb9c99aabb093a8a181bfb29d4d08e48945350d2f1fe8b773d7"
+      },
+      {
+        "scope": "bounded failure diagnostics",
+        "command": "python3 policies/test_quality_upgrade_diagnostics.py",
+        "passed": 24,
+        "log_sha256": "e0847ef59eecedc8e1cd71551fbc7de7ad27e3c4fa5c1ac57d9347f8f0a7419b"
+      },
+      {
+        "scope": "CI evidence collector",
+        "command": "python3 policies/test_ci_evidence.py",
+        "passed": 133,
+        "log_sha256": "672c4b41284400cd2d7076ae772a4eb55b8fdfdc6138bd16c2e11bbb6bed1471"
+      },
+      {
+        "scope": "CI shard contract",
+        "command": "python3 policies/test_ci_shards.py",
+        "passed": 28,
+        "log_sha256": "c2312e5c6ec5983233708124eed19c5d9e8ea9a60f7ec9460585cfb2d97d7840"
+      },
+      {
+        "scope": "protected evidence admission",
+        "command": "python3 policies/test_protected_authn_evidence.py",
+        "passed": 27,
+        "log_sha256": "292c823349d6fbd0969e08e17f830179b6d6fede7c573f50e370a492600bd820"
+      },
+      {
+        "scope": "immutable image controls",
+        "command": "python3 scripts/test_protected_authn_image.py",
+        "passed": 4,
+        "log_sha256": "9d5822f16af9b5fe0e4ad15771f3fd6c5f0262b26a6ebc83b6ec6bd52bf2d655"
+      },
+      {
+        "scope": "protected bootstrap controls",
+        "command": "python3 scripts/test_protected_authn_bootstrap.py",
+        "passed": 10,
+        "log_sha256": "18994db33c6e2b2d028b632fd51c296a48f96f5202f0bfb42f5191008ad84493"
+      }
+    ]
+  },
+  "secret_scan": {
+    "outcome": "PASS",
+    "tool": "gitleaks",
+    "version": "8.30.1",
+    "scopes": [
+      "publishable_worktree",
+      "reachable_git_history"
+    ],
+    "findings": 0,
+    "files": 1521,
+    "report_sha256": "76e952c80a1b719c77c4b6aef7a7c6822faf383a2db840e91601f5220ced357b"
+  },
+  "pending": [
+    "Fresh independent SQL023 and SQL024 pipeline execution on the published correction.",
+    "Protected-authentication native and browser execution on a fresh exact-source immutable image.",
+    "All45 required hosted outcomes and source-security on the new revision."
+  ],
+  "historical_failures_retained": [
+    "Original local SQL022: earlier140tests pass; reference phase1pass/17fail with unavailable SQL024 function.",
+    "Published5d37594:39success,2failure,4skipped; no aggregate pass.",
+    "Host diagnostic and composition development failures remain private; the Node26 host attempt was repeated with the pinned Node24.22.3."
+  ],
+  "limitations": [
+    "The source revision is a dirty candidate based on the recorded commit; differences are explicitly hashed, not represented as exact5d37594 bytes.",
+    "Only the named SQL022 run is qualified; no result inferred for other independently named commands.",
+    "Native storage/source qualification does not qualify HTTP, Temporal, external connectors, production or release readiness.",
+    "No new product TS or SQL migration behavior changed in this correction."
+  ]
+}

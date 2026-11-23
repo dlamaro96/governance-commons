@@ -13,3 +13,6 @@ test-results/
 *.tsbuildinfo
 .DS_Store
 coverage/
+
+# A managed worktree may reuse the private dependency directory through a symlink.
+/node_modules

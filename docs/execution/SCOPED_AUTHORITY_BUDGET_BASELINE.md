@@ -1,6 +1,6 @@
 # Scoped authority budget baseline
 
-Status: **DRAFT REVIEW PROPOSAL — SOURCE BASELINE ONLY; NO EVALUATOR IMPLEMENTATION, ACTIVATION OR QUALIFICATION.** Prepared 2026-11-16. Root review is required before adopting the proposed budget contract. This document neither changes existing operation profiles nor supplies numeric admission limits for new authority data.
+Status: **DRAFT REVIEW PROPOSAL — SOURCE BASELINE ONLY; NO EVALUATOR IMPLEMENTATION, ACTIVATION OR QUALIFICATION.** Prepared 2026-11-16. Design review is required before adopting the proposed budget contract. This document neither changes existing operation profiles nor supplies numeric admission limits for new authority data.
 
 The governing requirements remain `MOD-001`, `SYS-SEC-002`, `SYS-SEC-002.01`, `SYS-DATA-001.04` and `SYS-TEST-003` in [requirements.yaml](../product/requirements.yaml), with the complete [BUILD_SPEC](../product/BUILD_SPEC.md), especially lines 846–854, authoritative. Applied SQL001–011 are immutable. Execution and runtime ownership remain in [STATE](STATE.md). This proposal complements the [authority contract candidate](SCOPED_AUTHORITY_CONTRACT_CANDIDATE.md), [storage candidate](SCOPED_AUTHORITY_STORAGE_CANDIDATE.md) and [projection candidate](SCOPED_AUTHORITY_PROJECTIONS_CANDIDATE.md); it does not activate them.
 
@@ -37,7 +37,7 @@ SQL008's JSON counter counts values, not authorization decisions or object-key s
 
 ## 3. DRAFT scope-preserving evaluation proposal
 
-This section is for root review. It is not an implemented evaluator, adopted numeric budget, or permission to alter applied migrations.
+This section is for design review. It is not an implemented evaluator, adopted numeric budget, or permission to alter applied migrations.
 
 - Preserve each operation's existing scope discovery, count, physical-byte, node, version, deadline and error semantics as independent guards. Authority-only metadata must not consume a legacy business-payload budget unless a separately adopted contract changes that accounting. Both layers must pass; neither enlarges the other.
 - Give authority distinct named budgets for policy admission, canonical facts/role evidence, compiled descriptors, temporary memory, memo entries, explanation output and execution time. Specify units, distinct/repeated accounting, phase/lifetime, overflow behavior and SQL/TypeScript equivalence. An arbitrary total resource or field-pair ceiling does not supply this contract.
