@@ -18,7 +18,7 @@ Governance Commons brings technical metadata, business context, ownership and ch
 
 | Workflow | Current development capability |
 |---|---|
-| Discover | Register a PostgreSQL source, run a real metadata scan, search assets, order all matching results across pages and inspect table, view and column metadata. |
+| Discover | Register a PostgreSQL source, run a real metadata scan, search assets, order all matching results across pages, restore browser navigation and inspect table, view and column metadata. |
 | Steward | Assign owners, maintain descriptions, inspect change history and retain source provenance. |
 | Model | Author versioned operating models, inherited asset types, lifecycle rules, constrained relations and typed business domains. |
 | Change safely | Preview bounded model and graph migrations, detect stale versions and retain operation receipts. |

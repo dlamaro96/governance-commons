@@ -70,6 +70,8 @@ jobs:
         run: python3 policies/test_api_supervisor.py
       - name: Explicit authority-read upgrade qualification controls
         run: python3 scripts/test_authority_read_upgrade.py
+      - name: Inactive asset-context lifecycle qualification controls
+        run: python3 scripts/test_authority_asset_context.py
       - name: Explicit relation-candidate upgrade controls
         run: python3 scripts/test_relation_candidate_upgrade.py
       - name: Repaired governance chain controls
@@ -290,6 +292,10 @@ jobs:
         if: success() && matrix.shard == 'foundation'
         id: authority_read_current
         run: ./dev test --suite authority-read-current
+      - name: Verify inactive canonical asset context and session binding
+        if: success() && matrix.shard == 'foundation'
+        id: authority_asset_context
+        run: ./dev test --suite authority-asset-context
       - name: Verify source connector identity upgrade and preservation
         if: success() && matrix.shard == 'foundation'
         id: source_connectors_upgrade
@@ -426,6 +432,7 @@ jobs:
           GC_AUTHORITY_AUTHN_FOUNDATION_RESULT: ${{ steps.authority_authn_foundation.outcome }}
           GC_AUTHORITY_READ_ORIGINAL_RESULT: ${{ steps.authority_read_original.outcome }}
           GC_AUTHORITY_READ_CURRENT_RESULT: ${{ steps.authority_read_current.outcome }}
+          GC_AUTHORITY_ASSET_CONTEXT_RESULT: ${{ steps.authority_asset_context.outcome }}
           GC_SOURCE_CONNECTORS_UPGRADE_RESULT: ${{ steps.source_connectors_upgrade.outcome }}
           GC_POSTGRES_TARGETS_RESULT: ${{ steps.postgres_targets.outcome }}
           GC_RELATION_CANDIDATE_ORIGINAL_RESULT: ${{ steps.relation_candidate_original.outcome }}

@@ -46819,7 +46819,8 @@
         "packages/ui/src",
         "tests/e2e",
         "apps/api/src/asset-search.ts",
-        "apps/web/src/pages/Catalog.tsx"
+        "apps/web/src/pages/Catalog.tsx",
+        "apps/web/src/navigation.tsx"
       ],
       "test_ids": [
         "tests/unit/asset-search.test.ts",
@@ -46855,13 +46856,15 @@
       },
       "limitations": [
         "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open.",
-        "Global catalog sorting has scoped local172-case API and5-journey browser evidence, including canonical order, filter/sort-bound cursors and hidden/foreign exclusion. Complete UX/API and hosted release outcomes remain separate."
+        "Global catalog sorting has scoped local172-case API and5-journey browser evidence, including canonical order, filter/sort-bound cursors and hidden/foreign exclusion. Complete UX/API and hosted release outcomes remain separate.",
+        "Catalog history restoration passes one expanded local browser journey with three inspected desktop/mobile/Arabic captures. Back/Forward, reload, browser return from an asset and direct-link recovery are covered. History is bounded presentation metadata; full UX/API and hosted qualification remain separate."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M2",
       "partial_evidence": [
         "docs/verification/m1-browser.json",
-        "docs/verification/catalog-global-sorting-local.json"
+        "docs/verification/catalog-global-sorting-local.json",
+        "docs/verification/catalog-navigation-local.json"
       ]
     },
     {
@@ -54358,7 +54361,10 @@
         "scripts/authentication_roles.py",
         "scripts/runtime-authentication-roles.py",
         "packages/db/migrations/031_authority_read_grants.sql",
-        "docs/adr/0017-invocation-local-authority-read-validation.md"
+        "docs/adr/0017-invocation-local-authority-read-validation.md",
+        "packages/authority-runtime/src/asset-context.ts",
+        "packages/authority-storage/src/repository.ts",
+        "docs/adr/0020-inactive-canonical-asset-context.md"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -54392,7 +54398,10 @@
         "scripts/runtime-test-authority-authn-foundation.py",
         "tests/qualification/authority-read-grants.test.ts",
         "scripts/runtime-test-authority-read-upgrade.py",
-        "scripts/test_authority_read_upgrade.py"
+        "scripts/test_authority_read_upgrade.py",
+        "tests/unit/authority-asset-context.test.ts",
+        "tests/qualification/authority-asset-context.test.ts",
+        "scripts/runtime-test-authority-asset-context.py"
       ],
       "verification": {
         "fixture": {
@@ -54438,7 +54447,8 @@
         "PR20 fresh Source43817616108 and Development43817616265 qualify reference-engine headcdec876/testedmerge5e0234d:935 immutable files,154API,19 one-attempt browsers,14 mandatory stages and three zero-finding analyses. Exact head merged as94efe7f8 on2026-11-16T07:11:43Z. Hosted unit TAP/count is not exported;91 literal decision declarations are not an executed-result count. Protected authentication/storage, content authority, postmerge execution and complete profile/release qualification remain separate.",
         "Inactive protected authentication foundation only: SQL012, thirteen private tables, nine owner-only installation operations, six finite native-role functions, typed transactional client and private installation CLI are implemented. The exact isolated native gate passes21 storage and14 concurrency cases with115 stable sources, preserved SQL001\u2013011 data and owned cleanup.435 host units/root-web types/40 publication tests pass with269 stable inputs; historical type-upgrade9+9 is separate. Full protected OIDC broker, cookies/CSRF, canonical content authority, policy storage/loaders, SQL/OpenSearch equivalence, administration, service leases and atomic all-ingress cutover remain required. No complete profile or release outcome is promoted.",
         "SQL012 existing-core compatibility now passes154 API cases,19 browser journeys with zero retries and137 scoped original-frame reviews. The first hosted Development attempt failed its outdated11-migration seed guard and skipped later gates; a local12-migration repair passes three real seed invocations and exact22-table/persona restoration. These records preserve failures and do not qualify protected OIDC transport, content authority, any complete profile or release. See the separate current-core API, browser and seed evidence.",
-        "Authority-read contribution: SQL031 reuses only an exact DB-derived registry parse within one owner-only read invocation; all per-grant validations and original budgets remain. Original-prefix plus031 native133 and current001\u2013030\u2192031 native423 pass with preservation/replay and owned cleanup. This inactive loader does not authorize content or complete the broader authority model; source-equivalence differences are recorded, core source/ledger readback passes, and combined API/browser/hosted qualification remains explicit."
+        "Authority-read contribution: SQL031 reuses only an exact DB-derived registry parse within one owner-only read invocation; all per-grant validations and original budgets remain. Original-prefix plus031 native133 and current001\u2013030\u2192031 native423 pass with preservation/replay and owned cleanup. This inactive loader does not authorize content or complete the broader authority model; source-equivalence differences are recorded, core source/ledger readback passes, and combined API/browser/hosted qualification remains explicit.",
+        "Inactive canonical asset-context composition passes thirteen isolated native PostgreSQL cases, 65 relevant unit cases and exact 249-source readback with preservation/replay/cleanup. This binds protected identity, ACL, placement and current ancestry in one snapshot; it does not activate authorization or fabricate security revisions, reviewed facts or post-commit effect capabilities. Broader requirement outcomes remain unchanged."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -54476,7 +54486,8 @@
         "docs/verification/authentication-foundation-core-browser.json",
         "docs/verification/authentication-foundation-domain-seed.json",
         "docs/verification/authentication-foundation-hosted-attempt-1.json",
-        "docs/verification/authority-read-upgrade-local.json"
+        "docs/verification/authority-read-upgrade-local.json",
+        "docs/verification/authority-asset-context-local.json"
       ]
     },
     {
@@ -54506,12 +54517,18 @@
       "implementation_status": "IN_PROGRESS",
       "implementation_paths": [
         "packages/db/migrations/031_authority_read_grants.sql",
-        "docs/adr/0017-invocation-local-authority-read-validation.md"
+        "docs/adr/0017-invocation-local-authority-read-validation.md",
+        "packages/authority-runtime/src/asset-context.ts",
+        "packages/authority-storage/src/repository.ts",
+        "docs/adr/0020-inactive-canonical-asset-context.md"
       ],
       "test_ids": [
         "tests/qualification/authority-read-grants.test.ts",
         "scripts/runtime-test-authority-read-upgrade.py",
-        "scripts/test_authority_read_upgrade.py"
+        "scripts/test_authority_read_upgrade.py",
+        "tests/unit/authority-asset-context.test.ts",
+        "tests/qualification/authority-asset-context.test.ts",
+        "scripts/runtime-test-authority-asset-context.py"
       ],
       "verification": {
         "fixture": {
@@ -54543,12 +54560,14 @@
         "evidence": []
       },
       "limitations": [
-        "Authority-read contribution: SQL031 reuses only an exact DB-derived registry parse within one owner-only read invocation; all per-grant validations and original budgets remain. Original-prefix plus031 native133 and current001\u2013030\u2192031 native423 pass with preservation/replay and owned cleanup. This inactive loader does not authorize content or complete the broader authority model; source-equivalence differences are recorded, core source/ledger readback passes, and combined API/browser/hosted qualification remains explicit."
+        "Authority-read contribution: SQL031 reuses only an exact DB-derived registry parse within one owner-only read invocation; all per-grant validations and original budgets remain. Original-prefix plus031 native133 and current001\u2013030\u2192031 native423 pass with preservation/replay and owned cleanup. This inactive loader does not authorize content or complete the broader authority model; source-equivalence differences are recorded, core source/ledger readback passes, and combined API/browser/hosted qualification remains explicit.",
+        "Inactive canonical asset-context composition passes thirteen isolated native PostgreSQL cases, 65 relevant unit cases and exact 249-source readback with preservation/replay/cleanup. This binds protected identity, ACL, placement and current ancestry in one snapshot; it does not activate authorization or fabricate security revisions, reviewed facts or post-commit effect capabilities. Broader requirement outcomes remain unchanged."
       ],
       "owner": "unassigned",
       "milestone": "M0",
       "partial_evidence": [
-        "docs/verification/authority-read-upgrade-local.json"
+        "docs/verification/authority-read-upgrade-local.json",
+        "docs/verification/authority-asset-context-local.json"
       ]
     },
     {
@@ -54978,7 +54997,10 @@
         "packages/domain/src/business-domain-read.ts",
         "packages/domain/src/business-domain-service.ts",
         "packages/db/migrations/031_authority_read_grants.sql",
-        "docs/adr/0017-invocation-local-authority-read-validation.md"
+        "docs/adr/0017-invocation-local-authority-read-validation.md",
+        "packages/authority-runtime/src/asset-context.ts",
+        "packages/authority-storage/src/repository.ts",
+        "docs/adr/0020-inactive-canonical-asset-context.md"
       ],
       "test_ids": [
         "tests/integration/business-domains-storage.test.ts",
@@ -54988,7 +55010,10 @@
         "scripts/runtime-test-business-domain-seed.py",
         "tests/qualification/authority-read-grants.test.ts",
         "scripts/runtime-test-authority-read-upgrade.py",
-        "scripts/test_authority_read_upgrade.py"
+        "scripts/test_authority_read_upgrade.py",
+        "tests/unit/authority-asset-context.test.ts",
+        "tests/qualification/authority-asset-context.test.ts",
+        "scripts/runtime-test-authority-asset-context.py"
       ],
       "verification": {
         "fixture": {
@@ -55021,7 +55046,8 @@
       },
       "limitations": [
         "Business-domain contribution: Domain storage has forced tenant RLS, restricted runtime roles, exact resource lookup and current membership checks; original-scope replay and revoked/deleted seed memberships are covered. Scoped grants, policy AST, responsibility authority and all-store/ingress equivalence remain separate unimplemented qualifications; ownership grants no permission. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred.",
-        "Authority-read contribution: SQL031 reuses only an exact DB-derived registry parse within one owner-only read invocation; all per-grant validations and original budgets remain. Original-prefix plus031 native133 and current001\u2013030\u2192031 native423 pass with preservation/replay and owned cleanup. This inactive loader does not authorize content or complete the broader authority model; source-equivalence differences are recorded, core source/ledger readback passes, and combined API/browser/hosted qualification remains explicit."
+        "Authority-read contribution: SQL031 reuses only an exact DB-derived registry parse within one owner-only read invocation; all per-grant validations and original budgets remain. Original-prefix plus031 native133 and current001\u2013030\u2192031 native423 pass with preservation/replay and owned cleanup. This inactive loader does not authorize content or complete the broader authority model; source-equivalence differences are recorded, core source/ledger readback passes, and combined API/browser/hosted qualification remains explicit.",
+        "Inactive canonical asset-context composition passes thirteen isolated native PostgreSQL cases, 65 relevant unit cases and exact 249-source readback with preservation/replay/cleanup. This binds protected identity, ACL, placement and current ancestry in one snapshot; it does not activate authorization or fabricate security revisions, reviewed facts or post-commit effect capabilities. Broader requirement outcomes remain unchanged."
       ],
       "owner": "unassigned",
       "milestone": "M0",
@@ -55030,7 +55056,8 @@
         "docs/verification/business-domains-asset-scope-correction.json",
         "docs/verification/business-domains-api.json",
         "docs/verification/business-domains-seed-runtime.json",
-        "docs/verification/authority-read-upgrade-local.json"
+        "docs/verification/authority-read-upgrade-local.json",
+        "docs/verification/authority-asset-context-local.json"
       ]
     },
     {
@@ -56533,7 +56560,8 @@
         "packages/domain/src/business-domain-read.ts",
         "packages/domain/src/business-domain-service.ts",
         "apps/api/src/asset-search.ts",
-        "apps/web/src/pages/Catalog.tsx"
+        "apps/web/src/pages/Catalog.tsx",
+        "apps/web/src/navigation.tsx"
       ],
       "test_ids": [
         "tests/unit/cursor.test.ts",
@@ -56577,7 +56605,8 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
         "Model inventory adds bounded literal search and signed keyset cursors bound to actor, tenant, filters, page size and deterministic sort. Full generated clients, egress schemas, API coverage, durable bulk administration and webhook requirements remain open. See scoped model-migration evidence; no full SYS-API-001 pass.",
         "Business-domain contribution: Domain routes have strict nonmutating request validation, explicit OpenAPI responses/preconditions, bounded signed pages and current exact-resource authorization. Generated clients, other module APIs, bulk administration, webhooks and browser equivalence remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred.",
-        "Global catalog sorting has scoped local172-case API and5-journey browser evidence, including canonical order, filter/sort-bound cursors and hidden/foreign exclusion. Complete UX/API and hosted release outcomes remain separate."
+        "Global catalog sorting has scoped local172-case API and5-journey browser evidence, including canonical order, filter/sort-bound cursors and hidden/foreign exclusion. Complete UX/API and hosted release outcomes remain separate.",
+        "Catalog history restoration passes one expanded local browser journey with three inspected desktop/mobile/Arabic captures. Back/Forward, reload, browser return from an asset and direct-link recovery are covered. History is bounded presentation metadata; full UX/API and hosted qualification remain separate."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -56587,7 +56616,8 @@
         "docs/verification/business-domains-http-validation-correction.json",
         "docs/verification/business-domains-asset-scope-correction.json",
         "docs/verification/business-domains-api.json",
-        "docs/verification/catalog-global-sorting-local.json"
+        "docs/verification/catalog-global-sorting-local.json",
+        "docs/verification/catalog-navigation-local.json"
       ]
     },
     {
@@ -56621,7 +56651,8 @@
         "packages/domain/src/business-domain-read.ts",
         "packages/domain/src/business-domain-service.ts",
         "apps/api/src/asset-search.ts",
-        "apps/web/src/pages/Catalog.tsx"
+        "apps/web/src/pages/Catalog.tsx",
+        "apps/web/src/navigation.tsx"
       ],
       "test_ids": [
         "tests/unit/business-domain-http-validation.test.ts",
@@ -56660,7 +56691,8 @@
       },
       "limitations": [
         "Business-domain contribution: Domain routes have strict nonmutating request validation, explicit OpenAPI responses/preconditions, bounded signed pages and current exact-resource authorization. Generated clients, other module APIs, bulk administration, webhooks and browser equivalence remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred.",
-        "Global catalog sorting has scoped local172-case API and5-journey browser evidence, including canonical order, filter/sort-bound cursors and hidden/foreign exclusion. Complete UX/API and hosted release outcomes remain separate."
+        "Global catalog sorting has scoped local172-case API and5-journey browser evidence, including canonical order, filter/sort-bound cursors and hidden/foreign exclusion. Complete UX/API and hosted release outcomes remain separate.",
+        "Catalog history restoration passes one expanded local browser journey with three inspected desktop/mobile/Arabic captures. Back/Forward, reload, browser return from an asset and direct-link recovery are covered. History is bounded presentation metadata; full UX/API and hosted qualification remain separate."
       ],
       "owner": "unassigned",
       "milestone": "M0",
@@ -56668,7 +56700,8 @@
         "docs/verification/business-domains-http-validation-correction.json",
         "docs/verification/business-domains-asset-scope-correction.json",
         "docs/verification/business-domains-api.json",
-        "docs/verification/catalog-global-sorting-local.json"
+        "docs/verification/catalog-global-sorting-local.json",
+        "docs/verification/catalog-navigation-local.json"
       ]
     },
     {
@@ -68393,7 +68426,9 @@
         "docs/verification/runtime-protected-authentication-15496e3.json",
         "docs/verification/runtime-images-hosted-a6cd20d.json",
         "docs/verification/runtime-worker-timeout-local.json",
-        "docs/verification/runtime-worker-hash-dispositions.json"
+        "docs/verification/runtime-worker-hash-dispositions.json",
+        "docs/verification/runtime-images-hosted-80101e0.json",
+        "docs/verification/source-security-80101e0.json"
       ]
     },
     {
@@ -68698,7 +68733,9 @@
       "partial_evidence": [
         "docs/verification/runtime-images-hosted-a6cd20d.json",
         "docs/verification/runtime-worker-timeout-local.json",
-        "docs/verification/runtime-worker-hash-dispositions.json"
+        "docs/verification/runtime-worker-hash-dispositions.json",
+        "docs/verification/runtime-images-hosted-80101e0.json",
+        "docs/verification/source-security-80101e0.json"
       ]
     },
     {
@@ -68772,7 +68809,9 @@
         "docs/verification/runtime-protected-authentication-15496e3.json",
         "docs/verification/runtime-images-hosted-a6cd20d.json",
         "docs/verification/runtime-worker-timeout-local.json",
-        "docs/verification/runtime-worker-hash-dispositions.json"
+        "docs/verification/runtime-worker-hash-dispositions.json",
+        "docs/verification/runtime-images-hosted-80101e0.json",
+        "docs/verification/source-security-80101e0.json"
       ]
     },
     {
@@ -69277,7 +69316,9 @@
         "docs/verification/runtime-protected-authentication-15496e3.json",
         "docs/verification/runtime-images-hosted-a6cd20d.json",
         "docs/verification/runtime-worker-timeout-local.json",
-        "docs/verification/runtime-worker-hash-dispositions.json"
+        "docs/verification/runtime-worker-hash-dispositions.json",
+        "docs/verification/runtime-images-hosted-80101e0.json",
+        "docs/verification/source-security-80101e0.json"
       ]
     },
     {
@@ -69529,7 +69570,9 @@
       "partial_evidence": [
         "docs/verification/runtime-images-hosted-a6cd20d.json",
         "docs/verification/runtime-worker-timeout-local.json",
-        "docs/verification/runtime-worker-hash-dispositions.json"
+        "docs/verification/runtime-worker-hash-dispositions.json",
+        "docs/verification/runtime-images-hosted-80101e0.json",
+        "docs/verification/source-security-80101e0.json"
       ]
     },
     {

@@ -2,10 +2,14 @@
 # SPDX-License-Identifier: Apache-2.0
 """Host-only shard admission and actual collector controls; no Docker or network."""
 import hashlib
+import contextlib
+import importlib.util
+import io
 import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -26,7 +30,7 @@ class AssignmentTests(unittest.TestCase):
         self.assertEqual(len(assigned),len(set(assigned)))
         self.assertFalse(set(assigned)&set(policy.COMMON))
         self.assertEqual(set((*policy.COMMON,*assigned)),set(policy.STEPS))
-        self.assertEqual(len(policy.STEPS),45)
+        self.assertEqual(len(policy.STEPS),46)
 
     def test_each_shard_requires_all_its_results(self):
         for shard in policy.SHARDS:
@@ -152,7 +156,7 @@ class CollectorTests(unittest.TestCase):
                 self.assertEqual(code,1)
 
     def test_actual_collector_refuses_foreign_artifacts_without_publishing_them(self):
-        for name in ('api-summary.json','authority-authn-foundation.json','authority-read-original.json','authority-read-current.json','authority-foundation.json','protected-authn.json','playwright-results.json'):
+        for name in ('api-summary.json','authority-authn-foundation.json','authority-read-original.json','authority-read-current.json','authority-asset-context.json','authority-foundation.json','protected-authn.json','playwright-results.json'):
             code,report=self.collect(shard='quality-basics',retained_foreign=name)
             self.assertEqual(code,1);self.assertEqual(report['foreign_evidence'],'REFUSED')
             self.assertEqual(report['tests'],[]);self.assertEqual(report['screenshots'],[])
@@ -238,6 +242,150 @@ class AuthorityTransitionTests(unittest.TestCase):
         ]
         for before,after in mutations:
             with self.subTest(before=before),self.assertRaises(ValueError):policy.validate_workflow(workflow.replace(before,after))
+
+
+class AssetContextGateTests(unittest.TestCase):
+    STEP = 'authority_asset_context'
+
+    def test_host_lifecycle_control_is_required_once_in_quality_after_read_control(self):
+        workflow = (ROOT/'.github/workflows/ci.yml').read_text()
+        control = ('      - name: Inactive asset-context lifecycle qualification controls\n'
+                   '        run: python3 scripts/test_authority_asset_context.py\n')
+        predecessor = ('      - name: Explicit authority-read upgrade qualification controls\n'
+                       '        run: python3 scripts/test_authority_read_upgrade.py\n')
+        self.assertEqual(workflow.count(control), 1)
+        self.assertIn(predecessor+control, workflow)
+        self.assertTrue(policy.validate_workflow(workflow))
+        mutations = [workflow.replace(control, ''), workflow.replace(control, control+control),
+                     workflow.replace(predecessor+control, control+predecessor),
+                     workflow.replace(control, control.replace('        run:', '        if: false\n        run:')),
+                     workflow.replace(control, control+'        continue-on-error: true\n'),
+                     workflow.replace(control, control.replace('python3 scripts/test_authority_asset_context.py', 'true')),
+                     workflow.replace(control, '').replace('  secrets:\n', '  secrets:\n'+control)]
+        for number, changed in enumerate(mutations):
+            with self.subTest(mutation=number), self.assertRaises(ValueError):
+                policy.validate_workflow(changed)
+
+    def test_independent_inactive_scope_and_private_report_ownership(self):
+        scope = policy.ASSET_CONTEXT_SCOPES[self.STEP]
+        self.assertEqual(set(policy.ASSET_CONTEXT_SCOPES), {self.STEP})
+        self.assertEqual(set(policy.AUTHORITY_SCOPES), {'authority_read_original', 'authority_read_current'})
+        self.assertNotIn(self.STEP, policy.SUPERSEDED)
+        self.assertIn(self.STEP, policy.SHARDS['foundation'])
+        self.assertEqual(policy.COMMANDS[self.STEP], './dev test --suite authority-asset-context')
+        self.assertEqual(scope, {
+            'command': './dev test --suite authority-asset-context',
+            'runner': 'scripts/runtime-test-authority-asset-context.py',
+            'arguments': ['--run-local'], 'profile': 'isolated-inactive-asset-context-sql032',
+            'report': 'authority-asset-context.json',
+            'schemaScope': 'Isolated SQL001–030, then SQL031/032 with preservation and replay; current-source inactive canonical asset-context cases',
+            'outerTimeoutSeconds': 900, 'contentAuthority': False, 'evidence': 'STEP_OUTCOME_ONLY'})
+        self.assertEqual(policy.EVIDENCE[self.STEP], ('authority-asset-context.json',))
+        ordered = policy.SHARDS['foundation']
+        self.assertEqual(ordered[ordered.index(self.STEP)-1:ordered.index(self.STEP)+2],
+                         ('authority_read_current', self.STEP, 'source_connectors_upgrade'))
+
+    def test_missing_failure_and_other_authority_outcomes_cannot_substitute(self):
+        collect = evidence_tests.EvidenceGateTests(methodName='runTest').collect
+        for shard in (None, 'foundation'):
+            for value in (None, 'failure', 'cancelled', 'skipped', 'NOT_IN_SHARD', ''):
+                options = {'omitted_step': self.STEP} if value is None else {'failed_step': self.STEP, 'failed_outcome': value}
+                with self.subTest(shard=shard, value=value):
+                    # Every other authority outcome still says success; none can
+                    # replace this separately declared native context gate.
+                    code, report = collect(shard=shard, **options)
+                    self.assertEqual(code, 1)
+                    self.assertEqual(report['outcome'], 'NOT_PASSED')
+                    self.assertNotEqual(report['asset_context_qualifications'][self.STEP]['outcome'], 'success')
+        code, report = collect(shard='foundation', omitted_step=self.STEP,
+                               shard_environment={'GC_AUTHORITY_FOUNDATION_RESULT': 'success'})
+        self.assertEqual(code, 1)
+
+    def test_actual_collection_discloses_step_only_without_publishing_raw_context(self):
+        collect = evidence_tests.EvidenceGateTests(methodName='runTest').collect
+        for shard in (None, *policy.SHARDS):
+            code, report = collect(shard=shard)
+            self.assertEqual(code, 0)
+            expected = 'success' if shard in (None, 'foundation') else 'NOT_IN_SHARD'
+            self.assertEqual(report['asset_context_qualifications'], {
+                self.STEP: {**policy.ASSET_CONTEXT_SCOPES[self.STEP], 'outcome': expected}})
+            self.assertEqual(len(report['tests']), 38 if shard in (None, 'browser') else 0)
+
+    def test_workflow_cannot_crosswire_omit_reorder_or_bypass_context(self):
+        workflow = (ROOT/'.github/workflows/ci.yml').read_text()
+        step = ('      - name: Verify inactive canonical asset context and session binding\n'
+                "        if: success() && matrix.shard == 'foundation'\n"
+                '        id: authority_asset_context\n'
+                '        run: ./dev test --suite authority-asset-context\n')
+        self.assertEqual(workflow.count(step), 1)
+        mutations = [workflow.replace(step, ''), workflow.replace(step, step+step),
+                     workflow.replace(step, '').replace('      - name: Verify inactive canonical asset context and session binding\n', '')]
+        anchor = '        run: ./dev test --suite authority-read-original\n'
+        self.assertEqual(workflow.count(anchor), 1)
+        mutations.append(workflow.replace(step, '').replace(anchor, anchor+step))
+        for replacement in ('./dev test --suite authority-read-current', './dev test --suite authority-read-original',
+                            './dev test --suite authority-foundation', 'true'):
+            mutations.append(workflow.replace('run: ./dev test --suite authority-asset-context', 'run: '+replacement))
+        mapping = 'GC_AUTHORITY_ASSET_CONTEXT_RESULT: ${{ steps.authority_asset_context.outcome }}'
+        for replacement in ('GC_AUTHORITY_ASSET_CONTEXT_RESULT: success',
+                            'GC_AUTHORITY_ASSET_CONTEXT_RESULT: ${{ steps.authority_read_current.outcome }}',
+                            'GC_AUTHORITY_ASSET_CONTEXT_RESULT: ${{ steps.authority_authn_foundation.outcome }}'):
+            mutations.append(workflow.replace(mapping, replacement))
+        for number, changed in enumerate(mutations):
+            with self.subTest(mutation=number), self.assertRaises(ValueError):
+                policy.validate_workflow(changed)
+
+    def test_assignment_digest_binds_context_scope_and_deadline(self):
+        original = policy.assignment_hash()
+        for field, value in (('contentAuthority', True), ('profile', 'isolated-authority-read-current'),
+                             ('outerTimeoutSeconds', 901), ('report', 'authority-read-current.json'),
+                             ('arguments', [])):
+            with self.subTest(field=field), patch.dict(policy.ASSET_CONTEXT_SCOPES[self.STEP], {field: value}):
+                self.assertNotEqual(policy.assignment_hash(), original)
+        self.assertEqual(policy.assignment_hash(), original)
+
+
+class AssetContextRoutingTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        spec = importlib.util.spec_from_file_location('gc_context_runtime', ROOT/'scripts/runtime.py')
+        cls.runtime = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.runtime)
+
+    def test_exact_local_route_has_bounded_host_timeout_and_no_core_bootstrap(self):
+        calls = []
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'authority-asset-context']), \
+                patch.object(self.runtime, 'require_local', side_effect=lambda: calls.append('local')), \
+                patch.object(self.runtime, 'require_bootstrap', side_effect=AssertionError('core bootstrap reached')), \
+                patch.object(self.runtime, 'run', side_effect=lambda argv, **kwargs: calls.append((argv, kwargs))):
+            self.runtime.main()
+        self.assertEqual(calls, ['local', ([sys.executable, 'scripts/runtime-test-authority-asset-context.py', '--run-local'], {'timeout': 900})])
+
+    def test_remote_and_unavailable_context_refuse_before_any_runner(self):
+        for override, endpoint in (('tcp://remote.invalid:2375', 'unix:///local.sock'), ('', 'ssh://remote.invalid'), ('', None)):
+            with self.subTest(endpoint=endpoint), patch.object(sys, 'argv', ['dev', 'test', '--suite', 'authority-asset-context']), \
+                    patch.dict(os.environ, {'DOCKER_HOST': override}), \
+                    patch.object(self.runtime, 'capture', return_value=json.dumps([{'Endpoints': {'docker': {'Host': endpoint}}}]) if endpoint else 'invalid'), \
+                    patch.object(self.runtime, 'require_bootstrap', side_effect=AssertionError('core bootstrap reached')), \
+                    patch.object(self.runtime, 'run') as run:
+                with self.assertRaises(SystemExit): self.runtime.main()
+                run.assert_not_called()
+
+    def test_gate_failure_propagates_without_retry_or_fallback(self):
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'authority-asset-context']), \
+                patch.object(self.runtime, 'require_local'), \
+                patch.object(self.runtime, 'require_bootstrap', side_effect=AssertionError('core bootstrap reached')), \
+                patch.object(self.runtime, 'run', side_effect=RuntimeError('synthetic context refusal')) as run:
+            with self.assertRaisesRegex(RuntimeError, '^synthetic context refusal$'): self.runtime.main()
+            run.assert_called_once_with([sys.executable, 'scripts/runtime-test-authority-asset-context.py', '--run-local'], timeout=900)
+
+    def test_help_lists_exact_route_without_runtime_execution(self):
+        output = io.StringIO()
+        with patch.object(sys, 'argv', ['dev', 'help']), contextlib.redirect_stdout(output), \
+                patch.object(self.runtime, 'capture') as capture, patch.object(self.runtime, 'run') as run:
+            self.runtime.main()
+        self.assertEqual(output.getvalue().count('./dev test --suite authority-asset-context '), 1)
+        capture.assert_not_called(); run.assert_not_called()
 
 
 class RepairedRelationTransitionTests(unittest.TestCase):

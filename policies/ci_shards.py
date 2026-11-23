@@ -19,6 +19,7 @@ SHARDS = {'foundation': ('connectors',
                 'authority_authn_foundation',
                 'authority_read_original',
                 'authority_read_current',
+                'authority_asset_context',
                 'source_connectors_upgrade',
                 'postgres_targets'),
  'governance': ('relation_candidate_original',
@@ -62,6 +63,7 @@ COMMANDS = {'bootstrap': './dev bootstrap',
  'authority_authn_foundation': './dev test --suite authority-authn-foundation',
  'authority_read_original': './dev test --suite authority-read-original',
  'authority_read_current': './dev test --suite authority-read-current',
+ 'authority_asset_context': './dev test --suite authority-asset-context',
  'source_connectors_upgrade': './dev test --suite source-connectors-upgrade',
  'postgres_targets': './dev test --suite postgres-targets',
  'relation_candidate_original': './dev test --suite relation-candidate-original',
@@ -120,6 +122,16 @@ AUTHORITY_SCOPES = {'authority_read_original': {'command': './dev test --suite a
                             'schemaScope': 'Populated SQL001–030 to SQL031 application, full preservation '
                                            'and inert replay',
                             'evidence': 'STEP_OUTCOME_ONLY'}}
+ASSET_CONTEXT_SCOPES = {'authority_asset_context': {
+    'command': './dev test --suite authority-asset-context',
+    'runner': 'scripts/runtime-test-authority-asset-context.py',
+    'arguments': ['--run-local'],
+    'profile': 'isolated-inactive-asset-context-sql032',
+    'report': 'authority-asset-context.json',
+    'schemaScope': 'Isolated SQL001–030, then SQL031/032 with preservation and replay; current-source inactive canonical asset-context cases',
+    'outerTimeoutSeconds': 900,
+    'contentAuthority': False,
+    'evidence': 'STEP_OUTCOME_ONLY'}}
 SUPERSEDED.update({'glossary_population_upgrade': {'status': 'HISTORICAL_NOT_EXECUTED',
                                  'retainedCommand': './dev test --suite glossary-population-upgrade',
                                  'retainedSchema': 'SQL001–018',
@@ -272,6 +284,7 @@ EVIDENCE = {'security': ('api-summary.json',),
  'authority_authn_foundation': ('authority-authn-foundation.json',),
  'authority_read_original': ('authority-read-original.json',),
  'authority_read_current': ('authority-read-current.json',),
+ 'authority_asset_context': ('authority-asset-context.json',),
  'glossary_population_repaired_upgrade': ('glossary-population-repaired-upgrade.json',),
  'quality_repaired_upgrade': ('quality-repaired-upgrade.json',),
  'lineage_repaired_upgrade': ('lineage-repaired-upgrade.json',),
@@ -292,7 +305,7 @@ def required_steps(shard):
     return frozenset((*COMMON, *SHARDS[shard]))
 
 def assignment_hash():
-    return hashlib.sha256(json.dumps({'common':COMMON,'shards':SHARDS,'commands':COMMANDS,'superseded':SUPERSEDED,'authorityScopes':AUTHORITY_SCOPES,'relationScopes':RELATION_SCOPES},sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    return hashlib.sha256(json.dumps({'common':COMMON,'shards':SHARDS,'commands':COMMANDS,'superseded':SUPERSEDED,'authorityScopes':AUTHORITY_SCOPES,'assetContextScopes':ASSET_CONTEXT_SCOPES,'relationScopes':RELATION_SCOPES},sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 def collect_outcomes(environment, shard):
     required = required_steps(shard)
@@ -395,6 +408,7 @@ def validate_workflow(text):
  '          GC_AUTHORITY_AUTHN_FOUNDATION_RESULT: ${{ steps.authority_authn_foundation.outcome }}\n'
  '          GC_AUTHORITY_READ_ORIGINAL_RESULT: ${{ steps.authority_read_original.outcome }}\n'
  '          GC_AUTHORITY_READ_CURRENT_RESULT: ${{ steps.authority_read_current.outcome }}\n'
+ '          GC_AUTHORITY_ASSET_CONTEXT_RESULT: ${{ steps.authority_asset_context.outcome }}\n'
  '          GC_SOURCE_CONNECTORS_UPGRADE_RESULT: ${{ steps.source_connectors_upgrade.outcome }}\n'
  '          GC_POSTGRES_TARGETS_RESULT: ${{ steps.postgres_targets.outcome }}\n'
  '          GC_RELATION_CANDIDATE_ORIGINAL_RESULT: ${{ steps.relation_candidate_original.outcome }}\n'
@@ -458,10 +472,16 @@ def validate_workflow(text):
     require('permissions:\n  contents: read\n' in text and text.count('permissions:')==3)
     require('run: python3 policies/test_ci_shards.py' in blocks['quality'])
     require('run: python3 scripts/test_authority_read_upgrade.py' in blocks['quality'])
+    context_control = ('      - name: Inactive asset-context lifecycle qualification controls\n'
+                       '        run: python3 scripts/test_authority_asset_context.py\n')
+    require(re.findall(r'^      - name: Inactive asset-context lifecycle qualification controls\n.*?(?=^      - |\Z)',
+                       blocks['quality'], re.M | re.S) == [context_control])
+    require(text.count('run: python3 scripts/test_authority_asset_context.py') == 1)
+    require('        run: python3 scripts/test_authority_read_upgrade.py\n' + context_control in blocks['quality'])
     for step in SUPERSEDED:
         require('GC_'+step.upper()+'_RESULT' not in body and 'id: '+step+'\n' not in body)
     for control in ('test_relation_candidate_upgrade.py','test_governance_repaired_chain.py','test_runtime_routing.py'):
         require('run: python3 scripts/'+control in blocks['quality'])
-    require(body.index('id: authority_authn_foundation\n')<body.index('id: authority_read_original\n')<body.index('id: authority_read_current\n')<body.index('id: source_connectors_upgrade\n'))
+    require(body.index('id: authority_authn_foundation\n')<body.index('id: authority_read_original\n')<body.index('id: authority_read_current\n')<body.index('id: authority_asset_context\n')<body.index('id: source_connectors_upgrade\n'))
     require(body.index('id: browser\n')<body.index('id: protected_authn\n')<body.index('name: Collect bounded redacted evidence')<body.index('name: Stop only this Compose'))
     return True
