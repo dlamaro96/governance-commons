@@ -41,15 +41,19 @@ The [product status](docs/product/STATUS.md) separates usable workflows from rem
 
 ## Run it locally
 
-Install Docker with Compose and the documented development toolchain, then run:
+Install Docker with Compose and the [pinned development toolchain](CONTRIBUTING.md#set-up-and-check-a-change), then run:
 
 ```sh
+pnpm install --frozen-lockfile
+pnpm exec playwright install chromium
 ./dev doctor
 ./dev bootstrap
 ./dev up --profile core
 ./dev seed --dataset harbor-demo
 ./dev test --suite smoke
 ```
+
+On Linux, install browser system libraries with `pnpm exec playwright install-deps chromium` before running acceptance tests. You can use an existing compatible browser by setting `GC_BROWSER_EXECUTABLE` to its executable path.
 
 Open **http://localhost:4310**. Bootstrap generates synthetic development credentials in ignored local storage. `./dev down` stops the project while preserving data. The core requires no cloud account, paid service or LLM key. Profiles still under implementation fail explicitly instead of reporting an unexecuted success.
 

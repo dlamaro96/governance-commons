@@ -13,7 +13,7 @@ from api_evidence import safe_report
 from authentication_evidence import load_report as load_authentication_report
 from protected_authn_evidence import load_report as load_protected_report, copy_captures as copy_protected_captures
 from authentication_evidence import read_file as bounded_read, strict_json as private_json
-from quality_upgrade_diagnostics import load_repaired_report as load_quality_diagnostic
+from quality_upgrade_diagnostics import load_repaired_report as load_quality_diagnostic, REPAIRED_PROFILES
 
 from ci_shards import SUPERSEDED, AUTHORITY_SCOPES, RELATION_SCOPES, STEPS, required_steps, collect_outcomes, checkout_identity, foreign_evidence
 
@@ -86,15 +86,20 @@ if outcomes["authority_authn_foundation"] == "success" and not authn_report:
 report["authority_foundation_diagnostic"] = "HISTORICAL_NOT_EXECUTED"
 # Historical diagnostics are not evidence for the explicitly repaired SQL032 profiles.
 report["glossary_population_diagnostic"] = "HISTORICAL_NOT_EXECUTED"
-# Bind failures to the exact repaired019 command, never a historical quality report.
-quality_diagnostic = load_quality_diagnostic(ROOT, os.environ.get("GITHUB_SHA")) if "quality_repaired_upgrade" in REQUIRED else None
-if quality_diagnostic and outcomes["quality_repaired_upgrade"] in {"failure", "cancelled"}:
-    (DEST / "quality-repaired-upgrade-diagnostic.json").write_text(json.dumps(quality_diagnostic, indent=2) + "\n")
-    report["quality_repaired_upgrade_diagnostic"] = "FAILURE_DIAGNOSTIC_ONLY"
-else:
-    report["quality_repaired_upgrade_diagnostic"] = "STEP_RESULT_MISMATCH" if quality_diagnostic else "UNAVAILABLE_OR_INVALID"
-if quality_diagnostic and outcomes["quality_repaired_upgrade"] == "success":
-    report["outcome"] = "NOT_PASSED"
+# Each fixed repaired command owns only its exact failure projection. Never load
+# another shard's evidence or accept a historical report as repaired success.
+for through,(suite,_) in REPAIRED_PROFILES.items():
+    step=suite.replace('-', '_');field=step+'_diagnostic'
+    if step not in REQUIRED:
+        report[field]='NOT_IN_SHARD'
+        continue
+    diagnostic=load_quality_diagnostic(ROOT,os.environ.get('GITHUB_SHA'),through)
+    if diagnostic and outcomes[step] in {'failure','cancelled'}:
+        (DEST/(suite+'-diagnostic.json')).write_text(json.dumps(diagnostic,indent=2)+'\n')
+        report[field]='FAILURE_DIAGNOSTIC_ONLY'
+    else:
+        report[field]='STEP_RESULT_MISMATCH' if diagnostic else 'UNAVAILABLE_OR_INVALID'
+    if diagnostic and outcomes[step]=='success':report['outcome']='NOT_PASSED'
 # Protected transport is a separate required gate, never a replacement for
 # native foundation or the thirty-six core browser journeys. Hosted collection
 # requires the independently bound, baked image mode; local overlays refuse.
@@ -232,7 +237,6 @@ if outcomes["browser"] == "success":
             report["outcome"] = "NOT_PASSED"
 # Ownership is explicit; missing owner evidence is never relabeled unassigned.
 for step, field in (("security", "api_evidence"), ("authority_authn_foundation", "authentication_evidence"),
-                    ("quality_repaired_upgrade", "quality_repaired_upgrade_diagnostic"),
                     ("protected_authn", "protected_authentication_evidence")):
     if step not in REQUIRED:
         report[field] = "NOT_IN_SHARD"

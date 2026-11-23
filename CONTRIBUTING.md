@@ -13,6 +13,7 @@ is needed for the local reference profile.
 
 ```sh
 pnpm install --frozen-lockfile
+pnpm exec playwright install chromium
 python3 scripts/requirements.py validate
 pnpm typecheck
 pnpm test
@@ -27,6 +28,10 @@ python3 scripts/github/bootstrap check-local
 ./dev seed --dataset harbor-demo
 ./dev test --suite smoke
 ```
+
+On Linux, run `pnpm exec playwright install-deps chromium` to install required
+browser system libraries. An existing compatible browser can be selected through
+`GC_BROWSER_EXECUTABLE`; record the actual version in execution evidence.
 
 The static, unit, dependency-license and secret checks form the development
 pull-request gate. The secret scanner downloads a pinned official release on

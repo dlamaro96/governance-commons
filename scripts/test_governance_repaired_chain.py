@@ -194,7 +194,7 @@ class Controls(unittest.TestCase):
  def test_cleanup_throw_unconditionally_removes_credentials(self):
   with tempfile.TemporaryDirectory(dir=ROOT/'.local') as tmp:
    p=Path(tmp);secret=p/'private-config.json';secret.write_text('private');events=[]
-   h=types.SimpleNamespace(folder=p,secret_path=secret,report={},resources_before={},cleanup=lambda:(_ for _ in ()).throw(TimeoutError()),save=lambda **kw:events.append(kw))
+   selected=g.load('018');h=g.harness_class(selected)('018');h.folder=p;h.secret_path=secret;h.report={};h.resources_before={};h.cleanup=lambda:(_ for _ in ()).throw(TimeoutError());h.save=lambda **kw:events.append(kw)
    self.assertTrue(g.finish(h,False));self.assertFalse(secret.exists());self.assertEqual(h.report['result'],'FAIL');self.assertTrue(h.report['cleanup']['generatedCredentialsRemoved']);self.assertNotIn('ownedRemoved',h.report['cleanup'])
  def test_same_selected_report_propagates_all_nested_constructors(self):
   for through in g.PROFILES:
@@ -211,5 +211,31 @@ class Controls(unittest.TestCase):
    p.unlink()
    with self.assertRaises(Exception):g.sources(m)
   finally:p.write_bytes(original)
+
+ def test_all_prefixes_capture_real_command_failure_before_later_readback(self):
+  # Actual bounded Python subprocesses and inherited recorder, never Docker.
+  for through,phase in [('018','population-native-tests'),('019','quality-native-tests'),('020','lineage-native-tests'),('021','classification-native-tests'),('022','reference-native-tests'),('023','reference-quality-completeness-tests'),('024','structure-reference-quality-tests')]:
+   with self.subTest(through=through),tempfile.TemporaryDirectory(dir=ROOT/'.local') as tmp:
+    selected=g.load(through);h=g.harness_class(selected)(through);h.folder=Path(tmp);h.phase=phase;h.private_values=[];h.admission=lambda:None
+    result=h.command([os.sys.executable,'-c','raise SystemExit(3)'],timeout=2,allow_failure=True);self.assertEqual(result.returncode,3)
+    h.remember_repaired_failure(RuntimeError('PRIVATE'),native_failed=True)
+    failure=json.loads(json.dumps(h.report['failure_diagnostic']));self.assertEqual(failure['phase'],phase);self.assertEqual(failure['category'],'suite_failed');self.assertIsNotNone(failure['commandLog'])
+    h.command([os.sys.executable,'-c','print("PRIVATE readback")'],timeout=2);h.phase='cleanup';h.remember_repaired_failure(TimeoutError())
+    self.assertEqual(h.report['failure_diagnostic'],failure);data=(ROOT/failure['commandLog']['path']).read_bytes();self.assertEqual(g.sha(data),failure['commandLog']['sha256'])
+    self.assertEqual(data.count(b'GLOSSARY_POPULATION_DIAGNOSTIC_V1='),1)
+ def test_command_timeout_precedence_and_capture_failure_do_not_change_execution(self):
+  with tempfile.TemporaryDirectory(dir=ROOT/'.local') as tmp:
+   selected=g.load('024');h=g.harness_class(selected)('024');h.folder=Path(tmp);h.phase='structure-reference-tests';h.private_values=[];h.admission=lambda:None
+   with self.assertRaises(RuntimeError):h.command([os.sys.executable,'-c','import time;time.sleep(2)'],timeout=.03)
+   retained=dict(h.command_failure);h.phase='cleanup';h.remember_repaired_failure(RuntimeError('later'));self.assertEqual(h.report['failure_diagnostic'],retained)
+   h.report={};h.command_failure=None;h.phase='structure-reference-tests'
+   with patch.object(h,'failure_record',side_effect=OSError('PRIVATE')):h.remember_repaired_failure(RuntimeError('first'),native_failed=True)
+   self.assertEqual(h.report,{'quality_diagnostic_capture':'UNAVAILABLE'})
+ def test_cleanup_keeps_first_operation_phase_after_restoration(self):
+  with tempfile.TemporaryDirectory(dir=ROOT/'.local') as tmp:
+   selected=g.load('022');h=g.harness_class(selected)('022');h.folder=Path(tmp);h.secret_path=h.folder/'secret';h.secret_path.write_text('private');h.phase='reference-native-tests';h.private_values=[];h.admission=lambda:None
+   h.command([os.sys.executable,'-c','raise SystemExit(1)'],timeout=2,allow_failure=True);h.remember_repaired_failure(RuntimeError(),native_failed=True)
+   first=dict(h.report['failure_diagnostic']);h.cleanup=lambda:(_ for _ in ()).throw(TimeoutError());h.resources_before=None;h.save=lambda **kw:None
+   self.assertTrue(g.finish(h,False));self.assertEqual(h.report['failure_diagnostic'],first);self.assertEqual(h.report['failed_phase'],'reference-native-tests');self.assertFalse(h.secret_path.exists())
 
 if __name__=='__main__':unittest.main()

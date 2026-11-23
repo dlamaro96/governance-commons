@@ -29,6 +29,8 @@ PREDECESSORS = (
     {'path': 'apps/api/src/repository.ts', 'fixture': 'tests/qualification/predecessors/repository-sql021.ts.txt',
      'gitBlob': '38e05401f173d1890e837878ac581bbb6a0e9d15', 'sha256': '4a9701fb5638893dda51dedb4c4093fcf401467e6658e218075cb8ec9859c73f'},
 )
+# Historical SQL022 execution uses existing immutable compatible source bytes.
+NATIVE_BINDINGS = ({'path': 'packages/domain/src/approval-service.ts', 'fixture': 'tests/qualification/predecessors/approval-service-sql023.ts.txt', 'gitBlob': '0611657abc7af29c021105defd4397fdc3a56872', 'sha256': 'c9a2a002a1e9bb54c114778c3e49adac1bf98ce34728a87f1a16d140e9e2ed83', 'commit': '6b090767d3d7ca2a1645b81c97a96354d3b26358'}, {'path': 'apps/api/src/approvals.ts', 'fixture': 'tests/qualification/predecessors/approvals-sql023.ts.txt', 'gitBlob': '4bb24777f769df13f2bedb5fa91dba5b24f69598', 'sha256': 'b03e2e6e7b081d8ae78222e4b3b9557547a136ee116534f458a23950ac33857d', 'commit': '6b090767d3d7ca2a1645b81c97a96354d3b26358'}, {'path': 'apps/api/src/repository.ts', 'fixture': 'tests/qualification/predecessors/repository-sql022.ts.txt', 'gitBlob': 'b70e95bc65dc4b9723b01948604c722b560ba82e', 'sha256': '75aa5e716c537a0caafabba08e5e3ada6aefeae3a42d11c8b942444d6073a1ee', 'commit': '591220ab2b398c8af2ed3c9a8441641fa77bfc8d'})
 PROBE = '/app/reference-source-check.cjs'
 # Exact fixed-width row-hash aggregation retains duplicate multiplicity without
 # materializing predecessor populations as one large JSON array.
@@ -43,13 +45,16 @@ def sources():
                   'packages/domain/src/reference-data.ts', 'packages/domain/src/reference-data-contracts.ts',
                   'packages/domain/src/reference-data-service.ts', 'apps/api/src/reference-data.ts',
                   'apps/api/src/reference-data-publication.ts', *TESTS])
-    paths.update(row['fixture'] for row in PREDECESSORS)
+    paths.update(row['fixture'] for row in (*PREDECESSORS, *NATIVE_BINDINGS))
     paths.update(row['path'] for row in PREDECESSORS)
     pending = [ROOT / name for name in paths if name.endswith(('.ts', '.tsx'))]
     while pending:
         current = pending.pop()
-        for relative in re.findall(r'''(?:from\s*|import\s*)['"](\.[^'"]+)['"]''', current.read_text()):
+        text = current.read_text() + '\n' + '\n'.join((ROOT / row['fixture']).read_text() for row in NATIVE_BINDINGS if row['path'] == str(current.relative_to(ROOT)))
+        for relative in re.findall(r'''(?:from\s*|import\s*)['"](\.[^'"]+)['"]''', text):
             candidate = (current.parent / relative).resolve()
+            if candidate.suffix == '.js' and not candidate.exists():
+                candidate = candidate.with_suffix('.ts')
             if not candidate.suffix:
                 candidate = candidate.with_suffix('.ts') if candidate.with_suffix('.ts').is_file() else candidate / 'index.ts'
             require(candidate.is_relative_to(ROOT) and candidate.is_file(), 'Unresolved local reference source')
@@ -61,7 +66,7 @@ def sources():
 
 
 def fixtures():
-    for row in PREDECESSORS:
+    for row in (*PREDECESSORS, *NATIVE_BINDINGS):
         value = base.read_exact(ROOT / row['fixture'], row['sha256'])
         require(hashlib.sha1(b'blob ' + str(len(value)).encode() + b'\0' + value, usedforsecurity=False).hexdigest() == row['gitBlob'],
                 'Immutable reference predecessor Git identity differs')
@@ -91,8 +96,14 @@ class Harness(base.Harness):
         self.report.update(command='./dev test --suite reference-upgrade', profile='isolated-postgresql-reference')
 
     def reference_native_source_expectations(self, measured):
-        # A later isolated forward gate may declare exact predecessor bytes.
-        return measured
+        require(self.reference_current is not None and self.reference_predecessor is None
+                and self.phase == 'reference-native-tests', 'Undeclared SQL022 native readback')
+        original = [row for row in self.reference_current['sources'] if row['path'].endswith('.ts')]
+        require(measured == original, 'SQL022 original source map differs')
+        fixtures()
+        replacements = {row['path']: row['sha256'] for row in NATIVE_BINDINGS}
+        require(set(replacements).issubset({row['path'] for row in measured}), 'SQL022 source map omits native bindings')
+        return [{**row, 'sha256': replacements.get(row['path'], row['sha256'])} for row in measured]
 
     def classification_native_source_expectations(self, measured):
         require(self.reference_predecessor is not None and self.reference_current is None
@@ -145,6 +156,16 @@ class Harness(base.Harness):
                 selected.append({**row, 'commit': COMMIT, 'readOnly': True})
             # The inherited classification expectation hook binds these same
             # effective bytes while preserving its original checkout snapshot.
+        else:
+            for row in NATIVE_BINDINGS:
+                target = '/app/' + row['path']
+                matches = [(file, dest) for file, dest in mounts if dest == target]
+                require(len(matches) <= 1, 'Duplicate SQL022 native module mount')
+                if matches:
+                    base.read_exact(matches[0][0], row['sha256'])
+                else:
+                    mounts.append((ROOT / row['fixture'], target))
+                selected.append({**row, 'readOnly': True, 'mountRequired': not bool(matches)})
         expected = [row for row in effective if row['path'] in {item['path'] for item in PREDECESSORS}]
         require(len(expected) == 3, 'Reference phase inventory omits modules')
         self.reference_serial += 1
@@ -168,7 +189,7 @@ class Harness(base.Harness):
             record['overrideReleased'] = True
             base.read_exact(probe, sha(data))
             fixtures()
-            for row in PREDECESSORS:
+            for row in (*PREDECESSORS, *NATIVE_BINDINGS):
                 checkout = next(item for item in original['sources'] if item['path'] == row['path'])
                 base.read_exact(ROOT / row['path'], checkout['sha256'])
             record['sourceHashesMatched'] = True
@@ -232,7 +253,7 @@ def execute(h):
     h.report['limitations'] = [
         'Disposable PostgreSQL only: protected publication, independent decisions, real service reads and exact projection/history; no shared runtime mutation.',
         'SQL021 predecessor executes exact 49c166c service/router/repository bytes; existing SQL020 and SQL018 overlays retain precedence. referenceSourceChecks binds checkout and effective bytes.',
-        'SQL022 phase executes current mounted sources with startup/exit checks and independent full source readback; all predecessor tests remain mandatory.',
+        'SQL022 phase binds immutable compatible approval service/router and repository bytes with startup/exit checks and independent full source readback; all predecessor tests remain mandatory.',
         'Real bounded clock waits exercise effective-time boundaries; no timestamp mutation or simulated publication success.',
         'HTTP conditional responses, Temporal delivery/restart, browser/accessibility, external sources, crosswalks and data validation are separate qualifications. Raw reports remain private.']
 

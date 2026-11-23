@@ -219,18 +219,18 @@ class ProtectedEvidenceTests(unittest.TestCase):
         (self.root/'packages/authn/new.ts').write_text('new source')
         self.assertIsNone(self.validate())
 
-    def test_exact_fourteen_migration_checksums_required(self):
-        self.assertEqual(len(evidence.MIGRATIONS),14)
-        self.assertEqual(evidence.MIGRATIONS[-2:],('013_authority_foundation.sql','014_source_connectors.sql'))
+    def test_exact_thirty_two_migration_checksums_required(self):
+        self.assertEqual(len(evidence.MIGRATIONS),32)
+        self.assertEqual(evidence.MIGRATIONS[-2:],('031_authority_read_grants.sql','032_relation_candidate_validation.sql'))
         for mutate in (lambda r:r['migrations'].pop(),lambda r:r.update(migrations=r['migrations'][:12]),
                        lambda r:r['migrations'][0].update(sha256='0'*64),lambda r:r['migrations'][12].update(sha256='0'*64),
                        lambda r:r['migrations'][13].update(name='014_other.sql'),lambda r:r['migrations'].append(r['migrations'][0]),
-                       lambda r:r['migrations'].reverse()):
+                       lambda r:r['migrations'][-1].update(sha256='0'*64),lambda r:r['migrations'].reverse()):
             r=copy.deepcopy(self.report);mutate(r);self.assertIsNone(self.validate(r))
 
     def test_extra_missing_changed_or_symlink_migration_cannot_escape_source_binding(self):
         folder=self.root/'packages/db/migrations'
-        later=folder/'015_unadopted.sql';later.write_text('-- Unreviewed migration\n')
+        later=folder/'033_unadopted.sql';later.write_text('-- Unreviewed migration\n')
         self.assertIsNone(self.validate());later.unlink()
         for name in evidence.MIGRATIONS[-2:]:
             path=folder/name;original=path.read_bytes();path.unlink()
@@ -256,7 +256,7 @@ class ProtectedEvidenceTests(unittest.TestCase):
 
     def test_ledger_projection_exports_only_counts_and_digests(self):
         result=self.validate();self.assertIsNotNone(result)
-        self.assertEqual(result['migration_ledger'],{'rows':14,'unchanged':True,
+        self.assertEqual(result['migration_ledger'],{'rows':32,'unchanged':True,
             'digests':{k:v['sha256'] for k,v in self.report['migrationLedger'].items()}})
         self.assertNotIn('applied_at',json.dumps(result));self.assertNotIn('migrations-before.json',json.dumps(result))
 

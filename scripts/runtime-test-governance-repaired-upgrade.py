@@ -56,7 +56,7 @@ def source_file(path):
 
 def sources(selected):
  paths={r['path'] for r in selected.sources()}
- paths.update(('scripts/runtime-test-governance-repaired-upgrade.py','scripts/qualification_relation_candidate.py','packages/db/migrations/'+selected.repaired.MIGRATION))
+ paths.update(('policies/quality_upgrade_diagnostics.py','scripts/runtime-test-governance-repaired-upgrade.py','scripts/qualification_relation_candidate.py','packages/db/migrations/'+selected.repaired.MIGRATION))
  # Keep the exact inherited dependency closure and bind the actual modules loaded
  # by its Python imports, including all fixed predecessor source verifiers.
  for m in ancestry(selected):paths.add(str(Path(m.__file__).relative_to(ROOT)))
@@ -191,6 +191,16 @@ def harness_class(selected):
    self.report.update(command='./dev test --suite '+self.repaired_suite,profile='isolated-governance-repaired-sql'+self.repaired_through,
        qualification='EXPLICIT_REPAIRED_CHAIN',historicalOutcome='HISTORICAL_NOT_EXECUTED',through=self.repaired_through)
    return super().save(final=final)
+  def remember_repaired_failure(self,error,*,native_failed=False):
+   # Capture the first failed operation before inherited readbacks/cleanup can
+   # replace last_command. Auxiliary023/024 suites are exact native-plan phases.
+   try:
+    if 'failure_diagnostic' in self.report:return
+    if self.command_failure is not None:self.remember_failure(error)
+    elif native_failed and self.phase in {row['phase'] for row in self.repaired_plan}:
+     self.report['failure_diagnostic']=self.failure_record(self.phase,'suite_failed',self.last_command)
+    else:self.remember_failure(error)
+   except Exception:self.report.setdefault('quality_diagnostic_capture','UNAVAILABLE')
   def docker(self,*args,**kwargs):
    # Inspect the FINAL command after every inherited immutable-source wrapper.
    # No wrapper, mount or predecessor assertion is bypassed/reimplemented.
@@ -214,7 +224,7 @@ def harness_class(selected):
    try:
     result=super().docker(*command,**kwargs);record.update(tests=totals(result.stdout),exitStatus=result.returncode,result='FAIL')
     if result.returncode!=0:
-     if hasattr(self,'remember_quality_failure'):self.remember_quality_failure(RuntimeError('Native suite failed'))
+     self.remember_repaired_failure(RuntimeError('Native suite failed'),native_failed=True)
      try:record['mountedReadback']=observed_proofs(result.stdout,rows,config)
      except BaseException as e:record['sourceProofErrorType']=type(e).__name__
      return result  # Preserve inherited mandatory post-helper readback/refusal.
@@ -223,8 +233,8 @@ def harness_class(selected):
       and record['tests']['pass']==plan['expected'] and all(record['tests'][k]==0 for k in ('fail','cancelled','skipped','todo')),'Repaired native suite failed')
     record['observedTitles']=native_titles(result.stdout,plan['titles'])
     record['result']='PASS';return result
-   except BaseException:
-    record['result']='FAIL';raise
+   except BaseException as e:
+    self.remember_repaired_failure(e);record['result']='FAIL';raise
    finally:
     require(sha(probe.read_bytes())==sha(body) and sources(selected)==self.repaired_frozen,'Native source/probe changed')
     record['sourceHashesMatched']=True
@@ -246,14 +256,14 @@ def finish(h,failed):
    h.deadline=h.cleanup_deadline;require(h.inventory()==h.resources_before,'Preexisting inventory changed');h.report.setdefault('cleanup',{})['resourceInventoryPreserved']=True
  except BaseException as e:
   failed=True
-  if hasattr(h,'remember_quality_failure'):h.remember_quality_failure(e)
-  h.report.setdefault('failed_phase',h.phase);h.report['cleanupErrorType']=type(e).__name__
+  h.remember_repaired_failure(e)
+  h.report.setdefault('failed_phase',h.report.get('failure_diagnostic',{}).get('phase',h.phase));h.report['cleanupErrorType']=type(e).__name__
  finally:
   try:h.secret_path.unlink(missing_ok=True);require(not h.secret_path.exists(),'Private credential remains');h.report.setdefault('cleanup',{})['generatedCredentialsRemoved']=True
   except BaseException as e:
    failed=True
-   if hasattr(h,'remember_quality_failure'):h.remember_quality_failure(e)
-   h.report.setdefault('failed_phase',h.phase);h.report['credentialCleanupErrorType']=type(e).__name__
+   h.remember_repaired_failure(e)
+   h.report.setdefault('failed_phase',h.report.get('failure_diagnostic',{}).get('phase',h.phase));h.report['credentialCleanupErrorType']=type(e).__name__
  h.report.update(result='FAIL' if failed else 'PASS',recorded_at=datetime.now(timezone.utc).isoformat(),evidence_directory=str(h.folder.relative_to(ROOT)))
  h.report['private_logs']=[{'path':str(p.relative_to(ROOT)),'sha256':sha(p.read_bytes())} for p in sorted(h.folder.glob('*.log'))];h.save(final=True);return failed
 
@@ -263,7 +273,7 @@ def main():
  try:execute(h,selected)
  except BaseException as e:
   failed=True
-  if hasattr(h,'remember_quality_failure'):h.remember_quality_failure(e)
-  h.report.update(failed_phase=h.phase,error_type=type(e).__name__,error='Inspect bounded private phase evidence')
+  h.remember_repaired_failure(e)
+  h.report.update(failed_phase=h.report.get('failure_diagnostic',{}).get('phase',h.phase),error_type=type(e).__name__,error='Inspect bounded private phase evidence')
  failed=finish(h,failed);print(json.dumps({'result':h.report['result'],'through':args.through,'report':str(selected.REPORT.relative_to(ROOT))}));return int(failed)
 if __name__=='__main__':raise SystemExit(main())

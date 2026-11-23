@@ -66,8 +66,32 @@ class Controls(unittest.TestCase):
    self.assertEqual(m.sha(self.selected(row['path']).read_bytes()),row['sha256'])
    self.assertEqual(next(r['sha256'] for r in expected if r['path']==row['path']),row['sha256'])
   record=standalone.report['referenceQualitySourceChecks'][-1]
-  self.assertEqual(record['effectiveOwnedSources'],[r for r in expected if r['path'] in m.base.NON_REPOSITORY|{m.REPOSITORY}])
+  self.assertEqual(record['effectiveOwnedSources'],[r for r in expected if r['path'] in m.base.NON_REPOSITORY|{row['path'] for row in m.base.NATIVE_BINDINGS}])
   self.assertEqual(len(self.mounts()),len({target for _,target in self.mounts()}))
+ def test_standalone_sql022_and_nested_sql023_reference_use_exact_compatible_pins(self):
+  for cls in (m.base.base.Harness, m.base.Harness):
+   with self.subTest(scope=cls.__module__):
+    self.calls.clear();self.to022();h=object.__new__(cls);h.__dict__.update(self.h.__dict__);h.folder=self.h.folder/cls.__module__;h.folder.mkdir()
+    rows=[r for r in h.reference_current['sources'] if r['path'].endswith('.ts')]
+    expected=h.reference_native_source_expectations(rows);h.helper(['node','--test','owned.ts'])
+    for row in m.base.base.NATIVE_BINDINGS:
+     self.assertEqual(m.sha(self.selected(row['path']).read_bytes()),row['sha256'])
+     self.assertEqual(next(r['sha256'] for r in expected if r['path']==row['path']),row['sha256'])
+    self.assertEqual(len(self.mounts()),len({target for _,target in self.mounts()}))
+    record=h.report['referenceSourceChecks'][-1]
+    self.assertEqual([r for r in record['effectiveSources'] if r['path'].endswith('.ts')],expected)
+ def test_standalone_sql022_rejects_duplicate_wrong_and_parent_mounts(self):
+  self.to022();h=object.__new__(m.base.base.Harness);h.__dict__.update(self.h.__dict__)
+  row=m.base.base.NATIVE_BINDINGS[0];target='/app/'+row['path'];fixed=(ROOT/row['fixture'],target)
+  for mounts in ([(ROOT/'package.json',target)],[fixed,fixed],[(ROOT/'package.json','/app/packages/domain')]):
+   with self.assertRaises(RuntimeError):h.helper(['node'],mounts=mounts)
+  self.assertEqual(self.calls,[])
+ def test_standalone_sql022_refuses_wrong_phase_and_changed_source_map(self):
+  self.to022();h=object.__new__(m.base.base.Harness);h.__dict__.update(self.h.__dict__)
+  rows=[r for r in h.reference_current['sources'] if r['path'].endswith('.ts')]
+  with self.assertRaises(RuntimeError):h.reference_native_source_expectations([{**rows[0],'sha256':'0'*64},*rows[1:]])
+  h.phase='classification-native-tests'
+  with self.assertRaises(RuntimeError):h.reference_native_source_expectations(rows)
  def test_standalone_sql023_rejects_duplicate_or_untrusted_service_override_before_leaf(self):
   self.to023();standalone=object.__new__(m.base.Harness);standalone.__dict__.update(self.h.__dict__)
   row=m.base.NATIVE_BINDINGS[0];target='/app/'+row['path'];fixed=(ROOT/row['fixture'],target)

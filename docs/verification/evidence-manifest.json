@@ -1575,7 +1575,7 @@
       "source_binding": {
         "implementation_commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
         "method": "Exact integrated product revision; isolated native execution retains explicitly enumerated source-manifest differences. See the scoped evidence record.",
-        "evidence_sha256": "68a6477a585abca328eb9247f1189b94b56dc5a4c8d4205ab386eb489e0011f2"
+        "evidence_sha256": "f0d8cc2a488a3397a1706e5bbf8d080bd4bab409dd876d474c15b951d6633b2b"
       }
     },
     {
@@ -1584,7 +1584,7 @@
       "source_binding": {
         "implementation_commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
         "method": "Exact integrated product revision; isolated native execution retains explicitly enumerated source-manifest differences. See the scoped evidence record.",
-        "evidence_sha256": "99bccf93637f87dd6067155394cdebd5e4204614e8df5b9c0c39520269521bcb"
+        "evidence_sha256": "69b66005fc1e8d2dca63d32d65754c0c0a7717881e149123b766668ec1dcce8a"
       }
     },
     {
@@ -1637,8 +1637,46 @@
       "scope": "forward-relation-candidate-and-explicit-repaired-chain",
       "source_binding": {
         "implementation_commit": "fabc708a74c78fe5e68e66ba9516f22e48ecbf62",
-        "method": "Frozen native receipts and exact composed-source host controls are recorded separately; composed runtime and hosted outcomes remain pending.",
-        "evidence_sha256": "214c68d94797b1f1763bcc3b86c367d76052247723156831ef92948698f5b09b"
+        "method": "Frozen and composed native receipts remain separately scoped; current API/core and hosted failures are recorded with original revision bindings. The subsequent prefix repair has its own record.",
+        "evidence_sha256": "0ffa87abde2284b3cbec7fb3d90ebac848d29cf62d72caa84e63b9e807ea87f7"
+      }
+    },
+    {
+      "path": "docs/verification/source-security-5d37594.json",
+      "scope": "published-source-security-5d37594",
+      "source_binding": {
+        "implementation_commit": "5d37594396511e41004562a82db97ca57877d6d1",
+        "method": "Authenticated hosted artifact and exact Git-source readback; original failures and verification limitations remain in the scoped record. No new execution or release qualification is inferred.",
+        "verified_files": 1518,
+        "evidence_sha256": "f2ecbf60241ad28da2f3a69c88eb4339b986036372bb914aad62ffd605d9631f"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-f7fc213.json",
+      "scope": "published-integration-checkpoint-f7fc213",
+      "source_binding": {
+        "implementation_commit": "f7fc21307b4562a04812f5a3bd782dce3fea3a13",
+        "method": "Authenticated hosted artifact and exact Git-source readback; original failures and verification limitations remain in the scoped record. No new execution or release qualification is inferred.",
+        "verified_files": 1502,
+        "evidence_sha256": "05e3d4057a5cfdbab5c0d3b430db49a4e5142c83420ec31c42a3c8923590fac3"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-5d37594.json",
+      "scope": "published-integration-checkpoint-5d37594",
+      "source_binding": {
+        "implementation_commit": "5d37594396511e41004562a82db97ca57877d6d1",
+        "method": "Exact source and retained artifact hashes reviewed; dirty candidate differences, historical failures and unexecuted scopes remain explicit in the record.",
+        "evidence_sha256": "48fefe08922beeac4a1286ec694b1c5fcb5cb1fc81e340b35422d66d3bb8e820"
+      }
+    },
+    {
+      "path": "docs/verification/pipeline-prefix-repair-local.json",
+      "scope": "reference-prefix-compatibility-and-gate-admission",
+      "source_binding": {
+        "implementation_commit": "5d37594396511e41004562a82db97ca57877d6d1",
+        "method": "Exact source and retained artifact hashes reviewed; dirty candidate differences, historical failures and unexecuted scopes remain explicit in the record.",
+        "evidence_sha256": "f70d9c6aba7199b726ac373a65fc9da1e2f1565554c447e24e6ca141b1fd23f4"
       }
     }
   ],

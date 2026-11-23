@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "recorded_at": "2026-11-17T09:48:17.267175+00:00",
+  "recorded_at": "2026-11-17T10:05:44.402635+00:00",
   "implementation_commit": "fabc708a74c78fe5e68e66ba9516f22e48ecbf62",
   "implementation_status": "IN_PROGRESS",
   "release_qualified": false,
@@ -222,29 +222,308 @@
     }
   },
   "current_composed024": {
-    "outcome": "RUNNING",
+    "outcome": "PASS",
     "command": "./dev test --suite reference-structure-repaired-upgrade",
+    "profile": "isolated-governance-repaired-sql024",
     "implementation_commit": "fabc708a74c78fe5e68e66ba9516f22e48ecbf62",
-    "expected_tests": 263,
-    "source_files": 176
+    "qualification": "EXPLICIT_REPAIRED_CHAIN",
+    "historical_outcome": "HISTORICAL_NOT_EXECUTED",
+    "tests": {
+      "tests": 263,
+      "suites": 0,
+      "pass": 263,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "native_suites": 13,
+    "source_files": 176,
+    "exact_git_source_bytes": true,
+    "checkout_hashes_before_after_match": true,
+    "source_and_effective_mounted_startup_exit": true,
+    "observed_processes": 37,
+    "suites": [
+      {
+        "phase": "approval-native-tests",
+        "tests": 26,
+        "pass": 26,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "glossary-native-tests",
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "scope-native-tests",
+        "tests": 25,
+        "pass": 25,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "population-native-tests",
+        "tests": 26,
+        "pass": 26,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "quality-native-tests",
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "lineage-native-tests",
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "classification-native-tests",
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "reference-native-tests",
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "reference-quality-completeness-tests",
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "reference-quality-native-tests",
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "structure-reference-tests",
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "structure-reference-quality-tests",
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      },
+      {
+        "phase": "structure-native-tests",
+        "tests": 30,
+        "pass": 30,
+        "fail": 0,
+        "skipped": 0,
+        "mounted_source_startup_and_exit": true
+      }
+    ],
+    "sql032": {
+      "tables_preserved": 112,
+      "preservation": true,
+      "replay": true,
+      "prior_ledger_count": 18,
+      "initial_repaired_ledger_count": 19,
+      "final_repaired_ledger_count": 25,
+      "final_schema": "SQL001–024 plus SQL032",
+      "repair_checksum_and_applied_at_preserved": true
+    },
+    "completed_prefixes": [
+      "018",
+      "019",
+      "020",
+      "021",
+      "022",
+      "023",
+      "024"
+    ],
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "report_sha256": "5ee1195e8629946949b56d1034f4b63dc0b3d996cf57e3e91d042418b912236e",
+    "readback": {
+      "private_record": ".local/relation-population-repair-candidate/composition/root024-readback.json",
+      "sha256": "14c4b68cad8ec26953a1e32edbc6fb727483fe6ac248cead459cc4a749708352"
+    },
+    "limitations": [
+      "Only the independently named repaired024 invocation is qualified by this result. Its nested stages do not establish execution of the other six top-level repaired profiles.",
+      "All original native declarations and deadlines remain in force; historical source overlays are fixed and individually bound by the retained effective-source proofs.",
+      "Canonical-state and resource-inventory checks ran in the exact source-bound harness; the independent readback rehashed retained digests and safe phase logs rather than reconstructing the cleaned-up database."
+    ]
   },
   "current_import32": {
-    "outcome": "NOT_RUN",
-    "expected_tests": 5
+    "outcome": "PASS",
+    "command": "python3 scripts/runtime-test-reference-import.py --run-local",
+    "profile": "fresh-current-schema-reference-import",
+    "implementation_commit": "5d37594396511e41004562a82db97ca57877d6d1",
+    "tests": {
+      "tests": 5,
+      "suites": 0,
+      "pass": 5,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 1238.355125
+    },
+    "source_files": 103,
+    "exact_git_source_bytes": true,
+    "source_hashes_matched": true,
+    "applied_migrations": "SQL001–032",
+    "ledger_entries": 32,
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "report_sha256": "a070006521757172cd49d82ed9ff1a5d5b20cf45471267c7399f76eb25fea785",
+    "readback": {
+      "private_record": ".local/relation-population-repair-candidate/composition/current-import32-readback.json",
+      "sha256": "06dfe10e662932ead4e682acc8917603f579474cd85f7ddd96534be2fb7f349e"
+    },
+    "limitations": [
+      "Fresh current SQL001–032 database with five real PostgreSQL import service cases; not an upgrade or predecessor qualification.",
+      "The retained native report/readback inherited a stale SQL001–024 limitation sentence; the actual 32-entry ledger and exact migration hashes establish the scope recorded here.",
+      "Cached dependency image with exact current source mounts; no shared service, HTTP, scanner-engine, Temporal or browser execution is inferred."
+    ]
   },
   "current_core": {
-    "outcome": "NOT_APPLIED",
-    "applied_migrations": "SQL001–031"
+    "outcome": "PASS",
+    "profile": "core",
+    "implementation_commit": "5d37594396511e41004562a82db97ca57877d6d1",
+    "applied_migrations": "SQL001–032",
+    "ledger_entries": 32,
+    "application_source_files": 300,
+    "worker_source_files": 13,
+    "application_image_manifest": "sha256:22cca072113c962ebd853da1cd9154f927330a8a9a97f36e85d096a71fb69144",
+    "worker_image": "sha256:e586cf56dd0da7be601ac272983847e271030267af3d90a437c1f3e25bfaee3e",
+    "healthy_services": [
+      "api",
+      "site-runner",
+      "workflow-worker"
+    ],
+    "readback": {
+      "private_record": ".local/product-relation-runtime-readback.json",
+      "sha256": "7eecd0c988b07ac77ba081c815bec08450d31db96f052031461cc9c2b2d2e77d"
+    },
+    "limitations": [
+      "Current image/source, applied migration ledger and listed service health readback only; API and complete browser qualification remain separate.",
+      "SQL001–031 remain immutable. Shared SQL032 adoption does not qualify the other independently named repaired-chain profiles."
+    ]
   },
   "hosted45": {
-    "outcome": "NOT_RUN",
+    "outcome": "FAIL",
     "mandatory_outcomes": 45,
-    "browser_journeys": 37
+    "browser_journeys": 37,
+    "success": 39,
+    "failure": 2,
+    "skipped": 4,
+    "record": "docs/verification/hosted-checkpoint-5d37594.json"
   },
   "limitations": [
     "Frozen standalone113-source and repaired019130-source passes retain their exact execution scopes. Later runner/diagnostic changes do not become native passes by source review.",
     "The selected maximal024 run cannot qualify the other six independently named repaired profiles; all seven remain mandatory in CI.",
-    "No current core, API/browser, live vendor, enterprise-security, performance-scale or supported-release qualification is inferred.",
+    "Current core image/source/schema health is recorded separately from native gates. No current API/browser, live vendor, enterprise-security, performance-scale or supported-release qualification is inferred.",
     "The historical SQL018-only deadline failure and first runner-order failure remain retained."
-  ]
+  ],
+  "independently_named_repaired_profiles": [
+    {
+      "through": "018",
+      "command": "./dev test --suite glossary-population-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql018",
+      "final_composed_outcome": "NOT_RUN",
+      "expected_tests": 98,
+      "source_files": 119
+    },
+    {
+      "through": "019",
+      "command": "./dev test --suite quality-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql019",
+      "final_composed_outcome": "NOT_RUN",
+      "expected_tests": 113,
+      "source_files": 132,
+      "scope_note": "Frozen130-source019 PASS is retained separately; it is not a final132-source invocation."
+    },
+    {
+      "through": "020",
+      "command": "./dev test --suite lineage-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql020",
+      "final_composed_outcome": "NOT_RUN",
+      "expected_tests": 126,
+      "source_files": 141
+    },
+    {
+      "through": "021",
+      "command": "./dev test --suite classification-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql021",
+      "final_composed_outcome": "NOT_RUN",
+      "expected_tests": 140,
+      "source_files": 154
+    },
+    {
+      "through": "022",
+      "command": "./dev test --suite reference-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql022",
+      "final_composed_outcome": "NOT_RUN",
+      "expected_tests": 158,
+      "source_files": 160
+    },
+    {
+      "through": "023",
+      "command": "./dev test --suite reference-quality-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql023",
+      "final_composed_outcome": "NOT_RUN",
+      "expected_tests": 194,
+      "source_files": 167
+    },
+    {
+      "through": "024",
+      "command": "./dev test --suite reference-structure-repaired-upgrade",
+      "profile": "isolated-governance-repaired-sql024",
+      "final_composed_outcome": "PASS",
+      "expected_tests": 263,
+      "source_files": 176,
+      "evidence_field": "current_composed024"
+    }
+  ],
+  "subsequent_prefix_repair": {
+    "record": "docs/verification/pipeline-prefix-repair-local.json",
+    "reference022_native_result": "PASS",
+    "tests": 158,
+    "source_files": 163,
+    "historical_original_prefix_failure_preserved": true
+  }
 }

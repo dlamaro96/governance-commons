@@ -26,7 +26,29 @@ COMPOSE = 'deploy/protected-authn/compose.yaml'
 # Current protected transport is qualified on the exact integrated schema.
 # The separate SQL012 foundation gate and its historical evidence keep their
 # original prefix; new migrations require an explicit protected-gate update.
-MIGRATIONS = (*AUTHENTICATION_MIGRATIONS, '013_authority_foundation.sql', '014_source_connectors.sql')
+MIGRATIONS = (
+    *AUTHENTICATION_MIGRATIONS,
+    '013_authority_foundation.sql',
+    '014_source_connectors.sql',
+    '015_approval_workflows.sql',
+    '016_glossary_publication.sql',
+    '017_relation_scope_candidates.sql',
+    '018_glossary_nominal_candidates.sql',
+    '019_quality_execution.sql',
+    '020_native_lineage.sql',
+    '021_classification_review.sql',
+    '022_reference_publication.sql',
+    '023_reference_quality.sql',
+    '024_reference_structures.sql',
+    '025_quality_uniqueness.sql',
+    '026_quality_range.sql',
+    '027_quality_monitoring.sql',
+    '028_quality_freshness.sql',
+    '029_quality_freshness_scheduling.sql',
+    '030_quality_volume.sql',
+    '031_authority_read_grants.sql',
+    '032_relation_candidate_validation.sql',
+)
 FIXED_SOURCES = (
     'CONTRIBUTING.md', 'dev', 'scripts/runtime.py', 'scripts/authentication_roles.py',
     'scripts/runtime-test-authority-authn-foundation.py', 'scripts/runtime-test-protected-authn.py',
@@ -53,7 +75,7 @@ CAPTURES = tuple(sorted(name+'.png' for name in (
 SERVED = {'html': 'served/index.html', 'css': 'served/ui.css', 'js': 'served/ui.js'}
 ROLES = {'login-broker', 'session-api', 'authn-edge', 'owner-tool', 'helper'}
 CHECKS = [
-    'Native owner applied exact001–014 with temporary definer grant removed; canonical seed and exact13-manifest replay preserved all six original memberships; full migration ledger remained unchanged',
+    'Native owner applied exact001–032 with temporary definer grant removed; canonical seed and exact13-manifest replay preserved all six original memberships; full migration ledger remained unchanged',
     'Real Keycloak protected public client readback confirms exact callback/origin, S256,RS256 and built-in basic/auth_time mapper',
     'Actual bounded signed-token HTTP probes and native SCRAM SQL lifecycle/privilege/concurrency cases passed with no skipped cases',
     'Two real Keycloak browser journeys passed: fresh code+PKCE, exact private provenance, CSRF/version switch, stale/cross-tenant/unbound denial, member-revoked logout, keyboard/axe EN/AR desktop/mobile; eight fresh captures retained',

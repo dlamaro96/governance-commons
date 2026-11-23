@@ -14,7 +14,29 @@ REPAIRED_COMMAND='./dev test --suite quality-repaired-upgrade'
 REPAIRED_PROFILE='isolated-governance-repaired-sql019'
 REPAIRED_REPORT='.local/evidence/quality-repaired-upgrade.json'
 PHASES=POPULATION_PHASES|{'quality-predecessor-source','quality-predecessor','quality-upgrade','quality-native-tests'}
-REPAIRED_PHASES=PHASES|{'relation-candidate-predecessor','relation-candidate-upgrade','relation-candidate-replay'}
+# Closed command identities; filenames and phases never come from a report.
+REPAIRED_PROFILES={
+ '018':('glossary-population-repaired-upgrade',set()),
+ '019':('quality-repaired-upgrade',{'quality-predecessor-source','quality-predecessor','quality-upgrade','quality-native-tests'}),
+ '020':('lineage-repaired-upgrade',{'lineage-predecessor','lineage-upgrade','lineage-native-tests'}),
+ '021':('classification-repaired-upgrade',{'classification-predecessor','classification-upgrade','classification-native-tests'}),
+ '022':('reference-repaired-upgrade',{'reference-predecessor','reference-upgrade','reference-native-tests'}),
+ '023':('reference-quality-repaired-upgrade',{'reference-quality-predecessor','reference-quality-upgrade','reference-quality-completeness-tests','reference-quality-native-tests'}),
+ '024':('reference-structure-repaired-upgrade',{'structure-predecessor','structure-upgrade','structure-reference-tests','structure-reference-quality-tests','structure-native-tests'}),
+}
+
+def repaired_contract(through):
+    require(type(through) is str and through in REPAIRED_PROFILES)
+    phases=POPULATION_PHASES|{'upgrade-refusals','role-provisioner-refusals','installation-cli','replay','relation-candidate-predecessor','relation-candidate-upgrade','relation-candidate-replay'}
+    for key,(_,additional) in REPAIRED_PROFILES.items():
+        if key<=through:phases=phases|additional
+    suite=REPAIRED_PROFILES[through][0]
+    # Actual024 has 4,114 log entries and a 4.77MiB metadata report. Keep older
+    # bounds intact; this changes no command output, selected log or deadline.
+    maximum_logs,report_bytes=(8192,8*MIB) if through>='020' else (4096,4*MIB)
+    return './dev test --suite '+suite,'isolated-governance-repaired-sql'+through,phases,'.local/evidence/'+suite+'.json',maximum_logs,report_bytes
+
+REPAIRED_PHASES=repaired_contract('019')[2]
 COUNTERS=('tests','suites','pass','fail','cancelled','skipped','todo')
 CODE_CLASSES={'ERR_ASSERTION':'ASSERTION_FAILURE','57014':'DATABASE_DEADLINE','42883':'DATABASE_FUNCTION_UNAVAILABLE',
  '23503':'DATABASE_CONSTRAINT','23505':'DATABASE_CONSTRAINT','23514':'DATABASE_CONSTRAINT','42501':'DATABASE_PERMISSION',
@@ -31,14 +53,15 @@ def source_inventory(root):
     return checked_inventory(root,module.sources())
 
 
-def repaired_wrapper(root):
+def repaired_wrapper(root,through='019'):
+    repaired_contract(through)
     spec=importlib.util.spec_from_file_location('quality_repaired_diagnostic_scope',root/'scripts/runtime-test-governance-repaired-upgrade.py')
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
-    return module,module.load('019')
+    return module,module.load(through)
 
 
-def repaired_source_inventory(root):
-    module,selected=repaired_wrapper(root)
+def repaired_source_inventory(root,through='019'):
+    module,selected=repaired_wrapper(root,through)
     return checked_inventory(root,module.sources(selected))
 
 
@@ -72,8 +95,8 @@ def suite_files(root,phase):
     return [TEST] if phase=='quality-native-tests' else predecessor_suite_files(root,phase)
 
 
-def tap(root,phase,text):
-    expected=[row for name in suite_files(root,phase) for row in declarations(root,name)]
+def tap(root,phase,text,files=None):
+    expected=[row for name in (suite_files(root,phase) if files is None else files) for row in declarations(root,name)]
     require(len(expected)<=256 and len({row['title'] for row in expected})==len(expected))
     by_title={row['title']:row for row in expected};seen=set();numbers=set();records=[];unmapped=False
     matches=list(re.finditer(r'^(ok|not ok) ([1-9][0-9]{0,5}) - ([^\r\n]*)$',text,re.M))
@@ -112,9 +135,9 @@ def tap(root,phase,text):
       'counts_state':state,'tests':records,'unmapped_test_output':unmapped}
 
 
-def repaired_native_context(root,value,phase,sources):
-    require(value.get('qualification')=='EXPLICIT_REPAIRED_CHAIN' and value.get('historicalOutcome')=='HISTORICAL_NOT_EXECUTED' and value.get('through')=='019')
-    module,selected=repaired_wrapper(root);plan=module.native_plan(selected)
+def repaired_native_context(root,value,phase,sources,through='019'):
+    require(value.get('qualification')=='EXPLICIT_REPAIRED_CHAIN' and value.get('historicalOutcome')=='HISTORICAL_NOT_EXECUTED' and value.get('through')==through)
+    module,selected=repaired_wrapper(root,through);plan=module.native_plan(selected)
     require(value.get('repairedNativePlan')==plan)
     rows=value.get('repairedNativeSuites');require(type(rows) is list and len(rows)<=len(plan))
     pins=module.allowed_pins(selected);selected_effective=None
@@ -130,23 +153,24 @@ def repaired_native_context(root,value,phase,sources):
         else:require(row['result']=='PASS')
     if phase in {row['phase'] for row in plan} and selected_effective is None:
         require(len(rows)<len(plan) and plan[len(rows)]['phase']==phase)
-    return selected_effective
+    return selected_effective,plan
 
 
-def _safe_report(root,value,commit,repaired=False):
+def _safe_report(root,value,commit,repaired=False,through='019'):
     require(type(value) is dict and type(value.get('schema_version')) is int and value['schema_version']==1 and value.get('result')=='FAIL')
     require(type(commit) is str and re.fullmatch('[a-f0-9]{40}',commit) and value.get('commit')==commit)
-    command,profile,phases=(REPAIRED_COMMAND,REPAIRED_PROFILE,REPAIRED_PHASES) if repaired else (COMMAND,PROFILE,PHASES)
+    contract=repaired_contract(through) if repaired else None
+    command,profile,phases=contract[:3] if repaired else (COMMAND,PROFILE,PHASES)
     require(value.get('command')==command and value.get('profile')==profile and value.get('quality_diagnostic_capture') is None)
     require(0<=(timestamp(value['recorded_at'])-timestamp(value['started_at'])).total_seconds()<=3600)
-    sources=repaired_source_inventory(root) if repaired else source_inventory(root)
+    sources=repaired_source_inventory(root,through) if repaired else source_inventory(root)
     require(value['repairedCheckoutSources' if repaired else 'quality_diagnostic_sources']==sources)
     folder=value['evidence_directory'];require(type(folder) is str and re.fullmatch(r'\.local/evidence/source-connectors-upgrade-[0-9]{8}T[0-9]{6}-[0-9a-f]{12}',folder))
     failure=value['failure_diagnostic'];exact(failure,('phase','category','commandLog','elapsedMs'))
     phase,category=failure['phase'],failure['category'];integer(failure['elapsedMs'])
     require(phase in phases and phase==value['failed_phase'] and category in CATEGORIES)
-    effective=repaired_native_context(root,value,phase,sources) if repaired else None
-    maximum_logs=4096 if repaired else 2048
+    effective,plan=repaired_native_context(root,value,phase,sources,through) if repaired else (None,None)
+    maximum_logs=contract[4] if repaired else 2048
     logs=value['private_logs'];require(type(logs) is list and len(logs)<=maximum_logs)
     seen=set();ordinals=set();selected=None
     for row in logs:
@@ -166,8 +190,9 @@ def _safe_report(root,value,commit,repaired=False):
         exact(failure['commandLog'],('path','sha256'));require(selected is not None);text,exit_code,log_hash=selected
         require(re.findall(r'^'+MARKER+r'([a-z_]+)$',text,re.M)==[category] and text.endswith(MARKER+category+'\n'))
         if category in ('command_failed','suite_failed'):require(exit_code!=0)
-        if category=='suite_failed':require(phase.endswith('-native-tests'))
-    projection=tap(root,phase,text)
+        if category=='suite_failed':require(phase in {row['phase'] for row in plan} if repaired else phase.endswith('-native-tests'))
+    files=next((row['files'] for row in plan if row['phase']==phase),[]) if repaired else None
+    projection=tap(root,phase,text,files)
     if repaired and projection['tap_counts'] is not None:
         require(effective is not None)
         stage=value['repairedNativeSuites'][-1]
@@ -176,7 +201,7 @@ def _safe_report(root,value,commit,repaired=False):
     return {'schema_version':1,'purpose':'FAILURE_DIAGNOSTIC_ONLY','outcome':'NOT_PASSED','commit':commit,'command':command,'profile':profile,
       'started_at':value['started_at'],'recorded_at':value['recorded_at'],'failed_phase':phase,'category':category,'elapsed_ms':failure['elapsedMs'],
       'exit_code':exit_code,'command_log_sha256':log_hash,'command_log_available':selected is not None,**projection,
-      **({'repaired_scope':'SQL019_COMMAND_IDENTITY_ONLY','native_declared_effective_source_files':effective} if repaired else {}),
+      **({'repaired_scope':'SQL'+through+'_COMMAND_IDENTITY_ONLY','native_declared_effective_source_files':effective} if repaired else {}),
       'source_files':sources,'source_inventory_sha256':digest(json.dumps(sources,sort_keys=True,separators=(',',':')).encode()),
       'cleanup':{name:flags.get(name) is True for name in ('ownedRemoved','resourceInventoryPreserved')},
       'limitations':['Failure diagnostics only; no successful qualification is inferred.','Only known phases, finite counters, exact static declaration coordinates and closed code classes are exported. Missing or unmapped output leaves the cause unknown.','Raw test titles, messages, SQL, values, stack traces, private paths and credentials remain private. Original assertions and deadlines are unchanged.',*(['Effective source hashes are admitted mount declarations; completed startup/exit readback and schema application are not inferred from this failure projection.'] if repaired else [])]}
@@ -192,11 +217,13 @@ def load_report(root,commit):
     except (OSError,ValueError,TypeError,KeyError):return None
 
 
-def safe_repaired_report(root,value,commit):
-    try:return _safe_report(root,value,commit,repaired=True)
+def safe_repaired_report(root,value,commit,through='019'):
+    try:return _safe_report(root,value,commit,repaired=True,through=through)
     except (OSError,ValueError,TypeError,KeyError,IndexError,OverflowError,RuntimeError):return None
 
 
-def load_repaired_report(root,commit):
-    try:return safe_repaired_report(root,strict_json(read_file(root,REPAIRED_REPORT,4*MIB)),commit)
+def load_repaired_report(root,commit,through='019'):
+    try:
+        contract=repaired_contract(through)
+        return safe_repaired_report(root,strict_json(read_file(root,contract[3],contract[5])),commit,through)
     except (OSError,ValueError,TypeError,KeyError):return None

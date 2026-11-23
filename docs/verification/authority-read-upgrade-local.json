@@ -7,24 +7,24 @@
   "current_core": {
     "outcome": "PASS",
     "profile": "core",
-    "commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
-    "migrations": 31,
-    "application_source_files": 299,
+    "commit": "5d37594396511e41004562a82db97ca57877d6d1",
+    "migrations": 32,
+    "application_source_files": 300,
     "worker_source_files": 13,
-    "application_image": "sha256:ea2fe5fa3cb4d16c65f1f001393d34d9a62109bf5da1766e65f28d9f95d94cf3",
-    "worker_image": "sha256:d226b8c7e2c2883091473f0aefb7565723f38822489ef6a288c208d6a23a2554",
+    "application_image": "sha256:22cca072113c962ebd853da1cd9154f927330a8a9a97f36e85d096a71fb69144",
+    "worker_image": "sha256:e586cf56dd0da7be601ac272983847e271030267af3d90a437c1f3e25bfaee3e",
     "readback": {
-      "private_record": ".local/product-quality-volume-runtime-readback.json",
-      "sha256": "33ec162cd7b3c3c2ccbbe90fd075f7d454a1331d1cde1c9bd45477ebacae785d"
+      "private_record": ".local/product-relation-runtime-readback.json",
+      "sha256": "7eecd0c988b07ac77ba081c815bec08450d31db96f052031461cc9c2b2d2e77d"
     },
-    "command": "./dev up --profile core; ./dev seed --dataset harbor-demo; source and migration ledger readback",
+    "command": "./dev up --profile core; source/image and migration-ledger readback",
     "limitations": [
-      "Initialized persistent local core; this is not empty-volume installation, recovery or full-profile qualification."
+      "Rebuilt existing persistent synthetic core; no new seed, empty-volume installation, recovery or full-profile qualification is inferred."
     ]
   },
   "current_api": {
     "outcome": "PASS",
-    "commit": "f3f21e5e7eb7190a2b6ff98725737d7255be1878",
+    "commit": "5d37594396511e41004562a82db97ca57877d6d1",
     "expected": 171,
     "observed": 171,
     "counts": {
@@ -39,15 +39,15 @@
     "test_source_files": 25,
     "runtime_test_sources_match": true,
     "summary": {
-      "private_record": ".local/evidence/api-runs/20261117T085232Z-c17bb1a4b52449d3a6a4d6f50134b9ca/summary.json",
-      "sha256": "6a9c320a5f51fd489bb449cc2024fc49f02c4a9793df0338fde7b3b14bf8b3f3"
+      "private_record": ".local/evidence/api-runs/20261117T100000Z-ad2c77ca05104c508dffafcb7ba3456c/summary.json",
+      "sha256": "5164cbc6057f4a3f3c8ff6f9ec3c6834de4653cf19078946251f4a6d5882037d"
     },
     "readback": {
-      "private_record": ".local/evidence/api-runs/20261117T085232Z-c17bb1a4b52449d3a6a4d6f50134b9ca/root-readback.json",
-      "sha256": "9ff1992e7c9247f55d772f239a6152cb47ab54808bcda8cb8c5bd16f02e4b897"
+      "private_record": ".local/evidence/api-runs/20261117T100000Z-ad2c77ca05104c508dffafcb7ba3456c/root-readback.json",
+      "sha256": "5d7f45eb1ffb1231c3d006de11d2a1fc4db41f1eb6b5cc4d2e7ddf00c09520f9"
     },
     "limitations": [
-      "Real core API/PostgreSQL execution; does not qualify unexecuted browser, hosted or vendor workflows."
+      "Real SQL001–032 core API/PostgreSQL execution; does not qualify unexecuted browser, hosted or vendor workflows."
     ]
   },
   "current_browser": {
@@ -145,7 +145,7 @@
   "scope": "Invocation-local registry-validation reuse inside the inactive canonical authority loader.",
   "native_scopes": [
     {
-      "scope": "SQL001\u2013013 then SQL031",
+      "scope": "SQL001–013 then SQL031",
       "outcome": "PASS",
       "tests": 133,
       "phases": 8,
@@ -183,7 +183,7 @@
       }
     },
     {
-      "scope": "SQL001\u2013030 then SQL031",
+      "scope": "SQL001–030 then SQL031",
       "outcome": "PASS",
       "tests": 423,
       "phases": 29,
@@ -228,7 +228,7 @@
     "Combined current-core and fresh hosted qualification remain separate.",
     "Volume browser target passes separately; the current API run failed a test-fixture heap limit and the integrated37-journey regression remains required."
   ],
-  "recorded_at": "2026-11-17T08:34:59.156090+00:00",
+  "recorded_at": "2026-11-17T10:12:12.448599+00:00",
   "source_equivalence": {
     "private_record": ".local/product-integration-030-031/native-equivalence-review.json",
     "sha256": "11393f49343e0dcfdec4c9552977d955def01e7a81393d6a94a05b5cefae77fb"
@@ -271,6 +271,54 @@
       "runtime_test_sources_match": true,
       "summary_sha256": "fcc00ddae8adc55e9c11e2143387a557b892f9306c7fe849f1e823c98b0f9dec",
       "failure": "A business-domain rollback test loads accumulated tenant history into memory and exhausts its256MiB Node heap; test fixture repair is in progress. Missing cases are not counted as passed."
+    },
+    {
+      "outcome": "PASS",
+      "commit": "f3f21e5e7eb7190a2b6ff98725737d7255be1878",
+      "expected": 171,
+      "observed": 171,
+      "counts": {
+        "tests": 171,
+        "suites": 0,
+        "pass": 171,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "test_source_files": 25,
+      "runtime_test_sources_match": true,
+      "summary": {
+        "private_record": ".local/evidence/api-runs/20261117T085232Z-c17bb1a4b52449d3a6a4d6f50134b9ca/summary.json",
+        "sha256": "6a9c320a5f51fd489bb449cc2024fc49f02c4a9793df0338fde7b3b14bf8b3f3"
+      },
+      "readback": {
+        "private_record": ".local/evidence/api-runs/20261117T085232Z-c17bb1a4b52449d3a6a4d6f50134b9ca/root-readback.json",
+        "sha256": "9ff1992e7c9247f55d772f239a6152cb47ab54808bcda8cb8c5bd16f02e4b897"
+      },
+      "limitations": [
+        "Real core API/PostgreSQL execution; does not qualify unexecuted browser, hosted or vendor workflows."
+      ]
+    }
+  ],
+  "previous_core_readbacks": [
+    {
+      "outcome": "PASS",
+      "profile": "core",
+      "commit": "514ddeef8f2a086ed5e7fba1b0f6c6d00a0d1230",
+      "migrations": 31,
+      "application_source_files": 299,
+      "worker_source_files": 13,
+      "application_image": "sha256:ea2fe5fa3cb4d16c65f1f001393d34d9a62109bf5da1766e65f28d9f95d94cf3",
+      "worker_image": "sha256:d226b8c7e2c2883091473f0aefb7565723f38822489ef6a288c208d6a23a2554",
+      "readback": {
+        "private_record": ".local/product-quality-volume-runtime-readback.json",
+        "sha256": "33ec162cd7b3c3c2ccbbe90fd075f7d454a1331d1cde1c9bd45477ebacae785d"
+      },
+      "command": "./dev up --profile core; ./dev seed --dataset harbor-demo; source and migration ledger readback",
+      "limitations": [
+        "Initialized persistent local core; this is not empty-volume installation, recovery or full-profile qualification."
+      ]
     }
   ]
 }

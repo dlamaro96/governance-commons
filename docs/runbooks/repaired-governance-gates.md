@@ -2,7 +2,7 @@
 
 SQL032 bounds relation validation to its nominal candidates while preserving exact eligibility, authorization and the existing operation budget. Applied migrations remain immutable. These gates distinguish the original schema from the forward repair; a later passing result does not rewrite a historical failure.
 
-The commands and 45-outcome CI mapping are integrated in the local working tree. Hosted qualification is pending. SQL032 is not yet applied to the shared development core. This runbook describes isolated qualification, not a production migration procedure.
+The commands and 45-outcome CI mapping are published. SQL032 is applied to the shared development core, with exact source/image and migration-ledger readback. Hosted qualification remains open. This runbook describes isolated qualification, not a production migration procedure.
 
 ## Choose the scope
 
@@ -39,12 +39,14 @@ Keep failed attempts and their evidence. Diagnose the recorded failing phase bef
 
 The checked-in `policies/ci_shards.py` assigns every command to one of five independent runners. All 45 outcomes and the unretried 37-journey browser graph remain mandatory. The collector verifies commit/run identity and rejects missing, contradictory, skipped or foreign evidence. Historical stages are explicitly `HISTORICAL_NOT_EXECUTED`; only unassigned stages are `NOT_IN_SHARD`.
 
-For a failed or cancelled `quality-repaired-upgrade`, the collector may publish `quality-repaired-upgrade-diagnostic.json` after validating the exact report, source inventory and selected log hash. It contains only the known phase, bounded test counts, static file/line coordinates and closed failure categories. It preserves the first failure rather than replacing it with a later readback or cleanup error. Missing or malformed diagnostics leave the cause unavailable and never imply success.
+For a failed or cancelled repaired chain from SQL018 through SQL024, the owning shard may publish `<suite>-diagnostic.json` after validating the fixed command/profile, exact report, source inventory and selected log hash. The suite names are the seven entries above; reports from another shard or command cannot substitute for them. It contains only the known phase, bounded test counts, static file/line coordinates and closed failure categories. It preserves the first failure rather than replacing it with a later readback or cleanup error. Missing or malformed diagnostics leave the cause unavailable and never imply success.
 
 Declared effective-source hashes in that diagnostic identify admitted mounts; they do not establish completed startup/exit readback or schema application. Raw test titles, messages, SQL, source values, stack traces and credentials remain private. Upload only the existing collector allowlist, not the raw evidence directory.
 
-## Recorded scope at integration: 17 November 2026, 09:41 UTC
+## Recorded scope: 23 November 2026
 
-The two standalone SQL032 scopes each pass 37 native cases on their recorded 113-source candidate. An earlier repaired SQL019 run passes 113 cases across five suites with cleanup verified, bound to 130 source inputs. The composed diagnostic version has 132 inputs; that earlier result is not a rerun of these bytes. At integration, the final SQL024 composition had not run and there was no hosted 45-outcome pass.
+The two standalone SQL032 scopes each pass 37 native cases on their recorded 113-source candidate. An earlier repaired SQL019 run passes 113 cases across five suites with cleanup verified, bound to 130 source inputs. The composed diagnostic version has 132 inputs; that earlier result is not a rerun of these bytes. The subsequent composed SQL024 run passes 263 cases with 176 source inputs. The published `5d37594` pipeline completed with 39 successes, two failures and four skipped outcomes; its main browser suite passes all 37 journeys. Its reference022 and protected-authentication gates failed. The independently reproduced reference022 failure exposed a prefix-incompatible approval/repository module; explicit immutable predecessor bindings are undergoing fresh qualification. The protected-authentication gate now requires the exact SQL001–032 inventory, with fresh runtime qualification still required.
 
 Use the [current execution state](../execution/STATE.md) and [evidence manifest](../verification/evidence-manifest.json) for subsequent results. These isolated checks do not qualify the shared application, source workers, browser, external connectors or release programme.
+
+The reference022 correction now passes all 158 native cases with 163 exact candidate inputs, 26 process startup/exit proofs, preservation/replay and owned cleanup verified. All 270 affected host controls pass. Fresh SQL023/024 hosted and protected immutable-image execution remain pending. [Scoped correction evidence](../verification/pipeline-prefix-repair-local.json).

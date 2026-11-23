@@ -570,7 +570,7 @@ def execute(h):
     try:
         h.sql(roles.prepare_sql(OWNER, DATABASE))
         migration = h.js("await import('./packages/db/src/migrate.ts');", timeout=180)
-        require(re.findall(r'^Applied (.+)$', migration.stdout, re.MULTILINE) == list(publication.MIGRATIONS), 'Fresh database did not apply exact SQL001–014')
+        require(re.findall(r'^Applied (.+)$', migration.stdout, re.MULTILINE) == list(publication.MIGRATIONS), 'Fresh database did not apply exact SQL001–032')
     finally:
         h.sql(roles.finish_sql(OWNER))
     h.sql(roles.executor_sql(DATABASE, definitions))

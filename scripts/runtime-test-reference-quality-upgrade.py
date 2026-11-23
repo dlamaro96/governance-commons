@@ -23,7 +23,7 @@ COMPLETENESS_TESTS = ['tests/qualification/quality.test.ts']
 require, sha = base.require, base.sha
 COMMIT = '591220ab2b398c8af2ed3c9a8441641fa77bfc8d'
 PREDECESSORS = ({'path': 'packages/domain/src/quality-contracts.ts', 'fixture': 'tests/qualification/predecessors/quality-contracts-sql022.ts.txt', 'gitBlob': '5b5763224209e406b0f076e0ba15d2a4e83035e1', 'sha256': '21b61ae254b6633f74bf071a68301d8a5cc6f077dc3fb58d938bd22e36163a83'}, {'path': 'packages/domain/src/quality.ts', 'fixture': 'tests/qualification/predecessors/quality-sql022.ts.txt', 'gitBlob': 'bb3b725212a622fa65345fa8cb77bde706f27135', 'sha256': 'e9ef493c57c149154efd627204dde21dd1f3d7277afcbd108d5e7dd9423bace0'}, {'path': 'packages/domain/src/quality-service.ts', 'fixture': 'tests/qualification/predecessors/quality-service-sql022.ts.txt', 'gitBlob': '80160627852ff36f7c8d58f99171cce996e2a94c', 'sha256': '9d510d1cf4eb5a99c6667efad7eea9c4ed302ce450d469b77a086f428410b982'}, {'path': 'apps/api/src/repository.ts', 'fixture': 'tests/qualification/predecessors/repository-sql022.ts.txt', 'gitBlob': 'b70e95bc65dc4b9723b01948604c722b560ba82e', 'sha256': '75aa5e716c537a0caafabba08e5e3ada6aefeae3a42d11c8b942444d6073a1ee'})
-NATIVE_BINDINGS = ({'path': 'packages/domain/src/quality-service.ts', 'fixture': 'tests/qualification/predecessors/quality-service-sql029.ts.txt', 'gitBlob': '289dfdd222f7949d1aaabdb35c46cc48b7a5e975', 'sha256': '6a7691da7bf328341277ad0cf6737f44b5fd25cc61dbb97b2b345ecec14e1a73', 'commit': 'fca6bb94a8bd87965c4bf614ae492b85235f4ea9'}, {'path': 'apps/api/src/repository.ts', 'fixture': 'tests/qualification/predecessors/repository-sql023.ts.txt', 'gitBlob': 'a2734a8d7999e2bb66aedff2c6f80e44e7030260', 'sha256': '3e48472c23f874bf8eb478c8ecb1c88f380c5649df12d56c1929a6458c352048', 'commit': '6b090767d3d7ca2a1645b81c97a96354d3b26358'})
+NATIVE_BINDINGS = ({'path': 'packages/domain/src/quality-service.ts', 'fixture': 'tests/qualification/predecessors/quality-service-sql029.ts.txt', 'gitBlob': '289dfdd222f7949d1aaabdb35c46cc48b7a5e975', 'sha256': '6a7691da7bf328341277ad0cf6737f44b5fd25cc61dbb97b2b345ecec14e1a73', 'commit': 'fca6bb94a8bd87965c4bf614ae492b85235f4ea9'}, {'path': 'apps/api/src/repository.ts', 'fixture': 'tests/qualification/predecessors/repository-sql023.ts.txt', 'gitBlob': 'a2734a8d7999e2bb66aedff2c6f80e44e7030260', 'sha256': '3e48472c23f874bf8eb478c8ecb1c88f380c5649df12d56c1929a6458c352048', 'commit': '6b090767d3d7ca2a1645b81c97a96354d3b26358'}, {'path': 'packages/domain/src/approval-service.ts', 'fixture': 'tests/qualification/predecessors/approval-service-sql023.ts.txt', 'gitBlob': '0611657abc7af29c021105defd4397fdc3a56872', 'sha256': 'c9a2a002a1e9bb54c114778c3e49adac1bf98ce34728a87f1a16d140e9e2ed83', 'commit': '6b090767d3d7ca2a1645b81c97a96354d3b26358'}, {'path': 'apps/api/src/approvals.ts', 'fixture': 'tests/qualification/predecessors/approvals-sql023.ts.txt', 'gitBlob': '4bb24777f769df13f2bedb5fa91dba5b24f69598', 'sha256': 'b03e2e6e7b081d8ae78222e4b3b9557547a136ee116534f458a23950ac33857d', 'commit': '6b090767d3d7ca2a1645b81c97a96354d3b26358'})
 PROBE = '/app/reference-quality-source-check.cjs'
 REPOSITORY = 'apps/api/src/repository.ts'
 NON_REPOSITORY = {'packages/domain/src/quality-contracts.ts', 'packages/domain/src/quality.ts', 'packages/domain/src/quality-service.ts'}
@@ -119,7 +119,7 @@ class Harness(base.Harness):
                 and self.phase == 'reference-native-tests', 'Undeclared SQL022 source readback')
         original = [row for row in self.reference_current['sources'] if row['path'].endswith('.ts')]
         require(measured == original, 'SQL022 checkout source map differs')
-        return self.predecessor_expectations(measured, all_paths=True)
+        return self.predecessor_expectations(super().reference_native_source_expectations(measured), all_paths=True)
 
     def helper(self, args, *, mounts=(), **kwargs):
         stage = self.reference_quality_predecessor
@@ -137,7 +137,7 @@ class Harness(base.Harness):
             require([row['path'] for row in native] == [row['path'] for row in effective if row['path'].endswith('.ts')], 'Reference quality effective source paths differ')
             changed = {row['path']: row['sha256'] for row in native}
             effective = [{**row, 'sha256': changed.get(row['path'], row['sha256'])} for row in effective]
-        targets = {'/app/' + p for p in (paths | ({REPOSITORY} if current is not None else set()))} | {PROBE}
+        targets = {'/app/' + p for p in (paths | ({row['path'] for row in NATIVE_BINDINGS} if current is not None else set()))} | {PROBE}
         declared = {('/app/' + row['path']): row['sha256'] for row in effective if current is not None and row['sha256'] != next(item['sha256'] for item in original['sources'] if item['path'] == row['path'])}
         for file, target in mounts:
             for fixed in targets:
@@ -155,7 +155,7 @@ class Harness(base.Harness):
                     and self.reference_current is None and self.reference_predecessor is None
                     and self.classification_current is None and self.classification_predecessor is None
                     and self.repository_stage is None, 'Overlapping current reference quality source phase')
-            paths = NON_REPOSITORY | {REPOSITORY}
+            paths = NON_REPOSITORY | {row['path'] for row in NATIVE_BINDINGS}
             for row in NATIVE_BINDINGS:
                 matches=[(file,target) for file,target in mounts if target=='/app/'+row['path']]
                 require(len(matches)<=1, 'Duplicate historical native module mount')

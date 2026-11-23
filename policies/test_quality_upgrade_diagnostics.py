@@ -129,15 +129,18 @@ class Controls(unittest.TestCase):
         runner=self.runner();h=self.harness(runner)
         with patch.object(h,'remember_failure',side_effect=OSError('PRIVATE_IO')):h.remember_quality_failure(RuntimeError('original failed execution'))
         self.assertEqual(h.report,{'quality_diagnostic_capture':'UNAVAILABLE'})
-    def repaired(self):
+    def repaired(self,through='019',phase='quality-native-tests'):
         from types import SimpleNamespace
-        plan=[{'phase':'quality-native-tests','files':[evidence.TEST],'titles':[TITLE],'expected':1}]
+        plan=[{'phase':phase,'files':[evidence.TEST],'titles':[TITLE],'expected':1}]
         module=SimpleNamespace(native_plan=lambda selected:plan,allowed_pins=lambda selected:{evidence.TEST:{'b'*64}})
-        for patcher in (patch.object(evidence,'repaired_wrapper',lambda root:(module,object())),patch.object(evidence,'repaired_source_inventory',self.inventory)):
+        for patcher in (patch.object(evidence,'repaired_wrapper',lambda root,selected_through='019':(module,object())),patch.object(evidence,'repaired_source_inventory',lambda root,selected_through='019':self.inventory(root))):
             patcher.start();self.addCleanup(patcher.stop)
-        self.report.update(command=evidence.REPAIRED_COMMAND,profile=evidence.REPAIRED_PROFILE,qualification='EXPLICIT_REPAIRED_CHAIN',historicalOutcome='HISTORICAL_NOT_EXECUTED',through='019',repairedCheckoutSources=self.inventory(self.root),repairedNativePlan=plan,
-            repairedNativeSuites=[{'phase':'quality-native-tests','files':[evidence.TEST],'expected':1,'result':'FAIL','tests':{'tests':1,'suites':0,'pass':0,'fail':1,'cancelled':0,'skipped':0,'todo':0},'exitStatus':1,'checkoutSources':self.inventory(self.root),'effectiveSources':self.inventory(self.root)}])
-        return lambda:evidence.safe_repaired_report(self.root,self.report,COMMIT)
+        command,profile,*_=evidence.repaired_contract(through)
+        self.report.update(command=command,profile=profile,qualification='EXPLICIT_REPAIRED_CHAIN',historicalOutcome='HISTORICAL_NOT_EXECUTED',through=through,repairedCheckoutSources=self.inventory(self.root),repairedNativePlan=plan,
+            repairedNativeSuites=[{'phase':phase,'files':[evidence.TEST],'expected':1,'result':'FAIL','tests':{'tests':1,'suites':0,'pass':0,'fail':1,'cancelled':0,'skipped':0,'todo':0},'exitStatus':1,'checkoutSources':self.inventory(self.root),'effectiveSources':self.inventory(self.root)}])
+        self.report['failed_phase']=phase;self.report['failure_diagnostic']['phase']=phase
+        self.write(self.raw().replace('phase=quality-native-tests','phase='+phase),phase=phase)
+        return lambda:evidence.safe_repaired_report(self.root,self.report,COMMIT,through)
     def test_repaired_scope_requires_own_wrapper_identity_and_full_current_sources(self):
         result=self.repaired();value=result();self.assertIsNotNone(value);self.assertEqual(value['command'],evidence.REPAIRED_COMMAND);self.assertEqual(value['profile'],evidence.REPAIRED_PROFILE)
         self.assertEqual(value['repaired_scope'],'SQL019_COMMAND_IDENTITY_ONLY');self.assertEqual(value['native_declared_effective_source_files'],self.inventory(self.root));self.assertEqual(value['outcome'],'NOT_PASSED')
@@ -192,14 +195,110 @@ class Controls(unittest.TestCase):
 
     def test_collector_is_failure_only_and_never_reads_foreign_shard(self):
         import os
-        tree=ast.parse((ROOT/'policies/ci_evidence.py').read_text());start=next(i for i,node in enumerate(tree.body) if isinstance(node,ast.Assign) and any(isinstance(target,ast.Name) and target.id=='quality_diagnostic' for target in node.targets))
-        code=compile(ast.fix_missing_locations(ast.Module(body=tree.body[start:start+3],type_ignores=[])),'actual-quality-collector','exec')
-        for outcome in ('failure','cancelled','success','skipped','NOT_IN_SHARD'):
-            dest=self.root/outcome;dest.mkdir();report={'outcome':'PASS'};called=[]
-            def load(*args):called.append(True);return self.result()
-            exec(code,{'load_quality_diagnostic':load,'ROOT':self.root,'os':os,'REQUIRED':{'quality_repaired_upgrade'} if outcome!='NOT_IN_SHARD' else set(),'outcomes':{'quality_repaired_upgrade':outcome},'DEST':dest,'report':report,'json':json})
-            self.assertEqual((dest/'quality-repaired-upgrade-diagnostic.json').exists(),outcome in ('failure','cancelled'))
-            self.assertEqual(bool(called),outcome!='NOT_IN_SHARD')
-            if outcome=='success':self.assertEqual(report['outcome'],'NOT_PASSED')
+        tree=ast.parse((ROOT/'policies/ci_evidence.py').read_text())
+        loop=next(node for node in tree.body if isinstance(node,ast.For) and ast.unparse(node.iter)=='REPAIRED_PROFILES.items()')
+        code=compile(ast.fix_missing_locations(ast.Module(body=[loop],type_ignores=[])),'actual-repaired-collector','exec')
+        for through,(suite,_) in evidence.REPAIRED_PROFILES.items():
+            step=suite.replace('-','_')
+            for outcome in ('failure','cancelled','success','skipped','NOT_IN_SHARD'):
+                dest=self.root/(through+outcome);dest.mkdir();report={'outcome':'PASS'};called=[]
+                def load(root,commit,selected):called.append(selected);return self.result()
+                exec(code,{'load_quality_diagnostic':load,'REPAIRED_PROFILES':evidence.REPAIRED_PROFILES,'ROOT':self.root,'os':os,'REQUIRED':{step} if outcome!='NOT_IN_SHARD' else set(),'outcomes':{step:outcome},'DEST':dest,'report':report,'json':json})
+                self.assertEqual((dest/(suite+'-diagnostic.json')).exists(),outcome in ('failure','cancelled'))
+                self.assertEqual(called,[through] if outcome!='NOT_IN_SHARD' else [])
+                self.assertEqual(len(list(dest.iterdir())),int(outcome in ('failure','cancelled')))
+                if outcome=='success':self.assertEqual(report['outcome'],'NOT_PASSED')
+                for other,(other_suite,_) in evidence.REPAIRED_PROFILES.items():
+                    if other!=through:self.assertEqual(report[other_suite.replace('-','_')+'_diagnostic'],'NOT_IN_SHARD')
+
+    def test_all_seven_profiles_and_auxiliary_suites_have_exact_closed_coordinates(self):
+        phases={'018':'population-native-tests','019':'quality-native-tests','020':'lineage-native-tests','021':'classification-native-tests','022':'reference-native-tests','023':'reference-quality-completeness-tests','024':'structure-reference-quality-tests'}
+        for through,phase in phases.items():
+            with self.subTest(through=through):
+                result=self.repaired(through,phase);value=result();self.assertIsNotNone(value)
+                self.assertEqual(value['repaired_scope'],'SQL'+through+'_COMMAND_IDENTITY_ONLY')
+                self.assertEqual(value['tests'],[{'file':evidence.TEST,'line':1,'status':'failed','classification':'ASSERTION_FAILURE'}])
+                self.assertEqual(value['outcome'],'NOT_PASSED');self.assertNotIn('PRIVATE_',json.dumps(value))
+                for other in evidence.REPAIRED_PROFILES:
+                    if other!=through:self.assertIsNone(evidence.safe_repaired_report(self.root,self.report,COMMIT,other))
+        for through in ('017','025','019/../../',19,None):
+            self.assertIsNone(evidence.safe_repaired_report(self.root,self.report,COMMIT,through))
+            self.assertIsNone(evidence.load_repaired_report(self.root,COMMIT,through))
+
+    def test_later_metadata_caps_are_bounded_without_selected_log_expansion(self):
+        result=self.repaired('024','structure-reference-tests')
+        self.report['private_logs'].extend({'path':f'{FOLDER}/{i:03d}-structure-reference-tests.log','sha256':'a'*64} for i in range(2,8193))
+        self.assertIsNotNone(result())
+        self.report['private_logs'].append({'path':f'{FOLDER}/8193-structure-reference-tests.log','sha256':'a'*64});self.assertIsNone(result());self.report['private_logs'].pop()
+        path=self.root/evidence.repaired_contract('024')[3];path.write_text(json.dumps({**self.report,'unusedPrivatePadding':'x'*(4*evidence.MIB)}))
+        self.assertGreater(path.stat().st_size,4*evidence.MIB);self.assertIsNotNone(evidence.load_repaired_report(self.root,COMMIT,'024'))
+        path.write_bytes(b' '*(8*evidence.MIB+1));self.assertIsNone(evidence.load_repaired_report(self.root,COMMIT,'024'))
+        self.write(self.raw().replace('phase=quality-native-tests','phase=structure-reference-tests')+'x'*(4*evidence.MIB),phase='structure-reference-tests');self.assertIsNone(result())
+        self.assertEqual(evidence.repaired_contract('019')[4:],(4096,4*evidence.MIB))
+
+    def test_later_setup_and_native_phase_cannot_be_smuggled_into_earlier_profile(self):
+        result=self.repaired('022','reference-native-tests')
+        for phase in ('structure-upgrade','structure-reference-tests','private-phase'):
+            self.report['private_logs'].append({'path':f'{FOLDER}/002-{phase}.log','sha256':'a'*64});self.assertIsNone(result());self.report['private_logs'].pop()
+        self.report['failure_diagnostic'].update(category='suite_failed',phase='reference-upgrade');self.report['failed_phase']='reference-upgrade'
+        self.write('phase=reference-upgrade\nexit=1\n'+evidence.MARKER+'suite_failed\n',phase='reference-upgrade');self.assertIsNone(result())
+
+    def test_all_actual_profile_manifests_and_phase_allowlists_match_inherited_modules(self):
+        # Actual constructors/source inventories, no Docker or native execution.
+        import re
+        for through in evidence.REPAIRED_PROFILES:
+            module,selected=evidence.repaired_wrapper(ROOT,through);plan=module.native_plan(selected)
+            self.assertEqual(evidence.repaired_source_inventory(ROOT,through),module.sources(selected))
+            self.assertIn('policies/quality_upgrade_diagnostics.py',{row['path'] for row in module.sources(selected)})
+            allowed=evidence.repaired_contract(through)[2]
+            self.assertTrue({row['phase'] for row in plan}<=allowed)
+            for ancestor in module.ancestry(selected):
+                text=Path(ancestor.__file__).read_text()
+                phases=set(re.findall(r"\.phase\s*=\s*['\"]([a-z0-9_-]+)['\"]",text))
+                self.assertTrue(phases<=allowed,(through,Path(ancestor.__file__).name,phases-allowed))
+
+    def test_actual_022_collector_subprocess_exports_only_bound_failure_coordinates(self):
+        import os, shutil
+        module,selected=evidence.repaired_wrapper(ROOT,'022')
+        with tempfile.TemporaryDirectory(prefix='gc-repaired022-collector-') as directory:
+            root=Path(directory)
+            names={row['path'] for row in module.sources(selected)}|{'policies/ci_shards.py','policies/protected_authn_evidence.py'}
+            for name in names:
+                target=root/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/name,target)
+            subprocess.run(['git','init','--quiet',str(root)],check=True,capture_output=True,timeout=10)
+            subprocess.run(['git','-c','user.name=Synthetic test','-c','user.email=synthetic@example.invalid','-c','commit.gpgsign=false','commit','--allow-empty','--quiet','-m','Synthetic diagnostic identity'],cwd=root,check=True,capture_output=True,timeout=10)
+            commit=subprocess.run(['git','rev-parse','HEAD'],cwd=root,check=True,capture_output=True,text=True,timeout=10).stdout.strip()
+            actual,chosen=evidence.repaired_wrapper(root,'022');sources=actual.sources(chosen);plan=actual.native_plan(chosen);phase=plan[-1]['phase']
+            rows=[]
+            for item in plan:
+                failed=item is plan[-1];n=item['expected'];counts={'tests':n,'suites':0,'pass':n-int(failed),'fail':int(failed),'cancelled':0,'skipped':0,'todo':0}
+                rows.append({'phase':item['phase'],'files':item['files'],'expected':n,'result':'FAIL' if failed else 'PASS','tests':counts,'exitStatus':int(failed),'checkoutSources':sources,'effectiveSources':sources})
+            raw='phase='+phase+'\nexit=1\nTAP version 13\n'
+            for i,title in enumerate(plan[-1]['titles'],1):
+                raw+=('not ok' if i==1 else 'ok')+f' {i} - {title}\n'
+                if i==1:raw+="  ---\n  error: PRIVATE_SQL_CREDENTIAL_VALUE\n  code: '57014'\n  ...\n"
+            raw+='1..'+str(plan[-1]['expected'])+'\n'+''.join(f'# {key} {value}\n' for key,value in rows[-1]['tests'].items())+evidence.MARKER+'suite_failed\n'
+            log=root/FOLDER/('001-'+phase+'.log');log.parent.mkdir(parents=True);log.write_text(raw);logrow={'path':str(log.relative_to(root)),'sha256':evidence.digest(raw.encode())}
+            report={'schema_version':1,'result':'FAIL','commit':commit,'command':evidence.repaired_contract('022')[0],'profile':evidence.repaired_contract('022')[1],
+                'qualification':'EXPLICIT_REPAIRED_CHAIN','historicalOutcome':'HISTORICAL_NOT_EXECUTED','through':'022',
+                'started_at':'2026-11-17T06:00:00+00:00','recorded_at':'2026-11-17T06:00:40+00:00','failed_phase':phase,'evidence_directory':FOLDER,
+                'repairedCheckoutSources':sources,'repairedNativePlan':plan,'repairedNativeSuites':rows,'failure_diagnostic':{'phase':phase,'category':'suite_failed','commandLog':logrow,'elapsedMs':30000},'private_logs':[logrow],'cleanup':{'ownedRemoved':True,'resourceInventoryPreserved':True}}
+            (root/evidence.repaired_contract('022')[3]).write_text(json.dumps(report))
+            spec=importlib.util.spec_from_file_location('actual_shards',root/'policies/ci_shards.py');shards=importlib.util.module_from_spec(spec);spec.loader.exec_module(shards)
+            env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1','GITHUB_SHA':commit,'GITHUB_RUN_ID':'123','GITHUB_RUN_ATTEMPT':'1','GITHUB_REPOSITORY':'synthetic/fixture','GC_BEHAVIOR_SHARD':'quality-basics'}
+            for step in shards.STEPS:env['GC_'+step.upper()+'_RESULT']='failure' if step=='reference_repaired_upgrade' else 'success' if step in shards.required_steps('quality-basics') else 'skipped'
+            result=subprocess.run([sys.executable,str(root/'policies/ci_evidence.py'),'--shard','quality-basics'],env=env,cwd=root,capture_output=True,text=True,timeout=30)
+            self.assertEqual(result.returncode,1,result.stderr)
+            output=root/'.local/ci-artifacts';body=json.loads((output/'reference-repaired-upgrade-diagnostic.json').read_text())
+            self.assertEqual(body['failed_phase'],'reference-native-tests');self.assertEqual(body['tap_counts']['fail'],1);self.assertEqual(body['tests'][0]['classification'],'DATABASE_DEADLINE');self.assertEqual(body['outcome'],'NOT_PASSED')
+            self.assertEqual({p.name for p in output.iterdir()},{'behavior-summary.json','reference-repaired-upgrade-diagnostic.json'})
+            serialized=json.dumps(body)
+            self.assertNotIn('PRIVATE_',serialized)
+            for title in plan[-1]['titles']:self.assertNotIn(title,serialized)
+            self.assertEqual(json.loads((output/'behavior-summary.json').read_text())['reference_repaired_upgrade_diagnostic'],'FAILURE_DIAGNOSTIC_ONLY')
+            shutil.rmtree(output);(root/plan[-1]['files'][0]).write_text('changed source')
+            refused=subprocess.run([sys.executable,str(root/'policies/ci_evidence.py'),'--shard','quality-basics'],env=env,cwd=root,capture_output=True,text=True,timeout=30)
+            self.assertEqual(refused.returncode,1);self.assertFalse((output/'reference-repaired-upgrade-diagnostic.json').exists())
+            self.assertEqual(json.loads((output/'behavior-summary.json').read_text())['reference_repaired_upgrade_diagnostic'],'UNAVAILABLE_OR_INVALID')
 
 if __name__=='__main__':unittest.main()

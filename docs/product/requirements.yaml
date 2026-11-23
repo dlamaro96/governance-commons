@@ -58613,7 +58613,11 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
       ],
       "owner": "governance-commons maintainers",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/pipeline-prefix-repair-local.json",
+        "docs/verification/hosted-checkpoint-5d37594.json"
+      ]
     },
     {
       "id": "SYS-TEST-001.01",
@@ -58868,7 +58872,9 @@
         "docs/verification/business-domains-api.json",
         "docs/verification/participation-audit-fixture-correction.json",
         "docs/verification/participation-hosted-attempt-3.json",
-        "docs/verification/participation-main.json"
+        "docs/verification/participation-main.json",
+        "docs/verification/pipeline-prefix-repair-local.json",
+        "docs/verification/hosted-checkpoint-5d37594.json"
       ]
     },
     {
@@ -66136,7 +66142,11 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
       ],
       "owner": "governance-commons maintainers",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/pipeline-prefix-repair-local.json",
+        "docs/verification/hosted-checkpoint-5d37594.json"
+      ]
     },
     {
       "id": "OSS-003.01",
