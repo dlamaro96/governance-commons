@@ -48,6 +48,7 @@ MIGRATIONS = (
     '030_quality_volume.sql',
     '031_authority_read_grants.sql',
     '032_relation_candidate_validation.sql',
+    '033_content_security_revisions.sql',
 )
 FIXED_SOURCES = (
     'CONTRIBUTING.md', 'dev', 'scripts/runtime.py', 'scripts/authentication_roles.py',
@@ -75,7 +76,7 @@ CAPTURES = tuple(sorted(name+'.png' for name in (
 SERVED = {'html': 'served/index.html', 'css': 'served/ui.css', 'js': 'served/ui.js'}
 ROLES = {'login-broker', 'session-api', 'authn-edge', 'owner-tool', 'helper'}
 CHECKS = [
-    'Native owner applied exact001–032 with temporary definer grant removed; canonical seed and exact13-manifest replay preserved all six original memberships; full migration ledger remained unchanged',
+    'Native owner applied exact001–033 with temporary definer grant removed; canonical seed and exact13-manifest replay preserved all six original memberships; full migration ledger remained unchanged',
     'Real Keycloak protected public client readback confirms exact callback/origin, S256,RS256 and built-in basic/auth_time mapper',
     'Actual bounded signed-token HTTP probes and native SCRAM SQL lifecycle/privilege/concurrency cases passed with no skipped cases',
     'Two real Keycloak browser journeys passed: fresh code+PKCE, exact private provenance, CSRF/version switch, stale/cross-tenant/unbound denial, member-revoked logout, keyboard/axe EN/AR desktop/mobile; eight fresh captures retained',

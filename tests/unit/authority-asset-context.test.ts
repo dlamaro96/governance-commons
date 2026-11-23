@@ -8,6 +8,7 @@ import type { Counter, PolicyExpr, UTC, Version } from '../../packages/authority
 import type { AuthorityHumanClosure } from '../../packages/authority-storage/src/contracts.ts';
 import { parseAuthorityHumanClosure } from '../../packages/authority-storage/src/loader.ts';
 import { parseHumanAssetContext, type HumanAssetContext } from '../../packages/authority-runtime/src/asset-context.ts';
+import { parseVersionedHumanAssetContext, type VersionedHumanAssetContext } from '../../packages/authority-runtime/src/versioned-asset-context.ts';
 import { makeDecisionFixture, id, v, now, zero, parsed, type Mutable } from './fixtures/authority-decision.ts';
 
 const bytes = (value: unknown) => Buffer.byteLength(canonical(value));
@@ -73,6 +74,80 @@ function refuses(value: unknown, code?: string) {
   if (code !== undefined) assert.equal(result.issues[0]!.code, code);
   return result.issues;
 }
+
+function versionedFixture(): Mutable<VersionedHumanAssetContext> {
+  const value: Mutable<VersionedHumanAssetContext> = {formatVersion: 1, kind: 'inactive-versioned-asset-context',
+    contentAuthority: false, context: fixture(true), securityRevision: '1' as Counter, contextDigest: zero};
+  value.contextDigest = decisionHash({...value, contextDigest: zero});
+  return value;
+}
+function versionedRefuses(value: unknown) {
+  const result = parseVersionedHumanAssetContext(value);
+  assert.equal(result.ok, false);
+  if (result.ok) throw new Error('Expected versioned context refusal');
+  return result.issues;
+}
+
+test('versioned context binds an exact positive PostgreSQL bigint without granting content authority', () => {
+  for (const revision of ['1', '9007199254740993', '9223372036854775807']) {
+    const value = versionedFixture();value.securityRevision = revision as Counter;
+    value.contextDigest = decisionHash({...value, contextDigest: zero});
+    const result = parsed(parseVersionedHumanAssetContext(JSON.stringify(value)));
+    assert.equal(result.securityRevision, revision);
+    assert.equal(result.contentAuthority, false);
+    assert.equal(result.context.contentAuthority, false);
+    assert.deepEqual(result.context.unavailableFacts, ['classification', 'approved-tags', 'purpose', 'environment']);
+    assert.equal(Object.hasOwn(result, 'decision'), false);
+    assert.ok(Object.isFrozen(result) && Object.isFrozen(result.context));
+  }
+});
+
+test('versioned context refuses missing, zero, overflowing or lossy numeric revisions', () => {
+  for (const revision of [undefined, null, 1, 9007199254740992, '', '0', '-1', '01', '+1', '1.0', '1e3', '9223372036854775808']) {
+    const value = {...versionedFixture(), securityRevision: revision};
+    versionedRefuses(value);
+  }
+});
+
+test('an edited content revision cannot reuse the previous envelope digest', () => {
+  const value = versionedFixture();value.securityRevision = '2' as Counter;
+  versionedRefuses(value);
+});
+
+test('resealing the version wrapper cannot hide corrupt canonical asset or authority evidence', () => {
+  for (const mutate of [
+    (value: Mutable<VersionedHumanAssetContext>) => {value.context.asset.version = 9 as Version;},
+    (value: Mutable<VersionedHumanAssetContext>) => {value.context.contextDigest = zero;},
+    (value: Mutable<VersionedHumanAssetContext>) => {value.context.closure.snapshot.closureDigest = zero;},
+  ]) {
+    const value = versionedFixture();mutate(value);value.contextDigest = decisionHash({...value, contextDigest: zero});
+    versionedRefuses(value);
+  }
+});
+
+test('versioned context refuses added capabilities, activation flags and ambiguous raw keys', () => {
+  for (const extra of [{decision: 'allow'}, {contentAuthority: true}, {kind: 'asset-context'}, {formatVersion: 2}, {tenantId: id(1)}]) {
+    versionedRefuses({...versionedFixture(), ...extra});
+  }
+  const raw = JSON.stringify(versionedFixture()).replace('"securityRevision":"1"', '"securityRevision":"1","securityRevision":"2"');
+  versionedRefuses(raw);
+});
+
+test('versioned envelope admission rejects accessors and proxies without invoking them', () => {
+  let invoked = 0;
+  const value = versionedFixture();
+  Object.defineProperty(value, 'securityRevision', {enumerable: true, get: () => {invoked++;return '1';}});
+  versionedRefuses(value);
+  versionedRefuses(new Proxy(versionedFixture(), {ownKeys() {invoked++;throw Error('must not run');}}));
+  assert.equal(invoked, 0);
+});
+
+test('versioned context shares the outer byte and depth budgets before nested parsing', () => {
+  const oversized = {...versionedFixture(), context: {payload: 'x'.repeat(limits.rawBytes)}};
+  assert.equal(versionedRefuses(oversized)[0]!.code, 'limit');
+  let deep: unknown = null;for (let index = 0; index < limits.jsonDepth; index++) deep = {next: deep};
+  assert.equal(versionedRefuses({...versionedFixture(), context: deep})[0]!.code, 'limit');
+});
 
 test('inactive context accepts placed and never-placed canonical facts without granting authority', () => {
   for (const placed of [false, true]) {

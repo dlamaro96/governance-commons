@@ -64,6 +64,23 @@ const result=await alternate(f,{});assert.equal(installs,1);assert.equal(f.regis
     with self.assertRaises(RuntimeError):g.migrations()
     future.unlink();(migrations/g.NAMES[-1]).unlink()
     with self.assertRaises(RuntimeError):g.migrations()
+ def test_exact033_successor_never_enters031_and_requires032(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   folder=Path(tmp);migrations=folder/'packages/db/migrations';migrations.mkdir(parents=True)
+   for name in g.NAMES:(migrations/name).write_text('-- original prefix')
+   with patch.object(g,'ROOT',folder):
+    successor=migrations/'033_content_security_revisions.sql';successor.write_text('-- declared successor')
+    with self.assertRaises(RuntimeError):g.migrations()
+    preceding=migrations/'032_relation_candidate_validation.sql';preceding.write_text('-- declared predecessor')
+    self.assertEqual(g.migrations(),g.NAMES);self.assertEqual(len(g.migrations()),31)
+    self.assertNotIn(successor.name,g.migrations())
+    successor.write_text('-- successor bytes are not031 execution inputs');self.assertEqual(g.migrations(),g.NAMES)
+    for name in ('033_undeclared.sql','034_undeclared.sql'):
+     future=migrations/name;future.write_text('-- unreviewed')
+     with self.assertRaises(RuntimeError):g.migrations()
+     future.unlink()
+    preceding.unlink()
+    with self.assertRaises(RuntimeError):g.migrations()
  def test_original_loader_and_validator_delta_is_exact(self):
   old=(ROOT/'packages/db/migrations/013_authority_foundation.sql').read_text();new=(ROOT/'packages/db/migrations'/g.MIGRATION).read_text()
   def fn(text,name,head='CREATE FUNCTION'):

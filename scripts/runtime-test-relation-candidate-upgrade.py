@@ -27,7 +27,8 @@ PREDECESSORS=[
 source_file=transport.source_file
 
 def migrations():
- require(len(NAMES)==32 and sorted(p.name for p in (ROOT/'packages/db/migrations').glob('*.sql'))==NAMES,'Exact001–032 source inventory required');return NAMES
+ actual=sorted(p.name for p in (ROOT/'packages/db/migrations').glob('*.sql'))
+ require(len(NAMES)==32 and actual[:len(NAMES)]==NAMES and actual[len(NAMES):] in ([],['033_content_security_revisions.sql']),'Exact001–032 source prefix and declared033 successor required');return NAMES
 
 def predecessor_pins():
  for p in PREDECESSORS:

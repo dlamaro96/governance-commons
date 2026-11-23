@@ -30,7 +30,7 @@ class AssignmentTests(unittest.TestCase):
         self.assertEqual(len(assigned),len(set(assigned)))
         self.assertFalse(set(assigned)&set(policy.COMMON))
         self.assertEqual(set((*policy.COMMON,*assigned)),set(policy.STEPS))
-        self.assertEqual(len(policy.STEPS),46)
+        self.assertEqual(len(policy.STEPS),47)
 
     def test_each_shard_requires_all_its_results(self):
         for shard in policy.SHARDS:
@@ -156,7 +156,7 @@ class CollectorTests(unittest.TestCase):
                 self.assertEqual(code,1)
 
     def test_actual_collector_refuses_foreign_artifacts_without_publishing_them(self):
-        for name in ('api-summary.json','authority-authn-foundation.json','authority-read-original.json','authority-read-current.json','authority-asset-context.json','authority-foundation.json','protected-authn.json','playwright-results.json'):
+        for name in ('api-summary.json','authority-authn-foundation.json','authority-read-original.json','authority-read-current.json','authority-asset-context.json','content-security-revision.json','authority-foundation.json','protected-authn.json','playwright-results.json'):
             code,report=self.collect(shard='quality-basics',retained_foreign=name)
             self.assertEqual(code,1);self.assertEqual(report['foreign_evidence'],'REFUSED')
             self.assertEqual(report['tests'],[]);self.assertEqual(report['screenshots'],[])
@@ -283,7 +283,7 @@ class AssetContextGateTests(unittest.TestCase):
         self.assertEqual(policy.EVIDENCE[self.STEP], ('authority-asset-context.json',))
         ordered = policy.SHARDS['foundation']
         self.assertEqual(ordered[ordered.index(self.STEP)-1:ordered.index(self.STEP)+2],
-                         ('authority_read_current', self.STEP, 'source_connectors_upgrade'))
+                         ('authority_read_current', self.STEP, 'content_security_revision'))
 
     def test_missing_failure_and_other_authority_outcomes_cannot_substitute(self):
         collect = evidence_tests.EvidenceGateTests(methodName='runTest').collect
@@ -483,5 +483,69 @@ class RepairedRelationTransitionTests(unittest.TestCase):
         for field,value in (('profile','wrong-profile'),('outerTimeoutSeconds',9999),('arguments',['--run-local','--through','017'])):
             with patch.dict(policy.RELATION_SCOPES['quality_repaired_upgrade'],{field:value}):self.assertNotEqual(policy.assignment_hash(),original)
         self.assertEqual(policy.assignment_hash(),original)
+
+class ContentRevisionGateTests(unittest.TestCase):
+    STEP = 'content_security_revision'
+
+    def test_distinct_current_upgrade_scope_and_private_evidence(self):
+        scope = policy.CONTENT_REVISION_SCOPES[self.STEP]
+        self.assertEqual(scope['profile'], 'isolated-content-security-revision-sql033')
+        self.assertEqual(scope['evidence'], 'STEP_OUTCOME_ONLY')
+        self.assertIs(scope['contentAuthority'], False)
+        self.assertEqual(scope['outerTimeoutSeconds'], 900)
+        self.assertEqual(policy.EVIDENCE[self.STEP], ('content-security-revision.json',))
+        self.assertEqual(policy.ASSET_CONTEXT_SCOPES['authority_asset_context']['profile'], 'isolated-inactive-asset-context-sql032')
+        assigned = policy.SHARDS['foundation']
+        self.assertEqual(assigned[assigned.index(self.STEP)-1:assigned.index(self.STEP)+2],
+                         ('authority_asset_context', self.STEP, 'source_connectors_upgrade'))
+        original = policy.assignment_hash()
+        for field, value in [('outerTimeoutSeconds', 901), ('contentAuthority', True), ('profile', 'sql032'), ('report', 'authority-asset-context.json')]:
+            with patch.dict(scope, {field: value}):self.assertNotEqual(policy.assignment_hash(), original)
+
+    def test_missing_failed_or_cross_shard_revision_outcomes_cannot_be_substituted(self):
+        collect = evidence_tests.EvidenceGateTests(methodName='runTest').collect
+        for shard in (None, 'foundation'):
+            for outcome in (None, 'failure', 'cancelled', 'skipped', 'NOT_IN_SHARD', ''):
+                options = {'omitted_step': self.STEP} if outcome is None else {'failed_step': self.STEP, 'failed_outcome': outcome}
+                code, report = collect(shard=shard, **options)
+                self.assertEqual(code, 1)
+                self.assertNotEqual(report['content_revision_qualifications'][self.STEP]['outcome'], 'success')
+        for shard in policy.SHARDS:
+            code, report = collect(shard=shard)
+            self.assertEqual(code, 0)
+            expected = 'success' if shard == 'foundation' else 'NOT_IN_SHARD'
+            self.assertEqual(report['content_revision_qualifications'], {self.STEP: {**policy.CONTENT_REVISION_SCOPES[self.STEP], 'outcome': expected}})
+
+    def test_workflow_cannot_omit_duplicate_skip_crosswire_or_reorder_revision_gate(self):
+        workflow = (ROOT/'.github/workflows/ci.yml').read_text()
+        block = ('      - name: Verify private content-security revisions and concurrency\n'
+                 "        if: success() && matrix.shard == 'foundation'\n"
+                 '        id: content_security_revision\n'
+                 '        run: ./dev test --suite content-security-revision\n')
+        control = ('      - name: Content-security revision lifecycle controls\n'
+                   '        run: python3 scripts/test_content_security_revision.py\n')
+        anchor = '        run: ./dev test --suite authority-read-current\n'
+        mutations = [workflow.replace(block, ''), workflow.replace(block, block+block),
+                     workflow.replace(block, '').replace(anchor, anchor+block),
+                     workflow.replace('run: ./dev test --suite content-security-revision', 'run: ./dev test --suite authority-asset-context'),
+                     workflow.replace('GC_CONTENT_SECURITY_REVISION_RESULT: ${{ steps.content_security_revision.outcome }}',
+                                      'GC_CONTENT_SECURITY_REVISION_RESULT: ${{ steps.authority_asset_context.outcome }}'),
+                     workflow.replace(control, ''), workflow.replace(control, control+control),
+                     workflow.replace(control, control.replace('        run:', '        if: false\n        run:')),
+                     workflow.replace(control, control+'        continue-on-error: true\n'),
+                     workflow.replace(control, control.replace('python3 scripts/test_content_security_revision.py', 'true'))]
+        self.assertTrue(policy.validate_workflow(workflow))
+        for index, mutation in enumerate(mutations):
+            with self.subTest(index=index), self.assertRaises(ValueError):policy.validate_workflow(mutation)
+
+    def test_local_route_preserves_timeout_and_propagates_failure_without_core_bootstrap(self):
+        spec = importlib.util.spec_from_file_location('revision_runtime', ROOT/'scripts/runtime.py')
+        runtime = importlib.util.module_from_spec(spec);spec.loader.exec_module(runtime)
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'content-security-revision']), \
+                patch.object(runtime, 'require_local'), \
+                patch.object(runtime, 'require_bootstrap', side_effect=AssertionError('unexpected shared runtime')), \
+                patch.object(runtime, 'run', side_effect=RuntimeError('synthetic revision refusal')) as run:
+            with self.assertRaisesRegex(RuntimeError, '^synthetic revision refusal$'):runtime.main()
+            run.assert_called_once_with([sys.executable, 'scripts/runtime-test-content-security-revision.py', '--run-local'], timeout=900)
 
 if __name__=='__main__':unittest.main()
