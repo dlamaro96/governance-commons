@@ -378,7 +378,7 @@
   "source_register": [
     {
       "id": "SRC-01",
-      "text": "- **SRC-01 — Operating model**, 27 March 2026: https://productresources.collibra.com/docs/collibra/latest/Content/to_operating-model.htm",
+      "text": "- **SRC-01 \u2014 Operating model**, 27 March 2026: https://productresources.collibra.com/docs/collibra/latest/Content/to_operating-model.htm",
       "source_line": 530,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/to_operating-model.htm"
@@ -389,7 +389,7 @@
     },
     {
       "id": "SRC-02",
-      "text": "- **SRC-02 — Operating model settings**, 22 May 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Settings/OperatingModel/to_operating-model-settings.htm",
+      "text": "- **SRC-02 \u2014 Operating model settings**, 22 May 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Settings/OperatingModel/to_operating-model-settings.htm",
       "source_line": 531,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/Settings/OperatingModel/to_operating-model-settings.htm"
@@ -400,7 +400,7 @@
     },
     {
       "id": "SRC-03",
-      "text": "- **SRC-03 — Platform products/features**: https://productresources.collibra.com/docs/collibra/2026.08/Content/Products-and-features/co_basics-products-and-features.htm",
+      "text": "- **SRC-03 \u2014 Platform products/features**: https://productresources.collibra.com/docs/collibra/2026.08/Content/Products-and-features/co_basics-products-and-features.htm",
       "source_line": 532,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/2026.08/Content/Products-and-features/co_basics-products-and-features.htm"
@@ -411,7 +411,7 @@
     },
     {
       "id": "SRC-04",
-      "text": "- **SRC-04 — Automatic classification**, 1 June 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/DataClassification/UnifiedDataClassification/ta_use-data-classification.htm",
+      "text": "- **SRC-04 \u2014 Automatic classification**, 1 June 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/DataClassification/UnifiedDataClassification/ta_use-data-classification.htm",
       "source_line": 533,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/DataClassification/UnifiedDataClassification/ta_use-data-classification.htm"
@@ -422,7 +422,7 @@
     },
     {
       "id": "SRC-05",
-      "text": "- **SRC-05 — Policy Manager**, 3 August 2026: https://productresources.collibra.com/docs/collibra/latest/Content/PolicyManager/to_policy-manager.htm",
+      "text": "- **SRC-05 \u2014 Policy Manager**, 3 August 2026: https://productresources.collibra.com/docs/collibra/latest/Content/PolicyManager/to_policy-manager.htm",
       "source_line": 534,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/PolicyManager/to_policy-manager.htm"
@@ -433,7 +433,7 @@
     },
     {
       "id": "SRC-06",
-      "text": "- **SRC-06 — Data Helpdesk**, 29 July 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataHelpdesk/to_data-helpdesk.htm",
+      "text": "- **SRC-06 \u2014 Data Helpdesk**, 29 July 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataHelpdesk/to_data-helpdesk.htm",
       "source_line": 535,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/DataHelpdesk/to_data-helpdesk.htm"
@@ -444,7 +444,7 @@
     },
     {
       "id": "SRC-07",
-      "text": "- **SRC-07 — Workflow Designer**, 10 June 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Workflows/WorkflowDesigner/to_about-the-workflow-designer.htm",
+      "text": "- **SRC-07 \u2014 Workflow Designer**, 10 June 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Workflows/WorkflowDesigner/to_about-the-workflow-designer.htm",
       "source_line": 536,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/Workflows/WorkflowDesigner/to_about-the-workflow-designer.htm"
@@ -455,7 +455,7 @@
     },
     {
       "id": "SRC-08",
-      "text": "- **SRC-08 — Technical lineage supported sources**, 9 October 2026: https://productresources.collibra.com/docs/collibra/latest/Content/CollibraDataLineage/ref_technical-lineage-supported-data-sources.htm",
+      "text": "- **SRC-08 \u2014 Technical lineage supported sources**, 9 October 2026: https://productresources.collibra.com/docs/collibra/latest/Content/CollibraDataLineage/ref_technical-lineage-supported-data-sources.htm",
       "source_line": 537,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/CollibraDataLineage/ref_technical-lineage-supported-data-sources.htm"
@@ -466,7 +466,7 @@
     },
     {
       "id": "SRC-09",
-      "text": "- **SRC-09 — Custom technical lineage**, 22 September 2026: https://productresources.collibra.com/docs/collibra/latest/Content/CollibraDataLineage/DataSources/CustomTechLin/co_custom-technical-lineage.htm",
+      "text": "- **SRC-09 \u2014 Custom technical lineage**, 22 September 2026: https://productresources.collibra.com/docs/collibra/latest/Content/CollibraDataLineage/DataSources/CustomTechLin/co_custom-technical-lineage.htm",
       "source_line": 538,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/CollibraDataLineage/DataSources/CustomTechLin/co_custom-technical-lineage.htm"
@@ -477,7 +477,7 @@
     },
     {
       "id": "SRC-10",
-      "text": "- **SRC-10 — Data Quality & Observability**, 16 October 2026: https://productresources.collibra.com/docs/collibra/latest/Content/UnifiedDataQuality/co_about-data-quality.htm",
+      "text": "- **SRC-10 \u2014 Data Quality & Observability**, 16 October 2026: https://productresources.collibra.com/docs/collibra/latest/Content/UnifiedDataQuality/co_about-data-quality.htm",
       "source_line": 539,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/UnifiedDataQuality/co_about-data-quality.htm"
@@ -488,7 +488,7 @@
     },
     {
       "id": "SRC-11",
-      "text": "- **SRC-11 — Data Privacy**, 6 January 2026: https://productresources.collibra.com/docs/collibra/latest/Content/to_data-privacy.htm",
+      "text": "- **SRC-11 \u2014 Data Privacy**, 6 January 2026: https://productresources.collibra.com/docs/collibra/latest/Content/to_data-privacy.htm",
       "source_line": 540,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/to_data-privacy.htm"
@@ -499,7 +499,7 @@
     },
     {
       "id": "SRC-12",
-      "text": "- **SRC-12 — Assessment templates**, 5 August 2026: https://productresources.collibra.com/docs/collibra/latest/Content/CollibraAssessments/Templates/co_template-gallery.htm",
+      "text": "- **SRC-12 \u2014 Assessment templates**, 5 August 2026: https://productresources.collibra.com/docs/collibra/latest/Content/CollibraAssessments/Templates/co_template-gallery.htm",
       "source_line": 541,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/CollibraAssessments/Templates/co_template-gallery.htm"
@@ -510,7 +510,7 @@
     },
     {
       "id": "SRC-13",
-      "text": "- **SRC-13 — Data Access**, 11 August 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataAccess/co_data-access.htm",
+      "text": "- **SRC-13 \u2014 Data Access**, 11 August 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataAccess/co_data-access.htm",
       "source_line": 542,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/DataAccess/co_data-access.htm"
@@ -521,7 +521,7 @@
     },
     {
       "id": "SRC-14",
-      "text": "- **SRC-14 — Data Products**, 11 September 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataProducts/co_data-products.htm",
+      "text": "- **SRC-14 \u2014 Data Products**, 11 September 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataProducts/co_data-products.htm",
       "source_line": 543,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/DataProducts/co_data-products.htm"
@@ -532,7 +532,7 @@
     },
     {
       "id": "SRC-15",
-      "text": "- **SRC-15 — Data Contract assets**, 19 October 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataProducts/co_data-contract.htm",
+      "text": "- **SRC-15 \u2014 Data Contract assets**, 19 October 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataProducts/co_data-contract.htm",
       "source_line": 544,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/DataProducts/co_data-contract.htm"
@@ -543,7 +543,7 @@
     },
     {
       "id": "SRC-16",
-      "text": "- **SRC-16 — Data Marketplace**, 10 September 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataMarketplace/co_about-DM.htm",
+      "text": "- **SRC-16 \u2014 Data Marketplace**, 10 September 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataMarketplace/co_about-DM.htm",
       "source_line": 545,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/DataMarketplace/co_about-DM.htm"
@@ -554,7 +554,7 @@
     },
     {
       "id": "SRC-17",
-      "text": "- **SRC-17 — Reference Data**, 20 July 2026: https://productresources.collibra.com/docs/collibra/2026.08/Content/ReferenceData/to_reference-data.htm",
+      "text": "- **SRC-17 \u2014 Reference Data**, 20 July 2026: https://productresources.collibra.com/docs/collibra/2026.08/Content/ReferenceData/to_reference-data.htm",
       "source_line": 546,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/2026.08/Content/ReferenceData/to_reference-data.htm"
@@ -565,7 +565,7 @@
     },
     {
       "id": "SRC-18",
-      "text": "- **SRC-18 — Unstructured AI workflow**, 19 February 2026: https://productresources.collibra.com/docs/collibra/latest/Content/UnstructuredAI/co_unstructured-ai-workflow.htm",
+      "text": "- **SRC-18 \u2014 Unstructured AI workflow**, 19 February 2026: https://productresources.collibra.com/docs/collibra/latest/Content/UnstructuredAI/co_unstructured-ai-workflow.htm",
       "source_line": 547,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/UnstructuredAI/co_unstructured-ai-workflow.htm"
@@ -576,7 +576,7 @@
     },
     {
       "id": "SRC-19",
-      "text": "- **SRC-19 — AI Command Center**: https://productresources.collibra.com/docs/collibra/latest/Content/AICommandCenter/co_aicc-about.htm",
+      "text": "- **SRC-19 \u2014 AI Command Center**: https://productresources.collibra.com/docs/collibra/latest/Content/AICommandCenter/co_aicc-about.htm",
       "source_line": 548,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/AICommandCenter/co_aicc-about.htm"
@@ -587,7 +587,7 @@
     },
     {
       "id": "SRC-20",
-      "text": "- **SRC-20 — AI model/agent integrations**, 12 November 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/IntegrateAIModels/to_integrating-ai-models.htm",
+      "text": "- **SRC-20 \u2014 AI model/agent integrations**, 12 November 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/IntegrateAIModels/to_integrating-ai-models.htm",
       "source_line": 549,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/IntegrateAIModels/to_integrating-ai-models.htm"
@@ -598,7 +598,7 @@
     },
     {
       "id": "SRC-21",
-      "text": "- **SRC-21 — MCP integrations**, 20 October 2026: https://productresources.collibra.com/docs/collibra/latest/Content/ModelContextProtocol/ref_featured-mcp-integrations.htm",
+      "text": "- **SRC-21 \u2014 MCP integrations**, 20 October 2026: https://productresources.collibra.com/docs/collibra/latest/Content/ModelContextProtocol/ref_featured-mcp-integrations.htm",
       "source_line": 550,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/ModelContextProtocol/ref_featured-mcp-integrations.htm"
@@ -609,7 +609,7 @@
     },
     {
       "id": "SRC-22",
-      "text": "- **SRC-22 — MCP governance**, 9 November 2026: https://productresources.collibra.com/docs/release-notes/Content/AICommandCenter/MCPGovernance/co_mcp-governance.htm",
+      "text": "- **SRC-22 \u2014 MCP governance**, 9 November 2026: https://productresources.collibra.com/docs/release-notes/Content/AICommandCenter/MCPGovernance/co_mcp-governance.htm",
       "source_line": 551,
       "urls": [
         "https://productresources.collibra.com/docs/release-notes/Content/AICommandCenter/MCPGovernance/co_mcp-governance.htm"
@@ -620,7 +620,7 @@
     },
     {
       "id": "SRC-23",
-      "text": "- **SRC-23 — REST Import API**: https://developer.collibra.com/tutorials/getting-started-with-the-import-api",
+      "text": "- **SRC-23 \u2014 REST Import API**: https://developer.collibra.com/tutorials/getting-started-with-the-import-api",
       "source_line": 552,
       "urls": [
         "https://developer.collibra.com/tutorials/getting-started-with-the-import-api"
@@ -631,7 +631,7 @@
     },
     {
       "id": "SRC-24",
-      "text": "- **SRC-24 — ServiceNow community integration**: https://marketplace.collibra.com/listings/servicenow-bidirectional-collibra-integration-python/",
+      "text": "- **SRC-24 \u2014 ServiceNow community integration**: https://marketplace.collibra.com/listings/servicenow-bidirectional-collibra-integration-python/",
       "source_line": 553,
       "urls": [
         "https://marketplace.collibra.com/listings/servicenow-bidirectional-collibra-integration-python/"
@@ -642,7 +642,7 @@
     },
     {
       "id": "SRC-25",
-      "text": "- **SRC-25 — Databricks Unity Catalog integration**, 4 November 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/Databricks/co_about-databricks-integration.htm",
+      "text": "- **SRC-25 \u2014 Databricks Unity Catalog integration**, 4 November 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/Databricks/co_about-databricks-integration.htm",
       "source_line": 554,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/Databricks/co_about-databricks-integration.htm"
@@ -653,7 +653,7 @@
     },
     {
       "id": "SRC-26",
-      "text": "- **SRC-26 — Microsoft Fabric integration**, 24 July 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/MicrosoftFabric/co_about-fabric.htm",
+      "text": "- **SRC-26 \u2014 Microsoft Fabric integration**, 24 July 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/MicrosoftFabric/co_about-fabric.htm",
       "source_line": 555,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/MicrosoftFabric/co_about-fabric.htm"
@@ -664,7 +664,7 @@
     },
     {
       "id": "SRC-27",
-      "text": "- **SRC-27 — Power BI limitations**, 23 October 2026: https://productresources.collibra.com/docs/collibra/latest/Content/CollibraDataLineage/DataSources/PowerBI/co_power-bi-considerations-and-limitations.htm",
+      "text": "- **SRC-27 \u2014 Power BI limitations**, 23 October 2026: https://productresources.collibra.com/docs/collibra/latest/Content/CollibraDataLineage/DataSources/PowerBI/co_power-bi-considerations-and-limitations.htm",
       "source_line": 556,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/CollibraDataLineage/DataSources/PowerBI/co_power-bi-considerations-and-limitations.htm"
@@ -675,7 +675,7 @@
     },
     {
       "id": "SRC-28",
-      "text": "- **SRC-28 — SSRS/PBRS integration and limitations**, 19 March 2026: https://productresources.collibra.com/docs/collibra/2026.08/Content/CollibraDataLineage/DataSources/SSRS-PBRS/ref_ssrs-pbrs-steps.htm",
+      "text": "- **SRC-28 \u2014 SSRS/PBRS integration and limitations**, 19 March 2026: https://productresources.collibra.com/docs/collibra/2026.08/Content/CollibraDataLineage/DataSources/SSRS-PBRS/ref_ssrs-pbrs-steps.htm",
       "source_line": 557,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/2026.08/Content/CollibraDataLineage/DataSources/SSRS-PBRS/ref_ssrs-pbrs-steps.htm"
@@ -686,7 +686,7 @@
     },
     {
       "id": "SRC-29",
-      "text": "- **SRC-29 — SAP S/4HANA integration overview**: https://productresources.collibra.com/docs/release-notes/Content/Catalog/SAPS4HANA/co_about-sap-s4hana-integration.htm",
+      "text": "- **SRC-29 \u2014 SAP S/4HANA integration overview**: https://productresources.collibra.com/docs/release-notes/Content/Catalog/SAPS4HANA/co_about-sap-s4hana-integration.htm",
       "source_line": 558,
       "urls": [
         "https://productresources.collibra.com/docs/release-notes/Content/Catalog/SAPS4HANA/co_about-sap-s4hana-integration.htm"
@@ -697,7 +697,7 @@
     },
     {
       "id": "SRC-30",
-      "text": "- **SRC-30 — SAP S/4HANA mapped assets**, 4 November 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/SAPS4HANA/ref_integrated-sap-s4hana-data.htm",
+      "text": "- **SRC-30 \u2014 SAP S/4HANA mapped assets**, 4 November 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/SAPS4HANA/ref_integrated-sap-s4hana-data.htm",
       "source_line": 559,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/SAPS4HANA/ref_integrated-sap-s4hana-data.htm"
@@ -708,7 +708,7 @@
     },
     {
       "id": "SRC-31",
-      "text": "- **SRC-31 — SAP BW ERP/CRM integrator**, listing released 8 June 2023: https://marketplace.collibra.com/listings/erp-crm-integrator-for-sap-bw/",
+      "text": "- **SRC-31 \u2014 SAP BW ERP/CRM integrator**, listing released 8 June 2023: https://marketplace.collibra.com/listings/erp-crm-integrator-for-sap-bw/",
       "source_line": 560,
       "urls": [
         "https://marketplace.collibra.com/listings/erp-crm-integrator-for-sap-bw/"
@@ -719,7 +719,7 @@
     },
     {
       "id": "SRC-32",
-      "text": "- **SRC-32 — ADLS integration**, 3 June 2026: https://productresources.collibra.com/docs/collibra/2026.08/Content/Catalog/ADLS/co_about-adls-integration.htm",
+      "text": "- **SRC-32 \u2014 ADLS integration**, 3 June 2026: https://productresources.collibra.com/docs/collibra/2026.08/Content/Catalog/ADLS/co_about-adls-integration.htm",
       "source_line": 561,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/2026.08/Content/Catalog/ADLS/co_about-adls-integration.htm"
@@ -730,7 +730,7 @@
     },
     {
       "id": "SRC-33",
-      "text": "- **SRC-33 — Jira community integration**, listing released 3 October 2022: https://marketplace.collibra.com/listings/jira-service-desk-bidirectional-collibra-integration/",
+      "text": "- **SRC-33 \u2014 Jira community integration**, listing released 3 October 2022: https://marketplace.collibra.com/listings/jira-service-desk-bidirectional-collibra-integration/",
       "source_line": 562,
       "urls": [
         "https://marketplace.collibra.com/listings/jira-service-desk-bidirectional-collibra-integration/"
@@ -741,7 +741,7 @@
     },
     {
       "id": "SRC-34",
-      "text": "- **SRC-34 — MCP connection options**, 20 August 2026: https://productresources.collibra.com/docs/collibra/latest/Content/ModelContextProtocol/co_integrating-with-collibra-mcp.htm",
+      "text": "- **SRC-34 \u2014 MCP connection options**, 20 August 2026: https://productresources.collibra.com/docs/collibra/latest/Content/ModelContextProtocol/co_integrating-with-collibra-mcp.htm",
       "source_line": 563,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/ModelContextProtocol/co_integrating-with-collibra-mcp.htm"
@@ -752,7 +752,7 @@
     },
     {
       "id": "SRC-35",
-      "text": "- **SRC-35 — Managing data contracts**, 28 September 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataProducts/ta_manage-data-contracts.htm",
+      "text": "- **SRC-35 \u2014 Managing data contracts**, 28 September 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataProducts/ta_manage-data-contracts.htm",
       "source_line": 564,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/DataProducts/ta_manage-data-contracts.htm"
@@ -763,7 +763,7 @@
     },
     {
       "id": "SRC-36",
-      "text": "- **SRC-36 — Data Notebook**, 30 July 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataNotebook/to_data-notebook.htm",
+      "text": "- **SRC-36 \u2014 Data Notebook**, 30 July 2026: https://productresources.collibra.com/docs/collibra/latest/Content/DataNotebook/to_data-notebook.htm",
       "source_line": 565,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/DataNotebook/to_data-notebook.htm"
@@ -774,7 +774,7 @@
     },
     {
       "id": "SRC-37",
-      "text": "- **SRC-37 — Semantic Layer stewardship**, 1 June 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/GuidedStewardship/SemanticLayer/co_ui-semantic-layer.htm",
+      "text": "- **SRC-37 \u2014 Semantic Layer stewardship**, 1 June 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/GuidedStewardship/SemanticLayer/co_ui-semantic-layer.htm",
       "source_line": 566,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/Catalog/GuidedStewardship/SemanticLayer/co_ui-semantic-layer.htm"
@@ -785,7 +785,7 @@
     },
     {
       "id": "SRC-38",
-      "text": "- **SRC-38 — Publishing BPMN workflows**, 10 June 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Workflows/ManageWorkflows/ta_deploy-wf.htm",
+      "text": "- **SRC-38 \u2014 Publishing BPMN workflows**, 10 June 2026: https://productresources.collibra.com/docs/collibra/latest/Content/Workflows/ManageWorkflows/ta_deploy-wf.htm",
       "source_line": 567,
       "urls": [
         "https://productresources.collibra.com/docs/collibra/latest/Content/Workflows/ManageWorkflows/ta_deploy-wf.htm"
@@ -796,7 +796,7 @@
     },
     {
       "id": "SRC-39",
-      "text": "- **SRC-39 — Supported integration directory**, retrieved 15 November 2026: https://www.collibra.com/products/integrations-apis/integrations",
+      "text": "- **SRC-39 \u2014 Supported integration directory**, retrieved 15 November 2026: https://www.collibra.com/products/integrations-apis/integrations",
       "source_line": 568,
       "urls": [
         "https://www.collibra.com/products/integrations-apis/integrations"
@@ -807,7 +807,7 @@
     },
     {
       "id": "SRC-40",
-      "text": "- **SRC-40 — Partner integration catalogue**, retrieved 15 November 2026; public rendering is paginated and must not be treated as a complete single-page inventory: https://marketplace.collibra.com/search/?_solution_type=partner-integration",
+      "text": "- **SRC-40 \u2014 Partner integration catalogue**, retrieved 15 November 2026; public rendering is paginated and must not be treated as a complete single-page inventory: https://marketplace.collibra.com/search/?_solution_type=partner-integration",
       "source_line": 569,
       "urls": [
         "https://marketplace.collibra.com/search/?_solution_type=partner-integration"
@@ -818,7 +818,7 @@
     },
     {
       "id": "OSS-S1",
-      "text": "- **OSS-S1 — Apache License 2.0:** https://www.apache.org/licenses/LICENSE-2.0 ; applying it: https://www.apache.org/legal/apply-license",
+      "text": "- **OSS-S1 \u2014 Apache License 2.0:** https://www.apache.org/licenses/LICENSE-2.0 ; applying it: https://www.apache.org/legal/apply-license",
       "source_line": 1352,
       "urls": [
         "https://www.apache.org/licenses/LICENSE-2.0",
@@ -830,7 +830,7 @@
     },
     {
       "id": "OSS-S2",
-      "text": "- **OSS-S2 — GNU AGPL-3.0, especially Section 13:** https://www.gnu.org/licenses/agpl-3.0.en.html",
+      "text": "- **OSS-S2 \u2014 GNU AGPL-3.0, especially Section 13:** https://www.gnu.org/licenses/agpl-3.0.en.html",
       "source_line": 1353,
       "urls": [
         "https://www.gnu.org/licenses/agpl-3.0.en.html"
@@ -841,7 +841,7 @@
     },
     {
       "id": "OSS-S3",
-      "text": "- **OSS-S3 — Developer Certificate of Origin 1.1:** https://developercertificate.org/",
+      "text": "- **OSS-S3 \u2014 Developer Certificate of Origin 1.1:** https://developercertificate.org/",
       "source_line": 1354,
       "urls": [
         "https://developercertificate.org/"
@@ -852,7 +852,7 @@
     },
     {
       "id": "OSS-S4",
-      "text": "- **OSS-S4 — SPDX license expressions:** https://spdx.github.io/spdx-spec/v2.3.1/SPDX-license-expressions/ ; license list: https://spdx.org/licenses/",
+      "text": "- **OSS-S4 \u2014 SPDX license expressions:** https://spdx.github.io/spdx-spec/v2.3.1/SPDX-license-expressions/ ; license list: https://spdx.org/licenses/",
       "source_line": 1355,
       "urls": [
         "https://spdx.github.io/spdx-spec/v2.3.1/SPDX-license-expressions/",
@@ -864,7 +864,7 @@
     },
     {
       "id": "OSS-S5",
-      "text": "- **OSS-S5 — Open Source Definition:** https://opensource.org/osd",
+      "text": "- **OSS-S5 \u2014 Open Source Definition:** https://opensource.org/osd",
       "source_line": 1356,
       "urls": [
         "https://opensource.org/osd"
@@ -875,7 +875,7 @@
     },
     {
       "id": "OSS-S6",
-      "text": "- **OSS-S6 — GitHub CLI authentication status:** https://cli.github.com/manual/gh_auth_status ; repository creation: https://cli.github.com/manual/gh_repo_create",
+      "text": "- **OSS-S6 \u2014 GitHub CLI authentication status:** https://cli.github.com/manual/gh_auth_status ; repository creation: https://cli.github.com/manual/gh_repo_create",
       "source_line": 1357,
       "urls": [
         "https://cli.github.com/manual/gh_auth_status",
@@ -887,7 +887,7 @@
     },
     {
       "id": "OSS-S7",
-      "text": "- **OSS-S7 — Protected branches and rulesets:** https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches ; https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets",
+      "text": "- **OSS-S7 \u2014 Protected branches and rulesets:** https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches ; https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets",
       "source_line": 1358,
       "urls": [
         "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
@@ -899,7 +899,7 @@
     },
     {
       "id": "OSS-S8",
-      "text": "- **OSS-S8 — CODEOWNERS:** https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+      "text": "- **OSS-S8 \u2014 CODEOWNERS:** https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
       "source_line": 1359,
       "urls": [
         "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
@@ -910,7 +910,7 @@
     },
     {
       "id": "OSS-S9",
-      "text": "- **OSS-S9 — Merge queue availability and merge_group:** https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue",
+      "text": "- **OSS-S9 \u2014 Merge queue availability and merge_group:** https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue",
       "source_line": 1360,
       "urls": [
         "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue"
@@ -921,7 +921,7 @@
     },
     {
       "id": "OSS-S10",
-      "text": "- **OSS-S10 — Secure pull_request_target use:** https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target",
+      "text": "- **OSS-S10 \u2014 Secure pull_request_target use:** https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target",
       "source_line": 1361,
       "urls": [
         "https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target"
@@ -932,7 +932,7 @@
     },
     {
       "id": "OSS-S11",
-      "text": "- **OSS-S11 — Workflow permissions:** https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax",
+      "text": "- **OSS-S11 \u2014 Workflow permissions:** https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax",
       "source_line": 1362,
       "urls": [
         "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
@@ -943,7 +943,7 @@
     },
     {
       "id": "OSS-S12",
-      "text": "- **OSS-S12 — GitHub Actions secure-use reference:** https://docs.github.com/en/actions/reference/security/secure-use",
+      "text": "- **OSS-S12 \u2014 GitHub Actions secure-use reference:** https://docs.github.com/en/actions/reference/security/secure-use",
       "source_line": 1363,
       "urls": [
         "https://docs.github.com/en/actions/reference/security/secure-use"
@@ -954,7 +954,7 @@
     },
     {
       "id": "OSS-S13",
-      "text": "- **OSS-S13 — GitHub security products and availability:** https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security ; https://docs.github.com/en/code-security/concepts/code-scanning/code-scanning",
+      "text": "- **OSS-S13 \u2014 GitHub security products and availability:** https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security ; https://docs.github.com/en/code-security/concepts/code-scanning/code-scanning",
       "source_line": 1364,
       "urls": [
         "https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security",
@@ -966,7 +966,7 @@
     },
     {
       "id": "OSS-S14",
-      "text": "- **OSS-S14 — Private vulnerability reporting:** https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository",
+      "text": "- **OSS-S14 \u2014 Private vulnerability reporting:** https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository",
       "source_line": 1365,
       "urls": [
         "https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository"
@@ -977,7 +977,7 @@
     },
     {
       "id": "OSS-S15",
-      "text": "- **OSS-S15 — OpenSSF Best Practices Badge:** https://openssf.org/projects/best-practices-badge/",
+      "text": "- **OSS-S15 \u2014 OpenSSF Best Practices Badge:** https://openssf.org/projects/best-practices-badge/",
       "source_line": 1366,
       "urls": [
         "https://openssf.org/projects/best-practices-badge/"
@@ -988,7 +988,7 @@
     },
     {
       "id": "OSS-S16",
-      "text": "- **OSS-S16 — Semantic Versioning:** https://semver.org/spec/v2.0.0.html",
+      "text": "- **OSS-S16 \u2014 Semantic Versioning:** https://semver.org/spec/v2.0.0.html",
       "source_line": 1367,
       "urls": [
         "https://semver.org/spec/v2.0.0.html"
@@ -999,7 +999,7 @@
     },
     {
       "id": "OSS-S17",
-      "text": "- **OSS-S17 — SLSA v1.2 Build requirements/provenance:** https://slsa.dev/spec/v1.2/build-requirements ; https://slsa.dev/spec/v1.2/build-provenance",
+      "text": "- **OSS-S17 \u2014 SLSA v1.2 Build requirements/provenance:** https://slsa.dev/spec/v1.2/build-requirements ; https://slsa.dev/spec/v1.2/build-provenance",
       "source_line": 1368,
       "urls": [
         "https://slsa.dev/spec/v1.2/build-requirements",
@@ -1011,7 +1011,7 @@
     },
     {
       "id": "OSS-S18",
-      "text": "- **OSS-S18 — Sigstore container signing and verification:** https://docs.sigstore.dev/cosign/signing/signing_with_containers/ ; https://docs.sigstore.dev/cosign/verifying/verify/",
+      "text": "- **OSS-S18 \u2014 Sigstore container signing and verification:** https://docs.sigstore.dev/cosign/signing/signing_with_containers/ ; https://docs.sigstore.dev/cosign/verifying/verify/",
       "source_line": 1369,
       "urls": [
         "https://docs.sigstore.dev/cosign/signing/signing_with_containers/",
@@ -1023,7 +1023,7 @@
     },
     {
       "id": "OSS-S19",
-      "text": "- **OSS-S19 — GitHub artifact attestations:** https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations",
+      "text": "- **OSS-S19 \u2014 GitHub artifact attestations:** https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations",
       "source_line": 1370,
       "urls": [
         "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations"
@@ -1034,7 +1034,7 @@
     },
     {
       "id": "OSS-S20",
-      "text": "- **OSS-S20 — Immutable releases:** https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases",
+      "text": "- **OSS-S20 \u2014 Immutable releases:** https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases",
       "source_line": 1371,
       "urls": [
         "https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases"
@@ -1045,7 +1045,7 @@
     },
     {
       "id": "OSS-S21",
-      "text": "- **OSS-S21 — GitHub workflow dependency lockfiles:** https://docs.github.com/en/actions/concepts/security/workflow-dependency-lockfiles",
+      "text": "- **OSS-S21 \u2014 GitHub workflow dependency lockfiles:** https://docs.github.com/en/actions/concepts/security/workflow-dependency-lockfiles",
       "source_line": 1372,
       "urls": [
         "https://docs.github.com/en/actions/concepts/security/workflow-dependency-lockfiles"
@@ -4498,7 +4498,7 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
         "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five additional automated spot-checks, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
         "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Business-domain contribution: Domain storage has forced tenant RLS, restricted runtime roles, exact resource lookup and current membership checks; original-scope replay and revoked/deleted seed memberships are covered. Scoped grants, policy AST, responsibility authority and all-store/ingress equivalence remain separate unimplemented qualifications; ownership grants no permission. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
       ],
       "owner": "governance-commons maintainers",
@@ -5196,7 +5196,7 @@
       "limitations": [
         "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five additional automated spot-checks, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
         "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Business-domain contribution: Domain and placement writes require exact immutable revisions and paired audit/outbox records in the same transaction; missing/forged journal and history paths roll back. External audit anchoring, retention, delegation evidence and the remaining audit programme are not qualified. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
       ],
       "owner": "governance-commons maintainers",
@@ -5476,7 +5476,7 @@
       "limitations": [
         "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five additional automated spot-checks, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
         "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Business-domain contribution: Domain operations bind versions, exact intent/idempotency and current replay scope, with stale edits, competing writes and missing consent rejected without partial canonical/journal writes. Other retried operations, job cancellation and the complete API/version programme remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
       ],
       "owner": "governance-commons maintainers",
@@ -6270,7 +6270,7 @@
         "Required relation participation/migration, domain/attribute model kinds, scoped overrides, additional responsibility roles, durable large-cohort migrations and required bulk/workflow/MCP ingress remain open. Typed search/sort/catalog export, production restore and full MOD/AT-MOD/M2 qualification are not established by this bounded development evidence.",
         "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five additional automated spot-checks, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
         "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Business-domain contribution: Domain types support exact inheritance pins, typed fields, owner/lifecycle policy, compatible publication and explicit complete-cohort migration without floating old pins. Other governed model kinds, scoped overrides, form/workflow definitions and all required ingresses remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred.",
         "Business-domain browser checkpoint2026-11-16: real domain type/hierarchy/lifecycle/placement/migration UI passes three targeted journeys and the complete19-journey local regression, with26 final domain captures visually inspected. Five earlier targeted failures remain preserved. This contributes only the domain portion of this requirement; scoped authority, other model kinds/ingresses, full import/export, independent human accessibility/translation, hosted and release qualification remain separate. Verification and release outcomes are unchanged.",
         "Domain repair hosted qualification passes at exact4c4479a/testedmergeed0e0cbd:807 immutable source files,three zero-finding CodeQL analyses,154/154 API,19 one-attempt browser journeys and14 mandatory stage successes. Earlier hosted failure and local qualification remain historical. Safe artifacts do not provide application-image attestation, raw upgrade subtest counts or a new visual sign-off. PR17 merged as1c6d390, but postmerge execution is separate; all full profile and release outcomes remain unchanged."
@@ -6501,7 +6501,7 @@
         "Required relation participation/migration, domain/attribute model kinds, scoped overrides, additional responsibility roles, durable large-cohort migrations and required bulk/workflow/MCP ingress remain open. Typed search/sort/catalog export, production restore and full MOD/AT-MOD/M2 qualification are not established by this bounded development evidence.",
         "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five additional automated spot-checks, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
         "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Business-domain contribution: Domain publication/migration validates the complete mixed-version cohort, requires explicit migration intent and consent, records exact outcomes and rejects stale or invalid changes atomically. Visual editing, browser acceptance, broader declarative portability and complete repair/all-ingress coverage require their separate evidence. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred.",
         "Business-domain browser checkpoint2026-11-16: real domain type/hierarchy/lifecycle/placement/migration UI passes three targeted journeys and the complete19-journey local regression, with26 final domain captures visually inspected. Five earlier targeted failures remain preserved. This contributes only the domain portion of this requirement; scoped authority, other model kinds/ingresses, full import/export, independent human accessibility/translation, hosted and release qualification remain separate. Verification and release outcomes are unchanged.",
         "Domain repair hosted qualification passes at exact4c4479a/testedmergeed0e0cbd:807 immutable source files,three zero-finding CodeQL analyses,154/154 API,19 one-attempt browser journeys and14 mandatory stage successes. Earlier hosted failure and local qualification remain historical. Safe artifacts do not provide application-image attestation, raw upgrade subtest counts or a new visual sign-off. PR17 merged as1c6d390, but postmerge execution is separate; all full profile and release outcomes remain unchanged."
@@ -6953,7 +6953,7 @@
       "limitations": [
         "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five additional automated spot-checks, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
         "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M3",
@@ -15272,7 +15272,7 @@
         "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome.",
         "Manual freshness passes native232, source18 checks/14 measurements and its one-journey browser target with24 inspected frames. Full35 failed27/1/7; whole-row verification and release outcomes remain unchanged.",
         "Scheduled freshness passes native276, API168 and the real recovery/reopening/expiry browser target. Full36 records31 passed, one failed and four skipped; remaining families, broader scheduling and whole-profile/release qualification remain open.",
-        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001–031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
+        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001\u2013031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M4",
@@ -15384,7 +15384,7 @@
         "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome.",
         "Manual freshness passes native232, source18 checks/14 measurements and its one-journey browser target with24 inspected frames. Full35 failed27/1/7; whole-row verification and release outcomes remain unchanged.",
         "Scheduled freshness passes native276, API168 and the real recovery/reopening/expiry browser target. Full36 records31 passed, one failed and four skipped; remaining families, broader scheduling and whole-profile/release qualification remain open.",
-        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001–031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
+        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001\u2013031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
       ],
       "owner": "unassigned",
       "milestone": "M4",
@@ -15539,7 +15539,7 @@
       },
       "limitations": [
         "First bounded PostgreSQL completeness family passes scoped local native/worker/browser qualification. Remaining compound capability and profile/release qualification are open.",
-        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001–031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
+        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001\u2013031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M4",
@@ -15625,7 +15625,7 @@
         "evidence": []
       },
       "limitations": [
-        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001–031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
+        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001\u2013031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
       ],
       "owner": "unassigned",
       "milestone": "M4",
@@ -15710,7 +15710,7 @@
         "evidence": []
       },
       "limitations": [
-        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001–031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
+        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001\u2013031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
       ],
       "owner": "unassigned",
       "milestone": "M4",
@@ -15819,7 +15819,7 @@
         "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome.",
         "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged.",
         "Scheduled freshness passes native276, API168 and the real recovery/reopening/expiry browser target. Full36 records31 passed, one failed and four skipped; remaining families, broader scheduling and whole-profile/release qualification remain open.",
-        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001–031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
+        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001\u2013031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
       ],
       "owner": "unassigned",
       "milestone": "M4",
@@ -16010,7 +16010,7 @@
       "limitations": [
         "Scoped local evidence covers completeness, reference allowed-values, exact uniqueness/range and immutable input/rule/threshold history. Compound remaining families, context/schedules, profiles and release qualification remain open; partial evidence does not change whole-row outcome.",
         "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged.",
-        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001–031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
+        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001\u2013031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
       ],
       "owner": "unassigned",
       "milestone": "M4",
@@ -16299,7 +16299,7 @@
       "limitations": [
         "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged.",
         "Scoped UTC freshness scheduling, deduplicated incidents and current-evidence expiry pass native276 and the real lifecycle browser target; broader backfill, time-zone, silence and routing modes remain open.",
-        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001–031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
+        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001\u2013031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
       ],
       "owner": "unassigned",
       "milestone": "M4",
@@ -16828,7 +16828,7 @@
         "evidence": []
       },
       "limitations": [
-        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001–031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
+        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001\u2013031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
       ],
       "owner": "unassigned",
       "milestone": "M4",
@@ -16977,7 +16977,7 @@
         "evidence": []
       },
       "limitations": [
-        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001–031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
+        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001\u2013031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
       ],
       "owner": "unassigned",
       "milestone": "M4",
@@ -27413,15 +27413,15 @@
       "kind": "supplemental",
       "parent_id": null,
       "category": "cross_cutting",
-      "title": "- **V0 — designed:** manifest and adapter contract exist; no working runtime claim.",
-      "description": "- **V0 — designed:** manifest and adapter contract exist; no working runtime claim.",
+      "title": "- **V0 \u2014 designed:** manifest and adapter contract exist; no working runtime claim.",
+      "description": "- **V0 \u2014 designed:** manifest and adapter contract exist; no working runtime claim.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 391,
         "line_end": 391,
-        "text": "- **V0 — designed:** manifest and adapter contract exist; no working runtime claim.",
+        "text": "- **V0 \u2014 designed:** manifest and adapter contract exist; no working runtime claim.",
         "sha256": "4c6f33309c99a34e96f6b5c48a29ed13454102cb3c1ebb9c8f1e8b78e2947b3c"
       },
       "source_section": "Verification levels",
@@ -27429,7 +27429,7 @@
       "dependencies": [],
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
-        "- **V0 — designed:** manifest and adapter contract exist; no working runtime claim."
+        "- **V0 \u2014 designed:** manifest and adapter contract exist; no working runtime claim."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -27471,15 +27471,15 @@
       "kind": "supplemental",
       "parent_id": null,
       "category": "cross_cutting",
-      "title": "- **V1 — fixture verified:** implementation passes recorded/synthetic protocol fixtures and conformance tests. Evidence must identify synthe",
-      "description": "- **V1 — fixture verified:** implementation passes recorded/synthetic protocol fixtures and conformance tests. Evidence must identify synthetic versus captured fixtures.",
+      "title": "- **V1 \u2014 fixture verified:** implementation passes recorded/synthetic protocol fixtures and conformance tests. Evidence must identify synthe",
+      "description": "- **V1 \u2014 fixture verified:** implementation passes recorded/synthetic protocol fixtures and conformance tests. Evidence must identify synthetic versus captured fixtures.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 392,
         "line_end": 392,
-        "text": "- **V1 — fixture verified:** implementation passes recorded/synthetic protocol fixtures and conformance tests. Evidence must identify synthetic versus captured fixtures.",
+        "text": "- **V1 \u2014 fixture verified:** implementation passes recorded/synthetic protocol fixtures and conformance tests. Evidence must identify synthetic versus captured fixtures.",
         "sha256": "6edb0823f9acb18779b76e79ffacc598a4a4cd942051e1eea75e73699d032888"
       },
       "source_section": "Verification levels",
@@ -27487,7 +27487,7 @@
       "dependencies": [],
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
-        "- **V1 — fixture verified:** implementation passes recorded/synthetic protocol fixtures and conformance tests. Evidence must identify synthetic versus captured fixtures."
+        "- **V1 \u2014 fixture verified:** implementation passes recorded/synthetic protocol fixtures and conformance tests. Evidence must identify synthetic versus captured fixtures."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -27529,15 +27529,15 @@
       "kind": "supplemental",
       "parent_id": null,
       "category": "cross_cutting",
-      "title": "- **V2 — local integration verified:** implementation passes against a real locally running source, such as PostgreSQL or an S3-compatible s",
-      "description": "- **V2 — local integration verified:** implementation passes against a real locally running source, such as PostgreSQL or an S3-compatible store, for that exact source profile. A mock of a cloud/vendor service remains V1 for that vendor, even when its HTTP server runs locally. A local test of our own MCP gateway can verify the gateway; it cannot verify an external named vendor client/server.",
+      "title": "- **V2 \u2014 local integration verified:** implementation passes against a real locally running source, such as PostgreSQL or an S3-compatible s",
+      "description": "- **V2 \u2014 local integration verified:** implementation passes against a real locally running source, such as PostgreSQL or an S3-compatible store, for that exact source profile. A mock of a cloud/vendor service remains V1 for that vendor, even when its HTTP server runs locally. A local test of our own MCP gateway can verify the gateway; it cannot verify an external named vendor client/server.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 393,
         "line_end": 393,
-        "text": "- **V2 — local integration verified:** implementation passes against a real locally running source, such as PostgreSQL or an S3-compatible store, for that exact source profile. A mock of a cloud/vendor service remains V1 for that vendor, even when its HTTP server runs locally. A local test of our own MCP gateway can verify the gateway; it cannot verify an external named vendor client/server.",
+        "text": "- **V2 \u2014 local integration verified:** implementation passes against a real locally running source, such as PostgreSQL or an S3-compatible store, for that exact source profile. A mock of a cloud/vendor service remains V1 for that vendor, even when its HTTP server runs locally. A local test of our own MCP gateway can verify the gateway; it cannot verify an external named vendor client/server.",
         "sha256": "ad52a99081e2023c91e8155d4fc3cf1696c263a29917ae000149f42bcc37d78c"
       },
       "source_section": "Verification levels",
@@ -27545,7 +27545,7 @@
       "dependencies": [],
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
-        "- **V2 — local integration verified:** implementation passes against a real locally running source, such as PostgreSQL or an S3-compatible store, for that exact source profile. A mock of a cloud/vendor service remains V1 for that vendor, even when its HTTP server runs locally. A local test of our own MCP gateway can verify the gateway; it cannot verify an external named vendor client/server."
+        "- **V2 \u2014 local integration verified:** implementation passes against a real locally running source, such as PostgreSQL or an S3-compatible store, for that exact source profile. A mock of a cloud/vendor service remains V1 for that vendor, even when its HTTP server runs locally. A local test of our own MCP gateway can verify the gateway; it cannot verify an external named vendor client/server."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -27587,15 +27587,15 @@
       "kind": "supplemental",
       "parent_id": null,
       "category": "cross_cutting",
-      "title": "- **V3 — live verified:** implementation passed a versioned test plan against the real named external service with authorized credentials, r",
-      "description": "- **V3 — live verified:** implementation passed a versioned test plan against the real named external service with authorized credentials, recording date, source version, operation scope and redacted evidence.",
+      "title": "- **V3 \u2014 live verified:** implementation passed a versioned test plan against the real named external service with authorized credentials, r",
+      "description": "- **V3 \u2014 live verified:** implementation passed a versioned test plan against the real named external service with authorized credentials, recording date, source version, operation scope and redacted evidence.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 394,
         "line_end": 394,
-        "text": "- **V3 — live verified:** implementation passed a versioned test plan against the real named external service with authorized credentials, recording date, source version, operation scope and redacted evidence.",
+        "text": "- **V3 \u2014 live verified:** implementation passed a versioned test plan against the real named external service with authorized credentials, recording date, source version, operation scope and redacted evidence.",
         "sha256": "8bea2d73e2a6c1a86a1d99e5528be4d1baf6a4498ba8a2b47b7ca879f3ebd1e4"
       },
       "source_section": "Verification levels",
@@ -27603,7 +27603,7 @@
       "dependencies": [],
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
-        "- **V3 — live verified:** implementation passed a versioned test plan against the real named external service with authorized credentials, recording date, source version, operation scope and redacted evidence."
+        "- **V3 \u2014 live verified:** implementation passed a versioned test plan against the real named external service with authorized credentials, recording date, source version, operation scope and redacted evidence."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -33290,14 +33290,14 @@
       "parent_id": null,
       "category": "connector",
       "title": "AI platforms",
-      "description": "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -33312,7 +33312,7 @@
       ],
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -33356,14 +33356,14 @@
       "parent_id": "CX-030",
       "category": "connector",
       "title": "Azure AI Foundry",
-      "description": "Implement and independently qualify the named route Azure AI Foundry. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Implement and independently qualify the named route Azure AI Foundry. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -33379,7 +33379,7 @@
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
         "A source-specific manifest, substantive adapter, fixture/conformance tests and qualification procedure exist for Azure AI Foundry.",
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -33422,14 +33422,14 @@
       "parent_id": "CX-030",
       "category": "connector",
       "title": "Azure Machine Learning",
-      "description": "Implement and independently qualify the named route Azure Machine Learning. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Implement and independently qualify the named route Azure Machine Learning. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -33445,7 +33445,7 @@
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
         "A source-specific manifest, substantive adapter, fixture/conformance tests and qualification procedure exist for Azure Machine Learning.",
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -33488,14 +33488,14 @@
       "parent_id": "CX-030",
       "category": "connector",
       "title": "Databricks AI",
-      "description": "Implement and independently qualify the named route Databricks AI. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Implement and independently qualify the named route Databricks AI. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -33511,7 +33511,7 @@
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
         "A source-specific manifest, substantive adapter, fixture/conformance tests and qualification procedure exist for Databricks AI.",
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -33554,14 +33554,14 @@
       "parent_id": "CX-030",
       "category": "connector",
       "title": "Amazon Bedrock",
-      "description": "Implement and independently qualify the named route Amazon Bedrock. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Implement and independently qualify the named route Amazon Bedrock. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -33577,7 +33577,7 @@
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
         "A source-specific manifest, substantive adapter, fixture/conformance tests and qualification procedure exist for Amazon Bedrock.",
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -33620,14 +33620,14 @@
       "parent_id": "CX-030",
       "category": "connector",
       "title": "Amazon SageMaker",
-      "description": "Implement and independently qualify the named route Amazon SageMaker. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Implement and independently qualify the named route Amazon SageMaker. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -33643,7 +33643,7 @@
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
         "A source-specific manifest, substantive adapter, fixture/conformance tests and qualification procedure exist for Amazon SageMaker.",
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -33686,14 +33686,14 @@
       "parent_id": "CX-030",
       "category": "connector",
       "title": "MLflow",
-      "description": "Implement and independently qualify the named route MLflow. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Implement and independently qualify the named route MLflow. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -33709,7 +33709,7 @@
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
         "A source-specific manifest, substantive adapter, fixture/conformance tests and qualification procedure exist for MLflow.",
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -33752,14 +33752,14 @@
       "parent_id": "CX-030",
       "category": "connector",
       "title": "Dataiku",
-      "description": "Implement and independently qualify the named route Dataiku. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Implement and independently qualify the named route Dataiku. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -33775,7 +33775,7 @@
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
         "A source-specific manifest, substantive adapter, fixture/conformance tests and qualification procedure exist for Dataiku.",
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -33818,14 +33818,14 @@
       "parent_id": "CX-030",
       "category": "connector",
       "title": "OpenAI",
-      "description": "Implement and independently qualify the named route OpenAI. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Implement and independently qualify the named route OpenAI. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -33841,7 +33841,7 @@
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
         "A source-specific manifest, substantive adapter, fixture/conformance tests and qualification procedure exist for OpenAI.",
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -33884,14 +33884,14 @@
       "parent_id": "CX-030",
       "category": "connector",
       "title": "Anthropic",
-      "description": "Implement and independently qualify the named route Anthropic. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Implement and independently qualify the named route Anthropic. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -33907,7 +33907,7 @@
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
         "A source-specific manifest, substantive adapter, fixture/conformance tests and qualification procedure exist for Anthropic.",
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -33950,14 +33950,14 @@
       "parent_id": "CX-030",
       "category": "connector",
       "title": "Google Gemini",
-      "description": "Implement and independently qualify the named route Google Gemini. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Implement and independently qualify the named route Google Gemini. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -33973,7 +33973,7 @@
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
         "A source-specific manifest, substantive adapter, fixture/conformance tests and qualification procedure exist for Google Gemini.",
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -34016,14 +34016,14 @@
       "parent_id": "CX-030",
       "category": "connector",
       "title": "SAP AI Core",
-      "description": "Implement and independently qualify the named route SAP AI Core. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Implement and independently qualify the named route SAP AI Core. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -34039,7 +34039,7 @@
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
         "A source-specific manifest, substantive adapter, fixture/conformance tests and qualification procedure exist for SAP AI Core.",
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -34082,14 +34082,14 @@
       "parent_id": "CX-030",
       "category": "connector",
       "title": "Snowflake Cortex",
-      "description": "Implement and independently qualify the named route Snowflake Cortex. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag.",
+      "description": "Implement and independently qualify the named route Snowflake Cortex. Parent scope: Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 433,
         "line_end": 433,
-        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag. |",
+        "text": "| CX-030 AI platforms | Current registry/metrics integrations include Azure AI Foundry/ML, Databricks AI, Bedrock/SageMaker, MLflow, Dataiku, OpenAI, Anthropic, Gemini, SAP AI Core and Snowflake Cortex | Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag. |",
         "sha256": "8c9139b7b2799d924df9a142cddaaa8046cb95813522470970ba959156a164c8"
       },
       "source_section": "Connector target and public comparison matrix",
@@ -34105,7 +34105,7 @@
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
         "A source-specific manifest, substantive adapter, fixture/conformance tests and qualification procedure exist for Snowflake Cortex.",
-        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green “AI supported” flag."
+        "Individual manifests per provider and capability; registry, training/inference relations and metrics are separate flags. No common green \u201cAI supported\u201d flag."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -42732,7 +42732,7 @@
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 481,
         "line_end": 481,
-        "text": "| DIF-004 | Reproducible time-based evidence | User can answer “what did we know, what was approved, and what was enforced at this time?” using versioned observations, approval records and enforcement receipts. Unknown historical state stays unknown. |",
+        "text": "| DIF-004 | Reproducible time-based evidence | User can answer \u201cwhat did we know, what was approved, and what was enforced at this time?\u201d using versioned observations, approval records and enforcement receipts. Unknown historical state stays unknown. |",
         "sha256": "755129ba55a424580b44f809cae769bc74feb2b3e3ce8f1d19a1125c838dec93"
       },
       "source_section": "3.15 Proposed differentiators and measurable outcomes",
@@ -42742,7 +42742,7 @@
       ],
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
-        "User can answer “what did we know, what was approved, and what was enforced at this time?” using versioned observations, approval records and enforcement receipts. Unknown historical state stays unknown."
+        "User can answer \u201cwhat did we know, what was approved, and what was enforced at this time?\u201d using versioned observations, approval records and enforcement receipts. Unknown historical state stays unknown."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -43670,7 +43670,7 @@
         "Required relation participation/migration, domain/attribute model kinds, scoped overrides, additional responsibility roles, durable large-cohort migrations and required bulk/workflow/MCP ingress remain open. Typed search/sort/catalog export, production restore and full MOD/AT-MOD/M2 qualification are not established by this bounded development evidence.",
         "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five additional automated spot-checks, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
         "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Business-domain browser checkpoint2026-11-16: real domain type/hierarchy/lifecycle/placement/migration UI passes three targeted journeys and the complete19-journey local regression, with26 final domain captures visually inspected. Five earlier targeted failures remain preserved. This contributes only the domain portion of this requirement; scoped authority, other model kinds/ingresses, full import/export, independent human accessibility/translation, hosted and release qualification remain separate. Verification and release outcomes are unchanged.",
         "Domain repair hosted qualification passes at exact4c4479a/testedmergeed0e0cbd:807 immutable source files,three zero-finding CodeQL analyses,154/154 API,19 one-attempt browser journeys and14 mandatory stage successes. Earlier hosted failure and local qualification remain historical. Safe artifacts do not provide application-image attestation, raw upgrade subtest counts or a new visual sign-off. PR17 merged as1c6d390, but postmerge execution is separate; all full profile and release outcomes remain unchanged."
       ],
@@ -43899,7 +43899,7 @@
         "evidence": []
       },
       "limitations": [
-        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001–031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
+        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001\u2013031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
       ],
       "owner": "unassigned",
       "milestone": "M10",
@@ -44963,14 +44963,14 @@
       "parent_id": null,
       "category": "cross_cutting",
       "title": "The release report must list all requirement IDs and connector capabilities. It must include exact tests run, artifact paths, skipped extern",
-      "description": "The release report must list all requirement IDs and connector capabilities. It must include exact tests run, artifact paths, skipped external tests, known unsupported source features and blockers. An implementation may be locally complete while live enterprise qualification remains pending; both facts must be stated accurately. Do not use “full enterprise parity”, “production certified”, “all integrations supported” or “compliant” as unqualified completion claims.",
+      "description": "The release report must list all requirement IDs and connector capabilities. It must include exact tests run, artifact paths, skipped external tests, known unsupported source features and blockers. An implementation may be locally complete while live enterprise qualification remains pending; both facts must be stated accurately. Do not use \u201cfull enterprise parity\u201d, \u201cproduction certified\u201d, \u201call integrations supported\u201d or \u201ccompliant\u201d as unqualified completion claims.",
       "required": true,
       "activation": "Required implementation; runtime activation follows the specification.",
       "source": {
         "path": "docs/product/BUILD_SPEC.md",
         "line_start": 524,
         "line_end": 524,
-        "text": "The release report must list all requirement IDs and connector capabilities. It must include exact tests run, artifact paths, skipped external tests, known unsupported source features and blockers. An implementation may be locally complete while live enterprise qualification remains pending; both facts must be stated accurately. Do not use “full enterprise parity”, “production certified”, “all integrations supported” or “compliant” as unqualified completion claims.",
+        "text": "The release report must list all requirement IDs and connector capabilities. It must include exact tests run, artifact paths, skipped external tests, known unsupported source features and blockers. An implementation may be locally complete while live enterprise qualification remains pending; both facts must be stated accurately. Do not use \u201cfull enterprise parity\u201d, \u201cproduction certified\u201d, \u201call integrations supported\u201d or \u201ccompliant\u201d as unqualified completion claims.",
         "sha256": "3b486290a5d16112c1deb10a1eec3b1957f0fdc9974c7699b716826ee64ff047"
       },
       "source_section": "Release truthfulness gate",
@@ -44978,7 +44978,7 @@
       "dependencies": [],
       "dependency_basis": "Initial engineering ordering; source text remains authoritative.",
       "acceptance_criteria": [
-        "The release report must list all requirement IDs and connector capabilities. It must include exact tests run, artifact paths, skipped external tests, known unsupported source features and blockers. An implementation may be locally complete while live enterprise qualification remains pending; both facts must be stated accurately. Do not use “full enterprise parity”, “production certified”, “all integrations supported” or “compliant” as unqualified completion claims."
+        "The release report must list all requirement IDs and connector capabilities. It must include exact tests run, artifact paths, skipped external tests, known unsupported source features and blockers. An implementation may be locally complete while live enterprise qualification remains pending; both facts must be stated accurately. Do not use \u201cfull enterprise parity\u201d, \u201cproduction certified\u201d, \u201call integrations supported\u201d or \u201ccompliant\u201d as unqualified completion claims."
       ],
       "acceptance_ids": [],
       "implementation_status": "NOT_STARTED",
@@ -46817,9 +46817,15 @@
       "implementation_paths": [
         "apps/web/src",
         "packages/ui/src",
-        "tests/e2e"
+        "tests/e2e",
+        "apps/api/src/asset-search.ts",
+        "apps/web/src/pages/Catalog.tsx"
       ],
-      "test_ids": [],
+      "test_ids": [
+        "tests/unit/asset-search.test.ts",
+        "tests/integration/asset-search.test.ts",
+        "tests/e2e/catalog-sorting.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -46848,12 +46854,14 @@
         "evidence": []
       },
       "limitations": [
-        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open."
+        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open.",
+        "Global catalog sorting has scoped local172-case API and5-journey browser evidence, including canonical order, filter/sort-bound cursors and hidden/foreign exclusion. Complete UX/API and hosted release outcomes remain separate."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M2",
       "partial_evidence": [
-        "docs/verification/m1-browser.json"
+        "docs/verification/m1-browser.json",
+        "docs/verification/catalog-global-sorting-local.json"
       ]
     },
     {
@@ -52390,7 +52398,7 @@
         "evidence": []
       },
       "limitations": [
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Business-domain contribution: Tenant-scoped domain UUIDs, immutable type pins and asset placement are implemented; domains remain distinct from security tenants. Other organizational/governed entities and complete identity/provenance requirements remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
       ],
       "owner": "unassigned",
@@ -52497,7 +52505,7 @@
         "evidence": []
       },
       "limitations": [
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Business-domain contribution: A real HTTP-dispatched PostgreSQL scan/rescan preserves curator-managed placement and immutable domain/placement history while advancing the same source asset version; stale unassignment fails and current-version unassignment succeeds. Configurable field-claim precedence, conflict reconciliation and complete deletion/freshness semantics remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
       ],
       "owner": "unassigned",
@@ -52603,7 +52611,7 @@
         "evidence": []
       },
       "limitations": [
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Business-domain contribution: Typed domain attributes and definition constraints survive the actual noncoercing HTTP schema phase and are checked independently in PostgreSQL. This evidence does not complete all required attribute kinds, sensitivity/reference semantics or index-management requirements. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
       ],
       "owner": "unassigned",
@@ -52711,7 +52719,7 @@
         "evidence": []
       },
       "limitations": [
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Business-domain contribution: Domain hierarchy supports bounded traversal and atomic moves with cycle/nonempty-retirement checks, preserving existing business-relation graph semantics. The complete organizational model and cross-interface graph/storage programme remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
       ],
       "owner": "unassigned",
@@ -52819,7 +52827,7 @@
         "evidence": []
       },
       "limitations": [
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Business-domain contribution: Domain publication/migration validates the complete mixed-version cohort, requires explicit migration intent and consent, records exact outcomes and rejects stale or invalid changes atomically. Visual editing, browser acceptance, broader declarative portability and complete repair/all-ingress coverage require their separate evidence. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
       ],
       "owner": "unassigned",
@@ -54419,7 +54427,7 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
         "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five additional automated spot-checks, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
         "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Pure authority contribution only: the strict typed policy parser, declared-set normalization/canonical hashing and literal legacy-action compatibility mapping are implemented. The independent oracle covers all 1,024 subsets of ten permissions against 103 actions; no administration, field or service grant is installed. The historical report passes 22 focused and 232 full unit tests plus root/web types; the separate integrated-domain report passes 279 full unit tests including those 22 cases and root/web types. External documents must enter through raw 65,536-byte parsePolicyFile admission; object/catalog/permission APIs require trusted caller admission, because own-key reflection over arbitrary preexisting object metadata is not globally bounded. These are pure/local source-bound results only. Runtime evaluation, PostgreSQL/OpenSearch compilation and equivalence, policy administration, simulator, trusted fact/field adapters, scoped grants, revocation and all-ingress activation remain unimplemented by this increment; verification and release outcomes are unchanged.",
         "Pure predicate interpreter increment only: evaluatePolicyExpression implements all admitted AST operators with match/no-match/indeterminate, complete-child fail-closed evaluation, exact request-role tuple checks, canonical supplied UTC and explicit unavailable facts. It passes 16 focused tests and, after domain test-repair integration, 295 full unit tests with root/web types and 206 stable source/config/contract hashes (42 TSX). The producer must still prove current canonical membership, grants, delegation, field/fact provenance and bounded admission. This module does not authorize a request, aggregate policy effects, load facts, compile PostgreSQL/OpenSearch filters, administer policy, simulate access or activate runtime authority. Existing historical reports remain unchanged; full verification and release outcomes remain NOT_RUN.",
         "Generic authority-input admission only: raw/canonical JSON bytes, nodes, depth, exact safe integers, Unicode, duplicate keys and detached immutable data are implemented.18 focused cases and313 combined host unit cases plus root/web types pass with210 stable source/config/contract hashes. Semantic decision/proof budgets, grant liveness, loaders, full decisions and runtime activation remain open; exported semantic numbers alone are not enforcement. The first test-helper typecheck failure and all historical results are preserved. Verification and release outcomes are unchanged.",
@@ -54428,9 +54436,9 @@
         "Fresh PR18 Source43809453368 and Development43809453362 pass at identical-tree ancestry head0fa61c/testedmergefa3e997:821 immutable files,154API,19one-attempt browsers,14mandatory stages and three zero-finding current analyses. Exact head merged as4102116d on2026-11-16T05:58:47Z. This is regression qualification of the preceding parser/interpreter source, separate from the new decision engine and from unverified postmerge runs.",
         "PR19 fresh Source43814105793 and Development43814105764 qualify admission headcc916580/testedmergec3fff2cb:885 immutable files,154API,19 one-attempt browser journeys,14 mandatory stages and three zero-finding stored analyses. Exact head merged as2c525712 on2026-11-16T06:32:14Z. Hosted raw unit count is not exported. This is premerge regression qualification of admission only; engine, protected storage, runtime cutover, postmerge execution and full profile/release qualification remain separate.",
         "PR20 fresh Source43817616108 and Development43817616265 qualify reference-engine headcdec876/testedmerge5e0234d:935 immutable files,154API,19 one-attempt browsers,14 mandatory stages and three zero-finding analyses. Exact head merged as94efe7f8 on2026-11-16T07:11:43Z. Hosted unit TAP/count is not exported;91 literal decision declarations are not an executed-result count. Protected authentication/storage, content authority, postmerge execution and complete profile/release qualification remain separate.",
-        "Inactive protected authentication foundation only: SQL012, thirteen private tables, nine owner-only installation operations, six finite native-role functions, typed transactional client and private installation CLI are implemented. The exact isolated native gate passes21 storage and14 concurrency cases with115 stable sources, preserved SQL001–011 data and owned cleanup.435 host units/root-web types/40 publication tests pass with269 stable inputs; historical type-upgrade9+9 is separate. Full protected OIDC broker, cookies/CSRF, canonical content authority, policy storage/loaders, SQL/OpenSearch equivalence, administration, service leases and atomic all-ingress cutover remain required. No complete profile or release outcome is promoted.",
+        "Inactive protected authentication foundation only: SQL012, thirteen private tables, nine owner-only installation operations, six finite native-role functions, typed transactional client and private installation CLI are implemented. The exact isolated native gate passes21 storage and14 concurrency cases with115 stable sources, preserved SQL001\u2013011 data and owned cleanup.435 host units/root-web types/40 publication tests pass with269 stable inputs; historical type-upgrade9+9 is separate. Full protected OIDC broker, cookies/CSRF, canonical content authority, policy storage/loaders, SQL/OpenSearch equivalence, administration, service leases and atomic all-ingress cutover remain required. No complete profile or release outcome is promoted.",
         "SQL012 existing-core compatibility now passes154 API cases,19 browser journeys with zero retries and137 scoped original-frame reviews. The first hosted Development attempt failed its outdated11-migration seed guard and skipped later gates; a local12-migration repair passes three real seed invocations and exact22-table/persona restoration. These records preserve failures and do not qualify protected OIDC transport, content authority, any complete profile or release. See the separate current-core API, browser and seed evidence.",
-        "Authority-read contribution: SQL031 reuses only an exact DB-derived registry parse within one owner-only read invocation; all per-grant validations and original budgets remain. Original-prefix plus031 native133 and current001–030→031 native423 pass with preservation/replay and owned cleanup. This inactive loader does not authorize content or complete the broader authority model; source-equivalence differences are recorded, core source/ledger readback passes, and combined API/browser/hosted qualification remains explicit."
+        "Authority-read contribution: SQL031 reuses only an exact DB-derived registry parse within one owner-only read invocation; all per-grant validations and original budgets remain. Original-prefix plus031 native133 and current001\u2013030\u2192031 native423 pass with preservation/replay and owned cleanup. This inactive loader does not authorize content or complete the broader authority model; source-equivalence differences are recorded, core source/ledger readback passes, and combined API/browser/hosted qualification remains explicit."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -54535,7 +54543,7 @@
         "evidence": []
       },
       "limitations": [
-        "Authority-read contribution: SQL031 reuses only an exact DB-derived registry parse within one owner-only read invocation; all per-grant validations and original budgets remain. Original-prefix plus031 native133 and current001–030→031 native423 pass with preservation/replay and owned cleanup. This inactive loader does not authorize content or complete the broader authority model; source-equivalence differences are recorded, core source/ledger readback passes, and combined API/browser/hosted qualification remains explicit."
+        "Authority-read contribution: SQL031 reuses only an exact DB-derived registry parse within one owner-only read invocation; all per-grant validations and original budgets remain. Original-prefix plus031 native133 and current001\u2013030\u2192031 native423 pass with preservation/replay and owned cleanup. This inactive loader does not authorize content or complete the broader authority model; source-equivalence differences are recorded, core source/ledger readback passes, and combined API/browser/hosted qualification remains explicit."
       ],
       "owner": "unassigned",
       "milestone": "M0",
@@ -54705,7 +54713,7 @@
         "Fresh PR18 Source43809453368 and Development43809453362 pass at identical-tree ancestry head0fa61c/testedmergefa3e997:821 immutable files,154API,19one-attempt browsers,14mandatory stages and three zero-finding current analyses. Exact head merged as4102116d on2026-11-16T05:58:47Z. This is regression qualification of the preceding parser/interpreter source, separate from the new decision engine and from unverified postmerge runs.",
         "PR19 fresh Source43814105793 and Development43814105764 qualify admission headcc916580/testedmergec3fff2cb:885 immutable files,154API,19 one-attempt browser journeys,14 mandatory stages and three zero-finding stored analyses. Exact head merged as2c525712 on2026-11-16T06:32:14Z. Hosted raw unit count is not exported. This is premerge regression qualification of admission only; engine, protected storage, runtime cutover, postmerge execution and full profile/release qualification remain separate.",
         "PR20 fresh Source43817616108 and Development43817616265 qualify reference-engine headcdec876/testedmerge5e0234d:935 immutable files,154API,19 one-attempt browsers,14 mandatory stages and three zero-finding analyses. Exact head merged as94efe7f8 on2026-11-16T07:11:43Z. Hosted unit TAP/count is not exported;91 literal decision declarations are not an executed-result count. Protected authentication/storage, content authority, postmerge execution and complete profile/release qualification remain separate.",
-        "Inactive protected authentication foundation only: SQL012, thirteen private tables, nine owner-only installation operations, six finite native-role functions, typed transactional client and private installation CLI are implemented. The exact isolated native gate passes21 storage and14 concurrency cases with115 stable sources, preserved SQL001–011 data and owned cleanup.435 host units/root-web types/40 publication tests pass with269 stable inputs; historical type-upgrade9+9 is separate. Full protected OIDC broker, cookies/CSRF, canonical content authority, policy storage/loaders, SQL/OpenSearch equivalence, administration, service leases and atomic all-ingress cutover remain required. No complete profile or release outcome is promoted.",
+        "Inactive protected authentication foundation only: SQL012, thirteen private tables, nine owner-only installation operations, six finite native-role functions, typed transactional client and private installation CLI are implemented. The exact isolated native gate passes21 storage and14 concurrency cases with115 stable sources, preserved SQL001\u2013011 data and owned cleanup.435 host units/root-web types/40 publication tests pass with269 stable inputs; historical type-upgrade9+9 is separate. Full protected OIDC broker, cookies/CSRF, canonical content authority, policy storage/loaders, SQL/OpenSearch equivalence, administration, service leases and atomic all-ingress cutover remain required. No complete profile or release outcome is promoted.",
         "SQL012 existing-core compatibility now passes154 API cases,19 browser journeys with zero retries and137 scoped original-frame reviews. The first hosted Development attempt failed its outdated11-migration seed guard and skipped later gates; a local12-migration repair passes three real seed invocations and exact22-table/persona restoration. These records preserve failures and do not qualify protected OIDC transport, content authority, any complete profile or release. See the separate current-core API, browser and seed evidence.",
         "Dedicated protected OIDC/session/edge increment only:484 host units/types,15 native HTTP/SQL cases and2 real Keycloak browser journeys pass;8 original frames reviewed. Source-mounted isolated loopback execution does not qualify immutable images, production TLS, integrated content authority, group mapping, break-glass, SCIM, all ingress/content rendering controls or full profile/release obligations. All failed attempts and source scopes are retained."
       ],
@@ -54908,7 +54916,7 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
         "Constrained asserted relations are implemented for the bounded profile. Immutable SQL008 passes six upgrade checks, twelve storage tests and nine concurrency tests; the corrected core API passes98 cases with60 actual-image source hashes matched. The first four-failure API diagnostic and subsequent browser inventory-query failure are retained; the new inventory regression passes. Final targeted2/2 and full14/14 browser gates pass without retries or skips after retaining and fixing the recorded diagnostic failures. All20 new screenshots were inspected, five additional automated spot-checks, and75 historical PNGs preserved. UI source65, served asset19 and backend-equivalence60 hashes match; hosted qualification remains pending. Positive participation, explicit relation migrations, imported/derived claims, additional ingresses and full M2/MOD/release requirements remain open.",
         "Constrained-relations hosted qualification passed in run43764871580 with14 distinct one-attempt browser journeys and11 successful service/browser steps; PR14 merged as a8cfef10cc6e677f164d20bc41c76c33cd6d4424. The report retains the tested merge and prior failed attempts. Required participation SQL009, the newer source, full requirement profiles and release qualification remain open.",
-        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001–010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
+        "Current required-participation qualification: the graph copier correction passes 204 pure tests and root/web types, eight isolated upgrade checks, 20 storage cases, 13 concurrency cases and 123 real core API cases. Source counts 115/51/76 are recorded separately with exact execution times/images; SQL001\u2013010 remain immutable. Real 15-minute preparation expiry separately passed 1/1 on 82 earlier source files bound to 46d5b57; no later-source expiry rerun is inferred. Targeted browser attempt 4 passes 2/2 and all sixteen screenshots were inspected. The full sixteen-journey gate passes against the later graph copier image with zero failures, skips or retries, 139 actual-image source hashes and 22 served assets matched; all sixteen final screenshots were inspected, including five independent root spotchecks, and 95 historical images were restored byte-for-byte. Original failures and earlier passing snapshots remain preserved. Hosted participation, other ingresses, broad requirement profiles and release outcomes remain NOT_RUN.",
         "Business-domain contribution: Domain storage has forced tenant RLS, restricted runtime roles, exact resource lookup and current membership checks; original-scope replay and revoked/deleted seed memberships are covered. Scoped grants, policy AST, responsibility authority and all-store/ingress equivalence remain separate unimplemented qualifications; ownership grants no permission. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
       ],
       "owner": "governance-commons maintainers",
@@ -55013,7 +55021,7 @@
       },
       "limitations": [
         "Business-domain contribution: Domain storage has forced tenant RLS, restricted runtime roles, exact resource lookup and current membership checks; original-scope replay and revoked/deleted seed memberships are covered. Scoped grants, policy AST, responsibility authority and all-store/ingress equivalence remain separate unimplemented qualifications; ownership grants no permission. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred.",
-        "Authority-read contribution: SQL031 reuses only an exact DB-derived registry parse within one owner-only read invocation; all per-grant validations and original budgets remain. Original-prefix plus031 native133 and current001–030→031 native423 pass with preservation/replay and owned cleanup. This inactive loader does not authorize content or complete the broader authority model; source-equivalence differences are recorded, core source/ledger readback passes, and combined API/browser/hosted qualification remains explicit."
+        "Authority-read contribution: SQL031 reuses only an exact DB-derived registry parse within one owner-only read invocation; all per-grant validations and original budgets remain. Original-prefix plus031 native133 and current001\u2013030\u2192031 native423 pass with preservation/replay and owned cleanup. This inactive loader does not authorize content or complete the broader authority model; source-equivalence differences are recorded, core source/ledger readback passes, and combined API/browser/hosted qualification remains explicit."
       ],
       "owner": "unassigned",
       "milestone": "M0",
@@ -56305,7 +56313,7 @@
         "Monitoring native175 and real scheduled failure/recovery/reopening browser journey pass locally. Remaining schedule modes, quality families and delivery/profile qualification stay open; whole-row outcomes are unchanged.",
         "Manual freshness passes native232, source18 checks/14 measurements and its one-journey browser target with24 inspected frames. Full35 failed27/1/7; whole-row verification and release outcomes remain unchanged.",
         "Scheduled freshness passes native276, API168 and the real recovery/reopening/expiry browser target. Full36 records31 passed, one failed and four skipped; remaining families, broader scheduling and whole-profile/release qualification remain open.",
-        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001–031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
+        "Table-volume contribution: exact ordinary-table row counts and immutable inclusive thresholds are implemented. Recorded isolated upgrade320 and real PostgreSQL worker15 checks/8 measurements pass. Integrated SQL001\u2013031 core source/ledger readback passes; current API and volume browser qualification is tracked separately in the linked record. The predecessor full36 pass is separate. Filters, partitions, anomaly baselines, remaining rule families and compound/profile/release obligations remain open."
       ],
       "owner": "unassigned",
       "milestone": "M0",
@@ -56523,7 +56531,9 @@
         "apps/api/src/business-domains.ts",
         "apps/api/src/business-domain-http.ts",
         "packages/domain/src/business-domain-read.ts",
-        "packages/domain/src/business-domain-service.ts"
+        "packages/domain/src/business-domain-service.ts",
+        "apps/api/src/asset-search.ts",
+        "apps/web/src/pages/Catalog.tsx"
       ],
       "test_ids": [
         "tests/unit/cursor.test.ts",
@@ -56531,7 +56541,10 @@
         "tests/e2e/models.spec.ts",
         "tests/unit/business-domain-http-validation.test.ts",
         "tests/integration/business-domain-asset-scope.test.ts",
-        "tests/integration/business-domains-api.test.ts"
+        "tests/integration/business-domains-api.test.ts",
+        "tests/unit/asset-search.test.ts",
+        "tests/integration/asset-search.test.ts",
+        "tests/e2e/catalog-sorting.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -56563,7 +56576,8 @@
       "limitations": [
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
         "Model inventory adds bounded literal search and signed keyset cursors bound to actor, tenant, filters, page size and deterministic sort. Full generated clients, egress schemas, API coverage, durable bulk administration and webhook requirements remain open. See scoped model-migration evidence; no full SYS-API-001 pass.",
-        "Business-domain contribution: Domain routes have strict nonmutating request validation, explicit OpenAPI responses/preconditions, bounded signed pages and current exact-resource authorization. Generated clients, other module APIs, bulk administration, webhooks and browser equivalence remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
+        "Business-domain contribution: Domain routes have strict nonmutating request validation, explicit OpenAPI responses/preconditions, bounded signed pages and current exact-resource authorization. Generated clients, other module APIs, bulk administration, webhooks and browser equivalence remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred.",
+        "Global catalog sorting has scoped local172-case API and5-journey browser evidence, including canonical order, filter/sort-bound cursors and hidden/foreign exclusion. Complete UX/API and hosted release outcomes remain separate."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -56572,7 +56586,8 @@
         "docs/verification/m2-migration-ui.json",
         "docs/verification/business-domains-http-validation-correction.json",
         "docs/verification/business-domains-asset-scope-correction.json",
-        "docs/verification/business-domains-api.json"
+        "docs/verification/business-domains-api.json",
+        "docs/verification/catalog-global-sorting-local.json"
       ]
     },
     {
@@ -56604,12 +56619,17 @@
         "apps/api/src/business-domains.ts",
         "apps/api/src/business-domain-http.ts",
         "packages/domain/src/business-domain-read.ts",
-        "packages/domain/src/business-domain-service.ts"
+        "packages/domain/src/business-domain-service.ts",
+        "apps/api/src/asset-search.ts",
+        "apps/web/src/pages/Catalog.tsx"
       ],
       "test_ids": [
         "tests/unit/business-domain-http-validation.test.ts",
         "tests/integration/business-domain-asset-scope.test.ts",
-        "tests/integration/business-domains-api.test.ts"
+        "tests/integration/business-domains-api.test.ts",
+        "tests/unit/asset-search.test.ts",
+        "tests/integration/asset-search.test.ts",
+        "tests/e2e/catalog-sorting.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -56639,14 +56659,16 @@
         "evidence": []
       },
       "limitations": [
-        "Business-domain contribution: Domain routes have strict nonmutating request validation, explicit OpenAPI responses/preconditions, bounded signed pages and current exact-resource authorization. Generated clients, other module APIs, bulk administration, webhooks and browser equivalence remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
+        "Business-domain contribution: Domain routes have strict nonmutating request validation, explicit OpenAPI responses/preconditions, bounded signed pages and current exact-resource authorization. Generated clients, other module APIs, bulk administration, webhooks and browser equivalence remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred.",
+        "Global catalog sorting has scoped local172-case API and5-journey browser evidence, including canonical order, filter/sort-bound cursors and hidden/foreign exclusion. Complete UX/API and hosted release outcomes remain separate."
       ],
       "owner": "unassigned",
       "milestone": "M0",
       "partial_evidence": [
         "docs/verification/business-domains-http-validation-correction.json",
         "docs/verification/business-domains-asset-scope-correction.json",
-        "docs/verification/business-domains-api.json"
+        "docs/verification/business-domains-api.json",
+        "docs/verification/catalog-global-sorting-local.json"
       ]
     },
     {
@@ -68312,7 +68334,12 @@
         ".github",
         "LICENSE",
         "NOTICE",
-        "CONTRIBUTING.md"
+        "CONTRIBUTING.md",
+        "Dockerfile",
+        "python/Dockerfile",
+        ".github/workflows/runtime-security.yml",
+        "policies/scan_images.py",
+        "docs/security/RUNTIME_IMAGES.md"
       ],
       "test_ids": [],
       "verification": {
@@ -68322,7 +68349,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/runtime-images-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -68343,7 +68372,8 @@
         "evidence": []
       },
       "limitations": [
-        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
+        "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
+        "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -68358,7 +68388,12 @@
         "docs/verification/reference-structure-hosted-timeout-b08b88d.json",
         "docs/verification/protected-linux-tool-admission-local.json",
         "docs/verification/hosted-checkpoint-b08b88d.json",
-        "docs/verification/protected-authentication-tool-admission-local.json"
+        "docs/verification/protected-authentication-tool-admission-local.json",
+        "docs/verification/hosted-checkpoint-e51e8ec.json",
+        "docs/verification/runtime-protected-authentication-15496e3.json",
+        "docs/verification/runtime-images-hosted-a6cd20d.json",
+        "docs/verification/runtime-worker-timeout-local.json",
+        "docs/verification/runtime-worker-hash-dispositions.json"
       ]
     },
     {
@@ -68617,8 +68652,14 @@
         "- **Security:** secrets detection, dependency vulnerabilities, dependency licensing, SAST and workflow/IaC checks appropriate to the actual stack."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "Dockerfile",
+        "python/Dockerfile",
+        ".github/workflows/runtime-security.yml",
+        "policies/scan_images.py",
+        "docs/security/RUNTIME_IMAGES.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -68627,7 +68668,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/runtime-images-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -68647,9 +68690,16 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/runtime-images-hosted-a6cd20d.json",
+        "docs/verification/runtime-worker-timeout-local.json",
+        "docs/verification/runtime-worker-hash-dispositions.json"
+      ]
     },
     {
       "id": "OSS-006.06",
@@ -68675,8 +68725,14 @@
         "- **Packaging:** Docker builds, production startup/health checks, image vulnerability scan and dependency inventory."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "Dockerfile",
+        "python/Dockerfile",
+        ".github/workflows/runtime-security.yml",
+        "policies/scan_images.py",
+        "docs/security/RUNTIME_IMAGES.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -68685,7 +68741,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/runtime-images-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -68705,9 +68763,17 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/runtime-protected-authentication-15496e3.json",
+        "docs/verification/runtime-images-hosted-a6cd20d.json",
+        "docs/verification/runtime-worker-timeout-local.json",
+        "docs/verification/runtime-worker-hash-dispositions.json"
+      ]
     },
     {
       "id": "OSS-006.07",
@@ -69081,8 +69147,14 @@
         "Pin release-tool and container-image versions/digests, verify downloaded tools, and record resolved versions. Do not hard-code made-up SHAs. Disable persisted checkout credentials for jobs that do not need subsequent Git writes. Pass untrusted event fields through environment variables or structured APIs, not interpolated shell source. Give caches separate trust scopes, and never let a release consume an attacker-writable cache or executable artifact without independent validation. [OSS-S12]"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "Dockerfile",
+        "python/Dockerfile",
+        ".github/workflows/runtime-security.yml",
+        "policies/scan_images.py",
+        "docs/security/RUNTIME_IMAGES.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -69091,7 +69163,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/runtime-images-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -69111,7 +69185,9 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
+      ],
       "owner": "unassigned",
       "milestone": "M0"
     },
@@ -69146,7 +69222,12 @@
         ".github",
         "LICENSE",
         "NOTICE",
-        "CONTRIBUTING.md"
+        "CONTRIBUTING.md",
+        "Dockerfile",
+        "python/Dockerfile",
+        ".github/workflows/runtime-security.yml",
+        "policies/scan_images.py",
+        "docs/security/RUNTIME_IMAGES.md"
       ],
       "test_ids": [],
       "verification": {
@@ -69156,7 +69237,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/runtime-images-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -69178,7 +69261,8 @@
       },
       "limitations": [
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
-        "Dependabot security-fix proposals are enabled with authenticated readback (enabled true, paused false); existing dependency PRs and merge policies are preserved. SAST, portable/private entitlement alternatives, findings triage qualification and the complete OSS-007/release gates remain open."
+        "Dependabot security-fix proposals are enabled with authenticated readback (enabled true, paused false); existing dependency PRs and merge policies are preserved. SAST, portable/private entitlement alternatives, findings triage qualification and the complete OSS-007/release gates remain open.",
+        "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -69189,7 +69273,11 @@
         "docs/verification/participation-audit-fixture-correction.json",
         "docs/verification/participation-hosted-attempt-3.json",
         "docs/verification/participation-main.json",
-        "docs/verification/source-security-b08b88d.json"
+        "docs/verification/source-security-b08b88d.json",
+        "docs/verification/runtime-protected-authentication-15496e3.json",
+        "docs/verification/runtime-images-hosted-a6cd20d.json",
+        "docs/verification/runtime-worker-timeout-local.json",
+        "docs/verification/runtime-worker-hash-dispositions.json"
       ]
     },
     {
@@ -69395,8 +69483,14 @@
         "Define vulnerability triage by exploitability, exposure and affected component as well as severity. Block release for applicable unresolved critical/high issues unless a specific reviewed, time-bounded exception records why the release remains acceptable. Do not treat every scanner hit as exploitable, or every missing patch as permission to suppress it. Record false-positive evidence and risk acceptance with owner and expiry. Scheduled rescans must detect vulnerabilities disclosed after a release; pinning a dependency does not make it permanently safe."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "Dockerfile",
+        "python/Dockerfile",
+        ".github/workflows/runtime-security.yml",
+        "policies/scan_images.py",
+        "docs/security/RUNTIME_IMAGES.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -69405,7 +69499,9 @@
         },
         "local": {
           "outcome": "NOT_RUN",
-          "evidence": []
+          "evidence": [
+            "docs/verification/runtime-images-local.json"
+          ]
         },
         "vendor_live": {
           "outcome": "NOT_RUN",
@@ -69425,9 +69521,16 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/runtime-images-hosted-a6cd20d.json",
+        "docs/verification/runtime-worker-timeout-local.json",
+        "docs/verification/runtime-worker-hash-dispositions.json"
+      ]
     },
     {
       "id": "OSS-007.05",

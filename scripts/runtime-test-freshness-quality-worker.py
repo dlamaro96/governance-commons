@@ -73,7 +73,7 @@ def bounded_command(args, data, duration, cwd):
     """Bound both streams while running; no stderr/source/credential echo.
 
     Only the exact freshly started local process group is signalled. Docker exec
-    commands also carry their own remote GNU timeout; no remote orphan depends
+    commands also carry their own remote timeout; no remote orphan depends
     solely on local-client termination.
     """
     require(duration > 0 and (data is None or len(data.encode('utf-8')) <= 65536))
@@ -239,7 +239,7 @@ class Harness(base.Harness):
         inner,outer=(10,15) if mode in ('probe','locked') else (200,210)
         require(self.deadline-time.monotonic()>=outer)
         require(self.helper_identity()==self.helper)
-        value=decode(self.command(['docker','exec','-i',self.helper['id'],'timeout','--signal=TERM','--kill-after=3s',str(inner)+'s','/worker/.venv/bin/python','-c',WORKER],data=payload,seconds=outer))
+        value=decode(self.command(['docker','exec','-i',self.helper['id'],'timeout','-s','TERM','-k','3s',str(inner)+'s','/worker/.venv/bin/python','-c',WORKER],data=payload,seconds=outer))
         require(type(value) is dict and value.get('ok') is True and value.get('hashes')==allowed)
         if mode=='probe': require(set(value)=={'ok','hashes'})
         elif mode=='locked':

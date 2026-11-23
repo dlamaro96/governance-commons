@@ -9,6 +9,7 @@ Third-party material retains its own rights and obligations.
 | Apache License text | Official Apache Software Foundation text | Unmodified `LICENSE`; its use does not imply ASF sponsorship |
 | Developer Certificate of Origin 1.1 | Linux Foundation and contributors' verbatim-copy permission | Official text preserved in `DCO-1.1.txt`; no fabricated contributor certification |
 | React Flow (`@xyflow/react` 12.12.1) | MIT, [upstream license](https://github.com/xyflow/xyflow/blob/main/LICENSE) | Exact dependency pin; preserve the bundled upstream license in distributions; interactive graph keeps the accessible table fallback |
+| Minimal Node runtime and GCC support libraries | Pinned official Node and distroless images; upstream per-file licenses apply | The Dockerfile retains the copied GCC package metadata and copyright files. Full artifact-level notice/SBOM qualification remains open. |
 | Contributor Covenant 2.1 | CC-BY-4.0, upstream commit `91532d80ea5f39b6685aff4892bc6854bf2f6d6f` | Original text and contemporaneous license preserved; project adaptation changes reporting/contact wording and retains attribution |
 
 The current Contributor Covenant website repository has a different root

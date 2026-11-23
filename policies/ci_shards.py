@@ -91,7 +91,7 @@ COMMANDS = {'bootstrap': './dev bootstrap',
  'volume_worker': './dev test --suite volume-worker',
  'business_domain_seed': './dev test --suite business-domain-seed',
  'browser': 'pnpm exec playwright test --config .github/playwright.ci.config.ts '
-            'tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts '
+            'tests/e2e/vertical-slice.spec.ts tests/e2e/catalog-sorting.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts '
             'tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts '
             'tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts '
             'tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts '

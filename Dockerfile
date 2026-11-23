@@ -18,13 +18,23 @@ FROM dependencies AS production-dependencies
 # Temporal's workflow bundler and tsx's transpiler remain runtime dependencies.
 RUN pnpm install --prod --frozen-lockfile
 
-FROM node:24.22.3-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54 AS runtime
+# Supply the exact Node binary plus its C++ runtime to the maintained no-SSL base.
+FROM gcr.io/distroless/cc-debian13:nonroot@sha256:532c7a94f9e96ba9db75eb9388f4227751131c7cb0a411d1a8521af4096135de AS cxx-runtime
+FROM dependencies AS runtime-libraries
+COPY --from=cxx-runtime /usr/lib/*-linux-gnu/libgcc_s.so.1 /runtime-libraries/
+COPY --from=cxx-runtime /usr/lib/*-linux-gnu/libstdc++.so.6* /runtime-libraries/
+COPY --from=cxx-runtime /var/lib/dpkg/status.d/gcc-14-base* /var/lib/dpkg/status.d/libgcc-s1* /var/lib/dpkg/status.d/libstdc++6* /runtime-root/var/lib/dpkg/status.d/
+COPY --from=cxx-runtime /usr/share/doc/gcc-14-base /runtime-root/usr/share/doc/gcc-14-base
+COPY --from=cxx-runtime /usr/share/doc/libgcc-s1 /runtime-root/usr/share/doc/libgcc-s1
+COPY --from=cxx-runtime /usr/share/doc/libstdc++6 /runtime-root/usr/share/doc/libstdc++6
+RUN set -eu; case "$(uname -m)" in aarch64) multiarch=aarch64-linux-gnu ;; x86_64) multiarch=x86_64-linux-gnu ;; *) exit 1 ;; esac; \
+    mkdir -p "/runtime-root/usr/lib/$multiarch"; mv /runtime-libraries/* "/runtime-root/usr/lib/$multiarch/"
+
+FROM gcr.io/distroless/base-nossl-debian13:nonroot@sha256:4006ac92504be607b70de01d1f64f38288c69fcd8faa820f6d3aed266ea32ac5 AS runtime
 WORKDIR /app
-# The base includes package managers; services execute Node directly.
-RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn-* \
-    && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg
-# Preserve source and tests for immutable-image attestation and native gates.
-# .dockerignore excludes host/build node_modules and generated dist directories.
+COPY --from=runtime-libraries /runtime-root/ /
+COPY --from=dependencies /usr/local/bin/node /usr/local/bin/node
+# Preserve package inventory, source and tests for scanning and native gates.
 COPY --from=production-dependencies /app/node_modules ./node_modules
 COPY . .
 COPY --from=build /app/apps/web/dist ./apps/web/dist

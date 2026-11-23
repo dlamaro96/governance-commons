@@ -22,6 +22,10 @@ EVIDENCE = 'docs/verification/product-search-postgres-local.json'
 BLOB_SHA256 = '33261438f5072b40a07eaa5ffe01f5cf8d6c5cc8838e4e158b7fe4f2e7c61606'
 LINES = (221, 283, 298, 374, 384, 389, 391, 394, 399, 402, 410, 414, 420, 422,
          425, 440, 450, 452, 453, 458, 476, 480, 487, 490, 491, 497, 510, 511, 533)
+WORKER_COMMIT = '62b834ca8a32648ee413ca7c240c118048f7c996'
+WORKER_EVIDENCE = 'docs/verification/runtime-worker-timeout-local.json'
+WORKER_BLOB_SHA256 = '404d4a6d3f46ec725722bc8432f465ae63b6b2477a618cbb6face2ba5e58d755'
+WORKER_LINES = (35, 40, 84, 89, 136, 141, 190, 195, 247, 252, 299, 304, 343, 348)
 
 
 def git(*args, cwd=ROOT):
@@ -71,6 +75,7 @@ class SecretFingerprintTests(unittest.TestCase):
         entries = [line for line in (ROOT / '.gitleaksignore').read_text().splitlines()
                    if line and not line.startswith('#')]
         expected = [f'{COMMIT}:{EVIDENCE}:generic-api-key:{line}' for line in LINES]
+        expected += [f'{WORKER_COMMIT}:{WORKER_EVIDENCE}:generic-api-key:{line}' for line in WORKER_LINES]
         self.assertEqual(entries, expected)
         self.assertEqual(len(entries), len(set(entries)))
         value = json.loads(self.historical)
@@ -86,6 +91,49 @@ class SecretFingerprintTests(unittest.TestCase):
         records = current.pop('source_files')
         self.assertEqual(records, [{'path': p, 'sha256': h} for p, h in value.pop('source_sha256').items()])
         self.assertEqual(current, value)
+
+    def test_worker_evidence_dispositions_are_exact_source_hashes_and_preserve_detection(self):
+        original = git('show', f'{WORKER_COMMIT}:{WORKER_EVIDENCE}')
+        self.assertEqual(hashlib.sha256(original).hexdigest(), WORKER_BLOB_SHA256)
+        value = json.loads(original)
+        for line in WORKER_LINES:
+            match = re.fullmatch(r'\s*"([^"]+)": "([0-9a-f]{64})",?', original.decode().splitlines()[line-1])
+            self.assertIsNotNone(match)
+            path, digest = match.groups()
+            self.assertEqual(hashlib.sha256(git('show', f'{WORKER_COMMIT}:{path}')).hexdigest(), digest)
+        for gate in value['worker_gates']:
+            gate['source_files'] = [{'path': p, 'sha256': h} for p, h in gate.pop('sourceHashes').items()]
+        self.assertEqual(json.loads((ROOT / WORKER_EVIDENCE).read_bytes()), value)
+        with tempfile.TemporaryDirectory(prefix='gc-worker-hash-dispositions-') as temporary:
+            directory = Path(temporary)
+            empty = directory / 'empty-ignore'
+            empty.write_text('')
+            clone = directory / 'history'
+            git('clone', '--shared', '--no-checkout', '--no-hardlinks', str(ROOT), str(clone))
+            options = (f'--log-opts={WORKER_COMMIT}^..{WORKER_COMMIT}',)
+            expected = [f'{WORKER_COMMIT}:{WORKER_EVIDENCE}:generic-api-key:{line}' for line in WORKER_LINES]
+            baseline = self.scan('git', clone, empty, options=options)
+            self.assertEqual(sorted(x['Fingerprint'] for x in baseline), sorted(expected))
+            self.assertEqual(self.scan('git', ROOT, ROOT / '.gitleaksignore', options=options), [])
+            files = directory / 'files'
+            files.mkdir()
+            path = files / 'different-path.json'
+            path.write_bytes(original)
+            findings = self.scan('dir', files, ROOT / '.gitleaksignore')
+            self.assertEqual(len(findings), 14)
+            self.assertTrue(all(not x.get('Commit') for x in findings))
+            git('init', '-q', cwd=files)
+            git('add', '.', cwd=files)
+            git('-c', 'user.name=Synthetic scanner fixture', '-c', 'user.email=scanner@example.invalid',
+                '-c', 'commit.gpgsign=false', 'commit', '-qm', 'Synthetic worker digest fixture', cwd=files)
+            findings = self.scan('git', files, ROOT / '.gitleaksignore')
+            self.assertEqual(len(findings), 14)
+            self.assertTrue(all(x['Commit'] != WORKER_COMMIT for x in findings))
+            path.write_bytes((ROOT / WORKER_EVIDENCE).read_bytes())
+            self.assertEqual(self.scan('dir', files, ROOT / '.gitleaksignore'), [])
+            token = 'ghp_' + hashlib.sha256(b'Noncredential worker scanner control').hexdigest()[:36]
+            path.write_text(path.read_text() + '\nsynthetic_token = "' + token + '"\n')
+            self.assertTrue(any(x['RuleID'] == 'github-pat' for x in self.scan('dir', files, ROOT / '.gitleaksignore')))
 
     def test_exact_historical_scan_has_29_findings_without_dispositions_and_zero_with_them(self):
         with tempfile.TemporaryDirectory(prefix='gc-fingerprint-empty-') as temporary:

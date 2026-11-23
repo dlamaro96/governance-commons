@@ -1754,6 +1754,74 @@
         "method": "Five authenticated archives, exact requested/merge tree, all45 outcome names and API/authentication/browser source coordinates verified; both failures and the dependent skip retained.",
         "evidence_sha256": "622b7e17bbb17e20003d9377ac4b47604b7e166f64eca68842dd1bcdfd0befcb"
       }
+    },
+    {
+      "path": "docs/verification/source-security-e51e8ec.json",
+      "scope": "published-source-security-e51e8ec",
+      "source_binding": {
+        "method": "Three authenticated archives,1530 committed files and three stored CodeQL analyses verified.",
+        "evidence_sha256": "b98ff8e94120f4164875592c1ca6fa7401cb70899af23e04d1e65eb692a49e8c",
+        "implementation_commit": "e51e8ec24bc9b5e29c16f290d6ccb2f91f1be83e"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-local.json",
+      "scope": "minimal-runtime-images-local",
+      "source_binding": {
+        "method": "Exact local image IDs, source digests, pinned scanner/database,285 worker tests,12 TLS checks,171 API cases and2 browser journeys; dirty provenance and original runner failure retained.",
+        "evidence_sha256": "10cafcd32155614f21b0cd3577f5d84af244165a5b3ca08acbe43c4166353f65"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-e51e8ec.json",
+      "scope": "published-integration-checkpoint-e51e8ec",
+      "source_binding": {
+        "implementation_commit": "e51e8ec24bc9b5e29c16f290d6ccb2f91f1be83e",
+        "method": "All45 outcomes, five authenticated archives, exact source coordinates and merge/head tree verified. Four hosted captures inspected separately; normal merge read back.",
+        "evidence_sha256": "c6ba164671d549fc54aec4a3e03aabc2642226ee8125cd0ab363f8c0724e0212"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-protected-authentication-15496e3.json",
+      "scope": "minimal-runtime-protected-authentication",
+      "source_binding": {
+        "implementation_commit": "15496e3f02c81570b7bf8a8d40b138d199048c65",
+        "method": "Clean committed image,203 Git inputs,15 native and2 browser cases,32-row ledger and cleanup verified; two local captures inspected.",
+        "evidence_sha256": "27a2f7de9f64aa6aabfa90b191008044a9bb4d477e386a181596a29a2af2e584"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-a6cd20d.json",
+      "scope": "native-runtime-image-security",
+      "source_binding": {
+        "method": "Two authenticated archives and four exact native image reports independently validated against Git merge/head tree and scanner controls.",
+        "evidence_sha256": "dbb2337f38bed9677cec9cf4aaf4d6f21ae1f83dab3290fb7ecd08c5b16034c7",
+        "implementation_commit": "a6cd20db6e441cad38ae539f39c72d2db66e9187"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-worker-timeout-local.json",
+      "scope": "portable-python-worker-deadline-invocation",
+      "source_binding": {
+        "method": "Seven real source gates,82 host controls and actual normal/TERM/KILL probes pass; exact measured hashes and prior failures retained.",
+        "evidence_sha256": "0bb8cc3f02bf6b6aa208a9972a17e460e465ff0069ee1634683394fb23e12ce8"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-worker-hash-dispositions.json",
+      "scope": "worker-evidence-historical-digest-dispositions",
+      "source_binding": {
+        "method": "Exact historical source hashes verified;5 native scanner controls and worktree/history rescans pass. Dirty execution retained.",
+        "evidence_sha256": "0f724b350619134712f1f02ebae87915bfd22e9778ececedb32875000bba377f"
+      }
+    },
+    {
+      "path": "docs/verification/catalog-global-sorting-local.json",
+      "scope": "canonical-catalog-global-sorting",
+      "source_binding": {
+        "method": "Dirty-source hashes,172 API cases,5 browser journeys,20 search controls,162 CI controls and exact healthy image source readback verified.",
+        "evidence_sha256": "0b2c9f0fb5151899851cdcb8b243048db57509afd546c1c60d7678d86a2f8e8c"
+      }
     }
   ],
   "limitations": [

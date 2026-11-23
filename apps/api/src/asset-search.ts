@@ -6,7 +6,7 @@ import {parseBoundedJSONEnvelope} from '../../../packages/domain/src/model.ts';
 import type {Auth} from './security.ts';
 import {assetView} from './repository.ts';
 
-export type AssetSearchQuery={q?:string;type?:string;limit?:number;cursor?:string};
+export type AssetSearchQuery={q?:string;type?:string;limit?:number;cursor?:string;sort?:'name'|'name-desc'|'updated'};
 type SearchAuth=Pick<Auth,'principal'|'sessionHash'>;
 type Result={items:ReturnType<typeof assetView>[];total:number;nextCursor:string|null;facets:{type:string;count:number}[]};
 /** Per-query execution profile, not a maximum tenant population or capacity claim. */
@@ -56,17 +56,18 @@ class Budget {
 }
 
 function queryInput(query:AssetSearchQuery){
-  if(!object(query)||Object.keys(query).some(k=>!['q','type','limit','cursor'].includes(k))
+  if(!object(query)||Object.keys(query).some(k=>!['q','type','limit','cursor','sort'].includes(k))
     ||query.q!==undefined&&(!text(query.q,800)||Array.from(query.q).length>200)
     ||query.type!==undefined&&(!text(query.type,256)||Array.from(query.type).length>64)
     ||query.limit!==undefined&&(!integer(query.limit)||query.limit<1||query.limit>100)
-    ||query.cursor!==undefined&&!text(query.cursor,2048))throw new Problem(400,'VALIDATION_FAILED','Check the submitted search fields.');
+    ||query.cursor!==undefined&&!text(query.cursor,2048)
+    ||query.sort!==undefined&&!['name','name-desc','updated'].includes(query.sort))throw new Problem(400,'VALIDATION_FAILED','Check the submitted search fields.');
   // The catalog serializes its first page as cursor=. Only that exact empty
   // value is absence; every nonempty cursor still requires its bound signature.
-  return {q:query.q??'',type:query.type??'',limit:query.limit??50,cursor:query.cursor===''?undefined:query.cursor};
+  return {q:query.q??'',type:query.type??'',limit:query.limit??50,cursor:query.cursor===''?undefined:query.cursor,sort:query.sort??'name'};
 }
 function binding(auth:SearchAuth,q:ReturnType<typeof queryInput>){
-  return createHash('sha256').update(JSON.stringify([auth.principal.tenantId,auth.principal.id,q.q,q.type,q.limit])).digest('hex');
+  return createHash('sha256').update(JSON.stringify([auth.principal.tenantId,auth.principal.id,q.q,q.type,q.limit,q.sort])).digest('hex');
 }
 function cursorRead(input:string|undefined,bound:string,key:string){
   if(input===undefined)return 0;
@@ -162,7 +163,7 @@ export function createAssetSearch(deps:AssetSearchDependencies){
       if(!Array.isArray(sessions[0].permissions)||!sessions[0].permissions.includes('catalog:read'))throw new Problem(403,'FORBIDDEN','Your current permissions do not allow this action.');
       const created=await request('/'+INDEX+'/_search/point_in_time?keep_alive=30s&allow_partial_pit_creation=false','POST',undefined,budget);
       if(!object(created))throw unavailable();let currentPit=pit(created.pit_id);shards(created._shards);
-      const seen=new Set<string>(),facets=new Map<string,number>(),selected:string[]=[];
+      const seen=new Set<string>(),facets=new Map<string,number>(),eligible:string[]=[];
       let after:[string,string]|undefined,total=0,visits=0,pages=0;
       for(;;){
         // One final size1 probe proves exact-full-cap completeness. It cannot
@@ -195,11 +196,29 @@ export function createAssetSearch(deps:AssetSearchDependencies){
           const allowed=new Map<string,string>();
           for(const row of rows){if(!ids.includes(row.id)||allowed.has(row.id)||!text(row.type,256)||Array.from(row.type).length>64)throw unavailable();allowed.set(row.id,row.type);}
           for(const hit of hits){const type=allowed.get(hit.id);if(type===undefined)continue;
-            if(total>=offset&&selected.length<q.limit)selected.push(hit.id);total++;
+            eligible.push(hit.id);total++;
             if(!facets.has(type)&&facets.size>=ASSET_SEARCH_LIMITS.facetKeys)throw limited();facets.set(type,(facets.get(type)??0)+1);
           }
         }
         if(hits.length<size)break;
+      }
+      // OpenSearch discovers candidates; the same primary authorization snapshot
+      // orders the complete eligible set. Stale projected names/timestamps cannot
+      // choose a page, and no hidden row influences its ordering or counts.
+      // Only UUIDs are retained (at most100000); metadata hydration remains100.
+      // These are closed SQL fragments, never interpolated request expressions.
+      const order=q.sort==='updated'?'a.updated_at DESC,a.id ASC':q.sort==='name-desc'?'a.name COLLATE "C" DESC,a.id ASC':'a.name COLLATE "C" ASC,a.id ASC';
+      let selected:string[]=[];
+      if(offset<total){
+        const ordered=await sql(`SELECT a.id FROM assets a
+          WHERE a.tenant_id=$1::uuid AND a.id=ANY($2::uuid[]) AND a.status='active'
+            AND (a.visibility='tenant' OR a.allowed_identities @> $3::jsonb)
+            AND ($4::text='' OR a.type=$4)
+          ORDER BY ${order} LIMIT $5::integer OFFSET $6::integer`,[tenant,eligible,JSON.stringify([actor]),q.type,q.limit,offset]);
+        const allowed=new Set(eligible);
+        if(ordered.length!==Math.min(q.limit,total-offset)||new Set(ordered.map(r=>r.id)).size!==ordered.length
+          ||ordered.some(r=>!allowed.has(r.id)))throw unavailable();
+        selected=ordered.map(r=>r.id);
       }
       let items:ReturnType<typeof assetView>[]=[];
       if(selected.length){

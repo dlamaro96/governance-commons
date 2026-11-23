@@ -228,7 +228,7 @@ class Harness:
         require(len(payload.encode()) <= 16384)
         inner_seconds, outer_seconds = (10, 15) if mode == 'probe' else (200, 210)
         require(self.deadline - time.monotonic() >= outer_seconds)
-        result = decode(self.command(['docker','exec','-i', self.worker['id'], 'timeout','--signal=TERM','--kill-after=3s',str(inner_seconds)+'s',
+        result = decode(self.command(['docker','exec','-i', self.worker['id'], 'timeout','-s','TERM','-k','3s',str(inner_seconds)+'s',
                                     '/worker/.venv/bin/python','-c',WORKER], data=payload, seconds=outer_seconds))
         require(type(result) is dict and result.get('ok') is True and result.get('hashes') == allowed)
         if mode == 'probe': require(set(result) == {'ok','hashes'})

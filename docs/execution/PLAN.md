@@ -4,11 +4,10 @@ Updated 23 November 2026. The complete M0–M10 programme remains required. [Pro
 
 ## Active delivery sequence
 
-1. Publish implementation checkpoint `5d9e501` and qualify the exact new revision. The previous `b08b88d` pipeline finished with 42 successes, two failures and one dependent skip; all 171 API cases and 37 main browser journeys pass. Its failed SQL024 and protected-login gates remain recorded.
-2. The SQL024 batching correction passes 263 native cases in 387 seconds locally, within the original 600-second bound; all 77 affected composition controls pass. The protected tool-admission correction passes 17 process, 12 bootstrap and 27 publication controls, followed by 15 native and two real browser cases on the exact immutable image. Fresh hosted execution remains mandatory.
-3. Source security at `b08b88d` verifies all 1,522 committed files and three stored analyses with zero findings on attempt 2. Retain its initial installer failure and run all source-security languages on the newly published revision.
-4. Verify all 45 required outcomes, update evidence and complete the normal protected merge. Keep PR #23 draft while checks fail. No historical result, branch protection or release gate is bypassed.
-5. Continue canonical authorization, remaining quality/lineage and every milestone below. Vendor credentials and independent reviews block only their own qualification; executable implementation continues.
+1. Completed: all 45 development outcomes and source security pass at `e51e8ec`; five behavior archives and three stored analyses are verified. PR #23 merged normally as `0fc25d4`. Historical failures remain recorded.
+2. PR #39 publishes the runtime-security increment. Both native Linux image jobs pass at `a6cd20d`; the broader run exposed incompatible timeout flags in the worker launchers. Publish the locally verified correction and rerun the affected hosted regression. Preserve the original failure and exact scan bindings.
+3. Integrate locally verified global catalog ordering (172 API cases and five targeted browser journeys) and the exact source-hash secret-scan dispositions into PR #39. Complete all 45 outcomes, now including 38 main browser journeys, and security checks at the published revision. Qualify fork behavior before adding the new runtime aggregate to enforced requirements; no gate bypass or independent sign-off is inferred.
+4. Continue canonical authorization, remaining quality/lineage and every milestone below. Vendor credentials and independent reviews block only their own qualification; executable implementation continues.
 
 ## GitHub delivery backlog
 

@@ -37,6 +37,19 @@ jobs:
       - name: Dependency licensing for the installed host profile
         id: dependency_license
         run: python3 policies/check_dependencies.py --write
+      - name: Audit the exact JavaScript dependency lock
+        run: |
+          mkdir -p .local/dependency-audit
+          pnpm audit --json --audit-level=high > .local/dependency-audit/npm.json
+      - name: Preserve dependency vulnerability findings
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dependency-audit-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .local/dependency-audit/
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: error
       - name: Preserve the executed dependency inventory
         if: always() && steps.dependency_license.outcome != 'skipped'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -53,6 +66,8 @@ jobs:
         run: pnpm test
       - name: Fail-closed evidence collection
         run: python3 policies/test_ci_evidence.py
+      - name: In-container API test deadline and process cleanup
+        run: python3 policies/test_api_supervisor.py
       - name: Explicit authority-read upgrade qualification controls
         run: python3 scripts/test_authority_read_upgrade.py
       - name: Explicit relation-candidate upgrade controls
@@ -386,7 +401,7 @@ jobs:
       - name: Verify browser acceptance and accessibility
         if: success() && matrix.shard == 'browser'
         id: browser
-        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts tests/e2e/source-connectors.spec.ts tests/e2e/postgres-configuration.spec.ts tests/e2e/approvals.spec.ts tests/e2e/glossary.spec.ts tests/e2e/quality.spec.ts tests/e2e/lineage.spec.ts tests/e2e/classification.spec.ts tests/e2e/reference-data.spec.ts tests/e2e/reference-quality.spec.ts tests/e2e/reference-structures.spec.ts tests/e2e/reference-import.spec.ts tests/e2e/quality-uniqueness.spec.ts tests/e2e/quality-range.spec.ts tests/e2e/quality-monitoring.spec.ts tests/e2e/quality-freshness.spec.ts tests/e2e/quality-freshness-monitoring.spec.ts tests/e2e/quality-volume.spec.ts
+        run: pnpm exec playwright test --config .github/playwright.ci.config.ts tests/e2e/vertical-slice.spec.ts tests/e2e/catalog-sorting.spec.ts tests/e2e/ui-accessibility.spec.ts tests/e2e/models.spec.ts tests/e2e/model-migrations.spec.ts tests/e2e/asset-types.spec.ts tests/e2e/asset-type-migrations.spec.ts tests/e2e/relations.spec.ts tests/e2e/relation-migrations.spec.ts tests/e2e/business-domains.spec.ts tests/e2e/source-connectors.spec.ts tests/e2e/postgres-configuration.spec.ts tests/e2e/approvals.spec.ts tests/e2e/glossary.spec.ts tests/e2e/quality.spec.ts tests/e2e/lineage.spec.ts tests/e2e/classification.spec.ts tests/e2e/reference-data.spec.ts tests/e2e/reference-quality.spec.ts tests/e2e/reference-structures.spec.ts tests/e2e/reference-import.spec.ts tests/e2e/quality-uniqueness.spec.ts tests/e2e/quality-range.spec.ts tests/e2e/quality-monitoring.spec.ts tests/e2e/quality-freshness.spec.ts tests/e2e/quality-freshness-monitoring.spec.ts tests/e2e/quality-volume.spec.ts
       - name: Verify protected OIDC and session lifecycle on the exact built image
         if: success() && matrix.shard == 'browser'
         id: protected_authn

@@ -13,5 +13,29 @@
       "linux_x64": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
     },
     "provenance": "Official GitHub release asset digests and checksum file, read through the authenticated API. No release signature/provenance verification is claimed."
+  },
+  "trivy": {
+    "version": "0.74.0",
+    "license": "Apache-2.0",
+    "release": "https://github.com/aquasecurity/trivy/releases/tag/v0.74.0",
+    "retrieved_at": "2026-11-23",
+    "archives": {
+      "linux_x64": {
+        "name": "trivy_0.74.0_Linux-64bit.tar.gz",
+        "sha256": "2ae6fe3ee734b7fdf11335663e18c75ea12dccc76062f09f164a3b0f8be4371a",
+        "bytes": 50419107
+      },
+      "linux_arm64": {
+        "name": "trivy_0.74.0_Linux-ARM64.tar.gz",
+        "sha256": "b94ce1976bbf3c15b514b605ee88be7c6d94a29be2302847ff01cb794d47aad5",
+        "bytes": 45424969
+      },
+      "darwin_arm64": {
+        "name": "trivy_0.74.0_macOS-ARM64.tar.gz",
+        "sha256": "1caada5e0e2091909357c7525d3aa76f4b660b13821bc143b190c7483e31cc11",
+        "bytes": 47694894
+      }
+    },
+    "provenance": "Pinned official GitHub release asset digests and sizes; no independent signature claim."
   }
 }

@@ -235,6 +235,26 @@ def safe_report(root: Path, value: object, commit: str | None) -> dict | None:
         return None
 
 
+# The production image has no shell/coreutils. Keep the original 1740-second
+# in-container deadline and ten-second TERM-to-KILL grace in a separate Node
+# process, so a stuck test event loop cannot renew or prevent the deadline.
+API_TEST_SUPERVISOR = r"""import {spawn} from 'node:child_process';
+import {constants} from 'node:os';
+const child=spawn(process.execPath,process.argv.slice(1),{stdio:'inherit',detached:true});
+let forced=null,finished=false,hardTimer;
+const signalGroup=signal=>{if(Number.isSafeInteger(child.pid)&&child.pid>1){try{process.kill(-child.pid,signal);}catch(e){if(e.code!=='ESRCH')throw e;}}};
+const finish=(code)=>{if(finished)return;finished=true;clearTimeout(deadline);clearTimeout(hardTimer);
+ try{signalGroup('SIGKILL');}catch{code=125;}process.exit(code);};
+const stop=code=>{if(finished||forced!==null)return;forced=code;
+ try{signalGroup('SIGTERM');}catch{finish(125);return;}
+ hardTimer=setTimeout(()=>{try{signalGroup('SIGKILL');}catch{finish(125);}},10000);};
+const deadline=setTimeout(()=>stop(124),1740000);
+for(const signal of ['SIGTERM','SIGINT','SIGHUP'])process.on(signal,()=>stop(128+constants.signals[signal]));
+child.once('error',()=>finish(125));
+child.once('exit',(code,signal)=>finish(forced??code??(128+(constants.signals[signal]??1))));
+"""
+
+
 def run(root: Path) -> int:
     # A failed new invocation must never stage the previous invocation's result.
     # Unlink only the latest entry, including a symlink; preserve archive targets.
@@ -260,7 +280,8 @@ def run(root: Path) -> int:
     with raw_path.open("xb") as output:
         raw_path.chmod(0o600)
         if before:
-            command = [*compose, "timeout", "--signal=TERM", "--kill-after=10s", "1740s", "node", "--import", "tsx", "--test", "--test-concurrency=1", "--test-reporter=tap", *hashes]
+            command = [*compose, "node", "--input-type=module", "-e", API_TEST_SUPERVISOR, "--",
+                       "--import", "tsx", "--test", "--test-concurrency=1", "--test-reporter=tap", *hashes]
             try:
                 process = subprocess.Popen(command, cwd=root, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 def drain() -> None:

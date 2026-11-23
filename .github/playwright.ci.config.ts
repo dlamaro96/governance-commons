@@ -14,6 +14,7 @@ export default defineConfig({
   outputDir: '../.local/ci-test-results',
   projects: [
     { name: 'vertical-slice', testMatch: /vertical-slice\.spec\.ts/ },
+    { name: 'catalog-sorting', testMatch: /catalog-sorting\.spec\.ts/, dependencies: ['vertical-slice'] },
     { name: 'accessibility', testMatch: /ui-accessibility\.spec\.ts/, dependencies: ['vertical-slice'] },
     { name: 'models', testMatch: /models\.spec\.ts/, dependencies: ['vertical-slice'] },
     { name: 'model-migrations', testMatch: /model-migrations\.spec\.ts/, dependencies: ['models'] },

@@ -152,6 +152,7 @@ def failure_locations(results, filename):
 
 source = ROOT / ".local/evidence/playwright-results.json"
 REVIEWED_TITLES = {
+    "catalog-sorting.spec.ts": "UX-04: catalog sorting spans real source results and resets cursor after changing order",
     "quality-volume.spec.ts": 'DQ-VOLUME: exact table counts, immutable thresholds, scheduled recovery and reopened issue history',
     "quality-freshness-monitoring.spec.ts": 'DQ-FRESHNESS-MONITOR: scheduled latest timestamps recover, reopen and expire without rewriting a recorded pass',
     "quality-freshness.spec.ts": 'DQ-FRESHNESS: exact source-clock latest age, immutable duration versions, all-null outcome and current read boundaries',
@@ -178,7 +179,7 @@ if "browser" in REQUIRED and source.is_file():
                     results = test.get("results", [])
                     status = test.get("status", "unknown")
                     filename = Path(str(spec.get("file", ""))).name
-                    if filename not in {"vertical-slice.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts", "relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts", "lineage.spec.ts", "classification.spec.ts", "reference-data.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts", "quality-monitoring.spec.ts", "quality-freshness.spec.ts", "quality-freshness-monitoring.spec.ts", "quality-volume.spec.ts"}:
+                    if filename not in {"vertical-slice.spec.ts", "catalog-sorting.spec.ts", "ui-accessibility.spec.ts", "models.spec.ts", "model-migrations.spec.ts", "asset-types.spec.ts", "asset-type-migrations.spec.ts", "relations.spec.ts", "relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts", "lineage.spec.ts", "classification.spec.ts", "reference-data.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts", "quality-monitoring.spec.ts", "quality-freshness.spec.ts", "quality-freshness-monitoring.spec.ts", "quality-volume.spec.ts"}:
                         continue
                     # Bind each new journey to its reviewed declaration, without
                     # exporting arbitrary titles or accepting a same-file substitute.
@@ -194,6 +195,7 @@ if outcomes["browser"] == "success":
     # A successful filtered run is not the mandatory browser gate. Require all
     # registered journeys, once each, as well as their successful outcomes.
     expected = {f"tests/e2e/{name}.spec.ts": 2 for name in ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations")}
+    expected["tests/e2e/catalog-sorting.spec.ts"] = 1
     expected["tests/e2e/business-domains.spec.ts"] = 3
     expected["tests/e2e/source-connectors.spec.ts"] = 1
     expected["tests/e2e/postgres-configuration.spec.ts"] = 1
@@ -228,12 +230,15 @@ if outcomes["browser"] == "success":
                          for state in ("form", "failure")
                          for language, width in (("en", 1440), ("ar", 390))}
     names += sorted(postgres_captures)
+    sorting_captures = {"catalog-name-desc-1440.png", "catalog-name-desc-390.png", "catalog-name-desc-ar-390.png"}
+    names += sorted(sorting_captures)
     for name in names:
-        path = ROOT / "docs/verification/screenshots" / name
+        folder = ".local/evidence/catalog-sorting-captures" if name in sorting_captures else "docs/verification/screenshots"
+        path = ROOT / folder / name
         if path.is_file() and not path.is_symlink() and 0 < path.stat().st_size < 16 * 1024 * 1024:
             shutil.copyfile(path, DEST / name)
             report["screenshots"].append(name)
-        elif name in connector_captures | postgres_captures:
+        elif name in connector_captures | postgres_captures | sorting_captures:
             report["outcome"] = "NOT_PASSED"
 # Ownership is explicit; missing owner evidence is never relabeled unassigned.
 for step, field in (("security", "api_evidence"), ("authority_authn_foundation", "authentication_evidence"),

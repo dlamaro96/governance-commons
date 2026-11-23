@@ -365,6 +365,7 @@ def main():
   ./dev test --suite authority-read-original Verify explicit SQL013-to031 authority read upgrade
   ./dev test --suite authority-read-current Verify populated SQL030-to031 authority read upgrade
   ./dev test --suite protected-authn  Verify isolated real OIDC and protected session lifecycle
+  ./dev test --suite image-security   Scan exact built application images and retain full findings
   ./dev test --suite source-connectors-upgrade Verify source storage upgrade and native tenant isolation
   ./dev test --suite postgres-targets Verify isolated configurable PostgreSQL TLS and metadata boundaries
   ./dev test --suite approvals-upgrade Verify approval storage, upgrade and concurrent decisions

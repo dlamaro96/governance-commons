@@ -1,0 +1,83 @@
+name: Runtime image security
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '19 5 * * 1'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: runtime-security-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  images:
+    name: runtime-images (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: 3.14.5
+      - name: Verify fail-closed scanner controls
+        run: python3 policies/test_scan_images.py
+      - name: Build pinned runtime images
+        run: |
+          mkdir -p .local/runtime-security
+          docker build --iidfile .local/runtime-security/application.id -t governance-commons:security .
+          docker build -f python/Dockerfile --iidfile .local/runtime-security/python.id -t governance-commons-python:security .
+      - name: Verify application source and production imports
+        run: |
+          python3 - <<'PY'
+          import sys
+          sys.path.insert(0, 'scripts')
+          import runtime
+          runtime.INTEGRITY_PROFILES['api']['image'] = 'governance-commons:security'
+          runtime.INTEGRITY_PROFILES['python-worker']['image'] = 'governance-commons-python:security'
+          snapshot = runtime.integrity_source_snapshot()
+          for profile in ('api', 'python-worker'):
+              runtime.verify_built_image(profile, snapshot)
+          PY
+          docker run --rm --network none --read-only --tmpfs /tmp:rw,noexec,nosuid,size=64m --cap-drop ALL --security-opt no-new-privileges:true --memory 384m --pids-limit 64 --entrypoint node governance-commons:security --input-type=module -e 'import "@temporalio/worker"; import "pg"; import "fastify"; import "kysely"; import "jose";'
+      - name: Execute Python worker tests in the shipped runtime
+        run: docker run --rm --network none --read-only --tmpfs /tmp:rw,noexec,nosuid,size=64m --cap-drop ALL --security-opt no-new-privileges:true --memory 384m --pids-limit 64 --entrypoint /worker/.venv/bin/python governance-commons-python:security -m unittest discover -s tests -v
+      - name: Scan application image and preserve its full inventory
+        if: success() || failure()
+        run: python3 policies/scan_images.py --install --image "$(cat .local/runtime-security/application.id)" --profile application --output .local/runtime-security/application
+      - name: Scan Python image and preserve its full inventory
+        if: success() || failure()
+        run: python3 policies/scan_images.py --install --image "$(cat .local/runtime-security/python.id)" --profile python-worker --output .local/runtime-security/python-worker
+      - name: Preserve scans including failures
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: runtime-security-${{ matrix.arch }}-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .local/runtime-security/
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: error
+  required:
+    name: runtime-security-required
+    if: always()
+    needs: [images]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+      - name: Require both native architectures
+        env:
+          IMAGES_RESULT: ${{ needs.images.result }}
+        run: test "$IMAGES_RESULT" = success

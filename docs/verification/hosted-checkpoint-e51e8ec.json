@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T04:50:40.555064+00:00",
+  "implementation_commit": "e51e8ec24bc9b5e29c16f290d6ccb2f91f1be83e",
+  "tested_merge_commit": "ddab5cd3ada16af1d84eb685d1d1c621f4fefd0a",
+  "same_tree_and_parent_verified": true,
+  "result": "PASS",
+  "release_qualified": false,
+  "run_id": 45108331697,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45108331697",
+  "run_attempt": 1,
+  "required_outcomes": 45,
+  "outcome_counts": {
+    "success": 45
+  },
+  "outcomes": {
+    "connectors": "success",
+    "security": "success",
+    "model_upgrade": "success",
+    "asset_type_upgrade": "success",
+    "type_migration_upgrade": "success",
+    "relations_upgrade": "success",
+    "relation_participation_upgrade": "success",
+    "business_domains_upgrade": "success",
+    "authority_authn_foundation": "success",
+    "authority_read_original": "success",
+    "authority_read_current": "success",
+    "source_connectors_upgrade": "success",
+    "postgres_targets": "success",
+    "relation_candidate_original": "success",
+    "relation_candidate_current": "success",
+    "glossary_upgrade": "success",
+    "relation_scope_upgrade": "success",
+    "glossary_population_repaired_upgrade": "success",
+    "lineage_repaired_upgrade": "success",
+    "classification_repaired_upgrade": "success",
+    "quality_repaired_upgrade": "success",
+    "quality_worker": "success",
+    "lineage_worker": "success",
+    "reference_repaired_upgrade": "success",
+    "reference_quality_repaired_upgrade": "success",
+    "reference_quality_worker": "success",
+    "reference_structure_repaired_upgrade": "success",
+    "reference_import": "success",
+    "uniqueness_upgrade": "success",
+    "uniqueness_worker": "success",
+    "range_upgrade": "success",
+    "range_worker": "success",
+    "monitoring_upgrade": "success",
+    "freshness_upgrade": "success",
+    "freshness_worker": "success",
+    "freshness_scheduling_upgrade": "success",
+    "volume_upgrade": "success",
+    "volume_worker": "success",
+    "business_domain_seed": "success",
+    "browser": "success",
+    "protected_authn": "success",
+    "bootstrap": "success",
+    "services": "success",
+    "object_store": "success",
+    "seed": "success"
+  },
+  "verified_behavior_archives": 5,
+  "safe_evidence": [
+    {
+      "family": "api",
+      "actualTests": 171,
+      "sourceFiles": 25,
+      "sourceManifestSha256": "852153047ac99a782de488c630f5729d33c8178785fe00f296cf020ab2945019",
+      "artifactSha256": "33378651fca8294457411ac4850d931773602c576960d7f4f4db10ad02cb0061"
+    },
+    {
+      "family": "inactive-authentication",
+      "actualTests": 35,
+      "sourceFiles": 176,
+      "migrations": 12,
+      "sourceManifestSha256": "c562a74293bf7f2ed28a7cb2d148b794219d816f25e5f0b9540661d8d08ab4f2",
+      "artifactSha256": "df6749ea3657bce4078e7313d9211ff6f363d66b5d5ebfe657f52f4dee21d9da",
+      "cleanupExportedBothTrue": true
+    },
+    {
+      "family": "protected-authentication",
+      "actualNativeTests": 15,
+      "browserJourneys": 2,
+      "sourceFiles": 203,
+      "migrations": 32,
+      "immutableImageMode": true,
+      "captureCount": 8,
+      "visualReview": "NOT_PERFORMED",
+      "artifactSha256": "96dca7a23ea28a4b90b8f514d7f9f03efa9a173162a9f76fd3aa7b2ab9f01c2c",
+      "scope": "Public coordinate, source, schema and artifact readback; raw private native/installation proofs are not downloaded."
+    }
+  ],
+  "browser": {
+    "passed": 37,
+    "failedExecuted": 0,
+    "notRun": 0,
+    "retries": 0,
+    "failedCases": [],
+    "notRunFiles": [],
+    "screenshots": [
+      {
+        "sha256": "8a53571f194081feb8247c8e3d8368edab0cf1c896511ae339726f6aee70211f",
+        "bytes": 156656,
+        "name": "catalog-ar-dark-1440.png"
+      },
+      {
+        "sha256": "8e928e724e3757ba9678ac38f4cc23d86ebee296c3e4a0cea45658c3f400e9c6",
+        "bytes": 52772,
+        "name": "catalog-ar-dark-390.png"
+      },
+      {
+        "sha256": "ef30014813f796f0ff990c5f5ddd36772deafa55ebc485f66de9035f6c502b29",
+        "bytes": 81166,
+        "name": "catalog-ar-dark-768.png"
+      },
+      {
+        "sha256": "4a96e6c51bdb2482be25076e2031fc99b6579edfd0aa9d566c6cfe1797806e5a",
+        "bytes": 181072,
+        "name": "catalog-en-dark-1440.png"
+      },
+      {
+        "sha256": "9b62ef773549b7f4d00ee4848b95298ba317129d78528215b67db34a9aa9b6a5",
+        "bytes": 131303,
+        "name": "catalog-en-light-1024.png"
+      },
+      {
+        "sha256": "02a8bce02674b4417b03a76ded7384b472dce354123472e470ff063e1f6db435",
+        "bytes": 164010,
+        "name": "catalog-en-light-1280.png"
+      },
+      {
+        "sha256": "d9f3fce2d890331548f6612bb9f16fac7bac5c5721ae807afae1f4fb4b9a252a",
+        "bytes": 179381,
+        "name": "catalog-en-light-1440.png"
+      },
+      {
+        "sha256": "83212a7d367dfd69ccbc633d6eec2eafa06ba4228649c910b550b8c7c2ec3ce3",
+        "bytes": 57501,
+        "name": "catalog-en-light-390.png"
+      },
+      {
+        "sha256": "192903396f01285a173a33fc6a89f0cdea920286e633fcc58f2b6952675e536d",
+        "bytes": 88646,
+        "name": "catalog-en-light-768.png"
+      },
+      {
+        "sha256": "7fce1e2ac4fd39593394c62532025ed6a1891ca69f1e340a47e6422448cc9372",
+        "bytes": 92737,
+        "name": "catalog-history.png"
+      },
+      {
+        "sha256": "1f72390ad9ee989ba89f5af7df61b0749057fd520f9a8c221787a7ce536160d1",
+        "bytes": 44392,
+        "name": "m8-postgres-configuration-failure-ar-390.png"
+      },
+      {
+        "sha256": "009df45abe22fec6ad33a62f12b7beb64c03c9c70553dc967f2820f0c5c01460",
+        "bytes": 129947,
+        "name": "m8-postgres-configuration-failure-en-1440.png"
+      },
+      {
+        "sha256": "dc82dda4e0364a1c43ef141e251807206515c5a8d83fab87b9b826128db258d5",
+        "bytes": 60457,
+        "name": "m8-postgres-configuration-form-ar-390.png"
+      },
+      {
+        "sha256": "62016c864aae6851a008e2a78594fcb962c0536bf83961213748a2ff76d8ef63",
+        "bytes": 211058,
+        "name": "m8-postgres-configuration-form-en-1440.png"
+      },
+      {
+        "sha256": "9c4922b73f383827c21ed1d373cd381130d8ab178a0681a779344eff07ad2925",
+        "bytes": 18264,
+        "name": "m8-source-connectors-denial-ar-390.png"
+      },
+      {
+        "sha256": "8159ddbf0855d5264454ed80ce53c112e818a164f5c55e620c3f64b76c56cc8c",
+        "bytes": 57011,
+        "name": "m8-source-connectors-denial-en-1440.png"
+      },
+      {
+        "sha256": "2088bd88b14ab94246471b591b12294098dd54c1c3776c2f9beb14bc5183e48c",
+        "bytes": 44755,
+        "name": "m8-source-connectors-failure-ar-390.png"
+      },
+      {
+        "sha256": "81fac16e5af7d4a38e8a11496b146b00ee0cb5f49e0447531cafd82d19336b07",
+        "bytes": 134060,
+        "name": "m8-source-connectors-failure-en-1440.png"
+      },
+      {
+        "sha256": "6878ce1b0eaf4c95fbbad0c8f053ddf7f560a2d68ba6011f923afb48f8ca2bd7",
+        "bytes": 61833,
+        "name": "m8-source-connectors-form-ar-390.png"
+      },
+      {
+        "sha256": "d9dbab87ded8918878dbd4a182990d806bac0e0fe0f00611fa17b4a20bc3503b",
+        "bytes": 220451,
+        "name": "m8-source-connectors-form-en-1440.png"
+      },
+      {
+        "sha256": "9ef2a3ec166a5e505d0106cb0546725b191311956567dfdbe2edd922f6c192b6",
+        "bytes": 57464,
+        "name": "m8-source-connectors-registered-ar-390.png"
+      },
+      {
+        "sha256": "901ac2c4bde5b9338528052fb3c4af0ee5df0f50bb041c89069e9f6fbde0aeb0",
+        "bytes": 139549,
+        "name": "m8-source-connectors-registered-en-1440.png"
+      },
+      {
+        "sha256": "c141d489a59ddb66dd8a3da702729cafe630c365cf36796d906423c01eea5fc1",
+        "bytes": 64835,
+        "name": "protected-revoked-ar-mobile.png"
+      },
+      {
+        "sha256": "4d7c650b5ec7a2044004ef274e768e1fd18c6334c9421ebfd0eeb70b5a98a547",
+        "bytes": 75626,
+        "name": "protected-selected-ar-desktop.png"
+      },
+      {
+        "sha256": "0146fbf22c5bcbb8ea836a9adb2988df9dd6e2de2de86dca9075131d28f87f7a",
+        "bytes": 69183,
+        "name": "protected-selected-ar-mobile.png"
+      },
+      {
+        "sha256": "e41fca658eae6c856f0ba6232c073dbd325118894a23683f090611c031f1ee1f",
+        "bytes": 85901,
+        "name": "protected-selected-en-desktop.png"
+      },
+      {
+        "sha256": "0d54bd544251aa26a4722ef2cfd7dd4a9c26a3086c2c56e118d0182757950e48",
+        "bytes": 82807,
+        "name": "protected-session-en-desktop.png"
+      },
+      {
+        "sha256": "b272f34e7ed8a7a2ba6f37b85d921f23e32f819c827dd3c0dda868b4c6173350",
+        "bytes": 75273,
+        "name": "protected-steward-en-mobile.png"
+      },
+      {
+        "sha256": "21be5d5aa36de916779289c27023fcf704dd8b105af506a86fd4590038553b81",
+        "bytes": 75379,
+        "name": "protected-tenant-denied-en-mobile.png"
+      },
+      {
+        "sha256": "2f139d7a88e2aa54a66c8d9590af052e9897b992971bfbcaa9e92681a6487e06",
+        "bytes": 78645,
+        "name": "protected-unbound-denied-en-desktop.png"
+      }
+    ],
+    "visualReview": "NOT_PERFORMED"
+  },
+  "verification_receipt_sha256": "30a84d1c4e061b0f36a498dcfe59a00ffa4632a2f3221633dc275fcb5472ae0b",
+  "source_security": "docs/verification/source-security-e51e8ec.json",
+  "merged": {
+    "pull_request": "https://github.com/dlamaro96/governance-commons/pull/23",
+    "commit": "0fc25d42acc4e7e3fb1ce5f9ba559d01efbed559",
+    "at": "2026-11-23T04:49:06Z",
+    "method": "Normal merge after all required checks passed; no bypass or independent review claimed."
+  },
+  "limitations": [
+    "Aggregate PASS requires all45 exact outcomes, five verified archives and completed quality/secrets/required jobs; pending or failed work never implies success.",
+    "Authenticated archives and declared source maps are checked against exact Git; private native TAP and mounted-source/resource inventory proofs are not exported unless explicitly noted.",
+    "No source-security requalification, runtime execution or GitHub mutation performed.",
+    "The earlier readback receipt did not perform visual inspection; the separately listed four-image review occurred afterwards."
+  ],
+  "visual_review": {
+    "inspected": [
+      "catalog-en-light-1440.png",
+      "catalog-ar-dark-390.png",
+      "protected-selected-en-desktop.png",
+      "protected-selected-ar-mobile.png"
+    ],
+    "observations": [
+      "Main catalog and protected-session controls are readable in the inspected English desktop and Arabic mobile captures.",
+      "Catalog table horizontally overflows at desktop with long synthetic source labels; narrow mobile exposes its leading columns. This is not a complete visual acceptance."
+    ],
+    "limitations": [
+      "Four of thirty hosted captures inspected after the coordinate readback.",
+      "No independent accessibility or translation sign-off."
+    ]
+  }
+}

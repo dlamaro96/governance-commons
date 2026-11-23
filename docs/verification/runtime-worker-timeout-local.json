@@ -1,0 +1,818 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T05:06:10.942558+00:00",
+  "base_commit": "a6cd20db6e441cad38ae539f39c72d2db66e9187",
+  "dirty_worktree": true,
+  "result": "PASS",
+  "release_qualified": false,
+  "correction": "Use timeout -s TERM -k 3s for Python worker invocations; unchanged inner/outer deadlines, signal and kill grace. Source PostgreSQL GNU invocations remain unchanged.",
+  "original_failure": {
+    "run_id": 45114280627,
+    "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45114280627",
+    "job_id": 137493409455,
+    "phase": "owned_helper_binding",
+    "observed": "BusyBox timeout rejects the GNU --signal=TERM long option before worker execution.",
+    "log_sha256": "714dbba87f08403a66016862671fed83aca3fc5b379a9dcd28eba5f3088eea01"
+  },
+  "worker_gates": [
+    {
+      "suite": "quality-worker-local",
+      "result": "passed",
+      "checks": [
+        "exact_20_rows_5_nulls",
+        "empty_exact_measurement",
+        "row_budget_refusal",
+        "all_eight_target_pins_refused_when_stale",
+        "rls_unsupported",
+        "native_reader_role_and_read_only_default",
+        "native_reader_dml_denied",
+        "closed_measurements_without_row_values"
+      ],
+      "cleanup": "owned_tables_absent_and_catalog_inventory_preserved",
+      "limits": [
+        "local synthetic demo source only; no external TLS qualification",
+        "direct executor only; no HTTP, API, Temporal or publication qualification",
+        "planner bytes/cost are estimates; no physical IO bound claim",
+        "source catalog/ACL and owned synthetic data preservation; not a whole-database row checksum"
+      ],
+      "worker_image": "sha256:dc760d876c54a0335b12b04f7f147b95baa7e48b01ee45c5963c250b77f1d4cf",
+      "log_sha256": "2f276aabfbf1639c169ddea9b8e9a0457f56e065cc21fbd255b26d8c48d3eb8f",
+      "source_files": [
+        {
+          "path": "python/governance_workers/__init__.py",
+          "sha256": "6c6ec57de9f82ef42d82760f144a4571cb16b3cd6de33aaa7aa9fd65e8ab1fa1"
+        },
+        {
+          "path": "python/governance_workers/deadline.py",
+          "sha256": "2dcecedc356298f52fa7441df31d76ff92d414117e1e72ea87b4cb3c3d828ce0"
+        },
+        {
+          "path": "python/governance_workers/dispatch.py",
+          "sha256": "c2b5edc9c8df89da6aecb6aab9bdcd8863e6a619e75f8611ddc5a5ea00b8987f"
+        },
+        {
+          "path": "python/governance_workers/oauth.py",
+          "sha256": "249dc65de4d1056cdc1332997634cc2ee63409eb1150c5ae325878575b3fb7a3"
+        },
+        {
+          "path": "python/governance_workers/postgres_lineage.py",
+          "sha256": "e8d3f41d8b6fc85deea134ba806f8e7439ac0efa5b3bfb2d19dd41a7d72379f5"
+        },
+        {
+          "path": "python/governance_workers/postgres_targets.py",
+          "sha256": "19ffef3d5ad69084852a53151b99680f057076810e6fd372249d9cbc979e82e8"
+        },
+        {
+          "path": "python/governance_workers/postgresql.py",
+          "sha256": "cb930a534a323543b60ece506f5280f4b1733a1dd1e3d7fc9ced25df2217f895"
+        },
+        {
+          "path": "python/governance_workers/quality.py",
+          "sha256": "0e12e6a2731e6810ed595acc9d4a6d6a601216ff83f589efd88383272aa0322a"
+        },
+        {
+          "path": "python/governance_workers/secrets.py",
+          "sha256": "0663aef5eb2c1778a0d3187ea5d70c32a1e4453ac5403610db61b3cf1022685b"
+        },
+        {
+          "path": "python/governance_workers/server.py",
+          "sha256": "a59d63030362b561b621d9b3dc053072608bf9171fea6cc2c01630f6d520c3f0"
+        },
+        {
+          "path": "python/governance_workers/unity_catalog.py",
+          "sha256": "dfe71a10174326fb52d463e7ed340091ed7d04aede88a5f5021fcf4cd3f28d64"
+        },
+        {
+          "path": "python/pyproject.toml",
+          "sha256": "d25c50c349ba164af85f9e381f4345f371338b3fddf29ce857c82d9fafb8359a"
+        },
+        {
+          "path": "python/uv.lock",
+          "sha256": "7df05ec5afb240c8eeb25b63dc37bed1bdc72965a173d627177053ecd2c73674"
+        },
+        {
+          "path": "python/Dockerfile",
+          "sha256": "a7b0af2d545e91d74c5e128525fc0de3624ea9c51df3ee174444cf69362e8d0e"
+        },
+        {
+          "path": "deploy/compose/compose.yaml",
+          "sha256": "67ac5ccbf5a03ef83eca5720405007759d65cb118dca54830471766f7bb81e4e"
+        },
+        {
+          "path": "scripts/runtime-test-quality-worker.py",
+          "sha256": "f0762840e342939d2a16a2a14f0d06ef268c7b154afa2652a1681faee14fa623"
+        }
+      ]
+    },
+    {
+      "suite": "reference-quality-worker-local",
+      "result": "passed",
+      "checks": [
+        "text_exact_bytes_default_collation",
+        "varchar_exact_bytes_default_collation",
+        "case_and_leading_zero_distinctions",
+        "empty_vector_counts_all_nonnull_invalid",
+        "all_null_excludes_denominator",
+        "empty_relation_counts_zero",
+        "all_256_long_codes_match_exactly",
+        "row_budget_refusal",
+        "all_eight_target_pins_refused_when_stale",
+        "integer_bpchar_domain_unsupported",
+        "rls_unsupported",
+        "inheritance_parent_and_child_unsupported",
+        "native_reader_role_and_read_only_default",
+        "native_reader_dml_denied",
+        "closed_aggregate_measurements_without_source_values",
+        "actual_lock_timeout_refusal"
+      ],
+      "cleanup": "owned_tables_domain_and_lock_session_absent_and_catalog_inventory_preserved",
+      "limits": [
+        "local synthetic demo source and default database collation only; no external TLS qualification",
+        "direct executor only; no HTTP, API, Temporal or retained-reference authorization qualification",
+        "allowed codes are synthetic inputs; reports expose only aggregates and binding hashes",
+        "actual lock timeout exercised; no induced complete 30-second wall-deadline or caller cancellation qualification",
+        "planner bytes/cost are estimates; no physical IO bound claim",
+        "source catalog/ACL/type and owned synthetic data preservation; not a whole-database row checksum"
+      ],
+      "worker_image": "sha256:dc760d876c54a0335b12b04f7f147b95baa7e48b01ee45c5963c250b77f1d4cf",
+      "log_sha256": "99030519bface4ce9500078494c4a14677a59eb47d2269f9e566ac144a85ad41",
+      "source_files": [
+        {
+          "path": "python/governance_workers/__init__.py",
+          "sha256": "6c6ec57de9f82ef42d82760f144a4571cb16b3cd6de33aaa7aa9fd65e8ab1fa1"
+        },
+        {
+          "path": "python/governance_workers/deadline.py",
+          "sha256": "2dcecedc356298f52fa7441df31d76ff92d414117e1e72ea87b4cb3c3d828ce0"
+        },
+        {
+          "path": "python/governance_workers/dispatch.py",
+          "sha256": "c2b5edc9c8df89da6aecb6aab9bdcd8863e6a619e75f8611ddc5a5ea00b8987f"
+        },
+        {
+          "path": "python/governance_workers/oauth.py",
+          "sha256": "249dc65de4d1056cdc1332997634cc2ee63409eb1150c5ae325878575b3fb7a3"
+        },
+        {
+          "path": "python/governance_workers/postgres_lineage.py",
+          "sha256": "e8d3f41d8b6fc85deea134ba806f8e7439ac0efa5b3bfb2d19dd41a7d72379f5"
+        },
+        {
+          "path": "python/governance_workers/postgres_targets.py",
+          "sha256": "19ffef3d5ad69084852a53151b99680f057076810e6fd372249d9cbc979e82e8"
+        },
+        {
+          "path": "python/governance_workers/postgresql.py",
+          "sha256": "cb930a534a323543b60ece506f5280f4b1733a1dd1e3d7fc9ced25df2217f895"
+        },
+        {
+          "path": "python/governance_workers/quality.py",
+          "sha256": "0e12e6a2731e6810ed595acc9d4a6d6a601216ff83f589efd88383272aa0322a"
+        },
+        {
+          "path": "python/governance_workers/secrets.py",
+          "sha256": "0663aef5eb2c1778a0d3187ea5d70c32a1e4453ac5403610db61b3cf1022685b"
+        },
+        {
+          "path": "python/governance_workers/server.py",
+          "sha256": "a59d63030362b561b621d9b3dc053072608bf9171fea6cc2c01630f6d520c3f0"
+        },
+        {
+          "path": "python/governance_workers/unity_catalog.py",
+          "sha256": "dfe71a10174326fb52d463e7ed340091ed7d04aede88a5f5021fcf4cd3f28d64"
+        },
+        {
+          "path": "python/pyproject.toml",
+          "sha256": "d25c50c349ba164af85f9e381f4345f371338b3fddf29ce857c82d9fafb8359a"
+        },
+        {
+          "path": "python/uv.lock",
+          "sha256": "7df05ec5afb240c8eeb25b63dc37bed1bdc72965a173d627177053ecd2c73674"
+        },
+        {
+          "path": "python/Dockerfile",
+          "sha256": "a7b0af2d545e91d74c5e128525fc0de3624ea9c51df3ee174444cf69362e8d0e"
+        },
+        {
+          "path": "deploy/compose/compose.yaml",
+          "sha256": "67ac5ccbf5a03ef83eca5720405007759d65cb118dca54830471766f7bb81e4e"
+        },
+        {
+          "path": "scripts/runtime-test-quality-worker.py",
+          "sha256": "f0762840e342939d2a16a2a14f0d06ef268c7b154afa2652a1681faee14fa623"
+        },
+        {
+          "path": "scripts/runtime-test-reference-quality-worker.py",
+          "sha256": "7b738a97c0d69bf1224537d640b40df7baaebea396a08fa12e3fc948cf6882b6"
+        }
+      ]
+    },
+    {
+      "suite": "uniqueness-quality-worker-local",
+      "result": "passed",
+      "checks": [
+        "canonical_20_rows_duplicate_members_oracle",
+        "canonical_all_null",
+        "text_and_varchar_exact_utf8_groups",
+        "case_spaces_unicode_empty_string_distinct",
+        "owned_all_null_and_empty",
+        "all_group_members_not_excess_copies",
+        "lowered_row_bound_and_100001_refusal",
+        "logical_value_and_total_bytes_refusal",
+        "actual_cumulative_plan_cost_and_bytes_refusal",
+        "all_eight_target_pins_refused_when_stale",
+        "integer_bpchar_domain_unsupported",
+        "rls_and_inheritance_unsupported",
+        "native_reader_role_and_read_only_default",
+        "native_reader_dml_denied",
+        "closed_aggregates_without_source_values",
+        "actual_lock_timeout_refusal"
+      ],
+      "cleanup": "owned_helper_tables_domain_and_lock_session_absent_and_catalog_inventory_and_canonical_fixture_preserved",
+      "limits": [
+        "local synthetic demo source and default database collation only; no external TLS qualification",
+        "direct executor only; no HTTP, API, Temporal or canonical-rule authorization qualification",
+        "source values are synthetic; reports expose only aggregate counts/bytes and plan estimates",
+        "actual lock timeout exercised; no induced complete 30-second wall-deadline or caller cancellation qualification",
+        "planner bytes/cost are estimates; no physical IO bound claim",
+        "source catalog/ACL/type and owned synthetic data preservation; not a whole-database row checksum"
+      ],
+      "worker_image": "sha256:dc760d876c54a0335b12b04f7f147b95baa7e48b01ee45c5963c250b77f1d4cf",
+      "log_sha256": "1acd964dd979834fd4bd30f41b816cba85fa362c81cc078dd48c6e396aaec69e",
+      "source_files": [
+        {
+          "path": "python/governance_workers/__init__.py",
+          "sha256": "6c6ec57de9f82ef42d82760f144a4571cb16b3cd6de33aaa7aa9fd65e8ab1fa1"
+        },
+        {
+          "path": "python/governance_workers/deadline.py",
+          "sha256": "2dcecedc356298f52fa7441df31d76ff92d414117e1e72ea87b4cb3c3d828ce0"
+        },
+        {
+          "path": "python/governance_workers/dispatch.py",
+          "sha256": "c2b5edc9c8df89da6aecb6aab9bdcd8863e6a619e75f8611ddc5a5ea00b8987f"
+        },
+        {
+          "path": "python/governance_workers/oauth.py",
+          "sha256": "249dc65de4d1056cdc1332997634cc2ee63409eb1150c5ae325878575b3fb7a3"
+        },
+        {
+          "path": "python/governance_workers/postgres_lineage.py",
+          "sha256": "e8d3f41d8b6fc85deea134ba806f8e7439ac0efa5b3bfb2d19dd41a7d72379f5"
+        },
+        {
+          "path": "python/governance_workers/postgres_targets.py",
+          "sha256": "19ffef3d5ad69084852a53151b99680f057076810e6fd372249d9cbc979e82e8"
+        },
+        {
+          "path": "python/governance_workers/postgresql.py",
+          "sha256": "cb930a534a323543b60ece506f5280f4b1733a1dd1e3d7fc9ced25df2217f895"
+        },
+        {
+          "path": "python/governance_workers/quality.py",
+          "sha256": "0e12e6a2731e6810ed595acc9d4a6d6a601216ff83f589efd88383272aa0322a"
+        },
+        {
+          "path": "python/governance_workers/secrets.py",
+          "sha256": "0663aef5eb2c1778a0d3187ea5d70c32a1e4453ac5403610db61b3cf1022685b"
+        },
+        {
+          "path": "python/governance_workers/server.py",
+          "sha256": "a59d63030362b561b621d9b3dc053072608bf9171fea6cc2c01630f6d520c3f0"
+        },
+        {
+          "path": "python/governance_workers/unity_catalog.py",
+          "sha256": "dfe71a10174326fb52d463e7ed340091ed7d04aede88a5f5021fcf4cd3f28d64"
+        },
+        {
+          "path": "python/pyproject.toml",
+          "sha256": "d25c50c349ba164af85f9e381f4345f371338b3fddf29ce857c82d9fafb8359a"
+        },
+        {
+          "path": "python/uv.lock",
+          "sha256": "7df05ec5afb240c8eeb25b63dc37bed1bdc72965a173d627177053ecd2c73674"
+        },
+        {
+          "path": "python/Dockerfile",
+          "sha256": "a7b0af2d545e91d74c5e128525fc0de3624ea9c51df3ee174444cf69362e8d0e"
+        },
+        {
+          "path": "deploy/compose/compose.yaml",
+          "sha256": "67ac5ccbf5a03ef83eca5720405007759d65cb118dca54830471766f7bb81e4e"
+        },
+        {
+          "path": "scripts/runtime-test-quality-worker.py",
+          "sha256": "f0762840e342939d2a16a2a14f0d06ef268c7b154afa2652a1681faee14fa623"
+        },
+        {
+          "path": "scripts/runtime-test-uniqueness-quality-worker.py",
+          "sha256": "d1bb39fbcde6022e37d3c78f84673a1f71be98140d21722b41a30f04b60dde12"
+        },
+        {
+          "path": "scripts/runtime-test-reference-quality-worker.py",
+          "sha256": "7b738a97c0d69bf1224537d640b40df7baaebea396a08fa12e3fc948cf6882b6"
+        },
+        {
+          "path": "scripts/uniqueness_quality_worker_program.py",
+          "sha256": "2879c90469a045a89ec98eb2da663c4ecfd4f829bd70cf22ecd6592c8c8ae16e"
+        }
+      ]
+    },
+    {
+      "suite": "range-quality-worker-local",
+      "result": "passed",
+      "checks": [
+        "canonical_six_rows_inclusive_oracle",
+        "canonical_all_null",
+        "builtin_int2_int4_int8_exact",
+        "above_js_safe_integer_singleton",
+        "int64_extrema_and_equal_bounds",
+        "three_canonical_binding_hash_vectors",
+        "owned_all_null_and_empty",
+        "lowered_row_bound_and_100001_refusal",
+        "actual_plan_cost_and_bytes_refusal",
+        "all_eight_target_pins_refused_when_stale",
+        "numeric_float_money_text_domain_unsupported",
+        "rls_and_inheritance_unsupported",
+        "native_reader_role_and_read_only_default",
+        "native_reader_dml_denied",
+        "closed_aggregates_without_source_values",
+        "actual_lock_timeout_refusal"
+      ],
+      "cleanup": "owned_helper_tables_domain_and_lock_session_absent_and_catalog_inventory_and_canonical_fixture_preserved",
+      "limits": [
+        "local synthetic demo source and built-in integer types only; no external TLS qualification",
+        "direct executor only; no HTTP, API, Temporal or canonical-rule authorization qualification",
+        "source values are synthetic; reports expose only aggregate counts, bound hashes and plan estimates",
+        "actual lock timeout exercised; no induced complete 30-second wall-deadline or caller cancellation qualification",
+        "planner bytes/cost are estimates; no physical IO bound claim",
+        "source catalog/ACL/type and owned synthetic data preservation; not a whole-database row checksum"
+      ],
+      "worker_image": "sha256:dc760d876c54a0335b12b04f7f147b95baa7e48b01ee45c5963c250b77f1d4cf",
+      "log_sha256": "f67eb92fb540fb596943c8c0f4b2f7c973b7e57d8b1689bb9a841776cb5b4988",
+      "source_files": [
+        {
+          "path": "python/governance_workers/__init__.py",
+          "sha256": "6c6ec57de9f82ef42d82760f144a4571cb16b3cd6de33aaa7aa9fd65e8ab1fa1"
+        },
+        {
+          "path": "python/governance_workers/deadline.py",
+          "sha256": "2dcecedc356298f52fa7441df31d76ff92d414117e1e72ea87b4cb3c3d828ce0"
+        },
+        {
+          "path": "python/governance_workers/dispatch.py",
+          "sha256": "c2b5edc9c8df89da6aecb6aab9bdcd8863e6a619e75f8611ddc5a5ea00b8987f"
+        },
+        {
+          "path": "python/governance_workers/oauth.py",
+          "sha256": "249dc65de4d1056cdc1332997634cc2ee63409eb1150c5ae325878575b3fb7a3"
+        },
+        {
+          "path": "python/governance_workers/postgres_lineage.py",
+          "sha256": "e8d3f41d8b6fc85deea134ba806f8e7439ac0efa5b3bfb2d19dd41a7d72379f5"
+        },
+        {
+          "path": "python/governance_workers/postgres_targets.py",
+          "sha256": "19ffef3d5ad69084852a53151b99680f057076810e6fd372249d9cbc979e82e8"
+        },
+        {
+          "path": "python/governance_workers/postgresql.py",
+          "sha256": "cb930a534a323543b60ece506f5280f4b1733a1dd1e3d7fc9ced25df2217f895"
+        },
+        {
+          "path": "python/governance_workers/quality.py",
+          "sha256": "0e12e6a2731e6810ed595acc9d4a6d6a601216ff83f589efd88383272aa0322a"
+        },
+        {
+          "path": "python/governance_workers/secrets.py",
+          "sha256": "0663aef5eb2c1778a0d3187ea5d70c32a1e4453ac5403610db61b3cf1022685b"
+        },
+        {
+          "path": "python/governance_workers/server.py",
+          "sha256": "a59d63030362b561b621d9b3dc053072608bf9171fea6cc2c01630f6d520c3f0"
+        },
+        {
+          "path": "python/governance_workers/unity_catalog.py",
+          "sha256": "dfe71a10174326fb52d463e7ed340091ed7d04aede88a5f5021fcf4cd3f28d64"
+        },
+        {
+          "path": "python/pyproject.toml",
+          "sha256": "d25c50c349ba164af85f9e381f4345f371338b3fddf29ce857c82d9fafb8359a"
+        },
+        {
+          "path": "python/uv.lock",
+          "sha256": "7df05ec5afb240c8eeb25b63dc37bed1bdc72965a173d627177053ecd2c73674"
+        },
+        {
+          "path": "python/Dockerfile",
+          "sha256": "a7b0af2d545e91d74c5e128525fc0de3624ea9c51df3ee174444cf69362e8d0e"
+        },
+        {
+          "path": "deploy/compose/compose.yaml",
+          "sha256": "67ac5ccbf5a03ef83eca5720405007759d65cb118dca54830471766f7bb81e4e"
+        },
+        {
+          "path": "scripts/runtime-test-quality-worker.py",
+          "sha256": "f0762840e342939d2a16a2a14f0d06ef268c7b154afa2652a1681faee14fa623"
+        },
+        {
+          "path": "scripts/runtime-test-range-quality-worker.py",
+          "sha256": "b9b161d4cb1090762bd70d29a749a58122910ee9b78cce43e8680503abd79679"
+        },
+        {
+          "path": "tests/fixtures/quality-range-hash-vectors.json",
+          "sha256": "e6fe154e83a0076a91f08adcebc370a26242c065b27d77d6d4bc65e7a10748ad"
+        },
+        {
+          "path": "deploy/compose/range-quality-fixture.sql",
+          "sha256": "29c3e906a2fe88764dea8e8bf56028fa0dfe45a60f24b1ecfb7d53ec7660ce45"
+        },
+        {
+          "path": "scripts/range_quality_worker_program.py",
+          "sha256": "4d4ae22b81a814354451379d12683d441ec952f360518c1419ab2898ee69df3d"
+        }
+      ]
+    },
+    {
+      "suite": "freshness-quality-worker-local",
+      "result": "passed",
+      "checks": [
+        "latest_timestamp_recency_and_stale_oracle",
+        "future_values_cannot_mask_staleness",
+        "explicit_future_tolerance",
+        "infinity_and_unrepresentable_fail_closed_counts",
+        "empty_allnull_and_allinvalid_distinct",
+        "native_precision_zero_three_six",
+        "equivalent_offsets_have_identical_max",
+        "exact_microsecond_template_boundary_oracle",
+        "canonical_binding_hash_vector",
+        "lowered_row_bound_and_100001_refusal",
+        "actual_plan_cost_and_bytes_refusal",
+        "all_eight_target_pins_refused_when_stale",
+        "naive_date_text_epoch_array_domain_unsupported",
+        "rls_and_inheritance_unsupported",
+        "native_reader_role_and_read_only_default",
+        "native_reader_dml_denied",
+        "closed_aggregates_without_row_examples",
+        "actual_lock_timeout_refusal"
+      ],
+      "cleanup": "owned_helper_tables_domain_and_lock_session_absent_and_catalog_inventory_preserved",
+      "limits": [
+        "local synthetic demo source and built-in timestamptz type only; no external TLS qualification",
+        "direct executor only; no HTTP, API, Temporal or canonical-rule authorization qualification",
+        "source values are synthetic; reports expose only aggregate clocks/MAX/counts/ages, bound hashes and plan estimates",
+        "actual lock timeout exercised; no induced complete 30-second wall-deadline or caller cancellation qualification",
+        "planner bytes/cost are estimates; no physical IO bound claim",
+        "source catalog/ACL/type and owned synthetic data preservation; not a whole-database row checksum; preexisting source tables are never written"
+      ],
+      "worker_image": "sha256:dc760d876c54a0335b12b04f7f147b95baa7e48b01ee45c5963c250b77f1d4cf",
+      "log_sha256": "6f493d7462968f1df8ac86d5e382953e214d7cac28a046610857bba88e0cd16b",
+      "source_files": [
+        {
+          "path": "python/governance_workers/__init__.py",
+          "sha256": "6c6ec57de9f82ef42d82760f144a4571cb16b3cd6de33aaa7aa9fd65e8ab1fa1"
+        },
+        {
+          "path": "python/governance_workers/deadline.py",
+          "sha256": "2dcecedc356298f52fa7441df31d76ff92d414117e1e72ea87b4cb3c3d828ce0"
+        },
+        {
+          "path": "python/governance_workers/dispatch.py",
+          "sha256": "c2b5edc9c8df89da6aecb6aab9bdcd8863e6a619e75f8611ddc5a5ea00b8987f"
+        },
+        {
+          "path": "python/governance_workers/oauth.py",
+          "sha256": "249dc65de4d1056cdc1332997634cc2ee63409eb1150c5ae325878575b3fb7a3"
+        },
+        {
+          "path": "python/governance_workers/postgres_lineage.py",
+          "sha256": "e8d3f41d8b6fc85deea134ba806f8e7439ac0efa5b3bfb2d19dd41a7d72379f5"
+        },
+        {
+          "path": "python/governance_workers/postgres_targets.py",
+          "sha256": "19ffef3d5ad69084852a53151b99680f057076810e6fd372249d9cbc979e82e8"
+        },
+        {
+          "path": "python/governance_workers/postgresql.py",
+          "sha256": "cb930a534a323543b60ece506f5280f4b1733a1dd1e3d7fc9ced25df2217f895"
+        },
+        {
+          "path": "python/governance_workers/quality.py",
+          "sha256": "0e12e6a2731e6810ed595acc9d4a6d6a601216ff83f589efd88383272aa0322a"
+        },
+        {
+          "path": "python/governance_workers/secrets.py",
+          "sha256": "0663aef5eb2c1778a0d3187ea5d70c32a1e4453ac5403610db61b3cf1022685b"
+        },
+        {
+          "path": "python/governance_workers/server.py",
+          "sha256": "a59d63030362b561b621d9b3dc053072608bf9171fea6cc2c01630f6d520c3f0"
+        },
+        {
+          "path": "python/governance_workers/unity_catalog.py",
+          "sha256": "dfe71a10174326fb52d463e7ed340091ed7d04aede88a5f5021fcf4cd3f28d64"
+        },
+        {
+          "path": "python/pyproject.toml",
+          "sha256": "d25c50c349ba164af85f9e381f4345f371338b3fddf29ce857c82d9fafb8359a"
+        },
+        {
+          "path": "python/uv.lock",
+          "sha256": "7df05ec5afb240c8eeb25b63dc37bed1bdc72965a173d627177053ecd2c73674"
+        },
+        {
+          "path": "python/Dockerfile",
+          "sha256": "a7b0af2d545e91d74c5e128525fc0de3624ea9c51df3ee174444cf69362e8d0e"
+        },
+        {
+          "path": "deploy/compose/compose.yaml",
+          "sha256": "67ac5ccbf5a03ef83eca5720405007759d65cb118dca54830471766f7bb81e4e"
+        },
+        {
+          "path": "scripts/runtime-test-quality-worker.py",
+          "sha256": "f0762840e342939d2a16a2a14f0d06ef268c7b154afa2652a1681faee14fa623"
+        },
+        {
+          "path": "scripts/runtime-test-freshness-quality-worker.py",
+          "sha256": "a46c676fd2232f1492458e55cb27e396a78e03ee4cb91093d799a69440bb4a34"
+        },
+        {
+          "path": "scripts/freshness_quality_worker_program.py",
+          "sha256": "59d8e54e6b8217277e84de95bc86a3d16d29d0a0945cd4c5f45eb66655179b80"
+        }
+      ]
+    },
+    {
+      "suite": "volume-quality-worker-local",
+      "result": "passed",
+      "checks": [
+        "six_rows_above_authored_maximum_is_exact_measurement",
+        "inclusive_threshold_oracles_and_static_hashes",
+        "empty_table_is_exact_zero_not_no_data",
+        "exact_resource_cap_and_100001_refusal",
+        "row_limit_independent_of_authored_bounds",
+        "whole_row_count_ignores_nulls_and_wide_values",
+        "actual_plan_cost_and_bytes_refusal",
+        "all_five_source_table_pins_refused_when_stale",
+        "views_materialized_partition_and_inheritance_refused",
+        "enabled_and_forced_rls_refused",
+        "column_only_and_absent_table_grants_refused",
+        "native_reader_role_and_read_only_default",
+        "native_reader_dml_denied",
+        "closed_aggregates_without_column_or_row_values",
+        "actual_lock_timeout_refusal"
+      ],
+      "cleanup": "owned_helper_relations_and_lock_session_absent_and_catalog_inventory_preserved",
+      "limits": [
+        "local synthetic demo source and ordinary source tables only; no external TLS qualification",
+        "direct executor only; no HTTP, API, Temporal or canonical-rule authorization qualification",
+        "source values are synthetic; reports expose only aggregate row counts, threshold hashes and plan estimates",
+        "actual lock timeout exercised; no induced complete 30-second wall-deadline or caller cancellation qualification",
+        "planner bytes/cost are estimates; no physical IO bound claim",
+        "source catalog/ACL/type and owned synthetic data preservation; not a whole-database row checksum; preexisting source tables are never written"
+      ],
+      "worker_image": "sha256:dc760d876c54a0335b12b04f7f147b95baa7e48b01ee45c5963c250b77f1d4cf",
+      "log_sha256": "e67d1eed82b1beb091343eb0c420cc4025abc1250d8d0f8ecd2c7fb046b83a1e",
+      "source_files": [
+        {
+          "path": "python/governance_workers/__init__.py",
+          "sha256": "6c6ec57de9f82ef42d82760f144a4571cb16b3cd6de33aaa7aa9fd65e8ab1fa1"
+        },
+        {
+          "path": "python/governance_workers/deadline.py",
+          "sha256": "2dcecedc356298f52fa7441df31d76ff92d414117e1e72ea87b4cb3c3d828ce0"
+        },
+        {
+          "path": "python/governance_workers/dispatch.py",
+          "sha256": "c2b5edc9c8df89da6aecb6aab9bdcd8863e6a619e75f8611ddc5a5ea00b8987f"
+        },
+        {
+          "path": "python/governance_workers/oauth.py",
+          "sha256": "249dc65de4d1056cdc1332997634cc2ee63409eb1150c5ae325878575b3fb7a3"
+        },
+        {
+          "path": "python/governance_workers/postgres_lineage.py",
+          "sha256": "e8d3f41d8b6fc85deea134ba806f8e7439ac0efa5b3bfb2d19dd41a7d72379f5"
+        },
+        {
+          "path": "python/governance_workers/postgres_targets.py",
+          "sha256": "19ffef3d5ad69084852a53151b99680f057076810e6fd372249d9cbc979e82e8"
+        },
+        {
+          "path": "python/governance_workers/postgresql.py",
+          "sha256": "cb930a534a323543b60ece506f5280f4b1733a1dd1e3d7fc9ced25df2217f895"
+        },
+        {
+          "path": "python/governance_workers/quality.py",
+          "sha256": "0e12e6a2731e6810ed595acc9d4a6d6a601216ff83f589efd88383272aa0322a"
+        },
+        {
+          "path": "python/governance_workers/secrets.py",
+          "sha256": "0663aef5eb2c1778a0d3187ea5d70c32a1e4453ac5403610db61b3cf1022685b"
+        },
+        {
+          "path": "python/governance_workers/server.py",
+          "sha256": "a59d63030362b561b621d9b3dc053072608bf9171fea6cc2c01630f6d520c3f0"
+        },
+        {
+          "path": "python/governance_workers/unity_catalog.py",
+          "sha256": "dfe71a10174326fb52d463e7ed340091ed7d04aede88a5f5021fcf4cd3f28d64"
+        },
+        {
+          "path": "python/pyproject.toml",
+          "sha256": "d25c50c349ba164af85f9e381f4345f371338b3fddf29ce857c82d9fafb8359a"
+        },
+        {
+          "path": "python/uv.lock",
+          "sha256": "7df05ec5afb240c8eeb25b63dc37bed1bdc72965a173d627177053ecd2c73674"
+        },
+        {
+          "path": "python/Dockerfile",
+          "sha256": "a7b0af2d545e91d74c5e128525fc0de3624ea9c51df3ee174444cf69362e8d0e"
+        },
+        {
+          "path": "deploy/compose/compose.yaml",
+          "sha256": "67ac5ccbf5a03ef83eca5720405007759d65cb118dca54830471766f7bb81e4e"
+        },
+        {
+          "path": "scripts/runtime-test-quality-worker.py",
+          "sha256": "f0762840e342939d2a16a2a14f0d06ef268c7b154afa2652a1681faee14fa623"
+        },
+        {
+          "path": "scripts/runtime-test-volume-quality-worker.py",
+          "sha256": "8232e3860ba2bb2840731c3856122bb2d4498355ebc25a3702beb9513ecac38c"
+        },
+        {
+          "path": "scripts/volume_quality_worker_program.py",
+          "sha256": "ef37cd5b6fed8a78354e041a29b96ceb3463085345ec0022d47f9cb87049f30c"
+        }
+      ]
+    },
+    {
+      "suite": "postgres-lineage-native-conformance",
+      "result": "passed",
+      "checks": [
+        "native_reader_catalog_and_real_scan",
+        "harbor_exact_oid_rewrite_and_attnum_witnesses",
+        "all_scanned_views_and_dependencies_have_admitted_endpoints",
+        "constant_view_has_collected_empty_dependencies",
+        "external_relation_and_routine_are_closed_gaps",
+        "table_and_column_rename_preserve_oid_attnum_and_lineage",
+        "owned_fixture_cleanup_preserves_catalog_acl_and_scan"
+      ],
+      "cleanupConfirmed": true,
+      "limits": [
+        "synthetic local source; direct adapter and catalog only",
+        "empty dependency view, not an entirely empty schema",
+        "catalog/ACL and metadata preservation, not business-row checksums",
+        "no external TLS, ingestion, API, Temporal, UI, column mapping or SQL-body analysis claim"
+      ],
+      "worker_image": "sha256:60e006aaac472ce7e9e9f448675d7ebc63768d3192ec8aa4851a720081a2e6cd",
+      "log_sha256": "6a1bc5f61c6e96d5312b53d96acfe1e45c3e8700352cf9d48fa5ea2b1ab47160",
+      "source_files": [
+        {
+          "path": "python/governance_workers/__init__.py",
+          "sha256": "6c6ec57de9f82ef42d82760f144a4571cb16b3cd6de33aaa7aa9fd65e8ab1fa1"
+        },
+        {
+          "path": "python/governance_workers/deadline.py",
+          "sha256": "2dcecedc356298f52fa7441df31d76ff92d414117e1e72ea87b4cb3c3d828ce0"
+        },
+        {
+          "path": "python/governance_workers/dispatch.py",
+          "sha256": "c2b5edc9c8df89da6aecb6aab9bdcd8863e6a619e75f8611ddc5a5ea00b8987f"
+        },
+        {
+          "path": "python/governance_workers/oauth.py",
+          "sha256": "249dc65de4d1056cdc1332997634cc2ee63409eb1150c5ae325878575b3fb7a3"
+        },
+        {
+          "path": "python/governance_workers/postgres_lineage.py",
+          "sha256": "e8d3f41d8b6fc85deea134ba806f8e7439ac0efa5b3bfb2d19dd41a7d72379f5"
+        },
+        {
+          "path": "python/governance_workers/postgres_targets.py",
+          "sha256": "19ffef3d5ad69084852a53151b99680f057076810e6fd372249d9cbc979e82e8"
+        },
+        {
+          "path": "python/governance_workers/postgresql.py",
+          "sha256": "cb930a534a323543b60ece506f5280f4b1733a1dd1e3d7fc9ced25df2217f895"
+        },
+        {
+          "path": "python/governance_workers/quality.py",
+          "sha256": "0e12e6a2731e6810ed595acc9d4a6d6a601216ff83f589efd88383272aa0322a"
+        },
+        {
+          "path": "python/governance_workers/secrets.py",
+          "sha256": "0663aef5eb2c1778a0d3187ea5d70c32a1e4453ac5403610db61b3cf1022685b"
+        },
+        {
+          "path": "python/governance_workers/server.py",
+          "sha256": "a59d63030362b561b621d9b3dc053072608bf9171fea6cc2c01630f6d520c3f0"
+        },
+        {
+          "path": "python/governance_workers/unity_catalog.py",
+          "sha256": "dfe71a10174326fb52d463e7ed340091ed7d04aede88a5f5021fcf4cd3f28d64"
+        },
+        {
+          "path": "python/pyproject.toml",
+          "sha256": "d25c50c349ba164af85f9e381f4345f371338b3fddf29ce857c82d9fafb8359a"
+        },
+        {
+          "path": "python/uv.lock",
+          "sha256": "7df05ec5afb240c8eeb25b63dc37bed1bdc72965a173d627177053ecd2c73674"
+        },
+        {
+          "path": "python/Dockerfile",
+          "sha256": "a7b0af2d545e91d74c5e128525fc0de3624ea9c51df3ee174444cf69362e8d0e"
+        },
+        {
+          "path": "deploy/compose/compose.yaml",
+          "sha256": "67ac5ccbf5a03ef83eca5720405007759d65cb118dca54830471766f7bb81e4e"
+        },
+        {
+          "path": "python/tests/test_postgres_lineage_conformance.py",
+          "sha256": "f1f7c3830784c7c0b0d1b5dea1edb62b6e75315a881051f928004069e886b79e"
+        }
+      ]
+    }
+  ],
+  "host_controls": [
+    {
+      "family": "uniqueness",
+      "tests": 16,
+      "result": "PASS",
+      "log_sha256": "3ff97d55e148c31599961a0ea0e9df1885a32c53b6b526d19f0313eda787ffce"
+    },
+    {
+      "family": "range",
+      "tests": 18,
+      "result": "PASS",
+      "log_sha256": "7b8a8b051360fcc673e84f5dc9a50ffbaee05cf215c609c3635780a7b051531c"
+    },
+    {
+      "family": "freshness",
+      "tests": 17,
+      "result": "PASS",
+      "log_sha256": "beac828de0718a4681b7b63798e352a945d52451b231fc20202dd4c403d8ecb5"
+    },
+    {
+      "family": "volume",
+      "tests": 19,
+      "result": "PASS",
+      "log_sha256": "f434c96dd913b2b642f2dbd754260b22082babf24213fb8d253e607e11e17a76"
+    },
+    {
+      "family": "reference",
+      "tests": 12,
+      "result": "PASS",
+      "log_sha256": "bdbe8286b8f1c6e46b97a264159638c8bd4c719b70978e060879488d49569ed0"
+    }
+  ],
+  "process_probes": {
+    "result": "PASS",
+    "image": "sha256:dc760d876c54a0335b12b04f7f147b95baa7e48b01ee45c5963c250b77f1d4cf",
+    "recorded_at": "2026-11-23T05:02:32.620454+00:00",
+    "cases": [
+      {
+        "case": "normal",
+        "inner_exit_code": 7,
+        "elapsed_seconds": 0.32855754101183265,
+        "stdout_sha256": "e52b9bb2274024f529b26d94fbd375c57c642a90ce2dac75c41948d50b934ff4",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "term",
+        "inner_exit_code": -15,
+        "elapsed_seconds": 1.2812242499785498,
+        "stdout_sha256": "90ba595efaeffbec828bd418bbdd1ed3e24805d12e5bbd34b12b29c993cd08ec",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "kill",
+        "inner_exit_code": -9,
+        "elapsed_seconds": 2.2875077089993283,
+        "stdout_sha256": "862f7d30d6ca68232647614c5b58ed5c461d7fae2847d68b648f104c4509ef54",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "limits": "One-second probe with one-second kill grace in child-process position; production durations and grace unchanged.",
+    "prior_attempt": "Initial probe incorrectly placed timeout at namespace PID1 and hit its10s host bound; no product-gate pass was claimed."
+  },
+  "probe_receipt_sha256": "8c146915a35e844a03d4398b25b3184ca020c7f13753de489e25e544ff7784de",
+  "retained_failed_attempts": [
+    {
+      "gate": "lineage-worker",
+      "phase": "worker_source_binding",
+      "cleanupConfirmed": true,
+      "log_sha256": "8a9485cde57e100c6d28f6ff95ccd4ea89c8934a6b15e1d15441724094ef2a43",
+      "correction": "Rebuild only the worker so the changed conformance source matches the actual image; second attempt passes."
+    }
+  ],
+  "limitations": [
+    "Local synthetic source gates; no external vendor qualification or complete release certification.",
+    "Dirty execution provenance retained. Exact measured source hashes are verified; unrelated catalog work was also present and is not qualified by these worker checks.",
+    "The initial standalone timeout probe incorrectly used namespace PID1 and hit its host bound. Corrected probes use child-process position matching Docker exec.",
+    "Fresh hosted execution is required after publishing this correction; the earlier hosted image scan remains bound to a6cd20d."
+  ]
+}
