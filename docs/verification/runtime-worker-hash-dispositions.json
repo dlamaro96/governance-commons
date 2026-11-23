@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T05:15:20.337147+00:00",
+  "result": "PASS_SCOPED",
+  "release_qualified": false,
+  "original_failure": {
+    "run_id": 45115709851,
+    "commit": "62b834ca8a32648ee413ca7c240c118048f7c996",
+    "rule": "generic-api-key",
+    "worktree_findings": 14,
+    "history_findings": 14,
+    "disposition": "Every value equals SHA256 of its named source file at the exact historical commit; no credential was identified.",
+    "evidence_blob_sha256": "404d4a6d3f46ec725722bc8432f465ae63b6b2477a618cbb6face2ba5e58d755"
+  },
+  "correction": "Represent source hashes as explicit path/sha256 rows. Retain only the fourteen exact historical commit/path/rule/line fingerprints in the ignore file, preserving history.",
+  "verified_controls": {
+    "command": "python3 policies/test_secret_fingerprints.py -v",
+    "tests": 5,
+    "result": "PASS",
+    "log_sha256": "068b1c1cc40895280043828434b6f8eda6998c2a2627bf24a2656aa34079e849",
+    "checks": [
+      "Each historical value equals its named Git blob digest.",
+      "Evidence content is identical after representation normalization.",
+      "Pinned scanner detects all14 without dispositions and zero with exact dispositions.",
+      "Other paths and commits retain all14 findings.",
+      "Current records scan clean; a synthetic credential still triggers the real scanner."
+    ]
+  },
+  "candidate_rescan": {
+    "timestamp": "2026-11-23T05:13:27.192880+00:00",
+    "commit": "62b834ca8a32648ee413ca7c240c118048f7c996",
+    "worktree_dirty": true,
+    "tool_version": "8.30.1",
+    "publishable_files_scanned": 1544,
+    "working_tree_manifest_sha256": "ab54bd92f56864bf82d6e22a668b6955bf7b104a842694a4f49774689beae98d",
+    "outcome": "PASS"
+  },
+  "candidate_results": [
+    {
+      "scope": "publishable_worktree",
+      "outcome": "PASS",
+      "finding_count": 0
+    },
+    {
+      "scope": "reachable_git_history",
+      "outcome": "PASS",
+      "finding_count": 0
+    }
+  ],
+  "scan_receipt_sha256": "07ad14a56b229f479cf788f06c7ce43affed82e9175c3be09183ae5e021604fc",
+  "limitations": [
+    "Automated digest review and native scanner controls, not an independent security review.",
+    "Only exact immutable nonsecret source digests are dispositioned. No wildcard path, rule, current-worktree or credential exemption.",
+    "Fresh hosted scanning of the published correction remains required."
+  ]
+}

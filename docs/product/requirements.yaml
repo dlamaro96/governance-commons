@@ -46817,9 +46817,15 @@
       "implementation_paths": [
         "apps/web/src",
         "packages/ui/src",
-        "tests/e2e"
+        "tests/e2e",
+        "apps/api/src/asset-search.ts",
+        "apps/web/src/pages/Catalog.tsx"
       ],
-      "test_ids": [],
+      "test_ids": [
+        "tests/unit/asset-search.test.ts",
+        "tests/integration/asset-search.test.ts",
+        "tests/e2e/catalog-sorting.spec.ts"
+      ],
       "verification": {
         "fixture": {
           "outcome": "NOT_RUN",
@@ -46848,12 +46854,14 @@
         "evidence": []
       },
       "limitations": [
-        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open."
+        "M1 implemented interactions pass local automated browser/axe checks; remaining normative screen interactions, human accessibility and Arabic review remain open.",
+        "Global catalog sorting has scoped local172-case API and5-journey browser evidence, including canonical order, filter/sort-bound cursors and hidden/foreign exclusion. Complete UX/API and hosted release outcomes remain separate."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M2",
       "partial_evidence": [
-        "docs/verification/m1-browser.json"
+        "docs/verification/m1-browser.json",
+        "docs/verification/catalog-global-sorting-local.json"
       ]
     },
     {
@@ -56523,7 +56531,9 @@
         "apps/api/src/business-domains.ts",
         "apps/api/src/business-domain-http.ts",
         "packages/domain/src/business-domain-read.ts",
-        "packages/domain/src/business-domain-service.ts"
+        "packages/domain/src/business-domain-service.ts",
+        "apps/api/src/asset-search.ts",
+        "apps/web/src/pages/Catalog.tsx"
       ],
       "test_ids": [
         "tests/unit/cursor.test.ts",
@@ -56531,7 +56541,10 @@
         "tests/e2e/models.spec.ts",
         "tests/unit/business-domain-http-validation.test.ts",
         "tests/integration/business-domain-asset-scope.test.ts",
-        "tests/integration/business-domains-api.test.ts"
+        "tests/integration/business-domains-api.test.ts",
+        "tests/unit/asset-search.test.ts",
+        "tests/integration/asset-search.test.ts",
+        "tests/e2e/catalog-sorting.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -56563,7 +56576,8 @@
       "limitations": [
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed.",
         "Model inventory adds bounded literal search and signed keyset cursors bound to actor, tenant, filters, page size and deterministic sort. Full generated clients, egress schemas, API coverage, durable bulk administration and webhook requirements remain open. See scoped model-migration evidence; no full SYS-API-001 pass.",
-        "Business-domain contribution: Domain routes have strict nonmutating request validation, explicit OpenAPI responses/preconditions, bounded signed pages and current exact-resource authorization. Generated clients, other module APIs, bulk administration, webhooks and browser equivalence remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
+        "Business-domain contribution: Domain routes have strict nonmutating request validation, explicit OpenAPI responses/preconditions, bounded signed pages and current exact-resource authorization. Generated clients, other module APIs, bulk administration, webhooks and browser equivalence remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred.",
+        "Global catalog sorting has scoped local172-case API and5-journey browser evidence, including canonical order, filter/sort-bound cursors and hidden/foreign exclusion. Complete UX/API and hosted release outcomes remain separate."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -56572,7 +56586,8 @@
         "docs/verification/m2-migration-ui.json",
         "docs/verification/business-domains-http-validation-correction.json",
         "docs/verification/business-domains-asset-scope-correction.json",
-        "docs/verification/business-domains-api.json"
+        "docs/verification/business-domains-api.json",
+        "docs/verification/catalog-global-sorting-local.json"
       ]
     },
     {
@@ -56604,12 +56619,17 @@
         "apps/api/src/business-domains.ts",
         "apps/api/src/business-domain-http.ts",
         "packages/domain/src/business-domain-read.ts",
-        "packages/domain/src/business-domain-service.ts"
+        "packages/domain/src/business-domain-service.ts",
+        "apps/api/src/asset-search.ts",
+        "apps/web/src/pages/Catalog.tsx"
       ],
       "test_ids": [
         "tests/unit/business-domain-http-validation.test.ts",
         "tests/integration/business-domain-asset-scope.test.ts",
-        "tests/integration/business-domains-api.test.ts"
+        "tests/integration/business-domains-api.test.ts",
+        "tests/unit/asset-search.test.ts",
+        "tests/integration/asset-search.test.ts",
+        "tests/e2e/catalog-sorting.spec.ts"
       ],
       "verification": {
         "fixture": {
@@ -56639,14 +56659,16 @@
         "evidence": []
       },
       "limitations": [
-        "Business-domain contribution: Domain routes have strict nonmutating request validation, explicit OpenAPI responses/preconditions, bounded signed pages and current exact-resource authorization. Generated clients, other module APIs, bulk administration, webhooks and browser equivalence remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred."
+        "Business-domain contribution: Domain routes have strict nonmutating request validation, explicit OpenAPI responses/preconditions, bounded signed pages and current exact-resource authorization. Generated clients, other module APIs, bulk administration, webhooks and browser equivalence remain open. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred.",
+        "Global catalog sorting has scoped local172-case API and5-journey browser evidence, including canonical order, filter/sort-bound cursors and hidden/foreign exclusion. Complete UX/API and hosted release outcomes remain separate."
       ],
       "owner": "unassigned",
       "milestone": "M0",
       "partial_evidence": [
         "docs/verification/business-domains-http-validation-correction.json",
         "docs/verification/business-domains-asset-scope-correction.json",
-        "docs/verification/business-domains-api.json"
+        "docs/verification/business-domains-api.json",
+        "docs/verification/catalog-global-sorting-local.json"
       ]
     },
     {
@@ -68368,7 +68390,10 @@
         "docs/verification/hosted-checkpoint-b08b88d.json",
         "docs/verification/protected-authentication-tool-admission-local.json",
         "docs/verification/hosted-checkpoint-e51e8ec.json",
-        "docs/verification/runtime-protected-authentication-15496e3.json"
+        "docs/verification/runtime-protected-authentication-15496e3.json",
+        "docs/verification/runtime-images-hosted-a6cd20d.json",
+        "docs/verification/runtime-worker-timeout-local.json",
+        "docs/verification/runtime-worker-hash-dispositions.json"
       ]
     },
     {
@@ -68669,7 +68694,12 @@
         "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
       ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/runtime-images-hosted-a6cd20d.json",
+        "docs/verification/runtime-worker-timeout-local.json",
+        "docs/verification/runtime-worker-hash-dispositions.json"
+      ]
     },
     {
       "id": "OSS-006.06",
@@ -68739,7 +68769,10 @@
       "owner": "unassigned",
       "milestone": "M0",
       "partial_evidence": [
-        "docs/verification/runtime-protected-authentication-15496e3.json"
+        "docs/verification/runtime-protected-authentication-15496e3.json",
+        "docs/verification/runtime-images-hosted-a6cd20d.json",
+        "docs/verification/runtime-worker-timeout-local.json",
+        "docs/verification/runtime-worker-hash-dispositions.json"
       ]
     },
     {
@@ -69241,7 +69274,10 @@
         "docs/verification/participation-hosted-attempt-3.json",
         "docs/verification/participation-main.json",
         "docs/verification/source-security-b08b88d.json",
-        "docs/verification/runtime-protected-authentication-15496e3.json"
+        "docs/verification/runtime-protected-authentication-15496e3.json",
+        "docs/verification/runtime-images-hosted-a6cd20d.json",
+        "docs/verification/runtime-worker-timeout-local.json",
+        "docs/verification/runtime-worker-hash-dispositions.json"
       ]
     },
     {
@@ -69489,7 +69525,12 @@
         "Minimal runtime-image scanning and worker compatibility have scoped local evidence. Hosted/fork enforcement, infrastructure images, exploitability review and complete release qualification remain open."
       ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/runtime-images-hosted-a6cd20d.json",
+        "docs/verification/runtime-worker-timeout-local.json",
+        "docs/verification/runtime-worker-hash-dispositions.json"
+      ]
     },
     {
       "id": "OSS-007.05",

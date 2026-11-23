@@ -4,7 +4,7 @@ Updated 23 November 2026. Governance Commons is a working **development preview*
 ## Implemented workflows with scoped local evidence
 
 - OIDC login and server-side sessions; tenant-scoped PostgreSQL/API checks; ownership, audit and transactional outbox.
-- Real PostgreSQL metadata scans, authorized catalog search, asset details and source registration.
+- Real PostgreSQL metadata scans, authorized catalog search, asset details and source registration. Global name/recent-update ordering across pages passes 172 local API cases and five targeted browser journeys; fresh hosted qualification is pending. [Scoped ordering evidence](../verification/catalog-global-sorting-local.json).
 - Versioned operating models, inherited types, constrained relations, bounded graph migrations and business domains.
 - Reviewed glossary publication; reference code lists, effective dates, historical reads, exports, hierarchy/crosswalk and import workflows.
 - PostgreSQL view-dependency lineage and reviewed metadata classification.
@@ -22,7 +22,7 @@ Each item is narrower than its complete baseline requirement. Consult the [evide
 | Identity and authorization | Canonical authority activation across every ingress, policy/admin tooling, delegated operator access, service identities, identity synchronization and live Microsoft Entra qualification. |
 | Discovery and collaboration | More source object types, incremental/recovery ingestion, saved searches/views, subscriptions/comments, governed samples and complete bulk metadata interchange. |
 | Governance | Visual workflow/form designer and declared BPMN subset; broader approvals, policies/controls/risks/assessments, delegation/escalation and email/webhook delivery. |
-| Quality, lineage and semantics | The hosted 37-journey browser suite passes; the latest completed aggregate failed SQL024 and protected login, with local corrections passing and fresh hosted qualification required. Schema/distribution drift, remaining rule families, filters/partition scope, anomaly baselines and aggregation remain; broader SQL/OpenLineage/column lineage and semantic modelling remain. |
+| Quality, lineage and semantics | The merged checkpoint passes its full 37-journey browser suite and all 45 outcomes. The new runtime and catalog increment requires fresh qualification. Schema/distribution drift, remaining rule families, filters/partition scope, anomaly baselines and aggregation remain; broader SQL/OpenLineage/column lineage and semantic modelling remain. |
 | Contracts, products and access | Contract lifecycle, data-product marketplace, source grant/revoke/expiry/drift reconciliation and bounded SQL notebooks. |
 | AI and MCP | AI registry/evaluations, permission-filtered context assistant, authenticated MCP server and governed tool gateway. |
 | Documents and privacy | Document/version/ACL/delete propagation, privacy registers and assessments, cross-system evidence and complete portable migration. |

@@ -6,7 +6,7 @@ Updated 23 November 2026. The complete M0–M10 programme remains required. [Pro
 
 1. Completed: all 45 development outcomes and source security pass at `e51e8ec`; five behavior archives and three stored analyses are verified. PR #23 merged normally as `0fc25d4`. Historical failures remain recorded.
 2. PR #39 publishes the runtime-security increment. Both native Linux image jobs pass at `a6cd20d`; the broader run exposed incompatible timeout flags in the worker launchers. Publish the locally verified correction and rerun the affected hosted regression. Preserve the original failure and exact scan bindings.
-3. Complete the security PR through the normal required checks. Qualify hosted and fork behavior before adding the new runtime aggregate to enforced requirements; no gate bypass or independent sign-off is inferred.
+3. Integrate locally verified global catalog ordering (172 API cases and five targeted browser journeys) and the exact source-hash secret-scan dispositions into PR #39. Complete all 45 outcomes, now including 38 main browser journeys, and security checks at the published revision. Qualify fork behavior before adding the new runtime aggregate to enforced requirements; no gate bypass or independent sign-off is inferred.
 4. Continue canonical authorization, remaining quality/lineage and every milestone below. Vendor credentials and independent reviews block only their own qualification; executable implementation continues.
 
 ## GitHub delivery backlog

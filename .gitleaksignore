@@ -34,3 +34,22 @@
 64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:510
 64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:511
 64a13ed44dfc091193514e289f067e2574c7e07e:docs/verification/product-search-postgres-local.json:generic-api-key:533
+
+# Exact historical source hashes from the worker timeout evidence, not credentials.
+# All fourteen values are verified against their named Git blobs at62b834c.
+# Current evidence uses explicit path/sha256 records; no worktree exception.
+# Regression tests retain detection in other commits/paths and for synthetic tokens.
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:35
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:40
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:84
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:89
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:136
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:141
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:190
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:195
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:247
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:252
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:299
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:304
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:343
+62b834ca8a32648ee413ca7c240c118048f7c996:docs/verification/runtime-worker-timeout-local.json:generic-api-key:348

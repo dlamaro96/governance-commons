@@ -129,6 +129,7 @@ p { margin-bottom: 12px; }
 .facet-count { margin-inline-start: auto; color: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
 .catalog-facets > .text-button { font-size: 11px; margin: 14px 8px 0; }
 .catalog-results { flex: 1; min-width: 0; }
+.catalog-source-name { display: block; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
 .results-meta { display: flex; gap: 16px; align-items: center; justify-content: space-between; color: var(--text-muted); padding: 11px 20px; font-size: 11px; min-height: 40px; }
 .results-meta strong { color: var(--text); }
 .results-meta > span:last-child:not(:first-child) { font-size: 10px; }

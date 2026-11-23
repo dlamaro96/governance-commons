@@ -22,7 +22,7 @@ import protected_authn_evidence
 from test_authentication_evidence import fixture as authentication_fixture
 
 COLLECTOR = Path(__file__).with_name("ci_evidence.py")
-FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations", "business-domains", "source-connectors", "postgres-configuration", "approvals", "glossary", "quality", "lineage", "classification", "reference-data", "reference-quality", "reference-structures", "reference-import", "quality-uniqueness", "quality-range", "quality-monitoring", "quality-freshness", "quality-freshness-monitoring", "quality-volume")
+FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations", "business-domains", "source-connectors", "postgres-configuration", "approvals", "glossary", "quality", "lineage", "classification", "reference-data", "reference-quality", "reference-structures", "reference-import", "quality-uniqueness", "quality-range", "quality-monitoring", "quality-freshness", "quality-freshness-monitoring", "quality-volume", "catalog-sorting")
 STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_read_original", "authority_read_current", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "relation_candidate_original", "relation_candidate_current", "glossary_population_repaired_upgrade", "quality_repaired_upgrade", "quality_worker", "lineage_repaired_upgrade", "lineage_worker", "classification_repaired_upgrade", "reference_repaired_upgrade", "reference_quality_repaired_upgrade", "reference_quality_worker", "reference_structure_repaired_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade", "freshness_upgrade", "freshness_worker", "freshness_scheduling_upgrade", "volume_upgrade", "volume_worker", "browser", "protected_authn")
 QUALITY_TITLE = "DQ: real column completeness, immutable thresholds, aggregate outcomes and current read boundaries"
 LINEAGE_TITLE = "LIN-001/004/006: real PostgreSQL view dependencies, evidence, paged exploration and tenant isolation"
@@ -31,6 +31,7 @@ LINEAGE_TITLE = "LIN-001/004/006: real PostgreSQL view dependencies, evidence, p
 CONNECTOR_CAPTURES = tuple(f"m8-source-connectors-{state}-{language}-{width}.png"
                            for state in ("form", "registered", "failure", "denial")
                            for language, width in (("en", 1440), ("ar", 390)))
+SORTING_CAPTURES = ("catalog-name-desc-1440.png", "catalog-name-desc-390.png", "catalog-name-desc-ar-390.png")
 POSTGRES_CAPTURES = tuple(f"m8-postgres-configuration-{state}-{language}-{width}.png"
                          for state in ("form", "failure")
                          for language, width in (("en", 1440), ("ar", 390)))
@@ -53,9 +54,9 @@ CLASSIFICATION_TITLE = 'CLS: real metadata suggestion, independent application, 
 
 class EvidenceGateTests(unittest.TestCase):
     def collect(self, mutation=None, failed_step=None, api_mutation=None, omit_api=False, omitted_step=None, authn_mutation=None, omit_authn=False, protected_mutation=None, omit_protected=False, omitted_capture=None, symlink_capture=None, empty_capture=None, authority=False, authority_mutation=None, failed_outcome="failure", shard=None, shard_environment=None, retained_foreign=None):
-        specs = [{"file": f"{name}.spec.ts", "line": line, "title": VOLUME_TITLE if name == "quality-volume" else FRESHNESS_MONITORING_TITLE if name == "quality-freshness-monitoring" else FRESHNESS_TITLE if name == "quality-freshness" else MONITORING_TITLE if name == "quality-monitoring" else RANGE_TITLE if name == "quality-range" else UNIQUENESS_TITLE if name == "quality-uniqueness" else QUALITY_TITLE if name == "quality" else LINEAGE_TITLE if name == "lineage" else CLASSIFICATION_TITLE if name == "classification" else REFERENCE_TITLE if name == "reference-data" else REFERENCE_QUALITY_TITLE if name == "reference-quality" else REFERENCE_STRUCTURE_TITLE if name == "reference-structures" else REFERENCE_IMPORT_TITLE if name == "reference-import" else "PRIVATE_SYNTHETIC_TITLE",
+        specs = [{"file": f"{name}.spec.ts", "line": line, "title": "UX-04: catalog sorting spans real source results and resets cursor after changing order" if name == "catalog-sorting" else VOLUME_TITLE if name == "quality-volume" else FRESHNESS_MONITORING_TITLE if name == "quality-freshness-monitoring" else FRESHNESS_TITLE if name == "quality-freshness" else MONITORING_TITLE if name == "quality-monitoring" else RANGE_TITLE if name == "quality-range" else UNIQUENESS_TITLE if name == "quality-uniqueness" else QUALITY_TITLE if name == "quality" else LINEAGE_TITLE if name == "lineage" else CLASSIFICATION_TITLE if name == "classification" else REFERENCE_TITLE if name == "reference-data" else REFERENCE_QUALITY_TITLE if name == "reference-quality" else REFERENCE_STRUCTURE_TITLE if name == "reference-structures" else REFERENCE_IMPORT_TITLE if name == "reference-import" else "PRIVATE_SYNTHETIC_TITLE",
                   "tests": [{"status": "expected", "results": [{"status": "passed", "duration": 1, "stdout": ["PRIVATE_SYNTHETIC_OUTPUT"]}]}]}
-                 for name in FILES for line in ((10, 20, 30) if name == "business-domains" else (10,) if name in ("source-connectors", "postgres-configuration", "approvals", "quality", "lineage", "classification", "reference-data", "reference-quality", "reference-structures", "reference-import", "quality-uniqueness", "quality-range", "quality-monitoring", "quality-freshness", "quality-freshness-monitoring", "quality-volume") else (10, 20))]
+                 for name in FILES for line in ((10, 20, 30) if name == "business-domains" else (10,) if name in ("source-connectors", "postgres-configuration", "approvals", "quality", "lineage", "classification", "reference-data", "reference-quality", "reference-structures", "reference-import", "quality-uniqueness", "quality-range", "quality-monitoring", "quality-freshness", "quality-freshness-monitoring", "quality-volume", "catalog-sorting") else (10, 20))]
         if mutation:
             mutation(specs)
         with tempfile.TemporaryDirectory(prefix="gc-ci-evidence-") as temporary:
@@ -131,10 +132,12 @@ class EvidenceGateTests(unittest.TestCase):
             (captures / "quality-volume-unreviewed.png").write_bytes(b"PRIVATE_SYNTHETIC_IMAGE")
             for name in ("reference-import-duplicate-en-1440.png", "reference-import-complete-change-ar-390.png", "reference-import-removal-en-1440.png", "reference-import-published-ar-390.png"):
                 (captures / name).write_bytes(b"PRIVATE_SYNTHETIC_IMPORT_IMAGE")
-            for name in CONNECTOR_CAPTURES + POSTGRES_CAPTURES:
+            for name in CONNECTOR_CAPTURES + POSTGRES_CAPTURES + SORTING_CAPTURES:
                 if name == omitted_capture:
                     continue
-                path = captures / name
+                folder = root / ".local/evidence/catalog-sorting-captures" if name in SORTING_CAPTURES else captures
+                folder.mkdir(parents=True, exist_ok=True)
+                path = folder / name
                 if name == symlink_capture:
                     path.symlink_to(captures / "unreviewed-private.png")
                 else:
@@ -174,7 +177,7 @@ class EvidenceGateTests(unittest.TestCase):
             for private_name in ("authority-foundation.json", "authority-read-original.json", "authority-read-current.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-repaired-upgrade.json", "quality-worker.json", "lineage-repaired-upgrade.json", "lineage-worker.json", "classification-repaired-upgrade.json", "reference-repaired-upgrade.json", "reference-quality-repaired-upgrade.json", "reference-quality-worker.json", "reference-structure-repaired-upgrade.json", "reference-import.json", "reference-import-upload.json", "reference-import-upload.csv", "quality-uniqueness-upgrade.json", "uniqueness-quality-worker.json", "quality-range-upgrade.json", "range-quality-worker.json", "quality-monitoring-upgrade.json", "quality-freshness-upgrade.json", "freshness-quality-worker.json", "quality-freshness-scheduling-upgrade.json", "quality-volume-upgrade.json", "volume-quality-worker.json"):
                 self.assertFalse((root / ".local/ci-artifacts" / private_name).exists())
             for name in report["screenshots"]:
-                if name in CONNECTOR_CAPTURES + POSTGRES_CAPTURES:
+                if name in CONNECTOR_CAPTURES + POSTGRES_CAPTURES + SORTING_CAPTURES:
                     self.assertEqual((root / ".local/ci-artifacts" / name).read_bytes(), PNG)
             serialized = json.dumps(report)
             self.assertNotIn("PRIVATE_SYNTHETIC", serialized)
@@ -189,12 +192,12 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(diagnostic['failed_phase'], 'authority_loader')
             return result.returncode, report
 
-    def test_all_thirty_seven_required_journeys_are_accepted_and_private_payloads_omitted(self):
+    def test_all_thirty_eight_required_journeys_are_accepted_and_private_payloads_omitted(self):
         code, report = self.collect()
         self.assertEqual(code, 0)
         self.assertEqual(report["outcome"], "PASS")
-        self.assertEqual(len(report["tests"]), 37)
-        self.assertEqual(set(report["screenshots"]), set(CONNECTOR_CAPTURES + POSTGRES_CAPTURES))
+        self.assertEqual(len(report["tests"]), 38)
+        self.assertEqual(set(report["screenshots"]), set(CONNECTOR_CAPTURES + POSTGRES_CAPTURES + SORTING_CAPTURES))
         self.assertEqual(len(report["steps"]), 45)
 
     def test_reference_quality_requires_one_reviewed_journey(self):
@@ -215,7 +218,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    self.assertEqual(len(report["tests"]), 36)
+                    self.assertEqual(len(report["tests"]), 37)
 
     def test_reference_import_requires_one_exact_unretried_success(self):
         def target(specs):
@@ -237,7 +240,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    self.assertEqual(len(report["tests"]), 36)
+                    self.assertEqual(len(report["tests"]), 37)
 
     def test_reference_import_native_step_must_be_present_and_successful(self):
         for outcome in ("failure", "cancelled", "skipped", "unknown"):
@@ -271,8 +274,8 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    # The previous complete 36-journey report cannot qualify.
-                    self.assertEqual(len(report["tests"]), 36)
+                    # The previous complete 37-journey report cannot qualify.
+                    self.assertEqual(len(report["tests"]), 37)
 
     def test_range_requires_one_exact_unretried_success(self):
         def target(specs):
@@ -294,8 +297,8 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    # The previous complete 36-journey report cannot qualify.
-                    self.assertEqual(len(report["tests"]), 36)
+                    # The previous complete 37-journey report cannot qualify.
+                    self.assertEqual(len(report["tests"]), 37)
 
     def test_monitoring_requires_one_exact_unretried_success(self):
         def target(specs):
@@ -317,8 +320,8 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    # The previous complete 36-journey report cannot qualify.
-                    self.assertEqual(len(report["tests"]), 36)
+                    # The previous complete 37-journey report cannot qualify.
+                    self.assertEqual(len(report["tests"]), 37)
 
     def test_freshness_requires_one_exact_unretried_success(self):
         def target(specs):
@@ -340,8 +343,8 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    # The previous complete 36-journey report cannot qualify.
-                    self.assertEqual(len(report["tests"]), 36)
+                    # The previous complete 37-journey report cannot qualify.
+                    self.assertEqual(len(report["tests"]), 37)
 
     def test_scheduled_freshness_requires_one_exact_unretried_success(self):
         def target(specs):
@@ -363,8 +366,8 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    # The previous complete 36-journey report cannot qualify.
-                    self.assertEqual(len(report["tests"]), 36)
+                    # The previous complete 37-journey report cannot qualify.
+                    self.assertEqual(len(report["tests"]), 37)
 
     def test_volume_requires_one_exact_unretried_success(self):
         def target(specs):
@@ -386,8 +389,8 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    # The previous complete 36-journey report cannot qualify.
-                    self.assertEqual(len(report["tests"]), 36)
+                    # The previous complete 37-journey report cannot qualify.
+                    self.assertEqual(len(report["tests"]), 37)
 
     def test_uniqueness_and_range_stages_require_current_success(self):
         for step in ("uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade", "freshness_upgrade", "freshness_worker", "volume_upgrade", "volume_worker"):
@@ -420,7 +423,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(report["outcome"], "NOT_PASSED")
                 if number == 0:
-                    self.assertEqual(len(report["tests"]), 36)
+                    self.assertEqual(len(report["tests"]), 37)
 
     def test_reference_journey_requires_exactly_one_reviewed_success(self):
         mutations = (
@@ -526,7 +529,7 @@ class EvidenceGateTests(unittest.TestCase):
 
     def test_missing_source_connector_journey_cannot_qualify_complete_gate(self):
         code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "source-connectors.spec.ts"]))
-        self.assertEqual(len(report["tests"]), 36)
+        self.assertEqual(len(report["tests"]), 37)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
@@ -537,7 +540,7 @@ class EvidenceGateTests(unittest.TestCase):
 
     def test_missing_postgres_configuration_cannot_qualify_complete_gate(self):
         code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "postgres-configuration.spec.ts"]))
-        self.assertEqual(len(report["tests"]), 36)
+        self.assertEqual(len(report["tests"]), 37)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
@@ -564,20 +567,37 @@ class EvidenceGateTests(unittest.TestCase):
                     self.assertNotIn(name, report["screenshots"])
                     self.assertEqual(report["outcome"], "NOT_PASSED")
 
+    def test_catalog_sorting_journey_and_captures_are_required(self):
+        for option in ('omitted_capture','symlink_capture','empty_capture'):
+            for name in SORTING_CAPTURES:
+                with self.subTest(option=option,name=name):
+                    code, report = self.collect(**{option:name})
+                    self.assertEqual(code,1)
+                    self.assertEqual(report['outcome'],'NOT_PASSED')
+        for change in ('missing','title','skipped'):
+            def mutate(specs):
+                row=next(s for s in specs if s['file']=='catalog-sorting.spec.ts')
+                if change=='missing':specs.remove(row)
+                elif change=='title':row['title']='unreviewed substitute'
+                else:row['tests'][0]['results'][0]['status']='skipped'
+            code, report=self.collect(mutate)
+            self.assertEqual(code,1)
+            self.assertEqual(report['outcome'],'NOT_PASSED')
+
     def test_required_participation_journeys_cannot_be_replaced_by_domain_journeys(self):
         code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] != "relation-migrations.spec.ts"]))
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_older_sixteen_test_gate_cannot_hide_missing_business_domain_journeys(self):
-        code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] not in ("business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts", "lineage.spec.ts", "classification.spec.ts", "reference-data.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts", "quality-monitoring.spec.ts", "quality-freshness.spec.ts", "quality-freshness-monitoring.spec.ts", "quality-volume.spec.ts")]))
+        code, report = self.collect(lambda specs: specs.__setitem__(slice(None), [s for s in specs if s["file"] not in ("business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "approvals.spec.ts", "glossary.spec.ts", "quality.spec.ts", "lineage.spec.ts", "classification.spec.ts", "reference-data.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts", "quality-monitoring.spec.ts", "quality-freshness.spec.ts", "quality-freshness-monitoring.spec.ts", "quality-volume.spec.ts", "catalog-sorting.spec.ts")]))
         self.assertEqual(len(report["tests"]), 16)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_each_business_domain_journey_must_execute(self):
         code, report = self.collect(lambda specs: specs.remove(next(s for s in specs if s["file"] == "business-domains.spec.ts" and s["line"] == 30)))
-        self.assertEqual(len(report["tests"]), 36)
+        self.assertEqual(len(report["tests"]), 37)
         self.assertEqual(code, 1)
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
@@ -607,7 +627,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_failed_assertion_coordinates_are_allowlisted_without_private_payloads(self):
-        for filename in ("relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "quality.spec.ts", "lineage.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts", "quality-monitoring.spec.ts", "quality-freshness.spec.ts", "quality-freshness-monitoring.spec.ts", "quality-volume.spec.ts"):
+        for filename in ("relation-migrations.spec.ts", "business-domains.spec.ts", "source-connectors.spec.ts", "postgres-configuration.spec.ts", "quality.spec.ts", "lineage.spec.ts", "reference-quality.spec.ts", "reference-structures.spec.ts", "reference-import.spec.ts", "quality-uniqueness.spec.ts", "quality-range.spec.ts", "quality-monitoring.spec.ts", "quality-freshness.spec.ts", "quality-freshness-monitoring.spec.ts", "quality-volume.spec.ts", "catalog-sorting.spec.ts"):
             with self.subTest(filename=filename):
                 failure = {"status": "failed", "duration": 3, "error": {
                     "message": "PRIVATE_SYNTHETIC_MESSAGE", "stack": (

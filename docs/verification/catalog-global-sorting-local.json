@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T05:17:12.917111+00:00",
+  "result": "PASS_SCOPED",
+  "release_qualified": false,
+  "profile": "core; macOS host with Linux arm64 Docker services and installed Chrome",
+  "source_binding": {
+    "dirty": true,
+    "candidate_base_commit": "62b834ca8a32648ee413ca7c240c118048f7c996",
+    "api_execution_base_commit": "a6cd20db6e441cad38ae539f39c72d2db66e9187",
+    "method": "Exact current source digests and shipped images verified; dirty provenance retained. Later commits do not imply a rerun.",
+    "source_files": [
+      {
+        "path": "apps/api/src/asset-search.ts",
+        "sha256": "568af99a96d9da7c17c231b9b39961b1ef4c9340b9bc188585d35cc0328c2210"
+      },
+      {
+        "path": "apps/api/src/index.ts",
+        "sha256": "76911d2ec8e9c741a64162efd674c9e4294492282296be9dad7697d165043b85"
+      },
+      {
+        "path": "apps/web/src/i18n.tsx",
+        "sha256": "3777f06dbc98cd3729d43e0e142ba5b942f2a3dbeb647a4a04e73b92a60eac3b"
+      },
+      {
+        "path": "apps/web/src/pages/Catalog.tsx",
+        "sha256": "2ec5d47efb8073cc18f46cfcbc4580b98ab67fe222ab95a669cc70874db7e29b"
+      },
+      {
+        "path": "apps/web/src/styles.css",
+        "sha256": "d721e330072686a75e1ac69f32c73086c3003d30e6b55761598cc57fced166d4"
+      },
+      {
+        "path": "tests/unit/asset-search.test.ts",
+        "sha256": "ed5406885f617a54a20167d2a5133a13ea294b5b0f9418446f46aa900834b458"
+      },
+      {
+        "path": "tests/integration/asset-search.test.ts",
+        "sha256": "bb3df5470c6872340622b92feb1fcf53089776aa317172455950f94d27f0d343"
+      },
+      {
+        "path": "tests/e2e/catalog-sorting.spec.ts",
+        "sha256": "c3ba828987f6d728ea2bd0afc5a87b3f455fa59ba78158a9f9062238a9d41efd"
+      },
+      {
+        "path": ".github/workflows/ci.yml",
+        "sha256": "abb8fca060b235ce72c6419ecf137ea3c8f579e351e24392e6a2dbe25446d6ab"
+      },
+      {
+        "path": ".github/playwright.ci.config.ts",
+        "sha256": "d5a01fc6a7e46f59a269b60bd58580c7d72586f7c4e65cac6f42748591144944"
+      },
+      {
+        "path": "policies/ci_evidence.py",
+        "sha256": "0d019e472d9e7a9d80284c318f067fc64c482ca25718de0b69e1a374f09465b2"
+      },
+      {
+        "path": "policies/ci_shards.py",
+        "sha256": "9e31d852d6cbe98191811baf02cd4d6003b199512401043991801b548721fa07"
+      },
+      {
+        "path": "policies/test_ci_evidence.py",
+        "sha256": "29a5dce7439cba05a5489fb8038f6c95dccc279bea0c6e5adbc5859b1b506338"
+      },
+      {
+        "path": "policies/test_ci_shards.py",
+        "sha256": "60951fe9329265005fa8659475dde3e8fb87f8116f2cb8c2a51a9045dd7f279f"
+      }
+    ]
+  },
+  "behavior": [
+    "Name ascending, name descending and recently updated order the entire eligible candidate set in the same primary authorization snapshot before page selection.",
+    "Cursors bind tenant, identity, query, type, page size and sort. Changing sort clears the browser cursor/history.",
+    "Canonical names/update timestamps determine order even when OpenSearch candidates contain stale names. Ties use asset UUID; names use PostgreSQL C collation.",
+    "Counts/facets/order exclude hidden, retired and foreign-tenant assets. Existing candidate, page, hydration, time and cleanup bounds remain."
+  ],
+  "api": {
+    "command": "./dev test --suite security",
+    "counts": {
+      "tests": 172,
+      "suites": 0,
+      "pass": 172,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "source_files": 25,
+    "source_manifest_sha256": "23d80dfc37497521b227de43985007aa1933a72949c33bf9d2af657d4f665f32",
+    "receipt_sha256": "21bc131a9820aefa10259d3101c24b1c29e67aa8440a9ad90732015517d72f08",
+    "new_case": "73 canonical assets across two pages for every sort, repeated Unicode names, timestamp ties, stale index values, type filtering, changed-sort cursor refusal and hidden/foreign exclusions. Existing9101-result cursor traversal remains covered."
+  },
+  "browser": {
+    "command": "pnpm exec playwright test tests/e2e/catalog-sorting.spec.ts tests/e2e/vertical-slice.spec.ts tests/e2e/ui-accessibility.spec.ts",
+    "stats": {
+      "startTime": "2026-11-23T05:09:10.776Z",
+      "duration": 72912.121,
+      "expected": 5,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "file": "tests/e2e/catalog-sorting.spec.ts",
+        "line": 23,
+        "outcome": "PASS",
+        "attempts": 1
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 30,
+        "outcome": "PASS",
+        "attempts": 1
+      },
+      {
+        "file": "tests/e2e/ui-accessibility.spec.ts",
+        "line": 74,
+        "outcome": "PASS",
+        "attempts": 1
+      },
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 17,
+        "outcome": "PASS",
+        "attempts": 1
+      },
+      {
+        "file": "tests/e2e/vertical-slice.spec.ts",
+        "line": 145,
+        "outcome": "PASS",
+        "attempts": 1
+      }
+    ],
+    "receipt_sha256": "c00152578152d40bf2f3d78251133bb6d00894b40c3b23f881bf56d4f3fa4ee8",
+    "new_case": "Two real PostgreSQL scans populate multiple pages; actual controls change order and reset the cursor. English desktop/mobile and Arabic mobile captures inspected.",
+    "captures": [
+      {
+        "name": "catalog-name-desc-1440.png",
+        "sha256": "547743147f8c6ef9716d1c50fc3d7777b1bedf7f37d00cfc6bf3bde24ccad64c",
+        "bytes": 188428,
+        "width": 1440,
+        "height": 960
+      },
+      {
+        "name": "catalog-name-desc-390.png",
+        "sha256": "9b364e75a507c658860b2781d6dd4873a6b0dbf3db039b2cb7f49a2b7859a5e2",
+        "bytes": 68189,
+        "width": 390,
+        "height": 960
+      },
+      {
+        "name": "catalog-name-desc-ar-390.png",
+        "sha256": "75a56d5bb8d6d7463a97036c620a9bb485e777270822cdd090d8f74e4e6bfca3",
+        "bytes": 61727,
+        "width": 390,
+        "height": 960
+      }
+    ],
+    "visual_review": {
+      "inspected": [
+        "catalog-name-desc-1440.png",
+        "catalog-name-desc-390.png",
+        "catalog-name-desc-ar-390.png"
+      ],
+      "observations": [
+        "Desktop1440 shows all six catalog columns after bounding long source labels.",
+        "English and Arabic390 keep controls inside the viewport; the data table remains horizontally scrollable."
+      ],
+      "limitations": [
+        "Three new captures inspected; broader existing captures remain separately archived.",
+        "Automated accessibility and responsive checks pass; no human accessibility or Arabic-language certification."
+      ]
+    }
+  },
+  "host_controls": [
+    {
+      "suite": "ci-evidence",
+      "tests": 134,
+      "outcome": "PASS",
+      "log_sha256": "b2ad8de9c47807cfb635b361e6d0676b6948812cfc7b308de0320158402b36ff"
+    },
+    {
+      "suite": "ci-shards",
+      "tests": 28,
+      "outcome": "PASS",
+      "log_sha256": "e1556dc792360c10ec7858ec3e73965a86f021b71daec0aeb91637ea2f7a801d"
+    },
+    {
+      "suite": "asset-search-unit",
+      "tests": 20,
+      "outcome": "PASS",
+      "log_sha256": "77d7305a56d8137f831ccdd9053f887503fe7edae9ad4d2a91f466fc9340781c"
+    }
+  ],
+  "types": {
+    "command": "pnpm typecheck",
+    "outcome": "PASS",
+    "log_sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+  },
+  "runtime_readback": {
+    "sha256": "8e18986916571012d188f221285648bd3137bc05221d87c2e0e20e7794febd61",
+    "verified_application_files": 303,
+    "verified_worker_files": 33,
+    "healthy_services": {
+      "api": {
+        "image": "sha256:40c28cfc0aed6620ddaa14f926bdfe6f4f1293967c68203438cae38238b3a868",
+        "health": "healthy"
+      },
+      "workflow-worker": {
+        "image": "sha256:40c28cfc0aed6620ddaa14f926bdfe6f4f1293967c68203438cae38238b3a868",
+        "health": "healthy"
+      },
+      "site-runner": {
+        "image": "sha256:40c28cfc0aed6620ddaa14f926bdfe6f4f1293967c68203438cae38238b3a868",
+        "health": "healthy"
+      },
+      "python-worker": {
+        "image": "sha256:60e006aaac472ce7e9e9f448675d7ebc63768d3192ec8aa4851a720081a2e6cd",
+        "health": "healthy"
+      }
+    }
+  },
+  "pipeline": {
+    "required_browser_journeys": 38,
+    "required_outcomes": 45,
+    "new_capture_count": 3,
+    "hosted_qualification": "NOT_RUN"
+  },
+  "retained_attempts": [
+    "Initial typecheck could not use the nested package-manager shim; explicit local PATH corrected it.",
+    "First browser-test typecheck rejected its extensionless type import; explicit .ts import fixed it before browser execution.",
+    "CI evidence controls first rejected a syntax error, then a stale expected capture set; all134 pass after correction.",
+    "First core build stopped at the unchanged4GiB floor; disposable build cache was reclaimed and the retry passed."
+  ],
+  "limitations": [
+    "A request has a primary database snapshot and bounded OpenSearch PIT; pagination across separate requests is live, so concurrent edits may move rows between pages.",
+    "This changes catalog ordering, not policy-engine activation, semantic search, saved views or complete UX/API requirement qualification.",
+    "API execution used the unchanged application image while a separate worker-launcher qualification occurred; the later browser/readback used the rebuilt worker.",
+    "No new migration, production deployment, external vendor qualification or supported-release claim."
+  ]
+}

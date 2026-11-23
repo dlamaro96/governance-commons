@@ -1804,7 +1804,23 @@
       "scope": "portable-python-worker-deadline-invocation",
       "source_binding": {
         "method": "Seven real source gates,82 host controls and actual normal/TERM/KILL probes pass; exact measured hashes and prior failures retained.",
-        "evidence_sha256": "404d4a6d3f46ec725722bc8432f465ae63b6b2477a618cbb6face2ba5e58d755"
+        "evidence_sha256": "0bb8cc3f02bf6b6aa208a9972a17e460e465ff0069ee1634683394fb23e12ce8"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-worker-hash-dispositions.json",
+      "scope": "worker-evidence-historical-digest-dispositions",
+      "source_binding": {
+        "method": "Exact historical source hashes verified;5 native scanner controls and worktree/history rescans pass. Dirty execution retained.",
+        "evidence_sha256": "0f724b350619134712f1f02ebae87915bfd22e9778ececedb32875000bba377f"
+      }
+    },
+    {
+      "path": "docs/verification/catalog-global-sorting-local.json",
+      "scope": "canonical-catalog-global-sorting",
+      "source_binding": {
+        "method": "Dirty-source hashes,172 API cases,5 browser journeys,20 search controls,162 CI controls and exact healthy image source readback verified.",
+        "evidence_sha256": "0b2c9f0fb5151899851cdcb8b243048db57509afd546c1c60d7678d86a2f8e8c"
       }
     }
   ],

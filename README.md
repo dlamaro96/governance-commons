@@ -18,7 +18,7 @@ Governance Commons brings technical metadata, business context, ownership and ch
 
 | Workflow | Current development capability |
 |---|---|
-| Discover | Register a PostgreSQL source, run a real metadata scan, search assets and inspect table, view and column metadata. |
+| Discover | Register a PostgreSQL source, run a real metadata scan, search assets, order all matching results across pages and inspect table, view and column metadata. |
 | Steward | Assign owners, maintain descriptions, inspect change history and retain source provenance. |
 | Model | Author versioned operating models, inherited asset types, lifecycle rules, constrained relations and typed business domains. |
 | Change safely | Preview bounded model and graph migrations, detect stale versions and retain operation receipts. |
@@ -35,7 +35,7 @@ These are scoped development capabilities. Passing one workflow does not qualify
 
 Microsoft Entra ID federation has an operator-configured OIDC broker path. The protected login/session lifecycle is tested with real local Keycloak. Entra tenant registration, tenant-specific claims and live Microsoft sign-in still require external qualification; account/group synchronization and the broader identity administration capability remain open.
 
-Databricks Unity Catalog source registration and a metadata worker adapter are implemented in the development branch. Registration and missing-credential handling have local tests; a real Databricks workspace has **not** been qualified. Unity lineage, model registry, writeback and source permissions are separate remaining capabilities. PostgreSQL is the currently qualified real source path. The full [connector matrix](docs/product/connector-support.yaml) remains required.
+Databricks Unity Catalog source registration and a metadata worker adapter are implemented in the development preview. Registration and missing-credential handling have local tests; a real Databricks workspace has **not** been qualified. Unity lineage, model registry, writeback and source permissions are separate remaining capabilities. PostgreSQL is the currently qualified real source path. The full [connector matrix](docs/product/connector-support.yaml) remains required.
 
 The [product status](docs/product/STATUS.md) separates usable workflows from remaining implementation and qualification. Contracts, data products, source-access enforcement, notebooks, privacy, AI governance, semantic modelling, broader integrations and enterprise operations remain substantial work. Required features stay in the open-source project; there is no seat, asset or connector license gate.
 

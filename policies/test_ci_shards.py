@@ -139,7 +139,7 @@ class CollectorTests(unittest.TestCase):
                 self.assertEqual(code,0);self.assertEqual(report['outcome'],'PASS')
                 self.assertEqual(report['shard']['shard'],shard)
                 self.assertEqual(report['shard']['assignment_sha256'],policy.assignment_hash())
-                self.assertEqual(len(report['tests']),37 if shard=='browser' else 0)
+                self.assertEqual(len(report['tests']),38 if shard=='browser' else 0)
                 for step,value in report['steps'].items():self.assertEqual(value,'success' if step in policy.required_steps(shard) else 'NOT_IN_SHARD')
 
     def test_each_actual_collector_refuses_missing_assigned_and_foreign_success(self):

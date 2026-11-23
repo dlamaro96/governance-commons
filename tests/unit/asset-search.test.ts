@@ -13,7 +13,7 @@ const reply=(hits:unknown[]=[],extra:Record<string,unknown>={})=>({_shards:shard
 const json=(value:unknown,status=200)=>new Response(JSON.stringify(value),{status,headers:{'Content-Type':'application/json'}});
 type Hit=ReturnType<typeof hit>;
 function fixture(options:{hits?:Hit[];allow?:(id:string)=>boolean;type?:(id:string)=>string;permissions?:string[];
-  search?:(body:any,index:number)=>unknown|Response;create?:unknown;close?:unknown;expires?:boolean;measure?:number}={}){
+  search?:(body:any,index:number)=>unknown|Response;create?:unknown;close?:unknown;expires?:boolean;measure?:number;orderedIds?:string[]}={}){
   const sql:{text:string;values:any[]}[]=[],requests:{path:string;method:string;body:any;signal:AbortSignal;headers:Headers}[]=[],releases:boolean[]=[];
   let now=0,searches=0;
   const client:AssetSearchClient={release(destroy){releases.push(!!destroy);},async query(config){
@@ -22,6 +22,7 @@ function fixture(options:{hits?:Hit[];allow?:(id:string)=>boolean;type?:(id:stri
     if(config.text.startsWith('SELECT $1::double'))return {rows:[{live:true}]};
     if(config.text.startsWith('SELECT a.id,a.type'))return {rows:config.values![1].filter((value:string)=>options.allow?.(value)??true)
       .map((value:string)=>({id:value,type:options.type?.(value)??'table'})).filter((row:{type:string})=>!config.values![3]||row.type===config.values![3])};
+    if(config.text.startsWith('SELECT a.id FROM assets'))return {rows:(options.orderedIds??config.values![1]).slice(config.values![5],config.values![5]+config.values![4]).map((id:string)=>({id}))};
     if(config.text.includes('octet_length'))return {rows:config.values![1].map((value:string)=>({id:value,bytes:options.measure??500}))};
     if(config.text.startsWith('SELECT a.*'))return {rows:[...config.values![1]].reverse().map((value:string)=>({id:value,name:value,type:'table',status:'active',metadata:{},version:1}))};
     return {rows:[]};
@@ -41,7 +42,7 @@ function fixture(options:{hits?:Hit[];allow?:(id:string)=>boolean;type?:(id:stri
 }
 function error(code:string){return (value:any)=>value?.code===code&&!/secret|hidden-name|raw-database-error/.test(value.message);}
 
-test('current snapshot authorization precedes PIT; canonical SQL scopes batches and final hydration retains index order',async()=>{
+test('current snapshot authorization precedes PIT; canonical SQL scopes batches and final hydration retains database order',async()=>{
   const f=fixture({hits:[hit(10),hit(11),hit(12)],allow:value=>value!==id(11),type:value=>value===id(12)?'view':'table'});
   const result=await f.run(auth,{limit:1,q:'orders'});
   assert.equal(result.total,2);assert.deepEqual(result.items.map(x=>x.id),[id(10)]);
@@ -127,7 +128,7 @@ test('strict cursors reject tampering, unknown fields, noncanonical encoding and
     sign(JSON.stringify({...p,offset:-1})),sign(JSON.stringify({...p,offset:1.5})),sign(JSON.stringify({...p,offset:Number.MAX_SAFE_INTEGER+1})),sign(' '+JSON.stringify(p))]){
     await assert.rejects(f.run(auth,{q:'orders',type:'table',limit:1,cursor}),error('CURSOR_INVALID'));
   }
-  for(const changed of [{q:'different',type:'table',limit:1},{q:'orders',type:'view',limit:1},{q:'orders',type:'table',limit:2}])await assert.rejects(f.run(auth,{...changed,cursor:good}),error('CURSOR_INVALID'));
+  for(const changed of [{q:'different',type:'table',limit:1},{q:'orders',type:'view',limit:1},{q:'orders',type:'table',limit:2},{q:'orders',type:'table',limit:1,sort:'name-desc' as const},{q:'orders',type:'table',limit:1,sort:'updated' as const}])await assert.rejects(f.run(auth,{...changed,cursor:good}),error('CURSOR_INVALID'));
   for(const principal of [{...auth.principal,id:id(3)},{...auth.principal,tenantId:id(3)}])await assert.rejects(f.run({...auth,principal},{q:'orders',type:'table',limit:1,cursor:good}),error('CURSOR_INVALID'));
   assert.equal(f.requests.filter(r=>r.method==='POST'&&r.path.endsWith('/point_in_time')).length,1);
 });
@@ -228,4 +229,21 @@ test('late pool acquisition is disposed after original deadline, without opening
   // A clock that advances during the actual acquisition, not a shorter test profile.
   let tick=0;const actual=createAssetSearch({connect:async()=>{tick=15001;return f.client;},fetch:f.fetcher,searchUrl:'http://search.invalid:9200',cursorKey:key,now:()=>tick});
   await assert.rejects(actual(auth,{}),error('SEARCH_PROFILE_LIMIT'));assert.deepEqual(f.releases,[true]);assert.equal(f.sql.length,0);assert.equal(f.requests.length,0);
+});
+
+
+test('canonical page order wins over index order and unexpected ordered identifiers fail closed',async()=>{
+  const f=fixture({hits:[hit(10),hit(11),hit(12)],orderedIds:[id(12),id(10),id(11)]});
+  const page=await f.run(auth,{sort:'updated',limit:2});assert.deepEqual(page.items.map(r=>r.id),[id(12),id(10)]);
+  const ordered=f.sql.find(q=>q.text.startsWith('SELECT a.id FROM assets'))!;
+  assert.match(ordered.text,/ORDER BY a.updated_at DESC,a.id ASC LIMIT \$5::integer OFFSET \$6::integer/);
+  assert.deepEqual(ordered.values,[auth.principal.tenantId,[id(10),id(11),id(12)],JSON.stringify([auth.principal.id]),'',2,0]);
+  for(const orderedIds of [[id(99)],[id(10),id(10)],[]]){
+    const bad=fixture({hits:[hit(10),hit(11)],orderedIds});await assert.rejects(bad.run(auth,{}),error('SEARCH_UNAVAILABLE'));
+    assert.equal(bad.sql.some(q=>q.text.startsWith('SELECT a.*')),false);
+  }
+  for(const sort of ['', 'random', 'name; DROP TABLE assets', [], {}]){
+    const invalid=fixture();await assert.rejects(invalid.run(auth,{sort:sort as never}),error('VALIDATION_FAILED'));
+    assert.equal(invalid.sql.length,0);assert.equal(invalid.requests.length,0);
+  }
 });

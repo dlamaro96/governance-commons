@@ -19,7 +19,7 @@ const searchUrl=process.env.OPENSEARCH_URL??'http://opensearch:9200', index='gc-
 const token=()=>randomUUID().replaceAll('-','');
 const broad='searchbulk'+token(), narrow='searchneedle'+token(), filler='searchother'+token();
 type Asset={id:string; tenantId:string; name:string; qualifiedName:string; type:string; description:string;
-  status:string; visibility:'tenant'|'restricted'; allowed:string[]; metadata:{fixture:string}};
+  status:string; visibility:'tenant'|'restricted'; allowed:string[]; metadata:{fixture:string}; updatedAt?:Date};
 type Page={items:Array<{id:string;name:string;qualifiedName:string;type:string;description:string;status:string;
   version:number;metadata:unknown;sourceId:string|null;ownerId:string|null}>;
   total:number;facets:{type:string;count:number}[];nextCursor:string|null};
@@ -61,7 +61,7 @@ async function insert(rows:Asset[]) {
       for(const batch of batches(rows.filter(row=>row.tenantId===tenantId))) await tx.insertInto('assets').values(batch.map(row=>({
         tenant_id:row.tenantId,id:row.id,external_id:row.id,name:row.name,qualified_name:row.qualifiedName,type:row.type,
         description:row.description,status:row.status,visibility:row.visibility,allowed_identities:JSON.stringify(row.allowed),
-        metadata:JSON.stringify(row.metadata),observed_at:new Date()}))).execute();
+        metadata:JSON.stringify(row.metadata),observed_at:new Date(),updated_at:row.updatedAt??new Date()}))).execute();
     });
   }
 }
@@ -258,4 +258,35 @@ test('real glossary-text search retains canonical visibility before counts and f
  for(const q of [alias,abbreviation,translation]){
   const result=await http({q,limit:100},current.headers,200,t.signal);checkPage(result,[visible],[visible]);assert.equal(result.nextCursor,null);
  }
+});
+
+
+test('canonical global sorting crosses pages with ties and stale index values without hidden row influence', {timeout:90_000},async t=>{
+  const q='searchsort'+token();
+  const rows=Array.from({length:73},(_,i)=>asset(`${q} ${['A','a','Z','é','مبيعات'][i%5]}`,i%3?'table':'view',{
+    updatedAt:new Date(Date.UTC(2026,0,1)+Math.floor(i/3)*1000)}));
+  const hidden=asset(`${q} 0-hidden`,'hidden-sort-type',{visibility:'restricted',allowed:[steward],updatedAt:new Date('2040-01-01T00:00:00Z')});
+  const other=asset(`${q} 0-foreign`,'foreign-sort-type',{tenantId:foreign,updatedAt:new Date('2040-01-01T00:00:00Z')});
+  await insert([...rows,hidden,other]);
+  // Index names deliberately disagree with canonical order. Query terms remain
+  // discoverable, but only the primary name/update timestamp may order results.
+  await project([...rows,hidden,other].map((row,i)=>({id:row.id,value:document(row,{tenantId:tenant,name:`${q} stale ${String(100-i).padStart(3,'0')}`})})));
+  const current=await session(t),outsider=await session(t,summit,foreign);
+  const byId=(a:Asset,b:Asset)=>a.id<b.id?-1:a.id>b.id?1:0;
+  for(const sort of ['name','name-desc','updated'] as const){
+    const expected=[...rows].sort((a,b)=>(sort==='updated'?b.updatedAt!.getTime()-a.updatedAt!.getTime():
+      (sort==='name-desc'?-1:1)*Buffer.compare(Buffer.from(a.name),Buffer.from(b.name)))||byId(a,b));
+    const first=await http({q,sort,limit:50},current.headers,200,t.signal);checkPage(first,expected.slice(0,50),expected);assert.ok(first.nextCursor);
+    const second=await http({q,sort,limit:50,cursor:first.nextCursor},current.headers,200,t.signal);checkPage(second,expected.slice(50),expected);assert.equal(second.nextCursor,null);
+    assert.equal(new Set([...first.items,...second.items].map(r=>r.id)).size,73);
+    for(const foreignSort of ['name','name-desc','updated'] as const)if(foreignSort!==sort){
+      assert.equal((await http({q,sort:foreignSort,limit:50,cursor:first.nextCursor},current.headers,400,t.signal)).code,'CURSOR_INVALID');
+    }
+    const tables=expected.filter(r=>r.type==='table');checkPage(await http({q,sort,type:'table',limit:100},current.headers,200,t.signal),tables,tables);
+    for(const page of [first,second])assert.equal(JSON.stringify(page).includes(hidden.id)||JSON.stringify(page).includes(other.id),false);
+    assert.deepEqual(await http({q,sort,limit:50},outsider.headers,200,t.signal),{items:[],total:0,nextCursor:null,facets:[]});
+  }
+  const first=await http({q,limit:50},current.headers,200,t.signal);
+  assert.deepEqual(first,await http({q,sort:'name',limit:50},current.headers,200,t.signal));
+  for(const sort of ['random','name desc','name; SELECT 1'])await http({q,sort:sort as never},current.headers,400,t.signal);
 });
