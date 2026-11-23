@@ -15,7 +15,7 @@ from protected_authn_evidence import load_report as load_protected_report, copy_
 from authentication_evidence import read_file as bounded_read, strict_json as private_json
 from quality_upgrade_diagnostics import load_repaired_report as load_quality_diagnostic, REPAIRED_PROFILES
 
-from ci_shards import SUPERSEDED, AUTHORITY_SCOPES, ASSET_CONTEXT_SCOPES, CONTENT_REVISION_SCOPES, CLASSIFICATION_LABEL_SCOPES, RELATION_SCOPES, STEPS, required_steps, collect_outcomes, checkout_identity, foreign_evidence
+from ci_shards import SUPERSEDED, AUTHORITY_SCOPES, ASSET_CONTEXT_SCOPES, CONTENT_REVISION_SCOPES, CLASSIFICATION_LABEL_SCOPES, REVIEWED_CLASSIFICATION_SCOPES, RELATION_SCOPES, STEPS, required_steps, collect_outcomes, checkout_identity, foreign_evidence
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--shard")
@@ -48,12 +48,13 @@ report = {
     "asset_context_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in ASSET_CONTEXT_SCOPES.items()},
     "content_revision_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in CONTENT_REVISION_SCOPES.items()},
     "classification_label_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in CLASSIFICATION_LABEL_SCOPES.items()},
+    "reviewed_classification_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in REVIEWED_CLASSIFICATION_SCOPES.items()},
     "relation_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in RELATION_SCOPES.items()},
     "tests": [],
     "screenshots": [],
     "limitations": ["No traces, videos, error messages, stdout, cookies, request headers, bootstrap files or raw Playwright reports are published.",
                     "This local synthetic profile is not vendor-live, full accessibility, enterprise or release qualification.",
-                    "Explicit SQL032 repaired-chain and original/current relation qualifications, SQL031 original/current authority qualifications, the separate inactive canonical asset-context qualification, source-connector upgrade, configurable PostgreSQL TLS, glossary upgrade, completeness, lineage, classification, reference-data, reference-quality, reference-structure, reference-import, uniqueness, range, monitoring, freshness, scheduled-freshness and volume native gates remain CI step outcomes only; the superseded SQL013/SQL018 failures are retained in its original evidence and are not requalified here. Raw native reports/logs and unreviewed completeness/lineage/classification/reference-data/reference-quality/reference-structure/reference-import/uniqueness/range/monitoring/freshness/volume captures and all raw import uploads remain private."],
+                    "Explicit SQL032 repaired-chain and original/current relation qualifications, SQL031 original/current authority qualifications, the separate inactive canonical asset-context, content-security revision, classification label identity and reviewed classification producer/fact qualifications, source-connector upgrade, configurable PostgreSQL TLS, glossary upgrade, completeness, lineage, classification, reference-data, reference-quality, reference-structure, reference-import, uniqueness, range, monitoring, freshness, scheduled-freshness and volume native gates remain CI step outcomes only; the superseded SQL013/SQL018 failures are retained in its original evidence and are not requalified here. Raw native reports/logs and unreviewed completeness/lineage/classification/reference-data/reference-quality/reference-structure/reference-import/uniqueness/range/monitoring/freshness/volume captures and all raw import uploads remain private."],
 }
 # The API runner retains raw TAP privately. Only an independently revalidated,
 # exact-source report enters this staging directory; absence cannot turn a

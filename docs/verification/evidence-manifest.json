@@ -2052,6 +2052,57 @@
         "method": "Exact source/image bindings and limitations are retained in the scoped record.",
         "evidence_sha256": "d7f0eb341eff462d33bc1185798d1d774477edf096da3fc5f4ee171592608c7c"
       }
+    },
+    {
+      "path": "docs/verification/reviewed-classification-facts-local.json",
+      "scope": "isolated-reviewed-classification-facts-sql035",
+      "source_binding": {
+        "base_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+        "dirty": true,
+        "method": "Exact267-source isolated populated upgrade with98 native case executions; preservation, both replays and owned cleanup. Rebuilt core and hosted qualification remain separate.",
+        "verified_files": 267,
+        "evidence_sha256": "0841ab1a925b460fcd15c62be1a98ec0d095f6ad8c106197a07c2440d90adecb"
+      }
+    },
+    {
+      "path": "docs/verification/source-security-7b8babf.json",
+      "scope": "source-security",
+      "source_binding": {
+        "implementation_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+        "method": "Authenticated exact-revision hosted archives and immutable Git-source readback; scope and limitations retained in record. No qualification of later source inferred.",
+        "evidence_sha256": "b8abf034ae1748cbe0b3376c5068c3ac1ac37d0ad602aa6d08702087f7556599",
+        "verified_files": 1589
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-7b8babf.json",
+      "scope": "native-runtime-images",
+      "source_binding": {
+        "implementation_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+        "method": "Authenticated exact-revision hosted archives and immutable Git-source readback; scope and limitations retained in record. No qualification of later source inferred.",
+        "evidence_sha256": "1e613c557815d62aa9d6948d81cd43343737cc646a897135cd7ffbdbe896bcf9",
+        "verified_files": 47
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-a24af90-failed.json",
+      "scope": "hosted-development-48-outcomes-not-passed",
+      "source_binding": {
+        "implementation_commit": "a24af9068b5175c931e6481d399527b9b2a01d56",
+        "method": "Authenticated exact-revision hosted archives and immutable Git-source readback; scope and limitations retained in record. No qualification of later source inferred.",
+        "evidence_sha256": "6984cf8a1c417a8359573f8a81b8f7dcafe2e365f7b2081e0a9125665477b7eb"
+      }
+    },
+    {
+      "path": "docs/verification/reviewed-classification-facts-integrated-local.json",
+      "scope": "local-core-reviewed-classification-facts",
+      "source_binding": {
+        "base_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+        "dirty": true,
+        "method": "Exact347-source immutable-image and running-service readback before172 API cases and after one real classification browser journey. Separate98-case isolated native qualification; no content authority activation.",
+        "verified_files": 347,
+        "evidence_sha256": "8fec1b8800eb71d595f17c1e95707d50bd7f2960e693c883d7fc8a5afdee9280"
+      }
     }
   ],
   "limitations": [

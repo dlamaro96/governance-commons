@@ -44,8 +44,9 @@ _original_sources = predecessor.sources
 NAMES = [*predecessor.NAMES, MIGRATION]
 
 def migrations():
-    require(sorted(p.name for p in (ROOT / 'packages/db/migrations').glob('*.sql')) == NAMES,
-            'Exactly immutable SQL001–034 required; unknown successors refused')
+    actual = sorted(p.name for p in (ROOT / 'packages/db/migrations').glob('*.sql'))
+    require(actual[:len(NAMES)] == NAMES and actual[len(NAMES):] in ([], ['035_reviewed_classification_producer.sql']),
+            'Exactly immutable SQL001–034 prefix and declared035 successor required')
     return list(NAMES)
 
 def sources():

@@ -8415,12 +8415,22 @@
         "packages/db/migrations/021_classification_review.sql",
         "apps/web/src/classification/AssetClassification.tsx",
         "packages/db/migrations/034_classification_label_identities.sql",
-        "docs/adr/0022-stable-classification-label-identities.md"
+        "docs/adr/0022-stable-classification-label-identities.md",
+        "packages/db/migrations/035_reviewed_classification_producer.sql",
+        "packages/authority-storage/src/reviewed-classification-facts.ts",
+        "packages/authority-runtime/src/classified-asset-context.ts",
+        "packages/authority-storage/src/repository.ts",
+        "docs/adr/0023-reviewed-classification-facts.md"
       ],
       "test_ids": [
         "tests/e2e/classification.spec.ts",
         "tests/qualification/classification-label-identities.test.ts",
-        "scripts/test_classification_label_identities.py"
+        "scripts/test_classification_label_identities.py",
+        "tests/qualification/classification-producer-binding.test.ts",
+        "tests/qualification/reviewed-classification-facts.test.ts",
+        "tests/unit/classified-asset-context.test.ts",
+        "tests/unit/reviewed-classification-facts.test.ts",
+        "scripts/test_reviewed_classification_producer.py"
       ],
       "verification": {
         "fixture": {
@@ -8452,14 +8462,18 @@
       "limitations": [
         "Scoped local implementation and regression checks pass; the compound capability, additional source families and release qualification remain open.",
         "SQL034 adds private stable label UUIDs, historical-key reservation and permanent retirement. The isolated populated upgrade passes 50 native cases (27 predecessor and 23 new), with all 259 source bindings and preservation/replay/owned cleanup. These identities do not themselves produce approved authorization facts or activate content authority; broader capability and release outcomes remain unchanged.",
-        "The SQL034 core migration passes with all34 checksums and344 source/image bindings,172 API cases and one expanded real classification browser journey. The initial429 failure is retained, and three of14 successful captures were inspected. Separate hosted48-outcome qualification, trusted producer facts, content-authority activation and whole-requirement/release outcomes remain open."
+        "The SQL034 core migration passes with all34 checksums and344 source/image bindings,172 API cases and one expanded real classification browser journey. The initial429 failure is retained, and three of14 successful captures were inspected. Separate hosted48-outcome qualification, trusted producer facts, content-authority activation and whole-requirement/release outcomes remain open.",
+        "SQL035 binds an explicitly installed private producer to complete canonical classification approval proof in one protected read-only snapshot. Its isolated populated upgrade passes 98 native cases with 267 exact source bindings, preservation of 145 prior tables, both replays and owned cleanup; 1,207 unit cases pass. Missing, stale or pre-baseline identity proof stays unavailable. This is inactive provenance, not an effect capability. Held evaluation, full ingress activation, hosted qualification and whole-requirement/release outcomes remain open.",
+        "SQL035 normal core rebuild/migration passes with all 35 checksums and 347 source/image bindings, all 172 API cases and one real classification browser journey without skips or retries. Three of14 captures were visually inspected. The browser covers the existing classification workflow; the private producer/fact reader has separate native evidence. Exact-head hosted49-outcome qualification, held evaluation, ingress activation and whole-requirement/release outcomes remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M2",
       "partial_evidence": [
         "docs/verification/product-lineage-classification-local.json",
         "docs/verification/classification-label-identities-local.json",
-        "docs/verification/classification-label-identities-integrated-local.json"
+        "docs/verification/classification-label-identities-integrated-local.json",
+        "docs/verification/reviewed-classification-facts-local.json",
+        "docs/verification/reviewed-classification-facts-integrated-local.json"
       ]
     },
     {
@@ -54377,7 +54391,11 @@
         "packages/authority-runtime/src/versioned-asset-context.ts",
         "docs/adr/0021-private-content-security-revisions.md",
         "packages/db/migrations/034_classification_label_identities.sql",
-        "docs/adr/0022-stable-classification-label-identities.md"
+        "docs/adr/0022-stable-classification-label-identities.md",
+        "packages/db/migrations/035_reviewed_classification_producer.sql",
+        "packages/authority-storage/src/reviewed-classification-facts.ts",
+        "packages/authority-runtime/src/classified-asset-context.ts",
+        "docs/adr/0023-reviewed-classification-facts.md"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -54418,7 +54436,12 @@
         "tests/qualification/content-security-revision.test.ts",
         "scripts/test_content_security_revision.py",
         "tests/qualification/classification-label-identities.test.ts",
-        "scripts/test_classification_label_identities.py"
+        "scripts/test_classification_label_identities.py",
+        "tests/qualification/classification-producer-binding.test.ts",
+        "tests/qualification/reviewed-classification-facts.test.ts",
+        "tests/unit/classified-asset-context.test.ts",
+        "tests/unit/reviewed-classification-facts.test.ts",
+        "scripts/test_reviewed_classification_producer.py"
       ],
       "verification": {
         "fixture": {
@@ -54470,7 +54493,9 @@
         "Inactive canonical asset-context composition passes thirteen isolated native PostgreSQL cases, 65 relevant unit cases and exact 249-source readback with preservation/replay/cleanup. This binds protected identity, ACL, placement and current ancestry in one snapshot; it does not activate authorization or fabricate security revisions, reviewed facts or post-commit effect capabilities. Broader requirement outcomes remain unchanged.",
         "SQL033 adds private monotone content revisions for six canonical head families. Its isolated populated upgrade passes47 native case executions (27 predecessor and20 new), all255 source bindings, full preservation/replay and owned cleanup. Versioned asset context reads the revision in the same native-owner snapshot; it remains inactive provenance, with no approved-fact producer or later-effect authorization. This partial evidence does not promote whole-requirement, hosted or release verification.",
         "SQL034 adds private stable label UUIDs, historical-key reservation and permanent retirement. The isolated populated upgrade passes 50 native cases (27 predecessor and 23 new), with all 259 source bindings and preservation/replay/owned cleanup. These identities do not themselves produce approved authorization facts or activate content authority; broader capability and release outcomes remain unchanged.",
-        "The SQL034 core migration passes with all34 checksums and344 source/image bindings,172 API cases and one expanded real classification browser journey. The initial429 failure is retained, and three of14 successful captures were inspected. Separate hosted48-outcome qualification, trusted producer facts, content-authority activation and whole-requirement/release outcomes remain open."
+        "The SQL034 core migration passes with all34 checksums and344 source/image bindings,172 API cases and one expanded real classification browser journey. The initial429 failure is retained, and three of14 successful captures were inspected. Separate hosted48-outcome qualification, trusted producer facts, content-authority activation and whole-requirement/release outcomes remain open.",
+        "SQL035 binds an explicitly installed private producer to complete canonical classification approval proof in one protected read-only snapshot. Its isolated populated upgrade passes 98 native cases with 267 exact source bindings, preservation of 145 prior tables, both replays and owned cleanup; 1,207 unit cases pass. Missing, stale or pre-baseline identity proof stays unavailable. This is inactive provenance, not an effect capability. Held evaluation, full ingress activation, hosted qualification and whole-requirement/release outcomes remain open.",
+        "SQL035 normal core rebuild/migration passes with all 35 checksums and 347 source/image bindings, all 172 API cases and one real classification browser journey without skips or retries. Three of14 captures were visually inspected. The browser covers the existing classification workflow; the private producer/fact reader has separate native evidence. Exact-head hosted49-outcome qualification, held evaluation, ingress activation and whole-requirement/release outcomes remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -54512,7 +54537,9 @@
         "docs/verification/authority-asset-context-local.json",
         "docs/verification/content-security-revision-integrated-local.json",
         "docs/verification/classification-label-identities-local.json",
-        "docs/verification/classification-label-identities-integrated-local.json"
+        "docs/verification/classification-label-identities-integrated-local.json",
+        "docs/verification/reviewed-classification-facts-local.json",
+        "docs/verification/reviewed-classification-facts-integrated-local.json"
       ]
     },
     {
@@ -54550,7 +54577,11 @@
         "packages/authority-runtime/src/versioned-asset-context.ts",
         "docs/adr/0021-private-content-security-revisions.md",
         "packages/db/migrations/034_classification_label_identities.sql",
-        "docs/adr/0022-stable-classification-label-identities.md"
+        "docs/adr/0022-stable-classification-label-identities.md",
+        "packages/db/migrations/035_reviewed_classification_producer.sql",
+        "packages/authority-storage/src/reviewed-classification-facts.ts",
+        "packages/authority-runtime/src/classified-asset-context.ts",
+        "docs/adr/0023-reviewed-classification-facts.md"
       ],
       "test_ids": [
         "tests/qualification/authority-read-grants.test.ts",
@@ -54562,7 +54593,12 @@
         "tests/qualification/content-security-revision.test.ts",
         "scripts/test_content_security_revision.py",
         "tests/qualification/classification-label-identities.test.ts",
-        "scripts/test_classification_label_identities.py"
+        "scripts/test_classification_label_identities.py",
+        "tests/qualification/classification-producer-binding.test.ts",
+        "tests/qualification/reviewed-classification-facts.test.ts",
+        "tests/unit/classified-asset-context.test.ts",
+        "tests/unit/reviewed-classification-facts.test.ts",
+        "scripts/test_reviewed_classification_producer.py"
       ],
       "verification": {
         "fixture": {
@@ -54600,7 +54636,9 @@
         "Inactive canonical asset-context composition passes thirteen isolated native PostgreSQL cases, 65 relevant unit cases and exact 249-source readback with preservation/replay/cleanup. This binds protected identity, ACL, placement and current ancestry in one snapshot; it does not activate authorization or fabricate security revisions, reviewed facts or post-commit effect capabilities. Broader requirement outcomes remain unchanged.",
         "SQL033 adds private monotone content revisions for six canonical head families. Its isolated populated upgrade passes47 native case executions (27 predecessor and20 new), all255 source bindings, full preservation/replay and owned cleanup. Versioned asset context reads the revision in the same native-owner snapshot; it remains inactive provenance, with no approved-fact producer or later-effect authorization. This partial evidence does not promote whole-requirement, hosted or release verification.",
         "SQL034 adds private stable label UUIDs, historical-key reservation and permanent retirement. The isolated populated upgrade passes 50 native cases (27 predecessor and 23 new), with all 259 source bindings and preservation/replay/owned cleanup. These identities do not themselves produce approved authorization facts or activate content authority; broader capability and release outcomes remain unchanged.",
-        "The SQL034 core migration passes with all34 checksums and344 source/image bindings,172 API cases and one expanded real classification browser journey. The initial429 failure is retained, and three of14 successful captures were inspected. Separate hosted48-outcome qualification, trusted producer facts, content-authority activation and whole-requirement/release outcomes remain open."
+        "The SQL034 core migration passes with all34 checksums and344 source/image bindings,172 API cases and one expanded real classification browser journey. The initial429 failure is retained, and three of14 successful captures were inspected. Separate hosted48-outcome qualification, trusted producer facts, content-authority activation and whole-requirement/release outcomes remain open.",
+        "SQL035 binds an explicitly installed private producer to complete canonical classification approval proof in one protected read-only snapshot. Its isolated populated upgrade passes 98 native cases with 267 exact source bindings, preservation of 145 prior tables, both replays and owned cleanup; 1,207 unit cases pass. Missing, stale or pre-baseline identity proof stays unavailable. This is inactive provenance, not an effect capability. Held evaluation, full ingress activation, hosted qualification and whole-requirement/release outcomes remain open.",
+        "SQL035 normal core rebuild/migration passes with all 35 checksums and 347 source/image bindings, all 172 API cases and one real classification browser journey without skips or retries. Three of14 captures were visually inspected. The browser covers the existing classification workflow; the private producer/fact reader has separate native evidence. Exact-head hosted49-outcome qualification, held evaluation, ingress activation and whole-requirement/release outcomes remain open."
       ],
       "owner": "unassigned",
       "milestone": "M0",
@@ -54609,7 +54647,9 @@
         "docs/verification/authority-asset-context-local.json",
         "docs/verification/content-security-revision-integrated-local.json",
         "docs/verification/classification-label-identities-local.json",
-        "docs/verification/classification-label-identities-integrated-local.json"
+        "docs/verification/classification-label-identities-integrated-local.json",
+        "docs/verification/reviewed-classification-facts-local.json",
+        "docs/verification/reviewed-classification-facts-integrated-local.json"
       ]
     },
     {
@@ -54929,7 +54969,11 @@
         "packages/authority-storage/src/repository.ts",
         "docs/adr/0021-private-content-security-revisions.md",
         "packages/db/migrations/034_classification_label_identities.sql",
-        "docs/adr/0022-stable-classification-label-identities.md"
+        "docs/adr/0022-stable-classification-label-identities.md",
+        "packages/db/migrations/035_reviewed_classification_producer.sql",
+        "packages/authority-storage/src/reviewed-classification-facts.ts",
+        "packages/authority-runtime/src/classified-asset-context.ts",
+        "docs/adr/0023-reviewed-classification-facts.md"
       ],
       "test_ids": [
         "tests/unit/relation.test.ts",
@@ -54955,7 +54999,12 @@
         "tests/unit/authority-asset-context.test.ts",
         "scripts/test_content_security_revision.py",
         "tests/qualification/classification-label-identities.test.ts",
-        "scripts/test_classification_label_identities.py"
+        "scripts/test_classification_label_identities.py",
+        "tests/qualification/classification-producer-binding.test.ts",
+        "tests/qualification/reviewed-classification-facts.test.ts",
+        "tests/unit/classified-asset-context.test.ts",
+        "tests/unit/reviewed-classification-facts.test.ts",
+        "scripts/test_reviewed_classification_producer.py"
       ],
       "verification": {
         "fixture": {
@@ -54995,7 +55044,9 @@
         "Business-domain contribution: Domain storage has forced tenant RLS, restricted runtime roles, exact resource lookup and current membership checks; original-scope replay and revoked/deleted seed memberships are covered. Scoped grants, policy AST, responsibility authority and all-store/ingress equivalence remain separate unimplemented qualifications; ownership grants no permission. Evidence is partial local backend/storage qualification only; verification and release outcomes remain unchanged, and no browser/hosted or whole-requirement PASS is inferred.",
         "SQL033 adds private monotone content revisions for six canonical head families. Its isolated populated upgrade passes47 native case executions (27 predecessor and20 new), all255 source bindings, full preservation/replay and owned cleanup. Versioned asset context reads the revision in the same native-owner snapshot; it remains inactive provenance, with no approved-fact producer or later-effect authorization. This partial evidence does not promote whole-requirement, hosted or release verification.",
         "SQL034 adds private stable label UUIDs, historical-key reservation and permanent retirement. The isolated populated upgrade passes 50 native cases (27 predecessor and 23 new), with all 259 source bindings and preservation/replay/owned cleanup. These identities do not themselves produce approved authorization facts or activate content authority; broader capability and release outcomes remain unchanged.",
-        "The SQL034 core migration passes with all34 checksums and344 source/image bindings,172 API cases and one expanded real classification browser journey. The initial429 failure is retained, and three of14 successful captures were inspected. Separate hosted48-outcome qualification, trusted producer facts, content-authority activation and whole-requirement/release outcomes remain open."
+        "The SQL034 core migration passes with all34 checksums and344 source/image bindings,172 API cases and one expanded real classification browser journey. The initial429 failure is retained, and three of14 successful captures were inspected. Separate hosted48-outcome qualification, trusted producer facts, content-authority activation and whole-requirement/release outcomes remain open.",
+        "SQL035 binds an explicitly installed private producer to complete canonical classification approval proof in one protected read-only snapshot. Its isolated populated upgrade passes 98 native cases with 267 exact source bindings, preservation of 145 prior tables, both replays and owned cleanup; 1,207 unit cases pass. Missing, stale or pre-baseline identity proof stays unavailable. This is inactive provenance, not an effect capability. Held evaluation, full ingress activation, hosted qualification and whole-requirement/release outcomes remain open.",
+        "SQL035 normal core rebuild/migration passes with all 35 checksums and 347 source/image bindings, all 172 API cases and one real classification browser journey without skips or retries. Three of14 captures were visually inspected. The browser covers the existing classification workflow; the private producer/fact reader has separate native evidence. Exact-head hosted49-outcome qualification, held evaluation, ingress activation and whole-requirement/release outcomes remain open."
       ],
       "owner": "governance-commons maintainers",
       "milestone": "M0",
@@ -55025,7 +55076,9 @@
         "docs/verification/product-search-postgres-local.json",
         "docs/verification/content-security-revision-integrated-local.json",
         "docs/verification/classification-label-identities-local.json",
-        "docs/verification/classification-label-identities-integrated-local.json"
+        "docs/verification/classification-label-identities-integrated-local.json",
+        "docs/verification/reviewed-classification-facts-local.json",
+        "docs/verification/reviewed-classification-facts-integrated-local.json"
       ]
     },
     {
@@ -55067,7 +55120,11 @@
         "packages/authority-runtime/src/versioned-asset-context.ts",
         "docs/adr/0021-private-content-security-revisions.md",
         "packages/db/migrations/034_classification_label_identities.sql",
-        "docs/adr/0022-stable-classification-label-identities.md"
+        "docs/adr/0022-stable-classification-label-identities.md",
+        "packages/db/migrations/035_reviewed_classification_producer.sql",
+        "packages/authority-storage/src/reviewed-classification-facts.ts",
+        "packages/authority-runtime/src/classified-asset-context.ts",
+        "docs/adr/0023-reviewed-classification-facts.md"
       ],
       "test_ids": [
         "tests/integration/business-domains-storage.test.ts",
@@ -55084,7 +55141,12 @@
         "tests/qualification/content-security-revision.test.ts",
         "scripts/test_content_security_revision.py",
         "tests/qualification/classification-label-identities.test.ts",
-        "scripts/test_classification_label_identities.py"
+        "scripts/test_classification_label_identities.py",
+        "tests/qualification/classification-producer-binding.test.ts",
+        "tests/qualification/reviewed-classification-facts.test.ts",
+        "tests/unit/classified-asset-context.test.ts",
+        "tests/unit/reviewed-classification-facts.test.ts",
+        "scripts/test_reviewed_classification_producer.py"
       ],
       "verification": {
         "fixture": {
@@ -55123,7 +55185,9 @@
         "Inactive canonical asset-context composition passes thirteen isolated native PostgreSQL cases, 65 relevant unit cases and exact 249-source readback with preservation/replay/cleanup. This binds protected identity, ACL, placement and current ancestry in one snapshot; it does not activate authorization or fabricate security revisions, reviewed facts or post-commit effect capabilities. Broader requirement outcomes remain unchanged.",
         "SQL033 adds private monotone content revisions for six canonical head families. Its isolated populated upgrade passes47 native case executions (27 predecessor and20 new), all255 source bindings, full preservation/replay and owned cleanup. Versioned asset context reads the revision in the same native-owner snapshot; it remains inactive provenance, with no approved-fact producer or later-effect authorization. This partial evidence does not promote whole-requirement, hosted or release verification.",
         "SQL034 adds private stable label UUIDs, historical-key reservation and permanent retirement. The isolated populated upgrade passes 50 native cases (27 predecessor and 23 new), with all 259 source bindings and preservation/replay/owned cleanup. These identities do not themselves produce approved authorization facts or activate content authority; broader capability and release outcomes remain unchanged.",
-        "The SQL034 core migration passes with all34 checksums and344 source/image bindings,172 API cases and one expanded real classification browser journey. The initial429 failure is retained, and three of14 successful captures were inspected. Separate hosted48-outcome qualification, trusted producer facts, content-authority activation and whole-requirement/release outcomes remain open."
+        "The SQL034 core migration passes with all34 checksums and344 source/image bindings,172 API cases and one expanded real classification browser journey. The initial429 failure is retained, and three of14 successful captures were inspected. Separate hosted48-outcome qualification, trusted producer facts, content-authority activation and whole-requirement/release outcomes remain open.",
+        "SQL035 binds an explicitly installed private producer to complete canonical classification approval proof in one protected read-only snapshot. Its isolated populated upgrade passes 98 native cases with 267 exact source bindings, preservation of 145 prior tables, both replays and owned cleanup; 1,207 unit cases pass. Missing, stale or pre-baseline identity proof stays unavailable. This is inactive provenance, not an effect capability. Held evaluation, full ingress activation, hosted qualification and whole-requirement/release outcomes remain open.",
+        "SQL035 normal core rebuild/migration passes with all 35 checksums and 347 source/image bindings, all 172 API cases and one real classification browser journey without skips or retries. Three of14 captures were visually inspected. The browser covers the existing classification workflow; the private producer/fact reader has separate native evidence. Exact-head hosted49-outcome qualification, held evaluation, ingress activation and whole-requirement/release outcomes remain open."
       ],
       "owner": "unassigned",
       "milestone": "M0",
@@ -55136,7 +55200,9 @@
         "docs/verification/authority-asset-context-local.json",
         "docs/verification/content-security-revision-integrated-local.json",
         "docs/verification/classification-label-identities-local.json",
-        "docs/verification/classification-label-identities-integrated-local.json"
+        "docs/verification/classification-label-identities-integrated-local.json",
+        "docs/verification/reviewed-classification-facts-local.json",
+        "docs/verification/reviewed-classification-facts-integrated-local.json"
       ]
     },
     {

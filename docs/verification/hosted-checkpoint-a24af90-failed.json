@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "release_qualified": false,
+  "recorded_at": "2026-11-23T10:05:19.828291+00:00",
+  "implementation_commit": "a24af9068b5175c931e6481d399527b9b2a01d56",
+  "tested_merge_commit": "8c6ad03c547cfc0011cc761b4e9319e7853e9464",
+  "same_tree_and_parent_verified": true,
+  "result": "NOT_PASSED",
+  "run_id": 45145358471,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45145358471",
+  "run_attempt": 1,
+  "required_outcomes": 48,
+  "outcome_counts": {
+    "success": 35,
+    "cancelled": 4,
+    "skipped": 8,
+    "failure": 1
+  },
+  "outcomes": {
+    "connectors": "success",
+    "security": "success",
+    "model_upgrade": "success",
+    "asset_type_upgrade": "success",
+    "type_migration_upgrade": "success",
+    "relations_upgrade": "success",
+    "relation_participation_upgrade": "success",
+    "business_domains_upgrade": "success",
+    "authority_authn_foundation": "success",
+    "authority_read_original": "success",
+    "authority_read_current": "cancelled",
+    "authority_asset_context": "skipped",
+    "content_security_revision": "skipped",
+    "classification_label_identities": "skipped",
+    "source_connectors_upgrade": "skipped",
+    "postgres_targets": "skipped",
+    "relation_candidate_original": "success",
+    "relation_candidate_current": "success",
+    "glossary_upgrade": "success",
+    "relation_scope_upgrade": "success",
+    "glossary_population_repaired_upgrade": "success",
+    "lineage_repaired_upgrade": "success",
+    "classification_repaired_upgrade": "cancelled",
+    "quality_repaired_upgrade": "success",
+    "quality_worker": "success",
+    "lineage_worker": "success",
+    "reference_repaired_upgrade": "success",
+    "reference_quality_repaired_upgrade": "success",
+    "reference_quality_worker": "success",
+    "reference_structure_repaired_upgrade": "cancelled",
+    "reference_import": "skipped",
+    "uniqueness_upgrade": "success",
+    "uniqueness_worker": "success",
+    "range_upgrade": "success",
+    "range_worker": "success",
+    "monitoring_upgrade": "success",
+    "freshness_upgrade": "success",
+    "freshness_worker": "success",
+    "freshness_scheduling_upgrade": "success",
+    "volume_upgrade": "cancelled",
+    "volume_worker": "skipped",
+    "business_domain_seed": "success",
+    "browser": "failure",
+    "protected_authn": "skipped",
+    "bootstrap": "success",
+    "services": "success",
+    "object_store": "success",
+    "seed": "success"
+  },
+  "verified_behavior_archives": 5,
+  "safe_evidence": [
+    {
+      "family": "api",
+      "actualTests": 172,
+      "sourceFiles": 25,
+      "sourceManifestSha256": "23d80dfc37497521b227de43985007aa1933a72949c33bf9d2af657d4f665f32",
+      "artifactSha256": "b3b6a8a919915382f34979e660b5881cc097a52eb32c8750a379f56b4a35eefc"
+    },
+    {
+      "family": "inactive-authentication",
+      "actualTests": 35,
+      "sourceFiles": 176,
+      "migrations": 12,
+      "sourceManifestSha256": "611441212b026a47cfeaa4630c4232aa8d0851078317a9d0aa6528edcb09b157",
+      "artifactSha256": "12c35392cc6046de8b8f9c73c23598b669b378b5c201a75d35c6d41adc9bfbc8",
+      "cleanupExportedBothTrue": true
+    },
+    {
+      "family": "inactive-canonical-asset-context",
+      "hostedStepOutcome": "skipped",
+      "declaredNativeTests": 13,
+      "qualificationScope": {
+        "command": "./dev test --suite authority-asset-context",
+        "runner": "scripts/runtime-test-authority-asset-context.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-inactive-asset-context-sql032",
+        "report": "authority-asset-context.json",
+        "schemaScope": "Isolated SQL001\u2013030, then SQL031/032 with preservation and replay; current-source inactive canonical asset-context cases",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable declarations only; private 13-case report and its executed input/resource inventory are not exported."
+    },
+    {
+      "family": "inactive-content-security-revision",
+      "hostedStepOutcome": "skipped",
+      "declaredNewNativeTests": 20,
+      "declaredPrerequisiteTests": 27,
+      "declaredTotalNativeTests": 47,
+      "qualificationScope": {
+        "command": "./dev test --suite content-security-revision",
+        "runner": "scripts/runtime-test-content-security-revision.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-content-security-revision-sql033",
+        "report": "content-security-revision.json",
+        "schemaScope": "Populated SQL001\u2013032 to SQL033; private content revision, concurrency, snapshot, preservation and replay",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable 13+14+20 case declarations only; private native source inventory, preservation, concurrency and cleanup reports are not exported."
+    },
+    {
+      "family": "inactive-classification-label-identities",
+      "hostedStepOutcome": "skipped",
+      "declaredNewNativeTests": 23,
+      "declaredPrerequisiteTests": 27,
+      "declaredTotalNativeTests": 50,
+      "qualificationScope": {
+        "command": "./dev test --suite classification-label-identities",
+        "runner": "scripts/runtime-test-classification-label-identities.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-classification-label-identities-sql034",
+        "report": "classification-label-identities.json",
+        "schemaScope": "Populated SQL001\u2013033 to SQL034; current-pin identity baseline, terminal retirement, concurrency, preservation and replay",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable 13+14+23 case declarations only; private native source inventory, preservation, concurrency and cleanup reports are not exported."
+    }
+  ],
+  "browser": {
+    "passed": 28,
+    "failedExecuted": 1,
+    "notRun": 9,
+    "retries": 0,
+    "failedCases": [
+      {
+        "file": "tests/e2e/reference-data.spec.ts",
+        "line": 38,
+        "status": "unknown",
+        "attempts": 1,
+        "duration_ms": 38514,
+        "failure_locations": [
+          {
+            "file": "tests/e2e/reference-data.spec.ts",
+            "line": 61,
+            "column": 3
+          },
+          {
+            "file": "tests/e2e/reference-data.spec.ts",
+            "line": 61,
+            "column": 42
+          }
+        ]
+      }
+    ],
+    "notRunFiles": [
+      "tests/e2e/reference-quality.spec.ts",
+      "tests/e2e/reference-structures.spec.ts",
+      "tests/e2e/reference-import.spec.ts",
+      "tests/e2e/quality-uniqueness.spec.ts",
+      "tests/e2e/quality-range.spec.ts",
+      "tests/e2e/quality-monitoring.spec.ts",
+      "tests/e2e/quality-freshness.spec.ts",
+      "tests/e2e/quality-freshness-monitoring.spec.ts",
+      "tests/e2e/quality-volume.spec.ts"
+    ],
+    "screenshots": [],
+    "visualReview": "NOT_PERFORMED"
+  },
+  "verification_receipt_sha256": "c865c3804a2bf43b937b168dea8376fc7cf02b89bd9422a042873437a32d9ef2",
+  "source_security": "docs/verification/source-security-a24af90.json",
+  "runtime_security": "docs/verification/runtime-images-hosted-a24af90.json",
+  "pull_request": "https://github.com/dlamaro96/governance-commons/pull/47",
+  "merged": null,
+  "limitations": [
+    "Aggregate PASS requires all48 exact outcomes, five verified archives and completed quality/secrets/behavior/required jobs; pending or failed work never implies success.",
+    "Authenticated archives and declared source maps are checked against exact Git; private native TAP and mounted-source/resource inventory proofs are not exported unless explicitly noted.",
+    "Browser screenshot bytes are hashed, not visually reviewed.",
+    "No source-security requalification, runtime execution or GitHub mutation performed.",
+    "After the repair push, GitHub nested pull_requests metadata follows the current PR head. Original run.head_sha, jobs and artifacts remain bound to a24; the earlier authenticated PR association is retained and checked separately.",
+    "Inactive canonical asset-context scope is verified from exact hosted step outcome and immutable 13-case declarations; its private native executed-source and cleanup report is not exported.",
+    "Inactive content-security revision scope is verified from exact hosted step outcome and immutable 13+14+20 case declarations; its private executed-source, preservation, concurrency and cleanup report is not exported.",
+    "Inactive classification label identity scope is verified from exact hosted step outcome and immutable 13+14+23 case declarations; its private executed-source, preservation, concurrency and cleanup report is not exported.",
+    "Merge status must be filled from authenticated PR47 metadata after the normal merge; this proposal does not claim a merge."
+  ],
+  "visual_review": {
+    "status": "NOT_PERFORMED",
+    "inspected": [],
+    "observations": [],
+    "limitations": [
+      "This failed browser shard exported no screenshots; no visual review was possible from its hosted artifacts.",
+      "No independent accessibility or translation sign-off."
+    ]
+  },
+  "run_conclusion": "cancelled",
+  "initial_pr_head": "a24af9068b5175c931e6481d399527b9b2a01d56",
+  "observed_mutable_pr_head": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+  "pr_association_anchor_sha256": "3c636b00db9cd325717212d60970eb9575b1f2a4b7a393c7f220b203ec5c8b96",
+  "failure_diagnosis": {
+    "file": "tests/e2e/reference-data.spec.ts",
+    "line": 61,
+    "responseStatus": 429,
+    "code": "RATE_LIMITED",
+    "operation": "Scheduled reference-data effective-version GET polling",
+    "raw_log_sha256": "1248deebbbfd23e7349476279f640c61fbf8b76ebbb52c28d6886cf3caf5f187",
+    "limitations": [
+      "Exact429 established from authenticated job log; raw trace/error-context and screenshots were not exported. No broader network trace attribution inferred."
+    ]
+  }
+}

@@ -43,8 +43,8 @@ NAMES = [*asset.NAMES, MIGRATION]
 
 def migrations():
     actual = sorted(p.name for p in (ROOT / 'packages/db/migrations').glob('*.sql'))
-    require(actual[:len(NAMES)] == NAMES and actual[len(NAMES):] in ([], ['034_classification_label_identities.sql']),
-            'Exact immutable SQL001–033 prefix and declared034 successor required')
+    require(actual[:len(NAMES)] == NAMES and actual[len(NAMES):] in ([], ['034_classification_label_identities.sql'], ['034_classification_label_identities.sql', '035_reviewed_classification_producer.sql']),
+            'Exact immutable SQL001–033 prefix and declared contiguous034/035 successors required')
     return list(NAMES)
 
 def sources():

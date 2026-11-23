@@ -6,6 +6,8 @@ import {canonicalDecisionJSON,decisionHash,decisionShapes} from '../../authority
 import type {Counter,Digest,UUID,Version} from '../../authority/src/types.ts';
 import {parseHumanAssetContext,type HumanAssetContext} from '../../authority-runtime/src/asset-context.ts';
 import {parseVersionedHumanAssetContext,type VersionedHumanAssetContext} from '../../authority-runtime/src/versioned-asset-context.ts';
+import {parseReviewedClassificationProducerSnapshot,parseInactiveClassifiedAssetContext,type InactiveClassifiedAssetContext} from '../../authority-runtime/src/classified-asset-context.ts';
+import {loadReviewedClassificationFacts} from './reviewed-classification-facts.ts';
 import {AuthorityFoundationError,type AuthorityFoundationErrorCode,type AuthorityHumanClosure,type ClosureSelectors,type NativeOwnerConnection,type NativeOwnerPool} from './contracts.ts';
 import {parseAuthorityHumanClosure,parseClosureSelectors} from './loader.ts';
 import {admitted,digest,row,shape,uuid,version,literal,nullable,counter} from './shape.ts';
@@ -95,8 +97,8 @@ async function assetContent(query:Query,input:AssetInput,session:Record<string,u
 }
 /** Fresh native-owner connections only. No database singleton, role switching,
  * retries, reused snapshots, authority decision, or runtime activation. */
-export function createAuthorityFoundationRepository(pool:NativeOwnerPool):{loadHumanClosure(input:{sessionHash:Digest;selectors:ClosureSelectors}):Promise<AuthorityHumanClosure>;loadHumanAssetContext(input:AssetInput):Promise<HumanAssetContext>;loadVersionedHumanAssetContext(input:AssetInput):Promise<VersionedHumanAssetContext>}{
- async function read(input:unknown,kind:'closure'|'asset'|'versioned-asset'):Promise<AuthorityHumanClosure|HumanAssetContext|VersionedHumanAssetContext>{
+export function createAuthorityFoundationRepository(pool:NativeOwnerPool):{loadHumanClosure(input:{sessionHash:Digest;selectors:ClosureSelectors}):Promise<AuthorityHumanClosure>;loadHumanAssetContext(input:AssetInput):Promise<HumanAssetContext>;loadVersionedHumanAssetContext(input:AssetInput):Promise<VersionedHumanAssetContext>;loadClassifiedHumanAssetContext(input:AssetInput):Promise<InactiveClassifiedAssetContext>}{
+ async function read(input:unknown,kind:'closure'|'asset'|'versioned-asset'|'classified-asset'):Promise<AuthorityHumanClosure|HumanAssetContext|VersionedHumanAssetContext|InactiveClassifiedAssetContext>{
   const started=performance.now();let expired=false,client:NativeOwnerConnection|undefined,released=false,inTransaction=false;
   const deadlineError=()=>new AuthorityFoundationError('AUTHORITY_FOUNDATION_DEADLINE');
   const release=(destroy:boolean)=>{if(client&&!released){released=true;try{client.release(destroy);}catch{/* A broken owner connection is never returned as success. */}}};
@@ -124,7 +126,7 @@ export function createAuthorityFoundationRepository(pool:NativeOwnerPool):{loadH
     previousContext=one(await query("SELECT current_setting('gc.tenant_id',true) AS tenant,current_setting('gc.actor_id',true) AS actor"));
     if(Object.keys(previousContext).sort().join(',')!=='actor,tenant'||Object.values(previousContext).some(v=>v!==null&&(typeof v!=='string'||Buffer.byteLength(v)>128)))integrity();
     content=await assetContent(query,envelope as AssetInput,initialSession);
-    if(kind==='versioned-asset'){
+    if(kind==='versioned-asset'||kind==='classified-asset'){
      const head=one(await query('SELECT revision::text FROM gc_authority.content_security_heads WHERE tenant_id=$1::uuid',[content.asset.tenantId]));
      if(Object.keys(head).length!==1)integrity();
      securityRevision=counter(head.revision,'') as Counter;
@@ -141,13 +143,13 @@ export function createAuthorityFoundationRepository(pool:NativeOwnerPool):{loadH
    const meta=one(await query(registryMeasureQuery,params));if(Object.keys(meta).sort().join(',')!=='canonical_bytes,json_nodes,raw_bytes')throw new AuthorityFoundationError('AUTHORITY_FOUNDATION_INTEGRITY');
    const rawBytes=measure(meta.raw_bytes,L.rawBytes),canonicalBytes=measure(meta.canonical_bytes,L.canonicalBytes),nodes=measure(meta.json_nodes,L.jsonNodes);
    const retainedContext=content?{formatVersion:1,kind:'inactive-human-asset-context',contentAuthority:false,closure:physical.data,registry:null,...content,contextDigest:zeroDigest}:undefined;
-   const retained=retainedContext?admitted(kind==='versioned-asset'?{formatVersion:1,kind:'inactive-versioned-asset-context',contentAuthority:false,context:retainedContext,securityRevision,contextDigest:zeroDigest}:retainedContext):physical;
+   const retained=retainedContext?admitted(kind==='versioned-asset'||kind==='classified-asset'?{formatVersion:1,kind:'inactive-versioned-asset-context',contentAuthority:false,context:retainedContext,securityRevision,contextDigest:zeroDigest}:retainedContext):physical;
    if(retained.metrics.canonicalBytes+canonicalBytes>L.canonicalBytes||retained.metrics.canonicalBytes+rawBytes>L.rawBytes||retained.metrics.nodes+nodes>L.jsonNodes)throw new AuthorityFoundationError('AUTHORITY_FOUNDATION_PROFILE_LIMIT');
    const body=one(await query(registryBodyQuery,params));if(Object.keys(body).length!==1||typeof body.registry_document!=='string'||Buffer.byteLength(body.registry_document)!==rawBytes)throw new AuthorityFoundationError('AUTHORITY_FOUNDATION_INTEGRITY');
    const registry=admitted(body.registry_document);if(registry.metrics.canonicalBytes!==canonicalBytes||registry.metrics.nodes!==nodes)throw new AuthorityFoundationError('AUTHORITY_FOUNDATION_INTEGRITY');
    const parsed=parseAuthorityHumanClosure(physical.data,body.registry_document);if(!parsed.ok)throw new AuthorityFoundationError(parsed.issues.some(i=>i.code==='limit')?'AUTHORITY_FOUNDATION_PROFILE_LIMIT':'AUTHORITY_FOUNDATION_INTEGRITY');
    if(canonicalDecisionJSON(parsed.value.selectors)!==canonicalDecisionJSON(selectors.requests))throw new AuthorityFoundationError('AUTHORITY_FOUNDATION_INTEGRITY');check();
-   let result:AuthorityHumanClosure|HumanAssetContext|VersionedHumanAssetContext=parsed.value;
+   let result:AuthorityHumanClosure|HumanAssetContext|VersionedHumanAssetContext|InactiveClassifiedAssetContext=parsed.value;
    if(content){
     if(canonicalDecisionJSON(parsed.value.session)!==canonicalDecisionJSON(initialSession))integrity();
     // The registered raw document may retain unsorted sets. The closure parser
@@ -160,11 +162,34 @@ export function createAuthorityFoundationRepository(pool:NativeOwnerPool):{loadH
     admitted(value);value.contextDigest=decisionHash(value);
     const context=parseHumanAssetContext(value);if(!context.ok)throw new AuthorityFoundationError(context.issues.some(i=>i.code==='limit')?'AUTHORITY_FOUNDATION_PROFILE_LIMIT':'AUTHORITY_FOUNDATION_INTEGRITY');
     result=context.value;
-    if(kind==='versioned-asset'){
+    if(kind==='versioned-asset'||kind==='classified-asset'){
      const wrapped={formatVersion:1,kind:'inactive-versioned-asset-context',contentAuthority:false,context:context.value,securityRevision,contextDigest:zeroDigest};
      admitted(wrapped);wrapped.contextDigest=decisionHash(wrapped);
      const versioned=parseVersionedHumanAssetContext(wrapped);if(!versioned.ok)throw new AuthorityFoundationError(versioned.issues.some(i=>i.code==='limit')?'AUTHORITY_FOUNDATION_PROFILE_LIMIT':'AUTHORITY_FOUNDATION_INTEGRITY');
      result=versioned.value;
+     if(kind==='classified-asset'){
+      const producerRow=one(await query('SELECT gc_authority.load_reviewed_classification_producer_v1($1::text) AS producer',[envelope.sessionHash]));
+      if(Object.keys(producerRow).length!==1)integrity();
+      const producer=parseReviewedClassificationProducerSnapshot(producerRow.producer);
+      if(!producer.ok)throw new AuthorityFoundationError(producer.issues.some(i=>i.code==='limit')?'AUTHORITY_FOUNDATION_PROFILE_LIMIT':'AUTHORITY_FOUNDATION_INTEGRITY');
+      // The one complete retained proof shares the existing context's physical
+      // budget. Neither per-assignment bodies nor empty partitions reset it.
+      let admissions=0;
+      const facts=await loadReviewedClassificationFacts({query:async(text,values)=>{try{return await query(text,values);}catch(error){throw safeError(error);}},context:versioned.value,producerSnapshot:producer.value,
+       budget:{check,admitSource:(sourceProof:unknown)=>{
+        check();if(++admissions!==1)integrity();
+        admitted({context:versioned.value,producerSnapshot:producer.value,sourceProof});check();
+       }}});
+      if(admissions!==1)integrity();check();
+      const classified={formatVersion:1,kind:'inactive-classified-asset-context',contentAuthority:false,
+       context:versioned.value,...facts,contextDigest:zeroDigest};
+      admitted(classified);classified.contextDigest=decisionHash(classified);
+      const approved=parseInactiveClassifiedAssetContext(classified);
+      if(!approved.ok)throw new AuthorityFoundationError(approved.issues.some(i=>i.code==='limit')?'AUTHORITY_FOUNDATION_PROFILE_LIMIT':'AUTHORITY_FOUNDATION_INTEGRITY');
+      const finalSession=one(await query(sessionQuery,[envelope.sessionHash]));
+      if(Object.keys(finalSession).length!==1||canonicalDecisionJSON(finalSession.session)!==canonicalDecisionJSON(initialSession))integrity();
+      result=approved.value;
+     }
     }
     await query("SELECT set_config('gc.tenant_id',$1,true),set_config('gc.actor_id',$2,true)",[previousContext!.tenant??'',previousContext!.actor??'']);
    }
@@ -175,5 +200,5 @@ export function createAuthorityFoundationRepository(pool:NativeOwnerPool):{loadH
    release(true);throw failure;
   }finally{clearTimeout(timer);}
  }
- return Object.freeze({loadHumanClosure:(input:{sessionHash:Digest;selectors:ClosureSelectors})=>read(input,'closure') as Promise<AuthorityHumanClosure>,loadHumanAssetContext:(input:AssetInput)=>read(input,'asset') as Promise<HumanAssetContext>,loadVersionedHumanAssetContext:(input:AssetInput)=>read(input,'versioned-asset') as Promise<VersionedHumanAssetContext>});
+ return Object.freeze({loadHumanClosure:(input:{sessionHash:Digest;selectors:ClosureSelectors})=>read(input,'closure') as Promise<AuthorityHumanClosure>,loadHumanAssetContext:(input:AssetInput)=>read(input,'asset') as Promise<HumanAssetContext>,loadVersionedHumanAssetContext:(input:AssetInput)=>read(input,'versioned-asset') as Promise<VersionedHumanAssetContext>,loadClassifiedHumanAssetContext:(input:AssetInput)=>read(input,'classified-asset') as Promise<InactiveClassifiedAssetContext>});
 }

@@ -50,6 +50,7 @@ MIGRATIONS = (
     '032_relation_candidate_validation.sql',
     '033_content_security_revisions.sql',
     '034_classification_label_identities.sql',
+    '035_reviewed_classification_producer.sql',
 )
 FIXED_SOURCES = (
     'CONTRIBUTING.md', 'dev', 'scripts/runtime.py', 'scripts/authentication_roles.py',

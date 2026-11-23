@@ -220,8 +220,8 @@ class ProtectedEvidenceTests(unittest.TestCase):
         self.assertIsNone(self.validate())
 
     def test_exact_thirty_four_migration_checksums_required(self):
-        self.assertEqual(len(evidence.MIGRATIONS),34)
-        self.assertEqual(evidence.MIGRATIONS[-4:],('031_authority_read_grants.sql','032_relation_candidate_validation.sql','033_content_security_revisions.sql','034_classification_label_identities.sql'))
+        self.assertEqual(len(evidence.MIGRATIONS),35)
+        self.assertEqual(evidence.MIGRATIONS[-4:],('032_relation_candidate_validation.sql','033_content_security_revisions.sql','034_classification_label_identities.sql','035_reviewed_classification_producer.sql'))
         for mutate in (lambda r:r['migrations'].pop(),lambda r:r.update(migrations=r['migrations'][:12]),
                        lambda r:r['migrations'][0].update(sha256='0'*64),lambda r:r['migrations'][12].update(sha256='0'*64),
                        lambda r:r['migrations'][13].update(name='014_other.sql'),lambda r:r['migrations'].append(r['migrations'][0]),
@@ -256,7 +256,7 @@ class ProtectedEvidenceTests(unittest.TestCase):
 
     def test_ledger_projection_exports_only_counts_and_digests(self):
         result=self.validate();self.assertIsNotNone(result)
-        self.assertEqual(result['migration_ledger'],{'rows':34,'unchanged':True,
+        self.assertEqual(result['migration_ledger'],{'rows':35,'unchanged':True,
             'digests':{k:v['sha256'] for k,v in self.report['migrationLedger'].items()}})
         self.assertNotIn('applied_at',json.dumps(result));self.assertNotIn('migrations-before.json',json.dumps(result))
 

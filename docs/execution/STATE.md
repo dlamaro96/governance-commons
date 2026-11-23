@@ -145,8 +145,7 @@ complete development pass is claimed. The test now admits the existing real
 quota before its heavy phases, without retrying product requests or changing
 limits/deadlines. The selected real local journey passes with three of twelve
 captures inspected. [Correction evidence](../verification/reference-browser-rate-admission-local.json).
-Fresh exact-head hosted qualification remains required. Trusted fact production and held-snapshot authorization remain
-required before canonical content-authority activation.
+The failed assignment is preserved in its [exact hosted record](../verification/hosted-checkpoint-a24af90-failed.json). At the repaired head `7b8babf`, [source security](../verification/source-security-7b8babf.json) passes with all 1,589 Git files and three stored analyses verified. All four native [image reports](../verification/runtime-images-hosted-7b8babf.json) pass the high/critical gate; lower application-image findings remain recorded. Its separate 48-outcome development run is still pending. No parent scan qualifies the subsequent SQL035 changes.
 
 ## Current corrections
 
@@ -188,3 +187,39 @@ Earlier failed and passing attempts retain their original source bindings in the
 [Issue #24](https://github.com/dlamaro96/governance-commons/issues/24) is closed for the scoped pipeline checkpoint. Issues #25–#33 retain the broader delivery workstreams; [backlog.json](backlog.json) maps all 1,106 requirements exactly once. Qualification issues #11–#13 remain open. PR #22 is closed unmerged and superseded by #23 without rewriting history. Scoped issue #10 is closed; broader model and authority obligations remain open. Dependency PRs #1, #2 and #5 are closed as superseded by the published updates.
 
 Public documentation removes obsolete internal handoff instructions while preserving technical contracts, the complete specification and historical evidence. Public-content checks and pinned worktree/history secret scans pass; the latter initially flagged two labelled source hashes and passed after their schema was made explicit, without scanner suppression. Independent security, accessibility, deployment/restore and release qualifications remain open under [release readiness](../release/READINESS.md).
+
+## Reviewed classification provenance increment
+
+SQL035 introduces an explicit private producer binding and validates the complete
+canonical approval history before emitting reviewed classification facts. The
+protected session, authority closure, asset/security revision, stable label IDs
+and classification proof are read in one native-owner repeatable-read snapshot.
+Missing, stale or pre-baseline identity proof stays unavailable; complete empty
+facts require an available installed producer. The result remains inactive
+provenance, with no post-commit effect capability or content API activation.
+[Decision](../adr/0023-reviewed-classification-facts.md).
+
+The populated SQL034-to035 gate passes all 98 native cases and 267 exact source
+bindings, preserves all 145 prior tables, and passes both seven-check migration
+replays and owned cleanup. Three failed upgrade attempts and separate fresh-schema
+diagnostics remain recorded. All 1,207 unit cases and root/web types pass. The
+256-head boundary proves count admission followed by actual byte-limit refusal;
+it does not qualify 256 full facts within the byte cap. The pipeline adds a
+49th mandatory outcome while retaining the preceding 48 assignments.
+[Scoped evidence](../verification/reviewed-classification-facts-local.json).
+
+Normal core rebuild/startup applied SQL035. All 35 migration checksums and 347
+application/worker/build input hashes match the immutable images and four running
+services before API execution and after browser execution. All 172 API cases and
+the selected real classification browser journey pass without retries or skips.
+Three of fourteen captures were inspected; all ten services remain healthy.
+[Integrated evidence](../verification/reviewed-classification-facts-integrated-local.json).
+Fresh hosted source/image scans and the separate 49-outcome assignment remain
+required for this increment.
+
+The next held-evaluator integration exposed a literal scope-direction mismatch
+between canonical storage and the pure evaluator. A forward SQL036 repair must
+align own/onward/connected scope checks and parent time ceilings without changing
+SQL001–035 or silently rewriting retained grant history. Bounded atomic preflight
+must refuse incompatible active graphs pending explicit remediation. Pure
+composition is being prepared separately; it has no runtime activation claim.

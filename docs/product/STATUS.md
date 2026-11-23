@@ -47,3 +47,12 @@ The SQL033 private content revision increment passes isolated migration/concurre
 qualification, all 172 current-core API cases and seven focused browser journeys.
 It does not activate content authority or complete the broader requirements.
 [Integrated evidence](../verification/content-security-revision-integrated-local.json).
+
+The SQL035 reviewed-classification producer and approval-proof reader pass 98
+isolated native cases and 1,207 unit cases. Its new required CI outcome brings
+this development assignment to 49. All 172 core API cases and the selected real
+classification browser journey pass on the exact rebuilt images. Hosted
+qualification remains separate.
+This is inactive authorization provenance, with held execution and full ingress
+activation still required. [Scoped evidence](../verification/reviewed-classification-facts-local.json) and
+[integrated evidence](../verification/reviewed-classification-facts-integrated-local.json).
