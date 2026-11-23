@@ -1,6 +1,6 @@
 # Product status
 
-Updated 23 November 2026. Governance Commons is a working **development preview**, not a completed enterprise product or supported release. Implementation checkpoint `5d9e501` corrects SQL024 preservation-check overhead and Linux browser tool admission. Its complete local SQL024 chain passes 263 cases, and immutable-image protected login passes 15 native plus two real browser cases. The preceding hosted `b08b88d` pipeline finished with 42 successes, two failures and one dependent skip; all 171 API cases and 37 main browser journeys pass. Its source-security scan is verified with zero findings across 1,522 files. Fresh hosted checks are required before the protected merge.
+Updated 23 November 2026. Governance Commons is a working **development preview**, not a completed enterprise product or supported release. PR #23 merged as `0fc25d4` after all 45 required outcomes and source scanning passed at `e51e8ec`. The separate runtime-security PR #39 passes both native image scans at `a6cd20d`; its broader regression exposed a worker-launcher compatibility issue. A local correction passes all seven affected real worker gates and awaits fresh hosted regression. See [current state](../execution/STATE.md) and the exact [hosted checkpoint](../verification/hosted-checkpoint-e51e8ec.json).
 ## Implemented workflows with scoped local evidence
 
 - OIDC login and server-side sessions; tenant-scoped PostgreSQL/API checks; ownership, audit and transactional outbox.
@@ -33,8 +33,8 @@ There are 354 named baseline requirements plus their detailed and supplemental t
 
 ## Immediate delivery gates
 
-1. Publish the checked SQL024 and protected-login corrections, then pass all 45 outcomes and source-security analyses on the exact new revision. The [completed hosted failure](../verification/hosted-checkpoint-b08b88d.json) remains unchanged.
-2. Verify Linux hosted tool admission after the passing [local immutable-image run](../verification/protected-authentication-tool-admission-local.json). Local macOS execution cannot stand in for Linux qualification.
+1. Complete PR #39's hosted regression after the portable worker-timeout correction. Keep its earlier failure and passing image scans separately bound to their executed revisions.
+2. Qualify the runtime-security aggregate for fork use before adding it to enforced branch requirements. No scan alone completes security or release acceptance.
 3. Preserve the separately scoped volume, freshness, authority, reference and import evidence. The authority-read foundation remains inactive across content APIs.
 4. Keep the README, canonical register, GitHub backlog and PR descriptions aligned with executed behavior. Merge through protected checks.
 5. Continue every workstream above through the [M0–M10 delivery plan](../execution/PLAN.md). The [requirement-to-issue mapping](../execution/backlog.json) covers all 1,106 records.

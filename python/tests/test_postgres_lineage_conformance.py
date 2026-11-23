@@ -172,7 +172,7 @@ class Harness:
     def worker_call(self, mode, hashes):
         allowed = {p: h for p, h in hashes.items() if p.startswith('python/') and p != 'python/Dockerfile'}
         payload = json.dumps({'mode': mode, 'hashes': allowed, 'prefix': self.prefix}, separators=(',', ':'))
-        result = decode(self.command(['docker', 'exec', '-i', self.worker['id'], 'timeout', '--signal=TERM', '--kill-after=3s', '105s',
+        result = decode(self.command(['docker', 'exec', '-i', self.worker['id'], 'timeout', '-s','TERM', '-k','3s', '105s',
                                       '/worker/.venv/bin/python', '-m', 'tests.test_postgres_lineage_conformance', '--worker'],
                                      data=payload, seconds=112))
         require(type(result) is dict and result.get('ok') is True and result.get('hashes') == allowed)

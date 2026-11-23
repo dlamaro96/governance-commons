@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T04:58:17.662851+00:00",
+  "implementation_commit": "a6cd20db6e441cad38ae539f39c72d2db66e9187",
+  "tested_merge_commit": "e355dd82e7c29127afe6278384a3d4bad54035ab",
+  "same_tree_and_parent_verified": true,
+  "result": "PASS",
+  "release_qualified": false,
+  "run_id": 45114280654,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45114280654",
+  "run_attempt": 1,
+  "native_images": [
+    {
+      "architecture": "arm64",
+      "profile": "application",
+      "image": "sha256:a9d94e6b385d815ee922fe3ea42068dda9b53f5582936a155b07a2803d7d6c49",
+      "counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 14,
+        "MEDIUM": 22,
+        "UNKNOWN": 3
+      },
+      "packages": 692,
+      "scannerVersion": "0.74.0",
+      "scannerSha256": "fed2c9ca7d27191ada34524b5eaf5216a845c6d6f3246143c3b475552ffe5358",
+      "databaseUpdatedAt": "2026-11-23T01:05:17.578400694Z",
+      "reportSha256": "d752be70180ddf766c5ffc6b540fda411319ad6cfb4cb0ac950b8b97b0905418",
+      "summarySha256": "d9327e68acced1beea4e877b6c9d77bae7a6580d929d7b47e4d29f1c2be53d9b",
+      "archiveSha256": "4a08e6e85fb7e61bdd1497dc1d86933dfd952a3ab2bb8826346e6a7492e60475",
+      "startedAt": "2026-11-23T04:52:39.455808+00:00",
+      "finishedAt": "2026-11-23T04:52:51.644161+00:00"
+    },
+    {
+      "architecture": "arm64",
+      "profile": "python-worker",
+      "image": "sha256:21868b5d7c5e9d097eafead29c784f18c0a5853cf754201b08fef5230c354adc",
+      "counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 4,
+        "MEDIUM": 7,
+        "UNKNOWN": 0
+      },
+      "packages": 32,
+      "scannerVersion": "0.74.0",
+      "scannerSha256": "fed2c9ca7d27191ada34524b5eaf5216a845c6d6f3246143c3b475552ffe5358",
+      "databaseUpdatedAt": "2026-11-23T01:05:17.578400694Z",
+      "reportSha256": "9934c0557a289b56320e625cdcb13074673bbdfb58ce528bdd1871ba846fa9cf",
+      "summarySha256": "f43804e439d3f469f53946d03412623e8ce9c75ef8248744eacb8c7ea6de51d5",
+      "archiveSha256": "4a08e6e85fb7e61bdd1497dc1d86933dfd952a3ab2bb8826346e6a7492e60475",
+      "startedAt": "2026-11-23T04:52:51.736815+00:00",
+      "finishedAt": "2026-11-23T04:52:52.587926+00:00"
+    },
+    {
+      "architecture": "amd64",
+      "profile": "application",
+      "image": "sha256:0e804a5034219cb8e129ad575cdcae27ee68edf7ef15d3b8ee5302f17201446d",
+      "counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 14,
+        "MEDIUM": 22,
+        "UNKNOWN": 3
+      },
+      "packages": 692,
+      "scannerVersion": "0.74.0",
+      "scannerSha256": "d89bcc6510a267f11b773398cbf1be5520ce39f9e8b6633178c4487f05b7d791",
+      "databaseUpdatedAt": "2026-11-23T01:05:17.578400694Z",
+      "reportSha256": "431d3477a2c9bbe562dd1c7893b4ba461cd84b2c075a2c362a67be170b4911d2",
+      "summarySha256": "92440cfc770c2815bc20d70cd6a37730acb7bdbceca88fb25a3d9bb95cd08aa6",
+      "archiveSha256": "4964a3b211a68b7ada1f10d92ddd6d7da5fccbf177b920836f980ace7f34fae9",
+      "startedAt": "2026-11-23T04:52:57.040398+00:00",
+      "finishedAt": "2026-11-23T04:53:07.324656+00:00"
+    },
+    {
+      "architecture": "amd64",
+      "profile": "python-worker",
+      "image": "sha256:1484ba6df5db53f6c37356ad53531c6320cf5a4f5c85956b48bb7a6c46a44b72",
+      "counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 4,
+        "MEDIUM": 7,
+        "UNKNOWN": 0
+      },
+      "packages": 32,
+      "scannerVersion": "0.74.0",
+      "scannerSha256": "d89bcc6510a267f11b773398cbf1be5520ce39f9e8b6633178c4487f05b7d791",
+      "databaseUpdatedAt": "2026-11-23T01:05:17.578400694Z",
+      "reportSha256": "430dc252faf4d89dbed108f380e6a80c6ec9f38f15b21585dd1f2207694f2220",
+      "summarySha256": "1c5fee6b9ec1b0e6cff6c1ddd41d486ad9e1c9dcc6888a6251e69a0fba856189",
+      "archiveSha256": "4964a3b211a68b7ada1f10d92ddd6d7da5fccbf177b920836f980ace7f34fae9",
+      "startedAt": "2026-11-23T04:53:07.429541+00:00",
+      "finishedAt": "2026-11-23T04:53:08.462360+00:00"
+    }
+  ],
+  "all_jobs": [
+    {
+      "name": "runtime-images (arm64)",
+      "result": "success"
+    },
+    {
+      "name": "runtime-images (amd64)",
+      "result": "success"
+    },
+    {
+      "name": "runtime-security-required",
+      "result": "success"
+    }
+  ],
+  "limitations": [
+    "Exact native application images and full Trivy reports; not infrastructure-image or complete security qualification.",
+    "Reports and summaries are independently checked against exact image IDs, controls, Git tree, counts and authenticated archive digests. Scanner binary and vulnerability database files are not exported.",
+    "Database freshness is rechecked from the recorded update timestamp at execution, not from an independently downloaded database.",
+    "Worker conformance tests requiring an external PostgreSQL target are separately qualified by the development pipeline; the image workflow uses no network.",
+    "The new runtime aggregate is not yet an enforced repository rule; fork qualification remains open."
+  ],
+  "readback_receipt_sha256": "11d7ec60bf6700b94976e972e47d9ed29f2a1a6e0637033037d169aa1bf007d9"
+}

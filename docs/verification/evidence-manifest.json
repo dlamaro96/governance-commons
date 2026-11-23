@@ -1789,6 +1789,23 @@
         "method": "Clean committed image,203 Git inputs,15 native and2 browser cases,32-row ledger and cleanup verified; two local captures inspected.",
         "evidence_sha256": "27a2f7de9f64aa6aabfa90b191008044a9bb4d477e386a181596a29a2af2e584"
       }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-a6cd20d.json",
+      "scope": "native-runtime-image-security",
+      "source_binding": {
+        "method": "Two authenticated archives and four exact native image reports independently validated against Git merge/head tree and scanner controls.",
+        "evidence_sha256": "dbb2337f38bed9677cec9cf4aaf4d6f21ae1f83dab3290fb7ecd08c5b16034c7",
+        "implementation_commit": "a6cd20db6e441cad38ae539f39c72d2db66e9187"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-worker-timeout-local.json",
+      "scope": "portable-python-worker-deadline-invocation",
+      "source_binding": {
+        "method": "Seven real source gates,82 host controls and actual normal/TERM/KILL probes pass; exact measured hashes and prior failures retained.",
+        "evidence_sha256": "404d4a6d3f46ec725722bc8432f465ae63b6b2477a618cbb6face2ba5e58d755"
+      }
     }
   ],
   "limitations": [

@@ -21,10 +21,9 @@ the original 1,740-second deadline, ten-second termination grace and 1,800-secon
 host limit. Seven real process controls pass; the rerun passes all 171 API cases and both real
 Keycloak/source-scan browser journeys. All three captures were inspected.
 [Scoped local evidence](../verification/runtime-images-local.json).
-The new [image-security workflow](../../.github/workflows/runtime-security.yml),
-dependency audit and [developer command](../security/RUNTIME_IMAGES.md) are
-implemented; hosted execution and required-check qualification remain pending.
-This increment is not yet release qualified. [Runtime decision](../adr/0019-minimal-runtime-images.md).
+The new [image-security workflow](../../.github/workflows/runtime-security.yml) passes on native Linux amd64 and arm64 at `a6cd20d`. Both authenticated archives and all four full image reports are verified: zero high/critical findings, with every lower/unknown finding retained. [Hosted image record](../verification/runtime-images-hosted-a6cd20d.json). Required-check/fork qualification and supported-release qualification remain pending.
+
+[PR #39](https://github.com/dlamaro96/governance-commons/pull/39) remains open. Its broader development run exposed GNU-only timeout flags in the Alpine worker test launchers. The correction preserves all durations and the three-second kill grace. Seven real worker gates and 82 host controls pass locally, plus normal/TERM/KILL process probes. Lineage initially refused its old image source and passed after the worker-only rebuild. [Correction and retained failures](../verification/runtime-worker-timeout-local.json). Fresh hosted regression remains required. [Runtime decision](../adr/0019-minimal-runtime-images.md).
 
 A clean core rebuild of `15496e3` matches all 300 application and 13 worker files and the 32-row migration ledger. Its exact immutable image passes protected authentication: 15 native checks, both real Keycloak journeys, 203 Git inputs and every cleanup check. Two local captures were inspected. This is separate from the earlier candidate scans and API execution. [Committed-image record](../verification/runtime-protected-authentication-15496e3.json).
 
