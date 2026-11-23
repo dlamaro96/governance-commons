@@ -1771,6 +1771,24 @@
         "method": "Exact local image IDs, source digests, pinned scanner/database,285 worker tests,12 TLS checks,171 API cases and2 browser journeys; dirty provenance and original runner failure retained.",
         "evidence_sha256": "10cafcd32155614f21b0cd3577f5d84af244165a5b3ca08acbe43c4166353f65"
       }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-e51e8ec.json",
+      "scope": "published-integration-checkpoint-e51e8ec",
+      "source_binding": {
+        "implementation_commit": "e51e8ec24bc9b5e29c16f290d6ccb2f91f1be83e",
+        "method": "All45 outcomes, five authenticated archives, exact source coordinates and merge/head tree verified. Four hosted captures inspected separately; normal merge read back.",
+        "evidence_sha256": "c6ba164671d549fc54aec4a3e03aabc2642226ee8125cd0ab363f8c0724e0212"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-protected-authentication-15496e3.json",
+      "scope": "minimal-runtime-protected-authentication",
+      "source_binding": {
+        "implementation_commit": "15496e3f02c81570b7bf8a8d40b138d199048c65",
+        "method": "Clean committed image,203 Git inputs,15 native and2 browser cases,32-row ledger and cleanup verified; two local captures inspected.",
+        "evidence_sha256": "27a2f7de9f64aa6aabfa90b191008044a9bb4d477e386a181596a29a2af2e584"
+      }
     }
   ],
   "limitations": [
