@@ -136,8 +136,16 @@ The browser verifies display edits, permanent retirement, refused reactivation,
 a new key and immutable history; its earlier rate-limit failure is retained.
 Three of fourteen successful captures were inspected. Sources and running images
 match at startup, during the API run and after browser execution. [Integrated evidence](../verification/classification-label-identities-integrated-local.json).
-The new pipeline assignment contains 48 mandatory outcomes; its hosted
-qualification remains separate. Trusted fact production and held-snapshot authorization remain
+The new pipeline assignment contains 48 mandatory outcomes. At `a24af90`,
+[source security](../verification/source-security-a24af90.json) and all four native
+[image reports](../verification/runtime-images-hosted-a24af90.json) pass their
+respective gates, retaining lower image findings. Its browser shard failed on a
+reference-data effective-read rate limit; protected login was skipped and no
+complete development pass is claimed. The test now admits the existing real
+quota before its heavy phases, without retrying product requests or changing
+limits/deadlines. The selected real local journey passes with three of twelve
+captures inspected. [Correction evidence](../verification/reference-browser-rate-admission-local.json).
+Fresh exact-head hosted qualification remains required. Trusted fact production and held-snapshot authorization remain
 required before canonical content-authority activation.
 
 ## Current corrections

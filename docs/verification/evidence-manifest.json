@@ -2028,6 +2028,30 @@
         "verified_files": 344,
         "evidence_sha256": "087e5620182146fd1877f777698b9624356ffc0385e20abde8c2ff3b7e18c9d6"
       }
+    },
+    {
+      "path": "docs/verification/reference-browser-rate-admission-local.json",
+      "scope": "Selected real reference browser journey with rate-budget admission; 1 pass, no retries or skips; SQL034 runtime, broader qualification open",
+      "source_binding": {
+        "method": "Exact source/image bindings and limitations are retained in the scoped record.",
+        "evidence_sha256": "2c11e96abed77dbe60f7cc80c27cff6871f3177c6e5755d4bbce80082764cf33"
+      }
+    },
+    {
+      "path": "docs/verification/source-security-a24af90.json",
+      "scope": "Exact a24af90 hosted Source security archives, Git-source and stored-analysis verification",
+      "source_binding": {
+        "method": "Exact source/image bindings and limitations are retained in the scoped record.",
+        "evidence_sha256": "e2e3c6706d5561ed318b680cfbc4bb8ca55eb0989af3a027f82e31cb2df23470"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-a24af90.json",
+      "scope": "Exact a24af90 native amd64/arm64 runtime images; high/critical gate passes, lower findings retained",
+      "source_binding": {
+        "method": "Exact source/image bindings and limitations are retained in the scoped record.",
+        "evidence_sha256": "d7f0eb341eff462d33bc1185798d1d774477edf096da3fc5f4ee171592608c7c"
+      }
     }
   ],
   "limitations": [
