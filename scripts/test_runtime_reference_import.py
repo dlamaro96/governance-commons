@@ -82,13 +82,13 @@ class Controls(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             gate.migrations()
 
-    def test_current_schema_binds_all_33_migrations_including_content_security(self):
-        self.assertEqual(len(gate.NAMES), 33)
-        self.assertEqual(gate.NAMES[-2:], ['032_relation_candidate_validation.sql', '033_content_security_revisions.sql'])
+    def test_current_schema_binds_all_34_migrations_including_classification_identity(self):
+        self.assertEqual(len(gate.NAMES), 34)
+        self.assertEqual(gate.NAMES[-3:], ['032_relation_candidate_validation.sql', '033_content_security_revisions.sql', '034_classification_label_identities.sql'])
         before = {row['path']: row['sha256'] for row in gate.sources()}
         for name in gate.NAMES:
             self.assertIn('packages/db/migrations/' + name, before)
-        path = 'packages/db/migrations/033_content_security_revisions.sql'
+        path = 'packages/db/migrations/034_classification_label_identities.sql'
         self.write(path, '-- changed current migration')
         after = {row['path']: row['sha256'] for row in gate.sources()}
         self.assertNotEqual(before[path], after[path])
@@ -97,7 +97,7 @@ class Controls(unittest.TestCase):
             gate.sources()
 
     def test_current_schema_refuses_renamed_or_unreviewed_successor(self):
-        path = self.root / 'packages/db/migrations/033_content_security_revisions.sql'
+        path = self.root / 'packages/db/migrations/034_classification_label_identities.sql'
         renamed = path.with_name('033_undeclared.sql')
         path.rename(renamed)
         with self.assertRaises(RuntimeError): gate.sources()

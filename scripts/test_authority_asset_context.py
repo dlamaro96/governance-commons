@@ -17,7 +17,7 @@ spec.loader.exec_module(g)
 
 
 class Controls(unittest.TestCase):
-    def test_exact033_successor_is_admitted_without_expanding032_sources(self):
+    def test_exact_contiguous033034_successors_are_admitted_without_expanding032_sources(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)
             for name in g.NAMES: (folder/name).write_text('-- historical prefix')
@@ -30,7 +30,13 @@ class Controls(unittest.TestCase):
                 self.assertEqual(g.sources(),before)
                 self.assertNotIn('packages/db/migrations/'+successor.name,{row['path'] for row in before})
                 successor.write_text('-- changed unexecuted bytes');self.assertEqual(g.sources(),before)
-                for name in ('033_undeclared.sql','034_undeclared.sql'):
+                latest=folder/'034_classification_label_identities.sql';latest.write_text('-- not applied')
+                self.assertEqual(g.sources(),before);self.assertEqual(g.migrations(),g.NAMES)
+                latest.write_text('-- changed latest');self.assertEqual(g.sources(),before)
+                successor.unlink()
+                with self.assertRaises(RuntimeError):g.sources()
+                successor.write_text('-- restore required predecessor')
+                for name in ('033_undeclared.sql','034_undeclared.sql','035_undeclared.sql'):
                     extra=folder/name;extra.write_text('-- unreviewed')
                     with self.assertRaises(RuntimeError):g.sources()
                     extra.unlink()

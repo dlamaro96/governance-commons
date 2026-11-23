@@ -107,9 +107,11 @@ independent review remains an explicit qualification gap.
 
 The [fixed CI groups](docs/adr/0016-fixed-ci-shards.md) run on separate hosts.
 Every assigned outcome remains mandatory; missing or skipped work cannot pass.
-The current assignment has 47 required outcomes, qualified at the exact revision
-in the [hosted record](docs/verification/hosted-checkpoint-296d1e5.json). A change
-requires its own checks. Publish only the collector's bounded diagnostic artifacts, never raw database logs,
+The current assignment has 48 required outcomes, including the isolated stable
+classification-label gate. The preceding 47-outcome assignment is qualified at
+the exact revision in the [hosted record](docs/verification/hosted-checkpoint-296d1e5.json).
+Every change requires its own checks; an earlier result does not qualify the new
+assignment. Publish only the collector's bounded diagnostic artifacts, never raw database logs,
 source values or generated credentials.
 
 ## Contribution certification and attribution

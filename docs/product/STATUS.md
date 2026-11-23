@@ -1,13 +1,15 @@
 # Product status
 
 Updated 23 November 2026. Governance Commons is a working **development preview**, not a completed enterprise product or supported release. PR #39 merged normally as `fb1fd0e` after all 45 required development outcomes, source scanning and both native runtime image scans passed at `80101e0`. Its five behavior archives and exact source bindings are verified. PR #40's navigation/context increment passes all 46 outcomes at `4cbde6a` and merged normally as `ed0c6e4`. PR #41's SQL033 increment passes all 47 outcomes at `296d1e5` and merged normally as `1db2f71`. See [current state](../execution/STATE.md), [development evidence](../verification/hosted-checkpoint-296d1e5.json), [source evidence](../verification/source-security-296d1e5.json) and [image evidence](../verification/runtime-images-hosted-296d1e5.json).
+PR #42 dependency/startup changes pass all 47 outcomes and exact artifacts at `82859ad` and merged normally as `9e60da8`. [Latest hosted checkpoint](../verification/hosted-checkpoint-82859ad.json).
+
 ## Implemented workflows with scoped local evidence
 
 - OIDC login and server-side sessions; tenant-scoped PostgreSQL/API checks; ownership, audit and transactional outbox.
 - Real PostgreSQL metadata scans, authorized catalog search, asset details and source registration. Global name/recent-update ordering across pages passes 172 local API cases and five targeted browser journeys; exact hosted qualification passed in PR #40. Browser history and direct-link recovery also pass an expanded local journey. [Scoped ordering evidence](../verification/catalog-global-sorting-local.json).
 - Versioned operating models, inherited types, constrained relations, bounded graph migrations and business domains.
 - Reviewed glossary publication; reference code lists, effective dates, historical reads, exports, hierarchy/crosswalk and import workflows.
-- PostgreSQL view-dependency lineage and reviewed metadata classification.
+- PostgreSQL view-dependency lineage and reviewed metadata classification, with stable label identities and permanent key retirement.
 - Source-worker quality checks for completeness, allowed reference values, uniqueness, integer ranges and latest-timestamp freshness.
 - Table-volume rules count entire ordinary PostgreSQL tables with immutable row bounds. Isolated storage and real source-worker checks pass; its real browser lifecycle passes with all 18 captures inspected. All 171 API cases pass on SQL032 at `5d37594`, retaining the preceding pass and failed attempt. Full 37 attempt 16 failed with 24 passes, one obsolete table-refusal assertion and 12 unexecuted journeys; the corrected quality target and the subsequent hosted full 37 journeys pass. The earlier local failure remains recorded.
 - UTC quality schedules, deduplicated incidents, in-app notifications and verified recovery/reopening. A historical freshness pass remains in history after its eligibility expires.
@@ -33,7 +35,7 @@ There are 354 named baseline requirements plus their detailed and supplemental t
 
 ## Immediate delivery gates
 
-1. PR #39 is merged normally after exact all 45-outcome and artifact verification. PR #40 is also merged after its exact 46-outcome qualification. PR #41 is merged after its exact 47-outcome qualification. The local dependency/startup increment is published in PR #42 for its own hosted qualification.
+1. PR #39 is merged normally after exact all 45-outcome and artifact verification. PR #40 is also merged after its exact 46-outcome qualification. PR #41 is merged after its exact 47-outcome qualification. PR #42 also passes all 47 outcomes, source security and both native image gates at `82859ad`, then merged normally as `9e60da8`. SQL034 stable label identities pass isolated and core local qualification, including 172 API cases and the expanded real browser journey; its separate 48-outcome hosted qualification remains open. [Local evidence](../verification/classification-label-identities-integrated-local.json).
 2. Qualify the runtime-security aggregate for fork use before adding it to enforced branch requirements. No scan alone completes security or release acceptance.
 3. Preserve the separately scoped volume, freshness, authority, reference and import evidence. The authority-read foundation remains inactive across content APIs.
 4. Keep the README, canonical register, GitHub backlog and PR descriptions aligned with executed behavior. Merge through protected checks.

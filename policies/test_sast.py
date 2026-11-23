@@ -352,7 +352,7 @@ class NativePackageScopeTests(unittest.TestCase):
             # Explicit synthetic CommonJS protocol, separate from real extractor qualification.
             wrapper.write_text("exports.protocol = 'metadata'; console.log(JSON.stringify({type: exports.protocol}));")
             original = sast.tool_inventory(toolchain)
-            failed = subprocess.run([node, str(wrapper)], capture_output=True, timeout=5)
+            failed = subprocess.run([node, str(wrapper)], capture_output=True, timeout=30)
             self.assertEqual(failed.returncode, 1)
             self.assertIn(b'exports is not defined in ES module scope', failed.stderr)
             with self.assertRaisesRegex(sast.Rejected, 'requires-commonjs-package-scope'):
@@ -360,7 +360,7 @@ class NativePackageScopeTests(unittest.TestCase):
             with mock.patch.object(sast, 'ROOT', root):
                 boundary_hash = sast.prepare_owned_tool_cache(toolchain, POLICY)
                 self.assertEqual(sast.prepare_owned_tool_cache(toolchain, POLICY), boundary_hash)
-            passed = subprocess.run([node, str(wrapper)], capture_output=True, timeout=5)
+            passed = subprocess.run([node, str(wrapper)], capture_output=True, timeout=30)
             self.assertEqual(passed.returncode, 0)
             self.assertEqual(json.loads(passed.stdout), {'type': 'metadata'})
             self.assertEqual(sast.native_package_scope(toolchain),

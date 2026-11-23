@@ -472,6 +472,7 @@ def main():
   ./dev test --suite authority-read-current Verify populated SQL030-to031 authority read upgrade
   ./dev test --suite authority-asset-context Verify isolated inactive asset facts, placement and session binding
   ./dev test --suite content-security-revision Verify private content revisions, concurrent writes and snapshots
+  ./dev test --suite classification-label-identities Verify stable label identities and permanent retirement
   ./dev test --suite protected-authn  Verify isolated real OIDC and protected session lifecycle
   ./dev test --suite image-security   Scan exact built application images and retain full findings
   ./dev test --suite source-connectors-upgrade Verify source storage upgrade and native tenant isolation
@@ -595,6 +596,9 @@ Never use docker compose config output in public logs: it expands secrets.""")
     if args.command == "test" and args.suite == "authority-read-current":
         require_local()
         run([sys.executable, "scripts/runtime-test-authority-read-upgrade.py", "--run-local", "--scope", "current"], timeout=1800); return
+    if args.command == "test" and args.suite == "classification-label-identities":
+        require_local()
+        run([sys.executable, "scripts/runtime-test-classification-label-identities.py", "--run-local"], timeout=900); return
     if args.command == "test" and args.suite == "content-security-revision":
         require_local()
         run([sys.executable, "scripts/runtime-test-content-security-revision.py", "--run-local"], timeout=900); return

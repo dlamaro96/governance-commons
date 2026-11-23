@@ -1,0 +1,368 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T09:58:37.859775+00:00",
+  "result": "PASS",
+  "release_qualified": false,
+  "scope": "Local reference publication browser rate-budget admission correction; not the full hosted browser suite",
+  "runtime_revision": "a24af9068b5175c931e6481d399527b9b2a01d56",
+  "command": "GC_BROWSER_EXECUTABLE='<installed Chrome>' pnpm exec playwright test tests/e2e/reference-data.spec.ts --output=<private evidence directory>",
+  "browser": {
+    "name": "Google Chrome",
+    "version": "157.0.8103.79"
+  },
+  "tests": {
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "retries": 0
+  },
+  "run_stats": {
+    "startTime": "2026-11-23T09:53:55.783Z",
+    "duration": 219704.623,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "coverage": [
+    "Real OIDC and independent review",
+    "Temporal publication and immutable JSON/CSV downloads",
+    "Scheduled successor retains150-second activation lead and180-second effective-read polling budget",
+    "Consumer and foreign-tenant access boundaries",
+    "Bilingual desktop/mobile captures and automated accessibility assertions"
+  ],
+  "change": "Admit the real browser request quota at test entry and before scheduling the successor. The existing bounded helper waits for the advertised reset; no product request is retried and no product rate limit or acceptance deadline changes.",
+  "sources": [
+    {
+      "path": "apps/web/src/types.ts",
+      "sha256": "99028b61535d5424b2e4d5a3009354b457b58e8e406dce1baff0a8a4eaa4e50e"
+    },
+    {
+      "path": "package.json",
+      "sha256": "fe4a1b1dc13991ab42114164382d808f0e93e483403c188236331ee370b09a12"
+    },
+    {
+      "path": "packages/authz/src/index.ts",
+      "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+    },
+    {
+      "path": "packages/db/src/index.ts",
+      "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+    },
+    {
+      "path": "packages/domain/src/approval-contracts.ts",
+      "sha256": "07382a175da5144b0d2bd94c5f51176827dbd93d5cf50426c9a174b724d95e79"
+    },
+    {
+      "path": "packages/domain/src/approval-service.ts",
+      "sha256": "fae0aa35cb3b81ab9cb846421cebe2d935f12a97829e1b8ca4a493041032084b"
+    },
+    {
+      "path": "packages/domain/src/approval.ts",
+      "sha256": "2f3b55853fdfa719eb12eb9fb488158c905c8280bd1a524730831382df4f7028"
+    },
+    {
+      "path": "packages/domain/src/asset-type-migration-contracts.ts",
+      "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+    },
+    {
+      "path": "packages/domain/src/asset-type-migration-service.ts",
+      "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+    },
+    {
+      "path": "packages/domain/src/asset-type-migration.ts",
+      "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+    },
+    {
+      "path": "packages/domain/src/asset-type-policy.ts",
+      "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+    },
+    {
+      "path": "packages/domain/src/asset-type-service.ts",
+      "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+    },
+    {
+      "path": "packages/domain/src/asset-type.ts",
+      "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+    },
+    {
+      "path": "packages/domain/src/business-domain-contracts.ts",
+      "sha256": "b43ecced92ec6dd20392afc06a4f8e466819d98148e2b4bbce39ed91ec56edf1"
+    },
+    {
+      "path": "packages/domain/src/business-domain-service-contracts.ts",
+      "sha256": "ba82f0ca537c67c96614dc97c7b3f3f6c1a201304713c2bae2c40a57e83832b6"
+    },
+    {
+      "path": "packages/domain/src/classification-contracts.ts",
+      "sha256": "d3c11525afcc0b36e3cd818793f92b7ef9ccaac776f5826c9a8dda087d0a9a85"
+    },
+    {
+      "path": "packages/domain/src/classification-service.ts",
+      "sha256": "3cd095e23cb06bae79f5bb25a9bed420f6e463dec8d909ade97653ec002a27b2"
+    },
+    {
+      "path": "packages/domain/src/classification.ts",
+      "sha256": "8b13647db21a2724ea155c09556ae6ddc375df8dd9d10b3506ad4bbaabcc30b6"
+    },
+    {
+      "path": "packages/domain/src/cursor.ts",
+      "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+    },
+    {
+      "path": "packages/domain/src/glossary-contracts.ts",
+      "sha256": "ea7d1b01aa7f99b395f0cd44960a86670fae94fde763b2be89acb21f0b683a4d"
+    },
+    {
+      "path": "packages/domain/src/glossary-publication-service.ts",
+      "sha256": "cbfa31831b57f3ff8558cee4300e607b741bdc14d44361a03cec68a684d246e7"
+    },
+    {
+      "path": "packages/domain/src/glossary.ts",
+      "sha256": "193a245c95b445d1e0bd229d7fd84d9b0ac3cc8b4413a60d2e31757864d1f710"
+    },
+    {
+      "path": "packages/domain/src/graph-asset-persistence.ts",
+      "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+    },
+    {
+      "path": "packages/domain/src/graph-asset-preparation.ts",
+      "sha256": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49"
+    },
+    {
+      "path": "packages/domain/src/model-migration-service.ts",
+      "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+    },
+    {
+      "path": "packages/domain/src/model-migration.ts",
+      "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+    },
+    {
+      "path": "packages/domain/src/model-service.ts",
+      "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+    },
+    {
+      "path": "packages/domain/src/model.ts",
+      "sha256": "ebf90e8d24a0cf969d0ebe3c915d5b5113574d354a6e5963d5bc9cd285bc79ad"
+    },
+    {
+      "path": "packages/domain/src/reference-data-contracts.ts",
+      "sha256": "7163f78c5a245f3898c01c25335fea8a7876ca28d3307c4689d36f05af9313e7"
+    },
+    {
+      "path": "packages/domain/src/reference-data-service.ts",
+      "sha256": "20f0e7509e70c13c6c84c1cd0ab741d228ea0166eb06203256bdf5b39ae4870f"
+    },
+    {
+      "path": "packages/domain/src/reference-data.ts",
+      "sha256": "7429127176bb03b76b2f0a92d6577eb3dc598fc1dafd243bdaacc00e9694a15e"
+    },
+    {
+      "path": "packages/domain/src/reference-structure-contracts.ts",
+      "sha256": "5d4a995d37be03982cff94643ec8191ca985828de7f0539c6258c9474cc605d7"
+    },
+    {
+      "path": "packages/domain/src/reference-structure-service.ts",
+      "sha256": "4f4e83d9ab01aa4f7f52e9cf3af7c947e94197e9db0c0657ed910f348a176223"
+    },
+    {
+      "path": "packages/domain/src/reference-structure.ts",
+      "sha256": "ebcb15555ef0f8fa845dfb1058c519d6b915650025081d35eab6c78a37c05215"
+    },
+    {
+      "path": "packages/domain/src/relation-contracts.ts",
+      "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+    },
+    {
+      "path": "packages/domain/src/relation-endpoint-guard.ts",
+      "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+    },
+    {
+      "path": "packages/domain/src/relation-glossary-source.ts",
+      "sha256": "6c900ff5cbb1695816fdad6d80582611fc7b3b3d2e9a60e875ae3979968109e6"
+    },
+    {
+      "path": "packages/domain/src/relation-migration-contracts.ts",
+      "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+    },
+    {
+      "path": "packages/domain/src/relation-migration-read.ts",
+      "sha256": "bf5dc16ff794343dbc68d2992644e840e07846f791f6c119a8a168bc53142ff7"
+    },
+    {
+      "path": "packages/domain/src/relation-migration-service.ts",
+      "sha256": "474b26d1b090c9a4505f5c9eb3af7c0d76676827cae5a75bd0029a4b8bd27de8"
+    },
+    {
+      "path": "packages/domain/src/relation-migration-store.ts",
+      "sha256": "a544df936f3c1baee11d4805fae87ee42536e2e4c7d716b65236e675b012eaf6"
+    },
+    {
+      "path": "packages/domain/src/relation-migration.ts",
+      "sha256": "7957aef2d5f2c89156a1b2a113d4be5e139bf79830a9ab75f9fd685d5bdf10de"
+    },
+    {
+      "path": "packages/domain/src/relation-participation.ts",
+      "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+    },
+    {
+      "path": "packages/domain/src/relation-store.ts",
+      "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+    },
+    {
+      "path": "packages/domain/src/relation.ts",
+      "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "f671166e0edf378678ffdde7a643c2cfb4e3e8a5092517e94c38620acf3ffe45"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "49f347e0549a326aa51aeee5caf188c6e4f25e54afe6f8766cc387f5a39304a4"
+    },
+    {
+      "path": "tests/e2e/reference-data.spec.ts",
+      "sha256": "36265027aadf44a14c256b35708a53ac91fe7353754f693ee7ffa592a135a6cb"
+    },
+    {
+      "path": "tests/e2e/support/reference-workflow.ts",
+      "sha256": "327cce7106ec580bc0b7310e480136974083d484dc054f67558e2cd20edd4d80"
+    },
+    {
+      "path": "tests/fixtures/browser-rate-budget.ts",
+      "sha256": "4b1f22a52782449ccb44d4162812c11a0cb1b4c75dc098d158af5efe6f280e2a"
+    },
+    {
+      "path": "tests/fixtures/business-domains-browser.ts",
+      "sha256": "401a0fbb45e7eec1d26bc8b2911000496350111d301efd0acfe34dcb9a95903d"
+    }
+  ],
+  "runtime_source_bindings": {
+    "count": 344,
+    "private_readback_sha256": "810840df31fe7d15bcd24e491c207e5fb15aa6c3840bd0ffd0c15897bb8eeb94",
+    "services": {
+      "api": {
+        "imageId": "sha256:3dd50e96273f45c19219f8b4a24a3b01e6770b71ec42bc541b267c7c6296416f",
+        "status": "running",
+        "startedAt": "2026-11-23T08:46:39.713955254Z",
+        "sourcesMatched": 307,
+        "checks": [
+          "package-manifests",
+          "selected-runtime-imports"
+        ]
+      },
+      "workflow-worker": {
+        "imageId": "sha256:3dd50e96273f45c19219f8b4a24a3b01e6770b71ec42bc541b267c7c6296416f",
+        "status": "running",
+        "startedAt": "2026-11-23T08:46:45.43265384Z",
+        "sourcesMatched": 307,
+        "checks": [
+          "package-manifests",
+          "selected-runtime-imports"
+        ]
+      },
+      "site-runner": {
+        "imageId": "sha256:3dd50e96273f45c19219f8b4a24a3b01e6770b71ec42bc541b267c7c6296416f",
+        "status": "running",
+        "startedAt": "2026-11-23T08:46:45.434797923Z",
+        "sourcesMatched": 307,
+        "checks": [
+          "package-manifests",
+          "selected-runtime-imports"
+        ]
+      },
+      "python-worker": {
+        "imageId": "sha256:22e6cd02a631a40e31924e2841518e862981ba45a0f4f09a5872dd0ff3c232d9",
+        "status": "running",
+        "startedAt": "2026-11-23T08:46:39.033451087Z",
+        "sourcesMatched": 33,
+        "checks": [
+          "python-parse",
+          "project-lock-parse",
+          "psycopg-import"
+        ]
+      }
+    }
+  },
+  "private_browser_report_sha256": "82f99af60eeba7af3132f9958a16610a278f8b15a44bbbd31a24e12efc49062a",
+  "screenshots": [
+    {
+      "name": "reference-authoring-ar-390.png",
+      "sha256": "80d98d4c9da3e145c8751c9ad5436d4e001c84b99a1aa3a463684b5ac11f40e7",
+      "inspected": true
+    },
+    {
+      "name": "reference-authoring-en-1440.png",
+      "sha256": "98320ee49a7846c08425f47d0af4088c4dce18bc1e1e39e0ad38bc490131e37f",
+      "inspected": false
+    },
+    {
+      "name": "reference-consumer-ar-390.png",
+      "sha256": "ca06b377837e5d180e417a7b3f9a551729aa4427cfc765be6b385c6a4c7cf6f9",
+      "inspected": false
+    },
+    {
+      "name": "reference-consumer-en-1440.png",
+      "sha256": "94efcdce27aaf9d4d39fa21bd3ae0f491da0eca4eb261d2ac9bb29f024a4237c",
+      "inspected": false
+    },
+    {
+      "name": "reference-effective-ar-390.png",
+      "sha256": "339de393b90b8a07db01d099a391f95bd92d6503d9712634d4029cf34de35f9b",
+      "inspected": false
+    },
+    {
+      "name": "reference-effective-en-1440.png",
+      "sha256": "11c124883df6a4f4d5efefa358adcf07023f9d297dbad7ea70f63de3ad418c7e",
+      "inspected": true
+    },
+    {
+      "name": "reference-history-ar-390.png",
+      "sha256": "08880b539e2077fac441d84b735883a59eefd32279027bf622d309a3a0ba9dd5",
+      "inspected": false
+    },
+    {
+      "name": "reference-history-en-1440.png",
+      "sha256": "b3a02aeb81304eada7e0107eeeef043ace5b3f9e8848d9a7798edba956ffc886",
+      "inspected": false
+    },
+    {
+      "name": "reference-review-ar-390.png",
+      "sha256": "782d5522a6b7b3d50bdb3ba63d98f1f2720898b055ad7e39580b512e9012c518",
+      "inspected": false
+    },
+    {
+      "name": "reference-review-en-1440.png",
+      "sha256": "8c4a7d73dd78a319beca4798a1bd8dc301327a22be4d2a79ea1a627a84fd816c",
+      "inspected": false
+    },
+    {
+      "name": "reference-successor-ar-390.png",
+      "sha256": "dd0d6ad5ea52b40d621466363880dd89606f9d5d52a43807767ec42ea352c4f0",
+      "inspected": false
+    },
+    {
+      "name": "reference-successor-en-1440.png",
+      "sha256": "0f2a276102de8d52e9a7a798796d361a61010c7dbe17ee2a86c5e191cffd669c",
+      "inspected": true
+    }
+  ],
+  "checks": {
+    "root_typecheck": "PASS",
+    "browser_rate_budget_unit_cases": 7
+  },
+  "prior_failure": {
+    "head": "a24af9068b5175c931e6481d399527b9b2a01d56",
+    "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45145358471",
+    "outcome": "FAILED",
+    "cause": "Reference effective-version GET polling returned429;28browsercases passed,1failed,9notrun. Protected login skipped.",
+    "retained_private_record_sha256": "91fc264b19942c447319512b1cf979830841dbc7633fa467bfa17b12ca686077"
+  },
+  "limitations": [
+    "This selected local journey does not qualify the full38-journey hosted suite or protected login.",
+    "Runtime source/image bindings are for the committedSQL034 application, not the uncommittedSQL035 increment.",
+    "Source readback occurred during the browser run; prior startup evidence is retained separately.",
+    "Three of12captures were manually inspected; no independent human accessibility or security signoff is claimed."
+  ]
+}

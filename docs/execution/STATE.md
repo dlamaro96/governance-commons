@@ -1,6 +1,8 @@
 # Current state
 
-Updated 23 November 2026. **Development preview; the complete product programme and release qualification remain open.** [PR #41](https://github.com/dlamaro96/governance-commons/pull/41) merged normally as `1db2f71` after all 47 development outcomes passed at `296d1e5`. Five authenticated archives, 172 API cases, 35 inactive-authentication cases, 38 main browser journeys and protected login (15 native checks and two browser journeys) are verified. Hosted captures were retained but not manually inspected in this checkpoint. [Hosted record](../verification/hosted-checkpoint-296d1e5.json).
+Updated 23 November 2026. **Development preview; the complete product programme and release qualification remain open.** [PR #42](https://github.com/dlamaro96/governance-commons/pull/42) merged normally as `9e60da8` after all 47 development outcomes, source security and native amd64/arm64 image gates passed at `82859ad`. Five authenticated behavior archives and their exact source bindings were verified before merge. [Hosted checkpoint](../verification/hosted-checkpoint-82859ad.json).
+
+The preceding [PR #41](https://github.com/dlamaro96/governance-commons/pull/41) merged normally as `1db2f71` after all 47 development outcomes passed at `296d1e5`. Five authenticated archives, 172 API cases, 35 inactive-authentication cases, 38 main browser journeys and protected login (15 native checks and two browser journeys) are verified. Hosted captures were retained but not manually inspected in this checkpoint. [Hosted record](../verification/hosted-checkpoint-296d1e5.json).
 
 Source security at that revision verifies all 1,568 Git files and three stored analyses with zero findings. All four native amd64/arm64 application-image reports pass the high/critical gate, with lower findings retained. [Source record](../verification/source-security-296d1e5.json) and [image record](../verification/runtime-images-hosted-296d1e5.json). The subsequent local dependency patch has its own evidence below; no earlier scan qualifies it.
 
@@ -98,11 +100,53 @@ are healthy and all 33 migration checksums match. Candidate functional tests and
 final rebuilt-image startup/scans retain their different image IDs.
 [Integrated evidence](../verification/runtime-security-patches-integrated-local.json).
 [PR #42](https://github.com/dlamaro96/governance-commons/pull/42) publishes this
-increment. All346 executed application/build-control and launcher source entries
-match its implementation commit `69e361a`. Its fresh hosted qualification remains
-pending; earlier PR results do not substitute. The
+increment. All 346 executed application/build-control and launcher source entries
+match its implementation commit `69e361a`. At its current head `82859ad`,
+[source security](../verification/source-security-82859ad.json) verifies all
+1,576 committed files and three stored analyses with zero findings. Both native
+amd64/arm64 [runtime image jobs](../verification/runtime-images-hosted-82859ad.json)
+pass the high/critical gate, retaining 35 lower findings in each application
+image and none in either Python image. Its separate development run passes all 47 outcomes, with five authenticated
+archives verified before normal merge `9e60da8`. Earlier PR results do not
+substitute. [Hosted checkpoint](../verification/hosted-checkpoint-82859ad.json). The
 [local operations guide](../operations/local-core.md) documents supported commands
 and recovery boundaries.
+
+## Stable classification identities increment
+
+SQL034 gives each taxonomy label a private tenant-scoped UUID. Active labels
+retain their identity through display edits; omitted or deprecated keys cannot
+become active again. Existing taxonomy history is preserved, with a declared
+current-version baseline rather than inferred historical identity continuity.
+Authors receive `422 CLASSIFICATION_LABEL_RETIRED` when attempting prohibited
+reuse. [Decision](../adr/0022-stable-classification-label-identities.md).
+
+The isolated populated upgrade passes all 50 native cases, all 259 source hashes,
+full row/object preservation, both replays and owned cleanup. The canonical
+schema grows from 142 to 145 tables without changing prior rows, functions or
+privileges. All 1,158 unit cases, root/web types and the affected pipeline host
+controls pass. Earlier host failures remain recorded separately.
+[Scoped evidence](../verification/classification-label-identities-local.json).
+
+Normal local startup and the SQL034 migration pass after two safe disk-admission
+refusals. All ten services are healthy, all 34 checksums match the image, and
+344 application/worker/build inputs match immutable images and running services.
+All 172 real API cases and the expanded classification browser journey pass.
+The browser verifies display edits, permanent retirement, refused reactivation,
+a new key and immutable history; its earlier rate-limit failure is retained.
+Three of fourteen successful captures were inspected. Sources and running images
+match at startup, during the API run and after browser execution. [Integrated evidence](../verification/classification-label-identities-integrated-local.json).
+The new pipeline assignment contains 48 mandatory outcomes. At `a24af90`,
+[source security](../verification/source-security-a24af90.json) and all four native
+[image reports](../verification/runtime-images-hosted-a24af90.json) pass their
+respective gates, retaining lower image findings. Its browser shard failed on a
+reference-data effective-read rate limit; protected login was skipped and no
+complete development pass is claimed. The test now admits the existing real
+quota before its heavy phases, without retrying product requests or changing
+limits/deadlines. The selected real local journey passes with three of twelve
+captures inspected. [Correction evidence](../verification/reference-browser-rate-admission-local.json).
+Fresh exact-head hosted qualification remains required. Trusted fact production and held-snapshot authorization remain
+required before canonical content-authority activation.
 
 ## Current corrections
 
@@ -114,7 +158,7 @@ Fresh immutable-image protected authentication at `5d9e501` passes **15 native H
 
 ## Product and runtime
 
-The healthy Docker Compose core runs real PostgreSQL, OpenSearch, Temporal, Keycloak and source workers with synthetic data. The current core contains SQL033, the navigation increment and locally qualified dependency fixes. Its candidate functional tests, final rebuilt-image checks and isolated authority gates retain their own image/source bindings. Earlier observations retain their original revisions. Applied SQL001–033 migrations are immutable.
+The healthy Docker Compose core runs real PostgreSQL, OpenSearch, Temporal, Keycloak and source workers with synthetic data. The current core contains SQL034, stable classification label identities, the navigation increment and locally qualified dependency fixes. Its candidate functional tests, final rebuilt-image checks and isolated authority gates retain their own image/source bindings. Earlier observations retain their original revisions. Applied SQL001–034 migrations are immutable.
 
 Usable workflows include tenant-scoped catalog/search/ownership/audit, operating models and graph migrations, glossary/reference publication and imports, reviewed classification, PostgreSQL view lineage, and six source-executed quality families. Scheduled quality incidents support notification, verified resolution and reopening; expired freshness evidence remains historical without authorizing a new resolution.
 
@@ -138,9 +182,11 @@ Earlier failed and passing attempts retain their original source bindings in the
 
 1. Completed: verify all 45 outcomes and artifacts at `80101e0`, then merge PR #39 normally as `fb1fd0e`.
 2. Completed: verify all 46 PR #40 outcomes at `4cbde6a`, then merge normally as `ed0c6e4`. Completed: PR #41 at `296d1e5` passed its separate 47-outcome pipeline and merged normally as `1db2f71`.
-3. Qualify the published dependency/startup increment in PR #42, then implement stable classification identities, trusted classification facts and a held-snapshot executor before canonical authority activation. Continue the remaining M0–M10 workstreams in the [delivery plan](PLAN.md).
+3. Completed: PR #42 passes its exact 47 development outcomes, source and native runtime image qualification and merged normally as `9e60da8`. Finish the stable-classification-identity increment and its separate 48-outcome qualification, then implement trusted classification facts and a held-snapshot executor before canonical authority activation. Continue the remaining M0–M10 workstreams in the [delivery plan](PLAN.md).
 4. Qualify fork behavior before adding the new runtime security aggregate to enforced branch requirements. Independent reviews and live vendor prerequisites retain their own open qualifications.
 
 [Issue #24](https://github.com/dlamaro96/governance-commons/issues/24) is closed for the scoped pipeline checkpoint. Issues #25–#33 retain the broader delivery workstreams; [backlog.json](backlog.json) maps all 1,106 requirements exactly once. Qualification issues #11–#13 remain open. PR #22 is closed unmerged and superseded by #23 without rewriting history. Scoped issue #10 is closed; broader model and authority obligations remain open. Dependency PRs #1, #2 and #5 are closed as superseded by the published updates.
 
 Public documentation removes obsolete internal handoff instructions while preserving technical contracts, the complete specification and historical evidence. Public-content checks and pinned worktree/history secret scans pass; the latter initially flagged two labelled source hashes and passed after their schema was made explicit, without scanner suppression. Independent security, accessibility, deployment/restore and release qualifications remain open under [release readiness](../release/READINESS.md).
+
+Further snapshot transport batching passes the isolated SQL024 repaired chain: **263 native cases across 13 invocations**, 176 bound sources, preservation, replay and owned cleanup, in 332.580091 seconds within the unchanged 600-second lifecycle. Both original digest algorithms and all budgets remain unchanged; 56 affected host controls pass. This is one local observation. The earlier exact `7b8babf` hosted checkpoint remains **NOT_PASSED** (46 successes, one failure and one skip); the local pass does not replace fresh hosted qualification. [Transport evidence](../verification/reference-snapshot-transport-local.json) and [retained hosted failure](../verification/hosted-checkpoint-7b8babf-failed.json).

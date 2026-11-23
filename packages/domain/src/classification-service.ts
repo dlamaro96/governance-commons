@@ -30,6 +30,7 @@ export function classificationFailure(error:unknown):Problem{
  if(code==='42501'&&message==='classification forbidden')return new Problem(403,'CLASSIFICATION_FORBIDDEN','Your current permissions do not allow this classification operation.');
  if(code==='40001'){const conflict:Record<string,string>={'classification version conflict':'VERSION_CONFLICT','classification evidence stale':'CLASSIFICATION_EVIDENCE_STALE','classification pin stale':'CLASSIFICATION_PIN_STALE'};
   return Object.hasOwn(conflict,message)?new Problem(409,conflict[message],'The classification state changed. Reload before continuing.'):retry();}
+ if(code==='23514'&&message==='classification label key retired')return new Problem(422,'CLASSIFICATION_LABEL_RETIRED','This label key has been retired. Publish a new key for a new classification.');
  if(code==='23505')return new Problem(409,'CLASSIFICATION_CONFLICT','The classification command conflicts with an existing record.');
  if(code==='22023'&&message==='classification request invalid')return classificationInvalid();
  if(code==='54000')return new Problem(422,'CLASSIFICATION_LIMIT','This classification operation exceeds its supported bounds.');

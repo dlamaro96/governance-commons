@@ -42,8 +42,9 @@ _original_sources = asset.sources
 NAMES = [*asset.NAMES, MIGRATION]
 
 def migrations():
-    require(sorted(p.name for p in (ROOT / 'packages/db/migrations').glob('*.sql')) == NAMES,
-            'Exactly immutable SQL001–033 required')
+    actual = sorted(p.name for p in (ROOT / 'packages/db/migrations').glob('*.sql'))
+    require(actual[:len(NAMES)] == NAMES and actual[len(NAMES):] in ([], ['034_classification_label_identities.sql']),
+            'Exact immutable SQL001–033 prefix and declared034 successor required')
     return list(NAMES)
 
 def sources():

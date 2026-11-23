@@ -23,7 +23,7 @@ Governance Commons brings technical metadata, business context, ownership and ch
 | Model | Author versioned operating models, inherited asset types, lifecycle rules, constrained relations and typed business domains. |
 | Change safely | Preview bounded model and graph migrations, detect stale versions and retain operation receipts. |
 | Publish business meaning | Propose glossary terms and reference code lists, obtain independent approval, schedule effective releases and export governed reference values. |
-| Trace and classify | Explore PostgreSQL view dependencies and review metadata classification proposals with retained evidence. |
+| Trace and classify | Explore PostgreSQL view dependencies, review classification proposals and manage stable labels with retained evidence and immutable history. |
 | Measure quality | Execute bounded PostgreSQL completeness, reference allowed-values, uniqueness, integer-range, latest-timestamp and table-volume checks with immutable rule versions and measurements. |
 | Respond to quality issues | Schedule checks, acknowledge incidents, record remediation, verify recovery and retain reopening history. Expired freshness evidence cannot authorize resolution. |
 | Collaborate securely | Keycloak OIDC login, server-side sessions, tenant-scoped API/database checks and append-only audit/outbox records. |

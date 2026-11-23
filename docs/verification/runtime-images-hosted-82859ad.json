@@ -1,0 +1,367 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T08:15:14.713320+00:00",
+  "implementation_commit": "82859ad7a6f9730268b457b9e9fc3dc7edfe08eb",
+  "tested_merge_commit": "7b94ba0ab3180bb59e83f645ee814a336d4a4468",
+  "tree": "627601c99f9831db728bb474bcf6bbd15d3f7b41",
+  "same_tree_and_parent_verified": true,
+  "result": "PASS",
+  "release_qualified": false,
+  "run_id": 45136637007,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45136637007",
+  "run_attempt": 1,
+  "native_images": [
+    {
+      "architecture": "amd64",
+      "profile": "application",
+      "image": "sha256:a3a3c237df4cfa4652c473cc26cd4b3c7414660242e10d1591e933e1d1be93e1",
+      "counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 12,
+        "MEDIUM": 20,
+        "UNKNOWN": 3
+      },
+      "packages": 712,
+      "package_scopes": [
+        "cargo",
+        "debian",
+        "node-pkg"
+      ],
+      "scannerVersion": "0.74.0",
+      "scannerSha256": "d89bcc6510a267f11b773398cbf1be5520ce39f9e8b6633178c4487f05b7d791",
+      "databaseUpdatedAt": "2026-11-23T07:04:04.632673631Z",
+      "database_age_seconds": 4158.45,
+      "reportSha256": "7ed79a82b22e64863b1f8e1c71df21a7d6df3f6df546f5ad68457053238f877c",
+      "summarySha256": "98faf1a4568119556c6d26f0472caa7d33b8a8c69a19b1e2cf464ed61919c4e5",
+      "archiveSha256": "3d7217fecc4f4816f9ceb8c9dc9c30fb0a733f595b7140d44bf53a49d2694fb6",
+      "startedAt": "2026-11-23T08:13:07.470860+00:00",
+      "finishedAt": "2026-11-23T08:13:23.082685+00:00"
+    },
+    {
+      "architecture": "amd64",
+      "profile": "python-worker",
+      "image": "sha256:a207ff528855086168b449788a204563049bf49e47b41830360ad78df2bc3b8a",
+      "counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 0,
+        "MEDIUM": 0,
+        "UNKNOWN": 0
+      },
+      "packages": 32,
+      "package_scopes": [
+        "alpine",
+        "python-pkg"
+      ],
+      "scannerVersion": "0.74.0",
+      "scannerSha256": "d89bcc6510a267f11b773398cbf1be5520ce39f9e8b6633178c4487f05b7d791",
+      "databaseUpdatedAt": "2026-11-23T07:04:04.632673631Z",
+      "database_age_seconds": 4159.68,
+      "reportSha256": "780b015f4e4dafbab19412489be97ed7d4d93c13704dedd976c2e7bfb1863c0a",
+      "summarySha256": "b6e081e31beb4b5a9af42df94a7f19e98b166f793c19ea67da25774c4e062d41",
+      "archiveSha256": "3d7217fecc4f4816f9ceb8c9dc9c30fb0a733f595b7140d44bf53a49d2694fb6",
+      "startedAt": "2026-11-23T08:13:23.262028+00:00",
+      "finishedAt": "2026-11-23T08:13:24.312958+00:00"
+    },
+    {
+      "architecture": "arm64",
+      "profile": "application",
+      "image": "sha256:40ac5704d75d12f1319b111aac24cd4c7c335e1054d2e02f3db25b8e13c5bb89",
+      "counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 12,
+        "MEDIUM": 20,
+        "UNKNOWN": 3
+      },
+      "packages": 712,
+      "package_scopes": [
+        "cargo",
+        "debian",
+        "node-pkg"
+      ],
+      "scannerVersion": "0.74.0",
+      "scannerSha256": "fed2c9ca7d27191ada34524b5eaf5216a845c6d6f3246143c3b475552ffe5358",
+      "databaseUpdatedAt": "2026-11-23T07:04:04.632673631Z",
+      "database_age_seconds": 4144.875,
+      "reportSha256": "25cf99fd65496f356171fe7a3dab581645841fa235cc353623dcdc0c053c2538",
+      "summarySha256": "fdb275e8f84ede257bc773830aad842e5c1d0f5dc93c9a4bcac99b913e9bac72",
+      "archiveSha256": "c7dc85f5e3ac26b29b40495eee2fcb77a7b464a207358544b8862582c3e62ce0",
+      "startedAt": "2026-11-23T08:12:57.430861+00:00",
+      "finishedAt": "2026-11-23T08:13:09.507468+00:00"
+    },
+    {
+      "architecture": "arm64",
+      "profile": "python-worker",
+      "image": "sha256:9ceb5d1bcb422ce7405d0ab9ef5caf4c066cf271f736e1e0738b5098aad75549",
+      "counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 0,
+        "MEDIUM": 0,
+        "UNKNOWN": 0
+      },
+      "packages": 32,
+      "package_scopes": [
+        "alpine",
+        "python-pkg"
+      ],
+      "scannerVersion": "0.74.0",
+      "scannerSha256": "fed2c9ca7d27191ada34524b5eaf5216a845c6d6f3246143c3b475552ffe5358",
+      "databaseUpdatedAt": "2026-11-23T07:04:04.632673631Z",
+      "database_age_seconds": 4145.821,
+      "reportSha256": "6e661c43461a261b226f4db67eb54e93dff2cc8784aa6ce1ec12c0b852259af6",
+      "summarySha256": "c106735cb0d046220f51402241a5c51974609a4c5c87822ea1ef027be9ba910c",
+      "archiveSha256": "c7dc85f5e3ac26b29b40495eee2fcb77a7b464a207358544b8862582c3e62ce0",
+      "startedAt": "2026-11-23T08:13:09.602059+00:00",
+      "finishedAt": "2026-11-23T08:13:10.453536+00:00"
+    }
+  ],
+  "all_jobs": [
+    {
+      "name": "runtime-images (amd64)",
+      "result": "success",
+      "native_runner_labels": [
+        "ubuntu-24.04"
+      ],
+      "successful_steps": 13
+    },
+    {
+      "name": "runtime-images (arm64)",
+      "result": "success",
+      "native_runner_labels": [
+        "ubuntu-24.04-arm"
+      ],
+      "successful_steps": 13
+    },
+    {
+      "name": "runtime-security-required",
+      "result": "success",
+      "native_runner_labels": [
+        "ubuntu-24.04"
+      ],
+      "successful_steps": 3
+    }
+  ],
+  "archives": [
+    {
+      "id": 14799957769,
+      "architecture": "amd64",
+      "name": "runtime-security-amd64-7b94ba0ab3180bb59e83f645ee814a336d4a4468-45136637007-1",
+      "bytes": 83211,
+      "sha256": "3d7217fecc4f4816f9ceb8c9dc9c30fb0a733f595b7140d44bf53a49d2694fb6",
+      "expanded_bytes": 787841,
+      "regular_files": 16,
+      "files": [
+        {
+          "path": "application/empty-ignore",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "application/image.json",
+          "bytes": 684022,
+          "sha256": "7ed79a82b22e64863b1f8e1c71df21a7d6df3f6df546f5ad68457053238f877c"
+        },
+        {
+          "path": "application/revision.log",
+          "bytes": 41,
+          "sha256": "408c064901fe7eba179cd62ea7d47fd27d274c5ecb4debace205df2df1fe0fe9"
+        },
+        {
+          "path": "application/scan.log",
+          "bytes": 1108,
+          "sha256": "fcb33f87f059de7a72951e39155454dfefa520c1638fd5680a72c1ab4e378dcc"
+        },
+        {
+          "path": "application/scanner-version.log",
+          "bytes": 21,
+          "sha256": "8243c8c5d036d23f78112a901d22e7d91b97d80afa04d75b9b7c8242dcb7741d"
+        },
+        {
+          "path": "application/summary.json",
+          "bytes": 11589,
+          "sha256": "98faf1a4568119556c6d26f0472caa7d33b8a8c69a19b1e2cf464ed61919c4e5"
+        },
+        {
+          "path": "application/working-tree.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "application.id",
+          "bytes": 71,
+          "sha256": "c4a87dcfc4cc74fe598c6b2e236f4ca04015bb74dad654ee72d90e972baa51f4"
+        },
+        {
+          "path": "python-worker/empty-ignore",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "python-worker/image.json",
+          "bytes": 88124,
+          "sha256": "780b015f4e4dafbab19412489be97ed7d4d93c13704dedd976c2e7bfb1863c0a"
+        },
+        {
+          "path": "python-worker/revision.log",
+          "bytes": 41,
+          "sha256": "408c064901fe7eba179cd62ea7d47fd27d274c5ecb4debace205df2df1fe0fe9"
+        },
+        {
+          "path": "python-worker/scan.log",
+          "bytes": 812,
+          "sha256": "a3e00eba505a7f69231058feb7ad8afd936461954cc0fea2be8cd9ef8e86c82a"
+        },
+        {
+          "path": "python-worker/scanner-version.log",
+          "bytes": 21,
+          "sha256": "8243c8c5d036d23f78112a901d22e7d91b97d80afa04d75b9b7c8242dcb7741d"
+        },
+        {
+          "path": "python-worker/summary.json",
+          "bytes": 1920,
+          "sha256": "b6e081e31beb4b5a9af42df94a7f19e98b166f793c19ea67da25774c4e062d41"
+        },
+        {
+          "path": "python-worker/working-tree.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "python.id",
+          "bytes": 71,
+          "sha256": "ce5afb6f856b30b79bb2ffccfe558a643305012b0e13ce8e2b42a254b4dd59b4"
+        }
+      ]
+    },
+    {
+      "id": 14799893313,
+      "architecture": "arm64",
+      "name": "runtime-security-arm64-7b94ba0ab3180bb59e83f645ee814a336d4a4468-45136637007-1",
+      "bytes": 83229,
+      "sha256": "c7dc85f5e3ac26b29b40495eee2fcb77a7b464a207358544b8862582c3e62ce0",
+      "expanded_bytes": 788121,
+      "regular_files": 16,
+      "files": [
+        {
+          "path": "application/empty-ignore",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "application/image.json",
+          "bytes": 684320,
+          "sha256": "25cf99fd65496f356171fe7a3dab581645841fa235cc353623dcdc0c053c2538"
+        },
+        {
+          "path": "application/revision.log",
+          "bytes": 41,
+          "sha256": "408c064901fe7eba179cd62ea7d47fd27d274c5ecb4debace205df2df1fe0fe9"
+        },
+        {
+          "path": "application/scan.log",
+          "bytes": 1108,
+          "sha256": "d89540aebde6d6f2f645316d95ca4580df3faef33cc6959dbc6423d7794cc29c"
+        },
+        {
+          "path": "application/scanner-version.log",
+          "bytes": 21,
+          "sha256": "8243c8c5d036d23f78112a901d22e7d91b97d80afa04d75b9b7c8242dcb7741d"
+        },
+        {
+          "path": "application/summary.json",
+          "bytes": 11589,
+          "sha256": "fdb275e8f84ede257bc773830aad842e5c1d0f5dc93c9a4bcac99b913e9bac72"
+        },
+        {
+          "path": "application/working-tree.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "application.id",
+          "bytes": 71,
+          "sha256": "3c155b8e1b5a9d0ee4e97a0437ddc6451d3de4bfc412d1b825fc14626632248f"
+        },
+        {
+          "path": "python-worker/empty-ignore",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "python-worker/image.json",
+          "bytes": 88106,
+          "sha256": "6e661c43461a261b226f4db67eb54e93dff2cc8784aa6ce1ec12c0b852259af6"
+        },
+        {
+          "path": "python-worker/revision.log",
+          "bytes": 41,
+          "sha256": "408c064901fe7eba179cd62ea7d47fd27d274c5ecb4debace205df2df1fe0fe9"
+        },
+        {
+          "path": "python-worker/scan.log",
+          "bytes": 812,
+          "sha256": "86ac52dc64a217f5b35a80331ceb5249bc382e9f1e706d8a7ad42b8bc87997ce"
+        },
+        {
+          "path": "python-worker/scanner-version.log",
+          "bytes": 21,
+          "sha256": "8243c8c5d036d23f78112a901d22e7d91b97d80afa04d75b9b7c8242dcb7741d"
+        },
+        {
+          "path": "python-worker/summary.json",
+          "bytes": 1920,
+          "sha256": "c106735cb0d046220f51402241a5c51974609a4c5c87822ea1ef027be9ba910c"
+        },
+        {
+          "path": "python-worker/working-tree.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "python.id",
+          "bytes": 71,
+          "sha256": "7f098c0a93a808d943b3e134666f02419dca5418459402f299ecda225863ddc2"
+        }
+      ]
+    }
+  ],
+  "workflow_sha256": "750966db2c31dcdb6847fbce1076be172e50b7d8fd20a6a4ca29f32bcc8af1ba",
+  "verification_limits": {
+    "download_seconds_per_object": 60,
+    "metadata_and_compressed_archive_bytes_max": 2097152,
+    "zip_expected_regular_files_per_archive": 16,
+    "zip_entry_bytes_max": 16777216,
+    "zip_expanded_bytes_max_per_archive": 33554432,
+    "database_age_hours_max": 48,
+    "database_future_skew_minutes_max": 5
+  },
+  "limitations": [
+    "Authenticated GitHub archive digests, native job outcomes, exact tested merge/head tree and all four reports are independently checked. This does not independently execute or inspect the images.",
+    "Scanner executable and vulnerability database files are not exported; their bytes are not independently rehashed. Database freshness is checked from each recorded update timestamp at execution.",
+    "Only application and Python worker images are covered. Infrastructure images, application SAST/DAST, live integrations, release signing and complete security qualification remain separate.",
+    "External PostgreSQL worker conformance is qualified separately by the development pipeline; image-workflow worker tests run without a network.",
+    "Runtime aggregate required-rule enforcement and fork qualification are outside this artifact verification."
+  ],
+  "private_receipt_sha256": "1b45b9fd2665db0e90d99bb6cb62af555d637be7d984cce68362a7984945a32a",
+  "source_files": [
+    {
+      "path": "Dockerfile",
+      "sha256": "1235dfacb327c700737a13262fa5416e692dcf0f1834831f1df2f022b63b484c"
+    },
+    {
+      "path": "python/Dockerfile",
+      "sha256": "e29aff0893cb955eef9d2135119f4837ebb0aa980203a35e10246b6f39d5efa4"
+    },
+    {
+      "path": "policies/scan_images.py",
+      "sha256": "235f059fd90f903a173a22a83a157c52f6e5a4e006a60ea635f71dec1b1951b7"
+    },
+    {
+      "path": "policies/security-tools.json",
+      "sha256": "e97fde903e5cdf1bde08c8ee16678172a59b0901b460985c878912a05726c779"
+    }
+  ]
+}

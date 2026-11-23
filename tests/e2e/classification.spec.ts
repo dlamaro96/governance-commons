@@ -28,13 +28,14 @@ async function suggestions(page:Page,assetId:string){return domainBody<Classific
 async function language(page:Page,locale:'en'|'ar'){
  await page.locator('#language').selectOption(locale);await expect(page.locator('html')).toHaveAttribute('lang',locale);await expect(page.locator('html')).toHaveAttribute('dir',locale==='ar'?'rtl':'ltr');
 }
-async function capture(page:Page,info:TestInfo,name:string,width:number){
+async function capture(page:Page,info:TestInfo,name:string,width:number,focus?:Locator){
  await page.setViewportSize({width,height:960});await page.evaluate(()=>window.scrollTo(0,0));
  // Capture the asserted outcome even when existing synthetic rule pickers make
  // the page long. This is ordinary scrolling, with no altered page content.
  const locale=await page.locator('html').getAttribute('lang')==='ar'?'ar':'en';
  const section=/^(applied|withdrawn)-/.test(name)?classificationCopy[locale].approved:/^suggestion-/.test(name)?classificationCopy[locale].suggestions:null;
  if(section)await page.getByRole('heading',{name:section,exact:true}).evaluate(element=>element.scrollIntoView({block:'start',behavior:'instant'}));
+ if(focus)await focus.evaluate(element=>element.scrollIntoView({block:'start',behavior:'instant'}));
  await expect.poll(()=>page.evaluate(()=>document.getAnimations().filter(animation=>animation.playState==='running'&&animation.playbackRate!==0&&Number.isFinite(animation.effect?.getComputedTiming().endTime)).length)).toBe(0);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations).toEqual([]);
@@ -84,6 +85,15 @@ async function publishRule(page:Page,taxonomy:ClassificationTaxonomyView,name:st
  const pending=responseFor(page,'/api/v1/classification/rules');await page.getByRole('button',{name:'Publish definition',exact:true}).click();const response=await pending;expect(response.status()).toBe(201);
  const value:{rule:ClassificationRuleView}=await response.json(),rule=value.rule;expect(rule.id).toMatch(uuid);expect(rule).toMatchObject({version:1,currentVersion:1,definition,createdBy:stewardIdentity});expect(rule.definitionHash).toMatch(/^[a-f0-9]{64}$/);
  expect(response.request().postDataJSON()).toEqual({id:rule.id,expectedVersion:0,definition});await replay(page,response,value);await expect(page.getByRole('heading',{name,exact:true})).toBeVisible();return rule;
+}
+async function publishTaxonomyVersion(page:Page,previous:ClassificationTaxonomyView,definition:ClassificationTaxonomyView['definition']){
+ const pending=responseFor(page,'/api/v1/classification/taxonomies/'+previous.id+'/versions');
+ await page.getByRole('button',{name:'Publish definition',exact:true}).click();const response=await pending;expect(response.status()).toBe(201);
+ const value:ClassificationTaxonomyView=(await response.json()).taxonomy;
+ expect(value).toMatchObject({id:previous.id,version:previous.currentVersion+1,currentVersion:previous.currentVersion+1,createdBy:stewardIdentity,definition});
+ expect(value.definitionHash).toMatch(/^[a-f0-9]{64}$/);expect(value.definitionHash).not.toBe(previous.definitionHash);
+ expect(response.request().postDataJSON()).toEqual({id:previous.id,expectedVersion:previous.currentVersion,definition});
+ await expect(page.getByRole('heading',{name:definition.name,exact:true})).toBeVisible();return value;
 }
 async function submitReview(page:Page,workflow:ApprovalDefinitionView,change:ClassificationProposal['change']){
  const dialog=page.getByRole('dialog',{name:change.kind==='apply'?'Review proposed classification':'Review proposed withdrawal',exact:true});await expect(dialog).toBeVisible();
@@ -153,6 +163,44 @@ test('CLS: real metadata suggestion, independent application, immutable pins, re
   const withdrawn=await approve(reviewer,page,withdrawal.row,'withdrawn',2),current=await assignments(page,asset.id);expect(current.items).toHaveLength(1);expect(current.nextCursor).toBeNull();expect(current.items[0]).toMatchObject({...assignment,version:2,status:'withdrawn',approvalInstanceId:withdrawal.row.id,reason:withdrawalReason,updatedAt:expect.any(String)});
   expect(withdrawn.result?.assignmentId).toBe(applied.result?.assignmentId);const earlier=await request(page,submitted.row.id);expect({payload:earlier.payload,result:earlier.result,decisions:earlier.decisions,status:earlier.status}).toEqual({payload:applied.payload,result:applied.result,decisions:applied.decisions,status:applied.status});
   await page.goto('/approvals/'+withdrawal.row.id);await expect(page.getByText('Label withdrawn',{exact:false})).toBeVisible();await page.getByRole('link',{name:'Open resource',exact:true}).click();await expect(page.getByText('Withdrawn',{exact:true})).toBeVisible();await expect(page.getByText('Reviewed and applied',{exact:true})).toHaveCount(0);await expect(page.getByRole('button',{name:'Propose withdrawal',exact:true})).toHaveCount(0);await captureLocales(page,info,'withdrawn');
+  // Admit a fresh request budget for the independent authoring phase before
+  // sending any publication or history requests; never retry a refused write.
+  await waitForBrowserRateBudget(page.request,295);
+  // Author real taxonomy versions after withdrawal. Display edits keep the
+  // stable key, while a deprecated key cannot be reused as an active label.
+  await page.goto('/classifications');await choose(page,'Label taxonomies',taxonomy.definition.name+' · Version 1');
+  await page.getByRole('button',{name:'Publish new version',exact:true}).click();
+  const editedLabel={...taxonomy.definition.labels[0],name:'Synthetic sensitive metadata, reviewed',description:'Updated display text for the same independently reviewed classification key.'};
+  await expect(page.getByRole('textbox',{name:'Stable label key',exact:true})).toHaveValue(editedLabel.key);
+  await page.getByRole('textbox',{name:'Label name',exact:true}).fill(editedLabel.name);await page.getByRole('textbox',{name:'Label description',exact:true}).fill(editedLabel.description);
+  const editedTaxonomy=await publishTaxonomyVersion(page,taxonomy,{...taxonomy.definition,labels:[editedLabel]});
+  await expect(page.getByRole('heading',{name:editedLabel.name,exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Publish new version',exact:true}).click();await page.getByRole('combobox',{name:'Status',exact:true}).selectOption('deprecated');
+  const deprecatedLabel={...editedLabel,status:'deprecated' as const},deprecatedTaxonomy=await publishTaxonomyVersion(page,editedTaxonomy,{...editedTaxonomy.definition,labels:[deprecatedLabel]});
+  await expect(page.getByText('Deprecated',{exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Publish new version',exact:true}).click();await page.getByRole('combobox',{name:'Status',exact:true}).selectOption('active');
+  const retirementPending=responseFor(page,'/api/v1/classification/taxonomies/'+taxonomy.id+'/versions');await page.getByRole('button',{name:'Publish definition',exact:true}).click();
+  const retirementResponse=await retirementPending;expect(retirementResponse.status()).toBe(422);expect((await retirementResponse.json()).code).toBe('CLASSIFICATION_LABEL_RETIRED');
+  expect(retirementResponse.request().postDataJSON()).toEqual({id:taxonomy.id,expectedVersion:3,definition:{...deprecatedTaxonomy.definition,labels:[editedLabel]}});
+  const retirementMessage='This label key has been retired. Publish a new key for a new classification.';
+  await expect(page.getByRole('alert').getByText(retirementMessage,{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Publish definition',exact:true})).toBeEnabled();
+  expect((await domainBody<{taxonomy:ClassificationTaxonomyView}>(await page.request.get('/api/v1/classification/taxonomies/'+taxonomy.id))).taxonomy).toEqual(deprecatedTaxonomy);
+  await capture(page,info,'label-retired-refused-en',1440,page.getByRole('heading',{name:'Publish new version',exact:true}));
+  // Correct the rejected draft through the form, retain the deprecated key,
+  // and publish a genuinely distinct key without changing any earlier pin.
+  await page.getByRole('group',{name:'Label 1',exact:true}).getByRole('combobox',{name:'Status',exact:true}).selectOption('deprecated');await page.getByRole('button',{name:'Add label',exact:true}).click();
+  const newLabel={key:'synthetic_sensitive_replacement',name:'Synthetic replacement metadata',description:'A new independent classification key after permanent retirement.',status:'active' as const},newLabelForm=page.getByRole('group',{name:'Label 2',exact:true});
+  await newLabelForm.getByRole('textbox',{name:'Stable label key',exact:true}).fill(newLabel.key);await newLabelForm.getByRole('textbox',{name:'Label name',exact:true}).fill(newLabel.name);await newLabelForm.getByRole('textbox',{name:'Label description',exact:true}).fill(newLabel.description);await expect(newLabelForm.getByRole('combobox',{name:'Status',exact:true})).toHaveValue('active');
+  const replacementTaxonomy=await publishTaxonomyVersion(page,deprecatedTaxonomy,{...deprecatedTaxonomy.definition,labels:[deprecatedLabel,newLabel]});expect(replacementTaxonomy.currentVersion).toBe(4);
+  await expect(page.getByRole('heading',{name:newLabel.name,exact:true})).toBeVisible();await expect(page.getByText(retirementMessage,{exact:true})).toHaveCount(0);
+  await capture(page,info,'label-new-key-published-en',1440,page.getByRole('heading',{name:taxonomy.definition.name,exact:true}));
+  for(const historicTaxonomy of [deprecatedTaxonomy,editedTaxonomy,taxonomy]){
+   await page.getByRole('button',{name:'Previous version',exact:true}).click();await expect(page.getByText('Version '+historicTaxonomy.version+' · Current version 4',{exact:true})).toBeVisible();
+   await expect(page.getByRole('heading',{name:historicTaxonomy.definition.labels[0].name,exact:true})).toBeVisible();await expect(page.getByText(historicTaxonomy.definition.labels[0].description,{exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:newLabel.name,exact:true})).toHaveCount(0);await expect(page.getByRole('button',{name:'Publish new version',exact:true})).toHaveCount(0);
+   const oldTaxonomy=(await domainBody<{taxonomy:ClassificationTaxonomyView}>(await page.request.get('/api/v1/classification/taxonomies/'+taxonomy.id+'?version='+historicTaxonomy.version))).taxonomy;expect(oldTaxonomy).toEqual({...historicTaxonomy,currentVersion:4});
+  }
+  expect(await assignments(page,asset.id)).toEqual(current);expect((await domainBody<{rule:ClassificationRuleView}>(await page.request.get('/api/v1/classification/rules/'+rule.id+'?version=1'))).rule).toEqual({...rule,currentVersion:2});
+  for(const completed of [applied,withdrawn]){const preserved=await request(page,completed.id);expect({payload:preserved.payload,result:preserved.result,decisions:preserved.decisions,status:preserved.status}).toEqual({payload:completed.payload,result:completed.result,decisions:completed.decisions,status:completed.status});}
   const consumer=await consumerContext.newPage();await domainLogin(consumer,'consumer');await language(consumer,'en');const consumerMe=await domainBody<Session>(await consumer.request.get('/api/v1/me'));for(const permission of ['classification:read','classification:write','classification:approve'])expect(consumerMe.permissions).not.toContain(permission);
   for(const path of ['/api/v1/classification/taxonomies','/api/v1/classification/rules/'+rule.id,'/api/v1/assets/'+asset.id+'/classifications','/api/v1/assets/'+asset.id+'/classification-suggestions']){const denial=await consumer.request.get(path);expect(denial.status()).toBe(403);expect((await denial.json()).code).toBe('FORBIDDEN');}
   const consumerWrite=await consumer.request.post('/api/v1/assets/'+asset.id+'/classification-evaluations',{headers:await domainHeaders(consumer),data:{id:randomUUID(),expectedAssetVersion:refreshed.version,rule:pin(revised)}});expect(consumerWrite.status()).toBe(403);expect((await consumerWrite.json()).code).toBe('FORBIDDEN');

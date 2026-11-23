@@ -49,6 +49,7 @@ MIGRATIONS = (
     '031_authority_read_grants.sql',
     '032_relation_candidate_validation.sql',
     '033_content_security_revisions.sql',
+    '034_classification_label_identities.sql',
 )
 FIXED_SOURCES = (
     'CONTRIBUTING.md', 'dev', 'scripts/runtime.py', 'scripts/authentication_roles.py',
