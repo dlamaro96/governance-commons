@@ -42,18 +42,95 @@ test('UX-04: catalog sorting spans real source results and resets cursor after c
     {timeout:30_000,intervals:[1000,2000]}).toBeGreaterThan(baseline.total+50);
   let first=await rendered(page,'name','',()=>page.goto('/catalog'));
   expect(first.items).toHaveLength(50);expect(first.nextCursor).not.toBeNull();
+  const pagination=page.locator('.pagination');
+  const previous=()=>pagination.getByRole('button',{name:'Previous page',exact:true});
+  const next=()=>pagination.getByRole('button',{name:'Next page',exact:true});
+  const pageLabel=()=>pagination.locator(':scope > span');
+  const firstPage=async(result:AssetList)=>{
+    if(result.nextCursor){await expect(pageLabel()).toHaveText('Page 1');await expect(previous()).toBeDisabled();}
+    else await expect(pagination).toHaveCount(0);
+  };
+  let updatedCursor='';
   for(const sort of ['name','name-desc','updated']){
     if(sort!=='name')first=await rendered(page,sort,'',()=>page.getByRole('combobox',{name:'Sort by',exact:true}).selectOption(sort));
     expect(first.items).toEqual([...first.items].sort(comparator(sort)));expect(first.nextCursor).not.toBeNull();
-    const second=await rendered(page,sort,first.nextCursor!,()=>page.locator('.pagination').getByRole('button').last().click());
+    await expect(pageLabel()).toHaveText('Page 1');await expect(previous()).toBeDisabled();
+    const second=await rendered(page,sort,first.nextCursor!,()=>next().click());
     const combined=[...first.items,...second.items];expect(new Set(combined.map(a=>a.id)).size).toBe(combined.length);
     expect(combined).toEqual([...combined].sort(comparator(sort)));
-    await expect(page.locator('.pagination').getByRole('button').first()).toBeEnabled();
+    await expect(previous()).toBeEnabled();await expect(pageLabel()).toHaveText('Page 2');
+    if(sort==='updated')updatedCursor=first.nextCursor!;
   }
   // The last sort switch started from page2, so each new order must reset both
   // the signed cursor and the UI's previous-page history.
   first=await rendered(page,'name-desc','',()=>page.getByRole('combobox',{name:'Sort by',exact:true}).selectOption('name-desc'));
-  await expect(page.locator('.pagination').getByRole('button').first()).toBeDisabled();
+  await expect(previous()).toBeDisabled();await expect(pageLabel()).toHaveText('Page 1');
+  // Browser Back and Forward restore each entry's own cursor trail even after
+  // a sort/filter reset. The Previous control must then request its real prior
+  // page instead of guessing from a component-local array.
+  await rendered(page,'updated',updatedCursor,()=>page.goBack());
+  await expect(pageLabel()).toHaveText('Page 2');await expect(previous()).toBeEnabled();
+  await rendered(page,'name-desc','',()=>page.goForward());
+  await expect(pageLabel()).toHaveText('Page 1');await expect(previous()).toBeDisabled();
+  await rendered(page,'updated',updatedCursor,()=>page.goBack());
+  await rendered(page,'updated','',()=>previous().click());
+  await expect(pageLabel()).toHaveText('Page 1');await expect(previous()).toBeDisabled();
+  first=await rendered(page,'name-desc','',()=>page.getByRole('combobox',{name:'Sort by',exact:true}).selectOption('name-desc'));
+  const descendingCursor=first.nextCursor!;
+  const second=await rendered(page,'name-desc',descendingCursor,()=>next().click());
+  const secondUrl=page.url();
+  const filtered=await rendered(page,'name-desc','',()=>page.locator('.catalog-facets input[value="table"]').check());
+  expect(filtered.items.length).toBeGreaterThan(0);expect(filtered.items.every(asset=>asset.type==='table')).toBeTruthy();
+  expect(new URL(page.url()).searchParams.get('type')).toBe('table');
+  await firstPage(filtered);
+  await rendered(page,'name-desc',descendingCursor,()=>page.goBack());
+  await expect(pageLabel()).toHaveText('Page 2');await expect(previous()).toBeEnabled();
+  expect(new URL(page.url()).searchParams.has('type')).toBeFalsy();
+  const filteredForward=await rendered(page,'name-desc','',()=>page.goForward());
+  expect(new URL(page.url()).searchParams.get('type')).toBe('table');
+  await firstPage(filteredForward);
+  await rendered(page,'name-desc',descendingCursor,()=>page.goBack());
+  // Reload retains this browser entry; opening an asset and browser Back
+  // remounts the catalog with the same bound predecessor state.
+  await rendered(page,'name-desc',descendingCursor,()=>page.reload());
+  await expect(pageLabel()).toHaveText('Page 2');await expect(previous()).toBeEnabled();
+  await page.locator('.catalog-results tbody .asset-link').first().click();
+  await expect(page).toHaveURL(u=>u.pathname==='/catalog/'+second.items[0]!.id);
+  await expect(page.locator('#main-heading')).toHaveText(second.items[0]!.name);
+  await rendered(page,'name-desc',descendingCursor,()=>page.goBack());
+  await expect(pageLabel()).toHaveText('Page 2');await expect(previous()).toBeEnabled();
+  await rendered(page,'name-desc','',()=>previous().click());
+  await expect(pageLabel()).toHaveText('Page 1');await expect(previous()).toBeDisabled();
+
+  // A shared cursor URL contains no trustworthy page number or predecessor.
+  // Show an honest unknown position and offer a single bounded first-page reset.
+  const direct=await page.context().newPage();
+  try {
+    await rendered(direct,'name-desc',descendingCursor,()=>direct.goto(secondUrl));
+    const directPagination=direct.locator('.pagination');
+    const unknownPosition=async()=>{
+      await expect(directPagination.locator(':scope > span')).toHaveText('Current page');
+      await expect(directPagination.getByRole('button',{name:'Previous page',exact:true})).toBeDisabled();
+      await expect(directPagination.getByRole('button',{name:'First page',exact:true})).toBeEnabled();
+    };
+    await unknownPosition();
+    // Malformed/oversized/mismatched state is cosmetic, never a new API cursor
+    // or an invented page-one label. A real API response still supplies the rows.
+    for(const invalid of [
+      {binding:JSON.stringify(['','table','name-desc']),previous:['']},
+      {cursor:'different-cursor',previous:['']},
+      {previous:Array.from({length:21},()=>descendingCursor)},
+      {page:1,previous:['']},
+    ]){
+      await direct.evaluate(({cursor,invalid})=>window.history.replaceState({catalogPagination:{version:1,binding:JSON.stringify(['','','name-desc']),cursor,page:2,...invalid}},''),{cursor:descendingCursor,invalid});
+      await rendered(direct,'name-desc',descendingCursor,()=>direct.reload());
+      await unknownPosition();
+    }
+    await rendered(direct,'name-desc','',()=>directPagination.getByRole('button',{name:'First page',exact:true}).click());
+    await expect(directPagination.locator(':scope > span')).toHaveText('Page 1');
+    await expect(directPagination.getByRole('button',{name:'Previous page',exact:true})).toBeDisabled();
+    await expect(directPagination.getByRole('button',{name:'First page',exact:true})).toHaveCount(0);
+  } finally { await direct.close(); }
   await expect(page.getByText('Sorted across all matching results.',{exact:true})).toBeVisible();
   mkdirSync('.local/evidence/catalog-sorting-captures',{recursive:true});
   for(const width of [1440,390]){

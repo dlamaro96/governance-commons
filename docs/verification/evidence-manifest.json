@@ -1822,6 +1822,44 @@
         "method": "Dirty-source hashes,172 API cases,5 browser journeys,20 search controls,162 CI controls and exact healthy image source readback verified.",
         "evidence_sha256": "0b2c9f0fb5151899851cdcb8b243048db57509afd546c1c60d7678d86a2f8e8c"
       }
+    },
+    {
+      "path": "docs/verification/catalog-navigation-local.json",
+      "scope": "catalog-navigation-history",
+      "source_binding": {
+        "implementation_commit": "80101e079f2cbf68cbb9680817b1d494c916451a",
+        "method": "Dirty local source bindings and real browser report; not a hosted revision qualification.",
+        "evidence_sha256": "9afaa8c5048d53077470eb5a8176e0a0ad4cb0c95dec52d1569ecb5a16e8dd8f"
+      }
+    },
+    {
+      "path": "docs/verification/source-security-80101e0.json",
+      "scope": "hosted-source-security",
+      "source_binding": {
+        "implementation_commit": "80101e079f2cbf68cbb9680817b1d494c916451a",
+        "method": "Authenticated source archives, exact Git tree and stored CodeQL analysis identities verified.",
+        "evidence_sha256": "bbe26319fa1cbb9fafc81ae72c270aa9613b2601977c06740586915117cf4277"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-80101e0.json",
+      "scope": "hosted-runtime-images",
+      "source_binding": {
+        "implementation_commit": "80101e079f2cbf68cbb9680817b1d494c916451a",
+        "method": "Native amd64/arm64 archives and all four full image reports verified against the exact Git merge/head.",
+        "evidence_sha256": "b858a5a1712778aef9ce93d57537340a065f661cef13877bd2d25848076c691f"
+      }
+    },
+    {
+      "path": "docs/verification/authority-asset-context-local.json",
+      "scope": "inactive-canonical-asset-context",
+      "source_binding": {
+        "base_commit": "80101e079f2cbf68cbb9680817b1d494c916451a",
+        "dirty": true,
+        "verified_files": 249,
+        "method": "Real isolated PostgreSQL, exact mounted-source readback, retained failed attempts and completed cleanup; not a runtime authority or release claim.",
+        "evidence_sha256": "bdbc82f4c2f41440243fd804dc4ae46f7e4cc07d095a03f24bdaf0df9c2be656"
+      }
     }
   ],
   "limitations": [

@@ -1,10 +1,10 @@
 # Product status
 
-Updated 23 November 2026. Governance Commons is a working **development preview**, not a completed enterprise product or supported release. PR #23 merged as `0fc25d4` after all 45 required outcomes and source scanning passed at `e51e8ec`. The separate runtime-security PR #39 passes both native image scans at `a6cd20d`; its broader regression exposed a worker-launcher compatibility issue. A local correction passes all seven affected real worker gates and awaits fresh hosted regression. See [current state](../execution/STATE.md) and the exact [hosted checkpoint](../verification/hosted-checkpoint-e51e8ec.json).
+Updated 23 November 2026. Governance Commons is a working **development preview**, not a completed enterprise product or supported release. PR #23 merged as `0fc25d4` after all 45 required outcomes and source scanning passed at `e51e8ec`. PR #39 at `80101e0` passes source security and both native runtime image scans; its full development regression is still running. See [current state](../execution/STATE.md), [source evidence](../verification/source-security-80101e0.json) and [image evidence](../verification/runtime-images-hosted-80101e0.json).
 ## Implemented workflows with scoped local evidence
 
 - OIDC login and server-side sessions; tenant-scoped PostgreSQL/API checks; ownership, audit and transactional outbox.
-- Real PostgreSQL metadata scans, authorized catalog search, asset details and source registration. Global name/recent-update ordering across pages passes 172 local API cases and five targeted browser journeys; fresh hosted qualification is pending. [Scoped ordering evidence](../verification/catalog-global-sorting-local.json).
+- Real PostgreSQL metadata scans, authorized catalog search, asset details and source registration. Global name/recent-update ordering across pages passes 172 local API cases and five targeted browser journeys; fresh hosted qualification is pending. Browser history and direct-link recovery also pass an expanded local journey. [Scoped ordering evidence](../verification/catalog-global-sorting-local.json).
 - Versioned operating models, inherited types, constrained relations, bounded graph migrations and business domains.
 - Reviewed glossary publication; reference code lists, effective dates, historical reads, exports, hierarchy/crosswalk and import workflows.
 - PostgreSQL view-dependency lineage and reviewed metadata classification.
@@ -33,7 +33,7 @@ There are 354 named baseline requirements plus their detailed and supplemental t
 
 ## Immediate delivery gates
 
-1. Complete PR #39's hosted regression after the portable worker-timeout correction. Keep its earlier failure and passing image scans separately bound to their executed revisions.
+1. Complete and verify PR #39's exact hosted regression, then merge normally. Publish the navigation/context increment with its separate 46th pipeline outcome after local qualification.
 2. Qualify the runtime-security aggregate for fork use before adding it to enforced branch requirements. No scan alone completes security or release acceptance.
 3. Preserve the separately scoped volume, freshness, authority, reference and import evidence. The authority-read foundation remains inactive across content APIs.
 4. Keep the README, canonical register, GitHub backlog and PR descriptions aligned with executed behavior. Merge through protected checks.

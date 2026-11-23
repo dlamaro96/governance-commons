@@ -12,6 +12,12 @@ stale indexed names do not determine the displayed order. Names use PostgreSQL
 
 Cursors bind identity, tenant, query, type, page size and order. Changing order in
 the browser returns to the first page. A cursor from a different order is refused.
+The browser keeps a bounded predecessor trail in each history entry. Back/Forward,
+reload and browser Back from an asset restore that trail. A direct link or invalid
+history shows “Current page” with a “First page” recovery action. The explicit
+asset “Back to catalog” link opens the first page. History is a presentation hint;
+the API authenticates every cursor independently.
+
 Each request has its own primary-database snapshot: concurrent changes can move
 assets between requests. This is not a frozen export or a locale-aware sort.
 
@@ -30,7 +36,11 @@ pnpm exec playwright test tests/e2e/catalog-sorting.spec.ts
 
 Run the real core services and seed synthetic data before integration/browser
 checks. The browser journey signs in through Keycloak, scans PostgreSQL, checks
-all three orders across two pages and verifies the pagination reset. Desktop,
+all three orders across two pages, pagination reset, history restoration and
+direct-link recovery. Desktop,
 mobile and Arabic captures accompany the journey. See the scoped
 [local evidence](../verification/catalog-global-sorting-local.json); hosted
 qualification must refer to its own executed revision.
+
+The subsequent [navigation evidence](../verification/catalog-navigation-local.json)
+records the expanded local journey and its exact source binding.

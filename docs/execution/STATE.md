@@ -6,34 +6,59 @@ Source security at `e51e8ec` verifies all 1,530 files and three stored analyses 
 
 The preceding `b08b88d` development run completed with **42 successful outcomes, two failures and one dependent skip** across the exact 45-outcome assignment. All 171 API cases, 35 inactive-authentication cases and 37 main browser journeys pass. SQL024 exhausted its inherited 600-second lifecycle; protected login stopped during admission. Five authenticated archives, exact Git sources and static test coordinates are verified. [Completed hosted record](../verification/hosted-checkpoint-b08b88d.json).
 
-## Runtime security increment in validation
+## Published increment under qualification
 
-The separate `codex/runtime-image-security` branch follows published checkpoint
-`e51e8ec`. Its minimal Node and Python images run a healthy core stack. The exact
-local images pass pinned Trivy scans with zero high/critical findings; all 39
-lower/unknown application findings and 11 lower worker findings remain visible.
-Real PostgreSQL TLS passes 12 checks; all 285 worker tests and seven source
-conformance checks pass in the running worker. These are local arm64 observations.
+[PR #39](https://github.com/dlamaro96/governance-commons/pull/39) publishes global
+catalog sorting, minimal runtime images, portable worker deadlines and exact
+historical source-hash dispositions at `80101e0`.
 
-The first API smoke attempt could not start because the minimal image lacks GNU
-`timeout`; no API cases ran or passed in that attempt. A Node supervisor now keeps
-the original 1,740-second deadline, ten-second termination grace and 1,800-second
-host limit. Seven real process controls pass; the rerun passes all 171 API cases and both real
-Keycloak/source-scan browser journeys. All three captures were inspected.
-[Scoped local evidence](../verification/runtime-images-local.json).
-The new [image-security workflow](../../.github/workflows/runtime-security.yml) passes on native Linux amd64 and arm64 at `a6cd20d`. Both authenticated archives and all four full image reports are verified: zero high/critical findings, with every lower/unknown finding retained. [Hosted image record](../verification/runtime-images-hosted-a6cd20d.json). Required-check/fork qualification and supported-release qualification remain pending.
+Source security passes with all 1,547 published files matched to Git and all three
+stored CodeQL analyses verified, with zero findings. Both native Linux image jobs
+pass: all four reports have zero high/critical findings. Application images retain
+22 medium, 14 low and three unknown findings; worker images retain seven medium
+and four low findings. These are scoped scan results, not complete security or
+release qualification. [Source record](../verification/source-security-80101e0.json)
+and [image record](../verification/runtime-images-hosted-80101e0.json).
 
-[PR #39](https://github.com/dlamaro96/governance-commons/pull/39) remains open. Its broader development run exposed GNU-only timeout flags in the Alpine worker test launchers. The correction preserves all durations and the three-second kill grace. Seven real worker gates and 82 host controls pass locally, plus normal/TERM/KILL process probes. Lineage initially refused its old image source and passed after the worker-only rebuild. [Correction and retained failures](../verification/runtime-worker-timeout-local.json). Fresh hosted regression remains required. [Runtime decision](../adr/0019-minimal-runtime-images.md).
+Development run `45117553519` is still in progress at the last readback. Its
+quality and secret jobs pass. All 45 required outcomes, 172 API cases, 35 inactive
+authentication cases, 38 main browser journeys and protected login must finish
+and have their artifacts verified before this revision is merged.
 
-A clean core rebuild of `15496e3` matches all 300 application and 13 worker files and the 32-row migration ledger. Its exact immutable image passes protected authentication: 15 native checks, both real Keycloak journeys, 203 Git inputs and every cleanup check. Two local captures were inspected. This is separate from the earlier candidate scans and API execution. [Committed-image record](../verification/runtime-protected-authentication-15496e3.json).
+The local sorting candidate passes 20 targeted unit cases, all 172 API cases and
+five real browser journeys. Its three desktop/mobile/Arabic captures were
+inspected. Canonical PostgreSQL order applies before pagination; sort changes
+reset the cursor. [Search contract](../runbooks/catalog-search.md) and
+[exact local source/image evidence](../verification/catalog-global-sorting-local.json).
 
-The `62b834c` secret job flagged 14 source digests whose path keys included security-related words. Each value equals the SHA-256 of its named immutable Git source. The current record now uses explicit `path`/`sha256` fields; only those exact historical fingerprints are dispositioned. Five native scanner controls and a fresh worktree/history scan pass, including controls that retain detection at changed paths/revisions and for a credential fixture. [Disposition record](../verification/runtime-worker-hash-dispositions.json). This does not excuse a fresh hosted scan.
+Earlier runtime failures remain recorded: the minimal application lacked GNU
+`timeout`; worker launchers used GNU-only flags; and the secret scan flagged
+14 values independently verified as source digests. Corrections preserve the
+original deadlines and exact historical dispositions. No earlier failure is
+relabeled. See [application runtime](../verification/runtime-images-local.json),
+[worker deadline correction](../verification/runtime-worker-timeout-local.json)
+and [hash dispositions](../verification/runtime-worker-hash-dispositions.json).
 
-## Catalog ordering increment
+## Next implementation increment
 
-Catalog order now applies to the complete authorized candidate set before pagination, using canonical PostgreSQL names and update timestamps. All three orders bind the cursor; changing order resets the page. The desktop source column stays within the table layout. [Search contract](../runbooks/catalog-search.md).
+Catalog pagination now restores bounded history across Back/Forward, reload and
+browser return from an asset. Direct links and invalid history offer honest
+“Current page” / “First page” recovery. The expanded real browser journey passes
+with all three captures inspected. Its source binding is local and dirty;
+hosted qualification remains separate. [Navigation evidence](../verification/catalog-navigation-local.json).
 
-The local candidate passes 20 targeted search unit cases, all 172 API cases and five real browser journeys. All three new desktop/mobile/Arabic captures were inspected. Exact image readback matches 303 application files and 33 worker source/test files; four application containers use those images. Type checks and 134 evidence/28 shard controls pass. The hosted assignment now requires 38 main browser journeys across the existing 45 outcomes. These runs have dirty-tree source bindings and do not qualify a later clean revision. [Exact sources, images and limitations](../verification/catalog-global-sorting-local.json).
+The inactive authority repository now composes protected identity and authority
+closure with canonical asset, ACL, placement and current domain ancestry in one
+read-only repeatable-read snapshot. It does not manufacture a security revision
+or approved classification facts, change runtime privileges or activate content
+authority. [Decision](../adr/0020-inactive-canonical-asset-context.md).
+The isolated native gate passes all 13 cases with exact 249-source readback,
+row/ledger/ACL preservation, replay and owned cleanup. All 1,151 unit cases and type checks pass. Three failed native attempts and
+the preceding passing source snapshot remain recorded. The execution budget is
+780 seconds, with 90 seconds for cleanup inside the 900-second wrapper. The next
+development assignment adds a separate 46th required outcome; 134 evidence,
+38 shard, 15 routing and three lifecycle controls pass. [Scoped evidence](../verification/authority-asset-context-local.json).
+Hosted qualification of this next increment remains required.
 
 ## Current corrections
 
@@ -45,7 +70,7 @@ Fresh immutable-image protected authentication at `5d9e501` passes **15 native H
 
 ## Product and runtime
 
-The healthy Docker Compose core runs real PostgreSQL, OpenSearch, Temporal, Keycloak and source workers with synthetic data. The latest images contain the catalog ordering candidate and portable worker timeout correction; their exact dirty-tree bindings are recorded above. Earlier observations retain their original revisions. Applied SQL001–032 migrations are immutable.
+The healthy Docker Compose core runs real PostgreSQL, OpenSearch, Temporal, Keycloak and source workers with synthetic data. The latest core image contains the catalog navigation candidate; its browser evidence is separate from the isolated mounted-source authority checks. Earlier observations retain their original revisions. Applied SQL001–032 migrations are immutable.
 
 Usable workflows include tenant-scoped catalog/search/ownership/audit, operating models and graph migrations, glossary/reference publication and imports, reviewed classification, PostgreSQL view lineage, and six source-executed quality families. Scheduled quality incidents support notification, verified resolution and reopening; expired freshness evidence remains historical without authorizing a new resolution.
 
@@ -67,9 +92,10 @@ Earlier failed and passing attempts retain their original source bindings in the
 
 ## Delivery sequence
 
-1. Integrate catalog ordering and the scoped hash-record correction into PR #39. Qualify its exact final revision through both native Linux image builds, source analysis and all 45 development outcomes, including 38 main browser journeys. Inspect any failure before advancing.
-2. Keep the new security checks distinct from enforced branch requirements until hosted and fork qualification is complete. The preceding development PR is merged without bypassing its required checks.
-3. Continue canonical authorization and the remaining M0–M10 implementation in the [delivery plan](PLAN.md). Vendor credentials and independent reviews block only their own qualification; they do not excuse unfinished required code.
+1. Finish and verify the exact `80101e0` hosted development run, then merge PR #39 through protected checks.
+2. Publish the locally verified navigation/context and its 46-outcome pipeline as the next increment.
+3. Implement trusted content-security revisions, classification facts and a held-snapshot executor before any canonical authority activation. Continue the remaining M0–M10 workstreams in the [delivery plan](PLAN.md).
+4. Qualify fork behavior before adding the new runtime security aggregate to enforced branch requirements. Independent reviews and live vendor prerequisites retain their own open qualifications.
 
 [Issues #24–#33](https://github.com/dlamaro96/governance-commons/issues?q=is%3Aissue%20is%3Aopen) cover the delivery workstreams; [backlog.json](backlog.json) maps all 1,106 requirements exactly once. Qualification issues #11–#13 remain open. PR #22 is closed unmerged and superseded by #23 without rewriting history. Scoped issue #10 is closed; broader model and authority obligations remain open. Dependency PRs #1, #2 and #5 are closed as superseded by the published updates.
 
