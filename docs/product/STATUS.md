@@ -1,6 +1,6 @@
 # Product status
 
-Updated 23 November 2026. Governance Commons is a working **development preview**, not a completed enterprise product or supported release. PR #23 merged as `0fc25d4` after all 45 required outcomes and source scanning passed at `e51e8ec`. PR #39 at `80101e0` passes source security and both native runtime image scans; its full development regression is still running. See [current state](../execution/STATE.md), [source evidence](../verification/source-security-80101e0.json) and [image evidence](../verification/runtime-images-hosted-80101e0.json).
+Updated 23 November 2026. Governance Commons is a working **development preview**, not a completed enterprise product or supported release. PR #39 merged normally as `fb1fd0e` after all 45 required development outcomes, source scanning and both native runtime image scans passed at `80101e0`. Its five behavior archives and exact source bindings are verified. PR #40's navigation/context increment is under fresh qualification at `4cbde6a`. See [current state](../execution/STATE.md), [development evidence](../verification/hosted-checkpoint-80101e0.json), [source evidence](../verification/source-security-80101e0.json) and [image evidence](../verification/runtime-images-hosted-80101e0.json).
 ## Implemented workflows with scoped local evidence
 
 - OIDC login and server-side sessions; tenant-scoped PostgreSQL/API checks; ownership, audit and transactional outbox.
@@ -22,7 +22,7 @@ Each item is narrower than its complete baseline requirement. Consult the [evide
 | Identity and authorization | Canonical authority activation across every ingress, policy/admin tooling, delegated operator access, service identities, identity synchronization and live Microsoft Entra qualification. |
 | Discovery and collaboration | More source object types, incremental/recovery ingestion, saved searches/views, subscriptions/comments, governed samples and complete bulk metadata interchange. |
 | Governance | Visual workflow/form designer and declared BPMN subset; broader approvals, policies/controls/risks/assessments, delegation/escalation and email/webhook delivery. |
-| Quality, lineage and semantics | The merged checkpoint passes its full 37-journey browser suite and all 45 outcomes. The new runtime and catalog increment requires fresh qualification. Schema/distribution drift, remaining rule families, filters/partition scope, anomaly baselines and aggregation remain; broader SQL/OpenLineage/column lineage and semantic modelling remain. |
+| Quality, lineage and semantics | The merged `80101e0` checkpoint passes its full 38-journey browser suite and all 45 outcomes. The new navigation/context increment requires fresh qualification. Schema/distribution drift, remaining rule families, filters/partition scope, anomaly baselines and aggregation remain; broader SQL/OpenLineage/column lineage and semantic modelling remain. |
 | Contracts, products and access | Contract lifecycle, data-product marketplace, source grant/revoke/expiry/drift reconciliation and bounded SQL notebooks. |
 | AI and MCP | AI registry/evaluations, permission-filtered context assistant, authenticated MCP server and governed tool gateway. |
 | Documents and privacy | Document/version/ACL/delete propagation, privacy registers and assessments, cross-system evidence and complete portable migration. |
@@ -33,10 +33,15 @@ There are 354 named baseline requirements plus their detailed and supplemental t
 
 ## Immediate delivery gates
 
-1. Complete and verify PR #39's exact hosted regression, then merge normally. Publish the navigation/context increment with its separate 46th pipeline outcome after local qualification.
+1. PR #39 is merged normally after exact all 45-outcome and artifact verification. Finish PR #40's 46-outcome qualification, then merge through protected checks.
 2. Qualify the runtime-security aggregate for fork use before adding it to enforced branch requirements. No scan alone completes security or release acceptance.
 3. Preserve the separately scoped volume, freshness, authority, reference and import evidence. The authority-read foundation remains inactive across content APIs.
 4. Keep the README, canonical register, GitHub backlog and PR descriptions aligned with executed behavior. Merge through protected checks.
 5. Continue every workstream above through the [M0–M10 delivery plan](../execution/PLAN.md). The [requirement-to-issue mapping](../execution/backlog.json) covers all 1,106 records.
 
 External vendor accounts, licensed infrastructure and independent human reviews are explicit qualification prerequisites. They do not excuse missing adapter code or locally executable work. Optional runtime activation also does not make required implementation optional.
+
+The SQL033 private content revision increment passes isolated migration/concurrency
+qualification, all 172 current-core API cases and seven focused browser journeys.
+It does not activate content authority or complete the broader requirements.
+[Integrated evidence](../verification/content-security-revision-integrated-local.json).

@@ -17,6 +17,26 @@ spec.loader.exec_module(g)
 
 
 class Controls(unittest.TestCase):
+    def test_exact033_successor_is_admitted_without_expanding032_sources(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)
+            for name in g.NAMES: (folder/name).write_text('-- historical prefix')
+            for name in (g.NEW_TEST,'scripts/runtime-test-authority-asset-context.py','scripts/test_authority_asset_context.py'):
+                path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text('')
+            with patch.object(g,'ROOT',root),patch.object(g.volume,'ROOT',root),patch.object(g,'_original_sources',return_value=[]):
+                before=g.sources()
+                successor=folder/'033_content_security_revisions.sql';successor.write_text('-- unexecuted successor')
+                self.assertEqual(g.migrations(),g.NAMES);self.assertEqual(len(g.migrations()),32)
+                self.assertEqual(g.sources(),before)
+                self.assertNotIn('packages/db/migrations/'+successor.name,{row['path'] for row in before})
+                successor.write_text('-- changed unexecuted bytes');self.assertEqual(g.sources(),before)
+                for name in ('033_undeclared.sql','034_undeclared.sql'):
+                    extra=folder/name;extra.write_text('-- unreviewed')
+                    with self.assertRaises(RuntimeError):g.sources()
+                    extra.unlink()
+                (folder/g.NAMES[-1]).unlink()
+                with self.assertRaises(RuntimeError):g.sources()
+
     @contextmanager
     def harness(self, admission_seconds):
         clock = [1000.0]

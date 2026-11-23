@@ -5,14 +5,14 @@ Updated 23 November 2026. The complete M0–M10 programme remains required. [Pro
 ## Active delivery sequence
 
 1. Completed: all 45 development outcomes and source security pass at `e51e8ec`; five behavior archives and three stored analyses are verified. PR #23 merged normally as `0fc25d4`. Historical failures remain recorded.
-2. PR #39 at `80101e0` passes source security and both native image scans. Finish all 45 development outcomes and verify authenticated artifacts, then merge normally. Preserve prior failed runs and their exact source bindings.
-3. Publish the verified catalog navigation fix and inactive canonical asset-context reader after the isolated native gate passes. Add its separate foundation outcome to the next 46-outcome assignment; preserve the existing authority upgrade profiles and 38 browser journeys.
-4. Implement a trusted monotone content-security revision and reviewed-classification fact producer, then compose the existing evaluator inside the held database snapshot. Runtime executor capabilities, revocation fences, field projections and all-ingress cutover remain required before activation.
+2. Completed: PR #39 at `80101e0` passes all 45 development outcomes, source security and both native image scans. Five authenticated behavior archives verified before normal merge `fb1fd0e`; historical failures remain preserved.
+3. PR #40 publishes the verified catalog navigation fix and inactive canonical asset-context reader. Verify exact head `4cbde6a` after its normal main update, including all 46 outcomes; merge through protected checks. The 38 browser journeys and historical authority profiles remain separate.
+4. SQL033 private monotone content revisions and same-snapshot versioned context pass isolated local qualification. All 172 current-schema API cases and seven focused browser journeys pass; finish hosted gates. Implement the reviewed-classification fact producer, then compose the existing evaluator inside the held database snapshot. Runtime executor capabilities, revocation fences, field projections and all-ingress cutover remain required before activation.
 5. Continue every milestone below. Qualify fork behavior before adding the runtime aggregate to enforced requirements; vendor credentials and independent reviews block only their own qualification.
 
 ## GitHub delivery backlog
 
-[Issues #24–#33](https://github.com/dlamaro96/governance-commons/issues?q=is%3Aissue%20is%3Aopen) cover pipeline repair, identity, discovery, governance, quality, access, AI/MCP, privacy, connectors and release. [backlog.json](backlog.json) maps every canonical requirement to exactly one delivery workstream without duplicating its status. Existing scoped qualification issues retain their own acceptance criteria.
+The scoped pipeline issue #24 is closed. [Issues #25–#33](https://github.com/dlamaro96/governance-commons/issues?q=is%3Aissue%20is%3Aopen) cover identity, discovery, governance, quality, access, AI/MCP, privacy, connectors and release. [backlog.json](backlog.json) maps every canonical requirement to exactly one delivery workstream without duplicating its status. Existing scoped qualification issues retain their own acceptance criteria.
 
 ## Programme milestones
 

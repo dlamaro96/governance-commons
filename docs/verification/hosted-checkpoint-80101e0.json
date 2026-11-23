@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T06:15:47.927180+00:00",
+  "implementation_commit": "80101e079f2cbf68cbb9680817b1d494c916451a",
+  "tested_merge_commit": "9915c531fd15be3d19bb10fc25269da738aedd29",
+  "same_tree_and_parent_verified": true,
+  "result": "PASS",
+  "release_qualified": false,
+  "run_id": 45117553519,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45117553519",
+  "run_attempt": 1,
+  "required_outcomes": 45,
+  "outcome_counts": {
+    "success": 45
+  },
+  "outcomes": {
+    "connectors": "success",
+    "security": "success",
+    "model_upgrade": "success",
+    "asset_type_upgrade": "success",
+    "type_migration_upgrade": "success",
+    "relations_upgrade": "success",
+    "relation_participation_upgrade": "success",
+    "business_domains_upgrade": "success",
+    "authority_authn_foundation": "success",
+    "authority_read_original": "success",
+    "authority_read_current": "success",
+    "source_connectors_upgrade": "success",
+    "postgres_targets": "success",
+    "relation_candidate_original": "success",
+    "relation_candidate_current": "success",
+    "glossary_upgrade": "success",
+    "relation_scope_upgrade": "success",
+    "glossary_population_repaired_upgrade": "success",
+    "lineage_repaired_upgrade": "success",
+    "classification_repaired_upgrade": "success",
+    "quality_repaired_upgrade": "success",
+    "quality_worker": "success",
+    "lineage_worker": "success",
+    "reference_repaired_upgrade": "success",
+    "reference_quality_repaired_upgrade": "success",
+    "reference_quality_worker": "success",
+    "reference_structure_repaired_upgrade": "success",
+    "reference_import": "success",
+    "uniqueness_upgrade": "success",
+    "uniqueness_worker": "success",
+    "range_upgrade": "success",
+    "range_worker": "success",
+    "monitoring_upgrade": "success",
+    "freshness_upgrade": "success",
+    "freshness_worker": "success",
+    "freshness_scheduling_upgrade": "success",
+    "volume_upgrade": "success",
+    "volume_worker": "success",
+    "business_domain_seed": "success",
+    "browser": "success",
+    "protected_authn": "success",
+    "bootstrap": "success",
+    "services": "success",
+    "object_store": "success",
+    "seed": "success"
+  },
+  "verified_behavior_archives": 5,
+  "safe_evidence": [
+    {
+      "family": "api",
+      "actualTests": 172,
+      "sourceFiles": 25,
+      "sourceManifestSha256": "23d80dfc37497521b227de43985007aa1933a72949c33bf9d2af657d4f665f32",
+      "artifactSha256": "353f35cfce66f0acf54c409179711db92dc32422d06c73c40ff9b3fb6e762161"
+    },
+    {
+      "family": "inactive-authentication",
+      "actualTests": 35,
+      "sourceFiles": 176,
+      "migrations": 12,
+      "sourceManifestSha256": "c27a5f37e356df49e9eec480929cb55685d0f40f0c38a35999acb1a46a18ca69",
+      "artifactSha256": "c01505179364925bf39a4ca622bad908f05e588572d7bcf76c259390da21b520",
+      "cleanupExportedBothTrue": true
+    },
+    {
+      "family": "protected-authentication",
+      "actualNativeTests": 15,
+      "browserJourneys": 2,
+      "sourceFiles": 203,
+      "migrations": 32,
+      "immutableImageMode": true,
+      "captureCount": 8,
+      "visualReview": "ONE_OF_EIGHT_INSPECTED",
+      "artifactSha256": "f717bf4886164f2b5d1f507b5ece52194c19f514b151042626e0344d508632c3",
+      "scope": "Public coordinate, source, schema and artifact readback; raw private native/installation proofs are not downloaded."
+    }
+  ],
+  "browser": {
+    "passed": 38,
+    "failedExecuted": 0,
+    "notRun": 0,
+    "retries": 0,
+    "failedCases": [],
+    "notRunFiles": [],
+    "screenshots": [
+      {
+        "name": "catalog-ar-dark-390.png",
+        "sha256": "b8a7c5868672bb70d56b667c28c98256a9f10e64b85faa8d11d6b759f2bd98d1",
+        "bytes": 52644
+      },
+      {
+        "name": "catalog-ar-dark-1440.png",
+        "sha256": "d4f293ec580d6f250a57bbc14cccd1edd29f911c81af3289faef837efdbcb300",
+        "bytes": 147435
+      },
+      {
+        "name": "catalog-ar-dark-768.png",
+        "sha256": "09b3c7976edec7b261ae9859ea8d3c5f95bcb4c8ba6f31c057b1ead5e6d24d3f",
+        "bytes": 88720
+      },
+      {
+        "name": "catalog-en-dark-1440.png",
+        "sha256": "f42ba0fd7e96b3d9ef1a701f116aed5d336cf07a594cee242e41df3a6c2ee62e",
+        "bytes": 170184
+      },
+      {
+        "name": "catalog-en-light-1024.png",
+        "sha256": "9cf3cfe8fbc2a7387cd2a59aac444a228a2aed06bcb8ab9215a0d0bb7bee3c26",
+        "bytes": 133601
+      },
+      {
+        "name": "catalog-en-light-1280.png",
+        "sha256": "c77a205b91f8951f9b3f90f4d46f3bd96f0bd0a398d57d4bfd9c2074ed4eae27",
+        "bytes": 163429
+      },
+      {
+        "name": "catalog-en-light-1440.png",
+        "sha256": "69d780e400bd962d0468053285b43db04e3663c8f610d0a5e8925d3934cd0f59",
+        "bytes": 169052
+      },
+      {
+        "name": "catalog-en-light-390.png",
+        "sha256": "29fc2ea611cf338e0f290602426864bb0defddd6260d94e28ce330d5f71c7c84",
+        "bytes": 56562
+      },
+      {
+        "name": "catalog-en-light-768.png",
+        "sha256": "99fa9f29a05aa61180d0d5bdf8453f02a2cedd1bf47bc73d5f2b66ef9b4c69cc",
+        "bytes": 91607
+      },
+      {
+        "name": "catalog-history.png",
+        "sha256": "8632f0a256a3e250e87301b4a030533e5e3cad3fa7fcf432b167807bafff40c2",
+        "bytes": 92800
+      },
+      {
+        "name": "catalog-name-desc-1440.png",
+        "sha256": "14e0c32a332fb94d248b3bd4cf742d25f0d8501ef5653e726bbfdcd82360f516",
+        "bytes": 173332
+      },
+      {
+        "name": "catalog-name-desc-390.png",
+        "sha256": "4be52bc311aa3e9132b4804bf8a3d8e657fb5a7b5a16d061f64f4ea66362f6ca",
+        "bytes": 61827
+      },
+      {
+        "name": "catalog-name-desc-ar-390.png",
+        "sha256": "bc29b7e19ace3c64b88765187524f3e08c347c583470c0a424fad69b56fe3f15",
+        "bytes": 56769
+      },
+      {
+        "name": "m8-postgres-configuration-failure-ar-390.png",
+        "sha256": "80368858fc43dd481c6faf9c2fb2cbec1a5946c2d0e0fc04e3b8c9eb15e00328",
+        "bytes": 44404
+      },
+      {
+        "name": "m8-postgres-configuration-failure-en-1440.png",
+        "sha256": "7fff5792ac6e2c29be5b43ed61a4db5b0f4929448f653f0557b0865e5e77bfd4",
+        "bytes": 132053
+      },
+      {
+        "name": "m8-postgres-configuration-form-ar-390.png",
+        "sha256": "60b68b82b0963675c362de9dd56f21459d7810f9dc3b5795ea7a2b711564100f",
+        "bytes": 60977
+      },
+      {
+        "name": "m8-postgres-configuration-form-en-1440.png",
+        "sha256": "f2a756e689ee7c4ce78c746d3dd14cc810b733b45352fdddbd38992031dc5e95",
+        "bytes": 209593
+      },
+      {
+        "name": "m8-source-connectors-denial-ar-390.png",
+        "sha256": "9c4922b73f383827c21ed1d373cd381130d8ab178a0681a779344eff07ad2925",
+        "bytes": 18264
+      },
+      {
+        "name": "m8-source-connectors-denial-en-1440.png",
+        "sha256": "8bc99f94dfd01da8f9065ac240571d52ed3197f32005eff3f2ebf37a86f6d295",
+        "bytes": 57011
+      },
+      {
+        "name": "m8-source-connectors-failure-ar-390.png",
+        "sha256": "23f29619d59073389f0d4523b392984f4e4c054fded3ec71b87b385f4e718e21",
+        "bytes": 45362
+      },
+      {
+        "name": "m8-source-connectors-failure-en-1440.png",
+        "sha256": "0352f30c02977a8c5e3ae9e9b83d4e4f6f2cabb6b194f8eea5408b08e80febb5",
+        "bytes": 134080
+      },
+      {
+        "name": "m8-source-connectors-form-ar-390.png",
+        "sha256": "a9bcf7425a9abbdea78295c5afb86faec598e972980dd3aa2bee1ca4193e9a53",
+        "bytes": 62839
+      },
+      {
+        "name": "m8-source-connectors-form-en-1440.png",
+        "sha256": "18030c7c23dc5938b9adf4ddc8f6de8576f563eea716529a7f7763304afa010e",
+        "bytes": 215487
+      },
+      {
+        "name": "m8-source-connectors-registered-en-1440.png",
+        "sha256": "7f416b9729f3b4f54ee2a48e406e1f0c9e68b1ff3fed7ee60802b343bf149a8c",
+        "bytes": 139347
+      },
+      {
+        "name": "m8-source-connectors-registered-ar-390.png",
+        "sha256": "e185950893ce9838582e714103ba9cdd732a1945b28161ad4570e0e6b60bbad7",
+        "bytes": 57879
+      },
+      {
+        "name": "protected-revoked-ar-mobile.png",
+        "sha256": "c141d489a59ddb66dd8a3da702729cafe630c365cf36796d906423c01eea5fc1",
+        "bytes": 64835
+      },
+      {
+        "name": "protected-selected-ar-desktop.png",
+        "sha256": "bc1a9438b243bf158825e294d64849b08d2621d9b5bec408d71372c057be8d25",
+        "bytes": 75931
+      },
+      {
+        "name": "protected-selected-ar-mobile.png",
+        "sha256": "fc263ae6ae2a8c78bcc7309b208a32b3763d2f07b13fbe1a9c89ea4142800b1d",
+        "bytes": 69503
+      },
+      {
+        "name": "protected-selected-en-desktop.png",
+        "sha256": "6e621f04f498cbe895569417733556fe56516beaed46075823d2c75619a0cc72",
+        "bytes": 86229
+      },
+      {
+        "name": "protected-session-en-desktop.png",
+        "sha256": "cc3894dfbe8b7d15a58c9b1fcef1dc2c493665f815196212bb5ee4c3bdc7deaa",
+        "bytes": 83100
+      },
+      {
+        "name": "protected-steward-en-mobile.png",
+        "sha256": "92c0b3425a8292add83e838cbb689aede84be1c7065eb720755fefeed02ba42f",
+        "bytes": 75992
+      },
+      {
+        "name": "protected-tenant-denied-en-mobile.png",
+        "sha256": "21be5d5aa36de916779289c27023fcf704dd8b105af506a86fd4590038553b81",
+        "bytes": 75379
+      },
+      {
+        "name": "protected-unbound-denied-en-desktop.png",
+        "sha256": "2f139d7a88e2aa54a66c8d9590af052e9897b992971bfbcaa9e92681a6487e06",
+        "bytes": 78645
+      }
+    ],
+    "visualReview": "NOT_PERFORMED"
+  },
+  "verification_receipt_sha256": "e2d5ec5572f8ed9430e743de6c14fe0be57f94bf992974450a247b7880931442",
+  "source_security": "docs/verification/source-security-80101e0.json",
+  "merged": {
+    "pull_request": "https://github.com/dlamaro96/governance-commons/pull/39",
+    "commit": "fb1fd0e8f53722a168f0539257fc5442502d635c",
+    "at": "2026-11-23T06:12:34Z",
+    "method": "Normal merge after all required checks passed; no bypass or independent review claimed."
+  },
+  "limitations": [
+    "Aggregate PASS requires all45 exact outcomes, five verified archives and completed quality/secrets/behavior/required jobs; pending or failed work never implies success.",
+    "Authenticated archives and declared source maps are checked against exact Git; private native TAP and mounted-source/resource inventory proofs are not exported unless explicitly noted.",
+    "Four hosted captures inspected after authenticated artifact verification. Remaining visual, complete security and release qualifications stay open."
+  ],
+  "visual_review": {
+    "status": "SCOPED_REVIEW_COMPLETE",
+    "inspected": [
+      {
+        "name": "catalog-en-dark-1440.png",
+        "sha256": "f42ba0fd7e96b3d9ef1a701f116aed5d336cf07a594cee242e41df3a6c2ee62e",
+        "bytes": 170184
+      },
+      {
+        "name": "catalog-name-desc-1440.png",
+        "sha256": "14e0c32a332fb94d248b3bd4cf742d25f0d8501ef5653e726bbfdcd82360f516",
+        "bytes": 173332
+      },
+      {
+        "name": "catalog-name-desc-ar-390.png",
+        "sha256": "bc29b7e19ace3c64b88765187524f3e08c347c583470c0a424fad69b56fe3f15",
+        "bytes": 56769
+      },
+      {
+        "name": "protected-selected-en-desktop.png",
+        "sha256": "6e621f04f498cbe895569417733556fe56516beaed46075823d2c75619a0cc72",
+        "bytes": 86229
+      }
+    ],
+    "observations": [
+      "Desktop light and dark catalog captures show rendered navigation, result counts, sorting controls and rows.",
+      "The Arabic390px capture retains right-to-left controls and readable asset/type rows without page overflow in the inspected viewport.",
+      "The protected-session capture shows tenant selection and explicitly inactive content access."
+    ],
+    "limitations": [
+      "Four of33 captures inspected; other captures retain hash verification only.",
+      "This scoped inspection is not an independent accessibility or translation sign-off."
+    ]
+  }
+}

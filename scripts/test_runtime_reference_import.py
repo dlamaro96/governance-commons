@@ -82,19 +82,28 @@ class Controls(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             gate.migrations()
 
-    def test_current_schema_binds_all_32_migrations_including_relation_candidate(self):
-        self.assertEqual(len(gate.NAMES), 32)
-        self.assertEqual(gate.NAMES[-1], '032_relation_candidate_validation.sql')
+    def test_current_schema_binds_all_33_migrations_including_content_security(self):
+        self.assertEqual(len(gate.NAMES), 33)
+        self.assertEqual(gate.NAMES[-2:], ['032_relation_candidate_validation.sql', '033_content_security_revisions.sql'])
         before = {row['path']: row['sha256'] for row in gate.sources()}
         for name in gate.NAMES:
             self.assertIn('packages/db/migrations/' + name, before)
-        path = 'packages/db/migrations/032_relation_candidate_validation.sql'
+        path = 'packages/db/migrations/033_content_security_revisions.sql'
         self.write(path, '-- changed current migration')
         after = {row['path']: row['sha256'] for row in gate.sources()}
         self.assertNotEqual(before[path], after[path])
         (self.root / path).unlink()
         with self.assertRaises(RuntimeError):
             gate.sources()
+
+    def test_current_schema_refuses_renamed_or_unreviewed_successor(self):
+        path = self.root / 'packages/db/migrations/033_content_security_revisions.sql'
+        renamed = path.with_name('033_undeclared.sql')
+        path.rename(renamed)
+        with self.assertRaises(RuntimeError): gate.sources()
+        renamed.rename(path)
+        self.write('packages/db/migrations/034_undeclared.sql', '-- unreviewed successor')
+        with self.assertRaises(RuntimeError): gate.sources()
 
     def test_transitive_imports_and_missing_source_refusal(self):
         self.write(gate.TEST, "import {x} from '../../packages/domain/src/leaf.js';\nawait import('./side.ts');\n")

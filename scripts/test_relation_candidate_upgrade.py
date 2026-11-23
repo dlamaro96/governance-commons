@@ -11,11 +11,28 @@ class Controls(unittest.TestCase):
   for p in [g.BASELINE,g.NEW_TEST,'tests/fixtures/relation-candidate.ts',*[p['fixture'] for p in g.PREDECESSORS]]:self.assertIn(p,paths)
   self.assertNotIn('tests/fixtures/business-domains.ts',paths)
   self.assertEqual(g.sha((ROOT/'packages/db/migrations/018_glossary_nominal_candidates.sql').read_bytes()),'60361c7b2ddee2f1f095d0e832116b4b97cc04fdbee6a88b398721e5bee13fea')
- def test_fixed031_baseline_does_not_follow_current_import032(self):
-  self.assertEqual(len(g.transport.NAMES),32);self.assertEqual(g.transport.NAMES[-1],g.MIGRATION)
+ def test_fixed031_baseline_does_not_follow_current_import033(self):
+  self.assertEqual(len(g.transport.NAMES),33);self.assertEqual(g.transport.NAMES[-1],'033_content_security_revisions.sql')
   self.assertEqual(len(g.BASE_NAMES),31);self.assertEqual(g.BASE_NAMES[-1],'031_authority_read_grants.sql')
   self.assertEqual(g.NAMES,[*g.BASE_NAMES,g.MIGRATION]);self.assertEqual(g.NAMES.count(g.MIGRATION),1)
   self.assertEqual(g.migrations(),g.NAMES)
+ def test_exact033_successor_is_excluded_from_the032_source_and_execution_prefix(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   root=Path(tmp);folder=root/'packages/db/migrations';folder.mkdir(parents=True)
+   for name in g.NAMES:(folder/name).write_text('-- historical prefix')
+   with patch.object(g,'ROOT',root):
+    self.assertEqual(g.migrations(),g.NAMES)
+    successor=folder/'033_content_security_revisions.sql';successor.write_text('-- declared successor')
+    self.assertEqual(g.migrations(),g.NAMES);self.assertEqual(len(g.migrations()),32)
+    self.assertNotIn(successor.name,g.NAMES)
+    successor.write_text('-- changed unexecuted successor');self.assertEqual(g.migrations(),g.NAMES)
+    for name in ('033_undeclared.sql','034_undeclared.sql'):
+     extra=folder/name;extra.write_text('-- unreviewed')
+     with self.assertRaises(RuntimeError):g.migrations()
+     extra.unlink()
+    (folder/g.NAMES[-1]).unlink()
+    with self.assertRaises(RuntimeError):g.migrations()
+  self.assertNotIn('packages/db/migrations/033_content_security_revisions.sql',{row['path'] for row in g.sources()})
  def test_sql_function_has_only_two_exact_fences_and_original_acl(self):
   old=(ROOT/'packages/db/migrations/018_glossary_nominal_candidates.sql').read_text();new=(ROOT/'packages/db/migrations'/g.MIGRATION).read_text();start='CREATE OR REPLACE FUNCTION public.gc_relation_check_type';old=old[old.index(start):];new=new[new.index(start):]
   count=" OR (SELECT count(*) FROM public.gc_relation_nominal_candidates(head_definition) c JOIN public.assets a ON a.tenant_id=tenant AND a.id=c.asset_id WHERE (public.gc_relation_endpoint_eligible(tenant,a.id,head_definition,'source')\n   OR public.gc_relation_endpoint_eligible(tenant,a.id,head_definition,'target')))>2000 THEN"

@@ -15,7 +15,7 @@ from protected_authn_evidence import load_report as load_protected_report, copy_
 from authentication_evidence import read_file as bounded_read, strict_json as private_json
 from quality_upgrade_diagnostics import load_repaired_report as load_quality_diagnostic, REPAIRED_PROFILES
 
-from ci_shards import SUPERSEDED, AUTHORITY_SCOPES, ASSET_CONTEXT_SCOPES, RELATION_SCOPES, STEPS, required_steps, collect_outcomes, checkout_identity, foreign_evidence
+from ci_shards import SUPERSEDED, AUTHORITY_SCOPES, ASSET_CONTEXT_SCOPES, CONTENT_REVISION_SCOPES, RELATION_SCOPES, STEPS, required_steps, collect_outcomes, checkout_identity, foreign_evidence
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--shard")
@@ -46,6 +46,7 @@ report = {
     "superseded_outcomes": SUPERSEDED,
     "authority_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in AUTHORITY_SCOPES.items()},
     "asset_context_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in ASSET_CONTEXT_SCOPES.items()},
+    "content_revision_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in CONTENT_REVISION_SCOPES.items()},
     "relation_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in RELATION_SCOPES.items()},
     "tests": [],
     "screenshots": [],

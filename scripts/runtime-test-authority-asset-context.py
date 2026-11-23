@@ -37,9 +37,14 @@ require, sha = read.require, read.sha
 _original_sources = read.sources
 NAMES = [*read.NAMES, '032_relation_candidate_validation.sql']
 
+def migrations():
+    actual = sorted(p.name for p in (ROOT / 'packages/db/migrations').glob('*.sql'))
+    require(actual[:len(NAMES)] == NAMES and actual[len(NAMES):] in ([], ['033_content_security_revisions.sql']),
+            'Exact immutable SQL001–032 prefix and declared033 successor required')
+    return list(NAMES)
+
 def sources():
-    require(sorted(p.name for p in (ROOT / 'packages/db/migrations').glob('*.sql')) == NAMES,
-            'Exactly immutable SQL001–032 required')
+    migrations()
     paths = {r['path'] for r in _original_sources()} | {
         NEW_TEST, 'scripts/runtime-test-authority-asset-context.py', 'scripts/test_authority_asset_context.py',
         'packages/db/migrations/032_relation_candidate_validation.sql'}
