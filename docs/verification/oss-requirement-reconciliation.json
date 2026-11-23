@@ -1,0 +1,868 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T07:57:07.963081+00:00",
+  "scope": "Implementation-state reconciliation of existing open-source repository controls and current narrow documentation/updater fixes",
+  "base_commit": "1db2f71c21bebe6e00b673066e909990ef71fa08",
+  "working_tree_dirty": true,
+  "changed_records": 41,
+  "verification_outcomes_changed": 0,
+  "release_qualified": false,
+  "baseline_parent_statuses_changed": 0,
+  "method": "Read actual clause text, implementation files and previously scoped evidence. Correct stale NOT_STARTED labels only where concrete implementation exists. IMPLEMENTED describes the exact child clause, not its parent programme or verification.",
+  "changes": [
+    {
+      "id": "OSS-004.01",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "README.md",
+        "CONTRIBUTING.md",
+        "GOVERNANCE.md",
+        "SECURITY.md"
+      ],
+      "remaining_gaps": [
+        "Private project conduct route, complete development/operations/release guides and updater coverage remain incomplete."
+      ]
+    },
+    {
+      "id": "OSS-004.02",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "README.md",
+        "docs/media/catalog.png",
+        "docs/media/asset-columns.png",
+        "docs/media/audit-history.png"
+      ],
+      "remaining_gaps": [
+        "Keep image provenance and first-run qualification tied to their actual revisions; do not infer a fresh onboarding pass from existing screenshots."
+      ]
+    },
+    {
+      "id": "OSS-004.03",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "CONTRIBUTING.md",
+        "docs/legal/DCO-1.1.txt"
+      ],
+      "remaining_gaps": [
+        "Independent newcomer execution and fork behavior remain verification work."
+      ]
+    },
+    {
+      "id": "OSS-004.04",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "GOVERNANCE.md",
+        "MAINTAINERS.md"
+      ],
+      "remaining_gaps": [
+        "Independent escalation is explicitly unassigned; complete the project escalation route before treating the whole clause as implemented."
+      ]
+    },
+    {
+      "id": "OSS-004.05",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "MAINTAINERS.md"
+      ],
+      "remaining_gaps": [
+        "Refresh permissions at qualification time; naming an owner does not prove independent review or staffed support."
+      ]
+    },
+    {
+      "id": "OSS-004.06",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "CODE_OF_CONDUCT.md",
+        "docs/legal/contributor-covenant-2.1.md",
+        "docs/legal/contributor-covenant-license-CC-BY-4.0.md",
+        "docs/legal/source-provenance.json"
+      ],
+      "remaining_gaps": [
+        "A functioning private project route for off-platform conduct and independent escalation remain unassigned; the GitHub abuse flow does not fill that project role."
+      ]
+    },
+    {
+      "id": "OSS-004.07",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "SECURITY.md"
+      ],
+      "remaining_gaps": [
+        "Actual private-form submission was not performed; do not claim end-to-end report handling or production security qualification."
+      ]
+    },
+    {
+      "id": "OSS-004.08",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "SUPPORT.md"
+      ],
+      "remaining_gaps": [
+        "A support-bundle generator is separately unfinished; instructions do not imply it exists."
+      ]
+    },
+    {
+      "id": "OSS-004.09",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        ".github/CODEOWNERS",
+        "scripts/github/bootstrap"
+      ],
+      "remaining_gaps": [
+        "Independent code-owner approval is not enforced by file existence; repository report preserves the solo-review limitation."
+      ]
+    },
+    {
+      "id": "OSS-004.10",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        ".github/ISSUE_TEMPLATE/bug.yml",
+        ".github/ISSUE_TEMPLATE/feature.yml",
+        ".github/ISSUE_TEMPLATE/connector.yml",
+        ".github/ISSUE_TEMPLATE/config.yml"
+      ],
+      "remaining_gaps": [
+        "No new submitted issue/form workflow was executed for this review."
+      ]
+    },
+    {
+      "id": "OSS-004.11",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        ".github/PULL_REQUEST_TEMPLATE.md"
+      ],
+      "remaining_gaps": [
+        "Template completion is a contributor/reviewer practice, not an automatically proven outcome."
+      ]
+    },
+    {
+      "id": "OSS-004.12",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        ".github/dependabot.yml"
+      ],
+      "remaining_gaps": [
+        "The updater configuration now covers npm, Actions, uv and both Dockerfiles; actual hosted Dependabot execution of the new entries remains unverified."
+      ]
+    },
+    {
+      "id": "OSS-004.13",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "docs/adr/0002-architecture-and-first-increment.md",
+        "docs/adr/0012-isolate-protected-session-provenance.md",
+        "docs/adr/0021-private-content-security-revisions.md"
+      ],
+      "remaining_gaps": [
+        "An ADR acceptance statement does not independently verify the feature; retain its separate native/runtime evidence."
+      ]
+    },
+    {
+      "id": "OSS-004.14",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "docs/development/authentication-foundation.md",
+        "docs/development/protected-authentication.md",
+        "docs/development/table-volume-quality.md",
+        "CONTRIBUTING.md"
+      ],
+      "remaining_gaps": [
+        "A coherent general debugging/troubleshooting guide, connector author guide and API-generation instructions are still missing from docs/development."
+      ]
+    },
+    {
+      "id": "OSS-004.16",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "docs/release/READINESS.md"
+      ],
+      "remaining_gaps": [
+        "Release checklist, compatibility policy, detailed support policy and artifact/signature verification instructions are not complete."
+      ]
+    },
+    {
+      "id": "OSS-004.18",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "SECURITY.md",
+        "CODE_OF_CONDUCT.md",
+        "MAINTAINERS.md"
+      ],
+      "remaining_gaps": [
+        "The separate requirement for a functioning project conduct route remains open under OSS-004.06.",
+        "No communication or collaborator invitation was performed by this review."
+      ]
+    },
+    {
+      "id": "OSS-004.20",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "CONTRIBUTING.md",
+        "policies/scan_secrets.py",
+        "scripts/requirements.py"
+      ],
+      "remaining_gaps": [
+        "Continue privacy review of publication scope; source scanning alone cannot prove all personal or proprietary material absent.",
+        "Current documented full-programme commands retain separate implementation and execution qualifications."
+      ]
+    },
+    {
+      "id": "OSS-006.01",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "CONTRIBUTING.md",
+        "package.json",
+        "pnpm-lock.yaml",
+        "python/uv.lock",
+        ".github/workflows/ci.yml",
+        "scripts/runtime.py"
+      ],
+      "remaining_gaps": [
+        "All required full-programme checks are not yet implemented locally and in CI; release-tool closure and newcomer reproduction remain open."
+      ]
+    },
+    {
+      "id": "OSS-006.02",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml",
+        ".github/workflows/runtime-security.yml"
+      ],
+      "remaining_gaps": [
+        "Trusted release/signing/SBOM publishing workflow is absent."
+      ]
+    },
+    {
+      "id": "OSS-006.03",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        "package.json",
+        "scripts/requirements.py"
+      ],
+      "remaining_gaps": [
+        "No general formatting/lint command is declared in package.json; complete API/schema and migration/generated-file policy coverage must be explicit."
+      ]
+    },
+    {
+      "id": "OSS-006.04",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        "policies/ci_evidence.py",
+        "policies/ci_shards.py",
+        "tests/unit",
+        "tests/integration",
+        "tests/e2e",
+        "tests/qualification",
+        "python/tests"
+      ],
+      "remaining_gaps": [
+        "This status describes existing behavior-CI implementation, not every product requirement or connector.",
+        "Current exact-source hosted outcomes and fork execution remain separate verification; historical counts must not be promoted to new-source passes."
+      ]
+    },
+    {
+      "id": "OSS-006.08",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml",
+        ".github/workflows/runtime-security.yml",
+        "policies/ci_evidence.py",
+        "policies/test_ci_evidence.py",
+        "policies/test_ci_shards.py"
+      ],
+      "remaining_gaps": [
+        "No external vendor matrix is automatically activated here; future optimization/release jobs must preserve this fail-closed behavior.",
+        "Hosted success/failure evidence applies only to its recorded revision."
+      ]
+    },
+    {
+      "id": "OSS-006.09",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml",
+        ".github/workflows/runtime-security.yml",
+        "CONTRIBUTING.md"
+      ],
+      "remaining_gaps": [
+        "Actual public-fork and Dependabot effective-permission/event qualification remains open; no verification status is changed."
+      ]
+    },
+    {
+      "id": "OSS-006.10",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml",
+        ".github/workflows/runtime-security.yml"
+      ],
+      "remaining_gaps": [
+        "Recheck new workflow additions; current absence does not establish safety of future release workflows."
+      ]
+    },
+    {
+      "id": "OSS-006.11",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml",
+        ".github/workflows/runtime-security.yml",
+        "scripts/github/bootstrap"
+      ],
+      "remaining_gaps": [
+        "Public-fork/Dependabot effective permissions remain unexecuted qualification; future trusted publication jobs require their own scoped permissions."
+      ]
+    },
+    {
+      "id": "OSS-006.12",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        ".github/action-pins.json",
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml",
+        ".github/workflows/runtime-security.yml"
+      ],
+      "remaining_gaps": [
+        "Re-verify updates and newly introduced transitive/reusable workflow dependencies; do not claim actions.lock was generated."
+      ]
+    },
+    {
+      "id": "OSS-007.02",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "docs/security/SAST.md",
+        "policies/sast.py",
+        ".github/workflows/security.yml"
+      ],
+      "remaining_gaps": [
+        "A separately licensed qualified private/internal fallback is not implemented; public-only CodeQL is not that fallback."
+      ]
+    },
+    {
+      "id": "OSS-007.03",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "SECURITY.md",
+        "scripts/github/bootstrap"
+      ],
+      "remaining_gaps": [
+        "A private deployment operator-configured reporting route remains separate and unimplemented; no test vulnerability was submitted."
+      ]
+    },
+    {
+      "id": "OSS-007.05",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "SECURITY.md",
+        "MAINTAINERS.md",
+        "docs/release/READINESS.md"
+      ],
+      "remaining_gaps": [
+        "The explicit supported-version table and supported-release/advisory/upgrade operating process are not complete."
+      ]
+    },
+    {
+      "id": "OSS-007.06",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "docs/security/threat-model.md",
+        "docs/security/asvs-map.md"
+      ],
+      "remaining_gaps": [
+        "The model describes an initial M1 snapshot; refresh its outdated statements/line references for current connectors, policy foundations and governance surfaces.",
+        "Complete applicable control map and independent security evidence remain open; no OpenSSF certification/badge is claimed."
+      ]
+    },
+    {
+      "id": "OSS-010.01",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "docs/verification/repository-readiness.md",
+        "docs/verification/repository-readiness.json"
+      ],
+      "remaining_gaps": [
+        "Current Markdown links the verified PR41 checkpoint and actual merge; historical settings evidence retains its original timestamp. A current complete settings/release reassessment remains separate."
+      ]
+    },
+    {
+      "id": "OSS-010.02",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "docs/product/STATUS.md",
+        "docs/release/READINESS.md",
+        "docs/verification/evidence-manifest.json"
+      ],
+      "remaining_gaps": [
+        "The full release/product acceptance set is incomplete; keep all parent completion and verification gates open."
+      ]
+    },
+    {
+      "id": "OSS-010.03",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "README.md",
+        "CONTRIBUTING.md",
+        "dev",
+        "scripts/runtime.py",
+        "scripts/runtime-bootstrap.py",
+        "deploy/compose/compose.yaml"
+      ],
+      "remaining_gaps": [
+        "Independent clean-checkout onboarding for the final supported profile/current revision remains a distinct qualification; no dependency on an existing private receipt may be added to first run."
+      ]
+    },
+    {
+      "id": "OSS-010.04",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "CONTRIBUTING.md",
+        ".github/workflows/ci.yml",
+        "policies/test_ci_evidence.py",
+        "policies/test_ci_shards.py"
+      ],
+      "remaining_gaps": [
+        "Public-fork qualification and current contributor-command accuracy are incomplete; correct outdated outcome counts."
+      ]
+    },
+    {
+      "id": "OSS-010.05",
+      "before": "NOT_STARTED",
+      "after": "IMPLEMENTED",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "scripts/github/bootstrap",
+        ".github/CODEOWNERS",
+        "GOVERNANCE.md",
+        "docs/verification/repository-readiness.md"
+      ],
+      "remaining_gaps": [
+        "Refresh settings when qualification is repeated; historical readback is not proof of every current rule or actual independent approval."
+      ]
+    },
+    {
+      "id": "OSS-010.06",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "policies/check_dependencies.py",
+        "policies/dependencies.yml",
+        "policies/license-exceptions.yml",
+        "docs/legal/dependency-inventory.json",
+        "docs/release/READINESS.md"
+      ],
+      "remaining_gaps": [
+        "Finished release artifacts, OS layers, Python distributions, optional drivers and required redistributed notices need complete license/SBOM qualification."
+      ]
+    },
+    {
+      "id": "OSS-010.07",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "policies/scan_secrets.py",
+        ".github/workflows/ci.yml",
+        "docs/legal/source-provenance.json",
+        "CONTRIBUTING.md"
+      ],
+      "remaining_gaps": [
+        "Scanner passes do not prove absence of all personal/employer/client materials; final publication fixtures/screenshots/docs/attachments require scoped privacy review."
+      ]
+    },
+    {
+      "id": "OSS-010.09",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "SECURITY.md",
+        "MAINTAINERS.md",
+        "CODE_OF_CONDUCT.md",
+        "docs/release/READINESS.md"
+      ],
+      "remaining_gaps": [
+        "Complete supported-release/version policy and operational reporting qualification; conduct escalation is separately incomplete."
+      ]
+    },
+    {
+      "id": "OSS-010.10",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "scripts/runtime-test-recovery.py",
+        "scripts/runtime.py",
+        "tests/qualification"
+      ],
+      "remaining_gaps": [
+        "Backup/restore and break-glass commands/evidence remain missing; runtime.py explicitly refuses unsupported backup/restore rather than returning success."
+      ]
+    },
+    {
+      "id": "OSS-010.11",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Implementation only; existing verification and release outcomes unchanged.",
+      "implementation_paths": [
+        "docs/product/STATUS.md",
+        "docs/execution/STATE.md",
+        "docs/release/READINESS.md",
+        "docs/verification/evidence-manifest.json"
+      ],
+      "remaining_gaps": [
+        "Full programme delivery remains incomplete and some repository/readiness references need current-state refresh; no final completion/release statement is justified."
+      ]
+    },
+    {
+      "id": "OSS-004.15",
+      "before": "NOT_STARTED",
+      "after": "IN_PROGRESS",
+      "scope": "Local core operations documentation only",
+      "implementation_paths": [
+        "docs/operations/local-core.md"
+      ],
+      "remaining_gaps": [
+        "The local core operations guide covers actual startup, receipt-backed restart, health, diagnostic logs and synthetic tests. Production deployment, backup/restore, incident and break-glass recovery remain incomplete."
+      ]
+    }
+  ],
+  "source_files": [
+    {
+      "path": ".github/CODEOWNERS",
+      "sha256": "c6edbe39d9fc927e93a74086a186dffc9f71fcad75e3b78f82895a020547c6a5"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug.yml",
+      "sha256": "2018de44cf3a47b7fc0126e78f67a75def63b63bffe539c6e869ab25fea91f30"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/config.yml",
+      "sha256": "f9d281c0c536e324e2e3167a16d6dc998d4733dfd402ce418a61ac88977f63a7"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/connector.yml",
+      "sha256": "ca57c2ac44aff9e073ae40154156889200883680379c081e88a49ec1e4854d07"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/feature.yml",
+      "sha256": "93fd1eee8c8de71b7447aedae2a0d7eaf7c7616b88440e72735a51d3531cff3c"
+    },
+    {
+      "path": ".github/PULL_REQUEST_TEMPLATE.md",
+      "sha256": "53efe93d375170d5bb0f6a8e45c02800d3624fba08265ebb2fa406c730a50952"
+    },
+    {
+      "path": ".github/action-pins.json",
+      "sha256": "37d4e8dfdbccad4a5dd7c3a188ed3112003b1924937fe27ca931c45480da41dd"
+    },
+    {
+      "path": ".github/dependabot.yml",
+      "sha256": "965061d49c009eaac6d4eb66f1c2697751cba8ba66ff742c99df96d31b431b40"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "5e0af97051658aea9b75d7bff0ef3b1da508a5734d1f1050e1fec82f0ef77253"
+    },
+    {
+      "path": ".github/workflows/runtime-security.yml",
+      "sha256": "750966db2c31dcdb6847fbce1076be172e50b7d8fd20a6a4ca29f32bcc8af1ba"
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "sha256": "60bacbb7ea2705f20aeec929e04cabb66b469ede19f423835717469c3221a55b"
+    },
+    {
+      "path": "CODE_OF_CONDUCT.md",
+      "sha256": "32d0f25d59bb429125458b1243d99dc5d6a1050e28adecba3e1d1d3740d4be69"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha256": "6b45844bc74e58e0acb8af39e410c8e8fea8ff2ab513d0ab1aa0bf0e147ee502"
+    },
+    {
+      "path": "GOVERNANCE.md",
+      "sha256": "b6620da3fc3906238de0b078dbf4e68d34ec998629b0d30c09334ff9d486a54c"
+    },
+    {
+      "path": "MAINTAINERS.md",
+      "sha256": "e8d489a816c7af233375b42f049c8cdf8219587a96ad8a7dd9dbbb02f83f4ba5"
+    },
+    {
+      "path": "README.md",
+      "sha256": "202675f14c8140cca450ceaf4f7a4f43824cdb694d5ae5bb00cc1c622bd37135"
+    },
+    {
+      "path": "SECURITY.md",
+      "sha256": "09da6a952ef280087dbdb32e82250691322fd769e4787b8246a1f027ffcfe6e5"
+    },
+    {
+      "path": "SUPPORT.md",
+      "sha256": "0679f527171d4c39ecfded14eaabfbb7186da38646c19f4ad4b719058dd76a5b"
+    },
+    {
+      "path": "deploy/compose/compose.yaml",
+      "sha256": "67ac5ccbf5a03ef83eca5720405007759d65cb118dca54830471766f7bb81e4e"
+    },
+    {
+      "path": "dev",
+      "sha256": "3933fa6fdbbca26f1af4f1ad9b299cc651b6c7a51448c1cfcfa3468c933a26a5"
+    },
+    {
+      "path": "docs/adr/0002-architecture-and-first-increment.md",
+      "sha256": "50b21725bdbfde16d7b7cffd366ac4e9fb9ade3a457970d002a0360cccafcc0e"
+    },
+    {
+      "path": "docs/adr/0012-isolate-protected-session-provenance.md",
+      "sha256": "cdf67feb2074b454e6a31c0146119eee785058deb1f80a5a39e818d40dd32aa8"
+    },
+    {
+      "path": "docs/adr/0021-private-content-security-revisions.md",
+      "sha256": "9f6e51f38021789ccdb56915a99da2f5db265b7fbf8dec854da5841f8a9abd19"
+    },
+    {
+      "path": "docs/development/authentication-foundation.md",
+      "sha256": "046ce64f7c00099068e8ab32a890beb7a5d7912489889b22be33d52eafdc3070"
+    },
+    {
+      "path": "docs/development/protected-authentication.md",
+      "sha256": "ec2613c14d0c8905550c53eb3c26a945177ee8692b4e6a3ea46fc14b59ea5741"
+    },
+    {
+      "path": "docs/development/table-volume-quality.md",
+      "sha256": "898efebe79046754704b1ba4127e8a7115e3ac3fd1aafe597cfea7951be8a614"
+    },
+    {
+      "path": "docs/execution/STATE.md",
+      "sha256": "b21aac52cba81c0132fb3c8160106661c21dbd59c8a272fa437bbe53d1aa5927"
+    },
+    {
+      "path": "docs/legal/DCO-1.1.txt",
+      "sha256": "f7ac75b443f4ca16b503241344b41aeff9503b0c30bedc2b119551d83cb0fa90"
+    },
+    {
+      "path": "docs/legal/contributor-covenant-2.1.md",
+      "sha256": "c1a8d6aca7701da989fd35287e3a01329eaf57e609e30151481d882183d2ee74"
+    },
+    {
+      "path": "docs/legal/contributor-covenant-license-CC-BY-4.0.md",
+      "sha256": "81156f8a90f8614a5c5e0a4f7e8ce9b14fb371f8e8a9b0f128a9071ae8f809c6"
+    },
+    {
+      "path": "docs/legal/dependency-inventory.json",
+      "sha256": "d9583dbc6a4df0ea33fbf0b5a9649f5e9068f968c3b60730c77e62989e1ba7be"
+    },
+    {
+      "path": "docs/legal/source-provenance.json",
+      "sha256": "9d7616ab30b67db3a6a84e238fd2d1781b43e3e05f7aadd21d494e41178787a3"
+    },
+    {
+      "path": "docs/media/asset-columns.png",
+      "sha256": "ef579610aedfb86834e9bd2727d0bf8c0629a8e21a2bdbc74099c0dc71db583d"
+    },
+    {
+      "path": "docs/media/audit-history.png",
+      "sha256": "885ff02b0baf4043a6eb63c56a17bba95cffb3e48811ca091318e32171bd0541"
+    },
+    {
+      "path": "docs/media/catalog.png",
+      "sha256": "e8f3d1f7dbf88ea03a731387aa49d7d55337acef92b54901e895d610a3ca7baf"
+    },
+    {
+      "path": "docs/operations/local-core.md",
+      "sha256": "42dd0df36eb917f7e6c060af601d5d29f6b8e3dc33658fed35f8694ea4932d20"
+    },
+    {
+      "path": "docs/product/STATUS.md",
+      "sha256": "58d4a2ffb0e8c01a521eb5d5506499da1d72ce8843ee180fad709d3b8efecd64"
+    },
+    {
+      "path": "docs/release/READINESS.md",
+      "sha256": "513874ec58c6016ff4d968dd2b8e9654ba4d9cb3a0035d43d4a05f7626bbc9c6"
+    },
+    {
+      "path": "docs/security/SAST.md",
+      "sha256": "bfaf0e9a66a2a3a711a035a4b215cce6597900d10221151bc3fc3e21a28e22a6"
+    },
+    {
+      "path": "docs/security/asvs-map.md",
+      "sha256": "cc05ee71e6a5a3561243cc053d7dc771da24b0a81c7218da77162951e77c7bf2"
+    },
+    {
+      "path": "docs/security/threat-model.md",
+      "sha256": "a69afc5becc5128356421f245e3cae6f4dfc30869bb880ec00650aece43e08fc"
+    },
+    {
+      "path": "docs/verification/repository-readiness.json",
+      "sha256": "f5a710320096c056101302b01aefcfc7a1d84c1f53c8996f0847f6dd77eea01b"
+    },
+    {
+      "path": "docs/verification/repository-readiness.md",
+      "sha256": "bd19119a452424fac8aeb6eda69edc3fa0a4089526c431179755485b91899a08"
+    },
+    {
+      "path": "package.json",
+      "sha256": "fe4a1b1dc13991ab42114164382d808f0e93e483403c188236331ee370b09a12"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "49f347e0549a326aa51aeee5caf188c6e4f25e54afe6f8766cc387f5a39304a4"
+    },
+    {
+      "path": "policies/check_dependencies.py",
+      "sha256": "91bc1badc641f19936016689c9e9634152137ed4781e9ba975f89c48b32dc6fe"
+    },
+    {
+      "path": "policies/ci_evidence.py",
+      "sha256": "7ef750e0d70cd9d0ba769542e74939a3c834afc0f88693ce3cb1a082e9afd486"
+    },
+    {
+      "path": "policies/ci_shards.py",
+      "sha256": "fd56308646a324af08b2805c75a696f04828d4ac02d748a8afc1576f498ba380"
+    },
+    {
+      "path": "policies/dependencies.yml",
+      "sha256": "358f1af7ddb4f8202348e846f27042c176ea920de01a2bd649e95c4cae82211d"
+    },
+    {
+      "path": "policies/license-exceptions.yml",
+      "sha256": "9f2f08c972580b15a1ea4933f980dd9e6db8a0df1c7b428dfe83463be77c8b49"
+    },
+    {
+      "path": "policies/sast.py",
+      "sha256": "830b57f1d4d4cb8d37f98198018f63aa16cc7043e9fdc57e87f573259607dae7"
+    },
+    {
+      "path": "policies/scan_secrets.py",
+      "sha256": "dbc99431f3cf231057e55e20388e3fcf99e343656030db484ddbbdf2a11e695e"
+    },
+    {
+      "path": "policies/test_ci_evidence.py",
+      "sha256": "5687a7120ae569afbe33d3cd1a6a93222e3ed71f94a3a1bf8ebc14c45ecb470e"
+    },
+    {
+      "path": "policies/test_ci_shards.py",
+      "sha256": "0277bf15c2755ab87607cf41da5bb0d2ac0870d5a633bce238bb662ce50953f6"
+    },
+    {
+      "path": "python/uv.lock",
+      "sha256": "7df05ec5afb240c8eeb25b63dc37bed1bdc72965a173d627177053ecd2c73674"
+    },
+    {
+      "path": "scripts/github/bootstrap",
+      "sha256": "7ef124d80e0884cf2036adf9b6471610044805b9a5dbeaf51fc06d46d3de9138"
+    },
+    {
+      "path": "scripts/requirements.py",
+      "sha256": "8b1a7c57a7c57e42061c938b65d738897982d3d7bcc20460152e2142e33927eb"
+    },
+    {
+      "path": "scripts/runtime-bootstrap.py",
+      "sha256": "7e9227f78300c820b69eed5edbaa770851ee67ec766c95f4fe308ba47c8565fa"
+    },
+    {
+      "path": "scripts/runtime-test-recovery.py",
+      "sha256": "ded9d3cdbb0b68c531cdd4905599a5f33cbb737956155c178304e8d694e40d5f"
+    },
+    {
+      "path": "scripts/runtime.py",
+      "sha256": "08d12e8a33beb2b8381bcdd98a050720b7071d4f054be915f4b9e6c8981122c4"
+    }
+  ],
+  "updater_configuration": {
+    "ecosystems": [
+      "npm",
+      "github-actions",
+      "uv",
+      "docker"
+    ],
+    "python_directory": "/python",
+    "docker_directories": [
+      "/",
+      "/python"
+    ],
+    "configuration_validation": "PASS using installed yaml2.9.1; existing npm/Actions entries preserved",
+    "new_hosted_dependabot_execution": "NOT_RUN",
+    "official_references": [
+      "https://docs.github.com/en/code-security/reference/supply-chain-security/supported-ecosystems-and-repositories",
+      "https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference"
+    ]
+  },
+  "limitations": [
+    "All5530 per-record verification outcomes remain unchanged. This is an implementation audit, not new execution of those controls.",
+    "Private project conduct contact, independent human approvals, signed releases, complete operations/deployment and full product capability remain open."
+  ],
+  "evidence_index_note": "The evidence manifest indexes this record and is deliberately not self-hashed here. All other listed implementation inputs are hashed separately."
+}

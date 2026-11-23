@@ -1,0 +1,682 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T07:12:50.849454+00:00",
+  "scope": "local-arm64-runtime-security-patches",
+  "result": "PASS",
+  "release_qualified": false,
+  "claim": "All 15 previously identified fixable package/advisory findings are absent from the two new local arm64 image reports; all 35 prior Debian findings remain visible and unchanged.",
+  "source_binding": {
+    "base_commit": "82a4c93a0a703204242175e719952594957365ee",
+    "current_base_commit": "296d1e59abb8f7103390efca371921593415b219",
+    "same_base_tree_verified": "89d3e0a0f6db6cdb13e19c66dde74912055923f7",
+    "working_tree_dirty_at_scan": true,
+    "final_commit_binding_pending": true,
+    "source_files": [
+      {
+        "path": ".dockerignore",
+        "sha256": "c865503e879c0d5f8ddf85648726a533ebc0313ca9f905e30b68b23ed4c1f014"
+      },
+      {
+        "path": ".github/workflows/runtime-security.yml",
+        "sha256": "750966db2c31dcdb6847fbce1076be172e50b7d8fd20a6a4ca29f32bcc8af1ba"
+      },
+      {
+        "path": "Dockerfile",
+        "sha256": "1235dfacb327c700737a13262fa5416e692dcf0f1834831f1df2f022b63b484c"
+      },
+      {
+        "path": "package.json",
+        "sha256": "fe4a1b1dc13991ab42114164382d808f0e93e483403c188236331ee370b09a12"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "49f347e0549a326aa51aeee5caf188c6e4f25e54afe6f8766cc387f5a39304a4"
+      },
+      {
+        "path": "policies/scan_images.py",
+        "sha256": "235f059fd90f903a173a22a83a157c52f6e5a4e006a60ea635f71dec1b1951b7"
+      },
+      {
+        "path": "policies/security-tools.json",
+        "sha256": "e97fde903e5cdf1bde08c8ee16678172a59b0901b460985c878912a05726c779"
+      },
+      {
+        "path": "python/Dockerfile",
+        "sha256": "e29aff0893cb955eef9d2135119f4837ebb0aa980203a35e10246b6f39d5efa4"
+      },
+      {
+        "path": "scripts/runtime.py",
+        "sha256": "3b5604a69946e7e2d9288406d180fb199e7d10c3980c4c3a3687e29a67516bd2"
+      }
+    ],
+    "image_source_readback_status": "PASS in separately recorded exact candidate-image readback",
+    "source_freeze_sha256": "089c3ce3827dd90b59ffbee71bb15e9d5d939b0cece8dc1737dfb414b0543023",
+    "historical_control_note": "The runtime.py digest is the control source at scan time. The later receipt-backed launcher is separately source-bound and qualified in runtime-security-patches-integrated-local.json; no old scan is relabelled."
+  },
+  "baseline": {
+    "implementation_commit": "4cbde6a90b4758b28ced7ab3356bb8818ad667a5",
+    "tested_merge_commit": "cc2049656ad371e0bedd4933a98942360544d44d",
+    "run_id": 45122625155,
+    "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45122625155",
+    "architecture_compared": "arm64",
+    "authenticated_receipt_sha256": "ed3d62bcc7f387b3dcabb5eef7ee6cd35754cc51b4e617b2af0cc5f7d9846c02"
+  },
+  "images": [
+    {
+      "profile": "application",
+      "architecture": "arm64",
+      "image": "sha256:4883abeb5edcbcf5edbaf83b8ab846e4ac78b2a8ef2841ed1dfafc1fb70fa671",
+      "scanner_version": "0.74.0",
+      "scanner_sha256": "0ed07c205ca9ecc1065dc57b9f9f77adc79393bb469d9d1de9ec90c8c94ffc2f",
+      "counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 12,
+        "MEDIUM": 20,
+        "UNKNOWN": 3
+      },
+      "packages": 712,
+      "package_counts": {
+        "debian": 10,
+        "node-pkg": 301,
+        "cargo": 401
+      },
+      "updated_packages": {
+        "@temporalio/activity": "1.26.0",
+        "@temporalio/client": "1.26.0",
+        "@temporalio/common": "1.26.0",
+        "@temporalio/core-bridge": "1.26.0",
+        "@temporalio/nexus": "1.26.0",
+        "@temporalio/proto": "1.26.0",
+        "@temporalio/worker": "1.26.0",
+        "@temporalio/workflow": "1.26.0",
+        "rustls": "0.23.46"
+      },
+      "database_updated_at": "2026-11-23T01:05:17.578400694Z",
+      "database_age_seconds_at_completion": 21119.303,
+      "started_at": "2026-11-23T06:56:43.653176+00:00",
+      "finished_at": "2026-11-23T06:57:16.881125+00:00",
+      "report_sha256": "9d846dede174d1b7aad75dc40e630da9cd60acbd156f403316b7a5e18188be59",
+      "summary_sha256": "7ae8e3353c88b0834b55a1c211a9383777162d62a33f0984519036f4929769e2",
+      "empty_ignore_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "scan_command": [
+        "trivy",
+        "image",
+        "--image-src",
+        "docker",
+        "--timeout",
+        "5m",
+        "--scanners",
+        "vuln",
+        "--list-all-pkgs",
+        "--ignorefile",
+        "empty-ignore",
+        "--format",
+        "json",
+        "--no-progress",
+        "--output",
+        "image.json",
+        "sha256:4883abeb5edcbcf5edbaf83b8ab846e4ac78b2a8ef2841ed1dfafc1fb70fa671"
+      ],
+      "baseline_image": "sha256:57cf225d3da288326ad10300f89a4e1f9583239597c05984f2748800da9ddef3",
+      "baseline_report_sha256": "93392eddcc8a502f8b608c0c508b3fa4e41ce400e01f63b132bcbc9ad46cb90d",
+      "baseline_counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 14,
+        "MEDIUM": 22,
+        "UNKNOWN": 3
+      },
+      "baseline_packages": 692,
+      "new_findings": 0,
+      "removed_package_advisory_findings": 4,
+      "retained_findings": 35
+    },
+    {
+      "profile": "python-worker",
+      "architecture": "arm64",
+      "image": "sha256:0afa1349514bc5a3536fc91120f6c9d5fe911be5b4ca4a5b7235b0accd1cf4ad",
+      "scanner_version": "0.74.0",
+      "scanner_sha256": "0ed07c205ca9ecc1065dc57b9f9f77adc79393bb469d9d1de9ec90c8c94ffc2f",
+      "counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 0,
+        "MEDIUM": 0,
+        "UNKNOWN": 0
+      },
+      "packages": 32,
+      "package_counts": {
+        "alpine": 30,
+        "python-pkg": 2
+      },
+      "updated_packages": {
+        "libcrypto3": "3.5.9-r1",
+        "libssl3": "3.5.9-r1",
+        "zlib": "1.4-r0"
+      },
+      "database_updated_at": "2026-11-23T01:05:17.578400694Z",
+      "database_age_seconds_at_completion": 21245.963,
+      "started_at": "2026-11-23T06:59:22.684825+00:00",
+      "finished_at": "2026-11-23T06:59:23.541784+00:00",
+      "report_sha256": "9839c645915c33e186592e8170baf6b83af12ab29b0c79439e7c7b782a790cf2",
+      "summary_sha256": "a96875cea30e5c7fefb6d9267897b2fe1a61de7968f3a9b77c123cdc16a9445d",
+      "empty_ignore_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "scan_command": [
+        "trivy",
+        "image",
+        "--image-src",
+        "docker",
+        "--timeout",
+        "5m",
+        "--scanners",
+        "vuln",
+        "--list-all-pkgs",
+        "--ignorefile",
+        "empty-ignore",
+        "--format",
+        "json",
+        "--no-progress",
+        "--output",
+        "image.json",
+        "sha256:0afa1349514bc5a3536fc91120f6c9d5fe911be5b4ca4a5b7235b0accd1cf4ad"
+      ],
+      "baseline_image": "sha256:340a9fff54a070fc8e5fd310f675c1c02aa227cf1acc6f8353004b2d5fd76e69",
+      "baseline_report_sha256": "72a5ced73ae8fbf751f419151b3eb18fc25fb9a263c85fff74c340f70a5658c7",
+      "baseline_counts": {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "LOW": 4,
+        "MEDIUM": 7,
+        "UNKNOWN": 0
+      },
+      "baseline_packages": 32,
+      "new_findings": 0,
+      "removed_package_advisory_findings": 11,
+      "retained_findings": 0
+    }
+  ],
+  "comparison": {
+    "prior_package_advisory_findings": 50,
+    "current_package_advisory_findings": 35,
+    "removed_package_advisory_findings": 15,
+    "removed_distinct_advisory_ids": 10,
+    "removed_severity_counts": {
+      "MEDIUM": 9,
+      "LOW": 6
+    },
+    "new_package_advisory_findings": 0,
+    "same_recorded_database_update_as_baseline": true,
+    "suppression_files_empty": true,
+    "ignore_unfixed_used": false,
+    "severity_filter_used": false,
+    "all_detected_package_inventories_retained": true,
+    "cargo_inventory_retained": true,
+    "removed": [
+      {
+        "profile": "application",
+        "ecosystem": "cargo",
+        "component": "rustls",
+        "id": "GHSA-2mjx-qc3c-rqvc",
+        "prior_version": "0.23.36",
+        "severity": "MEDIUM"
+      },
+      {
+        "profile": "application",
+        "ecosystem": "cargo",
+        "component": "rustls",
+        "id": "GHSA-c8m5-c952-6cm4",
+        "prior_version": "0.23.36",
+        "severity": "MEDIUM"
+      },
+      {
+        "profile": "application",
+        "ecosystem": "cargo",
+        "component": "rustls",
+        "id": "GHSA-h2v8-394m-p7vv",
+        "prior_version": "0.23.36",
+        "severity": "LOW"
+      },
+      {
+        "profile": "application",
+        "ecosystem": "cargo",
+        "component": "rustls",
+        "id": "GHSA-w44r-93j7-qv28",
+        "prior_version": "0.23.36",
+        "severity": "LOW"
+      },
+      {
+        "profile": "python-worker",
+        "ecosystem": "alpine",
+        "component": "libcrypto3",
+        "id": "CVE-2026-107496",
+        "prior_version": "3.5.9-r0",
+        "severity": "MEDIUM"
+      },
+      {
+        "profile": "python-worker",
+        "ecosystem": "alpine",
+        "component": "libcrypto3",
+        "id": "CVE-2026-88822",
+        "prior_version": "3.5.9-r0",
+        "severity": "LOW"
+      },
+      {
+        "profile": "python-worker",
+        "ecosystem": "alpine",
+        "component": "libcrypto3",
+        "id": "CVE-2026-88823",
+        "prior_version": "3.5.9-r0",
+        "severity": "LOW"
+      },
+      {
+        "profile": "python-worker",
+        "ecosystem": "alpine",
+        "component": "libcrypto3",
+        "id": "CVE-2026-95691",
+        "prior_version": "3.5.9-r0",
+        "severity": "MEDIUM"
+      },
+      {
+        "profile": "python-worker",
+        "ecosystem": "alpine",
+        "component": "libcrypto3",
+        "id": "CVE-2026-95692",
+        "prior_version": "3.5.9-r0",
+        "severity": "MEDIUM"
+      },
+      {
+        "profile": "python-worker",
+        "ecosystem": "alpine",
+        "component": "libssl3",
+        "id": "CVE-2026-107496",
+        "prior_version": "3.5.9-r0",
+        "severity": "MEDIUM"
+      },
+      {
+        "profile": "python-worker",
+        "ecosystem": "alpine",
+        "component": "libssl3",
+        "id": "CVE-2026-88822",
+        "prior_version": "3.5.9-r0",
+        "severity": "LOW"
+      },
+      {
+        "profile": "python-worker",
+        "ecosystem": "alpine",
+        "component": "libssl3",
+        "id": "CVE-2026-88823",
+        "prior_version": "3.5.9-r0",
+        "severity": "LOW"
+      },
+      {
+        "profile": "python-worker",
+        "ecosystem": "alpine",
+        "component": "libssl3",
+        "id": "CVE-2026-95691",
+        "prior_version": "3.5.9-r0",
+        "severity": "MEDIUM"
+      },
+      {
+        "profile": "python-worker",
+        "ecosystem": "alpine",
+        "component": "libssl3",
+        "id": "CVE-2026-95692",
+        "prior_version": "3.5.9-r0",
+        "severity": "MEDIUM"
+      },
+      {
+        "profile": "python-worker",
+        "ecosystem": "alpine",
+        "component": "zlib",
+        "id": "CVE-2026-4738",
+        "prior_version": "1.3.2-r1",
+        "severity": "MEDIUM"
+      }
+    ],
+    "remaining_debian": [
+      {
+        "component": "gcc-14-base",
+        "id": "CVE-2026-102010",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-102010"
+      },
+      {
+        "component": "gcc-14-base",
+        "id": "CVE-2026-114690",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-114690"
+      },
+      {
+        "component": "gcc-14-base",
+        "id": "CVE-2026-114691",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-114691"
+      },
+      {
+        "component": "gcc-14-base",
+        "id": "CVE-2026-115455",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-115455"
+      },
+      {
+        "component": "gcc-14-base",
+        "id": "CVE-2026-125709",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "unfixed-without-trixie-exception",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-125709"
+      },
+      {
+        "component": "gcc-14-base",
+        "id": "CVE-2026-95619",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-95619"
+      },
+      {
+        "component": "gcc-14-base",
+        "id": "CVE-2026-115456",
+        "version": "14.2.0-19",
+        "severity": "LOW",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-115456"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2026-115819",
+        "version": "2.41-12+deb13u5",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-115819"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2026-84243",
+        "version": "2.41-12+deb13u5",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-84243"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2010-4756",
+        "version": "2.41-12+deb13u5",
+        "severity": "LOW",
+        "fixed_version": null,
+        "vendor_disposition": "unimportant",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2010-4756"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2018-20796",
+        "version": "2.41-12+deb13u5",
+        "severity": "LOW",
+        "fixed_version": null,
+        "vendor_disposition": "unimportant",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2018-20796"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2019-1010022",
+        "version": "2.41-12+deb13u5",
+        "severity": "LOW",
+        "fixed_version": null,
+        "vendor_disposition": "unimportant",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2019-1010022"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2019-1010023",
+        "version": "2.41-12+deb13u5",
+        "severity": "LOW",
+        "fixed_version": null,
+        "vendor_disposition": "unimportant",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2019-1010023"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2019-1010024",
+        "version": "2.41-12+deb13u5",
+        "severity": "LOW",
+        "fixed_version": null,
+        "vendor_disposition": "unimportant",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2019-1010024"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2019-1010025",
+        "version": "2.41-12+deb13u5",
+        "severity": "LOW",
+        "fixed_version": null,
+        "vendor_disposition": "unimportant",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2019-1010025"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2019-9192",
+        "version": "2.41-12+deb13u5",
+        "severity": "LOW",
+        "fixed_version": null,
+        "vendor_disposition": "unimportant",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2019-9192"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2026-100290",
+        "version": "2.41-12+deb13u5",
+        "severity": "LOW",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-100290"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2026-126765",
+        "version": "2.41-12+deb13u5",
+        "severity": "LOW",
+        "fixed_version": null,
+        "vendor_disposition": "unfixed-without-trixie-exception",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-126765"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2026-121757",
+        "version": "2.41-12+deb13u5",
+        "severity": "UNKNOWN",
+        "fixed_version": null,
+        "vendor_disposition": "unfixed-without-trixie-exception",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-121757"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2026-121758",
+        "version": "2.41-12+deb13u5",
+        "severity": "UNKNOWN",
+        "fixed_version": null,
+        "vendor_disposition": "unfixed-without-trixie-exception",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-121758"
+      },
+      {
+        "component": "libc6",
+        "id": "CVE-2026-124024",
+        "version": "2.41-12+deb13u5",
+        "severity": "UNKNOWN",
+        "fixed_version": null,
+        "vendor_disposition": "unfixed-without-trixie-exception",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-124024"
+      },
+      {
+        "component": "libgcc-s1",
+        "id": "CVE-2026-102010",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-102010"
+      },
+      {
+        "component": "libgcc-s1",
+        "id": "CVE-2026-114690",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-114690"
+      },
+      {
+        "component": "libgcc-s1",
+        "id": "CVE-2026-114691",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-114691"
+      },
+      {
+        "component": "libgcc-s1",
+        "id": "CVE-2026-115455",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-115455"
+      },
+      {
+        "component": "libgcc-s1",
+        "id": "CVE-2026-125709",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "unfixed-without-trixie-exception",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-125709"
+      },
+      {
+        "component": "libgcc-s1",
+        "id": "CVE-2026-95619",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-95619"
+      },
+      {
+        "component": "libgcc-s1",
+        "id": "CVE-2026-115456",
+        "version": "14.2.0-19",
+        "severity": "LOW",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-115456"
+      },
+      {
+        "component": "libstdc++6",
+        "id": "CVE-2026-102010",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-102010"
+      },
+      {
+        "component": "libstdc++6",
+        "id": "CVE-2026-114690",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-114690"
+      },
+      {
+        "component": "libstdc++6",
+        "id": "CVE-2026-114691",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-114691"
+      },
+      {
+        "component": "libstdc++6",
+        "id": "CVE-2026-115455",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-115455"
+      },
+      {
+        "component": "libstdc++6",
+        "id": "CVE-2026-125709",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "unfixed-without-trixie-exception",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-125709"
+      },
+      {
+        "component": "libstdc++6",
+        "id": "CVE-2026-95619",
+        "version": "14.2.0-19",
+        "severity": "MEDIUM",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-95619"
+      },
+      {
+        "component": "libstdc++6",
+        "id": "CVE-2026-115456",
+        "version": "14.2.0-19",
+        "severity": "LOW",
+        "fixed_version": null,
+        "vendor_disposition": "no-dsa-minor-issue",
+        "reference": "https://security-tracker.debian.org/tracker/CVE-2026-115456"
+      }
+    ]
+  },
+  "scanner_provenance": {
+    "version": "0.74.0",
+    "host_platform": "darwin_arm64",
+    "official_archive_url": "https://github.com/aquasecurity/trivy/releases/download/v0.74.0/trivy_0.74.0_macOS-ARM64.tar.gz",
+    "pinned_archive_sha256": "1caada5e0e2091909357c7525d3aa76f4b660b13821bc143b190c7483e31cc11",
+    "installed_binary_sha256_rechecked": "0ed07c205ca9ecc1065dc57b9f9f77adc79393bb469d9d1de9ec90c8c94ffc2f",
+    "signature_verification_claimed": false
+  },
+  "retained_failure": {
+    "profile": "python-worker",
+    "attempt": 1,
+    "result": "FAIL",
+    "complete": false,
+    "phase": "scanner-admission",
+    "summary_sha256": "c6fc2ba63d1a89aef603b79612cb8b82c2363c8a39990584d865729bee500ec9",
+    "success_attempt": 2
+  },
+  "limitations": [
+    "This comparison covers Linux arm64 images built locally. Native amd64 rebuild, scans and hosted pipeline qualification for this increment are pending.",
+    "Dirty-tree builds bind the base commit plus listed source hashes; no new final-commit or clean-tree image provenance is claimed.",
+    "Full reports and source-file hashes were rechecked offline. Image source readback, runtime imports, Python runtime units, actual source conformance and Temporal replay are separate checks and are not claimed here.",
+    "The database update timestamp is the same as the baseline and is less than 48 hours old at each scan. Database bytes were not independently verified by this comparison.",
+    "Zero worker findings means none detected in the complete reported Alpine and Python package scopes, not absence of all vulnerabilities or binary exploitability proof.",
+    "Debian no-dsa/unimportant dispositions do not suppress findings or constitute product risk acceptance; three UNKNOWN findings remain UNKNOWN.",
+    "Infrastructure images, application SAST/DAST, secrets, external integrations, release signing and complete enterprise release qualification are outside this local image comparison."
+  ],
+  "integrated_evidence": "docs/verification/runtime-security-patches-integrated-local.json"
+}

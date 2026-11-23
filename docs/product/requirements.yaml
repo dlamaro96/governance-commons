@@ -64314,7 +64314,9 @@
       "owner": "unassigned",
       "milestone": "M0",
       "partial_evidence": [
-        "docs/verification/business-domains-seed-runtime.json"
+        "docs/verification/business-domains-seed-runtime.json",
+        "docs/verification/runtime-security-patches-local.json",
+        "docs/verification/runtime-security-patches-integrated-local.json"
       ]
     },
     {
@@ -66759,8 +66761,13 @@
         "Ship meaningful versions of the following files, using the repository's actual layout and commands:"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "README.md",
+        "CONTRIBUTING.md",
+        "GOVERNANCE.md",
+        "SECURITY.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -66789,9 +66796,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Private project conduct route, complete development/operations/release guides and updater coverage remain incomplete."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.02",
@@ -66817,8 +66830,13 @@
         "| `README.md` | Product purpose, real screenshot, first-run command, supported profiles, feature/status matrix, links to docs and license, actual limitations. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        "README.md",
+        "docs/media/catalog.png",
+        "docs/media/asset-columns.png",
+        "docs/media/audit-history.png"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -66847,9 +66865,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Keep image provenance and first-run qualification tied to their actual revisions; do not infer a fresh onboarding pass from existing screenshots."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/evidence-manifest.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.03",
@@ -66875,8 +66899,11 @@
         "| `CONTRIBUTING.md` | Setup, repository map, test commands, first issue path, contribution workflow, DCO, review expectations, migrations and connector changes. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        "CONTRIBUTING.md",
+        "docs/legal/DCO-1.1.txt"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -66905,9 +66932,16 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Independent newcomer execution and fork behavior remain verification work."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/repository-backlog.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.04",
@@ -66933,8 +66967,11 @@
         "| `GOVERNANCE.md` | Current maintainers, decision process, maintainer onboarding/removal, conflicts, escalation and amendment process. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "GOVERNANCE.md",
+        "MAINTAINERS.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -66963,9 +67000,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Independent escalation is explicitly unassigned; complete the project escalation route before treating the whole clause as implemented."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.05",
@@ -66991,8 +67034,10 @@
         "| `MAINTAINERS.md` | Real GitHub identities, areas and actual responsibilities; identify unassigned areas honestly. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        "MAINTAINERS.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67021,9 +67066,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Refresh permissions at qualification time; naming an owner does not prove independent review or staffed support."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.06",
@@ -67049,8 +67100,13 @@
         "| `CODE_OF_CONDUCT.md` | A recognized, correctly attributed code of conduct and a functioning private reporting route. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "CODE_OF_CONDUCT.md",
+        "docs/legal/contributor-covenant-2.1.md",
+        "docs/legal/contributor-covenant-license-CC-BY-4.0.md",
+        "docs/legal/source-provenance.json"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67079,9 +67135,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: A functioning private project route for off-platform conduct and independent escalation remain unassigned; the GitHub abuse flow does not fill that project role."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.07",
@@ -67107,8 +67169,10 @@
         "| `SECURITY.md` | Supported versions, private reporting route, triage/disclosure process, realistic response targets, known security boundaries. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        "SECURITY.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67137,9 +67201,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Actual private-form submission was not performed; do not claim end-to-end report handling or production security qualification."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.08",
@@ -67165,8 +67235,10 @@
         "| `SUPPORT.md` | Community support routes, what evidence to include, redaction instructions and the absence of an uncontracted SLA. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        "SUPPORT.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67195,9 +67267,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: A support-bundle generator is separately unfinished; instructions do not imply it exists."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.09",
@@ -67223,8 +67301,11 @@
         "| `.github/CODEOWNERS` | Real users/teams with sufficient repository permission; explicit ownership for this file and security/release code. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        ".github/CODEOWNERS",
+        "scripts/github/bootstrap"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67253,9 +67334,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Independent code-owner approval is not enforced by file existence; repository report preserves the solo-review limitation."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.10",
@@ -67281,8 +67368,13 @@
         "| `.github/ISSUE_TEMPLATE/` | Bug, feature and connector forms with required reproducibility/context fields and a private-security-report link. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        ".github/ISSUE_TEMPLATE/bug.yml",
+        ".github/ISSUE_TEMPLATE/feature.yml",
+        ".github/ISSUE_TEMPLATE/connector.yml",
+        ".github/ISSUE_TEMPLATE/config.yml"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67311,9 +67403,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: No new submitted issue/form workflow was executed for this review."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.11",
@@ -67339,8 +67437,10 @@
         "| `.github/PULL_REQUEST_TEMPLATE.md` | Problem, behavior change, tests, security/data impact, migration/compatibility, screenshots when relevant, linked issue and checklist. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        ".github/PULL_REQUEST_TEMPLATE.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67369,9 +67469,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Template completion is a contributor/reviewer practice, not an automatically proven outcome."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.12",
@@ -67397,8 +67503,10 @@
         "| `.github/dependabot.yml` or equivalent | Supported ecosystems and Actions updates, with bounded scheduling and grouping. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        ".github/dependabot.yml"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67427,9 +67535,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: The updater configuration now covers npm, Actions, uv and both Dockerfiles; actual hosted Dependabot execution of the new entries remains unverified."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/dependency-actions-hosted.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.13",
@@ -67455,8 +67569,12 @@
         "| `docs/adr/` | Real architectural decisions, alternatives, consequences and supersession links. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        "docs/adr/0002-architecture-and-first-increment.md",
+        "docs/adr/0012-isolate-protected-session-provenance.md",
+        "docs/adr/0021-private-content-security-revisions.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67485,9 +67603,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: An ADR acceptance statement does not independently verify the feature; retain its separate native/runtime evidence."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/content-security-revision-local.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.14",
@@ -67513,8 +67637,13 @@
         "| `docs/development/` | Code map, local debugging, test fixtures, connector author guide, API generation and troubleshooting. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/development/authentication-foundation.md",
+        "docs/development/protected-authentication.md",
+        "docs/development/table-volume-quality.md",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67543,9 +67672,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: A coherent general debugging/troubleshooting guide, connector author guide and API-generation instructions are still missing from docs/development."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/authentication-foundation.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.15",
@@ -67571,8 +67706,10 @@
         "| `docs/operations/` | Deployment, configuration, upgrades, backup/restore, incident response and recovery. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/operations/local-core.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67601,9 +67738,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "The local core operations guide covers actual startup, receipt-backed restart, health, diagnostic logs and synthetic tests. Production deployment, backup/restore, incident and break-glass recovery remain incomplete."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/oss-requirement-reconciliation.json",
+        "docs/verification/runtime-security-patches-integrated-local.json"
+      ]
     },
     {
       "id": "OSS-004.16",
@@ -67629,8 +67772,10 @@
         "| `docs/release/` | Release checklist, compatibility policy, support policy and verification instructions. |"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/release/READINESS.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67659,9 +67804,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Release checklist, compatibility policy, detailed support policy and artifact/signature verification instructions are not complete."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.17",
@@ -67745,8 +67896,12 @@
         "Use a genuine project reporting route. If no security email or conduct contact exists, use a supported private GitHub reporting mechanism where appropriate and explicitly show any remaining unassigned contact. Never invent `security@<domain>` or claim somebody monitors it. Do not invite collaborators or send notifications/messages to named people without the user's authorization."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        "SECURITY.md",
+        "CODE_OF_CONDUCT.md",
+        "MAINTAINERS.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67775,9 +67930,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: The separate requirement for a functioning project conduct route remains open under OSS-004.06. No communication or collaborator invitation was performed by this review."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-004.19",
@@ -67868,8 +68029,12 @@
         "Maintain repository-root `CONTRIBUTING.md` with exact commands, architecture boundaries, generated-file rules, migrations, secrets policy, tests needed for risky areas and preservation of unrelated work. Keep private automation instructions outside the public repository. No documentation may contain credentials or claim checks passed without execution."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "CONTRIBUTING.md",
+        "policies/scan_secrets.py",
+        "scripts/requirements.py"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -67898,9 +68063,17 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Continue privacy review of publication scope; source scanning alone cannot prove all personal or proprietary material absent. Current documented full-programme commands retain separate implementation and execution qualifications."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/source-security-296d1e5.json",
+        "docs/security/sast-evidence/hosted-attempt-8/record.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-005",
@@ -68467,7 +68640,13 @@
         "docs/verification/runtime-worker-timeout-local.json",
         "docs/verification/runtime-worker-hash-dispositions.json",
         "docs/verification/runtime-images-hosted-80101e0.json",
-        "docs/verification/source-security-80101e0.json"
+        "docs/verification/source-security-80101e0.json",
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/source-security-296d1e5.json",
+        "docs/verification/runtime-images-hosted-296d1e5.json",
+        "docs/verification/runtime-security-patches-local.json",
+        "docs/verification/runtime-security-patches-integrated-local.json",
+        "docs/verification/hosted-checkpoint-296d1e5.json"
       ]
     },
     {
@@ -68494,8 +68673,15 @@
         "All required checks must run locally through documented commands as well as in CI. A newcomer should be able to reproduce a failure without access to a maintainer's machine. Lock language/runtime/package-manager versions and all package lockfiles. Do not use floating dependency resolution in release jobs."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "CONTRIBUTING.md",
+        "package.json",
+        "pnpm-lock.yaml",
+        "python/uv.lock",
+        ".github/workflows/ci.yml",
+        "scripts/runtime.py"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -68524,9 +68710,16 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: All required full-programme checks are not yet implemented locally and in CI; release-tool closure and newcomer reproduction remain open."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/development-pipeline-local.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-006.02",
@@ -68552,8 +68745,12 @@
         "Provide separate workflow concerns with stable check names:"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml",
+        ".github/workflows/runtime-security.yml"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -68582,9 +68779,19 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Trusted release/signing/SBOM publishing workflow is absent."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/development-pipeline-local.json",
+        "docs/verification/source-security-296d1e5.json",
+        "docs/security/sast-evidence/hosted-attempt-8/record.json",
+        "docs/verification/runtime-images-hosted-296d1e5.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-006.03",
@@ -68610,8 +68817,12 @@
         "- **Fast quality:** formatting, linting, static types, API/schema validation, migration policy and generated-file drift where relevant."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        "package.json",
+        "scripts/requirements.py"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -68640,9 +68851,16 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: No general formatting/lint command is declared in package.json; complete API/schema and migration/generated-file policy coverage must be explicit."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/development-pipeline-local.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-006.04",
@@ -68668,8 +68886,17 @@
         "- **Behavior:** meaningful unit tests; integration tests against disposable real local services; permission/tenant-isolation tests; targeted browser smoke tests; connector contracts and fixtures."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        "policies/ci_evidence.py",
+        "policies/ci_shards.py",
+        "tests/unit",
+        "tests/integration",
+        "tests/e2e",
+        "tests/qualification",
+        "python/tests"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -68698,9 +68925,16 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: This status describes existing behavior-CI implementation, not every product requirement or connector. Current exact-source hosted outcomes and fork execution remain separate verification; historical counts must not be promoted to new-source passes."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/development-pipeline-local.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-006.05",
@@ -68774,7 +69008,13 @@
         "docs/verification/runtime-worker-timeout-local.json",
         "docs/verification/runtime-worker-hash-dispositions.json",
         "docs/verification/runtime-images-hosted-80101e0.json",
-        "docs/verification/source-security-80101e0.json"
+        "docs/verification/source-security-80101e0.json",
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/source-security-296d1e5.json",
+        "docs/verification/runtime-images-hosted-296d1e5.json",
+        "docs/verification/runtime-security-patches-local.json",
+        "docs/verification/runtime-security-patches-integrated-local.json",
+        "docs/verification/hosted-checkpoint-296d1e5.json"
       ]
     },
     {
@@ -68935,8 +69175,15 @@
         "A changed UI label should not run the entire external connector matrix. Change detection may optimize jobs, but a required aggregate gate must still execute and accurately fail if any required child fails, is cancelled or unexpectedly skips. Do not use workflow-level path filters that leave a required check pending forever. Use `always()` carefully so a final aggregation job examines upstream results instead of passing unconditionally. Apply timeouts, bounded retry policies and per-ref cancellation for obsolete CI runs; avoid cancelling an in-progress production release through an overbroad concurrency key."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml",
+        ".github/workflows/runtime-security.yml",
+        "policies/ci_evidence.py",
+        "policies/test_ci_evidence.py",
+        "policies/test_ci_shards.py"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -68965,9 +69212,17 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: No external vendor matrix is automatically activated here; future optimization/release jobs must preserve this fail-closed behavior. Hosted success/failure evidence applies only to its recorded revision."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/development-pipeline-local.json",
+        "docs/verification/hosted-checkpoint-b08b88d.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-006.09",
@@ -68993,8 +69248,13 @@
         "Treat fork pull requests, issue text, PR titles, branch names, dependency install scripts and workflow artifacts as untrusted. Run ordinary contribution builds on `pull_request` with a read-only token and no deployment/signing/provider secrets. Use disposable hosted runners or an equivalently isolated ephemeral runner with no internal-network access. Never execute fork code on a persistent enterprise runner with credentials or connectivity to production. Dependabot changes must receive the same untrusted-input treatment."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml",
+        ".github/workflows/runtime-security.yml",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -69023,9 +69283,19 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Actual public-fork and Dependabot effective-permission/event qualification remains open; no verification status is changed."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/source-security-296d1e5.json",
+        "docs/security/sast-evidence/hosted-attempt-8/record.json",
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/development-pipeline-local.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-006.10",
@@ -69051,8 +69321,12 @@
         "Do not use `pull_request_target` to check out, install, build or run a fork's code with elevated permissions. Avoid it entirely unless a narrowly scoped metadata-only operation requires it. The same trust problem applies to `workflow_run`, issue-comment dispatches and downloaded artifacts: a privileged follow-up must not execute an untrusted artifact. [OSS-S10]"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml",
+        ".github/workflows/runtime-security.yml"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -69081,9 +69355,18 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Recheck new workflow additions; current absence does not establish safety of future release workflows."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/source-security-296d1e5.json",
+        "docs/security/sast-evidence/hosted-attempt-8/record.json",
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/development-pipeline-local.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-006.11",
@@ -69109,8 +69392,13 @@
         "At workflow level start from `permissions: {}` or `contents: read`; give each job only its necessary permissions. Public PR tests need no `packages: write`, `id-token: write`, `contents: write`, deployment credentials or signing identity. Grant publication, attestation and OIDC permissions only to trusted release jobs. Avoid `write-all`. GitHub permission behavior differs between events and fork policies, so inspect effective permissions as part of the workflow review. [OSS-S11]"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml",
+        ".github/workflows/runtime-security.yml",
+        "scripts/github/bootstrap"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -69139,9 +69427,17 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Public-fork/Dependabot effective permissions remain unexecuted qualification; future trusted publication jobs require their own scoped permissions."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/source-security-296d1e5.json",
+        "docs/security/sast-evidence/hosted-attempt-8/record.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-006.12",
@@ -69167,8 +69463,13 @@
         "Lock the actual Actions dependencies. Where the target supports GitHub's workflow dependency lockfile, generate `.github/workflows/actions.lock` with the official `gh actions-lock` extension and commit it; do not hand-author guessed identities or commits. This mechanism covers direct/transitive actions in onboarded workflows, while reusable workflow calls still need full-SHA references and their own dependency treatment. If lockfile adoption is unavailable, pin third-party Actions and reusable workflows to verified full commit SHAs with readable version comments. Review automated updates in either case. [OSS-S21]"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        ".github/action-pins.json",
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml",
+        ".github/workflows/runtime-security.yml"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -69197,9 +69498,16 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Re-verify updates and newly introduced transitive/reusable workflow dependencies; do not claim actions.lock was generated."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/dependency-actions-hosted.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-006.13",
@@ -69357,7 +69665,13 @@
         "docs/verification/runtime-worker-timeout-local.json",
         "docs/verification/runtime-worker-hash-dispositions.json",
         "docs/verification/runtime-images-hosted-80101e0.json",
-        "docs/verification/source-security-80101e0.json"
+        "docs/verification/source-security-80101e0.json",
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/source-security-296d1e5.json",
+        "docs/verification/runtime-images-hosted-296d1e5.json",
+        "docs/verification/runtime-security-patches-local.json",
+        "docs/verification/runtime-security-patches-integrated-local.json",
+        "docs/verification/hosted-checkpoint-296d1e5.json"
       ]
     },
     {
@@ -69447,8 +69761,12 @@
         "Current GitHub documentation distinguishes public repositories from private/internal entitlements: CodeQL/code scanning, secret protection and dependency review do not have identical licensing or availability. Check each capability; select appropriately licensed portable scanners when a feature is unavailable. Publish a local JSON/SARIF report even where GitHub cannot ingest it. Do not quietly pretend a disabled hosted scanner ran. [OSS-S13]"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/security/SAST.md",
+        "policies/sast.py",
+        ".github/workflows/security.yml"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -69477,9 +69795,16 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: A separately licensed qualified private/internal fallback is not implemented; public-only CodeQL is not that fallback."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/source-security-296d1e5.json",
+        "docs/security/sast-evidence/hosted-attempt-8/record.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-007.03",
@@ -69505,8 +69830,11 @@
         "For a public repository, enable GitHub private vulnerability reporting and link the actual repository security-report URL from `SECURITY.md`. This is a private vulnerability route, not the public issue tracker. Verify that the setting works before advertising it. For a private deployment, provide the operator's configured security route separately. [OSS-S14]"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "SECURITY.md",
+        "scripts/github/bootstrap"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -69535,9 +69863,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: A private deployment operator-configured reporting route remains separate and unimplemented; no test vulnerability was submitted."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-007.04",
@@ -69638,8 +69972,12 @@
         "Publish a supported-versions table based on real maintenance capacity. Initially state community/best-effort support and support the actual current release line; do not invent an LTS team, paid SLA, guaranteed response time, SOC 2/ISO certification or sector-specific approval. Separate proposed operational targets from contractual promises. Track security reports privately, coordinate a fix, issue advisories/CVEs when appropriate and document upgrade/mitigation instructions."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "SECURITY.md",
+        "MAINTAINERS.md",
+        "docs/release/READINESS.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -69668,9 +70006,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: The explicit supported-version table and supported-release/advisory/upgrade operating process are not complete."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-007.06",
@@ -69696,8 +70040,11 @@
         "Maintain a threat model covering browser/session boundaries, tenant authorization, connector execution, secret handling, outbound requests, plugin supply chain, ingestion parser attacks, job queues, exports and administrator actions. Map findings to code/tests and identify residual risks. An OpenSSF badge or score is a useful improvement checklist, not an independent security certification; claim a badge only after the project has actually earned the recorded status. [OSS-S15]"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/security/threat-model.md",
+        "docs/security/asvs-map.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -69726,9 +70073,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: The model describes an initial M1 snapshot; refresh its outdated statements/line references for current connectors, policy foundations and governance surfaces. Complete applicable control map and independent security evidence remain open; no OpenSSF certification/badge is claimed."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/m1-security.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-008",
@@ -70741,7 +71094,15 @@
         "Development foundation is partial. The complete normative requirement and all child clauses remain binding; no compound capability or release qualification is claimed."
       ],
       "owner": "governance-commons maintainers",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/source-security-296d1e5.json",
+        "docs/verification/runtime-images-hosted-296d1e5.json",
+        "docs/verification/runtime-security-patches-local.json",
+        "docs/verification/runtime-security-patches-integrated-local.json",
+        "docs/verification/hosted-checkpoint-296d1e5.json"
+      ]
     },
     {
       "id": "OSS-010.01",
@@ -70767,8 +71128,11 @@
         "Create `docs/verification/repository-readiness.md` and a machine-readable companion containing the exact commit, verification time, executed commands/run links, outcomes and unresolved items. This report is evidence, not a self-issued compliance certificate."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/verification/repository-readiness.md",
+        "docs/verification/repository-readiness.json"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -70797,9 +71161,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Current Markdown links the verified PR41 checkpoint and actual merge; historical settings evidence retains its original timestamp. A current complete settings/release reassessment remains separate."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-010.02",
@@ -70825,8 +71195,12 @@
         "The completed project must demonstrate:"
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/product/STATUS.md",
+        "docs/release/READINESS.md",
+        "docs/verification/evidence-manifest.json"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -70855,9 +71229,18 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: The full release/product acceptance set is incomplete; keep all parent completion and verification gates open."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/development-pipeline-local.json",
+        "docs/verification/source-security-296d1e5.json",
+        "docs/security/sast-evidence/hosted-attempt-8/record.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-010.03",
@@ -70883,8 +71266,15 @@
         "1. A clean checkout follows the documented local command to reach a usable application with synthetic data; another engineer does not need the author's workstation or paid cloud credentials."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "README.md",
+        "CONTRIBUTING.md",
+        "dev",
+        "scripts/runtime.py",
+        "scripts/runtime-bootstrap.py",
+        "deploy/compose/compose.yaml"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -70913,9 +71303,16 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Independent clean-checkout onboarding for the final supported profile/current revision remains a distinct qualification; no dependency on an existing private receipt may be added to first run."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/development-pipeline-local.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-010.04",
@@ -70941,8 +71338,13 @@
         "2. Contributor documentation matches executed commands; required CI checks run for normal branches and forks without secrets; meaningful failures actually block the aggregate gate."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "CONTRIBUTING.md",
+        ".github/workflows/ci.yml",
+        "policies/test_ci_evidence.py",
+        "policies/test_ci_shards.py"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -70971,9 +71373,17 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Public-fork qualification and current contributor-command accuracy are incomplete; correct outdated outcome counts."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/development-pipeline-local.json",
+        "docs/verification/hosted-checkpoint-b08b88d.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-010.05",
@@ -70999,8 +71409,13 @@
         "3. Repository settings have been read back, valid CODEOWNERS identities verified and review/plan limitations recorded. An unavailable remote is clearly distinguished from implemented local code."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IMPLEMENTED",
+      "implementation_paths": [
+        "scripts/github/bootstrap",
+        ".github/CODEOWNERS",
+        "GOVERNANCE.md",
+        "docs/verification/repository-readiness.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -71029,9 +71444,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Refresh settings when qualification is repeated; historical readback is not proof of every current rule or actual independent approval."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-010.06",
@@ -71057,8 +71478,14 @@
         "4. Dependency and release-artifact licenses are inventoried; unresolved redistribution obligations are addressed or explicitly block the affected distribution."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "policies/check_dependencies.py",
+        "policies/dependencies.yml",
+        "policies/license-exceptions.yml",
+        "docs/legal/dependency-inventory.json",
+        "docs/release/READINESS.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -71087,9 +71514,16 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Finished release artifacts, OS layers, Python distributions, optional drivers and required redistributed notices need complete license/SBOM qualification."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/dependency-actions-hosted.json",
+        "docs/legal/dependency-inventory.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-010.07",
@@ -71115,8 +71549,13 @@
         "5. Secret scanning covers publishable source/history; no real customer data, private company materials or credentials appear in fixtures, screenshots, docs or release attachments."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "policies/scan_secrets.py",
+        ".github/workflows/ci.yml",
+        "docs/legal/source-provenance.json",
+        "CONTRIBUTING.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -71145,9 +71584,17 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Scanner passes do not prove absence of all personal/employer/client materials; final publication fixtures/screenshots/docs/attachments require scoped privacy review."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/source-security-296d1e5.json",
+        "docs/security/sast-evidence/hosted-attempt-8/record.json",
+        "docs/security/secret-scan.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-010.08",
@@ -71231,8 +71678,13 @@
         "7. The vulnerability-report route is functional, supported versions are accurate and no certifications, audits, maintainer coverage or SLAs are invented."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "SECURITY.md",
+        "MAINTAINERS.md",
+        "CODE_OF_CONDUCT.md",
+        "docs/release/READINESS.md"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -71261,9 +71713,15 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Complete supported-release/version policy and operational reporting qualification; conduct escalation is separately incomplete."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/repository-readiness.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-010.10",
@@ -71289,8 +71747,12 @@
         "8. Backup/restore, upgrade/recovery and break-glass behavior have concrete test evidence for the supported deployment profile. Unverified enterprise capabilities remain clearly identified."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "scripts/runtime-test-recovery.py",
+        "scripts/runtime.py",
+        "tests/qualification"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -71319,9 +71781,17 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Backup/restore and break-glass commands/evidence remain missing; runtime.py explicitly refuses unsupported backup/restore rather than returning success."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/content-security-revision-local.json",
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/development-pipeline-local.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "OSS-010.11",
@@ -71347,8 +71817,13 @@
         "Finish by reporting what was built, the repository/PR/release locations actually created, the successful verification evidence and the remaining concrete blockers. Do not stop at a plan, leave placeholder identities in enforced configuration, or describe all enterprise capabilities as complete because documentation exists."
       ],
       "acceptance_ids": [],
-      "implementation_status": "NOT_STARTED",
-      "implementation_paths": [],
+      "implementation_status": "IN_PROGRESS",
+      "implementation_paths": [
+        "docs/product/STATUS.md",
+        "docs/execution/STATE.md",
+        "docs/release/READINESS.md",
+        "docs/verification/evidence-manifest.json"
+      ],
       "test_ids": [],
       "verification": {
         "fixture": {
@@ -71377,9 +71852,18 @@
         "outcome": "NOT_RUN",
         "evidence": []
       },
-      "limitations": [],
+      "limitations": [
+        "Implementation reconciliation23November2026: Full programme delivery remains incomplete and some repository/readiness references need current-state refresh; no final completion/release statement is justified."
+      ],
       "owner": "unassigned",
-      "milestone": "M0"
+      "milestone": "M0",
+      "partial_evidence": [
+        "docs/verification/hosted-checkpoint-4cbde6a.json",
+        "docs/verification/development-pipeline-local.json",
+        "docs/verification/source-security-296d1e5.json",
+        "docs/security/sast-evidence/hosted-attempt-8/record.json",
+        "docs/verification/oss-requirement-reconciliation.json"
+      ]
     },
     {
       "id": "SPEC-148",
