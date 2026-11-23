@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 import subprocess
 
-COMMON = ('bootstrap', 'services', 'object_store', 'seed')
+COMMON = ('bootstrap', 'services', 'object_store', 'seed', 'core_authentication_install')
 SHARDS = {'foundation': ('connectors',
                 'security',
                 'model_upgrade',
@@ -22,6 +22,9 @@ SHARDS = {'foundation': ('connectors',
                 'authority_asset_context',
                 'content_security_revision',
                 'classification_label_identities',
+                'reviewed_classification_facts',
+                'held_metadata_authority',
+                'application_authn_bridge',
                 'source_connectors_upgrade',
                 'postgres_targets'),
  'governance': ('relation_candidate_original',
@@ -54,6 +57,7 @@ COMMANDS = {'bootstrap': './dev bootstrap',
  'services': './dev up --profile core',
  'object_store': './dev test --suite object-store',
  'seed': './dev seed --dataset harbor-demo',
+ 'core_authentication_install': './dev authn-core-install',
  'connectors': './dev test --suite connectors',
  'security': './dev test --suite security',
  'model_upgrade': './dev test --suite model-upgrade',
@@ -68,6 +72,9 @@ COMMANDS = {'bootstrap': './dev bootstrap',
  'authority_asset_context': './dev test --suite authority-asset-context',
  'content_security_revision': './dev test --suite content-security-revision',
  'classification_label_identities': './dev test --suite classification-label-identities',
+ 'reviewed_classification_facts': './dev test --suite reviewed-classification-facts',
+ 'held_metadata_authority': './dev test --suite held-metadata-authority',
+ 'application_authn_bridge': './dev test --suite application-authn-bridge',
  'source_connectors_upgrade': './dev test --suite source-connectors-upgrade',
  'postgres_targets': './dev test --suite postgres-targets',
  'relation_candidate_original': './dev test --suite relation-candidate-original',
@@ -153,6 +160,40 @@ CLASSIFICATION_LABEL_SCOPES = {'classification_label_identities': {
     'profile': 'isolated-classification-label-identities-sql034',
     'report': 'classification-label-identities.json',
     'schemaScope': 'Populated SQL001–033 to SQL034; current-pin identity baseline, terminal retirement, concurrency, preservation and replay',
+    'outerTimeoutSeconds': 900,
+    'contentAuthority': False,
+    'evidence': 'STEP_OUTCOME_ONLY'}}
+REVIEWED_CLASSIFICATION_SCOPES = {'reviewed_classification_facts': {
+    'command': './dev test --suite reviewed-classification-facts',
+    'runner': 'scripts/runtime-test-reviewed-classification-producer.py',
+    'arguments': ['--run-local'],
+    'profile': 'isolated-reviewed-classification-facts-sql035',
+    'report': 'reviewed-classification-producer.json',
+    'schemaScope': 'Populated SQL001–034 to SQL035; private producer bindings and inactive reviewed classification facts, complete partition validation, preservation and replay',
+    'expectedNativeTests': {'predecessor': 50, 'producerBinding': 23, 'reviewedFacts': 25, 'total': 98},
+    'outerTimeoutSeconds': 900,
+    'contentAuthority': False,
+    'evidence': 'STEP_OUTCOME_ONLY'}}
+HELD_METADATA_SCOPES = {'held_metadata_authority': {
+    'command': './dev test --suite held-metadata-authority',
+    'runner': 'scripts/runtime-test-held-metadata-authority.py',
+    'arguments': ['--run-local'],
+    'profile': 'isolated-held-metadata-authority-sql036',
+    'report': 'held-metadata-authority.json',
+    'schemaScope': 'Populated SQL001–035 to SQL036; corrected scope and lifetime admission, retained-history preflight, held inactive metadata composition, preservation and replay',
+    'expectedNativeTests': {'predecessor': 98, 'preflight': 8, 'legacySeed': 1, 'scopeAlignment': 16, 'heldMetadata': 17, 'total': 140},
+    'outerTimeoutSeconds': 900,
+    'contentAuthority': False,
+    'evidence': 'STEP_OUTCOME_ONLY'}}
+CORE_AUTHENTICATION_SETUP_SCOPES = {'core_authentication_install': {'command': './dev authn-core-install', 'purpose': 'EXPLICIT_LOCAL_SETUP', 'qualifiesNativeBridge': False, 'contentAuthority': False, 'evidence': 'STEP_OUTCOME_ONLY'}}
+APPLICATION_AUTHN_BRIDGE_SCOPES = {'application_authn_bridge': {
+    'command': './dev test --suite application-authn-bridge',
+    'runner': 'scripts/runtime-test-application-authn-bridge.py',
+    'arguments': ['--run-local'],
+    'profile': 'isolated-application-authn-bridge-sql037',
+    'report': 'application-authn-bridge.json',
+    'schemaScope': 'Populated SQL001–036 to SQL037; protected application authentication binding, exact native reader privileges, preservation and replay; no HTTP cutover or content authority activation',
+    'expectedNativeTests': {'predecessor': 1, 'applicationBridge': 25, 'total': 26},
     'outerTimeoutSeconds': 900,
     'contentAuthority': False,
     'evidence': 'STEP_OUTCOME_ONLY'}}
@@ -311,6 +352,9 @@ EVIDENCE = {'security': ('api-summary.json',),
  'authority_asset_context': ('authority-asset-context.json',),
  'content_security_revision': ('content-security-revision.json',),
  'classification_label_identities': ('classification-label-identities.json',),
+ 'reviewed_classification_facts': ('reviewed-classification-producer.json',),
+ 'held_metadata_authority': ('held-metadata-authority.json',),
+ 'application_authn_bridge': ('application-authn-bridge.json',),
  'glossary_population_repaired_upgrade': ('glossary-population-repaired-upgrade.json',),
  'quality_repaired_upgrade': ('quality-repaired-upgrade.json',),
  'lineage_repaired_upgrade': ('lineage-repaired-upgrade.json',),
@@ -331,7 +375,7 @@ def required_steps(shard):
     return frozenset((*COMMON, *SHARDS[shard]))
 
 def assignment_hash():
-    return hashlib.sha256(json.dumps({'common':COMMON,'shards':SHARDS,'commands':COMMANDS,'superseded':SUPERSEDED,'authorityScopes':AUTHORITY_SCOPES,'assetContextScopes':ASSET_CONTEXT_SCOPES,'contentRevisionScopes':CONTENT_REVISION_SCOPES,'classificationLabelScopes':CLASSIFICATION_LABEL_SCOPES,'relationScopes':RELATION_SCOPES},sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    return hashlib.sha256(json.dumps({'common':COMMON,'shards':SHARDS,'commands':COMMANDS,'superseded':SUPERSEDED,'authorityScopes':AUTHORITY_SCOPES,'assetContextScopes':ASSET_CONTEXT_SCOPES,'contentRevisionScopes':CONTENT_REVISION_SCOPES,'classificationLabelScopes':CLASSIFICATION_LABEL_SCOPES,'reviewedClassificationScopes':REVIEWED_CLASSIFICATION_SCOPES,'heldMetadataScopes':HELD_METADATA_SCOPES,'applicationAuthnBridgeScopes':APPLICATION_AUTHN_BRIDGE_SCOPES,'coreAuthenticationSetupScopes':CORE_AUTHENTICATION_SETUP_SCOPES,'relationScopes':RELATION_SCOPES},sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 def collect_outcomes(environment, shard):
     required = required_steps(shard)
@@ -392,7 +436,7 @@ def validate_workflow(text):
     required = '    name: required\n    if: always()\n    needs: [quality, secrets, behavior]\n    runs-on: ubuntu-24.04\n    timeout-minutes: 2\n    permissions: {}\n    steps:\n      - name: Require every mandatory child to succeed\n        env:\n          QUALITY_RESULT: ${{ needs.quality.result }}\n          SECRETS_RESULT: ${{ needs.secrets.result }}\n          BEHAVIOR_RESULT: ${{ needs.behavior.result }}\n        run: |\n          test "$QUALITY_RESULT" = success\n          test "$SECRETS_RESULT" = success\n          test "$BEHAVIOR_RESULT" = success\n'
     require(blocks['required']==required)
     body=blocks['behavior_shards']
-    header = "    name: behavior (${{ matrix.shard }})\n    runs-on: ubuntu-24.04\n    timeout-minutes: 90\n    strategy:\n      fail-fast: false\n      max-parallel: 5\n      matrix:\n        shard: ["+', '.join(SHARDS)+"]\n    steps:\n"
+    header = "    name: behavior (${{ matrix.shard }})\n    runs-on: ubuntu-24.04\n    timeout-minutes: ${{ matrix.shard == 'foundation' && 120 || 90 }}\n    strategy:\n      fail-fast: false\n      max-parallel: 5\n      matrix:\n        shard: ["+', '.join(SHARDS)+"]\n    steps:\n"
     require(body.startswith(header))
     require('continue-on-error:' not in body and 'download-artifact' not in body and 'permissions:' not in body)
     steps=re.split(r'^      - ',body[len(header):],flags=re.M)[1:]
@@ -422,6 +466,7 @@ def validate_workflow(text):
  '          GC_SERVICES_RESULT: ${{ steps.services.outcome }}\n'
  '          GC_OBJECT_STORE_RESULT: ${{ steps.object_store.outcome }}\n'
  '          GC_SEED_RESULT: ${{ steps.seed.outcome }}\n'
+ '          GC_CORE_AUTHENTICATION_INSTALL_RESULT: ${{ steps.core_authentication_install.outcome }}\n'
  '          GC_CONNECTORS_RESULT: ${{ steps.connectors.outcome }}\n'
  '          GC_SECURITY_RESULT: ${{ steps.security.outcome }}\n'
  '          GC_MODEL_UPGRADE_RESULT: ${{ steps.model_upgrade.outcome }}\n'
@@ -437,6 +482,9 @@ def validate_workflow(text):
  '          GC_AUTHORITY_ASSET_CONTEXT_RESULT: ${{ steps.authority_asset_context.outcome }}\n'
  '          GC_CONTENT_SECURITY_REVISION_RESULT: ${{ steps.content_security_revision.outcome }}\n'
  '          GC_CLASSIFICATION_LABEL_IDENTITIES_RESULT: ${{ steps.classification_label_identities.outcome }}\n'
+ '          GC_REVIEWED_CLASSIFICATION_FACTS_RESULT: ${{ steps.reviewed_classification_facts.outcome }}\n'
+ '          GC_HELD_METADATA_AUTHORITY_RESULT: ${{ steps.held_metadata_authority.outcome }}\n'
+ '          GC_APPLICATION_AUTHN_BRIDGE_RESULT: ${{ steps.application_authn_bridge.outcome }}\n'
  '          GC_SOURCE_CONNECTORS_UPGRADE_RESULT: ${{ steps.source_connectors_upgrade.outcome }}\n'
  '          GC_POSTGRES_TARGETS_RESULT: ${{ steps.postgres_targets.outcome }}\n'
  '          GC_RELATION_CANDIDATE_ORIGINAL_RESULT: ${{ steps.relation_candidate_original.outcome }}\n'
@@ -494,11 +542,20 @@ def validate_workflow(text):
         # No additional per-step keys may silently replace commands or budgets.
         require(all(line.startswith(('        id: ','        if: ','        run: ')) for line in block.splitlines()[1:] if line))
     require(set(identified)==set(STEPS))
+    require(list(identified)[:len(COMMON)] == list(COMMON))
     required_fragments = ['      - name: Collect bounded redacted evidence\n        if: always()\n        env:\n          GC_BEHAVIOR_SHARD: ${{ matrix.shard }}', '        run: python3 policies/ci_evidence.py --shard "$GC_BEHAVIOR_SHARD"', '          name: behavior-${{ matrix.shard }}-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}', '          path: .local/ci-artifacts/\n          include-hidden-files: true\n          retention-days: 14\n          if-no-files-found: error', "      - name: Stop only this Compose project and preserve volumes\n        if: always() && steps.bootstrap.outcome == 'success'\n        run: ./dev down", "      - name: Install browser and Linux dependencies\n        if: success() && matrix.shard == 'browser'\n        run: pnpm exec playwright install --with-deps chromium"]
     for fragment in required_fragments:require(body.count(fragment)==1)
     for step in STEPS:require(body.count('GC_'+step.upper()+'_RESULT: ${{ steps.'+step+'.outcome }}')==1)
     require('permissions:\n  contents: read\n' in text and text.count('permissions:')==3)
     require('run: python3 policies/test_ci_shards.py' in blocks['quality'])
+    bootstrap_controls = ('      - name: Source credential persistence\n'
+                          '        run: |\n'
+                          '          python3 scripts/test_runtime_bootstrap.py\n'
+                          '          python3 scripts/test_runtime_keycloak_client.py\n')
+    require(re.findall(r'^      - name: Source credential persistence\n.*?(?=^      - |\Z)',
+                       blocks['quality'], re.M | re.S) == [bootstrap_controls])
+    require(text.count('python3 scripts/test_runtime_keycloak_client.py') == 1)
+
     require('run: python3 scripts/test_authority_read_upgrade.py' in blocks['quality'])
     context_control = ('      - name: Inactive asset-context lifecycle qualification controls\n'
                        '        run: python3 scripts/test_authority_asset_context.py\n')
@@ -518,10 +575,28 @@ def validate_workflow(text):
                        blocks['quality'], re.M | re.S) == [identity_control])
     require(text.count('run: python3 scripts/test_classification_label_identities.py') == 1)
     require(revision_control + identity_control in blocks['quality'])
+    reviewed_control = ('      - name: Reviewed classification producer and fact qualification controls\n'
+                        '        run: python3 scripts/test_reviewed_classification_producer.py\n')
+    require(re.findall(r'^      - name: Reviewed classification producer and fact qualification controls\n.*?(?=^      - |\Z)',
+                       blocks['quality'], re.M | re.S) == [reviewed_control])
+    require(text.count('run: python3 scripts/test_reviewed_classification_producer.py') == 1)
+    require(identity_control + reviewed_control in blocks['quality'])
+    held_control = ('      - name: Held metadata authority qualification controls\n'
+                    '        run: python3 scripts/test_held_metadata_authority.py\n')
+    require(re.findall(r'^      - name: Held metadata authority qualification controls\n.*?(?=^      - |\Z)',
+                       blocks['quality'], re.M | re.S) == [held_control])
+    require(text.count('run: python3 scripts/test_held_metadata_authority.py') == 1)
+    require(reviewed_control + held_control in blocks['quality'])
+    application_control = ('      - name: Application authentication bridge qualification controls\n'
+                           '        run: python3 scripts/test_application_authn_bridge.py\n')
+    require(re.findall(r'^      - name: Application authentication bridge qualification controls\n.*?(?=^      - |\Z)',
+                       blocks['quality'], re.M | re.S) == [application_control])
+    require(text.count('run: python3 scripts/test_application_authn_bridge.py') == 1)
+    require(held_control + application_control in blocks['quality'])
     for step in SUPERSEDED:
         require('GC_'+step.upper()+'_RESULT' not in body and 'id: '+step+'\n' not in body)
     for control in ('test_relation_candidate_upgrade.py','test_governance_repaired_chain.py','test_runtime_routing.py'):
         require('run: python3 scripts/'+control in blocks['quality'])
-    require(body.index('id: authority_authn_foundation\n')<body.index('id: authority_read_original\n')<body.index('id: authority_read_current\n')<body.index('id: authority_asset_context\n')<body.index('id: content_security_revision\n')<body.index('id: classification_label_identities\n')<body.index('id: source_connectors_upgrade\n'))
+    require(body.index('id: authority_authn_foundation\n')<body.index('id: authority_read_original\n')<body.index('id: authority_read_current\n')<body.index('id: authority_asset_context\n')<body.index('id: content_security_revision\n')<body.index('id: classification_label_identities\n')<body.index('id: reviewed_classification_facts\n')<body.index('id: held_metadata_authority\n')<body.index('id: application_authn_bridge\n')<body.index('id: source_connectors_upgrade\n'))
     require(body.index('id: browser\n')<body.index('id: protected_authn\n')<body.index('name: Collect bounded redacted evidence')<body.index('name: Stop only this Compose'))
     return True

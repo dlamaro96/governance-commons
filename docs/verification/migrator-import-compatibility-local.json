@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T13:21:45.929174+00:00",
+  "scope": "Migrator import compatibility, fresh SQL001–037 deployment and source-bound protected API verification",
+  "outcome": "PASS",
+  "release_qualified": false,
+  "base_commit": "663fee960c8c83a98ced2c69e60b206e70b180dd",
+  "source_binding": "The four changed code files below identify the uncommitted correction at observation time; no later commit is inferred.",
+  "correction": [
+    "The migrator again executes on import, preserving the historical node-e qualification entry point. Transaction logic is extracted into migration-runner.ts.",
+    "The exact SQL037 prerequisite is granted and revoked inside its migration transaction; all 37 applied SQL files remain unchanged.",
+    "The model-upgrade evidence inventory explicitly includes the extracted runner."
+  ],
+  "fresh_migration": {
+    "outcome": "PASS",
+    "profile": "two sequential owned network-none PostgreSQL scopes",
+    "started_at": "2026-11-23T13:18:00.232190+00:00",
+    "finished_at": "2026-11-23T13:18:05.722955+00:00",
+    "command": "python3 -B .local/protected-core-deployment/fresh-migration-qualification.py --run-local",
+    "harness_visibility": "Private qualification harness; its digest is retained below. The repository native bridge command is recorded separately.",
+    "entrypoint": "await import('./packages/db/src/migrate.ts'); process.argv is not changed",
+    "assertions_passed": 28,
+    "assertion_count_is_test_case_count": false,
+    "old_migrator": {
+      "commit": "bbc92e4",
+      "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b",
+      "expected_sqlstate": "42501",
+      "committed_migrations": 36,
+      "failed_sql037_rolled_back": true
+    },
+    "same_database_recovery": {
+      "applied": [
+        "037_application_authentication_bridge.sql"
+      ],
+      "administrative_prepare_repeated_between_old_and_current": false,
+      "prior_36_ledger_rows_preserved": true
+    },
+    "fresh_current": {
+      "applied_migrations": 37,
+      "sql012_revocation_followed_by_sql037_transfer": true
+    },
+    "replays": 2,
+    "exact_37_checksums_verified": true,
+    "transactional_create_removal_verified_before_finish": true,
+    "final_transfer_membership_and_create_removed": true,
+    "administrative_prepare_calls": 2,
+    "bounds": {
+      "migration_command_seconds": 180,
+      "each_database_scope_seconds": 300
+    },
+    "images": {
+      "postgres": "sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+      "application": "sha256:78f8f834ca82ac28cc316b1b627198eb950081b22411580bcb83d5db55d4b00a"
+    },
+    "runtime": {
+      "node": "v24.22.3",
+      "package": "fe4a1b1dc13991ab42114164382d808f0e93e483403c188236331ee370b09a12",
+      "lock": "49f347e0549a326aa51aeee5caf188c6e4f25e54afe6f8766cc387f5a39304a4"
+    },
+    "cleanup": {
+      "owned_containers_removed": true,
+      "generated_credentials_removed": true
+    },
+    "private_report_sha256": "197756f9fef79c26453efe09c559022597134296728396ae2d1566ec15abf4d5",
+    "private_harness_sha256": "8077388aecd1a4d746461edf0749938f4d59c99c1602d0aefa3815549b1c378f",
+    "migration_checksum_manifest_sha256": "002ee0c0b6cb8b9a6cb596b49a92d17c2452b22f5e8e58fa4f02c641a9eb6be0",
+    "migration_checksum_manifest_encoding": "SHA-256 of the private report migration filename-to-checksum object encoded as compact sorted-key UTF-8 JSON"
+  },
+  "native_application_bridge": {
+    "outcome": "PASS",
+    "command": "python3 scripts/runtime-test-application-authn-bridge.py --run-local",
+    "profile": "isolated-application-authn-bridge-sql037",
+    "started_at": "2026-11-23T13:18:00.315765+00:00",
+    "recorded_at": "2026-11-23T13:19:37.954337+00:00",
+    "test_counts": {
+      "tests": 26,
+      "pass": 26,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "phases": [
+      {
+        "phase": "application-authn-predecessor",
+        "tests": {
+          "tests": 1,
+          "suites": 0,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 470.723917
+        }
+      },
+      {
+        "phase": "application-authn-native",
+        "tests": {
+          "tests": 25,
+          "suites": 0,
+          "pass": 25,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 3650.414543
+        }
+      }
+    ],
+    "source_files_count": 282,
+    "source_hashes_matched": true,
+    "source_manifest_sha256": "753f052fa1cce2cd1fdb9b6fb0d09f3a92909e2f5eb00f1a4688347f931a50ca",
+    "source_manifest_encoding": "SHA-256 of the report sources array encoded as UTF-8 JSON with sorted keys and compact separators",
+    "images": {
+      "postgres": "sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+      "application": "sha256:78f8f834ca82ac28cc316b1b627198eb950081b22411580bcb83d5db55d4b00a"
+    },
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true,
+      "generatedCredentialsRemoved": true
+    },
+    "private_report_sha256": "6d165f7efa0229cc09f469f54f613c68ff7fb08fa823a79e16e66b12b981e67d",
+    "limits": [
+      "The 26 native test cases are separate from the 28 fresh-migration assertions.",
+      "Native SQL authentication and migration qualification do not prove browser or vendor-live SSO behavior."
+    ],
+    "replays": 2,
+    "replay_preservation": "Both replays preserve the ledger, table inventory, rows, metadata and migration no-op behavior."
+  },
+  "host_checks": {
+    "full_units": {
+      "command": "node --import tsx --test tests/unit/*.test.ts",
+      "outcome": "PASS",
+      "counts": {
+        "tests": 1301,
+        "pass": 1301,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "duration_ms": 25296.5515,
+      "private_output_sha256": "394e906ebe6a2ced7a6836ae1f2550cb9d1f26e1251a625b3037c692559d8995",
+      "node_version": "v24.22.3",
+      "runtime_attribution": "Parent execution used the explicit pinned Node PATH."
+    },
+    "migration_controls": {
+      "command": "node --import tsx --test tests/unit/db-migration.test.ts",
+      "status": "PASS",
+      "tests": 10,
+      "pass": 10,
+      "fail": 0,
+      "skip": 0,
+      "durationMs": 517.860667,
+      "kind": "pure host transaction controls and actual node-e import reaching missing-owner-URL refusal; no database"
+    },
+    "typecheck": {
+      "command": "pnpm typecheck",
+      "outcome": "PASS",
+      "scope": "Root full typecheck completed by parent after the four source files were frozen.",
+      "private_output_sha256": "04acaa42331a00596e618e07734e8db06811c3a93adc9f4e823ad68ee0234a88"
+    },
+    "private_targeted_verification_sha256": "7d97dc94116edfa0f4795c745b8b9c9259041c69feadb41e4587ecd56a08da4f",
+    "scope": "The 10 targeted migration controls are included in the full 1301 unit cases. Host fake-client transaction tests are separate from actual PostgreSQL qualification."
+  },
+  "protected_api": {
+    "outcome": "PASS",
+    "command": "./dev test --suite security",
+    "profile": "real core API/PostgreSQL; Node TAP; synthetic fixtures",
+    "recorded_at": "2026-11-23T13:17:59.302403+00:00",
+    "counts": {
+      "tests": 172,
+      "suites": 0,
+      "pass": 172,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "expected_tests": 172,
+    "observed_results": 172,
+    "flags": [],
+    "runtime_test_sources_match": true,
+    "source_files_count": 108,
+    "source_manifest_sha256": "2f753479454fa1cd1eae991d2abcd88d8bd905876a0bcd707039592ffb470def",
+    "source_manifest_encoding": "SHA-256 of the report path-to-SHA256 object encoded as UTF-8 JSON with sorted keys and compact separators",
+    "reported_commit": "bbc92e4b378e44536072a8fcd99954414397fec1",
+    "reported_commit_label_stale": true,
+    "independently_matched_commit": "663fee960c8c83a98ced2c69e60b206e70b180dd",
+    "all_108_sources_match_recorded_commit": false,
+    "all_108_sources_match_independently_matched_commit": true,
+    "all_108_sources_match_current_working_files": true,
+    "attribution": "The private report retains its original bbc92e4 commit label. All 108 recorded source hashes independently match 663fee9 and the current API source files. This record preserves that distinction rather than relabelling the private report or claiming an exact whole-commit run.",
+    "private_report_sha256": "ff4e454b4e7ca7a156d44683c605cd86e11d414c0afd2ed5cb777446db271751",
+    "private_output_sha256": "e2eccefccb8e83b17fa73cb5b1c2d1d6eaafd5c6490a2be5d1fa4f0f59f5e4c7",
+    "limits": [
+      "The API source manifest does not qualify the extracted migrator; the separate fresh and bridge gates cover that correction.",
+      "Persisted membership-loss fixture sessions remain bounded and are not silently renewed for reruns."
+    ],
+    "recorded_commit_source_mismatch_count": 1
+  },
+  "tool_versions_observed_at_recording": {
+    "docker": "27.3.1 (ce12230)",
+    "docker_compose": "v2.29.7-desktop.1",
+    "python": "3.14.5",
+    "native_node": "v24.22.3"
+  },
+  "source_files": [
+    {
+      "path": "packages/db/src/migrate.ts",
+      "sha256": "b41a175c408ff57a1a66777b677c01fcc0a0e1d31489461daf3d1366a5bdad40"
+    },
+    {
+      "path": "packages/db/src/migration-runner.ts",
+      "sha256": "7e4d6bc85219fb13fbe029f5929a0781c433169f9c11af05e461084f6b775288"
+    },
+    {
+      "path": "scripts/runtime-test-model-upgrade.py",
+      "sha256": "f7d700a2d2d3839f5c367db3ebea4c979de638737e5ecdccacb7e6a457aa2aa5"
+    },
+    {
+      "path": "tests/unit/db-migration.test.ts",
+      "sha256": "908320a27c452e0a235eeff4783feba636b166bd871af1ed17e0f4627da3ed8e"
+    }
+  ],
+  "limits": [
+    "This is local development evidence; hosted pipeline and code/security scans must qualify their exact revision independently.",
+    "Cached application images provide dependencies for native qualification; corrected migrator code, its helper and immutable SQL are mounted read-only. This is not immutable-image deployment qualification.",
+    "No new browser result is claimed here; the broader browser run is independent and was not awaited.",
+    "Canonical content authority and commit-time content revocation fencing remain inactive or unimplemented; no enterprise release, Entra-live or complete programme claim is made.",
+    "Private reports and logs are retained locally by digest. Credentials, session material, raw SQL, personal filesystem paths and raw test logs are not published."
+  ]
+}

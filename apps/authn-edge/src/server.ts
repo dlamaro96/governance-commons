@@ -7,13 +7,13 @@ import { AUTHN_LIMITS } from '../../../packages/authn/src/contracts.ts';
 import { cookieNames, validatePublicAuthnConfig } from '../../../packages/authn/src/transport.ts';
 
 export type EdgeConfig = PublicAuthnConfig & {
- readonly loginUpstream: string; readonly sessionUpstream: string; readonly legacyUpstream?: string;
+ readonly loginUpstream: string; readonly sessionUpstream: string; readonly legacyUpstream?: string; readonly applicationUpstream?: string;
 };
 type Route = 'login' | 'session' | 'legacy' | 'missing';
 const hopHeaders = new Set(['connection','keep-alive','proxy-authenticate','proxy-authorization','te','trailer','transfer-encoding','upgrade']);
 const protectedCookieNames = new Set(['gc_authn_session','gc_authn_csrf','gc_authn_attempt',
  '__Host-gc_authn_session','__Host-gc_authn_csrf','__Host-gc_authn_attempt']);
-const sensitiveHeaders = /^(?:forwarded|x-forwarded(?:-.*)?|x-original(?:-.*)?|x-authn(?:-.*)?|x-gc-authn(?:-.*)?|x-authenticated(?:-.*)?|x-principal(?:-.*)?)$/i;
+const sensitiveHeaders = /^(?:forwarded|x-forwarded(?:-.*)?|x-original(?:-.*)?|x-authn(?:-.*)?|x-gc-authn(?:-.*)?|x-authenticated(?:-.*)?|x-principal(?:-.*)?|x-user(?:-.*)?|x-identity(?:-.*)?|x-actor(?:-.*)?|x-role(?:s|-.*)?|x-permission(?:s|-.*)?|remote-user)$/i;
 const authnRequestHeaders = new Set(['accept','content-type','origin','x-csrf-token']);
 
 function upstream(value: string): URL {
@@ -47,6 +47,22 @@ function cookieHeader(raw: string | undefined, allowed: Set<string>, invert = fa
  });
  return values.length ? values.join('; ') : undefined;
 }
+/** Application authentication is cookie-only. Never turn forwarding headers or
+ * a legacy/attempt cookie into a protected application identity. */
+function applicationCookieHeader(raw: string | undefined, names: Set<string>): string | undefined {
+ if (raw === undefined) return undefined;
+ const selected = new Map<string,string>();
+ for (const item of raw.split(';')) {
+  const part = item.trim(), equal = part.indexOf('=');
+  if (equal < 1) throw new Error('AUTHN_REQUEST_INVALID');
+  const name = part.slice(0,equal);
+  if (!names.has(name)) continue;
+  const value = part.slice(equal+1);
+  if (selected.has(name) || !/^[A-Za-z0-9_-]{43}$/.test(value)) throw new Error('AUTHN_REQUEST_INVALID');
+  selected.set(name,value);
+ }
+ return selected.size ? [...selected].map(([name,value])=>`${name}=${value}`).join('; ') : undefined;
+}
 function securityHeaders(): OutgoingHttpHeaders {
  return {'cache-control':'no-store','referrer-policy':'no-referrer','x-content-type-options':'nosniff',
   'content-security-policy':"default-src 'none'; frame-ancestors 'none'; base-uri 'none'"};
@@ -70,17 +86,23 @@ function validSetCookie(value: string, names: Set<string>, config: PublicAuthnCo
   attributes.set(name,split < 0 ? '' : part.slice(split+1));
  }
  const production = config.environment === 'production';
- return attributes.get('path') === (production ? '/' : '/authn') && attributes.get('httponly') === ''
+ const name = nameValue.slice(0,equal), cookieValue = nameValue.slice(equal+1);
+ const expectedPath = production || name !== cookieNames(config).attempt ? '/' : '/authn';
+ const legacyClear = !production && name !== cookieNames(config).attempt && attributes.get('path') === '/authn'
+  && cookieValue === '' && attributes.get('max-age') === '0' && attributes.get('expires') === 'Thu, 01 Jan 1970 00:00:00 GMT';
+ return (attributes.get('path') === expectedPath || legacyClear) && attributes.get('httponly') === ''
   && attributes.get('samesite')?.toLowerCase() === 'lax' && attributes.has('secure') === production
   && (!attributes.has('secure') || attributes.get('secure') === '')
   && (!attributes.has('max-age') || /^(?:0|[1-9][0-9]{0,4})$/.test(attributes.get('max-age')!));
 }
 export function createAuthnEdge(input: EdgeConfig): http.Server {
+ if (input.applicationUpstream !== undefined && input.legacyUpstream !== undefined) throw new Error('AUTHN_EDGE_CONFIG_INVALID');
  const config = validatePublicAuthnConfig({publicOrigin:input.publicOrigin,environment:input.environment});
  const publicHost = new URL(config.publicOrigin).host;
- const targets = {login:upstream(input.loginUpstream),session:upstream(input.sessionUpstream),legacy:input.legacyUpstream ? upstream(input.legacyUpstream) : undefined};
+ const targets = {login:upstream(input.loginUpstream),session:upstream(input.sessionUpstream),legacy:input.legacyUpstream === undefined ? undefined : upstream(input.legacyUpstream),application:input.applicationUpstream === undefined ? undefined : upstream(input.applicationUpstream)};
  const names = cookieNames(config);
  const allowedCookies = new Set(Object.values(names));
+ const applicationCookies = new Set([names.session,names.csrf]);
  let inflight = 0;
  const server = http.createServer({maxHeaderSize:AUTHN_LIMITS.headerBytes,requestTimeout:AUTHN_LIMITS.requestTimeoutMs,
   headersTimeout:10_000,keepAliveTimeout:5_000}, (req,res) => {
@@ -89,11 +111,17 @@ export function createAuthnEdge(input: EdgeConfig): http.Server {
    const name=req.rawHeaders[i]!.toLowerCase(); headerCounts.set(name,(headerCounts.get(name) ?? 0)+1);
   }
   if (headerCounts.get('host') !== 1 || req.headers.host !== publicHost || req.method === 'CONNECT') { fail(res,400);req.resume();return; }
-  const route = edgeRoute(req.method ?? '',req.url ?? '');
+  const selected = edgeRoute(req.method ?? '',req.url ?? '');
+  const route = selected === 'legacy' && targets.application ? 'application' : selected;
   if (route === 'missing' || !targets[route]) { fail(res,404);req.resume();return; }
-  const protectedRoute = route !== 'legacy';
-  if (protectedRoute && (['cookie','origin','content-type','x-csrf-token','authorization'].some(name=>(headerCounts.get(name)??0)>1)
-    || Buffer.byteLength(req.url ?? '') > AUTHN_LIMITS.queryBytes + 64)) {fail(res,400);req.resume();return;}
+  const protectedRoute = route === 'login' || route === 'session';
+  const applicationRoute = route === 'application';
+  if ((protectedRoute || applicationRoute) && (['cookie','origin','content-type','x-csrf-token','authorization'].some(name=>(headerCounts.get(name)??0)>1)
+    || protectedRoute && Buffer.byteLength(req.url ?? '') > AUTHN_LIMITS.queryBytes + 64)) {fail(res,400);req.resume();return;}
+  let rawCookie: string | undefined;
+  try { rawCookie = applicationRoute ? applicationCookieHeader(req.headers.cookie,applicationCookies)
+   : cookieHeader(req.headers.cookie,protectedRoute ? allowedCookies : protectedCookieNames,!protectedRoute); }
+  catch { fail(res,400);req.resume();return; }
   if (protectedRoute && inflight >= AUTHN_LIMITS.processInflight) {fail(res,503,'AUTHN_UNAVAILABLE');req.resume();return;}
   if (protectedRoute) inflight++;
   let done=false,rejected=false;
@@ -116,7 +144,6 @@ export function createAuthnEdge(input: EdgeConfig): http.Server {
    if (!protectedRoute || authnRequestHeaders.has(name)) headers[name]=value;
   }
   headers.host=publicHost;
-  const rawCookie=cookieHeader(req.headers.cookie,protectedRoute ? allowedCookies : protectedCookieNames,!protectedRoute);
   if(rawCookie)headers.cookie=rawCookie;
   const target=targets[route]!;
   const forward=(body?:Buffer)=>{

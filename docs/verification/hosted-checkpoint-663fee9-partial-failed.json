@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T13:15:56.843183+00:00",
+  "release_qualified": false,
+  "implementation_commit": "663fee960c8c83a98ced2c69e60b206e70b180dd",
+  "tested_merge_commit": "c2e4345879d69960cc87d8b2773dbf69294184bd",
+  "same_tree_and_parent_verified": true,
+  "result": "NOT_PASSED",
+  "qualification_scope": "PARTIAL_FAILED_ATTEMPT_NOT_TERMINAL_QUALIFICATION",
+  "run_id": 45180666239,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45180666239",
+  "run_attempt": 1,
+  "run_status_at_snapshot": "in_progress",
+  "run_conclusion_at_snapshot": null,
+  "required_outcomes": 52,
+  "outcome_counts": {
+    "success": 7,
+    "in_progress": 2,
+    "pending": 18,
+    "failure": 3,
+    "skipped": 22
+  },
+  "outcomes": {
+    "connectors": "success",
+    "security": "in_progress",
+    "model_upgrade": "pending",
+    "asset_type_upgrade": "pending",
+    "type_migration_upgrade": "pending",
+    "relations_upgrade": "pending",
+    "relation_participation_upgrade": "pending",
+    "business_domains_upgrade": "pending",
+    "authority_authn_foundation": "pending",
+    "authority_read_original": "pending",
+    "authority_read_current": "pending",
+    "authority_asset_context": "pending",
+    "content_security_revision": "pending",
+    "classification_label_identities": "pending",
+    "reviewed_classification_facts": "pending",
+    "held_metadata_authority": "pending",
+    "application_authn_bridge": "pending",
+    "source_connectors_upgrade": "pending",
+    "postgres_targets": "pending",
+    "relation_candidate_original": "failure",
+    "relation_candidate_current": "skipped",
+    "glossary_upgrade": "skipped",
+    "relation_scope_upgrade": "skipped",
+    "glossary_population_repaired_upgrade": "skipped",
+    "lineage_repaired_upgrade": "skipped",
+    "classification_repaired_upgrade": "skipped",
+    "quality_repaired_upgrade": "failure",
+    "quality_worker": "skipped",
+    "lineage_worker": "skipped",
+    "reference_repaired_upgrade": "skipped",
+    "reference_quality_repaired_upgrade": "skipped",
+    "reference_quality_worker": "skipped",
+    "reference_structure_repaired_upgrade": "skipped",
+    "reference_import": "skipped",
+    "uniqueness_upgrade": "failure",
+    "uniqueness_worker": "skipped",
+    "range_upgrade": "skipped",
+    "range_worker": "skipped",
+    "monitoring_upgrade": "skipped",
+    "freshness_upgrade": "skipped",
+    "freshness_worker": "skipped",
+    "freshness_scheduling_upgrade": "skipped",
+    "volume_upgrade": "skipped",
+    "volume_worker": "skipped",
+    "business_domain_seed": "success",
+    "browser": "in_progress",
+    "protected_authn": "pending",
+    "bootstrap": "success",
+    "services": "success",
+    "object_store": "success",
+    "seed": "success",
+    "core_authentication_install": "success"
+  },
+  "closed_assignment_sha256": "9822fd2fa730032671b143150aa6ecbd33b7efc1968cf63ef224ec79f2196f7e",
+  "verified_behavior_archives": 3,
+  "safe_evidence": [],
+  "browser": {
+    "verification": "UNAVAILABLE_AT_SNAPSHOT",
+    "captures_verified": 0,
+    "visualReview": "NOT_PERFORMED"
+  },
+  "verification_receipt_sha256": "7ffd49e147b4832d7ddb7e68b03535d21db5fc59ad71b329f9770f1484d42a41",
+  "source_security": "docs/verification/source-security-663fee9.json",
+  "runtime_security": "docs/verification/runtime-images-hosted-663fee9.json",
+  "pull_request": "https://github.com/dlamaro96/governance-commons/pull/50",
+  "merged": null,
+  "jobs": [
+    {
+      "name": "secrets",
+      "id": 137713320060,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (governance)",
+      "id": 137713320251,
+      "status": "completed",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Explicit relation candidate original upgrade",
+        "Collect bounded redacted evidence"
+      ]
+    },
+    {
+      "name": "behavior (quality-basics)",
+      "id": 137713320276,
+      "status": "completed",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Verify completeness storage upgrade and current authorization",
+        "Collect bounded redacted evidence"
+      ]
+    },
+    {
+      "name": "behavior (foundation)",
+      "id": 137713320322,
+      "status": "in_progress",
+      "conclusion": null,
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (browser)",
+      "id": 137713320484,
+      "status": "in_progress",
+      "conclusion": null,
+      "failedSteps": []
+    },
+    {
+      "name": "quality",
+      "id": 137713320592,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (quality-freshness-volume)",
+      "id": 137713320920,
+      "status": "completed",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Verify uniqueness upgrade, immutable measurements and retained quality families",
+        "Collect bounded redacted evidence"
+      ]
+    }
+  ],
+  "core_authentication_setup": {
+    "scope": {
+      "command": "./dev authn-core-install",
+      "purpose": "EXPLICIT_LOCAL_SETUP",
+      "qualifiesNativeBridge": false,
+      "contentAuthority": false,
+      "evidence": "STEP_OUTCOME_ONLY"
+    },
+    "outcomeByShard": {
+      "foundation": "success",
+      "governance": "success",
+      "quality-basics": "success",
+      "quality-freshness-volume": "success",
+      "browser": "success"
+    }
+  },
+  "failed_steps": [
+    "relation_candidate_original",
+    "quality_repaired_upgrade",
+    "uniqueness_upgrade"
+  ],
+  "failure_diagnostic": {
+    "purpose": "FAILURE_DIAGNOSTIC_ONLY",
+    "phase": "pre013-preparation",
+    "category": "command_failed",
+    "elapsed_ms": 106,
+    "exit_code": 3,
+    "source_files_verified": 132,
+    "native_declared_effective_source_files": null,
+    "tap_counts": null,
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true
+    },
+    "diagnostic_sha256": "37218d53386dc455e5e857e91ef07be9eb2c912e63b7fe56a8f4c651fce84311",
+    "cause": "NOT_EXPORTED"
+  },
+  "artifacts": [
+    {
+      "shard": "quality-freshness-volume",
+      "artifactId": 14821161767,
+      "archiveSha256": "25da41c1efd3a0ea597a3a27415183f5f68fd4f833144d8c62b85ea116d14bf9",
+      "summarySha256": "7bf98a776e1a3ec84ca447027432f23e90857cc3166a9aeabb82f97b1f5bb5d0",
+      "exportedTestRecords": 0,
+      "exportedCaptures": 0
+    },
+    {
+      "shard": "quality-basics",
+      "artifactId": 14820537703,
+      "archiveSha256": "4874c2eaff40c7cd73f782ff365261ead9da5d6e2f7093c340e764e37ab15be6",
+      "summarySha256": "3d563749141e2db610b9f92e9cc3dd55e0e4ec0317ae77b163a8d71d9f6601a4",
+      "exportedTestRecords": 0,
+      "exportedCaptures": 0
+    },
+    {
+      "shard": "governance",
+      "artifactId": 14820482844,
+      "archiveSha256": "7420f22d9c66a0fc101f60b62edb5f024bb794c67cf1aad57e5429c861ec4dea",
+      "summarySha256": "015e6804aada9c913da0856ec7e0901570765d8b2daed44689183682e8993e5a",
+      "exportedTestRecords": 0,
+      "exportedCaptures": 0
+    }
+  ],
+  "limitations": [
+    "Run still in progress at this authenticated snapshot; no completed52-outcome qualification.",
+    "No API or browser success asserted from running steps.",
+    "Potential later cancellation is not assumed or relabeled as already observed.",
+    "No native command-log cause asserted; only exact exported failure phase and declared immutable sources verified.",
+    "All five core startups and explicit local authentication installation steps passed. Three subsequent native steps failed. Foundation API and browser acceptance were still running at this snapshot.",
+    "Only three completed shard archives were available and verified; the two unfinished shard archives are unavailable at this snapshot.",
+    "The quality diagnostic binds132 declared sources to Git but does not establish completed mounted-source startup/exit or applied-schema proof.",
+    "Source and runtime security are separate scopes and do not qualify this failed Development run or a release.",
+    "No runtime or browser was executed during this retained-evidence review."
+  ]
+}

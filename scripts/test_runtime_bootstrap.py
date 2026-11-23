@@ -6,6 +6,7 @@ import importlib.util
 import io
 import json
 import os
+import runpy
 from pathlib import Path
 import shutil
 import stat
@@ -42,7 +43,7 @@ class BootstrapPersistenceTests(unittest.TestCase):
         self.provider = self.local/'source-credentials/secrets.json'
         self.legacy = self.local/'source-secrets.json'
 
-    def run_bootstrap(self, success=True):
+    def run_bootstrap(self, success=True, error=b'Source credential provider is invalid or changed'):
         result = subprocess.run([sys.executable,'-B','scripts/runtime-bootstrap.py'],cwd=self.root,
                                 stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=5)
         output = result.stdout+result.stderr
@@ -51,7 +52,7 @@ class BootstrapPersistenceTests(unittest.TestCase):
         if success: self.assertEqual(result.returncode,0,output.decode())
         else:
             self.assertNotEqual(result.returncode,0)
-            self.assertIn(b'Source credential provider is invalid or changed',output)
+            self.assertIn(error,output)
         return result
 
     def write_legacy(self, value, raw=False, mode=0o600):
@@ -70,6 +71,209 @@ class BootstrapPersistenceTests(unittest.TestCase):
         state=json.loads((self.local/'bootstrap.json').read_text())
         self.assertEqual(self.parsed()['demo-postgres']['password'],state['SOURCE_READER_PASSWORD'])
         self.assertEqual(list(self.provider.parent.iterdir()),[self.provider])
+
+    def private_functions(self):
+        with contextlib.redirect_stdout(io.StringIO()):
+            return runpy.run_path(str(self.root/'scripts/runtime-bootstrap.py'))
+
+    def assert_no_output_temporaries(self):
+        self.assertEqual(list(self.local.glob('.bootstrap-*')), [])
+
+    def test_all_managed_outputs_are_private_and_authentication_credentials_are_separate(self):
+        self.run_bootstrap()
+        for name in ('bootstrap.json', 'runtime.env', 'authn-login.env', 'authn-session.env',
+                     'seaweed-s3.json', 'governance-realm.json', 'postgres-init.sql', 'source-init.sql'):
+            info=(self.local/name).lstat()
+            self.assertTrue(stat.S_ISREG(info.st_mode))
+            self.assertEqual(stat.S_IMODE(info.st_mode), 0o600)
+            self.assertEqual(info.st_uid, os.geteuid())
+        state=json.loads((self.local/'bootstrap.json').read_text())
+        login=(self.local/'authn-login.env').read_text()
+        session=(self.local/'authn-session.env').read_text()
+        general=(self.local/'runtime.env').read_text()
+        self.assertIn('PUBLIC_AUTHN_ORIGIN=http://127.0.0.1:4310', login)
+        self.assertIn('OIDC_ISSUER=http://localhost:4311/realms/governance', login)
+        self.assertIn(state['GC_AUTHN_LOGIN_PASSWORD'], login)
+        self.assertIn(state['GC_AUTHN_API_PASSWORD'], session)
+        for name in ('GC_OWNER_PASSWORD', 'GC_APP_PASSWORD', 'GC_AUTHN_API_PASSWORD'):
+            self.assertNotIn(state[name], login)
+        for name in ('GC_OWNER_PASSWORD', 'GC_APP_PASSWORD', 'GC_AUTHN_LOGIN_PASSWORD'):
+            self.assertNotIn(state[name], session)
+        for name in ('GC_AUTHN_LOGIN_PASSWORD', 'GC_AUTHN_API_PASSWORD'):
+            self.assertNotIn(state[name], general)
+        self.assert_no_output_temporaries()
+
+    def test_managed_output_existing_and_dangling_symlinks_are_refused_without_touching_targets(self):
+        self.run_bootstrap()
+        external=self.root/'external-private-output'
+        for name in ('bootstrap.json', 'runtime.env', 'authn-login.env', 'authn-session.env',
+                     'seaweed-s3.json', 'governance-realm.json', 'postgres-init.sql', 'source-init.sql'):
+            path=self.local/name
+            original=path.read_bytes()
+            for dangling in (False, True):
+                with self.subTest(output=name, dangling=dangling):
+                    external.unlink(missing_ok=True)
+                    if not dangling:
+                        external.write_bytes(b'synthetic-external-output')
+                        external.chmod(0o640)
+                        before=external.stat()
+                    path.unlink();path.symlink_to(external)
+                    self.run_bootstrap(success=False, error=b'Local bootstrap output is invalid or changed')
+                    self.assertTrue(path.is_symlink())
+                    if dangling:
+                        self.assertFalse(external.exists())
+                    else:
+                        self.assertEqual(external.read_bytes(), b'synthetic-external-output')
+                        after=external.stat()
+                        self.assertEqual((after.st_ino, after.st_mode, after.st_mtime_ns),
+                                         (before.st_ino, before.st_mode, before.st_mtime_ns))
+                    self.assert_no_output_temporaries()
+                    path.unlink();path.write_bytes(original);path.chmod(0o600)
+
+    def test_local_directory_symlink_or_insecure_mode_is_refused_without_repair(self):
+        external=self.root/'operator-directory';external.mkdir(mode=0o755)
+        self.local.symlink_to(external, target_is_directory=True)
+        self.run_bootstrap(success=False, error=b'Local bootstrap output is invalid or changed')
+        self.assertTrue(self.local.is_symlink())
+        self.assertEqual(stat.S_IMODE(external.stat().st_mode), 0o755)
+        self.assertEqual(list(external.iterdir()), [])
+        self.local.unlink();self.local.mkdir(mode=0o755)
+        self.run_bootstrap(success=False, error=b'Local bootstrap output is invalid or changed')
+        self.assertEqual(stat.S_IMODE(self.local.stat().st_mode), 0o755)
+        self.assertEqual(list(self.local.iterdir()), [])
+
+    def test_output_publisher_rejects_nonregular_insecure_and_aliased_targets(self):
+        self.run_bootstrap();publish=self.private_functions()['write']
+        path=self.local/'rejected.env'
+        for kind in ('directory', 'fifo', 'hardlink', 'public-file'):
+            with self.subTest(kind=kind):
+                if kind=='directory':path.mkdir()
+                elif kind=='fifo':os.mkfifo(path, 0o600)
+                elif kind=='hardlink':os.link(self.local/'authn-login.env', path)
+                else:path.write_text('synthetic-old');path.chmod(0o644)
+                before=path.lstat()
+                with self.assertRaisesRegex(SystemExit, 'Local bootstrap output is invalid or changed'):
+                    publish(path, 'synthetic-new-secret')
+                after=path.lstat()
+                self.assertEqual((after.st_ino, after.st_mode, after.st_size),
+                                 (before.st_ino, before.st_mode, before.st_size))
+                self.assert_no_output_temporaries()
+                if kind=='directory':path.rmdir()
+                else:path.unlink()
+
+    def test_output_publication_is_private_complete_and_atomic(self):
+        self.run_bootstrap();publish=self.private_functions()['write']
+        path=self.local/'authn-login.env';old=path.read_bytes();old_inode=path.stat().st_ino
+        expected=b'synthetic-complete-new-secret\n'
+        original_replace=os.replace
+        observations=[]
+        def inspect_replace(source, destination, **kwargs):
+            self.assertEqual(destination, path.name)
+            self.assertEqual(path.read_bytes(), old)
+            self.assertEqual(path.stat().st_ino, old_inode)
+            self.assertEqual(kwargs['src_dir_fd'], kwargs['dst_dir_fd'])
+            directory=kwargs['src_dir_fd']
+            fd=os.open(source, os.O_RDONLY|os.O_NOFOLLOW, dir_fd=directory)
+            try:
+                info=os.fstat(fd)
+                self.assertEqual(stat.S_IMODE(info.st_mode), 0o600)
+                self.assertEqual(os.read(fd, 65536), expected)
+            finally:os.close(fd)
+            observations.append(True)
+            return original_replace(source, destination, **kwargs)
+        with patch.object(os, 'replace', side_effect=inspect_replace):publish(path, expected.decode())
+        self.assertEqual(observations, [True])
+        self.assertEqual(path.read_bytes(), expected)
+        self.assertNotEqual(path.stat().st_ino, old_inode)
+        self.assertEqual(stat.S_IMODE(path.stat().st_mode), 0o600)
+        self.assert_no_output_temporaries()
+
+    def test_output_publication_failure_preserves_original_and_removes_temporary(self):
+        self.run_bootstrap();publish=self.private_functions()['write']
+        path=self.local/'authn-session.env';old=path.read_bytes();before=path.stat()
+        for operation in ('fsync', 'replace'):
+            with self.subTest(operation=operation):
+                with patch.object(os, operation, side_effect=OSError('synthetic interruption')):
+                    with self.assertRaisesRegex(SystemExit, 'Local bootstrap output is invalid or changed'):
+                        publish(path, 'synthetic-new-secret')
+                self.assertEqual(path.read_bytes(), old)
+                after=path.stat()
+                self.assertEqual((after.st_ino, after.st_mode, after.st_mtime_ns),
+                                 (before.st_ino, before.st_mode, before.st_mtime_ns))
+                self.assert_no_output_temporaries()
+
+    def test_state_read_refuses_insecure_or_invalid_inputs_without_overwriting_them(self):
+        self.run_bootstrap();state=self.local/'bootstrap.json';original=state.read_bytes()
+        for raw in (b'{"secret":"synthetic-preserved-custom-secret",', b'[]', b'x'*65537, b'\xff'):
+            with self.subTest(size=len(raw)):
+                state.write_bytes(raw)
+                self.run_bootstrap(success=False, error=b'Local bootstrap output is invalid or changed')
+                self.assertEqual(state.read_bytes(), raw)
+                self.assert_no_output_temporaries()
+        state.write_bytes(original);state.chmod(0o644)
+        self.run_bootstrap(success=False, error=b'Local bootstrap output is invalid or changed')
+        self.assertEqual(state.read_bytes(), original)
+        self.assertEqual(stat.S_IMODE(state.stat().st_mode), 0o644)
+
+    def test_output_created_during_preparation_is_not_overwritten(self):
+        self.run_bootstrap();publish=self.private_functions()['write']
+        path=self.local/'new-private-output';original_fsync=os.fsync;created=[]
+        def create_then_sync(fd):
+            if not created:
+                created.append(True)
+                path.write_bytes(b'synthetic-operator-created');path.chmod(0o600)
+            return original_fsync(fd)
+        with patch.object(os, 'fsync', side_effect=create_then_sync):
+            with self.assertRaisesRegex(SystemExit, 'Local bootstrap output is invalid or changed'):
+                publish(path, 'synthetic-new-secret')
+        self.assertEqual(path.read_bytes(), b'synthetic-operator-created')
+        self.assert_no_output_temporaries()
+
+    def test_output_parent_replacement_does_not_redirect_publication_or_cleanup(self):
+        self.run_bootstrap();publish=self.private_functions()['write']
+        path=self.local/'authn-session.env';original=path.read_bytes();moved=self.root/'original-private-directory'
+        original_fsync=os.fsync;changed=[]
+        def move_then_sync(fd):
+            if not changed:
+                changed.append(True)
+                self.local.rename(moved)
+                self.local.mkdir(mode=0o700)
+                path.write_bytes(b'synthetic-operator-directory');path.chmod(0o600)
+            return original_fsync(fd)
+        with patch.object(os, 'fsync', side_effect=move_then_sync):
+            with self.assertRaisesRegex(SystemExit, 'Local bootstrap output is invalid or changed'):
+                publish(path, 'synthetic-new-secret')
+        self.assertEqual(path.read_bytes(), b'synthetic-operator-directory')
+        self.assertEqual((moved/path.name).read_bytes(), original)
+        self.assertEqual(list(moved.glob('.bootstrap-*')), [])
+        self.assert_no_output_temporaries()
+
+    def test_output_changed_during_preparation_is_not_overwritten(self):
+        self.run_bootstrap();publish=self.private_functions()['write']
+        path=self.local/'authn-session.env';original_fsync=os.fsync;changed=[]
+        def mutate_then_sync(fd):
+            if not changed:
+                changed.append(True)
+                replacement=self.local/'operator-replacement'
+                replacement.write_bytes(b'synthetic-operator-change');replacement.chmod(0o600)
+                os.replace(replacement, path)
+            return original_fsync(fd)
+        with patch.object(os, 'fsync', side_effect=mutate_then_sync):
+            with self.assertRaisesRegex(SystemExit, 'Local bootstrap output is invalid or changed'):
+                publish(path, 'synthetic-new-secret')
+        self.assertEqual(path.read_bytes(), b'synthetic-operator-change')
+        self.assert_no_output_temporaries()
+
+    def test_exclusive_temporary_collision_never_removes_existing_file(self):
+        self.run_bootstrap();namespace=self.private_functions();path=self.local/'authn-session.env'
+        collision=self.local/('.bootstrap-'+'a'*32);collision.write_bytes(b'synthetic-existing-file')
+        before=path.read_bytes()
+        with patch.object(namespace['secrets'], 'token_hex', return_value='a'*32):
+            with self.assertRaisesRegex(SystemExit, 'Local bootstrap output is invalid or changed'):
+                namespace['write'](path, 'synthetic-new-secret')
+        self.assertEqual(path.read_bytes(), before)
+        self.assertEqual(collision.read_bytes(), b'synthetic-existing-file')
+        self.assertEqual(list(self.local.glob('.bootstrap-*')), [collision])
 
     def test_fresh_bootstrap_includes_each_closed_quality_profile_once(self):
         self.run_bootstrap()
@@ -219,6 +423,8 @@ class ExistingImageStartupTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         files = {name: b'synthetic' for name in runtime.INTEGRITY_CONTROLS}
+        for profile in runtime.INTEGRITY_PROFILES.values():
+            files.update({name: b'synthetic' for name in profile['files']})
         files.update({'package.json': b'{"name":"synthetic"}', 'pnpm-lock.yaml': b'lockfileVersion: 9',
                       'pnpm-workspace.yaml': b'packages: []', 'apps/api/src/main.ts': b'export const main = 1;',
                       'packages/domain/src/model.ts': b'export const model = 1;',
@@ -456,6 +662,44 @@ class ExistingImageStartupTests(unittest.TestCase):
                     runtime.main()
                 self.assertEqual(caught.exception.code, 2)
                 self.assertIn('--no-build is supported only with up', stderr.getvalue())
+
+    def test_protected_entry_points_and_host_controls_are_explicitly_bound(self):
+        shipped = {
+            'tsconfig.json', 'scripts/authentication-install-core.ts', 'scripts/authentication-install-demo.ts',
+            'scripts/authentication-install.ts', 'scripts/application-authentication-install.ts',
+            'scripts/protected-core-test-fixture.ts', 'tests/fixtures/protected-core-authentication.ts',
+            'tests/fixtures/protected-core-tenants.ts',
+        }
+        controls = {
+            'scripts/runtime.py', 'scripts/runtime-bootstrap.py', 'scripts/runtime-authentication-roles.py',
+            'scripts/authentication_roles.py', 'scripts/runtime-keycloak-client.py', 'scripts/test-security.sh',
+            'policies/api_evidence.py',
+        }
+        self.assertTrue(shipped.issubset(self.snapshot['profiles']['api']))
+        self.assertTrue(controls.issubset(runtime.INTEGRITY_CONTROLS))
+        self.assertTrue((shipped | controls).issubset(self.snapshot['sources']))
+        self.assertFalse((shipped | controls).intersection(self.snapshot['profiles']['python-worker']))
+
+    def test_changed_protected_entry_point_refuses_cached_receipt_before_startup(self):
+        names = [name for name in self.snapshot['profiles']['api']
+                 if name.startswith(('scripts/', 'tests/fixtures/')) or name == 'tsconfig.json']
+        self.assertEqual(len(names), 8)
+        for name in names:
+            with self.subTest(source=name):
+                path = self.root/name
+                previous = path.read_bytes()
+                path.write_bytes(previous+b' changed protected source')
+                try:
+                    current = runtime.integrity_source_snapshot()
+                    self.assertEqual(current['profiles'], self.snapshot['profiles'])
+                    self.assertNotEqual(current['sources'][name], self.snapshot['sources'][name])
+                    events, _, error = self.startup()
+                    self.assertIsInstance(error, SystemExit)
+                    self.assert_no_canonical_mutation(events)
+                    self.assertNotIn('readback-api', events)
+                    self.assertNotIn('readback-python-worker', events)
+                finally:
+                    path.write_bytes(previous)
 
     def test_recipe_only_changes_refuse_even_when_every_image_source_and_lock_hash_matches(self):
         for name in runtime.INTEGRITY_CONTROLS:

@@ -123,7 +123,7 @@ test('proposal commands normalize through pure parser and leave retained replay 
 
 async function appFixture(respond:(q:Query)=>Record<string,unknown>[]=rows,authError?:Problem){
  const f=recording(respond),app=Fastify({logger:false});let scopes=0,authentications=0;
- const dependencies:ReferenceDependencies={authenticate:async()=>{authentications++;if(authError)throw authError;return {principal:p,sessionHash:'synthetic',csrf:'synthetic',tenants:[]};},scope:(async(t:string,a:string,work:(tx:Tx)=>Promise<unknown>)=>{assert.equal(t,tenant);assert.equal(a,actor);scopes++;return work(f.tx);}) as ReferenceDependencies['scope']};
+ const dependencies:ReferenceDependencies={authenticate:async()=>{authentications++;if(authError)throw authError;return {principal:p,sessionHash:'synthetic',csrf:'synthetic',sessionVersion:1,tenants:[]};},scope:(async(t:string,a:string,work:(tx:Tx)=>Promise<unknown>)=>{assert.equal(t,tenant);assert.equal(a,actor);scopes++;return work(f.tx);}) as ReferenceDependencies['scope']};
  await installReferenceData(app,dependencies);await app.ready();return {app,f,scopes:()=>scopes,authentications:()=>authentications,close:async()=>{await app.close();await f.close();}};
 }
 

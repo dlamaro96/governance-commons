@@ -29,6 +29,8 @@ class ImageIntegrityTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         files = {name:b'synthetic' for name in runtime.INTEGRITY_CONTROLS}
+        for profile in runtime.INTEGRITY_PROFILES.values():
+            files.update({name: b'synthetic' for name in profile['files']})
         files.update({'package.json':b'{"name":"fixture"}', 'pnpm-lock.yaml':b'lockfileVersion: 9', 'pnpm-workspace.yaml':b'packages: []',
                       'apps/api/src/route.ts':b'export const route = 1;', 'apps/web/package.json':b'{"name":"web"}',
                       'packages/domain/src/model.ts':b'export const model = 1;', 'packages/domain/package.json':b'{"name":"domain"}',

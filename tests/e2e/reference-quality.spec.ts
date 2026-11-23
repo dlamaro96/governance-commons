@@ -6,6 +6,7 @@ import {test,expect,type Page,type TestInfo} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {randomUUID} from 'node:crypto';
 import {domainBody,domainHeaders,domainLogin,stewardIdentity} from '../fixtures/business-domains-browser.ts';
+import {waitForBrowserRateBudget} from '../fixtures/browser-rate-budget.ts';
 import type {Asset,AssetDetail,AssetList,Session} from '../../apps/web/src/types.ts';
 import type {ApprovalDefinition} from '../../packages/domain/src/approval-contracts.ts';
 import type {ApprovalDefinitionView,ApprovalRequestView} from '../../packages/domain/src/approval-service.ts';
@@ -58,6 +59,7 @@ async function publishRule(page:Page,definition:ReferenceAllowedValuesRuleDefini
  const key=response.request().headers()['idempotency-key'];const replay=await domainBody<{rule:QualityRuleView}>(await page.request.post(path,{headers:{...await domainHeaders(page),'Idempotency-Key':key},data:input}),201);expect(replay.rule).toEqual(rule);await expect(dialog).toHaveCount(0);return rule;
 }
 async function startRun(page:Page,rule:QualityRuleView,release:ReferenceReleaseView,verdict:'PASS'|'FAIL',invalid:number,asOf?:string){
+ await waitForBrowserRateBudget(page.request,180);
  const panel=page.getByRole('region',{name:'Immutable rule version',exact:true});await panel.getByRole('textbox',{name:'Reference date (UTC, optional)',exact:true}).fill(asOf??'');
  const path='/api/v1/quality/rules/'+rule.id+'/runs',pending=responseFor(page,path);await panel.getByRole('button',{name:'Run check',exact:true}).click();const response=await pending;expect(response.status()).toBe(202);
  const input=response.request().postDataJSON() as QualityRunInput;expect(input).toEqual({id:expect.stringMatching(/^[a-f0-9-]{36}$/),ruleVersion:rule.version,ruleHash:rule.definitionHash,...(asOf?{referenceAsOf:asOf}:{})});
@@ -81,7 +83,7 @@ async function capture(page:Page,info:TestInfo,name:string,run:QualityRunView){
  await language(page,'en');await page.setViewportSize({width:1440,height:960});
 }
 test('REF-DQ: approved allowed values, exact non-null thresholds, historical reference pins and current source observations',async({page,browser},info)=>{
- test.setTimeout(720_000);await domainLogin(page);await language(page,'en');
+ test.setTimeout(720_000);await waitForBrowserRateBudget(page.request,295);await domainLogin(page);await language(page,'en');
  const session=await domainBody<Session>(await page.request.get('/api/v1/me'));expect(session.permissions).toEqual(expect.arrayContaining(['reference:read','reference:write','quality:read','quality:write','quality:execute']));
  const ownerContext=await browser.newContext(),consumerContext=await browser.newContext(),foreignContext=await browser.newContext();
  try{

@@ -42,7 +42,7 @@ volume.effective_sources=lambda rows,phase: rows if phase in NATIVE_PHASES else 
 def migrations():
  actual=sorted(p.name for p in (ROOT/'packages/db/migrations').glob('*.sql'))
  suffix=actual[len(NAMES):]
- successors=['032_relation_candidate_validation.sql','033_content_security_revisions.sql','034_classification_label_identities.sql']
+ successors=['032_relation_candidate_validation.sql','033_content_security_revisions.sql','034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql']
  require(actual[:len(NAMES)]==NAMES and suffix==successors[:len(suffix)],'Exact001–031 prefix and declared contiguous successors required')
  return list(NAMES)
 
@@ -129,11 +129,33 @@ def additional_roles(h,total):
  h.report['privateConfigSha256']=sha(h.secret_path.read_bytes())
 
 def snapshot(h,tables):
- # Every complete column participates, including030's table_asset_id.
- result={}
+ # Every complete column participates, including030's table_asset_id. Preserve
+ # the exact sorted row-hash digest; batch only the PostgreSQL transport.
+ require(type(tables) is list and len(tables)<=512,'Invalid canonical table inventory')
  for table in tables:
-  require(re.fullmatch(r'(?:public|gc_authn|gc_authority)\.[a-z_]+',table),'Unsafe canonical table')
-  result[table]=json.loads(h.sql(f"WITH rows AS MATERIALIZED(SELECT sha256(convert_to(to_jsonb(r)::text,'UTF8')) value FROM {table} r) SELECT jsonb_build_object('rows',count(*),'sha256',encode(sha256(coalesce(string_agg(value,''::bytea ORDER BY value),''::bytea)),'hex')) FROM rows;"))
+  require(type(table) is str and re.fullmatch(r'(?:public|gc_authn|gc_authority)\.[a-z_]+',table),'Unsafe canonical table')
+ require(len(set(tables))==len(tables),'Duplicate canonical table')
+ def closed_object(pairs):
+  row={}
+  for key,value in pairs:
+   require(key not in row,'Invalid canonical snapshot')
+   row[key]=value
+  return row
+ result={}
+ for offset in range(0,len(tables),16):
+  batch=tables[offset:offset+16]
+  queries=[f"WITH rows AS MATERIALIZED(SELECT sha256(convert_to(to_jsonb(r)::text,'UTF8')) value FROM {table} r) SELECT jsonb_build_object('table','{table}','rows',count(*),'sha256',encode(sha256(coalesce(string_agg(value,''::bytea ORDER BY value),''::bytea)),'hex')) FROM rows;" for table in batch]
+  # ON_ERROR_STOP in sql() must reject any failed statement, including one
+  # after earlier results. Never accept a successful prefix as a full batch.
+  lines=h.sql('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY;\n'+'\n'.join(queries)+'\nCOMMIT;').splitlines()
+  require(len(lines)==len(batch),'Invalid canonical snapshot count')
+  for table,line in zip(batch,lines):
+   try:row=json.loads(line,object_pairs_hook=closed_object)
+   except (ValueError,TypeError):raise RuntimeError('Invalid canonical snapshot') from None
+   require(type(row) is dict and set(row)=={'table','rows','sha256'} and row['table']==table
+           and type(row['rows']) is int and row['rows']>=0 and type(row['sha256']) is str
+           and re.fullmatch(r'[a-f0-9]{64}',row['sha256']),'Invalid canonical snapshot')
+   result[table]={'rows':row['rows'],'sha256':row['sha256']}
  return result
 
 FUNCTIONS="SELECT json_agg(jsonb_build_object('signature',p.oid::regprocedure::text,'owner',p.proowner::text,'acl',p.proacl::text,'definer',p.prosecdef,'config',p.proconfig,'volatility',p.provolatile,'body',md5(p.prosrc)) ORDER BY p.oid::regprocedure::text) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname IN('public','gc_authn','gc_authority');"

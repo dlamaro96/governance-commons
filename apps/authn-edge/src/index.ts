@@ -6,7 +6,7 @@ try {
  const environment=process.env.AUTHN_ENVIRONMENT as AuthnEnvironment;
  const app=createAuthnEdge({environment,publicOrigin:process.env.PUBLIC_AUTHN_ORIGIN ?? '',
   loginUpstream:process.env.AUTHN_LOGIN_UPSTREAM ?? '',sessionUpstream:process.env.AUTHN_SESSION_UPSTREAM ?? '',
-  legacyUpstream:process.env.LEGACY_API_UPSTREAM});
+  legacyUpstream:process.env.LEGACY_API_UPSTREAM,applicationUpstream:process.env.APPLICATION_API_UPSTREAM});
  const port=Number(process.env.PORT ?? 4310);
  if(!Number.isInteger(port)||port<1||port>65535)throw new Error('AUTHN_EDGE_CONFIG_INVALID');
  app.listen(port,process.env.HOST ?? '0.0.0.0');

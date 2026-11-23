@@ -159,3 +159,17 @@ test('Entra token redirects and provider error bodies remain generic failures wi
   await assert.rejects(client.exchangeAndVerify(attempt,'code'),error=>loginRejected(error)&&!inspect(error).includes(secret));assert.equal(requests.length,3);
  }
 });
+
+ test('post-login destination is a closed deployment choice for Entra and Keycloak',async t=>{
+ const {path}=await privateFile(t);
+ const keycloak:BrokerOidcConfig={publicOrigin:'http://localhost:4314',environment:'isolated-test',issuer:'http://localhost:4315/realms/governance',clientId:'public-keycloak',redirectUri:'http://localhost:4314/authn/callback',authorizationEndpoint:'http://localhost:4315/realms/governance/auth',tokenEndpoint:'http://localhost:4315/realms/governance/token',jwksUri:'http://localhost:4315/realms/governance/keys'};
+ const keycloakEnv={PUBLIC_AUTHN_ORIGIN:keycloak.publicOrigin,AUTHN_ENVIRONMENT:keycloak.environment,OIDC_ISSUER:keycloak.issuer,OIDC_CLIENT_ID:keycloak.clientId,OIDC_REDIRECT_URI:keycloak.redirectUri,OIDC_AUTHORIZATION_ENDPOINT:keycloak.authorizationEndpoint,OIDC_TOKEN_ENDPOINT:keycloak.tokenEndpoint,OIDC_JWKS_URI:keycloak.jwksUri};
+ for(const postLoginPath of ['/','/authn/'] as const){
+  for(const current of [config,keycloak])assert.equal(validateBrokerOidcConfig({...current,postLoginPath}).postLoginPath,postLoginPath);
+  for(const current of [{...env,OIDC_CLIENT_SECRET_FILE:path},keycloakEnv])assert.equal((await loadBrokerOidcEnvironment({...current,AUTHN_POST_LOGIN_PATH:postLoginPath})).config.postLoginPath,postLoginPath);
+ }
+ for(const postLoginPath of ['','//attacker.invalid','https://attacker.invalid','/catalog','/authn','/?next=external','/%2f']){
+  for(const current of [config,keycloak])assert.throws(()=>validateBrokerOidcConfig({...current,postLoginPath} as BrokerOidcConfig),configurationRejected);
+  await assert.rejects(loadBrokerOidcEnvironment({...env,OIDC_CLIENT_SECRET_FILE:'/absent/no-secret-read',AUTHN_POST_LOGIN_PATH:postLoginPath}),configurationRejected);
+ }
+});

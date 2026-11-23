@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
+import {createProtectedCoreSession,closeProtectedCoreSessions} from '../fixtures/protected-core-authentication.ts';
 import assert from 'node:assert/strict';
-import {createHash,randomUUID} from 'node:crypto';
+import {randomUUID} from 'node:crypto';
 import {after,before,test,type TestContext} from 'node:test';
 import {db,scope,sql} from '../../packages/db/src/index.ts';
 import {Problem} from '../../packages/authz/src/index.ts';
@@ -17,7 +18,7 @@ before(async()=>{
  const result=await sql<{name:string;superuser:boolean;bypass:boolean}>`SELECT current_user name,rolsuper superuser,rolbypassrls bypass FROM pg_roles WHERE rolname=current_user`.execute(db);
  assert.deepEqual(result.rows,[{name:'gc_app',superuser:false,bypass:false}]);
 });
-after(async()=>{await db.destroy();});
+after(async()=>{await closeProtectedCoreSessions(); await db.destroy();});
 
 test('real source keysets traverse101 identical names, preserve literal search and reject invalid bindings without persistent fixtures',async()=>{
  const ids=Array.from({length:101},()=>randomUUID()).sort(),name='source-page-'+randomUUID(),literalIds=[randomUUID(),randomUUID()],astralIds=[randomUUID(),randomUUID()].sort(),controlIds=[randomUUID(),randomUUID()].sort(),controlPrefix=randomUUID().slice(0,12),controlName=controlPrefix+'\u0001'.repeat(108);
@@ -47,10 +48,8 @@ test('real source keysets traverse101 identical names, preserve literal search a
 });
 
 async function session(t:TestContext,identity:string,tenantId=tenant){
- const token=randomUUID()+randomUUID(),hash=createHash('sha256').update(token).digest('hex');
- await db.insertInto('sessions').values({id_hash:hash,identity_id:identity,tenant_id:tenantId,csrf:randomUUID(),expires_at:new Date(Date.now()+300_000)}).execute();
- t.after(async()=>{await db.deleteFrom('sessions').where('id_hash','=',hash).execute();});
- return {Cookie:'gc_session='+token};
+ const native=await createProtectedCoreSession(identity,tenantId);t.after(()=>native.revoke());
+ return native.headers;
 }
 test('real source list/detail HTTP pages expose101 rows and conceal unavailable tenant resources and cursor reuse',async t=>{
  const name='source-http-page-'+randomUUID(),ids=Array.from({length:101},()=>randomUUID()).sort(),other=randomUUID();

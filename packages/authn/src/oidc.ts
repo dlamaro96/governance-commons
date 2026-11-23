@@ -38,7 +38,8 @@ function endpoint(value:string,production:boolean):URL {
 /** Configuration is deployment-owned, immutable after startup, and never derived from request headers. */
 export function validateBrokerOidcConfig(input:BrokerOidcConfig):BrokerOidcConfig {
  if(!input||typeof input!=='object'||Array.isArray(input)
-  ||Object.keys(input).some(key=>!['publicOrigin','environment','provider','directoryTenantId','issuer','clientId','redirectUri','authorizationEndpoint','tokenEndpoint','jwksUri','transportAliases'].includes(key)))return configReject();
+  ||Object.keys(input).some(key=>!['publicOrigin','environment','provider','directoryTenantId','issuer','clientId','redirectUri','authorizationEndpoint','tokenEndpoint','jwksUri','transportAliases','postLoginPath'].includes(key)))return configReject();
+ if(input.postLoginPath!==undefined&&!['/','/authn/'].includes(input.postLoginPath))return configReject();
  if(input.provider!==undefined&&!['keycloak','microsoft-entra'].includes(input.provider))return configReject();
  if(input.provider!=='microsoft-entra'&&input.directoryTenantId!==undefined)return configReject();
  const base=validatePublicAuthnConfig(input),production=base.environment==='production';
@@ -47,7 +48,7 @@ export function validateBrokerOidcConfig(input:BrokerOidcConfig):BrokerOidcConfi
   endpoint(preset.redirectUri,production);
   if(input.transportAliases!==undefined||(['issuer','redirectUri','authorizationEndpoint','tokenEndpoint','jwksUri'] as const).some(key=>input[key]!==preset[key]))return configReject();
   if(production&&new URL(base.publicOrigin).hostname==='login.microsoftonline.com')return configReject();
-  return preset;
+  return Object.freeze({...preset,...(input.postLoginPath===undefined?{}:{postLoginPath:input.postLoginPath})});
  }
  const issuer=endpoint(input.issuer,production),authorization=endpoint(input.authorizationEndpoint,production),token=endpoint(input.tokenEndpoint,production),jwks=endpoint(input.jwksUri,production),callback=endpoint(input.redirectUri,production);
  if(issuer.pathname.endsWith('/')||callback.href!==`${base.publicOrigin}/authn/callback`||!input.clientId||Buffer.byteLength(input.clientId)>256||!/^[A-Za-z0-9._-]+$/.test(input.clientId))return configReject();
@@ -61,7 +62,7 @@ export function validateBrokerOidcConfig(input:BrokerOidcConfig):BrokerOidcConfi
    const original=new URL(source);if(target!==`http://keycloak:8080${original.pathname}`)return configReject();aliases[source]=target;
   }
  }
- return Object.freeze({...base,...(input.provider===undefined?{}:{provider:input.provider}),issuer:issuer.href,clientId:input.clientId,redirectUri:callback.href,authorizationEndpoint:authorization.href,tokenEndpoint:token.href,jwksUri:jwks.href,transportAliases:Object.freeze(aliases)});
+ return Object.freeze({...base,...(input.provider===undefined?{}:{provider:input.provider}),...(input.postLoginPath===undefined?{}:{postLoginPath:input.postLoginPath}),issuer:issuer.href,clientId:input.clientId,redirectUri:callback.href,authorizationEndpoint:authorization.href,tokenEndpoint:token.href,jwksUri:jwks.href,transportAliases:Object.freeze(aliases)});
 }
 function checkSignal(signal?:AbortSignal):void{if(signal?.aborted)return reject();}
 async function abortable<T>(promise:Promise<T>,signal:AbortSignal):Promise<T>{

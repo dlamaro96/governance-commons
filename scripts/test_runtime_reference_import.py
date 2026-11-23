@@ -82,13 +82,13 @@ class Controls(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             gate.migrations()
 
-    def test_current_schema_binds_all_34_migrations_including_classification_identity(self):
-        self.assertEqual(len(gate.NAMES), 34)
-        self.assertEqual(gate.NAMES[-3:], ['032_relation_candidate_validation.sql', '033_content_security_revisions.sql', '034_classification_label_identities.sql'])
+    def test_current_schema_binds_all_37_migrations_including_application_authentication_bridge(self):
+        self.assertEqual(len(gate.NAMES), 37)
+        self.assertEqual(gate.NAMES[-4:], ['034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql'])
         before = {row['path']: row['sha256'] for row in gate.sources()}
         for name in gate.NAMES:
             self.assertIn('packages/db/migrations/' + name, before)
-        path = 'packages/db/migrations/034_classification_label_identities.sql'
+        path = 'packages/db/migrations/037_application_authentication_bridge.sql'
         self.write(path, '-- changed current migration')
         after = {row['path']: row['sha256'] for row in gate.sources()}
         self.assertNotEqual(before[path], after[path])
@@ -97,12 +97,12 @@ class Controls(unittest.TestCase):
             gate.sources()
 
     def test_current_schema_refuses_renamed_or_unreviewed_successor(self):
-        path = self.root / 'packages/db/migrations/034_classification_label_identities.sql'
-        renamed = path.with_name('033_undeclared.sql')
+        path = self.root / 'packages/db/migrations/037_application_authentication_bridge.sql'
+        renamed = path.with_name('037_undeclared.sql')
         path.rename(renamed)
         with self.assertRaises(RuntimeError): gate.sources()
         renamed.rename(path)
-        self.write('packages/db/migrations/034_undeclared.sql', '-- unreviewed successor')
+        self.write('packages/db/migrations/038_undeclared.sql', '-- unreviewed successor')
         with self.assertRaises(RuntimeError): gate.sources()
 
     def test_transitive_imports_and_missing_source_refusal(self):
@@ -239,26 +239,41 @@ class Controls(unittest.TestCase):
                     self.assertEqual(h.report['testExitStatus'], code)
 
     def test_prepare_finally_finishes_roles_after_migration_failure(self):
-        h = self.harness('admission')
-        h.memory_admission = lambda: {}
-        h.inventory = lambda: {'containers': []}
-        h.private_values, h.created = [], False
-        calls = []
-        def docker(*args, **kwargs):
-            out = json.dumps([{'Endpoints': {'docker': {'Host': 'unix:///owned-control'}}}]) if args[:2] == ('context', 'inspect') else 'sha256:' + 'a' * 64
-            return subprocess.CompletedProcess(args, 0, out, '')
-        h.docker = docker
-        h.sql = lambda statement, **kwargs: calls.append(statement)
-        def migrate(folder):
-            calls.append(folder.name)
-            if folder.name == 'migrations-12':
-                raise RuntimeError('Synthetic migration failure')
-        h.migrate = migrate
-        roles = SimpleNamespace(prepare_sql=lambda *a: 'PREPARE', finish_sql=lambda *a: 'FINISH')
-        with patch.object(gate.base.base, 'module', return_value=roles), patch.dict(os.environ, {'DOCKER_HOST': ''}):
-            with self.assertRaisesRegex(RuntimeError, 'Synthetic migration'):
-                gate.setup(h)
-        self.assertEqual(calls[-3:], ['PREPARE', 'migrations-12', 'FINISH'])
+        for stage in (12, 13, 37):
+            with self.subTest(stage=stage):
+                h = self.harness('admission')
+                h.folder = h.folder / ('stage-' + str(stage))
+                h.folder.mkdir()
+                h.memory_admission = lambda: {}
+                h.inventory = lambda: {'containers': []}
+                h.private_values, h.created = [], False
+                calls, prepared = [], False
+                def docker(*args, **kwargs):
+                    out = json.dumps([{'Endpoints': {'docker': {'Host': 'unix:///owned-control'}}}]) if args[:2] == ('context', 'inspect') else 'sha256:' + 'a' * 64
+                    return subprocess.CompletedProcess(args, 0, out, '')
+                h.docker = docker
+                def sql(statement, **kwargs):
+                    nonlocal prepared
+                    calls.append(statement)
+                    if statement == 'PREPARE':
+                        self.assertFalse(prepared)
+                        prepared = True
+                    elif statement == 'FINISH':
+                        self.assertTrue(prepared)
+                        prepared = False
+                h.sql = sql
+                def migrate(folder):
+                    calls.append(folder.name)
+                    self.assertEqual(prepared, folder.name != 'migrations-11')
+                    if folder.name == 'migrations-' + str(stage):
+                        raise RuntimeError('Synthetic migration failure')
+                h.migrate = migrate
+                roles = SimpleNamespace(prepare_sql=lambda *a: 'PREPARE', finish_sql=lambda *a: 'FINISH')
+                with patch.object(gate.base.base, 'module', return_value=roles), patch.dict(os.environ, {'DOCKER_HOST': ''}):
+                    with self.assertRaisesRegex(RuntimeError, 'Synthetic migration'):
+                        gate.setup(h)
+                self.assertEqual(calls[-3:], ['PREPARE', 'migrations-' + str(stage), 'FINISH'])
+                self.assertFalse(prepared)
 
     def test_main_cleanup_on_failure_and_inventory_change(self):
         for fail_execute, inventory_changed in ((True, False), (False, True), (False, False)):

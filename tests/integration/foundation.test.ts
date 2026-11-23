@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
+import {createProtectedCoreSession,closeProtectedCoreSessions,probeProtectedTenantSelection} from '../fixtures/protected-core-authentication.ts';
 import { pacedFetch as fetch } from '../fixtures/http-budget.ts';
 import { createManualScanFixture } from '../fixtures/manual-scan.ts';
-import {test,after} from 'node:test';import assert from 'node:assert/strict';import {randomUUID,createHash} from 'node:crypto';
+import {test,after} from 'node:test';import assert from 'node:assert/strict';import {randomUUID} from 'node:crypto';
 import {db,scope,sql} from '../../packages/db/src/index.ts';
 import {record} from '../../apps/api/src/repository.ts';
 const A='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',B='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const steward='10000000-0000-4000-8000-000000000001',consumer='10000000-0000-4000-8000-000000000003';
 const base=process.env.TEST_BASE_URL??'http://api:4310',origin=process.env.PUBLIC_URL??'http://localhost:4310';
-async function session(user=steward,tenant=A){const raw=randomUUID()+randomUUID(),csrf=randomUUID();await db.insertInto('sessions').values({id_hash:createHash('sha256').update(raw).digest('hex'),identity_id:user,tenant_id:tenant,csrf,expires_at:new Date(Date.now()+60000)}).execute();return {'Cookie':`gc_session=${raw}`,'X-CSRF-Token':csrf,'Origin':origin,'Content-Type':'application/json'};}
+async function session(user=steward,tenant=A){return (await createProtectedCoreSession(user,tenant)).headers;}
 const sourceBody={name:'Integration source',host:'source-postgres',port:5432,database:'harbor',schema:'public',secretRef:'demo-postgres'};
 test('runtime role cannot bypass RLS and pool context resets',async()=>{
  const role=await sql<any>`SELECT rolname,rolsuper,rolbypassrls FROM pg_roles WHERE rolname=current_user`.execute(db);assert.equal(role.rows[0].rolsuper,false);assert.equal(role.rows[0].rolbypassrls,false);assert.equal(role.rows[0].rolname,'gc_app');
@@ -21,8 +22,8 @@ test('runtime role cannot bypass RLS and pool context resets',async()=>{
 });
 test('API denies unauthenticated access, CSRF, role escalation and tenant tampering',async()=>{
  assert.equal((await fetch(base+'/api/v1/assets')).status,401);
- const headers=await session();const me=await fetch(base+'/api/v1/me',{headers});assert.equal(me.status,200);assert.equal((await me.json() as any).tenant.id,A);
- assert.equal((await fetch(base+'/api/v1/session/tenant',{method:'POST',headers,body:JSON.stringify({tenantId:B})})).status,403);
+ const native=await createProtectedCoreSession(steward,A);const headers=native.headers;const me=await fetch(base+'/api/v1/me',{headers});assert.equal(me.status,200);assert.equal((await me.json() as any).tenant.id,A);
+ assert.equal((await probeProtectedTenantSelection(headers,{tenantId:B,expectedSessionVersion:native.sessionVersion})).status,403);
  assert.equal((await fetch(base+'/api/v1/sources',{method:'POST',headers:{...headers,Origin:'https://evil.invalid','Idempotency-Key':randomUUID()},body:JSON.stringify(sourceBody)})).status,403);
  const limited=await session(consumer);assert.equal((await fetch(base+'/api/v1/sources',{method:'POST',headers:{...limited,'Idempotency-Key':randomUUID()},body:JSON.stringify(sourceBody)})).status,403);
  assert.equal((await fetch(base+'/api/v1/sources',{method:'POST',headers:{...headers,'Idempotency-Key':randomUUID()},body:JSON.stringify({...sourceBody,host:'169.254.169.254'})})).status,400);
@@ -59,4 +60,4 @@ test('worker completion rechecks requester authority and publishes no revoked sc
  // The deleted/restricted canary leaves an immutable event outside current resource access.
  const integrity=await fetch(base+'/api/v1/audit/integrity',{headers});assert.equal(integrity.status,403);const chain=await integrity.json() as any;assert.equal(chain.code,'AUDIT_SCOPE_UNAVAILABLE');assert.equal('checked' in chain,false);assert.equal('head' in chain,false);assert.equal('failedId' in chain,false);
 });
-after(async()=>{await db.destroy();});
+after(async()=>{await closeProtectedCoreSessions(); await db.destroy();});

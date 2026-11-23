@@ -3,26 +3,29 @@ import { db, sql, type Tx } from '../../../packages/db/src/index.ts';
 import { Problem, requirePermission, type Principal } from '../../../packages/authz/src/index.ts';
 import { verifyAuditChain } from './audit.ts';
 import { visibleAudit } from './repository.ts';
+import { readProtectedSessionSnapshot, requireLiveProtectedSession } from './security.ts';
 
 const maximumAuditRows = 10_000;
 
-/** Runs the same reader inside an existing repeatable-read transaction. The
- * caller owns its lifetime; the public reader below always uses read-only mode. */
+/** The caller owns this bounded RR READ ONLY transaction. Authentication,
+ * current permissions and the complete visible ledger share its snapshot. */
 export async function verifyAuditIntegritySnapshot(tx: Tx, principal: Principal, sessionHash: string) {
-  await sql`SELECT set_config('gc.tenant_id', ${principal.tenantId}, true),
-    set_config('gc.actor_id', ${principal.id}, true)`.execute(tx);
-  const session = await tx.selectFrom('sessions').innerJoin('identities', 'identities.id', 'sessions.identity_id')
-    .select('identities.name').where('sessions.id_hash', '=', sessionHash)
-    .where('sessions.identity_id', '=', principal.id).where('sessions.tenant_id', '=', principal.tenantId)
-    .where('sessions.expires_at', '>', sql<Date>`transaction_timestamp()`)
-    .where('identities.active', '=', true).executeTakeFirst();
-  if (!session) throw new Problem(401, 'SESSION_EXPIRED', 'Your session has expired. Sign in again.');
+  await sql`SELECT set_config('statement_timeout','5000',true),set_config('lock_timeout','2000',true),
+    set_config('idle_in_transaction_session_timeout','5000',true)`.execute(tx);
+  const session = await readProtectedSessionSnapshot(tx, sessionHash);
+  if (session.identityId !== principal.id || session.selectedTenantId !== principal.tenantId)
+    throw new Problem(401, 'SESSION_EXPIRED', 'Your session has expired. Sign in again.');
+  await sql`SELECT set_config('gc.tenant_id', ${session.selectedTenantId}, true),
+    set_config('gc.actor_id', ${session.identityId}, true)`.execute(tx);
+  const identity = await tx.selectFrom('identities').select('name').where('id', '=', session.identityId)
+    .where('active', '=', true).executeTakeFirst();
+  if (!identity) throw new Problem(401, 'SESSION_EXPIRED', 'Your session has expired. Sign in again.');
   const membership = await tx.selectFrom('memberships').select('permissions')
     .where('tenant_id', '=', principal.tenantId).where('identity_id', '=', principal.id)
     .where('active', '=', true).executeTakeFirst();
   if (!membership) throw new Problem(401, 'MEMBERSHIP_REVOKED', 'Access to this organization has been revoked.');
-  const current: Principal = { id: principal.id, tenantId: principal.tenantId,
-    name: session.name, permissions: membership.permissions };
+  const current: Principal = { id: session.identityId, tenantId: session.selectedTenantId,
+    name: identity.name, permissions: membership.permissions };
   requirePermission(current, 'audit:read');
 
   // Complete current resource visibility precedes any size-dependent response.
@@ -36,7 +39,9 @@ export async function verifyAuditIntegritySnapshot(tx: Tx, principal: Principal,
   const rows = await tx.selectFrom('audit').selectAll().orderBy('sequence').limit(maximumAuditRows + 1).execute();
   if (rows.length > maximumAuditRows) throw new Problem(422, 'AUDIT_PROFILE_LIMIT',
     'This development verifier is limited to 10,000 entries. Verification of larger audit chains is not yet implemented.');
-  return verifyAuditChain(rows);
+  const result = verifyAuditChain(rows);
+  await requireLiveProtectedSession(tx, session);
+  return result;
 }
 
 /** Principal, visibility and bounded chain all use one MVCC snapshot. */

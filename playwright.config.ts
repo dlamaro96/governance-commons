@@ -8,7 +8,7 @@ export default defineConfig({
   timeout: 120_000,
   expect: { timeout: 15_000 },
   use: {
-    baseURL: process.env.GC_BROWSER_BASE_URL || 'http://localhost:4310',
+    baseURL: process.env.GC_BROWSER_BASE_URL || 'http://127.0.0.1:4310',
     headless: true,
     actionTimeout: 15_000,
     navigationTimeout: 30_000,

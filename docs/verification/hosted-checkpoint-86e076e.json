@@ -1,0 +1,596 @@
+{
+  "schema_version": 1,
+  "release_qualified": false,
+  "recorded_at": "2026-11-23T16:30:17.993850+00:00",
+  "implementation_commit": "86e076e0e62d7bbc96947d5465f326cb311b67fb",
+  "tested_merge_commit": "3718bea6e102d86acd289528470580d350f46bda",
+  "same_tree_and_parent_verified": true,
+  "result": "NOT_PASSED",
+  "run_id": 45197063975,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45197063975",
+  "run_attempt": 1,
+  "required_outcomes": 52,
+  "outcome_counts": {
+    "success": 48,
+    "failure": 1,
+    "skipped": 3
+  },
+  "outcomes": {
+    "connectors": "success",
+    "security": "success",
+    "model_upgrade": "success",
+    "asset_type_upgrade": "success",
+    "type_migration_upgrade": "success",
+    "relations_upgrade": "success",
+    "relation_participation_upgrade": "success",
+    "business_domains_upgrade": "success",
+    "authority_authn_foundation": "success",
+    "authority_read_original": "success",
+    "authority_read_current": "success",
+    "authority_asset_context": "success",
+    "content_security_revision": "success",
+    "classification_label_identities": "success",
+    "reviewed_classification_facts": "success",
+    "held_metadata_authority": "failure",
+    "application_authn_bridge": "skipped",
+    "source_connectors_upgrade": "skipped",
+    "postgres_targets": "skipped",
+    "relation_candidate_original": "success",
+    "relation_candidate_current": "success",
+    "glossary_upgrade": "success",
+    "relation_scope_upgrade": "success",
+    "glossary_population_repaired_upgrade": "success",
+    "lineage_repaired_upgrade": "success",
+    "classification_repaired_upgrade": "success",
+    "quality_repaired_upgrade": "success",
+    "quality_worker": "success",
+    "lineage_worker": "success",
+    "reference_repaired_upgrade": "success",
+    "reference_quality_repaired_upgrade": "success",
+    "reference_quality_worker": "success",
+    "reference_structure_repaired_upgrade": "success",
+    "reference_import": "success",
+    "uniqueness_upgrade": "success",
+    "uniqueness_worker": "success",
+    "range_upgrade": "success",
+    "range_worker": "success",
+    "monitoring_upgrade": "success",
+    "freshness_upgrade": "success",
+    "freshness_worker": "success",
+    "freshness_scheduling_upgrade": "success",
+    "volume_upgrade": "success",
+    "volume_worker": "success",
+    "business_domain_seed": "success",
+    "browser": "success",
+    "protected_authn": "success",
+    "bootstrap": "success",
+    "services": "success",
+    "object_store": "success",
+    "seed": "success",
+    "core_authentication_install": "success"
+  },
+  "verified_behavior_archives": 5,
+  "safe_evidence": [
+    {
+      "family": "api",
+      "actualTests": 174,
+      "declarationFiles": 26,
+      "sourceFiles": 109,
+      "sourceManifestSha256": "d96b783f6495238ebcc3547330aff157d9543457e6f1f5d4c497dfc97e6d0fe4",
+      "artifactSha256": "cced66355fcc4d32d9b1b5240cb97aa8c5856721537450b19e5d7873a8090584"
+    },
+    {
+      "family": "inactive-authentication",
+      "actualTests": 35,
+      "sourceFiles": 186,
+      "migrations": 12,
+      "sourceManifestSha256": "5e01598dae2f28a7cca8c8cf9df1f0f0a545d7dd8bed0a22002d68cf1215417d",
+      "artifactSha256": "64ea0c352bd6997da6d4e71d799bb54d75ce7f9b48f63ec3449b8cc67e6b4477",
+      "cleanupExportedBothTrue": true
+    },
+    {
+      "family": "protected-authentication",
+      "actualNativeTests": 15,
+      "browserJourneys": 2,
+      "sourceFiles": 212,
+      "migrations": 37,
+      "immutableImageMode": true,
+      "captureCount": 8,
+      "visualReview": "NOT_PERFORMED",
+      "artifactSha256": "5148ffb2829cb260f650fd7799f41819c07f4e24ac3e80591099f5dfcbde39d7",
+      "scope": "Public coordinate, source, schema and artifact readback; raw private native/installation proofs are not downloaded."
+    },
+    {
+      "family": "inactive-canonical-asset-context",
+      "hostedStepOutcome": "success",
+      "declaredNativeTests": 13,
+      "qualificationScope": {
+        "command": "./dev test --suite authority-asset-context",
+        "runner": "scripts/runtime-test-authority-asset-context.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-inactive-asset-context-sql032",
+        "report": "authority-asset-context.json",
+        "schemaScope": "Isolated SQL001\u2013030, then SQL031/032 with preservation and replay; current-source inactive canonical asset-context cases",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable declarations only; private 13-case report and its executed input/resource inventory are not exported."
+    },
+    {
+      "family": "inactive-content-security-revision",
+      "hostedStepOutcome": "success",
+      "declaredNewNativeTests": 20,
+      "declaredPrerequisiteTests": 27,
+      "declaredTotalNativeTests": 47,
+      "qualificationScope": {
+        "command": "./dev test --suite content-security-revision",
+        "runner": "scripts/runtime-test-content-security-revision.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-content-security-revision-sql033",
+        "report": "content-security-revision.json",
+        "schemaScope": "Populated SQL001\u2013032 to SQL033; private content revision, concurrency, snapshot, preservation and replay",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable 13+14+20 case declarations only; private native source inventory, preservation, concurrency and cleanup reports are not exported."
+    },
+    {
+      "family": "inactive-classification-label-identities",
+      "hostedStepOutcome": "success",
+      "declaredNewNativeTests": 23,
+      "declaredPrerequisiteTests": 27,
+      "declaredTotalNativeTests": 50,
+      "qualificationScope": {
+        "command": "./dev test --suite classification-label-identities",
+        "runner": "scripts/runtime-test-classification-label-identities.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-classification-label-identities-sql034",
+        "report": "classification-label-identities.json",
+        "schemaScope": "Populated SQL001\u2013033 to SQL034; current-pin identity baseline, terminal retirement, concurrency, preservation and replay",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable 13+14+23 case declarations only; private native source inventory, preservation, concurrency and cleanup reports are not exported."
+    },
+    {
+      "family": "inactive-reviewed-classification-facts",
+      "hostedStepOutcome": "success",
+      "declaredProducerBindingTests": 23,
+      "declaredReviewedFactTests": 25,
+      "declaredPrerequisiteTests": 50,
+      "declaredTotalNativeTests": 98,
+      "qualificationScope": {
+        "command": "./dev test --suite reviewed-classification-facts",
+        "runner": "scripts/runtime-test-reviewed-classification-producer.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-reviewed-classification-facts-sql035",
+        "report": "reviewed-classification-producer.json",
+        "schemaScope": "Populated SQL001\u2013034 to SQL035; private producer bindings and inactive reviewed classification facts, complete partition validation, preservation and replay",
+        "expectedNativeTests": {
+          "predecessor": 50,
+          "producerBinding": 23,
+          "reviewedFacts": 25,
+          "total": 98
+        },
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable50+23+25 case declarations only; private native reports, mounted-source inventory and cleanup are not exported."
+    },
+    {
+      "family": "inactive-held-metadata-authority",
+      "hostedStepOutcome": "failure",
+      "declaredPrerequisiteTests": 98,
+      "declaredAdditionalTests": {
+        "preflight": 8,
+        "legacySeed": 1,
+        "scopeAlignment": 16,
+        "heldMetadata": 17
+      },
+      "declaredTotalNativeTests": 140,
+      "qualificationScope": {
+        "command": "./dev test --suite held-metadata-authority",
+        "runner": "scripts/runtime-test-held-metadata-authority.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-held-metadata-authority-sql036",
+        "report": "held-metadata-authority.json",
+        "schemaScope": "Populated SQL001\u2013035 to SQL036; corrected scope and lifetime admission, retained-history preflight, held inactive metadata composition, preservation and replay",
+        "expectedNativeTests": {
+          "predecessor": 98,
+          "preflight": 8,
+          "legacySeed": 1,
+          "scopeAlignment": 16,
+          "heldMetadata": 17,
+          "total": 140
+        },
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable98+8+1+16+17 case declarations only; private native reports, mounted-source inventory, preserved function bodies and cleanup are not exported."
+    },
+    {
+      "family": "protected-application-authentication-bridge",
+      "hostedStepOutcome": "skipped",
+      "declaredPrerequisiteTests": 1,
+      "declaredNewNativeTests": 25,
+      "declaredTotalNativeTests": 26,
+      "qualificationScope": {
+        "command": "./dev test --suite application-authn-bridge",
+        "runner": "scripts/runtime-test-application-authn-bridge.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-application-authn-bridge-sql037",
+        "report": "application-authn-bridge.json",
+        "schemaScope": "Populated SQL001\u2013036 to SQL037; protected application authentication binding, exact native reader privileges, preservation and replay; no HTTP cutover or content authority activation",
+        "expectedNativeTests": {
+          "predecessor": 1,
+          "applicationBridge": 25,
+          "total": 26
+        },
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable1+25 declarations only; private native source, role/OID preservation and cleanup evidence is not exported. The bridge gate does not qualify HTTP cutover or content authority activation."
+    }
+  ],
+  "browser": {
+    "passed": 38,
+    "failedExecuted": 0,
+    "notRun": 0,
+    "retries": 0,
+    "failedCases": [],
+    "notRunFiles": [],
+    "screenshots": [
+      {
+        "name": "catalog-ar-dark-1440.png",
+        "sha256": "393bce93b614af8dca3c11dcfdfba2165c1512e45cde9c949c6ea44e4e84acb4",
+        "bytes": 145771
+      },
+      {
+        "name": "catalog-ar-dark-390.png",
+        "sha256": "d58307e7c8e417e642ca22d009828d7ab2c27894844a94a9a5ed811c78d5b200",
+        "bytes": 52533
+      },
+      {
+        "name": "catalog-ar-dark-768.png",
+        "sha256": "6236c94866c176ba45c0e6f0bf6ce2e89fd8b79d4b76fca2b6d59c3ac737b07d",
+        "bytes": 87997
+      },
+      {
+        "name": "catalog-en-dark-1440.png",
+        "sha256": "4baec65bc659469eb8aa39498b389a1bf1775a4473056fa9135c932fbdfd4169",
+        "bytes": 171012
+      },
+      {
+        "name": "catalog-en-light-1024.png",
+        "sha256": "8da8e5c096c88f222f0551c61b79a0bbc1128489b23ef28aabe3d474927cc4ab",
+        "bytes": 133787
+      },
+      {
+        "name": "catalog-en-light-1280.png",
+        "sha256": "c1948b4a01b81f06909697d92ce85e75a7feee0397d45a2d172da06f3ba20855",
+        "bytes": 161656
+      },
+      {
+        "name": "catalog-en-light-1440.png",
+        "sha256": "468029194b83a70537f4a0fa30b3b7d5d41517d0e08906532c181b8b25a0ea63",
+        "bytes": 169851
+      },
+      {
+        "name": "catalog-en-light-390.png",
+        "sha256": "8d62f4d16f8d68eb45e7da4939c59e7c1862687311a40310f56565045fd6160d",
+        "bytes": 56575
+      },
+      {
+        "name": "catalog-en-light-768.png",
+        "sha256": "8db8c4dfbd99724c003094858b39074494d5ec675d5d1ea3cd53a97ab63f0507",
+        "bytes": 91743
+      },
+      {
+        "name": "catalog-history.png",
+        "sha256": "448bb4ef8963f3a55e183005348f1c4ea4d35ce3833d81bc9066fe59f427da4f",
+        "bytes": 92449
+      },
+      {
+        "name": "catalog-name-desc-1440.png",
+        "sha256": "066eb289676de16b43fc72061b37ea711b4bf73577381306c63ae55b06ecd59c",
+        "bytes": 173812
+      },
+      {
+        "name": "catalog-name-desc-390.png",
+        "sha256": "c445d6b0ca2db1a33b496c717ec326bea8b435f157fde49dd341e222e4a35395",
+        "bytes": 61828
+      },
+      {
+        "name": "catalog-name-desc-ar-390.png",
+        "sha256": "dbec808f0980b69507b1e849b04f46e56e036d7f10a1e1a164d3b0322292f4eb",
+        "bytes": 56770
+      },
+      {
+        "name": "m8-postgres-configuration-failure-ar-390.png",
+        "sha256": "4c91dd3815c905f45f3b4f21d564d77dc06e081ed946f971e5c1b6b7dccdc914",
+        "bytes": 43900
+      },
+      {
+        "name": "m8-postgres-configuration-failure-en-1440.png",
+        "sha256": "d8976c795a97fcc1f0fbb7d64a64097595167fdbe54cc14f2705b77d2e7273c7",
+        "bytes": 132285
+      },
+      {
+        "name": "m8-postgres-configuration-form-en-1440.png",
+        "sha256": "beb3971e8416f24a9ca26af2b1f914b99d03df1300f8d4bb5e22175f5f6fd6ea",
+        "bytes": 210032
+      },
+      {
+        "name": "m8-source-connectors-denial-ar-390.png",
+        "sha256": "9c4922b73f383827c21ed1d373cd381130d8ab178a0681a779344eff07ad2925",
+        "bytes": 18264
+      },
+      {
+        "name": "m8-source-connectors-denial-en-1440.png",
+        "sha256": "8bc99f94dfd01da8f9065ac240571d52ed3197f32005eff3f2ebf37a86f6d295",
+        "bytes": 57011
+      },
+      {
+        "name": "m8-postgres-configuration-form-ar-390.png",
+        "sha256": "1ee5e78b6900cda36ccd9d8198792b2db5fd67c0d6abf50aabaa71075936b4dc",
+        "bytes": 60746
+      },
+      {
+        "name": "m8-source-connectors-failure-ar-390.png",
+        "sha256": "16243685363c06b2b9e21a91b61a019f3efbb6b83c2424a3dfca200ffa557d0b",
+        "bytes": 44622
+      },
+      {
+        "name": "m8-source-connectors-failure-en-1440.png",
+        "sha256": "27c5604a59f942d9a43bbc8d1056009223f10a3b223c15032f1a8cbf5b5c598a",
+        "bytes": 135273
+      },
+      {
+        "name": "m8-source-connectors-form-ar-390.png",
+        "sha256": "092db0edbd5246489a251cd35cccde9e32b4cf6e27fff4c859cad1bd7e6f48fb",
+        "bytes": 63107
+      },
+      {
+        "name": "m8-source-connectors-form-en-1440.png",
+        "sha256": "e28121e27939337cfcb338c62915d403f84ff4eb8e7fb951275e86625a1a3424",
+        "bytes": 216058
+      },
+      {
+        "name": "m8-source-connectors-registered-ar-390.png",
+        "sha256": "31335945d08a41e6c9fdf26316860391d5c80c9f5c452b01683c21558635907b",
+        "bytes": 57906
+      },
+      {
+        "name": "m8-source-connectors-registered-en-1440.png",
+        "sha256": "2a86001b6d1d225d5ea6345235823fc9110241dc765c90047e23265f5025baff",
+        "bytes": 139238
+      },
+      {
+        "name": "protected-revoked-ar-mobile.png",
+        "sha256": "c141d489a59ddb66dd8a3da702729cafe630c365cf36796d906423c01eea5fc1",
+        "bytes": 64835
+      },
+      {
+        "name": "protected-selected-ar-desktop.png",
+        "sha256": "a3316a67dbe882f15d6a1671bd744aa70127c9c84490bbed6b17f02609ee5830",
+        "bytes": 74774
+      },
+      {
+        "name": "protected-selected-ar-mobile.png",
+        "sha256": "0e5c6c1724d56eb9c3d21b5664ee3c9d6573765e8512ada125a65d9e7b25f2e3",
+        "bytes": 68519
+      },
+      {
+        "name": "protected-selected-en-desktop.png",
+        "sha256": "704d7f8927bc1ec57c43b8dd56cad0368de633b8d0e7acea13e1dc8598df3d2b",
+        "bytes": 85072
+      },
+      {
+        "name": "protected-session-en-desktop.png",
+        "sha256": "e6041cab2a5f03110c4cba179d67966e8e7439a0fb744534866f28441f215309",
+        "bytes": 81948
+      },
+      {
+        "name": "protected-steward-en-mobile.png",
+        "sha256": "f24f1452fa94953b055e062ebafc431cc8323b959c5081cb01db318041952eb9",
+        "bytes": 75720
+      },
+      {
+        "name": "protected-tenant-denied-en-mobile.png",
+        "sha256": "21be5d5aa36de916779289c27023fcf704dd8b105af506a86fd4590038553b81",
+        "bytes": 75379
+      },
+      {
+        "name": "protected-unbound-denied-en-desktop.png",
+        "sha256": "2f139d7a88e2aa54a66c8d9590af052e9897b992971bfbcaa9e92681a6487e06",
+        "bytes": 78645
+      }
+    ],
+    "visualReview": "NOT_PERFORMED"
+  },
+  "verification_receipt_sha256": "0ddd1bbbbadaf58dbab2852aed14ac3b2243d5e7e19ddf8241a02589b81b9061",
+  "source_security": "docs/verification/source-security-86e076e.json",
+  "runtime_security": "docs/verification/runtime-images-hosted-86e076e.json",
+  "pull_request": "https://github.com/dlamaro96/governance-commons/pull/50",
+  "merged": null,
+  "limitations": [
+    "Aggregate PASS requires all52 exact outcomes, five verified archives and completed quality/secrets/behavior/required jobs; pending or failed work never implies success.",
+    "Authenticated archives and declared source maps are checked against exact Git; private native TAP and mounted-source/resource inventory proofs are not exported unless explicitly noted.",
+    "Browser screenshot bytes are hashed, not visually reviewed.",
+    "No source-security requalification, runtime execution or GitHub mutation performed.",
+    "Inactive canonical asset-context scope is verified from exact hosted step outcome and immutable 13-case declarations; its private native executed-source and cleanup report is not exported.",
+    "Inactive content-security revision scope is verified from exact hosted step outcome and immutable 13+14+20 case declarations; its private executed-source, preservation, concurrency and cleanup report is not exported.",
+    "Inactive classification label identity scope is verified from exact hosted step outcome and immutable 13+14+23 case declarations; its private executed-source, preservation, concurrency and cleanup report is not exported.",
+    "Inactive reviewed-classification facts scope is verified from exact hosted step outcome and immutable50+23+25 case declarations; private executed-source, preservation, concurrency and cleanup reports are not exported.",
+    "Merge status must be filled from authenticated exact PR metadata after the normal merge; this proposal does not claim a merge.",
+    "Inactive held metadata and scope alignment is verified from exact hosted step outcome and immutable140-case declarations; private native source, preserved function bodies and cleanup evidence is not exported.",
+    "Protected application bridge native1+25 declarations are step-outcome evidence only; private native inventory and cleanup are not exported. Core setup is explicit local installation evidence and does not qualify the native bridge by itself.",
+    "This is the terminal failed86e development attempt:48 mandatory outcomes succeeded, held metadata failed, and3 dependent outcomes were skipped. It does not qualify a merge or substitute an earlier successful head.",
+    "Observed held duration is consistent with the declared780-second internal deadline plus cleanup, but no phase/error/cleanup diagnostic was exported; timeout is not established from elapsed duration alone."
+  ],
+  "visual_review": {
+    "status": "SELECTED_CAPTURES_REVIEWED",
+    "method": "Separate model-assisted view_image inspections of authenticated capture bytes",
+    "unique_captures_reviewed": 8,
+    "available_captures": 33,
+    "reviews": [
+      {
+        "receipt_sha256": "00faa97399967c66041c5e5417a02009477ca492a6b7195a322845264c6e0ed4",
+        "inspected": [
+          {
+            "name": "catalog-en-light-1440.png",
+            "sha256": "468029194b83a70537f4a0fa30b3b7d5d41517d0e08906532c181b8b25a0ea63",
+            "observation": "Desktop catalog renders current navigation, global sorting text, result count and table; synthetic qualification rows visible."
+          },
+          {
+            "name": "catalog-ar-dark-390.png",
+            "sha256": "d58307e7c8e417e642ca22d009828d7ab2c27894844a94a9a5ed811c78d5b200",
+            "observation": "Arabic dark mobile catalog renders RTL controls and scoped horizontal table overflow; human translation review warning remains visible."
+          },
+          {
+            "name": "protected-session-en-desktop.png",
+            "sha256": "e6041cab2a5f03110c4cba179d67966e8e7439a0fb744534866f28441f215309",
+            "observation": "Protected authentication foundation session screen renders details, tenant selection and logout; content authority explicitly inactive in this isolated test."
+          },
+          {
+            "name": "m8-source-connectors-form-en-1440.png",
+            "sha256": "e28121e27939337cfcb338c62915d403f84ff4eb8e7fb951275e86625a1a3424",
+            "observation": "Unity registration dialog renders actual fields and expected negative-test validation feedback. Credential reference only, no token displayed."
+          },
+          {
+            "name": "m8-source-connectors-failure-ar-390.png",
+            "sha256": "16243685363c06b2b9e21a91b61a019f3efbb6b83c2424a3dfca200ffa557d0b",
+            "observation": "Arabic mobile source scan history renders expected missing-reference refusal without raw credential or stack trace."
+          },
+          {
+            "name": "catalog-history.png",
+            "sha256": "448bb4ef8963f3a55e183005348f1c4ea4d35ce3833d81bc9066fe59f427da4f",
+            "observation": "Orders asset history renders collected metadata and stewardship changes with current tabs and assigned owner."
+          }
+        ],
+        "limitations": [
+          "Six of33 browser archive captures inspected; no claim all captures manually reviewed.",
+          "This is scoped rendered UI review, not an independent accessibility or translation sign-off.",
+          "Qualification fixture names and negative-test states are unsuitable as polished README presentation captures; those require refreshed curated synthetic captures."
+        ]
+      },
+      {
+        "receipt_sha256": "e97566ff0dca157f9efffdf8002794e60f37430bf94502416652af7d56302205",
+        "inspected": [
+          {
+            "name": "catalog-en-light-1440.png",
+            "sha256": "468029194b83a70537f4a0fa30b3b7d5d41517d0e08906532c181b8b25a0ea63",
+            "observation": "Rendered desktop catalog: navigation, search, asset facets, result table, status badges and synthetic tenant/persona are visible; no overlapping controls observed."
+          },
+          {
+            "name": "catalog-name-desc-ar-390.png",
+            "sha256": "dbec808f0980b69507b1e849b04f46e56e036d7f10a1e1a164d3b0322292f4eb",
+            "observation": "Rendered Arabic mobile catalog: RTL heading, search, descending sort, facets and table are readable within the viewport; Arabic human-review notice is visible."
+          },
+          {
+            "name": "protected-selected-ar-mobile.png",
+            "sha256": "0e5c6c1724d56eb9c3d21b5664ee3c9d6573765e8512ada125a65d9e7b25f2e3",
+            "observation": "Rendered Arabic mobile protected-session page: tenant-selection confirmation, version2, inactive content access and sign-out remain visible; long synthetic UUID wraps in the details card."
+          },
+          {
+            "name": "protected-session-en-desktop.png",
+            "sha256": "e6041cab2a5f03110c4cba179d67966e8e7439a0fb744534866f28441f215309",
+            "observation": "Rendered protected-session page: inactive content access, selected synthetic tenant, session version/expiry, tenant selection and sign-out controls are visible."
+          }
+        ],
+        "limitations": [
+          "Only these four captures were visually inspected; remaining29 captures were hash-verified only.",
+          "No new browser or runtime execution was performed.",
+          "This is model-assisted visual review, not human linguistic approval or complete accessibility certification.",
+          "The protected-session qualification remains explicitly inactive for content access."
+        ]
+      }
+    ],
+    "limitations": [
+      "The automated verification receipt and browser.visualReview field remain NOT_PERFORMED; these two separately bound reviews add scoped visual observations only.",
+      "Eight distinct captures were inspected; the other25 captures remain hash-verified only.",
+      "No independent accessibility or human translation sign-off.",
+      "Qualification fixtures and negative-test states are not curated README presentation captures."
+    ]
+  },
+  "core_authentication_setup": {
+    "scope": {
+      "command": "./dev authn-core-install",
+      "purpose": "EXPLICIT_LOCAL_SETUP",
+      "qualifiesNativeBridge": false,
+      "contentAuthority": false,
+      "evidence": "STEP_OUTCOME_ONLY"
+    },
+    "outcomeByShard": {
+      "foundation": "success",
+      "governance": "success",
+      "quality-basics": "success",
+      "quality-freshness-volume": "success",
+      "browser": "success"
+    }
+  },
+  "workflow_statuses": {
+    "development": "FAIL",
+    "source_security": "PASS",
+    "runtime_image_security": "PASS"
+  },
+  "failed_outcome": "held_metadata_authority",
+  "skipped_outcomes": [
+    "application_authn_bridge",
+    "source_connectors_upgrade",
+    "postgres_targets"
+  ],
+  "failure_observation": {
+    "foundation_job_id": 137770897365,
+    "held_step_started_at": "2026-11-23T15:56:41Z",
+    "held_step_completed_at": "2026-11-23T16:09:46Z",
+    "held_step_duration_seconds": 785,
+    "held_result": "FAIL",
+    "exit_code": 1,
+    "internal_execution_deadline_seconds": 780,
+    "outer_wrapper_deadline_seconds": 900,
+    "native_failed_phase": "NOT_EXPORTED",
+    "native_error_type": "NOT_EXPORTED",
+    "native_cleanup": "NOT_EXPORTED",
+    "timeout_cause": "NOT_ESTABLISHED",
+    "native_report_exported": false,
+    "collection_exit": "EXPECTED_NONZERO_FOR_NOT_PASSED_OUTCOMES",
+    "foundation_artifact_members": [
+      "api-summary.json",
+      "authentication-summary.json",
+      "behavior-summary.json"
+    ]
+  },
+  "source_security_receipt_sha256": "f98753044d072757b25fe120220e3a2ff2474e4fe7b4d5288fdfae0cf6e375fc",
+  "runtime_security_receipt_sha256": "88adca2cf39216dfb874663e26d4b38b9841a2e4ad5aced8ab21b0fc7a16d38a"
+}

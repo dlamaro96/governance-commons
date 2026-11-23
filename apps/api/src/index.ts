@@ -9,11 +9,12 @@ import {Id,SourceInput,SourceListInput,AssetEdit,ScanCompletion} from '../../../
 import {sourceStorage,sourceConfiguration,mayReconcileAbsence,validateSourceInput} from '../../../packages/connectors/src/sources.ts';
 import {listSources,type SourceListQuery} from '../../../packages/connectors/src/source-list.ts';
 import {connectorInventory} from '../../../packages/connectors/src/capabilities.ts';
-import {authenticate,installAuth,siteTenant,random,publicUrl} from './security.ts';
+import {authenticate,installAuth,siteTenant,publicUrl} from './security.ts';
 import {assetView,sourceView,jobView,auditView,visibleAssets,visibleAudit,record,once} from './repository.ts';
 import {startProjector} from './search.ts';
 import {searchAssets,type AssetSearchQuery} from './asset-search.ts';
 import {readAuditIntegrity} from './audit-reader.ts';
+import {readOverview} from './overview.ts';
 import {installModels} from './models.ts';
 import {installAssetTypes} from './asset-types.ts';
 import {installAssetTypeMigrations} from './asset-type-migrations.ts';
@@ -59,8 +60,7 @@ await installReferenceData(app);
 await installReferenceStructures(app);
 await installReferenceImport(app);
 const params={params:Type.Object({id:Id})};
-app.get('/api/v1/me',async req=>{const a=await authenticate(req);return {user:{id:a.principal.id,name:a.principal.name},tenant:a.tenants.find(x=>x.id===a.principal.tenantId),tenants:a.tenants,permissions:a.principal.permissions,csrfToken:a.csrf};});
-app.post('/api/v1/session/tenant',{schema:{body:Type.Object({tenantId:Id},{additionalProperties:false})}},async req=>{const a=await authenticate(req),tenant=(req.body as any).tenantId;if(!a.tenants.some(x=>x.id===tenant))throw new Problem(403,'TENANT_DENIED','Organization access is not permitted.');await db.updateTable('sessions').set({tenant_id:tenant,csrf:random()}).where('id_hash','=',a.sessionHash).execute();return {changed:true};});
+app.get('/api/v1/me',async req=>{const a=await authenticate(req);return {user:{id:a.principal.id,name:a.principal.name},tenant:a.tenants.find(x=>x.id===a.principal.tenantId),tenants:a.tenants,permissions:a.principal.permissions,csrfToken:a.csrf,sessionVersion:a.sessionVersion};});
 app.get('/api/v1/openapi',async req=>{await authenticate(req);return app.swagger();});
 app.get('/api/v1/members',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'catalog:write');return scope(p.tenantId,p.id,async tx=>({items:await tx.selectFrom('memberships').innerJoin('identities','identities.id','memberships.identity_id').select(['identities.id','identities.name','memberships.role']).where('memberships.active','=',true).where('identities.active','=',true).where('memberships.tenant_id','=',p.tenantId).execute()}));});
 app.get('/api/v1/assets',{schema:{querystring:Type.Object({q:Type.Optional(Type.String({maxLength:200})),type:Type.Optional(Type.String({maxLength:64})),limit:Type.Optional(Type.Integer({minimum:1,maximum:100})),cursor:Type.Optional(Type.String({maxLength:2048})),sort:Type.Optional(Type.Union([Type.Literal('name'),Type.Literal('name-desc'),Type.Literal('updated')]))},{additionalProperties:false})}},async req=>{
@@ -98,7 +98,7 @@ app.get('/api/v1/jobs',async req=>{const {principal:p}=await authenticate(req);r
 app.get('/api/v1/jobs/:id',{schema:params},async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'sources:read');return scope(p.tenantId,p.id,async tx=>{const j=await tx.selectFrom('jobs').selectAll().where('id','=',(req.params as any).id).executeTakeFirst();if(!j)throw new Problem(404,'JOB_NOT_FOUND','Job is unavailable.');return {job:jobView(j)};});});
 app.get('/api/v1/audit',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'audit:read');return scope(p.tenantId,p.id,async tx=>({items:(await visibleAudit(tx,p).orderBy('sequence','desc').limit(200).execute()).map(auditView)}));});
 app.get('/api/v1/audit/integrity',async req=>{const {principal,sessionHash}=await authenticate(req);return readAuditIntegrity(principal,sessionHash);});
-app.get('/api/v1/overview',async req=>{const {principal:p}=await authenticate(req);requirePermission(p,'catalog:read');return scope(p.tenantId,p.id,async tx=>{const a=await visibleAssets(tx,p).where('assets.status','=','active').execute();const sources=p.permissions.includes('sources:read')?await tx.selectFrom('sources').select('id').execute():[];const jobs=p.permissions.includes('sources:read')?await tx.selectFrom('jobs').select('id').execute():[];const recent=p.permissions.includes('audit:read')?await visibleAudit(tx,p).orderBy('sequence','desc').limit(8).execute():[];return {assetCount:a.length,sourceCount:sources.length,ownedCount:a.filter(x=>x.owner_id).length,jobCount:jobs.length,recentAudit:recent.map(auditView)};});});
+app.get('/api/v1/overview',async req=>readOverview((await authenticate(req)).principal));
 app.get('/api/v1/capabilities',async req=>{await authenticate(req);return {release:'development',items:connectorInventory(),aiEnabled:false};});
 const web=resolve('apps/web/dist');
 if(existsSync(web)){await app.register(fastifyStatic,{root:web,prefix:'/'});app.setNotFoundHandler(async(req,reply)=>{if(req.url.startsWith('/api/')||req.url.startsWith('/internal/')||req.url.startsWith('/auth/'))return reply.code(404).send({code:'NOT_FOUND'});return reply.sendFile('index.html');});}

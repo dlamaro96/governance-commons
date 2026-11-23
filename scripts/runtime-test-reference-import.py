@@ -33,12 +33,12 @@ NAMES = [*base.NAMES, '015_approval_workflows.sql', '016_glossary_publication.sq
          '017_relation_scope_candidates.sql', '018_glossary_nominal_candidates.sql',
          '019_quality_execution.sql', '020_native_lineage.sql', '021_classification_review.sql',
          '022_reference_publication.sql', '023_reference_quality.sql', '024_reference_structures.sql',
-         '025_quality_uniqueness.sql', '026_quality_range.sql', '027_quality_monitoring.sql', '028_quality_freshness.sql', '029_quality_freshness_scheduling.sql', '030_quality_volume.sql', '031_authority_read_grants.sql', '032_relation_candidate_validation.sql', '033_content_security_revisions.sql', '034_classification_label_identities.sql']
+         '025_quality_uniqueness.sql', '026_quality_range.sql', '027_quality_monitoring.sql', '028_quality_freshness.sql', '029_quality_freshness_scheduling.sql', '030_quality_volume.sql', '031_authority_read_grants.sql', '032_relation_candidate_validation.sql', '033_content_security_revisions.sql', '034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql']
 
 
 def migrations():
     actual = sorted(path.name for path in (ROOT / 'packages/db/migrations').glob('*.sql'))
-    require(actual == NAMES, 'Exact current SQL001–034 inventory required')
+    require(actual == NAMES, 'Exact current SQL001–037 inventory required')
     return actual
 
 
@@ -223,7 +223,10 @@ def setup(h):
         for name in names[:count]:
             shutil.copyfile(ROOT / 'packages/db/migrations' / name, folder / name)
         h.phase = 'schema-' + str(count)
-        if count in (12, 13):
+        # Each prefix finishes its deployment permissions before the next one.
+        # SQL037 also transfers a function to the protected definer, so its
+        # current-schema stage needs the same bounded SET-only preparation.
+        if count in (12, 13, 37):
             try:
                 h.sql(roles.prepare_sql(base.base.OWNER, base.base.DATABASE))
                 h.migrate(folder)
@@ -251,7 +254,7 @@ def execute(h):
     frozen = sources()
     h.frozen = frozen
     h.report.update(sources=frozen, commit=h.command(['git', 'rev-parse', 'HEAD'], sensitive=True).stdout.strip(),
-                    limitations=['Fresh current SQL001–034 plus five real PostgreSQL import service cases only; not content-security behavior, upgrade or predecessor qualification.',
+                    limitations=['Fresh current SQL001–037 plus five real PostgreSQL import service cases only; not authority scope-alignment behavior, upgrade or predecessor qualification.',
                                  'Cached dependency image with exact current source mounts; no shared services, HTTP, scanner engine, Temporal or browser execution.'])
     setup(h)
     h.phase = 'native-import-tests'

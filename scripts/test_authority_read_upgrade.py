@@ -14,6 +14,27 @@ ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('authority_read_gate',ROOT/'scripts/runtime-test-authority-read-upgrade.py')
 g=importlib.util.module_from_spec(spec);spec.loader.exec_module(g)
 class Controls(unittest.TestCase):
+ def test_declared037_inventory_preserves_exact031_target_and_rejects_gaps_or_unknown_names(self):
+  historical=g.sources();paths={row['path'] for row in historical}
+  self.assertNotIn('packages/db/migrations/036_authority_scope_alignment.sql',paths)
+  self.assertNotIn('packages/db/migrations/037_application_authentication_bridge.sql',paths)
+  self.assertEqual(sorted(p.rsplit('/',1)[-1] for p in paths if p.startswith('packages/db/migrations/') and p.endswith('.sql')),g.NAMES)
+  with tempfile.TemporaryDirectory() as directory:
+   root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)
+   for name in g.NAMES:(folder/name).write_text('-- immutable historical prefix')
+   with patch.object(g,'ROOT',root):
+    for name in ['032_relation_candidate_validation.sql', '033_content_security_revisions.sql', '034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql']:
+     path=folder/name;path.write_text('-- declared successor, never applied here')
+     self.assertEqual(g.migrations(),g.NAMES);self.assertEqual(len(g.migrations()),31)
+     path.write_text('-- changed successor bytes are outside the historical migration set')
+     self.assertEqual(g.migrations(),g.NAMES)
+    for name in ('036_undeclared.sql','037_undeclared.sql','038_undeclared.sql'):
+     extra=folder/name;extra.write_text('-- unreviewed')
+     with self.assertRaises(RuntimeError):g.migrations()
+     extra.unlink()
+    (folder/'035_reviewed_classification_producer.sql').unlink()
+    with self.assertRaises(RuntimeError):g.migrations()
+
  def test_actual_alternate_fixture_uses_normalized_registry_digest(self):
   node=shutil.which('node');self.assertIsNotNone(node)
   source=(ROOT/g.NEW_TEST).read_text()
@@ -168,7 +189,7 @@ const result=await alternate(f,{});assert.equal(installs,1);assert.equal(f.regis
   self.assertEqual(g.volume.predecessor_pins(),[])
   with self.assertRaises(RuntimeError):g.volume.effective_sources(rows,'undeclared')
  def test_snapshot_includes_complete_table_target(self):
-  calls=[];h=types.SimpleNamespace(sql=lambda text:(calls.append(text) or '{"rows":2,"sha256":"'+'a'*64+'"}'))
+  calls=[];h=types.SimpleNamespace(sql=lambda text:(calls.append(text) or '{"table":"public.quality_rules","rows":2,"sha256":"'+'a'*64+'"}'))
   self.assertEqual(g.snapshot(h,['public.quality_rules'])['public.quality_rules']['rows'],2)
   self.assertIn('to_jsonb(r)::text',calls[0]);self.assertNotIn("-'table_asset_id'",calls[0])
  def apply_fixture(self,prefix,tamper=None):

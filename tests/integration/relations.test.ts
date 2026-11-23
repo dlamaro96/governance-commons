@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
+import {createProtectedCoreSession,closeProtectedCoreSessions} from '../fixtures/protected-core-authentication.ts';
 import { pacedFetch as fetch } from '../fixtures/http-budget.ts';
 import { createManualScanFixture } from '../fixtures/manual-scan.ts';
 import assert from 'node:assert/strict';
 import { after, test } from 'node:test';
-import { createHash, randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { db, scope, sql, lockTenantLedger, type Tx } from '../../packages/db/src/index.ts';
 import { Problem, type Principal } from '../../packages/authz/src/index.ts';
 import type { AssetTypeDefinition } from '../../packages/domain/src/asset-type.ts';
@@ -37,10 +38,7 @@ const scoped = <T>(work: (tx: Tx) => Promise<T>, principal = p) => scope(princip
   await configureRelationTransaction(tx); return work(tx);
 });
 async function session(actor = steward, organization = tenant) {
-  const token = randomUUID() + randomUUID(), csrf = randomUUID();
-  await db.insertInto('sessions').values({ id_hash: createHash('sha256').update(token).digest('hex'), identity_id: actor,
-    tenant_id: organization, csrf, expires_at: new Date(Date.now() + 300_000) }).execute();
-  return { Cookie: `gc_session=${token}`, 'X-CSRF-Token': csrf, Origin: origin, 'Content-Type': 'application/json' };
+  return (await createProtectedCoreSession(actor, organization)).headers;
 }
 const request = (path: string, headers: Record<string, string>, method = 'GET', body?: unknown) =>
   fetch(base + '/api/v1' + path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body) });
@@ -555,4 +553,4 @@ test('asset assignment and lifecycle HTTP mutations time out behind the tenant l
   assert.deepEqual(await scoped(tx => tx.selectFrom('idempotency').selectAll().where('key', 'in', [assignmentHeaders['Idempotency-Key'], transitionHeaders['Idempotency-Key']]).execute()), []);
 });
 
-after(async () => { await db.destroy(); });
+after(async () => { await closeProtectedCoreSessions(); await db.destroy(); });

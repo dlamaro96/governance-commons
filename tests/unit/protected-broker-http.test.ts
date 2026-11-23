@@ -11,7 +11,7 @@ import {AuthnHttpError,sha256} from '../../packages/authn/src/transport.ts';
 const config:BrokerOidcConfig={publicOrigin:'http://localhost:4314',environment:'isolated-test',issuer:'http://localhost:4315/realms/governance',clientId:'governance-protected-web',redirectUri:'http://localhost:4314/authn/callback',authorizationEndpoint:'http://localhost:4315/realms/governance/protocol/openid-connect/auth',tokenEndpoint:'http://localhost:4315/realms/governance/protocol/openid-connect/token',jwksUri:'http://localhost:4315/realms/governance/protocol/openid-connect/certs'};
 const id='10000000-0000-0000-0000-000000000001';
 /** A controlled pg-compatible protocol fixture tests HTTP/commit sequencing; it is not database qualification. */
-async function setup(options:{consumeFailure?:boolean;consumeCommitFailure?:boolean;issueCommitFailure?:boolean;tokenFailure?:boolean;readinessFailure?:boolean}={}){
+async function setup(options:{consumeFailure?:boolean;consumeCommitFailure?:boolean;issueCommitFailure?:boolean;tokenFailure?:boolean;readinessFailure?:boolean;postLoginPath?:'/'|'/authn/'}={}){
  const events:string[]=[],inputs:unknown[][]=[];let stateHash='',nonceHash='',verifier='',consumed=false;
  const expires=new Date(Date.now()+299_000).toISOString(),sessionExpires=new Date(Date.now()+900_000).toISOString();
  const pool:AuthenticationPool={async connect(){let phase='transaction';return {
@@ -26,7 +26,7 @@ async function setup(options:{consumeFailure?:boolean;consumeCommitFailure?:bool
   events.push('token:exchange');assert.ok(events.includes('consume:COMMIT'));assert.equal(attempt.verifier,verifier);assert.equal(code,'synthetic-code');assert.equal(signal?.aborted,false);if(options.tokenFailure)throw new AuthnHttpError('AUTHN_LOGIN_INVALID');
   const now=new Date().toISOString() as UTC;return {issuer:config.issuer,subject:'synthetic-subject',audience:config.clientId,nonceHash:attempt.nonceHash,idTokenHash:sha256('synthetic-unit-token'),authenticatedAt:now,tokenIssuedAt:now,tokenExpiresAt:sessionExpires as UTC};
  }};
- const app=await buildLoginBroker({config,authentication:createAuthenticationClient(pool),oidc,readiness:async()=>{events.push('readiness');if(options.readinessFailure)throw Error('synthetic readiness failure');}});
+ const app=await buildLoginBroker({config:{...config,...(options.postLoginPath===undefined?{}:{postLoginPath:options.postLoginPath})},authentication:createAuthenticationClient(pool),oidc,readiness:async()=>{events.push('readiness');if(options.readinessFailure)throw Error('synthetic readiness failure');}});
  async function login(){const response=await app.inject({method:'GET',url:'/authn/login',headers:{host:'localhost:4314'}});assert.equal(response.statusCode,302);const url=new URL(String(response.headers.location));const cookie=values(response.headers)[0]!.split(';')[0]!;return {response,state:url.searchParams.get('state')!,nonce:url.searchParams.get('nonce')!,cookie};}
  return {app,events,inputs,login};
 }
@@ -41,8 +41,8 @@ test('protected broker consumes and commits before exchange, commits issue befor
  const fixture=await setup();t.after(()=>fixture.app.close());const {state,cookie}=await fixture.login();
  const response=await fixture.app.inject({method:'GET',url:`/authn/callback?code=synthetic-code&state=${state}&iss=${encodeURIComponent(config.issuer)}`,headers:{host:'localhost:4314',cookie}});
  assert.equal(response.statusCode,302);assert.equal(response.headers.location,'/authn/');assert.ok(fixture.events.indexOf('consume:COMMIT')<fixture.events.indexOf('token:exchange'));assert.ok(fixture.events.indexOf('token:exchange')<fixture.events.indexOf('issue:COMMIT'));
- const cookies=values(response.headers);assert.equal(cookies.length,3);assert.match(cookies[0]!,/^gc_authn_attempt=;.*Max-Age=0/);
- const session=/^gc_authn_session=([A-Za-z0-9_-]{43});/.exec(cookies[1]!)![1]!,csrf=/^gc_authn_csrf=([A-Za-z0-9_-]{43});/.exec(cookies[2]!)![1]!;assert.notEqual(session,csrf);assert.notEqual(session,state);
+ const cookies=values(response.headers);assert.equal(cookies.length,5);assert.match(cookies[0]!,/^gc_authn_attempt=;.*Max-Age=0/);
+ const session=/^gc_authn_session=([A-Za-z0-9_-]{43});/.exec(cookies[2]!)![1]!,csrf=/^gc_authn_csrf=([A-Za-z0-9_-]{43});/.exec(cookies[4]!)![1]!;assert.notEqual(session,csrf);assert.notEqual(session,state);
  const issue=fixture.inputs[1]!;assert.equal(issue[9],sha256(session));assert.equal(issue[10],sha256(csrf));assert.equal(response.body,'');
  const replay=await fixture.app.inject({method:'GET',url:`/authn/callback?code=synthetic-code&state=${state}`,headers:{host:'localhost:4314',cookie}});assert.equal(replay.statusCode,401);assert.equal(fixture.events.filter(x=>x==='token:exchange').length,1);
 });
@@ -88,4 +88,16 @@ test('protected broker readiness checks native health without creating attempts 
  assert.equal((await fixture.app.inject({url:'/health/ready?x=1',headers:{host:'localhost:4314'}})).statusCode,400);
  assert.equal((await fixture.app.inject({url:'/health/ready',headers:{host:'wrong.invalid'}})).statusCode,400);
  const failed=await setup({readinessFailure:true});t.after(()=>failed.app.close());const result=await failed.app.inject({url:'/health/ready',headers:{host:'localhost:4314'}});assert.equal(result.statusCode,503);assert.doesNotMatch(result.body,/synthetic readiness/);
+});
+
+ test('protected broker application redirect is deployment-owned and clears obsolete local cookie paths',async t=>{
+ const fixture=await setup({postLoginPath:'/'});t.after(()=>fixture.app.close());const {state,cookie}=await fixture.login();
+ const response=await fixture.app.inject({url:`/authn/callback?code=synthetic-code&state=${state}`,headers:{host:'localhost:4314',cookie}});
+ assert.equal(response.statusCode,302);assert.equal(response.headers.location,'/');
+ const emitted=values(response.headers);
+ for(const name of ['session','csrf']){
+  const related=emitted.filter(value=>value.startsWith(`gc_authn_${name}=`));assert.equal(related.length,2);
+  assert.match(related[0]!,/^gc_authn_\w+=; Path=\/authn;.*Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT$/);
+  assert.match(related[1]!,/^gc_authn_\w+=[A-Za-z0-9_-]{43}; Path=\/; HttpOnly; SameSite=Lax;/);
+ }
 });

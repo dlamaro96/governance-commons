@@ -44,8 +44,11 @@ _original_sources = predecessor.sources
 NAMES = [*predecessor.NAMES, MIGRATION]
 
 def migrations():
-    require(sorted(p.name for p in (ROOT / 'packages/db/migrations').glob('*.sql')) == NAMES,
-            'Exactly immutable SQL001–034 required; unknown successors refused')
+    actual = sorted(p.name for p in (ROOT / 'packages/db/migrations').glob('*.sql'))
+    successors = ['035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql']
+    suffix = actual[len(NAMES):]
+    require(actual[:len(NAMES)] == NAMES and suffix == successors[:len(suffix)],
+            'Exact immutable SQL001–034 prefix and declared contiguous035–036 successors required')
     return list(NAMES)
 
 def sources():

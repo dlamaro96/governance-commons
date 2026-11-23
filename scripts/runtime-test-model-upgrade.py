@@ -200,7 +200,7 @@ ROLLBACK;
                       "postgresql": postgres, "postgres_image": image, "app_image": app_image,
                       "isolation": {"network": "none; migrator shares only the disposable database network namespace", "published_ports": [], "database_storage": "disposable256MiB tmpfs", "production_volumes_used": False},
                       "sources": [{"path": str(path.relative_to(ROOT)), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
-                                  for path in [*(MIGRATIONS / filename for filename in NAMES), ROOT / "packages/db/src/migrate.ts", Path(__file__).resolve()]],
+                                  for path in [*(MIGRATIONS / filename for filename in NAMES), ROOT / "packages/db/src/migrate.ts", ROOT / "packages/db/src/migration-runner.ts", Path(__file__).resolve()]],
                       "limitations": ["Fixtures deliberately construct pre005 records, including an incomplete initial revision; they are not product user journeys.", "This qualifies a development schema transition, not a released-version upgrade, backup restore, interrupted durable bulk migration, or complete SYS-OPS-003.", "Runtime insert/update/tenant-denial and application getter behavior are qualified separately by real integration tests."]}
         finally:
             if created:

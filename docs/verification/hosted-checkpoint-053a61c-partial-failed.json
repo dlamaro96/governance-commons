@@ -1,0 +1,481 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T14:14:36.797524+00:00",
+  "release_qualified": false,
+  "implementation_commit": "053a61c0e3646ee5bb802847c279ab275912cd76",
+  "tested_merge_commit": "3cf030f782ce3f525e9e3a5b442d91ead6b6f237",
+  "same_tree_and_parent_verified": true,
+  "result": "NOT_PASSED",
+  "qualification_scope": "PARTIAL_FAILED_ATTEMPT_NOT_TERMINAL_QUALIFICATION",
+  "run_id": 45183421761,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45183421761",
+  "run_attempt": 1,
+  "run_status_at_snapshot": "in_progress",
+  "run_conclusion_at_snapshot": null,
+  "required_outcomes": 52,
+  "outcome_counts": {
+    "success": 40,
+    "in_progress": 1,
+    "pending": 8,
+    "failure": 2,
+    "skipped": 1
+  },
+  "outcomes": {
+    "connectors": "success",
+    "security": "success",
+    "model_upgrade": "success",
+    "asset_type_upgrade": "success",
+    "type_migration_upgrade": "success",
+    "relations_upgrade": "success",
+    "relation_participation_upgrade": "success",
+    "business_domains_upgrade": "success",
+    "authority_authn_foundation": "success",
+    "authority_read_original": "success",
+    "authority_read_current": "in_progress",
+    "authority_asset_context": "pending",
+    "content_security_revision": "pending",
+    "classification_label_identities": "pending",
+    "reviewed_classification_facts": "pending",
+    "held_metadata_authority": "pending",
+    "application_authn_bridge": "pending",
+    "source_connectors_upgrade": "pending",
+    "postgres_targets": "pending",
+    "relation_candidate_original": "success",
+    "relation_candidate_current": "success",
+    "glossary_upgrade": "success",
+    "relation_scope_upgrade": "success",
+    "glossary_population_repaired_upgrade": "success",
+    "lineage_repaired_upgrade": "success",
+    "classification_repaired_upgrade": "success",
+    "quality_repaired_upgrade": "success",
+    "quality_worker": "success",
+    "lineage_worker": "success",
+    "reference_repaired_upgrade": "success",
+    "reference_quality_repaired_upgrade": "success",
+    "reference_quality_worker": "success",
+    "reference_structure_repaired_upgrade": "success",
+    "reference_import": "failure",
+    "uniqueness_upgrade": "success",
+    "uniqueness_worker": "success",
+    "range_upgrade": "success",
+    "range_worker": "success",
+    "monitoring_upgrade": "success",
+    "freshness_upgrade": "success",
+    "freshness_worker": "success",
+    "freshness_scheduling_upgrade": "success",
+    "volume_upgrade": "success",
+    "volume_worker": "success",
+    "business_domain_seed": "success",
+    "browser": "failure",
+    "protected_authn": "skipped",
+    "bootstrap": "success",
+    "services": "success",
+    "object_store": "success",
+    "seed": "success",
+    "core_authentication_install": "success"
+  },
+  "closed_assignment_sha256": "9822fd2fa730032671b143150aa6ecbd33b7efc1968cf63ef224ec79f2196f7e",
+  "verified_behavior_archives": 4,
+  "safe_evidence": [],
+  "browser": {
+    "passed": 24,
+    "failedExecuted": 1,
+    "notRun": 13,
+    "retries": 0,
+    "failedCases": [
+      {
+        "file": "tests/e2e/glossary.spec.ts",
+        "line": 272,
+        "status": "unknown",
+        "attempts": 1,
+        "duration_ms": 114498,
+        "failure_locations": [
+          {
+            "file": "tests/e2e/glossary.spec.ts",
+            "line": 326,
+            "column": 74
+          }
+        ]
+      }
+    ],
+    "notRunFiles": [
+      "tests/e2e/quality.spec.ts",
+      "tests/e2e/lineage.spec.ts",
+      "tests/e2e/classification.spec.ts",
+      "tests/e2e/reference-data.spec.ts",
+      "tests/e2e/reference-quality.spec.ts",
+      "tests/e2e/reference-structures.spec.ts",
+      "tests/e2e/reference-import.spec.ts",
+      "tests/e2e/quality-uniqueness.spec.ts",
+      "tests/e2e/quality-range.spec.ts",
+      "tests/e2e/quality-monitoring.spec.ts",
+      "tests/e2e/quality-freshness.spec.ts",
+      "tests/e2e/quality-freshness-monitoring.spec.ts",
+      "tests/e2e/quality-volume.spec.ts"
+    ],
+    "screenshots": [],
+    "visualReview": "NOT_PERFORMED"
+  },
+  "verification_receipt_sha256": "1276ada01b57201fa1f1bb63ad4992aa2f39485449237694511c1dc35b342fe4",
+  "source_security": "docs/verification/source-security-053a61c.json",
+  "runtime_security": "docs/verification/runtime-images-hosted-053a61c.json",
+  "pull_request": "https://github.com/dlamaro96/governance-commons/pull/50",
+  "merged": null,
+  "jobs": [
+    {
+      "name": "behavior (governance)",
+      "id": 137723332269,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (quality-freshness-volume)",
+      "id": 137723332531,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (quality-basics)",
+      "id": 137723332588,
+      "status": "completed",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Verify bounded reference import reconciliation and current authority",
+        "Collect bounded redacted evidence"
+      ]
+    },
+    {
+      "name": "quality",
+      "id": 137723332624,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (foundation)",
+      "id": 137723332809,
+      "status": "in_progress",
+      "conclusion": null,
+      "failedSteps": []
+    },
+    {
+      "name": "secrets",
+      "id": 137723332844,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (browser)",
+      "id": 137723332864,
+      "status": "completed",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Verify browser acceptance and accessibility",
+        "Collect bounded redacted evidence"
+      ]
+    }
+  ],
+  "core_authentication_setup": {
+    "scope": {
+      "command": "./dev authn-core-install",
+      "purpose": "EXPLICIT_LOCAL_SETUP",
+      "qualifiesNativeBridge": false,
+      "contentAuthority": false,
+      "evidence": "STEP_OUTCOME_ONLY"
+    },
+    "outcomeByShard": {
+      "foundation": "success",
+      "governance": "success",
+      "quality-basics": "success",
+      "quality-freshness-volume": "success",
+      "browser": "success"
+    }
+  },
+  "failed_steps": [
+    "browser",
+    "reference_import"
+  ],
+  "artifacts": [
+    {
+      "shard": "governance",
+      "artifactId": 14825865055,
+      "archiveSha256": "08d36d37431c60f1559e7fbbb1ba651523ae8afb7e60f1ed4d4fccd2b0cb1857",
+      "summarySha256": "e398acdc32d2ebc46529167f15d1229fd350883236441643efc42c4df0ad8534",
+      "artifactOutcome": "PASS",
+      "exportedTestRecords": 0,
+      "exportedCaptures": 0
+    },
+    {
+      "shard": "quality-freshness-volume",
+      "artifactId": 14824790671,
+      "archiveSha256": "33724da306d84b900d41ffceffd6ea5534ee643f4748496c8d442292c717584f",
+      "summarySha256": "cd65bb536668d30ef41739e3a72c6461ab0cedd48ba2e16f57559635c0111322",
+      "artifactOutcome": "PASS",
+      "exportedTestRecords": 0,
+      "exportedCaptures": 0
+    },
+    {
+      "shard": "quality-basics",
+      "artifactId": 14824551775,
+      "archiveSha256": "02abd115aa3ea4844a79e70c9ff51869ca863794e3ee522507ab7006c8073e30",
+      "summarySha256": "939fcd457154c648a1567fa05eaae289c64947968ac83062cbee66ceeba2ca4e",
+      "artifactOutcome": "NOT_PASSED",
+      "exportedTestRecords": 0,
+      "exportedCaptures": 0
+    },
+    {
+      "shard": "browser",
+      "artifactId": 14823083114,
+      "archiveSha256": "94f8a07bf8a3e3bf42c580122044454bfb1b0e3b4102ad23ed7218b80614c6cb",
+      "summarySha256": "6179d7111d7252b35b9b659fb690b81d62a5961b39dd15361bc5d88e2fc352d2",
+      "artifactOutcome": "NOT_PASSED",
+      "exportedTestRecords": 38,
+      "exportedCaptures": 0
+    }
+  ],
+  "source_files": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "c534d82b8bc53f030667d3a27dc6ac254d4c46ec5c70a26f2f2c0606f4b21db8"
+    },
+    {
+      "path": "policies/api_evidence.py",
+      "sha256": "7fda2a522bfa6c8db22bd18e945597b15cc5d0aa90bcd93cf2c08a3aea2d1404"
+    },
+    {
+      "path": "policies/authentication_evidence.py",
+      "sha256": "aff4165182b6a89eb16e7d54f435c78a4ba33573295a99294f80f658addc23eb"
+    },
+    {
+      "path": "policies/ci_evidence.py",
+      "sha256": "1decfa9564bdd2b1729408bb08578d4b31f0c09f9cc9a89d437f5705ab0accc9"
+    },
+    {
+      "path": "policies/ci_shards.py",
+      "sha256": "18df2123e593654819fbbc91ad0f1606cd7faa58b56be44d4ef0681c968a93b6"
+    },
+    {
+      "path": "policies/protected_authn_evidence.py",
+      "sha256": "5e37d5e2e26844edcec1967f80c363725049d027922b3b6e4304256350994e54"
+    },
+    {
+      "path": "scripts/runtime-test-application-authn-bridge.py",
+      "sha256": "7341a37ed0ce4ed74c02a36d7d97708643896a16a3f1ed60c3a181f3efbe4d26"
+    },
+    {
+      "path": "scripts/runtime-test-authority-asset-context.py",
+      "sha256": "abe83fea080e01410c19d579f0f6995990b31ceb50a78804e8291fcf12fad2fb"
+    },
+    {
+      "path": "scripts/runtime-test-classification-label-identities.py",
+      "sha256": "b9db25069c992d2ece0eee6d2ffebe7dcca63309798eb25f9c0da9b08eadfeef"
+    },
+    {
+      "path": "scripts/runtime-test-content-security-revision.py",
+      "sha256": "7330678b22fdb99df1cb0d1bedc446d5a2a12eb7a648ef30dcdea634b3fbf2d2"
+    },
+    {
+      "path": "scripts/runtime-test-held-metadata-authority.py",
+      "sha256": "f3eae0d774e17f78527a41689b9881946c30d60086d4f7897eab9625f741bbce"
+    },
+    {
+      "path": "scripts/runtime-test-reviewed-classification-producer.py",
+      "sha256": "2af333d89e68fba9c27a3c8d63b10dd134260be1a0c2e24b715fd56ede415e22"
+    },
+    {
+      "path": "tests/api/classification-storage.test.ts",
+      "sha256": "c7da978fefd4ab359de9fd984778d05699427a320dae104ccbaab7d0242b89a0"
+    },
+    {
+      "path": "tests/e2e/approvals.spec.ts",
+      "sha256": "8bee1c4a4955585fdb50d71883772173db1b4c207918653949ceb6742151c02a"
+    },
+    {
+      "path": "tests/e2e/asset-type-migrations.spec.ts",
+      "sha256": "2ec609812d36c29ddd1365cc96a4b18760a95590e2656fef18c6d34c994e8996"
+    },
+    {
+      "path": "tests/e2e/asset-types.spec.ts",
+      "sha256": "2388075e40c2865f486b7ce66de3b494bde3f498cd0c734bf330221976b698c3"
+    },
+    {
+      "path": "tests/e2e/business-domains.spec.ts",
+      "sha256": "8d6556f30510ba42eb2d7a537004060fbbf0b9f2714f3f09b8c26d31d25005f6"
+    },
+    {
+      "path": "tests/e2e/catalog-sorting.spec.ts",
+      "sha256": "8326984a3d1d988b171a95c765ec2c20f94554fd399d353b30342c13ffcaaac4"
+    },
+    {
+      "path": "tests/e2e/classification.spec.ts",
+      "sha256": "81782fed5991ba5efe0b1909214aa4edac33bf11f6dfac5863ae1dc920ccec56"
+    },
+    {
+      "path": "tests/e2e/glossary.spec.ts",
+      "sha256": "f7070a30251a3ad5afa65fc820b5a32149bada65d1a7646bed561d95e85efd7c"
+    },
+    {
+      "path": "tests/e2e/lineage.spec.ts",
+      "sha256": "36ea229cafef469ec45e014d87b5f3e095fb813999b00ce70d948563efe3dace"
+    },
+    {
+      "path": "tests/e2e/model-migrations.spec.ts",
+      "sha256": "4580fedfa9e785e77283372e44195a82d71ae2b84a7bb03753de7516edf65ace"
+    },
+    {
+      "path": "tests/e2e/models.spec.ts",
+      "sha256": "28b7386a7f945025fc89397e946ecea5d83fd2896d2af078bba66444696bb18b"
+    },
+    {
+      "path": "tests/e2e/postgres-configuration.spec.ts",
+      "sha256": "dc4167fc59d8bed5e456fbbf9925c0c98f5a1deee1987a1efd86c7e4a5935c79"
+    },
+    {
+      "path": "tests/e2e/quality-freshness-monitoring.spec.ts",
+      "sha256": "d7a5ac75d7303976ff66415e1debbaf1a5616907d369b9aa18bc4b5241a8295c"
+    },
+    {
+      "path": "tests/e2e/quality-freshness.spec.ts",
+      "sha256": "feff9b73d8a87886330cd2c3876a275c108c1f3359053a5367cc9248d6b0cc27"
+    },
+    {
+      "path": "tests/e2e/quality-monitoring.spec.ts",
+      "sha256": "b61667ae06592c3ea29365792cf8a67b31fe805cf5f9c296d961f437c6feb85f"
+    },
+    {
+      "path": "tests/e2e/quality-range.spec.ts",
+      "sha256": "1e61a6dbf68cd7c7219cc12d9db52dd381cf58450412a4ff43c5968a8907608c"
+    },
+    {
+      "path": "tests/e2e/quality-uniqueness.spec.ts",
+      "sha256": "9c74880bfffc304f455ef60d9c0643db5ae9f00fb074e29a4587d9092eab57fe"
+    },
+    {
+      "path": "tests/e2e/quality-volume.spec.ts",
+      "sha256": "a78748504c6666a61302b04860c82cae9688d374d49988956bbf8770bde4f9cb"
+    },
+    {
+      "path": "tests/e2e/quality.spec.ts",
+      "sha256": "634f1c13a940f5bb4ea7a9525291c612a6040a6ee407a2f8c31f7742071bf545"
+    },
+    {
+      "path": "tests/e2e/reference-data.spec.ts",
+      "sha256": "36265027aadf44a14c256b35708a53ac91fe7353754f693ee7ffa592a135a6cb"
+    },
+    {
+      "path": "tests/e2e/reference-import.spec.ts",
+      "sha256": "23d6877d9d9791888d44bb6c3bb43f148ca70d2292f8ace67cdd9dea7fdcc9dc"
+    },
+    {
+      "path": "tests/e2e/reference-quality.spec.ts",
+      "sha256": "05c99013beebacb6e36c410b7306c69ee54c4af83a7b3c4349be88e9f888f0f3"
+    },
+    {
+      "path": "tests/e2e/reference-structures.spec.ts",
+      "sha256": "63232bccf1f2b26e85c3d52853570d32e9ed706fb9070cf0378c9a9678b39c98"
+    },
+    {
+      "path": "tests/e2e/relation-migrations.spec.ts",
+      "sha256": "067eb99dbb1156db4ad649c2958261144fc020a0b1a98bdfc5247e36f4e7fccf"
+    },
+    {
+      "path": "tests/e2e/relations.spec.ts",
+      "sha256": "15d2a753836f576ae97f3285eebf06632f55b535632c9f9b8db5e59d41370211"
+    },
+    {
+      "path": "tests/e2e/source-connectors.spec.ts",
+      "sha256": "3772cc177e4b8b37334e54ddf032961bf69b9ca53abbb67aeb1c7e9e6cf9e6b2"
+    },
+    {
+      "path": "tests/e2e/ui-accessibility.spec.ts",
+      "sha256": "415234c14c5f34ee50958771295508964ae7c91b57c4361b4e30f3440022be81"
+    },
+    {
+      "path": "tests/e2e/vertical-slice.spec.ts",
+      "sha256": "26735ada04bdd12e9623c3ea2ce89c31b25875db2aed9af20e897f44bca59122"
+    },
+    {
+      "path": "tests/qualification/application-authn-bridge-predecessor.test.ts",
+      "sha256": "7d2cdcd1fd42d1597b098f0f84ea59fea962a736e63b7dae07bcc83c0167b1d0"
+    },
+    {
+      "path": "tests/qualification/application-authn-bridge.test.ts",
+      "sha256": "5a6dfb59351e050290a3901606908e84a6f84960f0d1f4cce547a309cbd98eb1"
+    },
+    {
+      "path": "tests/qualification/authority-asset-context.test.ts",
+      "sha256": "0cd33b2eb6b26da708688f6b358d20aec1f347cab13fe20655d2d22bce374823"
+    },
+    {
+      "path": "tests/qualification/authority-scope-alignment.test.ts",
+      "sha256": "dfb34a2480eae11e9286717f3557c5fd11805622faf8d4410d890e209a2164a8"
+    },
+    {
+      "path": "tests/qualification/authority-scope-legacy-seed.test.ts",
+      "sha256": "5ff78c78f6a99c426e35e7812250b66648e6f3be1cc79acb2848fd2179c35ec5"
+    },
+    {
+      "path": "tests/qualification/authority-scope-preflight.test.ts",
+      "sha256": "3fd9dd6ec379cf54baece51aa53a72753beb481eeb4ca21bf9d7329aff3aba13"
+    },
+    {
+      "path": "tests/qualification/classification-label-identities.test.ts",
+      "sha256": "36b9e3355b765771033e9df50f5d6c6232cffc2996ca5f6119c3fbb377e61545"
+    },
+    {
+      "path": "tests/qualification/classification-producer-binding.test.ts",
+      "sha256": "66357bdf30c29b1a8f7c6f7054349c1d92288ae61900e60e7e95dc34a32fb0a7"
+    },
+    {
+      "path": "tests/qualification/content-security-revision.test.ts",
+      "sha256": "b408f3fc2cac7b39e076a997ae47d3770f5bcd3430433b73d0c7800d0ebc3b0c"
+    },
+    {
+      "path": "tests/qualification/held-metadata-evaluation.test.ts",
+      "sha256": "b533e537f588ae4bbe4d7c63b2ff921d16a73c794345c0c017a69f0f2780f9fe"
+    },
+    {
+      "path": "tests/qualification/reviewed-classification-facts.test.ts",
+      "sha256": "4cb0fd93bb0775a593da2fce5fd7c192ecf7b376bfc072f1de3805dd7768dca9"
+    }
+  ],
+  "limitations": [
+    "This is a partial authenticated snapshot; the complete52-outcome Development gate is not qualified.",
+    "Four authenticated archives are verified: governance and freshness/volume pass; quality-basics and browser fail. Foundation remains running at the populated authority-read upgrade.",
+    "Browser source-bound records contain24passed,1failed,13notrun,zero retries and no captures; no visual review was performed.",
+    "Protected authentication was skipped after browser failure; no protected native/browser qualification is inferred.",
+    "Foundation has no completed archive at this snapshot; no complete API/native case verification is inferred from its passed step statuses.",
+    "Browser failure cause and reference-import inner failure phase are not established by their exported records.",
+    "Later cancellation is not presumed; this record preserves observed in-progress state.",
+    "Source and runtime security are separate successful scopes and do not qualify this failed Development run or a release.",
+    "No runtime or browser was executed during this retained-evidence review."
+  ],
+  "failure_diagnostics": [
+    {
+      "purpose": "FAILURE_DIAGNOSTIC_ONLY",
+      "test_file": "tests/e2e/glossary.spec.ts",
+      "declaration_line": 272,
+      "assertion_line": 326,
+      "assertion_column": 74,
+      "assertion": "Remove link button count",
+      "expected_count": 1,
+      "observed_count": 0,
+      "timeout_ms": 15000,
+      "cause": "NOT_ESTABLISHED",
+      "rendered_page_error_context": "NOT_EXPORTED",
+      "http_status_or_network_evidence": "NOT_EXPORTED"
+    },
+    {
+      "purpose": "FAILURE_DIAGNOSTIC_ONLY",
+      "command": "./dev test --suite reference-import",
+      "result": "FAIL",
+      "exit_code": 1,
+      "inner_phase": "NOT_EXPORTED",
+      "cause": "NOT_ESTABLISHED",
+      "private_report": "NOT_EXPORTED"
+    }
+  ]
+}

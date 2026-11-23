@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
+import {createProtectedCoreSession,closeProtectedCoreSessions} from '../fixtures/protected-core-authentication.ts';
 /** Real HTTP/PostgreSQL registration boundaries. Registering a destination does
  * not authorize worker network access; the isolated TLS gate tests that policy. */
 import assert from 'node:assert/strict';
-import {createHash, randomUUID} from 'node:crypto';
+import {randomUUID} from 'node:crypto';
 import {after, before, test, type TestContext} from 'node:test';
 import {db, scope, sql} from '../../packages/db/src/index.ts';
 import {pacedFetch as fetch} from '../fixtures/http-budget.ts';
@@ -23,10 +24,8 @@ async function body<T>(response:Response,status:number):Promise<T>{
   const text=await response.text();assert.equal(response.status,status,'Unexpected real API status');return JSON.parse(text) as T;
 }
 async function session(t:TestContext,identity=engineer,organization=tenant):Promise<Headers>{
-  const raw=randomUUID()+randomUUID(),csrf=randomUUID(),hash=createHash('sha256').update(raw).digest('hex');
-  await db.insertInto('sessions').values({id_hash:hash,identity_id:identity,tenant_id:organization,csrf,expires_at:new Date(Date.now()+300_000)}).execute();
-  t.after(async()=>{await db.deleteFrom('sessions').where('id_hash','=',hash).execute();});
-  const headers={Cookie:'gc_session='+raw,'X-CSRF-Token':csrf,Origin:origin,'Content-Type':'application/json'};
+  const native=await createProtectedCoreSession(identity,organization);t.after(()=>native.revoke());
+  const headers=native.headers;
   const me=await body<{user:{id:string};tenant:{id:string};permissions:string[]}>(await request('/me',headers),200);
   assert.equal(me.user.id,identity);assert.equal(me.tenant.id,organization);
   assert.equal(me.permissions.includes('sources:write'),identity!==owner,'Seeded persona authority differs');
@@ -52,7 +51,7 @@ before(async()=>{
   assert.deepEqual(role.rows,[{name:'gc_app',superuser:false,bypass:false}]);
   assert.ok(await db.selectFrom('schema_migrations').select('name').where('name','=','014_source_connectors.sql').executeTakeFirst());
 });
-after(async()=>{await db.destroy();});
+after(async()=>{await closeProtectedCoreSessions(); await db.destroy();});
 
 test('configurable PostgreSQL registration stores exact scope and one immutable journal/receipt across replay',async t=>{
   const headers=await session(t),configuration=input(),key=randomUUID();

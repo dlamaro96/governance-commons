@@ -1,24 +1,20 @@
 // SPDX-License-Identifier: Apache-2.0
+import {domainLogin} from '../fixtures/business-domains-browser.ts';
 import { test, expect, type Browser, type Page, type APIResponse, type Response as BrowserResponse } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { mkdirSync, readFileSync } from 'node:fs';
 import type { AssetTypeDefinition } from '../../packages/domain/src/asset-type.ts';
 import type { RelationCreate, RelationEdit, RelationGraphPage, RelationTypeDefinition, RelationTypeView, RelationView } from '../../packages/domain/src/relation-contracts.ts';
 
-const credentials = JSON.parse(readFileSync('.local/bootstrap.json', 'utf8'));
 const life = { initial: 'draft', states: ['draft', 'active', 'retired'], transitions: [{ from: 'draft', to: 'active' }, { from: 'active', to: 'retired' }] };
 async function login(page: Page, username = 'steward') {
   page.on('response', response => { if (response.status() === 429 || response.status() >= 500) console.info(JSON.stringify({ diagnostic: response.status() === 429 ? 'browser_request_budget' : 'browser_server_response', method: response.request().method(), status: response.status(), path: new URL(response.url()).pathname })); });
-  await page.goto('/auth/login'); await page.locator('input[name="username"]').fill(username);
-  await page.locator('input[name="password"]').fill(credentials.personas[username]);
-  await page.getByRole('button', { name: 'Sign In', exact: true }).click();
-  await expect(page).toHaveURL('http://localhost:4310/');
-  await expect(page.getByRole('heading', { level: 1, name: username === 'summit' ? 'Summit Logistics' : 'Harbor Retail' })).toBeVisible();
+  await domainLogin(page, username);
 }
 function waitResponse(page: Page, predicate: (response: BrowserResponse) => boolean) { return page.waitForResponse(predicate, { timeout: 40_000 }); }
 async function headers(page: Page) {
   const response = await page.request.get('/api/v1/me'); expect(response.status()).toBe(200);
-  const me = await response.json(); return { 'X-CSRF-Token': me.csrfToken, Origin: 'http://localhost:4310', 'Idempotency-Key': crypto.randomUUID() };
+  const me = await response.json(); return { 'X-CSRF-Token': me.csrfToken, Origin: 'http://127.0.0.1:4310', 'Idempotency-Key': crypto.randomUUID() };
 }
 async function paceRequestBudget({ browser }: { browser: Browser }) {
   test.setTimeout(75_000); const context = await browser.newContext(); const response = await context.request.get('/api/v1/me');

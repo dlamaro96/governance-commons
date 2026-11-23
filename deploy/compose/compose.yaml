@@ -15,10 +15,9 @@ x-api-env: &api-env
   PORT: 4310
   DATABASE_URL: postgresql://gc_app:${GC_APP_PASSWORD}@postgres:5432/governance
   SESSION_KEY: ${SESSION_KEY}
-  OIDC_ISSUER: http://localhost:4311/realms/governance
-  OIDC_INTERNAL_BASE: http://keycloak:8080/realms/governance
-  OIDC_CLIENT_ID: governance-web
-  PUBLIC_URL: http://localhost:4310
+  AUTHN_ENVIRONMENT: local-development
+  PUBLIC_AUTHN_ORIGIN: http://127.0.0.1:4310
+  PUBLIC_URL: http://127.0.0.1:4310
   SITE_TOKEN: ${SITE_TOKEN}
   SITE_TENANTS: ${SITE_TENANTS}
   OPENSEARCH_URL: http://opensearch:9200
@@ -208,17 +207,114 @@ services:
     <<: *app
     command: [node, --import, tsx, apps/api/src/index.ts]
     environment: *api-env
-    ports: [127.0.0.1:4310:4310]
     depends_on:
       migrate: {condition: service_completed_successfully}
       opensearch: {condition: service_healthy}
       keycloak: {condition: service_healthy}
       seaweedfs: {condition: service_healthy}
     healthcheck:
-      test: [CMD, node, -e, "fetch('http://localhost:4310/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:4310/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 5s
       timeout: 5s
       retries: 30
+    mem_limit: 512m
+  login-broker:
+    <<: *app
+    command: [node, --import, tsx, apps/login-broker/src/index.ts]
+    env_file: [../../.local/authn-login.env]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      keycloak: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "const r=require('node:http').get({hostname:'127.0.0.1',port:4312,path:'/health/ready',headers:{Host:'127.0.0.1:4310'}},s=>{s.resume();process.exit(s.statusCode===200?0:1)});r.setTimeout(2000,()=>r.destroy());r.on('error',()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    mem_limit: 256m
+  session-api:
+    <<: *app
+    command: [node, --import, tsx, apps/session-api/src/index.ts]
+    env_file: [../../.local/authn-session.env]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, node, -e, "const r=require('node:http').get({hostname:'127.0.0.1',port:4313,path:'/health/ready',headers:{Host:'127.0.0.1:4310'}},s=>{s.resume();process.exit(s.statusCode===200?0:1)});r.setTimeout(2000,()=>r.destroy());r.on('error',()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    mem_limit: 192m
+  authn-edge:
+    <<: *app
+    command: [node, --import, tsx, apps/authn-edge/src/index.ts]
+    environment:
+      AUTHN_ENVIRONMENT: local-development
+      PUBLIC_AUTHN_ORIGIN: http://127.0.0.1:4310
+      AUTHN_LOGIN_UPSTREAM: http://login-broker:4312
+      AUTHN_SESSION_UPSTREAM: http://session-api:4313
+      APPLICATION_API_UPSTREAM: http://api:4310
+      HOST: 0.0.0.0
+      PORT: 4310
+    ports: [127.0.0.1:4310:4310]
+    depends_on:
+      api: {condition: service_healthy}
+      login-broker: {condition: service_healthy}
+      session-api: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "const r=require('node:http').get({hostname:'127.0.0.1',port:4310,path:'/authn/',headers:{Host:'127.0.0.1:4310'}},s=>{s.resume();process.exit(s.statusCode===200?0:1)});r.setTimeout(2000,()=>r.destroy());r.on('error',()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    mem_limit: 128m
+  authn-install-state:
+    image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
+    profiles: [tools]
+    user: '0:0'
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN]
+    security_opt: [no-new-privileges:true]
+    entrypoint: [/bin/sh, -ec]
+    command: ['test -d /state && test ! -L /state; if test "$$(stat -c %u:%g:%a /state)" != "${LOCAL_UID:?}:${LOCAL_GID:?}:700"; then chown 0:0 /state; chmod 0700 /state; chown ${LOCAL_UID:?}:${LOCAL_GID:?} /state; fi']
+    volumes: [authn-installation:/state]
+    restart: 'no'
+  authn-install:
+    <<: *app
+    profiles: [tools]
+    user: '${LOCAL_UID:?}:${LOCAL_GID:?}'
+    restart: 'no'
+    command: [node, --import, tsx, scripts/authentication-install-core.ts, --batch, /state]
+    environment:
+      MIGRATION_DATABASE_URL: postgresql://gc_owner:${GC_OWNER_PASSWORD}@postgres:5432/governance
+      AUTHN_ENVIRONMENT: local-development
+      PUBLIC_AUTHN_ORIGIN: http://127.0.0.1:4310
+      OIDC_ISSUER: http://localhost:4311/realms/governance
+    volumes: [authn-installation:/state]
+    mem_limit: 256m
+  authn-test-fixture:
+    <<: *app
+    profiles: [tools]
+    user: '${LOCAL_UID:?}:${LOCAL_GID:?}'
+    restart: 'no'
+    command: [node, --import, tsx, scripts/protected-core-test-fixture.ts, --batch, /state/qualification, --core-plan, /state/plan.json]
+    env_file: [../../.local/authn-login.env, ../../.local/authn-session.env]
+    environment:
+      MIGRATION_DATABASE_URL: postgresql://gc_owner:${GC_OWNER_PASSWORD}@postgres:5432/governance
+    volumes: [authn-installation:/state]
+    mem_limit: 384m
+  qualification-runner:
+    <<: *app
+    profiles: [tools]
+    user: '${LOCAL_UID:?}:${LOCAL_GID:?}'
+    restart: 'no'
+    read_only: true
+    tmpfs: ['/tmp:rw,nosuid,nodev,size=64m,mode=1777']
+    environment:
+      <<: *api-env
+      AUTHN_PROTECTED_CORE_CONFIG: /run/authn-state/qualification/test-config.json
+      TEST_BASE_URL: http://api:4310
+      AUTHN_CORE_EDGE_URL: http://authn-edge:4310
+    volumes: [authn-installation:/run/authn-state:ro]
     mem_limit: 512m
   workflow-worker:
     <<: *app
@@ -303,3 +399,4 @@ volumes:
   source-data:
   search-data:
   object-data:
+  authn-installation:

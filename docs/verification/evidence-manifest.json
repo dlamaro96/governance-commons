@@ -425,7 +425,7 @@
     },
     {
       "path": "docs/verification/relation-participation-upgrade-security-regression.json",
-      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001–010 unchanged; prior executions retained."
+      "scope": "Fresh Map-copier correction SQL regression: eight upgrade checks,20 storage and13 concurrency cases with51 mounted source hashes; immutable001\u2013010 unchanged; prior executions retained."
     },
     {
       "path": "docs/verification/m2-relation-participation-api-final.json",
@@ -443,7 +443,7 @@
     },
     {
       "path": "docs/verification/relation-participation-graph-copy-upgrade.json",
-      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001–010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
+      "scope": "Fresh graph asset copier regression: eight isolated upgrade checks,20 storage and13 concurrency cases;51 mounted-source hashes, immutable001\u2013010 preserved and disposable database removed. Earlier reports retain their own exact snapshots.",
       "source_binding": {
         "implementation_commit": "826a137cb86219693cc4b0091f93236b7ccc2086",
         "method": "Recorded source and screenshot SHA256 values match committed Git blobs. Original execution times, runtime images and dirty-worktree provenance remain unchanged; this binding is not a test rerun.",
@@ -1111,7 +1111,7 @@
     },
     {
       "path": "docs/verification/authority-admission-budget-alignment.json",
-      "scope": "Generic admission proposed dependency-depth alignment8→16;18 focused and313 combined host unit cases/types. No semantic engine or runtime claim.",
+      "scope": "Generic admission proposed dependency-depth alignment8\u219216;18 focused and313 combined host unit cases/types. No semantic engine or runtime claim.",
       "implementation_status": "IN_PROGRESS",
       "verification_status": "PASS_FOCUSED_AND_COMBINED_HOST_UNIT_AND_TYPECHECK_SCOPE",
       "source_binding": {
@@ -1233,7 +1233,7 @@
       "release_qualified": false,
       "editorial_redaction": {
         "recorded_at": "2026-11-16T11:32:05.039407+00:00",
-        "reason": "Remove local account paths and unrelated project references at the owner’s request. Original execution outcomes and source binding are unchanged. Original evidence remains in private archive and Git history.",
+        "reason": "Remove local account paths and unrelated project references at the owner\u2019s request. Original execution outcomes and source binding are unchanged. Original evidence remains in private archive and Git history.",
         "original_evidence_sha256": "05c45ff1f8d5c883abef56a5d7f89b60d4d411effadbdd022f6cb5636e6a7d0e",
         "redacted_evidence_sha256": "1ae2c6bbb126f3f4bbf1d334cf49007a8037678848023fe325ad09d4fd9ae1f5"
       }
@@ -1389,7 +1389,7 @@
       "release_qualified": false,
       "editorial_redaction": {
         "recorded_at": "2026-11-16T11:32:05.042226+00:00",
-        "reason": "Remove local account paths and unrelated project references at the owner’s request. Original execution outcomes and source binding are unchanged. Original evidence remains in private archive and Git history.",
+        "reason": "Remove local account paths and unrelated project references at the owner\u2019s request. Original execution outcomes and source binding are unchanged. Original evidence remains in private archive and Git history.",
         "original_evidence_sha256": "ac3f41617053e65973adda8dabaf5eab1d7cdb229a53491b63a49cf0a4255d23",
         "redacted_evidence_sha256": "1145e9af123a8accb70525071e4ac13197b8fba55ba3b6aa8bef903b7dfaff7a"
       }
@@ -1983,7 +1983,7 @@
       "scope": "isolated-classification-label-identities-sql034",
       "source_binding": {
         "base_commit": "82859ad7a6f9730268b457b9e9fc3dc7edfe08eb",
-        "method": "Native current mounted source hashes and unchanged SQL001–033 prefix verified independently; cached image supplies dependencies only. Current core and hosted qualification are separate.",
+        "method": "Native current mounted source hashes and unchanged SQL001\u2013033 prefix verified independently; cached image supplies dependencies only. Current core and hosted qualification are separate.",
         "verified_files": 259,
         "evidence_sha256": "3891ce034b763aa83158898c6ff5bcc538007d94aefb1d667b06e0b7ecde7845"
       }
@@ -2054,6 +2054,68 @@
       }
     },
     {
+      "path": "docs/verification/reviewed-classification-facts-local.json",
+      "scope": "isolated-reviewed-classification-facts-sql035",
+      "source_binding": {
+        "base_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+        "dirty": true,
+        "method": "Exact267-source isolated populated upgrade with98 native case executions; preservation, both replays and owned cleanup. Rebuilt core and hosted qualification remain separate.",
+        "verified_files": 267,
+        "evidence_sha256": "0841ab1a925b460fcd15c62be1a98ec0d095f6ad8c106197a07c2440d90adecb"
+      }
+    },
+    {
+      "path": "docs/verification/source-security-7b8babf.json",
+      "scope": "source-security",
+      "source_binding": {
+        "implementation_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+        "method": "Authenticated exact-revision hosted archives and immutable Git-source readback; scope and limitations retained in record. No qualification of later source inferred.",
+        "evidence_sha256": "b8abf034ae1748cbe0b3376c5068c3ac1ac37d0ad602aa6d08702087f7556599",
+        "verified_files": 1589
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-7b8babf.json",
+      "scope": "native-runtime-images",
+      "source_binding": {
+        "implementation_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+        "method": "Authenticated exact-revision hosted archives and immutable Git-source readback; scope and limitations retained in record. No qualification of later source inferred.",
+        "evidence_sha256": "1e613c557815d62aa9d6948d81cd43343737cc646a897135cd7ffbdbe896bcf9",
+        "verified_files": 47
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-a24af90-failed.json",
+      "scope": "hosted-development-48-outcomes-not-passed",
+      "source_binding": {
+        "implementation_commit": "a24af9068b5175c931e6481d399527b9b2a01d56",
+        "method": "Authenticated exact-revision hosted archives and immutable Git-source readback; scope and limitations retained in record. No qualification of later source inferred.",
+        "evidence_sha256": "6984cf8a1c417a8359573f8a81b8f7dcafe2e365f7b2081e0a9125665477b7eb"
+      }
+    },
+    {
+      "path": "docs/verification/reviewed-classification-facts-integrated-local.json",
+      "scope": "local-core-reviewed-classification-facts",
+      "source_binding": {
+        "base_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+        "dirty": true,
+        "method": "Exact347-source immutable-image and running-service readback before172 API cases and after one real classification browser journey. Separate98-case isolated native qualification; no content authority activation.",
+        "verified_files": 347,
+        "evidence_sha256": "8fec1b8800eb71d595f17c1e95707d50bd7f2960e693c883d7fc8a5afdee9280"
+      }
+    },
+    {
+      "path": "docs/verification/held-metadata-authority-local.json",
+      "scope": "isolated-held-metadata-authority-sql036",
+      "source_binding": {
+        "base_commit": "bc1f650445a291619209fdaa53691612821e965f",
+        "dirty": true,
+        "method": "Exact281-source isolated populated SQL035 to036 upgrade with140 native case executions;147-table preservation, four replays and owned cleanup. Core and hosted qualification remain separate; content authority remains inactive.",
+        "verified_files": 281,
+        "evidence_sha256": "1d23ba2239071da217afbb97145748e9e36a876163fd1625c6356c01a671ab2f"
+      }
+    },
+    {
       "path": "docs/verification/reference-snapshot-transport-local.json",
       "scope": "Isolated repaired SQL024 snapshot transport: 263 native cases across 13 invocations, full preservation/replay/cleanup and 56 host controls; hosted qualification remains separate.",
       "source_binding": {
@@ -2073,11 +2135,227 @@
         "method": "Authenticated exact-head/merge-parent/same-tree verification and all 48 mandatory outcomes; original failure and missing source-proof disclosures retained.",
         "evidence_sha256": "33f0b8538eef878d401aecce79e57838a09a2ab45ed0470f9d9b99317703b01a"
       }
+    },
+    {
+      "path": "docs/verification/held-metadata-authority-integrated-local.json",
+      "scope": "Local SQL036 core: 172 API cases and one classification browser journey; inactive held evaluation retains separate 140-case native qualification.",
+      "source_binding": {
+        "api_launch_dirty": true,
+        "product_commit": "89586005130b106393559aa95994b442408488b7",
+        "browser_launch_commit": "89586005130b106393559aa95994b442408488b7",
+        "method": "Exact 349-source immutable-image and running-service readback before API and after browser execution; three of fourteen captures inspected. Fresh hosted scans and content-authority activation remain separate.",
+        "verified_files": 349,
+        "evidence_sha256": "808d8ce180b4d958632f0c23ec907f6ffa3dcb1bb1ef51232f82ed40b6453f40",
+        "test_launch_base_commit": "24c3814c94ee6f9c66a26dd256843bd2f34602ab"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-bc1f650-cancelled.json",
+      "scope": "Superseded exact bc1f650 Development checkpoint: 41 successes, two cancellations and six skips; required aggregate did not pass.",
+      "source_binding": {
+        "implementation_commit": "bc1f650445a291619209fdaa53691612821e965f",
+        "tested_merge_commit": "e397b63074fcb22f6bb8f9f80e3e73ac27ca1a90",
+        "method": "Authenticated exact-run, merge-parent/same-tree and all 49 outcome readback. Cancelled browser exported no browser report/captures; fresh-head qualification remains separate.",
+        "evidence_sha256": "59954ee13493c6bac4c0b429ee126be1c058cd7dd4780213a1e73629a1d890a0"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-bc8dd26.json",
+      "scope": "PR47 exact 48-outcome hosted development checkpoint, authenticated archives verified before normal protected merge.",
+      "source_binding": {
+        "implementation_commit": "bc8dd26c8b9bd4f11022b707af71a4763b9f1296",
+        "method": "Authenticated GitHub run/artifact and exact source verification; normal merge 5aeb5401613a1559580c41309332c89f25b38f57 at 2026-11-23T12:13:23Z.",
+        "evidence_sha256": "4d494c0903bf0b05472658a28032fd444c0f9f0acd71470296b19ade6ed745c2"
+      }
+    },
+    {
+      "path": "docs/verification/source-security-bc8dd26.json",
+      "scope": "PR47 exact-source security qualification with authenticated stored analyses.",
+      "source_binding": {
+        "implementation_commit": "bc8dd26c8b9bd4f11022b707af71a4763b9f1296",
+        "method": "Authenticated GitHub run/artifact and exact source verification; normal merge 5aeb5401613a1559580c41309332c89f25b38f57 at 2026-11-23T12:13:23Z.",
+        "evidence_sha256": "d94422467b215ee0d4b99fa2c9d40426b3e7dfc66c4fb7baa3e0fd056ac383c2"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-bc8dd26.json",
+      "scope": "PR47 native amd64 and arm64 runtime image qualification, lower findings retained.",
+      "source_binding": {
+        "implementation_commit": "bc8dd26c8b9bd4f11022b707af71a4763b9f1296",
+        "method": "Authenticated GitHub run/artifact and exact source verification; normal merge 5aeb5401613a1559580c41309332c89f25b38f57 at 2026-11-23T12:13:23Z.",
+        "evidence_sha256": "2604012fc3963f735418cdb512b1e3d9e9d1945973b94eea156da769a089833c"
+      }
+    },
+    {
+      "path": "docs/verification/application-authentication-bridge-local.json",
+      "scope": "Explicit protected application authentication bridge on populated SQL001\u2013036; native SQL037 qualification only.",
+      "source_binding": {
+        "implementation_commit": "da1777e9dac541e9e06acce1ef420f889c2e8e4b",
+        "method": "281 exact source hashes, populated predecessor, native migration/reader/owner installer checks, two preservation replays and owned cleanup.",
+        "evidence_sha256": "5cd639a81afa3abc16dfadb26c501faf79b1da82d3f79ef7fdc0971c243ac7c8"
+      }
+    },
+    {
+      "path": "docs/verification/protected-application-core-initial-local.json",
+      "scope": "Initial SQL037 integrated core startup and two real protected-login catalog browser journeys",
+      "source_binding": {
+        "implementation_commit": "da1777e9dac541e9e06acce1ef420f889c2e8e4b",
+        "method": "Root source startup admission, real core services, retained browser JSON and three visually inspected exact capture hashes. Complete integrated source/readback evidence remains separate.",
+        "evidence_sha256": "992998720a6b3aa4d24e76bbc782639faac94193cbdac0902731c9478e212c33"
+      }
+    },
+    {
+      "path": "docs/verification/protected-application-corrections-local.json",
+      "scope": "Fresh SQL001\u2013037 migration, failed-install recovery and protected test corrections",
+      "source_binding": {
+        "method": "Exact authenticated prior-head artifact verification or explicit correction source hashes; qualification scopes remain separate.",
+        "evidence_sha256": "9a45b620305257ecff5aa061862cfaae8125de7bd32639a231ad4ef1d5c96a88",
+        "base_commit": "bbc92e4b378e44536072a8fcd99954414397fec1",
+        "working_tree_dirty": true
+      }
+    },
+    {
+      "path": "docs/verification/source-security-bbc92e4-failed.json",
+      "scope": "Exact hosted Source security artifact, Git-source and stored CodeQL analysis verification; not a new scan",
+      "source_binding": {
+        "implementation_commit": "bbc92e4b378e44536072a8fcd99954414397fec1",
+        "method": "Exact authenticated prior-head artifact verification or explicit correction source hashes; qualification scopes remain separate.",
+        "evidence_sha256": "f7bf2b4a88ebfe9f25284cb9addc439bdd5d9af99620d242a5896807229de354"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-bbc92e4.json",
+      "scope": "runtime-images-hosted-bbc92e4",
+      "source_binding": {
+        "implementation_commit": "bbc92e4b378e44536072a8fcd99954414397fec1",
+        "method": "Exact authenticated prior-head artifact verification or explicit correction source hashes; qualification scopes remain separate.",
+        "evidence_sha256": "abe54bd1180c1e671a069219b61c0d26905c628332cf2b1614cd0a631cc78d8a"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-bbc92e4-failed.json",
+      "scope": "Initial consolidated delivery failure before product tests",
+      "source_binding": {
+        "implementation_commit": "bbc92e4b378e44536072a8fcd99954414397fec1",
+        "method": "52 exact hosted outcomes, five authenticated failure archives and retained exact input hashes.",
+        "evidence_sha256": "542e0831b9fe10740c03d64ed3fbf07902df525ea57e47ce6b24c8c5cdf9c06a"
+      }
+    },
+    {
+      "path": "docs/verification/source-security-663fee9.json",
+      "scope": "Exact hosted Source security artifact, Git-source and stored CodeQL analysis verification; not a new scan",
+      "source_binding": {
+        "method": "Exact prior-head authenticated hosted qualification or individually bound correction sources and local proof hashes; scopes remain separate.",
+        "evidence_sha256": "ec469b8450ea475284e7c2203f75901d1d093fb2fdd3fa75dfb7f1c51e49203c",
+        "implementation_commit": "663fee960c8c83a98ced2c69e60b206e70b180dd"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-663fee9.json",
+      "scope": "runtime-images-hosted-663fee9",
+      "source_binding": {
+        "method": "Exact prior-head authenticated hosted qualification or individually bound correction sources and local proof hashes; scopes remain separate.",
+        "evidence_sha256": "2e1622e784882989da2f7a651eb1a9acfa1d1f5d25254ea5091430d2aeb83e3b",
+        "implementation_commit": "663fee960c8c83a98ced2c69e60b206e70b180dd"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-663fee9-partial-failed.json",
+      "scope": "hosted-checkpoint-663fee9-partial-failed",
+      "source_binding": {
+        "method": "Exact prior-head authenticated hosted qualification or individually bound correction sources and local proof hashes; scopes remain separate.",
+        "evidence_sha256": "0a74b98b900a8663041362b8e3dfaa5b51c0a36b2991aab125b6de7a3838766e",
+        "implementation_commit": "663fee960c8c83a98ced2c69e60b206e70b180dd"
+      }
+    },
+    {
+      "path": "docs/verification/migrator-import-compatibility-local.json",
+      "scope": "Migrator import compatibility, fresh SQL001\u2013037 deployment and source-bound protected API verification",
+      "source_binding": {
+        "method": "Exact prior-head authenticated hosted qualification or individually bound correction sources and local proof hashes; scopes remain separate.",
+        "evidence_sha256": "6c4df046c26f76e15e0f90d07b11e31f85629b1e929d75eec831eb1719fef6bf",
+        "base_commit": "663fee960c8c83a98ced2c69e60b206e70b180dd",
+        "working_tree_dirty": true
+      }
+    },
+    {
+      "path": "docs/verification/source-security-053a61c.json",
+      "scope": "Prior-head source security qualification; zero findings.",
+      "source_binding": {
+        "method": "Exact prior-head hosted artifacts or individually hashed local source/runtime/test receipts; no result substitutes for later source.",
+        "evidence_sha256": "dfa38c6a5400f04fdd9fd67a67f3f0318e587a34a804cc45ef8187786d08d61c",
+        "implementation_commit": "053a61c0e3646ee5bb802847c279ab275912cd76"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-053a61c.json",
+      "scope": "Prior-head native amd64 and arm64 runtime security gates; lower findings retained.",
+      "source_binding": {
+        "method": "Exact prior-head hosted artifacts or individually hashed local source/runtime/test receipts; no result substitutes for later source.",
+        "evidence_sha256": "eb6d0b3da2ea88100eae31e6416d5d2de8a2cc8e8a08f158c23dd00b6f8be5a1",
+        "implementation_commit": "053a61c0e3646ee5bb802847c279ab275912cd76"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-053a61c-partial-failed.json",
+      "scope": "Prior-head partial failed 52-outcome development snapshot; four authenticated archives.",
+      "source_binding": {
+        "method": "Exact prior-head hosted artifacts or individually hashed local source/runtime/test receipts; no result substitutes for later source.",
+        "evidence_sha256": "342843088f1d8ca9f5a4a0e22b115dcee8dd96bca274e7ee5e12c59010789889",
+        "implementation_commit": "053a61c0e3646ee5bb802847c279ab275912cd76"
+      }
+    },
+    {
+      "path": "docs/verification/consolidated-browser-overview-local.json",
+      "scope": "Scoped overview allocation, native import and browser corrections; historical and pending qualification kept separate.",
+      "source_binding": {
+        "method": "Exact prior-head hosted artifacts or individually hashed local source/runtime/test receipts; no result substitutes for later source.",
+        "evidence_sha256": "820293b64b86cbc008a2d1c6a0f61f2bdcbe25a4836d35a4069127cc2abe2551",
+        "base_commit": "053a61c0e3646ee5bb802847c279ab275912cd76",
+        "working_tree_dirty": true
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-86e076e.json",
+      "scope": "Exact failed 52-outcome development attempt; 48 success, one failure and three skipped; five authenticated archives.",
+      "source_binding": {
+        "method": "Authenticated hosted archives and immutable Git input closure independently verified; exact prior-head scopes only.",
+        "evidence_sha256": "4a4bee66b935912d03f2a2bb3dad1d5d7181aace61675fedfa15650542a4aa34",
+        "implementation_commit": "86e076e0e62d7bbc96947d5465f326cb311b67fb"
+      }
+    },
+    {
+      "path": "docs/verification/source-security-86e076e.json",
+      "scope": "Exact prior-head source security; zero findings with separately verified Git and artifact bindings.",
+      "source_binding": {
+        "method": "Authenticated hosted archives and immutable Git input closure independently verified; exact prior-head scopes only.",
+        "evidence_sha256": "b91e8b7fc08d728eadc3b6c6717cf9af149b49d6f14b61043f5115601c833fa9",
+        "implementation_commit": "86e076e0e62d7bbc96947d5465f326cb311b67fb"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-86e076e.json",
+      "scope": "Exact prior-head native amd64/arm64 runtime images; high/critical gate passes with lower findings retained.",
+      "source_binding": {
+        "method": "Authenticated hosted archives and immutable Git input closure independently verified; exact prior-head scopes only.",
+        "evidence_sha256": "dbf0374715842b2ad27bac983d95a9bdb4f16f9ba2b4bc56b98ad828978cb117",
+        "implementation_commit": "86e076e0e62d7bbc96947d5465f326cb311b67fb"
+      }
+    },
+    {
+      "path": "docs/verification/authority-snapshot-diagnostics-local.json",
+      "scope": "Canonical snapshot transport and bounded held-authority diagnostics; application behavior and all native deadlines unchanged.",
+      "source_binding": {
+        "base_commit": "86e076e0e62d7bbc96947d5465f326cb311b67fb",
+        "working_tree_dirty": true,
+        "method": "Individually hashed local source, actual PostgreSQL equality/native reports and host controls; exact native/test-only followup scopes recorded separately.",
+        "evidence_sha256": "6f1455c15d3a65c98cb400f3a32ff67b10c981bbcd9b47282d344b248238c7c4"
+      }
     }
   ],
   "limitations": [
     "Passing scoped development gates does not complete compound baseline requirements.",
-    "M1 core local journey passes; full M0 repository/release and M2–M10 programme remain open.",
+    "M1 core local journey passes; full M0 repository/release and M2\u2013M10 programme remain open.",
     "Vendor-live, independent human review, complete accessibility, enterprise HA/scale/offline/restore and release distribution are not qualified."
   ],
   "bound_at": "2026-11-17T06:53:28.598978+00:00"

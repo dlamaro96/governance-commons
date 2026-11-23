@@ -62,17 +62,19 @@ test('edge enforces upstream cookie scope and preserves valid cookies, no CORS e
  const edge=createAuthnEdge({publicOrigin:origin,environment:'isolated-test',loginUpstream:target,sessionUpstream:target,legacyUpstream:target});const address=await listen(edge);
  try{
   assert.equal((await request(address,'/authn/session')).status,503);
-  const token=randomBytes(32).toString('base64url');setCookie=`gc_authn_session=${token}; Path=/authn; HttpOnly; SameSite=Lax; Max-Age=300`;
+  const token=randomBytes(32).toString('base64url');setCookie=`gc_authn_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=300`;
   const good=await request(address,'/authn/session');assert.equal(good.status,200);assert.deepEqual(good.headers['set-cookie'],[setCookie]);assert.equal(good.headers['access-control-allow-origin'],undefined);
   assert.equal((await request(address,'/api/v1/example')).status,503);
-  for(const attribute of ['; Domain=localhost','; Path=/','; Secure','; SameSite=None']){setCookie=`gc_authn_session=${token}; Path=/authn; HttpOnly; SameSite=Lax${attribute}`;assert.equal((await request(address,'/authn/session')).status,503);}
+  for(const attribute of ['; Domain=localhost','; Path=/authn','; Secure','; SameSite=None']){setCookie=`gc_authn_session=${token}; Path=/; HttpOnly; SameSite=Lax${attribute}`;assert.equal((await request(address,'/authn/session')).status,503);}
  }finally{await close(edge);await close(backend);}
 });
 
-test('legacy payloads stream past the small protected-body cap',async()=>{
+test('legacy and application payloads stream past the small authentication-body cap',async()=>{
+ for(const mode of ['legacyUpstream','applicationUpstream'] as const){
  const backend=http.createServer((req,res)=>{let size=0;req.on('data',chunk=>size+=chunk.length);req.on('end',()=>res.end(String(size)));});const target=await listen(backend);
- const edge=createAuthnEdge({publicOrigin:origin,environment:'isolated-test',loginUpstream:target,sessionUpstream:target,legacyUpstream:target});const address=await listen(edge);
+ const edge=createAuthnEdge({publicOrigin:origin,environment:'isolated-test',loginUpstream:target,sessionUpstream:target,[mode]:target});const address=await listen(edge);
  try{const result=await request(address,'/api/v1/example',{},'x'.repeat(65536),'POST');assert.equal(result.status,200);assert.equal(result.body,'65536');}finally{await close(edge);await close(backend);}
+ }
 });
 
 
@@ -97,4 +99,54 @@ test('protected edge uses one original wall deadline across slow body and upstre
   assert.equal(result.status,503);assert.equal(JSON.parse(result.body).code,'AUTHN_UNAVAILABLE');
   assert.equal(upstreamCalls,1);assert.ok(elapsed>=19_000 && elapsed<27_000,`original wall deadline elapsed ${elapsed}`);
  }finally{clearTimeout(bodyTimer);await close(edge);await close(backend);}
+});
+
+ test('application and legacy upstreams are mutually exclusive, including empty supplied values',()=>{
+ for(const legacyUpstream of ['http://127.0.0.1:4310',''])assert.throws(()=>createAuthnEdge({publicOrigin:origin,environment:'isolated-test',loginUpstream:'http://127.0.0.1:4312',sessionUpstream:'http://127.0.0.1:4313',applicationUpstream:'http://127.0.0.1:4310',legacyUpstream}),/AUTHN_EDGE_CONFIG_INVALID/);
+});
+ test('application forwarding admits only exact session and CSRF cookies and rejects duplicate credentials',async()=>{
+ const observed:http.IncomingHttpHeaders[]=[];
+ const backend=http.createServer((req,res)=>{observed.push(req.headers);req.resume();res.end('ok');});const target=await listen(backend);
+ const edge=createAuthnEdge({publicOrigin:origin,environment:'isolated-test',loginUpstream:target,sessionUpstream:target,applicationUpstream:target});const address=await listen(edge);
+ const session=randomBytes(32).toString('base64url'),csrf=randomBytes(32).toString('base64url');
+ try{
+  const cookie=`gc_session=legacy; gc_authn_attempt=synthetic-attempt; __Host-gc_authn_session=${session}; gc_authn_session=${session}; gc_authn_csrf=${csrf}; preference=dark`;
+  assert.equal((await request(address,'/api/v1/me',{cookie,'x-authenticated-user':'forged','x-principal-id':'forged','x-user-id':'forged','x-identity-id':'forged','x-roles':'forged','x-permissions':'forged','remote-user':'forged','x-forwarded-host':'forged','x-gc-authn-session':'forged','x-csrf-token':csrf})).status,200);
+  assert.equal(observed[0]!.cookie,`gc_authn_session=${session}; gc_authn_csrf=${csrf}`);assert.equal(observed[0]!['x-csrf-token'],csrf);
+  for(const header of ['x-authenticated-user','x-principal-id','x-user-id','x-identity-id','x-roles','x-permissions','remote-user','x-forwarded-host','x-gc-authn-session'])assert.equal(observed[0]![header],undefined);
+  for(const cookie of [`gc_authn_session=${session}; gc_authn_session=${session}`,`gc_authn_csrf=${csrf}; gc_authn_csrf=${csrf}`,'gc_authn_session=bad%20token','malformed'])assert.equal((await request(address,'/api/v1/me',{cookie})).status,400);
+  assert.equal((await request(address,'/api/v1/me',{'x-csrf-token':['one','two']})).status,400);assert.equal(observed.length,1);
+  assert.equal((await request(address,'/api/v1/me',{cookie:'gc_session=legacy'})).status,200);assert.equal(observed[1]!.cookie,undefined);
+ }finally{await close(edge);await close(backend);}
+});
+ test('application cannot mint protected cookies and old path clears are narrowly admitted from authn only',async()=>{
+ let value='';const backend=http.createServer((_req,res)=>{res.setHeader('set-cookie',value);res.end('ok');});const target=await listen(backend);
+ const edge=createAuthnEdge({publicOrigin:origin,environment:'isolated-test',loginUpstream:target,sessionUpstream:target,applicationUpstream:target});const address=await listen(edge);
+ try{
+  for(const name of ['session','csrf']){
+   value=`gc_authn_${name}=; Path=/authn; HttpOnly; SameSite=Lax; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+   assert.equal((await request(address,'/authn/session')).status,200);assert.equal((await request(address,'/api/v1/me')).status,503);
+   for(const bad of [value.replace('=;','=x;'),value.replace('Max-Age=0','Max-Age=1'),value.replace('1970','2099'),value.replace('; Expires=Thu, 01 Jan 1970 00:00:00 GMT','')]){
+    const valid=value;value=bad;assert.equal((await request(address,'/authn/session')).status,503);value=valid;
+   }
+  }
+  value=`gc_authn_session=${randomBytes(32).toString('base64url')}; Path=/; HttpOnly; SameSite=Lax; Max-Age=300`;
+  assert.equal((await request(address,'/api/v1/me')).status,503);assert.equal((await request(address,'/authn/session')).status,200);
+ }finally{await close(edge);await close(backend);}
+});
+
+ test('production application forwarding accepts only __Host session and CSRF cookies',async()=>{
+ const observed:http.IncomingHttpHeaders[]=[];let setCookie:string|undefined;
+ const backend=http.createServer((req,res)=>{observed.push(req.headers);if(setCookie)res.setHeader('set-cookie',setCookie);res.end('ok');});const target=await listen(backend);
+ const edge=createAuthnEdge({publicOrigin:'https://governance.example',environment:'production',loginUpstream:target,sessionUpstream:target,applicationUpstream:target});const address=await listen(edge);
+ const token=randomBytes(32).toString('base64url');
+ try{
+  assert.equal((await request(address,'/api/v1/me',{host:'governance.example',cookie:`gc_authn_session=${token}; __Host-gc_authn_attempt=synthetic; __Host-gc_authn_session=${token}; __Host-gc_authn_csrf=${token}`})).status,200);
+  assert.equal(observed[0]!.cookie,`__Host-gc_authn_session=${token}; __Host-gc_authn_csrf=${token}`);
+  setCookie=`__Host-gc_authn_session=${token}; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=300`;
+  assert.equal((await request(address,'/authn/session',{host:'governance.example'})).status,200);
+  assert.equal((await request(address,'/api/v1/me',{host:'governance.example'})).status,503);
+  setCookie='__Host-gc_authn_session=; Path=/authn; HttpOnly; SameSite=Lax; Secure; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  assert.equal((await request(address,'/authn/session',{host:'governance.example'})).status,503);
+ }finally{await close(edge);await close(backend);}
 });

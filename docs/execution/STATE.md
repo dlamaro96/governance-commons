@@ -1,5 +1,13 @@
 # Current state
 
+Current publication remains [PR #50](https://github.com/dlamaro96/governance-commons/pull/50), consolidating the latest work for a normal protected merge into main. The corrected local checks below pass at their recorded scopes; fresh hosted qualification is required before merge. Main will be the continuing development checkout.
+
+The exact `86e076e` development attempt completed with **48 successful outcomes, one failed held-metadata gate and three dependent skips**. Five authenticated behavior archives, 174 API cases, 35 inactive-authentication cases, 38 main browser journeys and two protected browser journeys were verified. Eight distinct hosted captures were inspected; remaining captures received hash verification. The held gate stopped after 13m05s, but its published output does not establish a failure phase, timeout cause or owned-cleanup result. The collector's failure is the expected aggregate failure, not a separate export crash. [Retained failed checkpoint](../verification/hosted-checkpoint-86e076e.json). Exact-head [source security](../verification/source-security-86e076e.json) and [native image security](../verification/runtime-images-hosted-86e076e.json) pass separately; they do not qualify later corrections.
+
+The correction batches canonical snapshot transport while preserving exact row hashes, all native assertions and deadlines. Eighteen real PostgreSQL equivalence checks, 140 held-authority cases, 26 application-bridge cases and 185 host controls pass locally. The held run's 290 source hashes and 401 private logs were verified before a subsequent host-test-only timing-margin adjustment; the final 21 diagnostic controls pass separately. All 283 bridge source hashes match the final source. Safe stdout diagnostics now distinguish the explicit execution/command/cleanup deadline origin and report owned cleanup. Fresh exact-head hosted qualification remains required before merge. [Scoped correction evidence](../verification/authority-snapshot-diagnostics-local.json).
+
+Latest merged increment: [PR #47](https://github.com/dlamaro96/governance-commons/pull/47) merged normally as `5aeb540` on 23 November 2026 after all 48 development outcomes, source security and both native image gates passed at `bc8dd26`. All five authenticated behavior archives were verified. [Hosted checkpoint](../verification/hosted-checkpoint-bc8dd26.json), [source scans](../verification/source-security-bc8dd26.json) and [runtime scans](../verification/runtime-images-hosted-bc8dd26.json). The next publication consolidates the remaining increments onto main; the complete programme remains open.
+
 Updated 23 November 2026. **Development preview; the complete product programme and release qualification remain open.** [PR #42](https://github.com/dlamaro96/governance-commons/pull/42) merged normally as `9e60da8` after all 47 development outcomes, source security and native amd64/arm64 image gates passed at `82859ad`. Five authenticated behavior archives and their exact source bindings were verified before merge. [Hosted checkpoint](../verification/hosted-checkpoint-82859ad.json).
 
 The preceding [PR #41](https://github.com/dlamaro96/governance-commons/pull/41) merged normally as `1db2f71` after all 47 development outcomes passed at `296d1e5`. Five authenticated archives, 172 API cases, 35 inactive-authentication cases, 38 main browser journeys and protected login (15 native checks and two browser journeys) are verified. Hosted captures were retained but not manually inspected in this checkpoint. [Hosted record](../verification/hosted-checkpoint-296d1e5.json).
@@ -145,8 +153,7 @@ complete development pass is claimed. The test now admits the existing real
 quota before its heavy phases, without retrying product requests or changing
 limits/deadlines. The selected real local journey passes with three of twelve
 captures inspected. [Correction evidence](../verification/reference-browser-rate-admission-local.json).
-Fresh exact-head hosted qualification remains required. Trusted fact production and held-snapshot authorization remain
-required before canonical content-authority activation.
+The failed assignment is preserved in its [exact hosted record](../verification/hosted-checkpoint-a24af90-failed.json). At the repaired head `7b8babf`, [source security](../verification/source-security-7b8babf.json) passes with all 1,589 Git files and three stored analyses verified. All four native [image reports](../verification/runtime-images-hosted-7b8babf.json) pass the high/critical gate; lower application-image findings remain recorded. Its separate 48-outcome development run finished with 46 successes, one failure and one skip; the original timeout remains recorded in the [failed checkpoint](../verification/hosted-checkpoint-7b8babf-failed.json). No parent scan qualifies the subsequent SQL035 changes.
 
 ## Current corrections
 
@@ -158,7 +165,7 @@ Fresh immutable-image protected authentication at `5d9e501` passes **15 native H
 
 ## Product and runtime
 
-The healthy Docker Compose core runs real PostgreSQL, OpenSearch, Temporal, Keycloak and source workers with synthetic data. The current core contains SQL034, stable classification label identities, the navigation increment and locally qualified dependency fixes. Its candidate functional tests, final rebuilt-image checks and isolated authority gates retain their own image/source bindings. Earlier observations retain their original revisions. Applied SQL001–034 migrations are immutable.
+The preceding SQL036 Docker Compose checkpoint ran real PostgreSQL, OpenSearch, Temporal, Keycloak and source workers with synthetic data, with the inactive held metadata evaluator. The current SQL037 startup and protected login checkpoint is recorded below. That preceding checkpoint contains SQL036. All 36 migration checksums and 349 source/image bindings match the rebuilt images and four running application services; all ten services are healthy. All 172 API cases and one real classification browser journey pass without retries or skips, with three of fourteen captures inspected. The separate 140-case native gate qualifies the inactive authority behavior. Earlier observations retain their original source and image bindings. Applied SQL001–037 migrations are immutable. [Integrated evidence](../verification/held-metadata-authority-integrated-local.json).
 
 Usable workflows include tenant-scoped catalog/search/ownership/audit, operating models and graph migrations, glossary/reference publication and imports, reviewed classification, PostgreSQL view lineage, and six source-executed quality families. Scheduled quality incidents support notification, verified resolution and reopening; expired freshness evidence remains historical without authorizing a new resolution.
 
@@ -182,11 +189,113 @@ Earlier failed and passing attempts retain their original source bindings in the
 
 1. Completed: verify all 45 outcomes and artifacts at `80101e0`, then merge PR #39 normally as `fb1fd0e`.
 2. Completed: verify all 46 PR #40 outcomes at `4cbde6a`, then merge normally as `ed0c6e4`. Completed: PR #41 at `296d1e5` passed its separate 47-outcome pipeline and merged normally as `1db2f71`.
-3. Completed: PR #42 passes its exact 47 development outcomes, source and native runtime image qualification and merged normally as `9e60da8`. Finish the stable-classification-identity increment and its separate 48-outcome qualification, then implement trusted classification facts and a held-snapshot executor before canonical authority activation. Continue the remaining M0–M10 workstreams in the [delivery plan](PLAN.md).
+3. Completed: PR #42 passes its exact 47 development outcomes, source and native runtime image qualification and merged normally as `9e60da8`. Finish the separate hosted qualification for the open SQL034/SQL035 increments, then qualify SQL036 through its new 50-outcome assignment. Trusted classification facts and held metadata evaluation have scoped local evidence; effect fencing and complete ingress activation remain required. Continue the remaining M0–M10 workstreams in the [delivery plan](PLAN.md).
 4. Qualify fork behavior before adding the new runtime security aggregate to enforced branch requirements. Independent reviews and live vendor prerequisites retain their own open qualifications.
 
 [Issue #24](https://github.com/dlamaro96/governance-commons/issues/24) is closed for the scoped pipeline checkpoint. Issues #25–#33 retain the broader delivery workstreams; [backlog.json](backlog.json) maps all 1,106 requirements exactly once. Qualification issues #11–#13 remain open. PR #22 is closed unmerged and superseded by #23 without rewriting history. Scoped issue #10 is closed; broader model and authority obligations remain open. Dependency PRs #1, #2 and #5 are closed as superseded by the published updates.
 
 Public documentation removes obsolete internal handoff instructions while preserving technical contracts, the complete specification and historical evidence. Public-content checks and pinned worktree/history secret scans pass; the latter initially flagged two labelled source hashes and passed after their schema was made explicit, without scanner suppression. Independent security, accessibility, deployment/restore and release qualifications remain open under [release readiness](../release/READINESS.md).
 
+## Reviewed classification provenance increment
+
+SQL035 introduces an explicit private producer binding and validates the complete
+canonical approval history before emitting reviewed classification facts. The
+protected session, authority closure, asset/security revision, stable label IDs
+and classification proof are read in one native-owner repeatable-read snapshot.
+Missing, stale or pre-baseline identity proof stays unavailable; complete empty
+facts require an available installed producer. The result remains inactive
+provenance, with no post-commit effect capability or content API activation.
+[Decision](../adr/0023-reviewed-classification-facts.md).
+
+The populated SQL034-to035 gate passes all 98 native cases and 267 exact source
+bindings, preserves all 145 prior tables, and passes both seven-check migration
+replays and owned cleanup. Three failed upgrade attempts and separate fresh-schema
+diagnostics remain recorded. All 1,207 unit cases and root/web types pass. The
+256-head boundary proves count admission followed by actual byte-limit refusal;
+it does not qualify 256 full facts within the byte cap. The pipeline adds a
+49th mandatory outcome while retaining the preceding 48 assignments.
+[Scoped evidence](../verification/reviewed-classification-facts-local.json).
+
+Normal core rebuild/startup applied SQL035. All 35 migration checksums and 347
+application/worker/build input hashes match the immutable images and four running
+services before API execution and after browser execution. All 172 API cases and
+the selected real classification browser journey pass without retries or skips.
+Three of fourteen captures were inspected; all ten services remain healthy.
+[Integrated evidence](../verification/reviewed-classification-facts-integrated-local.json).
+PR #48 is now closed as superseded by consolidated PR #50. Its `bc1f650` development run was cancelled,
+with 41 successful outcomes, two cancelled outcomes and six skips; the required
+aggregate did not pass. The fresh run at `7d91aae` retains its own qualification.
+[Cancelled checkpoint](../verification/hosted-checkpoint-bc1f650-cancelled.json).
+
+The first hosted SQL035 run at `4e0c5bb` exposed one stale host-control
+expectation: the relation-candidate historical gate correctly retained its
+SQL031 baseline, but its test still expected the current transport to end at
+SQL034. The correction expects SQL035 while preserving every historical-prefix
+assertion. All 18 controls pass against the exact published source plus this
+one-line correction; the original hosted failure remains retained. Fresh hosted
+qualification is required for the corrected revision.
+
+## Held metadata evaluation increment
+
+SQL036 aligns canonical own, onward and connected scope checks and parent time
+ceilings with the pure evaluator. Its bounded atomic preflight refuses
+incompatible active graphs pending explicit remediation, preserving SQL001–035
+and retained grant history. Composition and evaluation now execute inside the
+protected repeatable-read snapshot; the returned diagnostic does not authorize
+a later effect.
+
+All 1,257 unit cases, root/web types, ten new harness controls, 289 migration
+admission controls and 219 affected CI/dev controls pass; these overlapping
+counts are not additive. The isolated gate passes all 140 native cases with
+281 exact source bindings, 147-table preservation, four migration replay phases
+and owned cleanup. The actual 2 MiB source-proof boundary is native-qualified;
+the complete 8 MiB and aggregate-node overflow controls remain unit-only.
+[Native evidence](../verification/held-metadata-authority-local.json).
+
+Normal core rebuild and SQL036 migration pass. All 36 checksums and 349 source
+bindings match the immutable images and four running application services
+before API execution and after browser execution. All 172 API cases and the
+selected real classification browser journey pass without retries or skips;
+three of fourteen captures were inspected. This browser journey covers the
+existing classification workflow, while the inactive evaluator retains its
+separate native qualification. [Integrated evidence](../verification/held-metadata-authority-integrated-local.json).
+
+The pipeline adds a 50th mandatory outcome while preserving the preceding 49.
+Fresh hosted qualification and source/image scans remain required. Runtime
+effect and revocation fencing, field projections, compiled-filter equivalence
+and all-ingress activation remain open. No content authority is activated.
+[Decision](../adr/0024-held-metadata-evaluation.md).
+
 Further snapshot transport batching passes the isolated SQL024 repaired chain: **263 native cases across 13 invocations**, 176 bound sources, preservation, replay and owned cleanup, in 332.580091 seconds within the unchanged 600-second lifecycle. Both original digest algorithms and all budgets remain unchanged; 56 affected host controls pass. This is one local observation. The earlier exact `7b8babf` hosted checkpoint remains **NOT_PASSED** (46 successes, one failure and one skip); the local pass does not replace fresh hosted qualification. [Transport evidence](../verification/reference-snapshot-transport-local.json) and [retained hosted failure](../verification/hosted-checkpoint-7b8babf-failed.json).
+
+## Consolidated application SSO publication
+
+The latest delivery combines the reviewed classification and held metadata increments with the protected application authentication cutover in one pull request against main. Prior pull-request runs retain their exact revision evidence. After the required checks and normal merge, main is the continuing development checkout.
+
+SQL037 adds an explicitly installed native application-session reader. The API, edge and browser use protected login, tenant selection and logout; private executor credentials remain outside the application. The final root native gate passes all 26 cases with 281 exact source bindings, two preservation replays and owned cleanup. All 1,291 unit cases and root/web type checks pass at their recorded source scopes. The initial five failing unit fixtures and stale CI-control assertion were corrected and retained. The pipeline has 52 mandatory outcomes. [Decision](../adr/0025-protected-application-authentication.md) and [native evidence](../verification/application-authentication-bridge-local.json).
+
+The core rebuild and SQL037 application pass; all thirteen long-running services are healthy. Synthetic seed and explicit protected core installation succeed with persisted manifests. Two real browser journeys pass: protected Keycloak login, UI registration, PostgreSQL scan, catalog discovery, ownership/audit and consumer/cross-tenant isolation. All three captures were visually inspected. The first full 172-case API attempt stopped during owner fixture preparation before executing any test; its NOT_PASSED report is retained. The fixture queried a nonexistent receipt sequence column; the correction verifies the exact expected predecessor hash instead. A fresh rebuilt-image attempt passes preparation (three dedicated tenants, seven identities and 10,002 synthetic audit events) and is running the API cases. The remaining browser matrix has not run at this revision. [Initial core evidence](../verification/protected-application-core-initial-local.json). Do not treat the native pass as integrated or vendor-live SSO qualification. Runtime content-effect fencing, Microsoft Entra tenant qualification, directory synchronization, group mapping, SCIM and the remaining M0–M10 programme remain open.
+
+
+## Consolidated delivery corrections
+
+[PR #50](https://github.com/dlamaro96/governance-commons/pull/50) is the sole consolidated delivery to main; superseded PRs #48 and #49 are closed after their terminal evidence was retained. Its initial `bbc92e4` development run fails fresh startup: SQL012 revokes the temporary schema permission before SQL037 transfers function ownership. The corrected migrator stages and removes that exact permission within the pending SQL037 transaction. All 37 SQL files remain immutable. Two isolated real PostgreSQL scopes reproduce the original failure, recover the same database, apply the full fresh chain and verify both replays, exact ledgers, final privileges and owned cleanup.
+
+All 1,300 unit cases, types, 16 Keycloak host controls and both targeted real audit cases pass. The full local API attempt remains NOT_PASSED (171 pass, one expected-denial fixture failure, plus source drift during correction); a fresh rebuilt-image rerun is required. The original source scan reports two test-code findings: missing probe rate limiting and a synthetic credential written to disk. The test route now uses the production rate limiter, and registration tests keep decoded credentials in memory while preserving real private-file admission controls. Fresh hosted scans must confirm remediation. The prior image scan passes the high/critical gate and retains its lower findings; it does not qualify these corrections. [Correction evidence](../verification/protected-application-corrections-local.json), [retained source findings](../verification/source-security-bbc92e4-failed.json) and [prior image scan](../verification/runtime-images-hosted-bbc92e4.json).
+The failed initial development assignment is preserved separately: [hosted startup failure](../verification/hosted-checkpoint-bbc92e4-failed.json). No native/API/browser case executed in that run.
+
+## Migrator entry-point compatibility correction
+
+The `663fee9` source scan verifies all 1,657 files and three stored analyses with zero findings; both native image architectures pass the high/critical gate. All five hosted core startups pass. Three subsequent historical upgrade gates fail, and their partial authenticated snapshot remains NOT_PASSED. The new CLI guard skipped migration when those runners imported it without a script argument. The corrected entry point executes on import again; its unchanged transaction helper lives in a separately importable module and is included in native source manifests. SQL001–037 remain unchanged. [Source](../verification/source-security-663fee9.json), [images](../verification/runtime-images-hosted-663fee9.json) and [partial failed development checkpoint](../verification/hosted-checkpoint-663fee9-partial-failed.json) qualify only that prior revision.
+
+All 1,301 unit cases pass. Real isolated PostgreSQL now passes both import-only fresh/recovery scopes, with exact migration ledgers, replay, privileges and owned cleanup. The rebuilt core API rerun passes all 172 cases with all 108 declared source inputs matched. Its inherited commit label remains `bbc92e4`; the exact source hashes match `663fee9`, so the stale label is not used as qualification. The full 38-journey browser run is in progress and has no pass claim yet. The corrected native gate and exact source evidence are recorded in [entry-point qualification](../verification/migrator-import-compatibility-local.json). Fresh hosted qualification of the corrected head is required before the normal PR #50 merge.
+
+## Bounded overview and final publication checks
+
+The prior `053a61c` source and native image security gates pass. Its partial development snapshot remains NOT_PASSED: browser glossary and reference-import failed, with four authenticated archives verified. No prior scan or partial run qualifies the corrected head. [Source](../verification/source-security-053a61c.json), [images](../verification/runtime-images-hosted-053a61c.json), [failed development snapshot](../verification/hosted-checkpoint-053a61c-partial-failed.json).
+
+The overview now counts in PostgreSQL using the existing tenant and visibility predicates instead of materializing the catalog. Two new real API cases verify counts, ownership, immediate ACL changes, tenant and permission boundaries, and the eight-event audit limit. All 1,301 unit tests, types and 164 evidence controls pass. Rebuilt source readback matches 369 source/build inputs, the three changed overview files and all 37 live migration checksums; thirteen services are healthy and four initialization services exited successfully. Thirty overview requests per version returned identical totals, with the observed heap increase after collection falling from roughly 78 MB to 3.5–4.1 MB. These local measurements do not prove load capacity, a retained-memory leak fix or the cause of a hosted failure. The temporary debugger is closed and probe sessions revoked.
+
+The original full browser result remains 32 passed and six failed. Seven focused corrected journeys subsequently pass. A later run passes both vertical-slice journeys and the first glossary journey, while linked publication fails with GLOSSARY_LIMIT. A read-only numeric probe does not exceed the early SQL limits; the exact later limiting check is unproven. The linked journey now creates its own pinned business-term descendant and asserts inherited behavior, preserving every real publication, amendment, removal and access assertion. Both final glossary journeys pass without test retries. This avoids shared fixture accumulation without changing product limits. Two glossary and two vertical-slice captures were inspected at their respective recorded revisions.
+
+The reference-import harness now stages and removes the required temporary definer membership for SQL037, passing all five native cases and 16 host controls. SQL001–037 remain unchanged. The expanded foundation job receives 120 minutes while other shards retain 90; all 52 outcomes and individual gate deadlines remain intact. Sixty-nine pipeline controls, seventeen deadline/routing controls and workflow lint pass. The timing evidence establishes job-budget risk, not a retrospectively invented timeout. Combined 174-case API, 38-journey browser and complete hosted qualification remain required before the normal PR #50 merge. [Scoped correction evidence](../verification/consolidated-browser-overview-local.json).

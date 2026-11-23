@@ -33,7 +33,7 @@ These are scoped development capabilities. Passing one workflow does not qualify
 
 ## Configurable identity and integrations
 
-Microsoft Entra ID federation has an operator-configured OIDC broker path. The protected login/session lifecycle is tested with real local Keycloak. Entra tenant registration, tenant-specific claims and live Microsoft sign-in still require external qualification; account/group synchronization and the broader identity administration capability remain open.
+Microsoft Entra ID federation has an operator-configured OIDC broker path. The main application uses the protected login and server-side session services, verified with real local Keycloak. Entra tenant registration, tenant-specific claims and live Microsoft sign-in still require external qualification; account/group synchronization and the broader identity administration capability remain open.
 
 Databricks Unity Catalog source registration and a metadata worker adapter are implemented in the development preview. Registration and missing-credential handling have local tests; a real Databricks workspace has **not** been qualified. Unity lineage, model registry, writeback and source permissions are separate remaining capabilities. PostgreSQL is the currently qualified real source path. The full [connector matrix](docs/product/connector-support.yaml) remains required.
 
@@ -50,12 +50,13 @@ pnpm exec playwright install chromium
 ./dev bootstrap
 ./dev up --profile core
 ./dev seed --dataset harbor-demo
+./dev authn-core-install
 ./dev test --suite smoke
 ```
 
 On Linux, install browser system libraries with `pnpm exec playwright install-deps chromium` before running acceptance tests. You can use an existing compatible browser by setting `GC_BROWSER_EXECUTABLE` to its executable path.
 
-Open **http://localhost:4310**. Bootstrap generates synthetic development credentials in ignored local storage. `./dev down` stops the project while preserving data. The core requires no cloud account, paid service or LLM key. Profiles still under implementation fail explicitly instead of reporting an unexecuted success.
+Open **http://127.0.0.1:4310**. Bootstrap generates synthetic development credentials in ignored local storage. The explicit `authn-core-install` step installs protected local sign-in with a fixed 24-hour lifetime from creation of its persisted installation plan. Repeating it replays that exact plan; restarting the stack does not renew or reactivate it. See [local operations](docs/operations/local-core.md) for explicit installation and revocation. `./dev down` stops the project while preserving data. The core requires no cloud account, paid service or LLM key. Profiles still under implementation fail explicitly instead of reporting an unexecuted success.
 
 ## Built for transparent engineering
 

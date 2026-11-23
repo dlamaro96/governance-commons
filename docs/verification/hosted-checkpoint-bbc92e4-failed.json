@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T13:02:59.436225+00:00",
+  "release_qualified": false,
+  "implementation_commit": "bbc92e4b378e44536072a8fcd99954414397fec1",
+  "tested_merge_commit": "2be81a8c99083a4b95b6eb6b7c16b22039ae84c0",
+  "same_tree_and_parent_verified": true,
+  "result": "NOT_PASSED",
+  "run_id": 45178033603,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45178033603",
+  "run_attempt": 1,
+  "required_outcomes": 52,
+  "outcome_counts": {
+    "skipped": 50,
+    "success": 1,
+    "failure": 1
+  },
+  "outcomes": {
+    "connectors": "skipped",
+    "security": "skipped",
+    "model_upgrade": "skipped",
+    "asset_type_upgrade": "skipped",
+    "type_migration_upgrade": "skipped",
+    "relations_upgrade": "skipped",
+    "relation_participation_upgrade": "skipped",
+    "business_domains_upgrade": "skipped",
+    "authority_authn_foundation": "skipped",
+    "authority_read_original": "skipped",
+    "authority_read_current": "skipped",
+    "authority_asset_context": "skipped",
+    "content_security_revision": "skipped",
+    "classification_label_identities": "skipped",
+    "reviewed_classification_facts": "skipped",
+    "held_metadata_authority": "skipped",
+    "application_authn_bridge": "skipped",
+    "source_connectors_upgrade": "skipped",
+    "postgres_targets": "skipped",
+    "relation_candidate_original": "skipped",
+    "relation_candidate_current": "skipped",
+    "glossary_upgrade": "skipped",
+    "relation_scope_upgrade": "skipped",
+    "glossary_population_repaired_upgrade": "skipped",
+    "lineage_repaired_upgrade": "skipped",
+    "classification_repaired_upgrade": "skipped",
+    "quality_repaired_upgrade": "skipped",
+    "quality_worker": "skipped",
+    "lineage_worker": "skipped",
+    "reference_repaired_upgrade": "skipped",
+    "reference_quality_repaired_upgrade": "skipped",
+    "reference_quality_worker": "skipped",
+    "reference_structure_repaired_upgrade": "skipped",
+    "reference_import": "skipped",
+    "uniqueness_upgrade": "skipped",
+    "uniqueness_worker": "skipped",
+    "range_upgrade": "skipped",
+    "range_worker": "skipped",
+    "monitoring_upgrade": "skipped",
+    "freshness_upgrade": "skipped",
+    "freshness_worker": "skipped",
+    "freshness_scheduling_upgrade": "skipped",
+    "volume_upgrade": "skipped",
+    "volume_worker": "skipped",
+    "business_domain_seed": "skipped",
+    "browser": "skipped",
+    "protected_authn": "skipped",
+    "bootstrap": "success",
+    "services": "failure",
+    "object_store": "skipped",
+    "seed": "skipped",
+    "core_authentication_install": "skipped"
+  },
+  "closed_assignment_sha256": "9822fd2fa730032671b143150aa6ecbd33b7efc1968cf63ef224ec79f2196f7e",
+  "verified_behavior_archives": 5,
+  "safe_evidence": [],
+  "browser": {
+    "executed": false,
+    "captures": 0,
+    "visualReview": "NOT_PERFORMED"
+  },
+  "verification_receipt_sha256": "6a439d7aa7429bbb66b40a24486455cf85ec100e8628b93b3a385d67bfb4fb0a",
+  "source_security": "docs/verification/source-security-bbc92e4-failed.json",
+  "runtime_security": "docs/verification/runtime-images-hosted-bbc92e4.json",
+  "pull_request": "https://github.com/dlamaro96/governance-commons/pull/50",
+  "merged": null,
+  "jobs": [
+    {
+      "name": "quality",
+      "id": 137704281230,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "behavior (quality-basics)",
+      "id": 137704281491,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "behavior (quality-freshness-volume)",
+      "id": 137704281562,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "behavior (foundation)",
+      "id": 137704281574,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "behavior (governance)",
+      "id": 137704281611,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "secrets",
+      "id": 137704281660,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "behavior (browser)",
+      "id": 137704281666,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "behavior",
+      "id": 137705433010,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "required",
+      "id": 137707709306,
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ],
+  "failure": {
+    "phase": "Fresh SQL037 migration in Start real core services",
+    "sqlstate": "42501",
+    "reason": "Temporary public schema CREATE grant was revoked by SQL012 before SQL037 function ownership transfer.",
+    "nativeCodeOrApiCasesExecuted": false,
+    "browserJourneysExecuted": false
+  },
+  "source_files": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "c534d82b8bc53f030667d3a27dc6ac254d4c46ec5c70a26f2f2c0606f4b21db8"
+    },
+    {
+      "path": "packages/db/migrations/012_authentication_foundation.sql",
+      "sha256": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77"
+    },
+    {
+      "path": "packages/db/migrations/037_application_authentication_bridge.sql",
+      "sha256": "fe5dae5d1be5067bcbc99edb349d97f9d7898e12810d278afdd93594de0e317d"
+    },
+    {
+      "path": "packages/db/src/migrate.ts",
+      "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+    },
+    {
+      "path": "policies/ci_evidence.py",
+      "sha256": "1decfa9564bdd2b1729408bb08578d4b31f0c09f9cc9a89d437f5705ab0accc9"
+    },
+    {
+      "path": "policies/ci_shards.py",
+      "sha256": "18df2123e593654819fbbc91ad0f1606cd7faa58b56be44d4ef0681c968a93b6"
+    },
+    {
+      "path": "scripts/authentication_roles.py",
+      "sha256": "99a3014f3ebb3828940995922ae869eef1b05705b4aff50eecdb1a09d070801e"
+    },
+    {
+      "path": "scripts/runtime-authentication-roles.py",
+      "sha256": "1e3ee00123e8a73f24950898efa2475efcc1b16ee1e13575175efa5881a0a3b3"
+    },
+    {
+      "path": "scripts/runtime.py",
+      "sha256": "f823914b45bde77ed317e716758c862a677c3341325f4e64e5ceca8ad1333bf0"
+    }
+  ],
+  "artifacts": [
+    {
+      "shard": "quality-basics",
+      "artifactId": 14820580037,
+      "archiveSha256": "03b466179515a902867fb1fc6b771e5e01da59c9da79cb545490737520baeffa",
+      "summarySha256": "0d493ac1ea14476c4eb69c29aafc143e8bc75dff76dea3a948afb8cc65b7b11b",
+      "exportedTestRecords": 0,
+      "exportedCaptures": 0
+    },
+    {
+      "shard": "browser",
+      "artifactId": 14819588571,
+      "archiveSha256": "e48ccc904ce98d545de3d5d114c379a4db0abed36e48ceb735a878602ce4d9f6",
+      "summarySha256": "7449c4c4263ee1e37ba6cc48f6f7edbb951d59d5cb7ca88e0126c802851080dd",
+      "exportedTestRecords": 0,
+      "exportedCaptures": 0
+    },
+    {
+      "shard": "foundation",
+      "artifactId": 14819414677,
+      "archiveSha256": "0540fbcaa6ee73a6eea5c0c2cb156e3d40e81cb558533f09c2368666036631b0",
+      "summarySha256": "e0a6f97e5480282ebad2194ada4988efcccb732f30a9a9e90fb41db46f21b919",
+      "exportedTestRecords": 0,
+      "exportedCaptures": 0
+    },
+    {
+      "shard": "governance",
+      "artifactId": 14819404876,
+      "archiveSha256": "7b9ce6d5ae5b7f405bf53f8f4c992b7051f3c965782cf0ba5f53c20d778ade90",
+      "summarySha256": "169e145310e670f2167624cf531fb66f3eea2a7d466474b84670c9986cc5719d",
+      "exportedTestRecords": 0,
+      "exportedCaptures": 0
+    },
+    {
+      "shard": "quality-freshness-volume",
+      "artifactId": 14818544893,
+      "archiveSha256": "b9f02bd957ad599aa5242f744c62d03a6c91f90a9090e63d6100e01cef9c0237",
+      "summarySha256": "5f41e4dbdaf7ce26e4b9de291ab33d7c8cfdb78a84a8fc48ea967ed2460b4451",
+      "exportedTestRecords": 0,
+      "exportedCaptures": 0
+    }
+  ],
+  "limitations": [
+    "No API/native/browser test case success is inferred; all downstream assigned steps were skipped.",
+    "The five exact authenticated failure summaries contain zero test records and zero captures.",
+    "Source and runtime security results are separate scopes, not evidence that this startup or product release passes.",
+    "No runtime was executed during this retained-evidence review.",
+    "This is the retained failed original PR50 attempt. Corrected later commits require fresh exact-head evidence.",
+    "All five core service startup outcomes failed after SQL036 applied; downstream API, native and browser steps were skipped.",
+    "Private job logs were authenticated and hashed; they are not copied into this public record."
+  ]
+}

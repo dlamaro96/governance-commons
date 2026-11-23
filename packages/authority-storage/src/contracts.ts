@@ -21,7 +21,7 @@ export type AuthorityHumanClosure = {
 };
 export interface NativeOwnerConnection {query(text:string,values?:unknown[]):Promise<{rows:unknown[]}>;release(error?:boolean):void}
 export interface NativeOwnerPool {connect():Promise<NativeOwnerConnection>}
-export type AuthorityFoundationErrorCode='AUTHORITY_FOUNDATION_INPUT_INVALID'|'AUTHORITY_FOUNDATION_EXECUTOR_REJECTED'|'AUTHORITY_FOUNDATION_SESSION_REJECTED'|'AUTHORITY_FOUNDATION_VERSION_CONFLICT'|'AUTHORITY_FOUNDATION_PROFILE_LIMIT'|'AUTHORITY_FOUNDATION_INTEGRITY'|'AUTHORITY_FOUNDATION_DEADLINE';
+export type AuthorityFoundationErrorCode='AUTHORITY_FOUNDATION_INPUT_INVALID'|'AUTHORITY_FOUNDATION_EXECUTOR_REJECTED'|'AUTHORITY_FOUNDATION_SESSION_REJECTED'|'AUTHORITY_FOUNDATION_VERSION_CONFLICT'|'AUTHORITY_FOUNDATION_PROFILE_LIMIT'|'AUTHORITY_FOUNDATION_INTEGRITY'|'AUTHORITY_FOUNDATION_DEADLINE'|'AUTHORITY_FOUNDATION_UNSUPPORTED';
 export class AuthorityFoundationError extends Error {
  constructor(readonly code:AuthorityFoundationErrorCode){super(code);this.name='AuthorityFoundationError';}
 }

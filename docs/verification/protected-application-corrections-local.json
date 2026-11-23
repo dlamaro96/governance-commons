@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T13:05:29.087145+00:00",
+  "scope": "Fresh SQL001\u2013037 migration, failed-install recovery and protected test corrections",
+  "outcome": "PASS",
+  "release_qualified": false,
+  "base_commit": "bbc92e4b378e44536072a8fcd99954414397fec1",
+  "native": {
+    "profile": "two owned network-none PostgreSQL scopes",
+    "old_runner_reproduced": {
+      "sqlstate": "42501",
+      "committed_migrations": 36
+    },
+    "corrected_recovery_applied": [
+      "037_application_authentication_bridge.sql"
+    ],
+    "corrected_fresh_applied": 37,
+    "checks": [
+      "cached-images-only",
+      "exact-37-migration-inventory",
+      "changed-current-migrator",
+      "cached-dependency-inputs-match",
+      "old-42501-after-exact36",
+      "old-reproduction-exact-ledger",
+      "failed037-rolled-back",
+      "recovery-only037",
+      "same-database-recovery-exact-ledger",
+      "recovery-prior-ledger-preserved",
+      "recovery-transaction-revoked-create",
+      "recovery-privilege-cleanup",
+      "recovery-finish-exact-ledger",
+      "recovery-replay-noop",
+      "recovery-replay-exact-ledger",
+      "recovery-replay-ledger-preserved",
+      "recovery-replay-privileges-preserved",
+      "recovery-within300s",
+      "fresh-current-all37",
+      "fresh-transaction-revoked-create",
+      "fresh-privilege-cleanup",
+      "fresh-finish-exact-ledger",
+      "fresh-replay-noop",
+      "fresh-replay-exact-ledger",
+      "fresh-replay-ledger-preserved",
+      "fresh-replay-privileges-preserved",
+      "fresh-within300s",
+      "source-freeze-retained"
+    ],
+    "replays": 2,
+    "migration_hashes": {
+      "001_foundation.sql": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa",
+      "002_audit_envelopes.sql": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728",
+      "003_governance_models.sql": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa",
+      "004_model_migrations.sql": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f",
+      "005_model_migration_integrity.sql": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763",
+      "006_inherited_asset_types.sql": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8",
+      "007_asset_type_migrations.sql": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7",
+      "008_constrained_relations.sql": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2",
+      "009_relation_participation.sql": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe",
+      "010_relation_scope_discovery.sql": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a",
+      "011_business_domains.sql": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78",
+      "012_authentication_foundation.sql": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77",
+      "013_authority_foundation.sql": "4a9304cf02ab51fc085a6018cd22980e948bc6cd1167b3595ccb817b2cf41fbf",
+      "014_source_connectors.sql": "5d43592b8120818db2a2d81e62652ffccdc9dde1a0c0111604bc373b8b2e1f4b",
+      "015_approval_workflows.sql": "571e14b0b42fe2dc58d076e35e7e2a3bab0bca918042e4ef222c63b3be2f269d",
+      "016_glossary_publication.sql": "26b03dd63077e0477da3ed80d2a099b2dc4e00390d9e11eeea2546a0d19aea57",
+      "017_relation_scope_candidates.sql": "c22f0b6d35e75555e1c58b503a82d2bbf6f23ab404c3af618143178cc5baa47b",
+      "018_glossary_nominal_candidates.sql": "60361c7b2ddee2f1f095d0e832116b4b97cc04fdbee6a88b398721e5bee13fea",
+      "019_quality_execution.sql": "ed7fefe9f1598831b6feb5954ba688fd35073af20dc1717082cb5176bc576ab5",
+      "020_native_lineage.sql": "b5e601a50fdad2417f6b497eade5d65da7c5dcdb7bde94e74694a04d208691b8",
+      "021_classification_review.sql": "e8637511016f4e9cf6741c4d5718c14a8b47a97898b8769e2884a7ee2a3a294e",
+      "022_reference_publication.sql": "5720d63ac78b9ad9781c3a46da00369c90d25cf5493cddb318fd8252b131c9d9",
+      "023_reference_quality.sql": "92221543903d7069d34d9e946b18063be52b1dfa0a7423cdb1b9bd5ff8b5d3ee",
+      "024_reference_structures.sql": "71a019163fec45a88fc91f4cb53839e582c23eb37db7615928ae5d7f888dcd2c",
+      "025_quality_uniqueness.sql": "94a814af5b80baf9835eca83ad200e67bf6e5697f79ae99e7abb2a1f4c0a3f9e",
+      "026_quality_range.sql": "7fda1bc5768525ff60449433b452da549063ee52f2d9cad01c0b26330c52bd8e",
+      "027_quality_monitoring.sql": "b50fc5375c9a992e55fd196cf3e745b667b1b11dff045a88cb5899d493b4f35a",
+      "028_quality_freshness.sql": "d1157374269dad9a2d43dd2e6fbe2bf67ab8b487c67db9f3f30ae266cefd41ef",
+      "029_quality_freshness_scheduling.sql": "ae29e6ff984b0a48dead1c9a99eb3c1ea69b7e530e7a0f2ff3a16ffcd5266026",
+      "030_quality_volume.sql": "d870f176bf3e1f6fef39e32ee5a5d01d17a56bff4ecf6333c5922b6affc4bc45",
+      "031_authority_read_grants.sql": "f8e824ec39a32005f4c687d4db6abd3563459ed869f75384a295124864f87a3d",
+      "032_relation_candidate_validation.sql": "7837d2c9484c539330cb567cd550a4e19ee769360e0c9118d45837ded4f918b5",
+      "033_content_security_revisions.sql": "c178380ccd70033e9c1810519416f951057f8d726dfb5e1864222c0184ec1e4a",
+      "034_classification_label_identities.sql": "c181fb06af18973cb8b3f8039f95b57c1692a1fa420f4bcbea563f28c1a06614",
+      "035_reviewed_classification_producer.sql": "4a3f72e424770e61560c55171775869ab20be7f5afd1735033888b0a94220f93",
+      "036_authority_scope_alignment.sql": "5c03e2cc221bc785d24b51a7b25a913ad38c4759726c9292c9e3ce8d16426569",
+      "037_application_authentication_bridge.sql": "fe5dae5d1be5067bcbc99edb349d97f9d7898e12810d278afdd93594de0e317d"
+    },
+    "images": {
+      "postgres": "sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+      "application": "sha256:5d086a4bba7c2d79e386472367158050bb4289f9df836cb54bf62c55797f7d72"
+    },
+    "runtime": {
+      "node": "v24.22.3",
+      "package": "fe4a1b1dc13991ab42114164382d808f0e93e483403c188236331ee370b09a12",
+      "lock": "49f347e0549a326aa51aeee5caf188c6e4f25e54afe6f8766cc387f5a39304a4"
+    },
+    "cleanup": {
+      "owned_containers_removed": true,
+      "generated_credentials_removed": true
+    },
+    "private_report_sha256": "0725024695ed24e8f2cfc02d4205363cbd9e638d0575e74250de3830c0f29ee9",
+    "private_harness_sha256": "604d1ea7c3dc12603d20dfe9430f08ff6cbdc646a1831aed06ce8b09b11d7265"
+  },
+  "host": {
+    "unit_tests": 1300,
+    "unit_passed": 1300,
+    "unit_failed": 0,
+    "unit_skipped": 0,
+    "typecheck": "PASS",
+    "keycloak_host_controls": 16,
+    "targeted_authentication_and_migration_cases": 23,
+    "real_audit_cases": 2,
+    "unit_scope": "Complete 1300-case pass precedes representation-only checksum constant rename; all9 affected migration cases and types pass again after rename."
+  },
+  "retained_failure": {
+    "api_tests": 172,
+    "api_passed": 171,
+    "api_failed": 1,
+    "api_outcome": "NOT_PASSED",
+    "flags": [
+      "RUNNER_FAILED",
+      "RUNTIME_SOURCE_MISMATCH"
+    ],
+    "reason": "Expected native session denial was asserted inside the aborted transaction. The correction is independently qualified by both targeted real audit cases. A bound file changed during the failed run; no complete source-bound API pass is claimed."
+  },
+  "limits": [
+    "Fresh hosted checks and code scans must independently qualify the corrected revision.",
+    "Host orchestration tests use explicit fake clients; the separate isolated PostgreSQL invocations execute the real migrator and unchanged SQL.",
+    "The cached application image supplies Node and exact dependencies; current migration code and SQL were mounted read-only. This is not immutable-image or browser qualification.",
+    "The initial sandboxed unit attempt could not bind loopback sockets; the complete authorized rerun passes."
+  ],
+  "source_files": [
+    {
+      "path": "packages/db/src/migrate.ts",
+      "sha256": "331c82e84c7e2f56cd94eabbfeb837df1ed1f9e3a5546156232398a78efbb81f"
+    },
+    {
+      "path": "tests/unit/db-migration.test.ts",
+      "sha256": "4d21a685ae436ee4c922d6e03c728eb5e2e66ff9c24b7a1ed83b43ae73d89b2d"
+    },
+    {
+      "path": "tests/integration/audit-integrity.test.ts",
+      "sha256": "119bab6d6f6c018a7ac875c4909106b0738e752cb268c9f098f4daeafec0cc92"
+    },
+    {
+      "path": "tests/unit/protected-api-authentication.test.ts",
+      "sha256": "0d1cd6d4b683187d762cffa24deac241164210598f07c6f432b1f88daa12ce76"
+    },
+    {
+      "path": "scripts/test_runtime_keycloak_client.py",
+      "sha256": "97cb2a2957b30b6be1f4c37b16e16ec0c2b676780e79f249e25bba84cdf0538d"
+    }
+  ],
+  "retained_secret_scan": {
+    "finding_count": 3,
+    "disposition": "All three were independently verified source SHA-256 values: two path-keyed evidence entries and the immutable SQL037 checksum constant. Evidence now uses explicit path/sha256 records and the constant is named SQL037_SHA256. No secret-rule suppression or historical fingerprint exception was added."
+  }
+}

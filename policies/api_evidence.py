@@ -13,11 +13,14 @@ import ast
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
+import stat
 from pathlib import Path
 import re
 import subprocess
 import sys
 import threading
+import time
 import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,6 +33,18 @@ FLAGS = {"SOURCE_DECLARATION_INVALID", "OUTPUT_TRUNCATED", "TAP_ENVELOPE_INVALID
 
 def digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def source_bytes(path: Path) -> bytes:
+    fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK)
+    try:
+        before=os.fstat(fd)
+        if not stat.S_ISREG(before.st_mode) or before.st_size>16*1024*1024:raise ValueError()
+        with os.fdopen(fd,'rb',closefd=False) as stream:data=stream.read(16*1024*1024+1)
+        after=os.fstat(fd)
+        if len(data)!=before.st_size or (before.st_dev,before.st_ino,before.st_size,before.st_mtime_ns,before.st_ctime_ns)!=(after.st_dev,after.st_ino,after.st_size,after.st_mtime_ns,after.st_ctime_ns):raise ValueError()
+        return data
+    finally:os.close(fd)
 
 
 def declaration_literal(text: str) -> str | None:
@@ -65,8 +80,12 @@ def source_inventory(root: Path) -> tuple[dict, dict, set[str]]:
         if path.is_symlink() or not FILE.fullmatch(name):
             flags.add("SOURCE_DECLARATION_INVALID")
             continue
-        data = path.read_bytes()
-        lines = data.decode("utf-8").splitlines()
+        try:
+            data=source_bytes(path)
+            lines=data.decode("utf-8").splitlines()
+        except (OSError,ValueError,UnicodeError):
+            flags.add("SOURCE_DECLARATION_INVALID")
+            continue
         files[name] = {"sha256": digest(data), "lines": lines}
         for line, text in enumerate(lines, 1):
             if not re.match(r"^\s*(?:test|it|describe)(?:\s*\(|\.)", text):
@@ -82,6 +101,34 @@ def source_inventory(root: Path) -> tuple[dict, dict, set[str]]:
             declarations[title] = {"file": name, "line": line}
     if not files or not declarations:
         flags.add("SOURCE_DECLARATION_INVALID")
+    # Bind imported fixtures, product readers and explicit owner provisioning as
+    # well as declarations. Only declaration files are passed to node --test.
+    pending=list(files)
+    total=sum(len("\n".join(row["lines"]).encode()) for row in files.values())
+    while pending:
+        current=pending.pop()
+        text="\n".join(files[current]["lines"])
+        dependencies=re.findall(r"(?:from\s*|import\s*(?:\(\s*)?|require\s*\(\s*)['\"](\.[^'\"]+)['\"]",text)
+        requested=[]
+        for relative in dependencies:
+            candidate=Path(os.path.abspath((root/current).parent/relative))
+            if candidate.suffix=='.js' and not candidate.exists():candidate=candidate.with_suffix('.ts')
+            if not candidate.suffix:candidate=candidate.with_suffix('.ts') if candidate.with_suffix('.ts').exists() else candidate/'index.ts'
+            requested.append(candidate)
+        if current=='tests/fixtures/protected-core-authentication.ts':
+            requested.extend(root/name for name in ('scripts/protected-core-test-fixture.ts','scripts/test-security.sh','deploy/compose/compose.yaml','policies/api_evidence.py','package.json','pnpm-lock.yaml','tsconfig.json'))
+        for candidate in requested:
+            try:
+                name=candidate.relative_to(root).as_posix()
+                if not re.fullmatch(r'[A-Za-z0-9_./-]{1,256}',name) or any((root/part).is_symlink() for part in [name,*[str(x) for x in Path(name).parents if str(x)!='.']]):raise ValueError()
+                if name in files:continue
+                metadata=candidate.lstat()
+                if not stat.S_ISREG(metadata.st_mode) or metadata.st_size>16*1024*1024 or len(files)>=512:raise ValueError()
+                data=source_bytes(candidate);total+=len(data)
+                if len(data)!=metadata.st_size or total>64*1024*1024:raise ValueError()
+                files[name]={'sha256':digest(data),'lines':data.decode('utf8').splitlines()}
+                if candidate.suffix in ('.ts','.tsx','.py'):pending.append(name)
+            except (OSError,ValueError,UnicodeError):flags.add('SOURCE_DECLARATION_INVALID')
     return files, declarations, flags
 
 
@@ -159,7 +206,7 @@ def collect(root: Path, output: bytes, exit_code: int, commit: str | None, runti
             "source_files": hashes, "source_manifest_sha256": digest(json.dumps(hashes, sort_keys=True, separators=(",", ":")).encode()),
             "private_output_sha256": digest(output[:MAX_OUTPUT]),
             "limitations": ["Only exact static repository test declarations and bounded source coordinates are published; raw TAP, titles, errors and values remain private.",
-                            "Runtime binding covers the executed test files only, not application image/source equivalence, browser or full release qualification."]}
+                            "Runtime binding covers declaration sources, their relative import closure and explicit qualification provisioning inputs in both application and isolated test images. It does not certify the complete dependency image, browser or release qualification."]}
 
 
 def _safe_report(root: Path, value: object, commit: str | None) -> dict | None:
@@ -255,6 +302,41 @@ child.once('exit',(code,signal)=>finish(forced??code??(128+(constants.signals[si
 """
 
 
+def prepare_fixture(command: list[str], root: Path, output_path: Path, timeout: float) -> int:
+    """Keep owner preparation output private and bounded, separate from TAP."""
+    with output_path.open("xb") as output:
+        output_path.chmod(0o600)
+        process = subprocess.Popen(command, cwd=root, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        overflow = [False]
+        def drain() -> None:
+            retained = 0
+            assert process.stdout is not None
+            try:
+                while chunk := process.stdout.read1(65536):
+                    available = max(0, 65536-retained)
+                    output.write(chunk[:available]); output.flush(); retained += min(len(chunk), available)
+                    if len(chunk) > available:
+                        overflow[0] = True
+                        process.terminate()
+            except (OSError, ValueError):
+                overflow[0] = True
+                try:
+                    process.terminate()
+                except ProcessLookupError:
+                    pass
+        reader = threading.Thread(target=drain, daemon=True); reader.start()
+        try:
+            code = process.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            process.kill(); process.wait(timeout=5); code = 124
+        reader.join(timeout=5)
+        if reader.is_alive():
+            return 124
+        if process.stdout is not None:
+            process.stdout.close()
+        return 125 if overflow[0] else code
+
+
 def run(root: Path) -> int:
     # A failed new invocation must never stage the previous invocation's result.
     # Unlink only the latest entry, including a symlink; preserve archive targets.
@@ -267,12 +349,16 @@ def run(root: Path) -> int:
     directory = root / ".local/evidence/api-runs" / (datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "-" + uuid.uuid4().hex)
     directory.mkdir(parents=True, mode=0o700)
     raw_path = directory / "output.tap"
-    compose = ["docker", "compose", "--project-name", "governance-commons", "--env-file", str(root / ".local/runtime.env"), "-f", str(root / "deploy/compose/compose.yaml"), "exec", "-T", "api"]
+    compose_base = ["docker", "compose", "--project-name", "governance-commons", "--env-file", str(root / ".local/runtime.env"), "-f", str(root / "deploy/compose/compose.yaml")]
+    compose = [*compose_base, "run", "--rm", "--no-deps", "-T", "qualification-runner"]
+    application = [*compose_base, "exec", "-T", "api"]
     readback_script = "import{readFileSync}from'node:fs';import{createHash}from'node:crypto';const names=JSON.parse(process.argv[1]);process.stdout.write(JSON.stringify(Object.fromEntries(names.map(name=>[name,createHash('sha256').update(readFileSync(name)).digest('hex')]))));"
     def matching_sources() -> bool:
         try:
-            result = subprocess.run([*compose, "node", "--input-type=module", "-e", readback_script, json.dumps(list(hashes))], cwd=root, capture_output=True, timeout=30)
-            return result.returncode == 0 and len(result.stdout) <= 65536 and json.loads(result.stdout) == hashes
+            for boundary in (application, compose):
+                result = subprocess.run([*boundary, "node", "--input-type=module", "-e", readback_script, json.dumps(list(hashes))], cwd=root, capture_output=True, timeout=30)
+                if result.returncode != 0 or len(result.stdout) > 1024*1024 or json.loads(result.stdout) != hashes:return False
+            return True
         except (OSError, subprocess.SubprocessError, ValueError):
             return False
     before = not source_flags and matching_sources()
@@ -280,8 +366,20 @@ def run(root: Path) -> int:
     with raw_path.open("xb") as output:
         raw_path.chmod(0o600)
         if before:
+            # Admission must precede owner writes. Preparation and API execution
+            # share the original host budget; the test supervisor is unchanged.
+            execution_deadline = time.monotonic()+1800
+            preparation = [*compose_base, "run", "--rm", "--no-deps", "-T", "authn-test-fixture",
+                           "node", "--input-type=module", "-e", API_TEST_SUPERVISOR.replace("1740000", "150000"), "--",
+                           "--import", "tsx", "scripts/protected-core-test-fixture.ts", "--batch", "/state/qualification",
+                           "--core-plan", "/state/plan.json"]
+            try:
+                exit_code = prepare_fixture(preparation, root, directory / "preparation.log", min(180, execution_deadline-time.monotonic()))
+            except (OSError, subprocess.SubprocessError):
+                exit_code = 1
+        if before and exit_code == 0:
             command = [*compose, "node", "--input-type=module", "-e", API_TEST_SUPERVISOR, "--",
-                       "--import", "tsx", "--test", "--test-concurrency=1", "--test-reporter=tap", *hashes]
+                       "--import", "tsx", "--test", "--test-concurrency=1", "--test-reporter=tap", *(name for name in hashes if FILE.fullmatch(name))]
             try:
                 process = subprocess.Popen(command, cwd=root, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 def drain() -> None:
@@ -294,7 +392,7 @@ def run(root: Path) -> int:
                             truncated[0] = True
                 reader = threading.Thread(target=drain, daemon=True); reader.start()
                 try:
-                    exit_code = process.wait(timeout=1800)
+                    exit_code = process.wait(timeout=max(0.001, execution_deadline-time.monotonic()))
                 except subprocess.TimeoutExpired:
                     process.kill(); process.wait(); exit_code = 124
                 reader.join(timeout=5)
