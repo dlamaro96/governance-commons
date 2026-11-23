@@ -1735,6 +1735,25 @@
         "method": "Original dirty-candidate provenance retained with exact implementation hashes, command outputs and retained evidence readback; clean Git execution is not inferred.",
         "evidence_sha256": "cb4489e3a2f3918b12a141d316921ec3b210330cb2436db074cbd78bd2a6cb79"
       }
+    },
+    {
+      "path": "docs/verification/protected-authentication-tool-admission-local.json",
+      "scope": "protected-authentication-after-shared-streaming-hash",
+      "source_binding": {
+        "implementation_commit": "5d9e5017e1cba6950cda3e0a0fd45327776b9ef8",
+        "method": "Exact203 Git inputs, immutable image, native/browser outcomes,32-row ledger, retained logs and cleanup independently verified.",
+        "verified_files": 203,
+        "evidence_sha256": "42ee7062ba6b9b35a49ca49cb850ea89a01aded29422ccc559a1c7b73c509924"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-b08b88d.json",
+      "scope": "published-integration-checkpoint-b08b88d",
+      "source_binding": {
+        "implementation_commit": "b08b88dda99fd08ea18dc8dea14f3347dcbd52f6",
+        "method": "Five authenticated archives, exact requested/merge tree, all45 outcome names and API/authentication/browser source coordinates verified; both failures and the dependent skip retained.",
+        "evidence_sha256": "622b7e17bbb17e20003d9377ac4b47604b7e166f64eca68842dd1bcdfd0befcb"
+      }
     }
   ],
   "limitations": [

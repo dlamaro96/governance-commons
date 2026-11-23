@@ -58623,7 +58623,9 @@
         "docs/verification/reference-prefix-composition-b08b88d.json",
         "docs/verification/reference-snapshot-batching-local.json",
         "docs/verification/reference-structure-hosted-timeout-b08b88d.json",
-        "docs/verification/protected-linux-tool-admission-local.json"
+        "docs/verification/protected-linux-tool-admission-local.json",
+        "docs/verification/hosted-checkpoint-b08b88d.json",
+        "docs/verification/protected-authentication-tool-admission-local.json"
       ]
     },
     {
@@ -58885,7 +58887,9 @@
         "docs/verification/reference-prefix-composition-b08b88d.json",
         "docs/verification/reference-snapshot-batching-local.json",
         "docs/verification/reference-structure-hosted-timeout-b08b88d.json",
-        "docs/verification/protected-linux-tool-admission-local.json"
+        "docs/verification/protected-linux-tool-admission-local.json",
+        "docs/verification/hosted-checkpoint-b08b88d.json",
+        "docs/verification/protected-authentication-tool-admission-local.json"
       ]
     },
     {
@@ -68352,7 +68356,9 @@
         "docs/verification/source-security-b08b88d.json",
         "docs/verification/reference-snapshot-batching-local.json",
         "docs/verification/reference-structure-hosted-timeout-b08b88d.json",
-        "docs/verification/protected-linux-tool-admission-local.json"
+        "docs/verification/protected-linux-tool-admission-local.json",
+        "docs/verification/hosted-checkpoint-b08b88d.json",
+        "docs/verification/protected-authentication-tool-admission-local.json"
       ]
     },
     {
