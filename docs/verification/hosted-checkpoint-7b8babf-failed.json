@@ -1,0 +1,461 @@
+{
+  "schema_version": 1,
+  "release_qualified": false,
+  "recorded_at": "2026-11-23T10:51:59.814412+00:00",
+  "implementation_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+  "tested_merge_commit": "771a039853c05cf8934611887fe8a3635fd7d509",
+  "same_tree_and_parent_verified": true,
+  "result": "NOT_PASSED",
+  "run_id": 45152387454,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45152387454",
+  "run_attempt": 1,
+  "required_outcomes": 48,
+  "outcome_counts": {
+    "success": 46,
+    "failure": 1,
+    "skipped": 1
+  },
+  "outcomes": {
+    "connectors": "success",
+    "security": "success",
+    "model_upgrade": "success",
+    "asset_type_upgrade": "success",
+    "type_migration_upgrade": "success",
+    "relations_upgrade": "success",
+    "relation_participation_upgrade": "success",
+    "business_domains_upgrade": "success",
+    "authority_authn_foundation": "success",
+    "authority_read_original": "success",
+    "authority_read_current": "success",
+    "authority_asset_context": "success",
+    "content_security_revision": "success",
+    "classification_label_identities": "success",
+    "source_connectors_upgrade": "success",
+    "postgres_targets": "success",
+    "relation_candidate_original": "success",
+    "relation_candidate_current": "success",
+    "glossary_upgrade": "success",
+    "relation_scope_upgrade": "success",
+    "glossary_population_repaired_upgrade": "success",
+    "lineage_repaired_upgrade": "success",
+    "classification_repaired_upgrade": "success",
+    "quality_repaired_upgrade": "success",
+    "quality_worker": "success",
+    "lineage_worker": "success",
+    "reference_repaired_upgrade": "success",
+    "reference_quality_repaired_upgrade": "success",
+    "reference_quality_worker": "success",
+    "reference_structure_repaired_upgrade": "failure",
+    "reference_import": "skipped",
+    "uniqueness_upgrade": "success",
+    "uniqueness_worker": "success",
+    "range_upgrade": "success",
+    "range_worker": "success",
+    "monitoring_upgrade": "success",
+    "freshness_upgrade": "success",
+    "freshness_worker": "success",
+    "freshness_scheduling_upgrade": "success",
+    "volume_upgrade": "success",
+    "volume_worker": "success",
+    "business_domain_seed": "success",
+    "browser": "success",
+    "protected_authn": "success",
+    "bootstrap": "success",
+    "services": "success",
+    "object_store": "success",
+    "seed": "success"
+  },
+  "verified_behavior_archives": 5,
+  "safe_evidence": [
+    {
+      "family": "api",
+      "actualTests": 172,
+      "sourceFiles": 25,
+      "sourceManifestSha256": "23d80dfc37497521b227de43985007aa1933a72949c33bf9d2af657d4f665f32",
+      "artifactSha256": "33604b17a140948bc7d99619501806e0bcf3c559184d4a71a5b642414457a46b"
+    },
+    {
+      "family": "inactive-authentication",
+      "actualTests": 35,
+      "sourceFiles": 176,
+      "migrations": 12,
+      "sourceManifestSha256": "611441212b026a47cfeaa4630c4232aa8d0851078317a9d0aa6528edcb09b157",
+      "artifactSha256": "4184c5fc41f19a0b120d8905505e8aa1c5a18512620a59ae3e44d2aef3aea5c2",
+      "cleanupExportedBothTrue": true
+    },
+    {
+      "family": "protected-authentication",
+      "actualNativeTests": 15,
+      "browserJourneys": 2,
+      "sourceFiles": 205,
+      "migrations": 34,
+      "immutableImageMode": true,
+      "captureCount": 8,
+      "visualReview": "NOT_PERFORMED",
+      "artifactSha256": "89489d686e43c06398fc4c6fae95441f23e4c4f897d15154b2794968a3a2f8ce",
+      "scope": "Public coordinate, source, schema and artifact readback; raw private native/installation proofs are not downloaded."
+    },
+    {
+      "family": "inactive-canonical-asset-context",
+      "hostedStepOutcome": "success",
+      "declaredNativeTests": 13,
+      "qualificationScope": {
+        "command": "./dev test --suite authority-asset-context",
+        "runner": "scripts/runtime-test-authority-asset-context.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-inactive-asset-context-sql032",
+        "report": "authority-asset-context.json",
+        "schemaScope": "Isolated SQL001\u2013030, then SQL031/032 with preservation and replay; current-source inactive canonical asset-context cases",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable declarations only; private 13-case report and its executed input/resource inventory are not exported."
+    },
+    {
+      "family": "inactive-content-security-revision",
+      "hostedStepOutcome": "success",
+      "declaredNewNativeTests": 20,
+      "declaredPrerequisiteTests": 27,
+      "declaredTotalNativeTests": 47,
+      "qualificationScope": {
+        "command": "./dev test --suite content-security-revision",
+        "runner": "scripts/runtime-test-content-security-revision.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-content-security-revision-sql033",
+        "report": "content-security-revision.json",
+        "schemaScope": "Populated SQL001\u2013032 to SQL033; private content revision, concurrency, snapshot, preservation and replay",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable 13+14+20 case declarations only; private native source inventory, preservation, concurrency and cleanup reports are not exported."
+    },
+    {
+      "family": "inactive-classification-label-identities",
+      "hostedStepOutcome": "success",
+      "declaredNewNativeTests": 23,
+      "declaredPrerequisiteTests": 27,
+      "declaredTotalNativeTests": 50,
+      "qualificationScope": {
+        "command": "./dev test --suite classification-label-identities",
+        "runner": "scripts/runtime-test-classification-label-identities.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-classification-label-identities-sql034",
+        "report": "classification-label-identities.json",
+        "schemaScope": "Populated SQL001\u2013033 to SQL034; current-pin identity baseline, terminal retirement, concurrency, preservation and replay",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable 13+14+23 case declarations only; private native source inventory, preservation, concurrency and cleanup reports are not exported."
+    }
+  ],
+  "browser": {
+    "passed": 38,
+    "failedExecuted": 0,
+    "notRun": 0,
+    "retries": 0,
+    "failedCases": [],
+    "notRunFiles": [],
+    "screenshots": [
+      {
+        "name": "catalog-ar-dark-1440.png",
+        "sha256": "d4f22a116e7d2cb211eba4c8d5bae031e6f8f076460deca755e000e50648ef73",
+        "bytes": 147258
+      },
+      {
+        "name": "catalog-ar-dark-390.png",
+        "sha256": "bae54444cbcb68e3d91721fdb075e3457afa63700b4ee403f2580daf8a50cdc6",
+        "bytes": 52644
+      },
+      {
+        "name": "catalog-ar-dark-768.png",
+        "sha256": "cc1389bed53fa458e17058e53d230d13c639de456ecf5f50447da7bbaa982ca8",
+        "bytes": 90193
+      },
+      {
+        "name": "catalog-en-dark-1440.png",
+        "sha256": "767dd76a36a9a571ec92a61cb2e710d0f52c90c448dfef23850a4b4da96f608f",
+        "bytes": 170439
+      },
+      {
+        "name": "catalog-en-light-1024.png",
+        "sha256": "91db50ce03c87db7038c0d09030ea9d45e9e710c3a124139a630324f810bdc10",
+        "bytes": 133433
+      },
+      {
+        "name": "catalog-en-light-1280.png",
+        "sha256": "f3d6adba68a28b44e2b1164ce83da4fcff0e5486b1b691d7cd608a8bff33f460",
+        "bytes": 161395
+      },
+      {
+        "name": "catalog-en-light-1440.png",
+        "sha256": "df1a352dab67d220d6c4fa6a39c0c38d1eede0d452ee16f96e8f57f366fb5113",
+        "bytes": 169798
+      },
+      {
+        "name": "catalog-en-light-390.png",
+        "sha256": "130b7e3da6be0a332094972dff04466da53be639da5b54a06325c6459cc84f16",
+        "bytes": 56558
+      },
+      {
+        "name": "catalog-en-light-768.png",
+        "sha256": "e890b111b1724469c2241241f3c5f50619f06bddc02b4974f16131cda8db8d8f",
+        "bytes": 91613
+      },
+      {
+        "name": "catalog-history.png",
+        "sha256": "1fdfd2fcbe8ef7c8d3b90177893224fcfbc10568c571e2422f902a39a085ac62",
+        "bytes": 93082
+      },
+      {
+        "name": "catalog-name-desc-1440.png",
+        "sha256": "0bc07f13631b788600228cf5ef04820c8d403d88785bb2b8e2f384cfa3ca1183",
+        "bytes": 173975
+      },
+      {
+        "name": "catalog-name-desc-390.png",
+        "sha256": "d9df2d01a5d7dde5ff74e8f7546bcbce3076ef4030d3eeee13d47ba8db5bf20d",
+        "bytes": 61811
+      },
+      {
+        "name": "catalog-name-desc-ar-390.png",
+        "sha256": "96b2212d8a7f22b1e15b18755ecf18dd6c24bdd3d4ea8cc6384a6124f79fc5f6",
+        "bytes": 56847
+      },
+      {
+        "name": "m8-postgres-configuration-failure-ar-390.png",
+        "sha256": "722d1c504d95a551e4c3c8f6b09e216e812efc1fdd89be0037db27cfaf8816b1",
+        "bytes": 45136
+      },
+      {
+        "name": "m8-postgres-configuration-failure-en-1440.png",
+        "sha256": "e7ebd4a045b578675701ef257c0504e271f02707718679d9151bbc049f03c4bf",
+        "bytes": 132485
+      },
+      {
+        "name": "m8-postgres-configuration-form-en-1440.png",
+        "sha256": "3c98fedfb579ac22a3a942c1664d38bcbec594df693d32be6006913b1400d608",
+        "bytes": 210358
+      },
+      {
+        "name": "m8-postgres-configuration-form-ar-390.png",
+        "sha256": "91cb921fd21924d35b97e79bc08de54ec18d8dbc29196271a9a17973b7d245df",
+        "bytes": 60824
+      },
+      {
+        "name": "m8-source-connectors-denial-ar-390.png",
+        "sha256": "9c4922b73f383827c21ed1d373cd381130d8ab178a0681a779344eff07ad2925",
+        "bytes": 18264
+      },
+      {
+        "name": "m8-source-connectors-denial-en-1440.png",
+        "sha256": "8bc99f94dfd01da8f9065ac240571d52ed3197f32005eff3f2ebf37a86f6d295",
+        "bytes": 57011
+      },
+      {
+        "name": "m8-source-connectors-failure-ar-390.png",
+        "sha256": "8908d2449fc60d4b77856e894639847764a2565b100f155c2923866b8305ff4e",
+        "bytes": 45312
+      },
+      {
+        "name": "m8-source-connectors-form-ar-390.png",
+        "sha256": "e671570251b99622a41fa95ce44bf6471bbbdd47becd9a47f3719b7433b159d0",
+        "bytes": 63003
+      },
+      {
+        "name": "m8-source-connectors-failure-en-1440.png",
+        "sha256": "874ff73bdac218267fe0578732834693f89c8d053d8e2465d0c17a0a5ec86ffa",
+        "bytes": 135165
+      },
+      {
+        "name": "m8-source-connectors-form-en-1440.png",
+        "sha256": "217f14c58c5e4df47983a81693fbe63f7a89440821d2e3912df96c5961aeb5c2",
+        "bytes": 217811
+      },
+      {
+        "name": "m8-source-connectors-registered-ar-390.png",
+        "sha256": "8ae7739816638f491cca90a980534d7d599f784b7c0d76ea190ddc15f44faee9",
+        "bytes": 57880
+      },
+      {
+        "name": "m8-source-connectors-registered-en-1440.png",
+        "sha256": "563282a504ae57d35218d3305e9abdb2a03b3f52b9621dacfc648f0eab47ab19",
+        "bytes": 140828
+      },
+      {
+        "name": "protected-revoked-ar-mobile.png",
+        "sha256": "c141d489a59ddb66dd8a3da702729cafe630c365cf36796d906423c01eea5fc1",
+        "bytes": 64835
+      },
+      {
+        "name": "protected-selected-ar-desktop.png",
+        "sha256": "b51878d0a5f4210c96fa2d83bd6ae193311f2935a3900e36cad09480b5ab23e3",
+        "bytes": 75060
+      },
+      {
+        "name": "protected-selected-ar-mobile.png",
+        "sha256": "7988eddae8d4549195e4773bf8afe3e78e7c268fad37f15e37e6fb61133d741e",
+        "bytes": 68600
+      },
+      {
+        "name": "protected-selected-en-desktop.png",
+        "sha256": "b747725ae6de9541b5242a3286c4e498e61dd20cb83fe6432a600f951368967f",
+        "bytes": 85491
+      },
+      {
+        "name": "protected-session-en-desktop.png",
+        "sha256": "db52131b0b97a89e6583e4ff21e44dcd7a00e239f539c6574e04e24cac99e3c6",
+        "bytes": 82412
+      },
+      {
+        "name": "protected-steward-en-mobile.png",
+        "sha256": "7d792155289e8845497e830345ca531afd4fd8b288b87f5f2120de46d3925ab7",
+        "bytes": 75670
+      },
+      {
+        "name": "protected-tenant-denied-en-mobile.png",
+        "sha256": "21be5d5aa36de916779289c27023fcf704dd8b105af506a86fd4590038553b81",
+        "bytes": 75379
+      },
+      {
+        "name": "protected-unbound-denied-en-desktop.png",
+        "sha256": "2f139d7a88e2aa54a66c8d9590af052e9897b992971bfbcaa9e92681a6487e06",
+        "bytes": 78645
+      }
+    ],
+    "visualReview": "NOT_PERFORMED"
+  },
+  "verification_receipt_sha256": "fe4910fd6ce88767154014d5cfa0f88b10020e6509617b5fe275492c6d244bd2",
+  "source_security": "docs/verification/source-security-7b8babf.json",
+  "runtime_security": "docs/verification/runtime-images-hosted-7b8babf.json",
+  "pull_request": "https://github.com/dlamaro96/governance-commons/pull/47",
+  "merged": null,
+  "limitations": [
+    "Aggregate PASS requires all48 exact outcomes, five verified archives and completed quality/secrets/behavior/required jobs; pending or failed work never implies success.",
+    "Authenticated archives and declared source maps are checked against exact Git; private native TAP and mounted-source/resource inventory proofs are not exported unless explicitly noted.",
+    "Browser screenshot bytes are hashed, not visually reviewed.",
+    "No source-security requalification, runtime execution or GitHub mutation performed.",
+    "Inactive canonical asset-context scope is verified from exact hosted step outcome and immutable 13-case declarations; its private native executed-source and cleanup report is not exported.",
+    "Inactive content-security revision scope is verified from exact hosted step outcome and immutable 13+14+20 case declarations; its private executed-source, preservation, concurrency and cleanup report is not exported.",
+    "Inactive classification label identity scope is verified from exact hosted step outcome and immutable 13+14+23 case declarations; its private executed-source, preservation, concurrency and cleanup report is not exported.",
+    "Merge status must be filled from authenticated PR47 metadata after the normal merge; this proposal does not claim a merge.",
+    "Aggregate Development qualification failed. Reference structure upgrade timed out; the subsequent reference import obligation was skipped. Other passed outcomes do not supersede that failure."
+  ],
+  "visual_review": {
+    "status": "NOT_PERFORMED",
+    "inspected": [],
+    "observations": [],
+    "limitations": [
+      "All 33 hosted capture hashes were verified without visual inspection.",
+      "No independent accessibility or translation sign-off."
+    ]
+  },
+  "workflow_conclusion": "failure",
+  "jobs": [
+    {
+      "name": "secrets",
+      "id": 137617229927,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (quality-freshness-volume)",
+      "id": 137617230095,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "quality",
+      "id": 137617230123,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (quality-basics)",
+      "id": 137617230143,
+      "status": "completed",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Verify temporal reference structures, immutable history and concurrent authorization",
+        "Collect bounded redacted evidence"
+      ]
+    },
+    {
+      "name": "behavior (browser)",
+      "id": 137617230162,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (governance)",
+      "id": 137617230326,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior (foundation)",
+      "id": 137617230361,
+      "status": "completed",
+      "conclusion": "success",
+      "failedSteps": []
+    },
+    {
+      "name": "behavior",
+      "id": 137641350710,
+      "status": "completed",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Require every fixed behavior shard to succeed"
+      ]
+    },
+    {
+      "name": "required",
+      "id": 137641420390,
+      "status": "completed",
+      "conclusion": "failure",
+      "failedSteps": [
+        "Require every mandatory child to succeed"
+      ]
+    }
+  ],
+  "failure": {
+    "step": "Verify temporal reference structures, immutable history and concurrent authorization",
+    "command": "./dev test --suite reference-structure-repaired-upgrade",
+    "profile": "isolated-governance-repaired-sql024",
+    "failed_phase": "structure-upgrade",
+    "category": "command_timeout",
+    "elapsed_ms": 267,
+    "exit_code": -9,
+    "test_coordinates_available": false,
+    "declared_source_hashes_verified": 176,
+    "native_source_start_exit_proof": "NOT_EXPORTED",
+    "cleanup": {
+      "ownedRemoved": true,
+      "resourceInventoryPreserved": true
+    },
+    "diagnostic_sha256": "414540565867e3e0b734e1cd1e2482ed4ba260786a70b6322c5738ad393ca5ed",
+    "job_log_sha256": "761ce606a803f5a0ce5575c908b86a39020c5390519ddafa5fea414ee4998e4b",
+    "private_diagnosis_receipt_sha256": "7c585d14201a9904a782afc502931dec24914540db88e2203ef2ab281a9a94ba",
+    "retained_command_log_sha256": "9ce4d2d32ea907d367c9373d6cd4d8113d39d5fc64d67a2ce8383cca6c36165d",
+    "scope": "Exported SQL024_COMMAND_IDENTITY_ONLY failure; no failing SQL or native-test assertion is established. Exact inherited code and267ms command timing support exhaustion of the absolute600s lifecycle. Product deadlines and assertions remain unchanged."
+  }
+}

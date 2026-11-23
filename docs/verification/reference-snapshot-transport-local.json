@@ -1,0 +1,1370 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-23T11:04:33.729841+00:00",
+  "result": "PASS",
+  "release_qualified": false,
+  "execution_base_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+  "source_provenance": "Executed on the recorded base commit with explicitly listed dirty source differences; not represented as an exact Git checkout.",
+  "source_differences": [
+    {
+      "path": "scripts/qualification_relation_candidate.py",
+      "base": {
+        "sha256": "79bb4d0dc9219a7ab18875de1fea30b5a3498dd267bbf4cc07a545caadbf0de2"
+      },
+      "execution": {
+        "sha256": "bb09bb162d4795c1cb1ed9444aa68b306383f860f3eb60c4407112ff43a190ad"
+      }
+    },
+    {
+      "path": "scripts/runtime-test-glossary-population-upgrade.py",
+      "base": {
+        "sha256": "20ba041b4e3780fa96498b8508cf7acf89b38ad4d3e55eee36bb5cf20c1001ce"
+      },
+      "execution": {
+        "sha256": "838c0c6f6f1b8134952b67412becc4df248fa641b8b0b8361708c9db2e296051"
+      }
+    }
+  ],
+  "command": "./dev test --suite reference-structure-repaired-upgrade",
+  "profile": "isolated-governance-repaired-sql024",
+  "qualification": "EXPLICIT_REPAIRED_CHAIN",
+  "historical_outcome": "HISTORICAL_NOT_EXECUTED",
+  "timing": {
+    "started_at": "2026-11-23T10:59:01.149750+00:00",
+    "finished_at": "2026-11-23T11:04:33.729841+00:00",
+    "elapsed_seconds": 332.580091,
+    "lifecycle_budget_seconds": 600,
+    "interpretation": "Single local observation; not a hosted performance or capacity claim."
+  },
+  "native": {
+    "tests": {
+      "tests": 263,
+      "suites": 0,
+      "pass": 263,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "invocations": 13,
+    "source_files": 176,
+    "observed_processes": 37,
+    "all_process_startup_and_exit": true,
+    "phases": [
+      {
+        "phase": "approval-native-tests",
+        "files": [
+          "tests/qualification/approvals-storage.test.ts",
+          "tests/qualification/glossary-submission.test.ts"
+        ],
+        "expected": 26,
+        "actual": {
+          "tests": 26,
+          "suites": 0,
+          "pass": 26,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "f34682e345c368565f4ff4ba9f2e4602fc91fd238649ae7d39f14fab0417897f",
+        "effective_manifest_sha256": "323f5aacb7571d4d45d2f6ed29b20ac07b54105d835038b950cdf69a52c01875",
+        "outer_processes": 1,
+        "observed_processes": 3,
+        "startup_and_exit": true,
+        "verifier_sha256": "2cd4ad10c7f8c557db3504a66e5a8135a7b1d05e453326f4a0bd71b43a64abb6"
+      },
+      {
+        "phase": "glossary-native-tests",
+        "files": [
+          "tests/qualification/glossary-publication.test.ts",
+          "tests/qualification/glossary-publication-boundaries.test.ts",
+          "tests/qualification/glossary-context.test.ts"
+        ],
+        "expected": 21,
+        "actual": {
+          "tests": 21,
+          "suites": 0,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "9a6a6ef06657613aed0ecd14a21267bbefdafc9c4ab35aa018a6fc8ef47368b2",
+        "effective_manifest_sha256": "323f5aacb7571d4d45d2f6ed29b20ac07b54105d835038b950cdf69a52c01875",
+        "outer_processes": 1,
+        "observed_processes": 4,
+        "startup_and_exit": true,
+        "verifier_sha256": "2cd4ad10c7f8c557db3504a66e5a8135a7b1d05e453326f4a0bd71b43a64abb6"
+      },
+      {
+        "phase": "scope-native-tests",
+        "files": [
+          "tests/qualification/glossary-publication.test.ts",
+          "tests/qualification/glossary-publication-boundaries.test.ts",
+          "tests/qualification/glossary-context.test.ts",
+          "tests/qualification/relation-scope-candidates.test.ts"
+        ],
+        "expected": 25,
+        "actual": {
+          "tests": 25,
+          "suites": 0,
+          "pass": 25,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "ed4ba3680fc6c0baf87f6b15504bbcaff92f2ffb148732a478b2eda4a0f5648f",
+        "effective_manifest_sha256": "323f5aacb7571d4d45d2f6ed29b20ac07b54105d835038b950cdf69a52c01875",
+        "outer_processes": 1,
+        "observed_processes": 5,
+        "startup_and_exit": true,
+        "verifier_sha256": "2cd4ad10c7f8c557db3504a66e5a8135a7b1d05e453326f4a0bd71b43a64abb6"
+      },
+      {
+        "phase": "population-native-tests",
+        "files": [
+          "tests/qualification/glossary-publication.test.ts",
+          "tests/qualification/glossary-publication-boundaries.test.ts",
+          "tests/qualification/glossary-context.test.ts",
+          "tests/qualification/relation-scope-candidates.test.ts",
+          "tests/qualification/glossary-population.test.ts"
+        ],
+        "expected": 26,
+        "actual": {
+          "tests": 26,
+          "suites": 0,
+          "pass": 26,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "375b0360df44cbbd6a0f623b47437976abc7b6cb605fae056c81e6bc6ce374a4",
+        "effective_manifest_sha256": "323f5aacb7571d4d45d2f6ed29b20ac07b54105d835038b950cdf69a52c01875",
+        "outer_processes": 1,
+        "observed_processes": 6,
+        "startup_and_exit": true,
+        "verifier_sha256": "2cd4ad10c7f8c557db3504a66e5a8135a7b1d05e453326f4a0bd71b43a64abb6"
+      },
+      {
+        "phase": "quality-native-tests",
+        "files": [
+          "tests/qualification/quality.test.ts"
+        ],
+        "expected": 15,
+        "actual": {
+          "tests": 15,
+          "suites": 0,
+          "pass": 15,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "8ffbffc5e53d4867407679f12d69dbdf29cc30e4cb68723c9d4e8f210a60b1ff",
+        "effective_manifest_sha256": "979612c0c906b8fb5b62e2620c9ca285a58b5f4d9b5e9ecf0eb033c93c2be330",
+        "outer_processes": 1,
+        "observed_processes": 2,
+        "startup_and_exit": true,
+        "verifier_sha256": "9205011141daa9dfdc9950ba2b3bd073fda857cfdc8813416ed76bae0cb55717"
+      },
+      {
+        "phase": "lineage-native-tests",
+        "files": [
+          "tests/qualification/lineage.test.ts"
+        ],
+        "expected": 13,
+        "actual": {
+          "tests": 13,
+          "suites": 0,
+          "pass": 13,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "5c471ed128985cd8602836173a2b869c8bb21c57004181dcf2df505e5d815342",
+        "effective_manifest_sha256": "979612c0c906b8fb5b62e2620c9ca285a58b5f4d9b5e9ecf0eb033c93c2be330",
+        "outer_processes": 1,
+        "observed_processes": 2,
+        "startup_and_exit": true,
+        "verifier_sha256": "9205011141daa9dfdc9950ba2b3bd073fda857cfdc8813416ed76bae0cb55717"
+      },
+      {
+        "phase": "classification-native-tests",
+        "files": [
+          "tests/api/classification-storage.test.ts"
+        ],
+        "expected": 14,
+        "actual": {
+          "tests": 14,
+          "suites": 0,
+          "pass": 14,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "71e450f079d48f0cde1fbfbe9dd00d3a39d688671919901312aa21d2be566b68",
+        "effective_manifest_sha256": "f8f3f95f2d61a60745cce068ef6b18249bbd77b85bdd4f83d88560e3e6a8a72c",
+        "outer_processes": 1,
+        "observed_processes": 2,
+        "startup_and_exit": true,
+        "verifier_sha256": "e5eceddd7d12bec0c642237e3d173ca101622ddde07e65d0e5bf216ac59f51de"
+      },
+      {
+        "phase": "reference-native-tests",
+        "files": [
+          "tests/api/reference-data-storage.test.ts"
+        ],
+        "expected": 18,
+        "actual": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "c1445dbd1094fb5d22f7d91b413e9b45c7d52ccf8267ef64012608699209a508",
+        "effective_manifest_sha256": "a53e487faa163b9d6e16e6effff48eadc8efb48e380989852ded9ca53bca04d1",
+        "outer_processes": 1,
+        "observed_processes": 2,
+        "startup_and_exit": true,
+        "verifier_sha256": "e7cc92e8c973b3332051999e206304a964a405cb7a176ea20950a8c41decd14e"
+      },
+      {
+        "phase": "reference-quality-completeness-tests",
+        "files": [
+          "tests/qualification/quality.test.ts"
+        ],
+        "expected": 15,
+        "actual": {
+          "tests": 15,
+          "suites": 0,
+          "pass": 15,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "8b13be8fa0157b2cc707b3257073570f4614140e80525330c45a2ef649507316",
+        "effective_manifest_sha256": "01bb3524582ef223300c25be789f6b918e8b051075c3571d293102af3f8db64c",
+        "outer_processes": 1,
+        "observed_processes": 2,
+        "startup_and_exit": true,
+        "verifier_sha256": "64909cef5b192f98722e6aa3facbf9dcf2650d75ca9a3fa29a651892bd9356b8"
+      },
+      {
+        "phase": "reference-quality-native-tests",
+        "files": [
+          "tests/api/reference-quality-storage.test.ts"
+        ],
+        "expected": 21,
+        "actual": {
+          "tests": 21,
+          "suites": 0,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "53da3df632f8f769f2d1fff884d8c289c9d0bbf66f67642e23e4ddbb92a0a2a1",
+        "effective_manifest_sha256": "01bb3524582ef223300c25be789f6b918e8b051075c3571d293102af3f8db64c",
+        "outer_processes": 1,
+        "observed_processes": 2,
+        "startup_and_exit": true,
+        "verifier_sha256": "64909cef5b192f98722e6aa3facbf9dcf2650d75ca9a3fa29a651892bd9356b8"
+      },
+      {
+        "phase": "structure-reference-tests",
+        "files": [
+          "tests/api/reference-data-storage.test.ts"
+        ],
+        "expected": 18,
+        "actual": {
+          "tests": 18,
+          "suites": 0,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "805f372a40c123b399478bd7290f972c3af1208e05dd2e25771800c8fc451cca",
+        "effective_manifest_sha256": "660a0df6d73c60829ca27240cb82f2c0b641f4e8b811cb8b8b629dcf2cde035d",
+        "outer_processes": 1,
+        "observed_processes": 2,
+        "startup_and_exit": true,
+        "verifier_sha256": "08d3dff5033ab34d1675987695163212235ed839904cbb36dcb6c2cd9fe61322"
+      },
+      {
+        "phase": "structure-reference-quality-tests",
+        "files": [
+          "tests/api/reference-quality-storage.test.ts"
+        ],
+        "expected": 21,
+        "actual": {
+          "tests": 21,
+          "suites": 0,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "02d6bddfe0845fba2923ae7b8bc5233f85e0b84cadd64a05b8c790f9dbe14fd9",
+        "effective_manifest_sha256": "660a0df6d73c60829ca27240cb82f2c0b641f4e8b811cb8b8b629dcf2cde035d",
+        "outer_processes": 1,
+        "observed_processes": 2,
+        "startup_and_exit": true,
+        "verifier_sha256": "08d3dff5033ab34d1675987695163212235ed839904cbb36dcb6c2cd9fe61322"
+      },
+      {
+        "phase": "structure-native-tests",
+        "files": [
+          "tests/api/reference-structure-storage.test.ts",
+          "tests/api/reference-structure-concurrency.test.ts"
+        ],
+        "expected": 30,
+        "actual": {
+          "tests": 30,
+          "suites": 0,
+          "pass": 30,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "log_sha256": "a1e97b89a9c23f70251b28ec79b75b8864d2d37ffbde3752a7eb694ce15d66b3",
+        "effective_manifest_sha256": "660a0df6d73c60829ca27240cb82f2c0b641f4e8b811cb8b8b629dcf2cde035d",
+        "outer_processes": 1,
+        "observed_processes": 3,
+        "startup_and_exit": true,
+        "verifier_sha256": "08d3dff5033ab34d1675987695163212235ed839904cbb36dcb6c2cd9fe61322"
+      }
+    ]
+  },
+  "images": {
+    "postgres": "sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5",
+    "application": "sha256:73c38adaba77680a4146d7908ff3e04e0ef0305e7db996ba9af7a81af0b93fb1"
+  },
+  "tools": {
+    "node": {
+      "version": "v24.22.3",
+      "sha256": "8f9c2a55879e9705cb285b6cdd649d95df642c6720f052cb30f300d2677da99f"
+    },
+    "tsx": {
+      "version": "4.23.15",
+      "sha256": "17e2a92c5f1f70065b01c65d5ee9ac260839d4fc0ea78fdbb4db7b1155ccd32f"
+    }
+  },
+  "preservation": {
+    "repair": {
+      "migration": "032_relation_candidate_validation.sql",
+      "sha256": "7837d2c9484c539330cb567cd550a4e19ee769360e0c9118d45837ded4f918b5",
+      "canonicalTables": 112,
+      "canonicalBaselineSha256": "446507973ce1e2709aad5cbf9ea0892a5422bf1ec41260f8637a74cf25f2a2f6",
+      "preservation": true,
+      "replay": true,
+      "functionBeforeSha256": "9d37289d79aae812e423689ad8a461e961ac4ba0a503ec7240779a7cbaf364d7",
+      "functionAfterSha256": "ab85c3354f0760af7610ea1962194c6f7e7b5ae632b314608a594d0dc3d41fa1",
+      "guardsSha256": "a8a25202ab6c0db73f772a2e2c502c59eec75c021d1fd2045b5d2cf6d2ad5983",
+      "phaseCommands": {
+        "relation-candidate-predecessor": {
+          "commands": 11,
+          "nonzero": 0,
+          "applied": []
+        },
+        "relation-candidate-upgrade": {
+          "commands": 12,
+          "nonzero": 0,
+          "applied": [
+            "032_relation_candidate_validation.sql"
+          ]
+        },
+        "relation-candidate-replay": {
+          "commands": 12,
+          "nonzero": 0,
+          "applied": []
+        }
+      }
+    },
+    "stage_baselines": [
+      {
+        "target_prefix": "018",
+        "canonical_tables": 112,
+        "full_row_baseline_sha256": "80ce01bdfce1851d2d8c6c77116ed503229435d5c9763dc37e4c00324b87f2fd"
+      },
+      {
+        "target_prefix": "019",
+        "canonical_tables": 112,
+        "full_row_baseline_sha256": "35f7578cfd233e4841fd153b03c5b9b6821fdd66edc1c0897cce62a32b5fa13b"
+      },
+      {
+        "target_prefix": "020",
+        "canonical_tables": 115,
+        "full_row_baseline_sha256": "18cc0e7309c16fd010a51038cecb40f23d31ae15fab11c3bb39ef8a0bb205873"
+      },
+      {
+        "target_prefix": "021",
+        "canonical_tables": 117,
+        "full_row_baseline_sha256": "e9174806a3e525d3112dd5b738eaee8de86b4fb0667e79b527d457e2966e5156"
+      },
+      {
+        "target_prefix": "022",
+        "canonical_tables": 124,
+        "full_row_baseline_sha256": "9a45966429a1c1bce74cfb2163a5bdecf40280796b17a109714fc0b91d88a358"
+      },
+      {
+        "target_prefix": "023",
+        "canonical_tables": 127,
+        "full_row_baseline_sha256": "b012e3c17954bb81ab88603f2e7ebd0914726a17e9115016e4839275806883a1"
+      },
+      {
+        "target_prefix": "024",
+        "canonical_tables": 129,
+        "full_row_baseline_sha256": "a8ab8fea11170da2bc824c4529e492f2a88c8d849d8abe946ae7df71a0f2e1d5"
+      }
+    ],
+    "ledgers": [
+      {
+        "prefix": "018",
+        "ledgerEntries": 19,
+        "ledgerSha256": "413b63eb5f3a23cabdb0bb756bcbb2893b9bab4fbd5a344041df2fe6c283364e",
+        "priorLedgerPreserved": true,
+        "repairEntryPreserved": true,
+        "lastNativeTests": {
+          "tests": 26,
+          "pass": 26,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 26585.554303
+        }
+      },
+      {
+        "prefix": "019",
+        "ledgerEntries": 20,
+        "ledgerSha256": "59db77e5c8ea19044d1e7d2c9541c5763a1991031a710b57bb1774eb2ef2ef48",
+        "priorLedgerPreserved": true,
+        "repairEntryPreserved": true,
+        "lastNativeTests": {
+          "tests": 15,
+          "pass": 15,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 1839.451542
+        }
+      },
+      {
+        "prefix": "020",
+        "ledgerEntries": 21,
+        "ledgerSha256": "31b0333989d562f864d316ea91ae6b5ba3df0954f479f22747b1af49c83ea995",
+        "priorLedgerPreserved": true,
+        "repairEntryPreserved": true,
+        "lastNativeTests": {
+          "tests": 13,
+          "pass": 13,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 1720.392792
+        }
+      },
+      {
+        "prefix": "021",
+        "ledgerEntries": 22,
+        "ledgerSha256": "d39656ee4733d5ad34f24e85446fdefba47be86362ea7adb4b18110f0f3666de",
+        "priorLedgerPreserved": true,
+        "repairEntryPreserved": true,
+        "lastNativeTests": {
+          "tests": 14,
+          "pass": 14,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 2463.467585
+        }
+      },
+      {
+        "prefix": "022",
+        "ledgerEntries": 23,
+        "ledgerSha256": "5735a88ba5f54f5fc4edd6d312c2e44830699176ef0a244b9791f34be85ebebd",
+        "priorLedgerPreserved": true,
+        "repairEntryPreserved": true,
+        "lastNativeTests": {
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 16677.488758
+        }
+      },
+      {
+        "prefix": "023",
+        "ledgerEntries": 24,
+        "ledgerSha256": "1c163fbc760edafd691da39bbc5dd3fe1cf5951e16fb6d5cff906ed01fecbb76",
+        "priorLedgerPreserved": true,
+        "repairEntryPreserved": true,
+        "lastNativeTests": {
+          "tests": 21,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 9698.485545
+        }
+      },
+      {
+        "prefix": "024",
+        "ledgerEntries": 25,
+        "ledgerSha256": "8962c7b446a6ff6527b0d2d68dbf1f3d396a89de9a23dc7d8e36682cdaa3acac",
+        "priorLedgerPreserved": true,
+        "repairEntryPreserved": true,
+        "lastNativeTests": {
+          "tests": 30,
+          "pass": 30,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "duration_ms": 13879.145923
+        }
+      }
+    ],
+    "original_stage_preservation_and_replay_assertions_executed": true,
+    "scope": "SQL032 is applied after the original SQL017-to-SQL018 preservation/replay and before the 26 original population assertions; later prefixes preserve that same repair ledger entry."
+  },
+  "cleanup": {
+    "ownedRemoved": true,
+    "resourceInventoryPreserved": true,
+    "generatedCredentialsRemoved": true,
+    "privateConfigAbsentOnReadback": true,
+    "recordedCommands": 59,
+    "exit0Commands": 7,
+    "redactedAllowFailureInspectExit1": 52
+  },
+  "evidence_binding": {
+    "private_report_sha256": "d974cb2a0158a32dd3a0c9535f572996a4d8bd1484657d089644868f91e9dde2",
+    "independent_readback_sha256": "d35dbc9882e4751f0feb8ab1f4152bd7c18d2f910e566d054054b3a85d3ed5d8",
+    "verification_program_sha256": "6030240fbd3fdf220329fdc56ec5b053ff7b9a4062b22a998845bc3f0ccb3c10",
+    "private_logs_rehashed": 1777,
+    "all_private_log_digests_matched": true,
+    "private_log_manifest_sha256": "f993c54be2b7d4a5e4043e391eb49fc8f875ce8657a124afaddd3713ee0961bf",
+    "raw_private_logs_published": false
+  },
+  "transport": {
+    "batch_tables": 16,
+    "inventory_bound": 512,
+    "transaction": "REPEATABLE READ READ ONLY",
+    "digest_algorithms": [
+      {
+        "path": "scripts/runtime-test-glossary-population-upgrade.py",
+        "preserved": "Exact sorted full-row jsonb_agg expression and count, retaining duplicate multiplicity."
+      },
+      {
+        "path": "scripts/qualification_relation_candidate.py",
+        "preserved": "Exact sorted fixed-width SHA256 row-digest multiset and count, retaining duplicate multiplicity."
+      }
+    ],
+    "fail_closed": [
+      "Invalid, duplicate or over-bound table inventories before SQL execution.",
+      "Missing, extra, reordered or duplicated result rows.",
+      "Malformed counts, digests, JSON or duplicate JSON keys.",
+      "Any SQL failure, including partial output."
+    ],
+    "unchanged_limits": {
+      "lifecycle_seconds": 600,
+      "command_seconds": 120,
+      "diagnostic_bytes": 4194304
+    },
+    "cross_batch_global_snapshot_claimed": false,
+    "quality_snapshot_unchanged": {
+      "path": "scripts/runtime-test-quality-upgrade.py",
+      "sha256": "bffe02a08cdcb8cd53df17669c8a764b7209257214aaf6a37e56795a7e7d4141"
+    }
+  },
+  "host_controls": {
+    "command": "python3 -m unittest policies.test_glossary_population_diagnostics scripts.test_governance_repaired_chain scripts.test_quality_upgrade_snapshot",
+    "python_version": "3.14",
+    "node_version": "v24.22.3",
+    "tests": 56,
+    "new_controls_included": 13,
+    "fail": 0,
+    "skipped": 0,
+    "result": "PASS",
+    "elapsed_seconds": 96.636,
+    "log_sha256": "f243ac2c058585505617672f04abe93f23f5e12d5a1d889546a63bbb9cf08c3f",
+    "verification_sha256": "811dea0ebb2902c24661f5e68f49efa4352effd2fd49fa0920536549e0f2b5dd",
+    "sources": [
+      {
+        "path": "scripts/runtime-test-glossary-population-upgrade.py",
+        "sha256": "838c0c6f6f1b8134952b67412becc4df248fa641b8b0b8361708c9db2e296051"
+      },
+      {
+        "path": "policies/test_glossary_population_diagnostics.py",
+        "sha256": "8c186a37cb9a175c746543139544c80f4541e736a4556614ebe590c5a100dbfe"
+      },
+      {
+        "path": "scripts/qualification_relation_candidate.py",
+        "sha256": "bb09bb162d4795c1cb1ed9444aa68b306383f860f3eb60c4407112ff43a190ad"
+      },
+      {
+        "path": "scripts/test_governance_repaired_chain.py",
+        "sha256": "fa3e20dbf85b8b9416f395a25889c87d7ed0c56f49273793f3cdd205aab42d65"
+      }
+    ],
+    "syntax": "PASS"
+  },
+  "retained_hosted_failure": {
+    "path": "docs/verification/hosted-checkpoint-7b8babf-failed.json",
+    "sha256": "33f0b8538eef878d401aecce79e57838a09a2ab45ed0470f9d9b99317703b01a",
+    "implementation_commit": "7b8babfcfe15e3d7c59ae9f12dda1aff8af233b6",
+    "run_id": 45152387454,
+    "result": "NOT_PASSED",
+    "outcome_counts": {
+      "success": 46,
+      "failure": 1,
+      "skipped": 1
+    },
+    "interpretation": "The original structure-upgrade command exhausted its remaining absolute lifecycle budget. This local repair pass neither changes that result nor establishes a product assertion failure or a complete hosted timing diagnosis."
+  },
+  "source_binding": {
+    "files": 176,
+    "all_current_bytes_before_and_after": true,
+    "full_declared_closure_matched": true,
+    "manifest_encoding": "SHA256 of compact, sorted-key JSON over this ordered path/sha256 list.",
+    "manifest_sha256": "c079996402586727af8f2b9d449fc0273c84db86c39496ebaa5839a1ed46000c",
+    "sources": [
+      {
+        "path": "apps/api/src/approvals.ts",
+        "sha256": "b1bff6fcccf3c0f9badc821757ef14b0bbe558b520630ddd010fe781bcad3896"
+      },
+      {
+        "path": "apps/api/src/business-domain-http.ts",
+        "sha256": "8a22ceb6a2cd935e5af689d4867d21a1c06098c8b89875103ae52daf1a828577"
+      },
+      {
+        "path": "apps/api/src/classification-publication.ts",
+        "sha256": "581c79318d835640c126f43830bb476f2729f4dfe1675ea37c3b8fb013b98181"
+      },
+      {
+        "path": "apps/api/src/classification.ts",
+        "sha256": "f9240dbb3987e7d950baf735e68de8781d4d8d7b624b3bca75fe494039781697"
+      },
+      {
+        "path": "apps/api/src/glossary-publication.ts",
+        "sha256": "00d5d6cb8fb8176959a9d2cbf535a310dd96d583bb3c9f39c6cef87d00f2a0d6"
+      },
+      {
+        "path": "apps/api/src/lineage.ts",
+        "sha256": "d416d93835ee26a25ceb98f6277c4df587840a24a007980bbe75ac6591327083"
+      },
+      {
+        "path": "apps/api/src/reference-data-publication.ts",
+        "sha256": "15be52c9e9a57fd423f186acd45335a456d3db0734b4d3384c873bb37e49cd47"
+      },
+      {
+        "path": "apps/api/src/reference-data.ts",
+        "sha256": "4d393599df4f0c416c490f0e90fb0efb33150d7be3e2b6ae4da7d4e26b564cd4"
+      },
+      {
+        "path": "apps/api/src/reference-structure-publication.ts",
+        "sha256": "3558c972f89a1084d9465cd324d76366224a523dc74850595b59901d293062c1"
+      },
+      {
+        "path": "apps/api/src/reference-structure.ts",
+        "sha256": "9498406363813d755ad5152c3430e5cceaea30400b6e28828ad4c72ad106e24a"
+      },
+      {
+        "path": "apps/api/src/repository.ts",
+        "sha256": "555ea9ee51f7a7418b9e00a7f47854d18daab7feba65ca1121736d0005543675"
+      },
+      {
+        "path": "apps/api/src/security.ts",
+        "sha256": "8ad42a961be9a6a266dc61c0361f31f49e5f93a619c28bcb31bbca9e9f46644f"
+      },
+      {
+        "path": "apps/api/src/source-scans.ts",
+        "sha256": "8445ba167937014e5522d0085145945190a90a4dd332262dced8b3daeacecc96"
+      },
+      {
+        "path": "connectors/manifests/postgresql.json",
+        "sha256": "54f5285a616123bd391b7597b147f4aa8bd98c7f63c4dca0c685ac4c36218eee"
+      },
+      {
+        "path": "connectors/manifests/unity-catalog.json",
+        "sha256": "2d931f9a6abb19524d2a35ddb823c3d51984ce07960c7cbe9aeaa34b4fe7717a"
+      },
+      {
+        "path": "deploy/compose/compose.yaml",
+        "sha256": "67ac5ccbf5a03ef83eca5720405007759d65cb118dca54830471766f7bb81e4e"
+      },
+      {
+        "path": "docs/execution/authentication-legacy-function-census.json",
+        "sha256": "a2affa4c201bd03c23bdf91ed7f765fcbcde0cb3c351c13607be405ba3cfb51e"
+      },
+      {
+        "path": "package.json",
+        "sha256": "fe4a1b1dc13991ab42114164382d808f0e93e483403c188236331ee370b09a12"
+      },
+      {
+        "path": "packages/authority/src/actions.ts",
+        "sha256": "203e81870496129a7914bcadb5c6f0c268612449d59319e1450350d250604a95"
+      },
+      {
+        "path": "packages/authority/src/admission.ts",
+        "sha256": "1ef4989d22310cc902d7529c7ea55e4b1b0024b182501615ff84742187a67668"
+      },
+      {
+        "path": "packages/authority/src/authentication-installation.ts",
+        "sha256": "b085eaa0757f3a35971602ad7bfbc38d2c164918711d092c1e0930e680a385fa"
+      },
+      {
+        "path": "packages/authority/src/authentication.ts",
+        "sha256": "80d1ca07499e60917aae2e11aa5e5eefe61568279bb037b8f19cb65de5cf612d"
+      },
+      {
+        "path": "packages/authority/src/types.ts",
+        "sha256": "044e1ecf9ddb03a5a77ecbf71ae170aac6965690f4bc8522709609c688178164"
+      },
+      {
+        "path": "packages/authz/src/index.ts",
+        "sha256": "25e8d08531d578e17d33ae0095e2cf11e4555cac39da8471248c275bf00025be"
+      },
+      {
+        "path": "packages/connectors/src/capabilities.ts",
+        "sha256": "b7039810105145474401c0f4bb649ac1002f7cedad3cf77c798c3152bb7c5b1d"
+      },
+      {
+        "path": "packages/connectors/src/sources.ts",
+        "sha256": "ee8dba2bdc0f84180d1c0af33db0cc9135b29cccf0e070889a8370ee49c8dcf5"
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "sha256": "04c7991fdc3d159d0128fcfdef2208ff43cea91b7161d364a302970e60a9f6fe"
+      },
+      {
+        "path": "packages/db/migrations/001_foundation.sql",
+        "sha256": "2cad0f9026b512c9c896d0a5a5162d58d7d08c8ad80bcda21180041f460fefaa"
+      },
+      {
+        "path": "packages/db/migrations/002_audit_envelopes.sql",
+        "sha256": "a2fa9227ea0c9d3e883d6b67e802e32840d68f63f45b16b603b5e23f4fb3d728"
+      },
+      {
+        "path": "packages/db/migrations/003_governance_models.sql",
+        "sha256": "fea03697b1871df21dc108b54d1b39ca0075f60432f8e3c6185ab796c67131aa"
+      },
+      {
+        "path": "packages/db/migrations/004_model_migrations.sql",
+        "sha256": "b0cd71b9d98e5073e96f42d6bb010df3cda8692bb2cc4fbd2887a97390f0525f"
+      },
+      {
+        "path": "packages/db/migrations/005_model_migration_integrity.sql",
+        "sha256": "799d4d20072126a9c3a1dfe9544668d022c3a4a478bc7010b4c84c5c0285e763"
+      },
+      {
+        "path": "packages/db/migrations/006_inherited_asset_types.sql",
+        "sha256": "5160923875148544b725d57447a0787e8b4167cd6239421bd2beb0d836571df8"
+      },
+      {
+        "path": "packages/db/migrations/007_asset_type_migrations.sql",
+        "sha256": "0abe6645087a2cffcd65d95e44cf7825640b7d7b4d91a3a589d3312fcb7e3df7"
+      },
+      {
+        "path": "packages/db/migrations/008_constrained_relations.sql",
+        "sha256": "b8d858ffade0b577848014cedef54218a4a7e47e7a9243c03c582ad829cf96f2"
+      },
+      {
+        "path": "packages/db/migrations/009_relation_participation.sql",
+        "sha256": "eb1b13ada40544c269b46ff5ca5c0ff4f83e3b18f0e65c3d075f0ca8352b8bfe"
+      },
+      {
+        "path": "packages/db/migrations/010_relation_scope_discovery.sql",
+        "sha256": "9437f8d179dd6f26ee757373dd8eb5eb40771681a0417a426e6e00575da8d91a"
+      },
+      {
+        "path": "packages/db/migrations/011_business_domains.sql",
+        "sha256": "ece1c39647d7ab3c2d0e7fcf5d21f908951884ee48e101b836292444909b6c78"
+      },
+      {
+        "path": "packages/db/migrations/012_authentication_foundation.sql",
+        "sha256": "2c4e1ca33f8983e0716328281578aae6e4bed97dbe9916cf0febaef2bd481b77"
+      },
+      {
+        "path": "packages/db/migrations/013_authority_foundation.sql",
+        "sha256": "4a9304cf02ab51fc085a6018cd22980e948bc6cd1167b3595ccb817b2cf41fbf"
+      },
+      {
+        "path": "packages/db/migrations/014_source_connectors.sql",
+        "sha256": "5d43592b8120818db2a2d81e62652ffccdc9dde1a0c0111604bc373b8b2e1f4b"
+      },
+      {
+        "path": "packages/db/migrations/015_approval_workflows.sql",
+        "sha256": "571e14b0b42fe2dc58d076e35e7e2a3bab0bca918042e4ef222c63b3be2f269d"
+      },
+      {
+        "path": "packages/db/migrations/016_glossary_publication.sql",
+        "sha256": "26b03dd63077e0477da3ed80d2a099b2dc4e00390d9e11eeea2546a0d19aea57"
+      },
+      {
+        "path": "packages/db/migrations/017_relation_scope_candidates.sql",
+        "sha256": "c22f0b6d35e75555e1c58b503a82d2bbf6f23ab404c3af618143178cc5baa47b"
+      },
+      {
+        "path": "packages/db/migrations/018_glossary_nominal_candidates.sql",
+        "sha256": "60361c7b2ddee2f1f095d0e832116b4b97cc04fdbee6a88b398721e5bee13fea"
+      },
+      {
+        "path": "packages/db/migrations/019_quality_execution.sql",
+        "sha256": "ed7fefe9f1598831b6feb5954ba688fd35073af20dc1717082cb5176bc576ab5"
+      },
+      {
+        "path": "packages/db/migrations/020_native_lineage.sql",
+        "sha256": "b5e601a50fdad2417f6b497eade5d65da7c5dcdb7bde94e74694a04d208691b8"
+      },
+      {
+        "path": "packages/db/migrations/021_classification_review.sql",
+        "sha256": "e8637511016f4e9cf6741c4d5718c14a8b47a97898b8769e2884a7ee2a3a294e"
+      },
+      {
+        "path": "packages/db/migrations/022_reference_publication.sql",
+        "sha256": "5720d63ac78b9ad9781c3a46da00369c90d25cf5493cddb318fd8252b131c9d9"
+      },
+      {
+        "path": "packages/db/migrations/023_reference_quality.sql",
+        "sha256": "92221543903d7069d34d9e946b18063be52b1dfa0a7423cdb1b9bd5ff8b5d3ee"
+      },
+      {
+        "path": "packages/db/migrations/024_reference_structures.sql",
+        "sha256": "71a019163fec45a88fc91f4cb53839e582c23eb37db7615928ae5d7f888dcd2c"
+      },
+      {
+        "path": "packages/db/migrations/032_relation_candidate_validation.sql",
+        "sha256": "7837d2c9484c539330cb567cd550a4e19ee769360e0c9118d45837ded4f918b5"
+      },
+      {
+        "path": "packages/db/src/index.ts",
+        "sha256": "9c61565b9a71408fb1e598fc4f9e96e2fa2b964f595442b66551e76a0b6b6976"
+      },
+      {
+        "path": "packages/db/src/migrate.ts",
+        "sha256": "a0c12ca1e31a99535ecfb401e0ccf0b947af3dae1e6efe7ca5d128e26671e72b"
+      },
+      {
+        "path": "packages/db/src/seed-business-domains.ts",
+        "sha256": "382a9968582d3dfc54b6f60c1a3c1eefaac564d2c6db62469bc301ab753ffe7b"
+      },
+      {
+        "path": "packages/db/src/seed-glossary.ts",
+        "sha256": "8d0989950dfd79c774ff15eead318aed6ba0674bdbcabf7be4f64cd986d62c20"
+      },
+      {
+        "path": "packages/db/src/seed.ts",
+        "sha256": "0713ed40705444d8405ccc78b1fe249e75da66df9940bc2f2e4c2ef887e14e77"
+      },
+      {
+        "path": "packages/domain/src/approval-contracts.ts",
+        "sha256": "07382a175da5144b0d2bd94c5f51176827dbd93d5cf50426c9a174b724d95e79"
+      },
+      {
+        "path": "packages/domain/src/approval-service.ts",
+        "sha256": "fae0aa35cb3b81ab9cb846421cebe2d935f12a97829e1b8ca4a493041032084b"
+      },
+      {
+        "path": "packages/domain/src/approval.ts",
+        "sha256": "2f3b55853fdfa719eb12eb9fb488158c905c8280bd1a524730831382df4f7028"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-contracts.ts",
+        "sha256": "5e52dfaf5d160bca66fdffd29babb09789cbecaa9e114a1cec4f3e8ba1c6343a"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration-service.ts",
+        "sha256": "ad2c9f73073e352d7b5e44c5c8c47bb95ce91a33e701fed63139287011a87892"
+      },
+      {
+        "path": "packages/domain/src/asset-type-migration.ts",
+        "sha256": "655c5e7a999ab470a4eaf556b1ef624a3e2c2e7377f5976f373921385ffbb450"
+      },
+      {
+        "path": "packages/domain/src/asset-type-policy.ts",
+        "sha256": "fa0464878773ee272a5ee8071a8158f53cd2772196069bc18103e904d4ea76d7"
+      },
+      {
+        "path": "packages/domain/src/asset-type-service.ts",
+        "sha256": "3d45da5c5c29d330b47a29361b1f09ef9f53ffb506bc23d31b9c613623ae13d6"
+      },
+      {
+        "path": "packages/domain/src/asset-type.ts",
+        "sha256": "b83a64df27b13b33b750f8caaba7277f6fb4eca1f212a758dae2d0db6a0660cd"
+      },
+      {
+        "path": "packages/domain/src/business-domain-contracts.ts",
+        "sha256": "b43ecced92ec6dd20392afc06a4f8e466819d98148e2b4bbce39ed91ec56edf1"
+      },
+      {
+        "path": "packages/domain/src/business-domain-migration.ts",
+        "sha256": "ca5396dc13234e6aa5be9f4087c3cad5bcbea2f05bcd88bb8873f70881972d99"
+      },
+      {
+        "path": "packages/domain/src/business-domain-preview.ts",
+        "sha256": "cc05d1567dd9d84b67245b9fa1b1d6bbd451c2ae8aa2f9cf38b54e44a2147478"
+      },
+      {
+        "path": "packages/domain/src/business-domain-read.ts",
+        "sha256": "29ef7892ca3c2e581679b269558af238246a77044d0153c61e47d8456e279b14"
+      },
+      {
+        "path": "packages/domain/src/business-domain-service-contracts.ts",
+        "sha256": "ba82f0ca537c67c96614dc97c7b3f3f6c1a201304713c2bae2c40a57e83832b6"
+      },
+      {
+        "path": "packages/domain/src/business-domain-service.ts",
+        "sha256": "5215ce759fbcf1f85327893476f213d009a0caa5f82acc4aa1df9723769a5cb4"
+      },
+      {
+        "path": "packages/domain/src/business-domain-store.ts",
+        "sha256": "ddfd6cd5c9846818c81093062132c27800717e10efd110a76a7cb54a1300d974"
+      },
+      {
+        "path": "packages/domain/src/business-domain-type.ts",
+        "sha256": "19c4a82916ba81f5d236c3e46e1edad94e7b747f68643556a6f98af53677885e"
+      },
+      {
+        "path": "packages/domain/src/business-domain-write.ts",
+        "sha256": "e6225dd90ca9ccadaa01d54c709ec4b32a182d52841e7208c4b7430b7671b067"
+      },
+      {
+        "path": "packages/domain/src/classification-contracts.ts",
+        "sha256": "d3c11525afcc0b36e3cd818793f92b7ef9ccaac776f5826c9a8dda087d0a9a85"
+      },
+      {
+        "path": "packages/domain/src/classification-service.ts",
+        "sha256": "3cd095e23cb06bae79f5bb25a9bed420f6e463dec8d909ade97653ec002a27b2"
+      },
+      {
+        "path": "packages/domain/src/classification.ts",
+        "sha256": "8b13647db21a2724ea155c09556ae6ddc375df8dd9d10b3506ad4bbaabcc30b6"
+      },
+      {
+        "path": "packages/domain/src/cursor.ts",
+        "sha256": "f1d501242fe218eaaa7759ab04114d3855683cfb19906576e6fde0cdbeea4d8d"
+      },
+      {
+        "path": "packages/domain/src/glossary-context-contracts.ts",
+        "sha256": "bb35aaedd9fb2e0f4540eb25fc90265d6cc5619dce408b2b1c60becf904321a1"
+      },
+      {
+        "path": "packages/domain/src/glossary-context.ts",
+        "sha256": "f8a0c2d11fb3c732cb093dafad5bb7e61e73f37f95f0926fdb810c3797c1203c"
+      },
+      {
+        "path": "packages/domain/src/glossary-contracts.ts",
+        "sha256": "ea7d1b01aa7f99b395f0cd44960a86670fae94fde763b2be89acb21f0b683a4d"
+      },
+      {
+        "path": "packages/domain/src/glossary-publication-service.ts",
+        "sha256": "cbfa31831b57f3ff8558cee4300e607b741bdc14d44361a03cec68a684d246e7"
+      },
+      {
+        "path": "packages/domain/src/glossary-service.ts",
+        "sha256": "da5cfc30968f74963c0bca1ee9a38706440f3d9c3ab5b5243ee0b425e747ace3"
+      },
+      {
+        "path": "packages/domain/src/glossary.ts",
+        "sha256": "193a245c95b445d1e0bd229d7fd84d9b0ac3cc8b4413a60d2e31757864d1f710"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-persistence.ts",
+        "sha256": "2df76e69a1cd39d78dbceea31a101a01bf74af86af1b308bebe9e27886415b07"
+      },
+      {
+        "path": "packages/domain/src/graph-asset-preparation.ts",
+        "sha256": "2378db5f737aea8a94132feb39eadce3c95272d0f1ba18f459abc1554c266b49"
+      },
+      {
+        "path": "packages/domain/src/lineage-contracts.ts",
+        "sha256": "ea0082ab263abd0a4fab79082d841546a8011a24ea37b601d4d31eb39ab63aeb"
+      },
+      {
+        "path": "packages/domain/src/lineage-ingest.ts",
+        "sha256": "e82bc6a88c926ce7a3fbbed0d46d458a42cb2ab189623a30e041c249effc3aa3"
+      },
+      {
+        "path": "packages/domain/src/lineage-read.ts",
+        "sha256": "35b1a75bfde720332b92d507d13cff9520d66c28619ed2489fffde17f6718c1d"
+      },
+      {
+        "path": "packages/domain/src/model-migration-service.ts",
+        "sha256": "775d6ebab6ceb8d68170130a7b55c4b9f0381f05cab05fcdc20acb19dc9d50f6"
+      },
+      {
+        "path": "packages/domain/src/model-migration.ts",
+        "sha256": "8217a92ef138be4142e14e247b282b6e57e38ba765e47fc57ab8521a374c0072"
+      },
+      {
+        "path": "packages/domain/src/model-service.ts",
+        "sha256": "afac3f7b8ca95b4fba5aea4881d8a293fd74c9a0bd8fd725c8717b27d20bce4a"
+      },
+      {
+        "path": "packages/domain/src/model.ts",
+        "sha256": "ebf90e8d24a0cf969d0ebe3c915d5b5113574d354a6e5963d5bc9cd285bc79ad"
+      },
+      {
+        "path": "packages/domain/src/quality-contracts.ts",
+        "sha256": "13728143f29a1c3263f4b3ca4a37de0998f61fb7e9608de8f812780ac1fc45ef"
+      },
+      {
+        "path": "packages/domain/src/quality-service.ts",
+        "sha256": "3d912c5ab5ae1f9de3e397eb652a0cd04d1cb7e204a01ec749618b32840e4cab"
+      },
+      {
+        "path": "packages/domain/src/quality.ts",
+        "sha256": "1cfaaa6b47727a87ab691ba9140ef1b8aa33dedc7626fcdc70e28a32a15be72a"
+      },
+      {
+        "path": "packages/domain/src/reference-data-contracts.ts",
+        "sha256": "7163f78c5a245f3898c01c25335fea8a7876ca28d3307c4689d36f05af9313e7"
+      },
+      {
+        "path": "packages/domain/src/reference-data-service.ts",
+        "sha256": "20f0e7509e70c13c6c84c1cd0ab741d228ea0166eb06203256bdf5b39ae4870f"
+      },
+      {
+        "path": "packages/domain/src/reference-data.ts",
+        "sha256": "7429127176bb03b76b2f0a92d6577eb3dc598fc1dafd243bdaacc00e9694a15e"
+      },
+      {
+        "path": "packages/domain/src/reference-structure-contracts.ts",
+        "sha256": "5d4a995d37be03982cff94643ec8191ca985828de7f0539c6258c9474cc605d7"
+      },
+      {
+        "path": "packages/domain/src/reference-structure-service.ts",
+        "sha256": "4f4e83d9ab01aa4f7f52e9cf3af7c947e94197e9db0c0657ed910f348a176223"
+      },
+      {
+        "path": "packages/domain/src/reference-structure.ts",
+        "sha256": "ebcb15555ef0f8fa845dfb1058c519d6b915650025081d35eab6c78a37c05215"
+      },
+      {
+        "path": "packages/domain/src/relation-contracts.ts",
+        "sha256": "2181809dbcf4e26eeaf6ed8b6d28cefb17406b6cfa501b64be86bbe30de00caf"
+      },
+      {
+        "path": "packages/domain/src/relation-endpoint-guard.ts",
+        "sha256": "dd02e537a4334ba5689180fa71ff0b2e455b8af09d7d5543223a0f4c1ec412c3"
+      },
+      {
+        "path": "packages/domain/src/relation-glossary-source.ts",
+        "sha256": "6c900ff5cbb1695816fdad6d80582611fc7b3b3d2e9a60e875ae3979968109e6"
+      },
+      {
+        "path": "packages/domain/src/relation-graph.ts",
+        "sha256": "67348ab7b40253f4c5cdb8c84e1d3dc3992bfb51d313902b7da23663b9fccc42"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-contracts.ts",
+        "sha256": "9bc2f7d61392072f316a2b4ecb49b69a14f3d6634242291a873c07f38c60c5da"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-read.ts",
+        "sha256": "bf5dc16ff794343dbc68d2992644e840e07846f791f6c119a8a168bc53142ff7"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-service.ts",
+        "sha256": "474b26d1b090c9a4505f5c9eb3af7c0d76676827cae5a75bd0029a4b8bd27de8"
+      },
+      {
+        "path": "packages/domain/src/relation-migration-store.ts",
+        "sha256": "a544df936f3c1baee11d4805fae87ee42536e2e4c7d716b65236e675b012eaf6"
+      },
+      {
+        "path": "packages/domain/src/relation-migration.ts",
+        "sha256": "7957aef2d5f2c89156a1b2a113d4be5e139bf79830a9ab75f9fd685d5bdf10de"
+      },
+      {
+        "path": "packages/domain/src/relation-participation.ts",
+        "sha256": "c6ce8f44472002ed6422530d2d49622ef099ff83c750f4b1f5c00518ebb5fa2e"
+      },
+      {
+        "path": "packages/domain/src/relation-service.ts",
+        "sha256": "1581897d9758cf5ac6021f3dc3f2b545bd3f186770042f73e1884252549afb26"
+      },
+      {
+        "path": "packages/domain/src/relation-store.ts",
+        "sha256": "96e11e308f845e4b59dd50d9b6d8f31098eed9faa4634c9ac2e652467dc33557"
+      },
+      {
+        "path": "packages/domain/src/relation.ts",
+        "sha256": "ff7e8c1759670572f87b33493c084ce1aef1e979c73700b00fe7df9b1e2fc188"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "49f347e0549a326aa51aeee5caf188c6e4f25e54afe6f8766cc387f5a39304a4"
+      },
+      {
+        "path": "policies/api_evidence.py",
+        "sha256": "cdcce78f64fd7cd0f753107e374883cb6b9b6a8eb4933a3ec7b15e21841da669"
+      },
+      {
+        "path": "policies/authentication_evidence.py",
+        "sha256": "aff4165182b6a89eb16e7d54f435c78a4ba33573295a99294f80f658addc23eb"
+      },
+      {
+        "path": "policies/ci_evidence.py",
+        "sha256": "6e5955a55779c45f07f49e86b8b2263bc7707fe5a1f03fbbec14d1056a649473"
+      },
+      {
+        "path": "policies/glossary_population_diagnostics.py",
+        "sha256": "cb9cce91e1f4c75870a735bff538e19fcf6b4864b899b86608e012adf76405b1"
+      },
+      {
+        "path": "policies/quality_upgrade_diagnostics.py",
+        "sha256": "bff2e92a9bd18cb0bbd2bde2f1d37b3d77642e82f2c0161f52a6caaca6cb43ed"
+      },
+      {
+        "path": "scripts/authentication-install.ts",
+        "sha256": "5c00fa1781a203a83d4046fe7326b45f632ee35d06ce9e02e0547bc8f480590d"
+      },
+      {
+        "path": "scripts/authentication_roles.py",
+        "sha256": "99a3014f3ebb3828940995922ae869eef1b05705b4aff50eecdb1a09d070801e"
+      },
+      {
+        "path": "scripts/qualification_approval_service.py",
+        "sha256": "3cf76eec682d8a1c96a81a8242002299c158a95687823637898b84d10edc2375"
+      },
+      {
+        "path": "scripts/qualification_quality_sql019.py",
+        "sha256": "1dcaa7f092184ce6da2cf43f94da342eab952aad0688ed11b20a1a99d19dcbe6"
+      },
+      {
+        "path": "scripts/qualification_relation_candidate.py",
+        "sha256": "bb09bb162d4795c1cb1ed9444aa68b306383f860f3eb60c4407112ff43a190ad"
+      },
+      {
+        "path": "scripts/qualification_repository.py",
+        "sha256": "1688342aa9d81965df26ade0f45cd75576efda1ef7b333430cae9ae0f8282673"
+      },
+      {
+        "path": "scripts/runtime-test-approvals-upgrade.py",
+        "sha256": "af290ce413cac61de12d17500171da1171d75c1362a00f4b20b7fa9c49425185"
+      },
+      {
+        "path": "scripts/runtime-test-authority-authn-foundation.py",
+        "sha256": "60b5ad51d757851de74a11f4cac4a7c98ebcdcb8ec7b764f715b2f249f2df9fe"
+      },
+      {
+        "path": "scripts/runtime-test-classification-upgrade.py",
+        "sha256": "ada4974bfd460d071997c906fb69332073590f9ee015dad22d4bc55a79c5689f"
+      },
+      {
+        "path": "scripts/runtime-test-glossary-population-upgrade.py",
+        "sha256": "838c0c6f6f1b8134952b67412becc4df248fa641b8b0b8361708c9db2e296051"
+      },
+      {
+        "path": "scripts/runtime-test-glossary-upgrade.py",
+        "sha256": "eb3be07d3f9352f84acf9ee7887ec6a166e4613c2f7e67f7f02ab9308adb8f9e"
+      },
+      {
+        "path": "scripts/runtime-test-governance-repaired-upgrade.py",
+        "sha256": "68f99a3f9c92632eb429bea97942028bff9d62182562445d5af6a33fb160e6e0"
+      },
+      {
+        "path": "scripts/runtime-test-lineage-upgrade.py",
+        "sha256": "fb8cc0fcde9c6ba352c831cd06733ddaec4c4c93f9ea425831a24a940ce0b5f6"
+      },
+      {
+        "path": "scripts/runtime-test-quality-upgrade.py",
+        "sha256": "bffe02a08cdcb8cd53df17669c8a764b7209257214aaf6a37e56795a7e7d4141"
+      },
+      {
+        "path": "scripts/runtime-test-reference-quality-upgrade.py",
+        "sha256": "d07b115117903a758b3b65e3391b3675f668a656bd18b24d039c850f98830cdf"
+      },
+      {
+        "path": "scripts/runtime-test-reference-structure-upgrade.py",
+        "sha256": "d8c832e695f4cf8f7ce9d0747d9d829f68e8a7a67ef6d75c500221f628194283"
+      },
+      {
+        "path": "scripts/runtime-test-reference-upgrade.py",
+        "sha256": "b8c62dbe4a4303a71fd9ef78f84f4b33b09d83f9fc82e65af700fb0af577aaab"
+      },
+      {
+        "path": "scripts/runtime-test-relation-scope-upgrade.py",
+        "sha256": "6c8a9756bcf974779d39351580bae0be5bc2c82daebe7987beaa9da49e64950e"
+      },
+      {
+        "path": "scripts/runtime-test-source-connectors-upgrade.py",
+        "sha256": "1b2e49be424db18718be508d3f25d456e19dd4242023a1210772d0f0ac21c194"
+      },
+      {
+        "path": "scripts/test_authentication_roles.py",
+        "sha256": "732c90529bb3ee35a54e0c2c3244f69832739c460c34a31b3e482fb047f4754a"
+      },
+      {
+        "path": "tests/api/classification-storage.test.ts",
+        "sha256": "c7da978fefd4ab359de9fd984778d05699427a320dae104ccbaab7d0242b89a0"
+      },
+      {
+        "path": "tests/api/reference-data-storage.test.ts",
+        "sha256": "0422524d10542150a85609b97a3256e0465785f66f35ebb02002fab5d8bd5106"
+      },
+      {
+        "path": "tests/api/reference-quality-storage.test.ts",
+        "sha256": "c2e5e115904384b41b31103c12160a4c3fd6638b6f4b0ba15fc7483f4408f813"
+      },
+      {
+        "path": "tests/api/reference-structure-concurrency.test.ts",
+        "sha256": "087846a2fd52fba58380452f8cd72dce98b859fb5d2ff741e96b09e08b4b1d60"
+      },
+      {
+        "path": "tests/api/reference-structure-storage.test.ts",
+        "sha256": "31129a3b00a863fd9dd196f456db17664377d8fdc09d9ce3cce53e1ad399ff36"
+      },
+      {
+        "path": "tests/fixtures/glossary-population-diagnostic.ts",
+        "sha256": "13f125ba0763180fea54b2ae9769f81326153975717a3499c694f000b83ac192"
+      },
+      {
+        "path": "tests/fixtures/reference-quality.ts",
+        "sha256": "abd4123bfc02c2e234772bf0cbcccd6cf6b0121724d7ea479ba04f612f17ed7b"
+      },
+      {
+        "path": "tests/fixtures/reference-structure-concurrency.ts",
+        "sha256": "2e5cdb420ba40f58affdcf7961adff9eea392938fc51f8e49c497e99411eef6f"
+      },
+      {
+        "path": "tests/fixtures/reference-structure.ts",
+        "sha256": "92471a7b0f43feadf7de776e4a0d420e8dbad6b14725c23ba837afe96f0e5916"
+      },
+      {
+        "path": "tests/qualification/approvals-storage.test.ts",
+        "sha256": "dd451d91dd4092efafacfbefdcf6aca9309a8965358cdcd38bf3f4ced9db78d5"
+      },
+      {
+        "path": "tests/qualification/glossary-context.test.ts",
+        "sha256": "f9b025099335c6bf3201cbdbf71ae855a2721bf344d7812a3e8e986aef6f1924"
+      },
+      {
+        "path": "tests/qualification/glossary-population.test.ts",
+        "sha256": "f16fa9cddcda5b792f7aa797ee9e268726b08c829c84c327c2347231c7b4cd19"
+      },
+      {
+        "path": "tests/qualification/glossary-publication-boundaries.test.ts",
+        "sha256": "03511339e9d39f7fbcb270759df5b98f745f9f70e85dc05076406f23b973b788"
+      },
+      {
+        "path": "tests/qualification/glossary-publication.test.ts",
+        "sha256": "f1e359feb94e77d7248caf7693f3e6920f12d8cdf7fd9031206486571335ab2d"
+      },
+      {
+        "path": "tests/qualification/glossary-submission.test.ts",
+        "sha256": "895167e0adada2282fdaf44b12ef82e1c7c9f1f38a9159e4c4bbadd917d53d99"
+      },
+      {
+        "path": "tests/qualification/lineage.test.ts",
+        "sha256": "1ddfe8cf41e48bc3ff936b36a955dce1bdf32362ef3712b0218fd8392f2f69df"
+      },
+      {
+        "path": "tests/qualification/predecessors/approval-service-sql020.ts.txt",
+        "sha256": "c0bdee3d1a7f1ae91982fe34503282ee144ff4f1231575799ac89586fa1fa0f4"
+      },
+      {
+        "path": "tests/qualification/predecessors/approval-service-sql021.ts.txt",
+        "sha256": "165033f5eefc472e2cb5b38be066b19f76fad996c70999aedf516282bba4700a"
+      },
+      {
+        "path": "tests/qualification/predecessors/approval-service-sql023.ts.txt",
+        "sha256": "c9a2a002a1e9bb54c114778c3e49adac1bf98ce34728a87f1a16d140e9e2ed83"
+      },
+      {
+        "path": "tests/qualification/predecessors/approvals-sql020.ts.txt",
+        "sha256": "d276b51fac67659c45111722820ffb7798731d3540e455659df8595530356ce3"
+      },
+      {
+        "path": "tests/qualification/predecessors/approvals-sql021.ts.txt",
+        "sha256": "fdfb94001e453288121e319da66a5e2915da537997b43f256df416ddd00086e4"
+      },
+      {
+        "path": "tests/qualification/predecessors/approvals-sql023.ts.txt",
+        "sha256": "b03e2e6e7b081d8ae78222e4b3b9557547a136ee116534f458a23950ac33857d"
+      },
+      {
+        "path": "tests/qualification/predecessors/quality-contracts-sql022.ts.txt",
+        "sha256": "21b61ae254b6633f74bf071a68301d8a5cc6f077dc3fb58d938bd22e36163a83"
+      },
+      {
+        "path": "tests/qualification/predecessors/quality-service-sql022.ts.txt",
+        "sha256": "9d510d1cf4eb5a99c6667efad7eea9c4ed302ce450d469b77a086f428410b982"
+      },
+      {
+        "path": "tests/qualification/predecessors/quality-service-sql029.ts.txt",
+        "sha256": "6a7691da7bf328341277ad0cf6737f44b5fd25cc61dbb97b2b345ecec14e1a73"
+      },
+      {
+        "path": "tests/qualification/predecessors/quality-sql022.ts.txt",
+        "sha256": "e9ef493c57c149154efd627204dde21dd1f3d7277afcbd108d5e7dd9423bace0"
+      },
+      {
+        "path": "tests/qualification/predecessors/repository-sql018.ts.txt",
+        "sha256": "02513444534aa7cbed358235478bae0ea8cdd14e3dfd3b5fe5f76897c1e9dcf6"
+      },
+      {
+        "path": "tests/qualification/predecessors/repository-sql020.ts.txt",
+        "sha256": "b7ac63819810bf1df411307537d114525f284c489384e8db570626c92ccb2a08"
+      },
+      {
+        "path": "tests/qualification/predecessors/repository-sql021.ts.txt",
+        "sha256": "4a9701fb5638893dda51dedb4c4093fcf401467e6658e218075cb8ec9859c73f"
+      },
+      {
+        "path": "tests/qualification/predecessors/repository-sql022.ts.txt",
+        "sha256": "75aa5e716c537a0caafabba08e5e3ada6aefeae3a42d11c8b942444d6073a1ee"
+      },
+      {
+        "path": "tests/qualification/predecessors/repository-sql023.ts.txt",
+        "sha256": "3e48472c23f874bf8eb478c8ecb1c88f380c5649df12d56c1929a6458c352048"
+      },
+      {
+        "path": "tests/qualification/predecessors/repository-sql026.ts.txt",
+        "sha256": "9cb5f78fe0d70e1d614f7940ed3de4e44394ae47befd817c2f7816f08fe654f5"
+      },
+      {
+        "path": "tests/qualification/quality.test.ts",
+        "sha256": "af0fc14eb664563241e0c15828811ca29a096cf340554b00a0426db21cc44b4f"
+      },
+      {
+        "path": "tests/qualification/relation-scope-candidates.test.ts",
+        "sha256": "ac0fc2e4a776fcc42fc37091a4f52a54a3b08f9d6b22ec66df21d8445d6ea549"
+      }
+    ]
+  },
+  "limitations": [
+    "This record summarizes the executed isolated repaired SQL024 chain and an independent retained-evidence review; documentation preparation did not rerun native services.",
+    "The run used the recorded base commit plus the two explicit source differences, with the original immutable predecessor module overlays and their effective manifests; it is not represented as a clean-checkout or application-image build qualification.",
+    "Only this repaired invocation is qualified. Other top-level profiles and fresh hosted CI retain their own requirements.",
+    "Node TAP reports zero nested suites; the thirteen invocations are separate native test processes, not thirteen nested suites.",
+    "Full-row preservation, replay and resource inventory equality were asserted by the exact source-bound harness. SQL results, resource identities and raw logs stay private; independent review checks retained digests, phase outcomes and source assertions rather than reconstructing the deleted database.",
+    "Cleanup retains successful removal checks separately from redacted, allowed-failure inspections of absent helper resources.",
+    "Each snapshot batch uses a read-only repeatable-read transaction. There is no cross-batch global snapshot claim.",
+    "The previous host-only receipt records native qualification as pending at its own timestamp; the subsequent native report supplies the scoped runtime evidence here.",
+    "The earlier hosted checkpoint and historical SQL018-only failure evidence are not relabeled. No shared core, HTTP, API, browser, source worker, content-authority activation or release qualification is inferred."
+  ]
+}
