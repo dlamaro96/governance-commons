@@ -1977,6 +1977,57 @@
         "evidence_sha256": "d818560ac4d3d3ecde2857bfbf64c6caa4eb25d68d1caed41d3eeb2f2cd234b1",
         "implementation_commit": "69e361a3bafc4853baae838be6ca01d4204cf838"
       }
+    },
+    {
+      "path": "docs/verification/classification-label-identities-local.json",
+      "scope": "isolated-classification-label-identities-sql034",
+      "source_binding": {
+        "base_commit": "82859ad7a6f9730268b457b9e9fc3dc7edfe08eb",
+        "method": "Native current mounted source hashes and unchanged SQL001\u2013033 prefix verified independently; cached image supplies dependencies only. Current core and hosted qualification are separate.",
+        "verified_files": 259,
+        "evidence_sha256": "3891ce034b763aa83158898c6ff5bcc538007d94aefb1d667b06e0b7ecde7845"
+      }
+    },
+    {
+      "path": "docs/verification/source-security-82859ad.json",
+      "scope": "source-security",
+      "source_binding": {
+        "implementation_commit": "82859ad7a6f9730268b457b9e9fc3dc7edfe08eb",
+        "method": "Authenticated hosted archives, exact Git sources and independent retained verification receipt. Qualification remains scoped to this PR42 head.",
+        "verified_files": 1576,
+        "evidence_sha256": "8af6c8a8e41301c373459265ee2cf57fd28caa33e2abd5242a1c84312d14e458"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-82859ad.json",
+      "scope": "native-runtime-images",
+      "source_binding": {
+        "implementation_commit": "82859ad7a6f9730268b457b9e9fc3dc7edfe08eb",
+        "method": "Authenticated hosted archives, exact Git sources and independent retained verification receipt. Qualification remains scoped to this PR42 head.",
+        "verified_files": 47,
+        "evidence_sha256": "f2848f36589e38e44248a2794e9878e73f870a9d5b51d07df9f41040e8631ad5"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-82859ad.json",
+      "scope": "hosted-development-47-outcomes",
+      "source_binding": {
+        "implementation_commit": "82859ad7a6f9730268b457b9e9fc3dc7edfe08eb",
+        "method": "All47 exact outcomes, five authenticated behavior archives and56 retained verification inputs checked before normal merge. Capture hashes verified; visual inspection not performed.",
+        "verified_files": 56,
+        "evidence_sha256": "af667f37cc0ac397e39d7691467993d4551ff0ef2d0ddaaf50bc5939e29b13a3"
+      }
+    },
+    {
+      "path": "docs/verification/classification-label-identities-integrated-local.json",
+      "scope": "local-core-classification-label-identities",
+      "source_binding": {
+        "base_commit": "82859ad7a6f9730268b457b9e9fc3dc7edfe08eb",
+        "dirty": true,
+        "method": "Exact344-source immutable-image startup checks and running-service readbacks during the172-case API run and after one real browser journey. Native isolated qualification and hosted gates remain separate.",
+        "verified_files": 344,
+        "evidence_sha256": "087e5620182146fd1877f777698b9624356ffc0385e20abde8c2ff3b7e18c9d6"
+      }
     }
   ],
   "limitations": [

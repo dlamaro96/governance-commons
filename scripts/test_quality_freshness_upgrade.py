@@ -131,17 +131,17 @@ class Controls(unittest.TestCase):
             (self.root/'packages/db/migrations'/gate.NAMES[-1]).unlink()
         with self.assertRaises(RuntimeError): gate.migrations()
 
-    def test_sql033_suffix_is_admitted_but_never_a_historical_phase_input(self):
+    def test_sql034_suffix_is_admitted_but_never_a_historical_phase_input(self):
         before = gate.sources()
         names = ['025_quality_uniqueness.sql', '026_quality_range.sql', '027_quality_monitoring.sql',
                  '028_quality_freshness.sql', '029_quality_freshness_scheduling.sql',
-                 '030_quality_volume.sql', '031_authority_read_grants.sql', '032_relation_candidate_validation.sql', '033_content_security_revisions.sql']
+                 '030_quality_volume.sql', '031_authority_read_grants.sql', '032_relation_candidate_validation.sql', '033_content_security_revisions.sql', '034_classification_label_identities.sql']
         for name in names:
             if name not in gate.NAMES:
                 self.write('packages/db/migrations/' + name, '-- successor only')
         self.assertEqual(gate.migrations(), gate.NAMES)
         self.assertEqual(gate.sources(), before)
-        path = 'packages/db/migrations/033_content_security_revisions.sql'
+        path = 'packages/db/migrations/034_classification_label_identities.sql'
         self.assertNotIn(path, {row['path'] for row in gate.sources()})
         self.write(path, '-- changed unexecuted successor')
         self.assertEqual(gate.sources(), before)

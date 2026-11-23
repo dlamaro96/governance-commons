@@ -18,7 +18,7 @@ spec.loader.exec_module(g)
 
 
 class Controls(unittest.TestCase):
-    def test_exact033_inventory_binds_migration_and_host_control_without_admitting_successors(self):
+    def test_exact033_inventory_binds_controls_and_admits_only_unexecuted034(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)
             for name in g.NAMES: (folder/name).write_text('-- exact prefix')
@@ -31,7 +31,12 @@ class Controls(unittest.TestCase):
                 self.assertIn('scripts/test_content_security_revision.py',bound)
                 (folder/g.MIGRATION).write_text('-- changed candidate bytes')
                 self.assertNotEqual(g.sources(),before)
-                for name in ('033_undeclared.sql','034_undeclared.sql'):
+                changed=g.sources()
+                successor=folder/'034_classification_label_identities.sql';successor.write_text('-- not applied')
+                self.assertEqual(g.migrations(),g.NAMES);self.assertEqual(g.sources(),changed)
+                self.assertNotIn('packages/db/migrations/'+successor.name,{r['path'] for r in changed})
+                successor.write_text('-- changed unexecuted successor');self.assertEqual(g.sources(),changed)
+                for name in ('033_undeclared.sql','034_undeclared.sql','035_undeclared.sql'):
                     extra=folder/name;extra.write_text('-- unreviewed')
                     with self.assertRaises(RuntimeError):g.sources()
                     extra.unlink()

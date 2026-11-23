@@ -28,7 +28,7 @@ source_file=transport.source_file
 
 def migrations():
  actual=sorted(p.name for p in (ROOT/'packages/db/migrations').glob('*.sql'))
- require(len(NAMES)==32 and actual[:len(NAMES)]==NAMES and actual[len(NAMES):] in ([],['033_content_security_revisions.sql']),'Exact001–032 source prefix and declared033 successor required');return NAMES
+ require(len(NAMES)==32 and actual[:len(NAMES)]==NAMES and actual[len(NAMES):]==['033_content_security_revisions.sql','034_classification_label_identities.sql'][:len(actual)-len(NAMES)],'Exact001–032 source prefix and declared contiguous033/034 successors required');return NAMES
 
 def predecessor_pins():
  for p in PREDECESSORS:

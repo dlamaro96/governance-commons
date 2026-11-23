@@ -12,7 +12,7 @@ class Controls(unittest.TestCase):
   self.assertNotIn('tests/fixtures/business-domains.ts',paths)
   self.assertEqual(g.sha((ROOT/'packages/db/migrations/018_glossary_nominal_candidates.sql').read_bytes()),'60361c7b2ddee2f1f095d0e832116b4b97cc04fdbee6a88b398721e5bee13fea')
  def test_fixed031_baseline_does_not_follow_current_import033(self):
-  self.assertEqual(len(g.transport.NAMES),33);self.assertEqual(g.transport.NAMES[-1],'033_content_security_revisions.sql')
+  self.assertEqual(len(g.transport.NAMES),34);self.assertEqual(g.transport.NAMES[-1],'034_classification_label_identities.sql')
   self.assertEqual(len(g.BASE_NAMES),31);self.assertEqual(g.BASE_NAMES[-1],'031_authority_read_grants.sql')
   self.assertEqual(g.NAMES,[*g.BASE_NAMES,g.MIGRATION]);self.assertEqual(g.NAMES.count(g.MIGRATION),1)
   self.assertEqual(g.migrations(),g.NAMES)

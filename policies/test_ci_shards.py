@@ -30,7 +30,7 @@ class AssignmentTests(unittest.TestCase):
         self.assertEqual(len(assigned),len(set(assigned)))
         self.assertFalse(set(assigned)&set(policy.COMMON))
         self.assertEqual(set((*policy.COMMON,*assigned)),set(policy.STEPS))
-        self.assertEqual(len(policy.STEPS),47)
+        self.assertEqual(len(policy.STEPS),48)
 
     def test_each_shard_requires_all_its_results(self):
         for shard in policy.SHARDS:
@@ -497,7 +497,7 @@ class ContentRevisionGateTests(unittest.TestCase):
         self.assertEqual(policy.ASSET_CONTEXT_SCOPES['authority_asset_context']['profile'], 'isolated-inactive-asset-context-sql032')
         assigned = policy.SHARDS['foundation']
         self.assertEqual(assigned[assigned.index(self.STEP)-1:assigned.index(self.STEP)+2],
-                         ('authority_asset_context', self.STEP, 'source_connectors_upgrade'))
+                         ('authority_asset_context', self.STEP, 'classification_label_identities'))
         original = policy.assignment_hash()
         for field, value in [('outerTimeoutSeconds', 901), ('contentAuthority', True), ('profile', 'sql032'), ('report', 'authority-asset-context.json')]:
             with patch.dict(scope, {field: value}):self.assertNotEqual(policy.assignment_hash(), original)
@@ -547,5 +547,69 @@ class ContentRevisionGateTests(unittest.TestCase):
                 patch.object(runtime, 'run', side_effect=RuntimeError('synthetic revision refusal')) as run:
             with self.assertRaisesRegex(RuntimeError, '^synthetic revision refusal$'):runtime.main()
             run.assert_called_once_with([sys.executable, 'scripts/runtime-test-content-security-revision.py', '--run-local'], timeout=900)
+
+class ClassificationLabelGateTests(unittest.TestCase):
+    STEP = 'classification_label_identities'
+
+    def test_distinct_current_upgrade_scope_and_private_evidence(self):
+        scope = policy.CLASSIFICATION_LABEL_SCOPES[self.STEP]
+        self.assertEqual(scope['profile'], 'isolated-classification-label-identities-sql034')
+        self.assertEqual(scope['evidence'], 'STEP_OUTCOME_ONLY')
+        self.assertIs(scope['contentAuthority'], False)
+        self.assertEqual(scope['outerTimeoutSeconds'], 900)
+        self.assertEqual(policy.EVIDENCE[self.STEP], ('classification-label-identities.json',))
+        self.assertEqual(policy.ASSET_CONTEXT_SCOPES['authority_asset_context']['profile'], 'isolated-inactive-asset-context-sql032')
+        assigned = policy.SHARDS['foundation']
+        self.assertEqual(assigned[assigned.index(self.STEP)-1:assigned.index(self.STEP)+2],
+                         ('content_security_revision', self.STEP, 'source_connectors_upgrade'))
+        original = policy.assignment_hash()
+        for field, value in [('outerTimeoutSeconds', 901), ('contentAuthority', True), ('profile', 'sql032'), ('report', 'authority-asset-context.json')]:
+            with patch.dict(scope, {field: value}):self.assertNotEqual(policy.assignment_hash(), original)
+
+    def test_missing_failed_or_cross_shard_revision_outcomes_cannot_be_substituted(self):
+        collect = evidence_tests.EvidenceGateTests(methodName='runTest').collect
+        for shard in (None, 'foundation'):
+            for outcome in (None, 'failure', 'cancelled', 'skipped', 'NOT_IN_SHARD', ''):
+                options = {'omitted_step': self.STEP} if outcome is None else {'failed_step': self.STEP, 'failed_outcome': outcome}
+                code, report = collect(shard=shard, **options)
+                self.assertEqual(code, 1)
+                self.assertNotEqual(report['classification_label_qualifications'][self.STEP]['outcome'], 'success')
+        for shard in policy.SHARDS:
+            code, report = collect(shard=shard)
+            self.assertEqual(code, 0)
+            expected = 'success' if shard == 'foundation' else 'NOT_IN_SHARD'
+            self.assertEqual(report['classification_label_qualifications'], {self.STEP: {**policy.CLASSIFICATION_LABEL_SCOPES[self.STEP], 'outcome': expected}})
+
+    def test_workflow_cannot_omit_duplicate_skip_crosswire_or_reorder_revision_gate(self):
+        workflow = (ROOT/'.github/workflows/ci.yml').read_text()
+        block = ('      - name: Verify stable classification label identities and retirement\n'
+                 "        if: success() && matrix.shard == 'foundation'\n"
+                 '        id: classification_label_identities\n'
+                 '        run: ./dev test --suite classification-label-identities\n')
+        control = ('      - name: Classification label identity lifecycle controls\n'
+                   '        run: python3 scripts/test_classification_label_identities.py\n')
+        anchor = '        run: ./dev test --suite authority-read-current\n'
+        mutations = [workflow.replace(block, ''), workflow.replace(block, block+block),
+                     workflow.replace(block, '').replace(anchor, anchor+block),
+                     workflow.replace('run: ./dev test --suite classification-label-identities', 'run: ./dev test --suite authority-asset-context'),
+                     workflow.replace('GC_CLASSIFICATION_LABEL_IDENTITIES_RESULT: ${{ steps.classification_label_identities.outcome }}',
+                                      'GC_CLASSIFICATION_LABEL_IDENTITIES_RESULT: ${{ steps.authority_asset_context.outcome }}'),
+                     workflow.replace(control, ''), workflow.replace(control, control+control),
+                     workflow.replace(control, control.replace('        run:', '        if: false\n        run:')),
+                     workflow.replace(control, control+'        continue-on-error: true\n'),
+                     workflow.replace(control, control.replace('python3 scripts/test_classification_label_identities.py', 'true'))]
+        self.assertTrue(policy.validate_workflow(workflow))
+        for index, mutation in enumerate(mutations):
+            with self.subTest(index=index), self.assertRaises(ValueError):policy.validate_workflow(mutation)
+
+    def test_local_route_preserves_timeout_and_propagates_failure_without_core_bootstrap(self):
+        spec = importlib.util.spec_from_file_location('revision_runtime', ROOT/'scripts/runtime.py')
+        runtime = importlib.util.module_from_spec(spec);spec.loader.exec_module(runtime)
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'classification-label-identities']), \
+                patch.object(runtime, 'require_local'), \
+                patch.object(runtime, 'require_bootstrap', side_effect=AssertionError('unexpected shared runtime')), \
+                patch.object(runtime, 'run', side_effect=RuntimeError('synthetic revision refusal')) as run:
+            with self.assertRaisesRegex(RuntimeError, '^synthetic revision refusal$'):runtime.main()
+            run.assert_called_once_with([sys.executable, 'scripts/runtime-test-classification-label-identities.py', '--run-local'], timeout=900)
 
 if __name__=='__main__':unittest.main()
