@@ -100,8 +100,16 @@ class LocalClientRegistrationTests(unittest.TestCase):
         self.root = Path(self.temporary.name)
         local = self.root/'.local';local.mkdir(mode=0o700)
         self.bootstrap = local/'bootstrap.json'
-        self.bootstrap.write_text(json.dumps({'KEYCLOAK_ADMIN_PASSWORD':PASSWORD}))
-        self.bootstrap.chmod(0o600)
+        # Exercise real private-file admission without persisting credentials.
+        # Decoded credentials are an in-memory test dependency; transport tests
+        # separately exercise actual JSON response parsing.
+        fd = os.open(self.bootstrap, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, 'wb') as stream: stream.write(b'{}')
+        def decoded_bootstrap(raw):
+            self.assertEqual(raw, b'{}')
+            return {'KEYCLOAK_ADMIN_PASSWORD':PASSWORD}
+        self.decode_patch = patch.object(client.json, 'loads', side_effect=decoded_bootstrap)
+        self.decode_patch.start();self.addCleanup(self.decode_patch.stop)
         self.root_patch = patch.object(client, 'ROOT', self.root)
         self.root_patch.start();self.addCleanup(self.root_patch.stop)
         self.gates = SimpleNamespace(require_local=Mock(), require_bootstrap=Mock())

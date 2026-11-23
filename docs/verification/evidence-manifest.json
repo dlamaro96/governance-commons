@@ -2203,6 +2203,43 @@
         "method": "Root source startup admission, real core services, retained browser JSON and three visually inspected exact capture hashes. Complete integrated source/readback evidence remains separate.",
         "evidence_sha256": "992998720a6b3aa4d24e76bbc782639faac94193cbdac0902731c9478e212c33"
       }
+    },
+    {
+      "path": "docs/verification/protected-application-corrections-local.json",
+      "scope": "Fresh SQL001\u2013037 migration, failed-install recovery and protected test corrections",
+      "source_binding": {
+        "method": "Exact authenticated prior-head artifact verification or explicit correction source hashes; qualification scopes remain separate.",
+        "evidence_sha256": "9a45b620305257ecff5aa061862cfaae8125de7bd32639a231ad4ef1d5c96a88",
+        "base_commit": "bbc92e4b378e44536072a8fcd99954414397fec1",
+        "working_tree_dirty": true
+      }
+    },
+    {
+      "path": "docs/verification/source-security-bbc92e4-failed.json",
+      "scope": "Exact hosted Source security artifact, Git-source and stored CodeQL analysis verification; not a new scan",
+      "source_binding": {
+        "implementation_commit": "bbc92e4b378e44536072a8fcd99954414397fec1",
+        "method": "Exact authenticated prior-head artifact verification or explicit correction source hashes; qualification scopes remain separate.",
+        "evidence_sha256": "f7bf2b4a88ebfe9f25284cb9addc439bdd5d9af99620d242a5896807229de354"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-bbc92e4.json",
+      "scope": "runtime-images-hosted-bbc92e4",
+      "source_binding": {
+        "implementation_commit": "bbc92e4b378e44536072a8fcd99954414397fec1",
+        "method": "Exact authenticated prior-head artifact verification or explicit correction source hashes; qualification scopes remain separate.",
+        "evidence_sha256": "abe54bd1180c1e671a069219b61c0d26905c628332cf2b1614cd0a631cc78d8a"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-bbc92e4-failed.json",
+      "scope": "Initial consolidated delivery failure before product tests",
+      "source_binding": {
+        "implementation_commit": "bbc92e4b378e44536072a8fcd99954414397fec1",
+        "method": "52 exact hosted outcomes, five authenticated failure archives and retained exact input hashes.",
+        "evidence_sha256": "542e0831b9fe10740c03d64ed3fbf07902df525ea57e47ce6b24c8c5cdf9c06a"
+      }
     }
   ],
   "limitations": [

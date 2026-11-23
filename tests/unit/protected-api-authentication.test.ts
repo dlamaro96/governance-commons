@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import {after,before,test,type TestContext} from 'node:test';
 import type {IncomingHttpHeaders} from 'node:http';
 import Fastify from 'fastify';
+import rateLimit from '@fastify/rate-limit';
 import {Kysely,DummyDriver,PostgresAdapter,PostgresIntrospector,PostgresQueryCompiler,
  type CompiledQuery,type DatabaseConnection,type QueryResult,type TransactionSettings} from 'kysely';
 import {db} from '../../packages/db/src/index.ts';
@@ -40,7 +41,8 @@ async function fixture(t:TestContext,options:{bridge?:()=>Record<string,unknown>
  }
  const unitDb=new Kysely<Record<string,any>>({dialect:{createAdapter:()=>new PostgresAdapter(),createDriver:()=>new Driver(),createIntrospector:value=>new PostgresIntrospector(value),createQueryCompiler:()=>new PostgresQueryCompiler()}});
  t.mock.method(db,'transaction',()=>unitDb.transaction());
- const app=Fastify({logger:false});app.setErrorHandler(apiErrorHandler);await installAuth(app);
+ const app=Fastify({logger:false});app.setErrorHandler(apiErrorHandler);
+ await app.register(rateLimit,{max:300,timeWindow:'1 minute'});await installAuth(app);
  app.route({method:['GET','POST'],url:'/api/v1/probe',handler:async request=>{
   const auth=await authenticate(request);return {principal:auth.principal,sessionVersion:auth.sessionVersion,csrfToken:auth.csrf,tenants:auth.tenants};
  }});

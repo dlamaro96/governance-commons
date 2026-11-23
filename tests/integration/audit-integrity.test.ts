@@ -59,8 +59,10 @@ test('audit integrity reloads current membership permissions and binds the exact
   // The caller's stale grant cannot replace the current membership read.
   await assert.rejects(()=>verifyAuditIntegritySnapshot(tx,{...principal,id:consumer},limited.sessionHash),problem(403,'FORBIDDEN'));
  });
- await readOnly(tx=>assert.rejects(()=>verifyAuditIntegritySnapshot(tx,principal,limited.sessionHash),problem(401,'SESSION_EXPIRED')));
- await readOnly(tx=>assert.rejects(()=>verifyAuditIntegritySnapshot(tx,{...principal,tenantId:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'},current.sessionHash),problem(401,'SESSION_EXPIRED')));
+ await assert.rejects(()=>readOnly(tx=>verifyAuditIntegritySnapshot(tx,principal,limited.sessionHash)),problem(401,'SESSION_EXPIRED'));
+ await assert.rejects(()=>readOnly(tx=>verifyAuditIntegritySnapshot(tx,{...principal,tenantId:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'},current.sessionHash)),problem(401,'SESSION_EXPIRED'));
+ // A native rejection aborts PostgreSQL; assert outside the transaction so its
+ // rollback completes before the expected application denial is inspected.
  await current.revoke();
- await readOnly(tx=>assert.rejects(()=>verifyAuditIntegritySnapshot(tx,principal,current.sessionHash),problem(401,'SESSION_EXPIRED')));
+ await assert.rejects(()=>readOnly(tx=>verifyAuditIntegritySnapshot(tx,principal,current.sessionHash)),problem(401,'SESSION_EXPIRED'));
 });
