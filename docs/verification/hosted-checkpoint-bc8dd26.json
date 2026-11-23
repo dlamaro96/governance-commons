@@ -1,0 +1,364 @@
+{
+  "schema_version": 1,
+  "release_qualified": false,
+  "recorded_at": "2026-11-23T12:03:30.468342+00:00",
+  "implementation_commit": "bc8dd26c8b9bd4f11022b707af71a4763b9f1296",
+  "tested_merge_commit": "9d7953b6897903fbb3cb7066507d3829b7bdb09e",
+  "same_tree_and_parent_verified": true,
+  "result": "PASS",
+  "run_id": 45163196324,
+  "run_url": "https://github.com/dlamaro96/governance-commons/actions/runs/45163196324",
+  "run_attempt": 1,
+  "required_outcomes": 48,
+  "outcome_counts": {
+    "success": 48
+  },
+  "outcomes": {
+    "connectors": "success",
+    "security": "success",
+    "model_upgrade": "success",
+    "asset_type_upgrade": "success",
+    "type_migration_upgrade": "success",
+    "relations_upgrade": "success",
+    "relation_participation_upgrade": "success",
+    "business_domains_upgrade": "success",
+    "authority_authn_foundation": "success",
+    "authority_read_original": "success",
+    "authority_read_current": "success",
+    "authority_asset_context": "success",
+    "content_security_revision": "success",
+    "classification_label_identities": "success",
+    "source_connectors_upgrade": "success",
+    "postgres_targets": "success",
+    "relation_candidate_original": "success",
+    "relation_candidate_current": "success",
+    "glossary_upgrade": "success",
+    "relation_scope_upgrade": "success",
+    "glossary_population_repaired_upgrade": "success",
+    "lineage_repaired_upgrade": "success",
+    "classification_repaired_upgrade": "success",
+    "quality_repaired_upgrade": "success",
+    "quality_worker": "success",
+    "lineage_worker": "success",
+    "reference_repaired_upgrade": "success",
+    "reference_quality_repaired_upgrade": "success",
+    "reference_quality_worker": "success",
+    "reference_structure_repaired_upgrade": "success",
+    "reference_import": "success",
+    "uniqueness_upgrade": "success",
+    "uniqueness_worker": "success",
+    "range_upgrade": "success",
+    "range_worker": "success",
+    "monitoring_upgrade": "success",
+    "freshness_upgrade": "success",
+    "freshness_worker": "success",
+    "freshness_scheduling_upgrade": "success",
+    "volume_upgrade": "success",
+    "volume_worker": "success",
+    "business_domain_seed": "success",
+    "browser": "success",
+    "protected_authn": "success",
+    "bootstrap": "success",
+    "services": "success",
+    "object_store": "success",
+    "seed": "success"
+  },
+  "verified_behavior_archives": 5,
+  "safe_evidence": [
+    {
+      "family": "api",
+      "actualTests": 172,
+      "sourceFiles": 25,
+      "sourceManifestSha256": "23d80dfc37497521b227de43985007aa1933a72949c33bf9d2af657d4f665f32",
+      "artifactSha256": "2b0a86673ef83212962f163c39c846fde6f93e55bbd9e9dd0e31ca760dabc147"
+    },
+    {
+      "family": "inactive-authentication",
+      "actualTests": 35,
+      "sourceFiles": 176,
+      "migrations": 12,
+      "sourceManifestSha256": "611441212b026a47cfeaa4630c4232aa8d0851078317a9d0aa6528edcb09b157",
+      "artifactSha256": "0477050efd14e6de2acea122562b9ece41b907d96a349fe69703166cf26b5aeb",
+      "cleanupExportedBothTrue": true
+    },
+    {
+      "family": "protected-authentication",
+      "actualNativeTests": 15,
+      "browserJourneys": 2,
+      "sourceFiles": 205,
+      "migrations": 34,
+      "immutableImageMode": true,
+      "captureCount": 8,
+      "visualReview": "NOT_PERFORMED",
+      "artifactSha256": "333ed75883f9f38227fe8872c6561796fda1c71ad2bd3c451e2faf43be8df4c2",
+      "scope": "Public coordinate, source, schema and artifact readback; raw private native/installation proofs are not downloaded."
+    },
+    {
+      "family": "inactive-canonical-asset-context",
+      "hostedStepOutcome": "success",
+      "declaredNativeTests": 13,
+      "qualificationScope": {
+        "command": "./dev test --suite authority-asset-context",
+        "runner": "scripts/runtime-test-authority-asset-context.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-inactive-asset-context-sql032",
+        "report": "authority-asset-context.json",
+        "schemaScope": "Isolated SQL001\u2013030, then SQL031/032 with preservation and replay; current-source inactive canonical asset-context cases",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable declarations only; private 13-case report and its executed input/resource inventory are not exported."
+    },
+    {
+      "family": "inactive-content-security-revision",
+      "hostedStepOutcome": "success",
+      "declaredNewNativeTests": 20,
+      "declaredPrerequisiteTests": 27,
+      "declaredTotalNativeTests": 47,
+      "qualificationScope": {
+        "command": "./dev test --suite content-security-revision",
+        "runner": "scripts/runtime-test-content-security-revision.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-content-security-revision-sql033",
+        "report": "content-security-revision.json",
+        "schemaScope": "Populated SQL001\u2013032 to SQL033; private content revision, concurrency, snapshot, preservation and replay",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable 13+14+20 case declarations only; private native source inventory, preservation, concurrency and cleanup reports are not exported."
+    },
+    {
+      "family": "inactive-classification-label-identities",
+      "hostedStepOutcome": "success",
+      "declaredNewNativeTests": 23,
+      "declaredPrerequisiteTests": 27,
+      "declaredTotalNativeTests": 50,
+      "qualificationScope": {
+        "command": "./dev test --suite classification-label-identities",
+        "runner": "scripts/runtime-test-classification-label-identities.py",
+        "arguments": [
+          "--run-local"
+        ],
+        "profile": "isolated-classification-label-identities-sql034",
+        "report": "classification-label-identities.json",
+        "schemaScope": "Populated SQL001\u2013033 to SQL034; current-pin identity baseline, terminal retirement, concurrency, preservation and replay",
+        "outerTimeoutSeconds": 900,
+        "contentAuthority": false,
+        "evidence": "STEP_OUTCOME_ONLY"
+      },
+      "nativeSourceInventoryReadback": "NOT_EXPORTED",
+      "nativeCleanupReadback": "NOT_EXPORTED",
+      "scope": "Authenticated exact CI step outcome and immutable 13+14+23 case declarations only; private native source inventory, preservation, concurrency and cleanup reports are not exported."
+    }
+  ],
+  "browser": {
+    "passed": 38,
+    "failedExecuted": 0,
+    "notRun": 0,
+    "retries": 0,
+    "failedCases": [],
+    "notRunFiles": [],
+    "screenshots": [
+      {
+        "name": "catalog-ar-dark-1440.png",
+        "sha256": "ab758adb48d8cb1b3d07d742999a77d932d48ed5f5e3fee22bf669219dd4fd83",
+        "bytes": 147881
+      },
+      {
+        "name": "catalog-ar-dark-390.png",
+        "sha256": "8f617269ec9764d78ba05fbdb9afbdb629f5e055106e397edfa53fa0a345661b",
+        "bytes": 52644
+      },
+      {
+        "name": "catalog-ar-dark-768.png",
+        "sha256": "49dbd02f17fc1b1a1b35794f6389043a79c5d2233d17e2cf21645fd87e7fbf63",
+        "bytes": 91801
+      },
+      {
+        "name": "catalog-en-dark-1440.png",
+        "sha256": "344813239422ac8506cd9d825d84b903f8efe033c8f9e3276eb9052f96b2607d",
+        "bytes": 169181
+      },
+      {
+        "name": "catalog-en-light-1024.png",
+        "sha256": "3450eaa8edfabf92505218fc1b58a62d83242e37f7bcc454d67fc5ec03125c8f",
+        "bytes": 133712
+      },
+      {
+        "name": "catalog-en-light-1280.png",
+        "sha256": "d1bbdda377102bd8bd78ba3df9e0fd5b0059fab9bf8c4e155b00930d81b55f3a",
+        "bytes": 161437
+      },
+      {
+        "name": "catalog-en-light-1440.png",
+        "sha256": "11de1e4f24e3a1f00dcaa8f74b724085fc80d43d673975de9d94f52ad585106b",
+        "bytes": 168197
+      },
+      {
+        "name": "catalog-en-light-390.png",
+        "sha256": "c668cb55f6bf7a81788283d1c78419f30fdced034506a23517368af248634577",
+        "bytes": 56558
+      },
+      {
+        "name": "catalog-en-light-768.png",
+        "sha256": "40d5c7a5a5f984c94a9d5cda8b3e9e3c8bc7089985f1e715dc758b040694528b",
+        "bytes": 91759
+      },
+      {
+        "name": "catalog-history.png",
+        "sha256": "47d239ebd11e57a0ec8235cf6491f6489fd8428b84854c1aa14e270968d2bd84",
+        "bytes": 92740
+      },
+      {
+        "name": "catalog-name-desc-1440.png",
+        "sha256": "92bd126701fa08ed9a4ebf32d2d252b1ee32921d60915cf16fbb0a85623a4879",
+        "bytes": 172244
+      },
+      {
+        "name": "catalog-name-desc-390.png",
+        "sha256": "c445d6b0ca2db1a33b496c717ec326bea8b435f157fde49dd341e222e4a35395",
+        "bytes": 61828
+      },
+      {
+        "name": "catalog-name-desc-ar-390.png",
+        "sha256": "dbec808f0980b69507b1e849b04f46e56e036d7f10a1e1a164d3b0322292f4eb",
+        "bytes": 56770
+      },
+      {
+        "name": "m8-postgres-configuration-failure-ar-390.png",
+        "sha256": "90e7940fc22edf31a94c8396a7308c613b460367f06b504d72e0c4fc02288bb4",
+        "bytes": 44406
+      },
+      {
+        "name": "m8-postgres-configuration-failure-en-1440.png",
+        "sha256": "8cc70466ef38d142085f419eb5d8022f7db730e291a82abfda585541e6de6f2b",
+        "bytes": 131671
+      },
+      {
+        "name": "m8-postgres-configuration-form-ar-390.png",
+        "sha256": "a19069fa9a2089fca999e107eca6f5d4287d41fb19c328605a0f569121438ec5",
+        "bytes": 60676
+      },
+      {
+        "name": "m8-postgres-configuration-form-en-1440.png",
+        "sha256": "0981ca0db19bfef3941775b6b873ec3bb3fc38cf4d3f26b8180587d8845ca304",
+        "bytes": 209983
+      },
+      {
+        "name": "m8-source-connectors-denial-ar-390.png",
+        "sha256": "9c4922b73f383827c21ed1d373cd381130d8ab178a0681a779344eff07ad2925",
+        "bytes": 18264
+      },
+      {
+        "name": "m8-source-connectors-denial-en-1440.png",
+        "sha256": "8bc99f94dfd01da8f9065ac240571d52ed3197f32005eff3f2ebf37a86f6d295",
+        "bytes": 57011
+      },
+      {
+        "name": "m8-source-connectors-failure-ar-390.png",
+        "sha256": "d036da66732b59d3f223b6d0b470fbed766344d09148d49c728b5cd598df6df8",
+        "bytes": 44757
+      },
+      {
+        "name": "m8-source-connectors-failure-en-1440.png",
+        "sha256": "b716c4b0530f29b9855764fa43840ba3de6d44c0d6651c97acbe9e8d66ba1ec8",
+        "bytes": 133452
+      },
+      {
+        "name": "m8-source-connectors-form-ar-390.png",
+        "sha256": "8701b86ced3cd53d14527a4bc9a49f977626a7f1e792d5993ad3acd58f3f349d",
+        "bytes": 62389
+      },
+      {
+        "name": "m8-source-connectors-form-en-1440.png",
+        "sha256": "0b956345612bb21908c7d104e635d95b3cfa9fafe79cf28c95cf99becadd5e38",
+        "bytes": 216167
+      },
+      {
+        "name": "m8-source-connectors-registered-ar-390.png",
+        "sha256": "5a4ade7e2bba2c5252b52ddb4bb60471a67c96696ae289108ab1b9556ca3f0b8",
+        "bytes": 56629
+      },
+      {
+        "name": "m8-source-connectors-registered-en-1440.png",
+        "sha256": "f461d213a87deebe3d761675aa87458f8c9d0e074c6edc1323bba6f594ec4945",
+        "bytes": 140144
+      },
+      {
+        "name": "protected-revoked-ar-mobile.png",
+        "sha256": "c141d489a59ddb66dd8a3da702729cafe630c365cf36796d906423c01eea5fc1",
+        "bytes": 64835
+      },
+      {
+        "name": "protected-selected-ar-desktop.png",
+        "sha256": "9d7f71da7789fae6a802bf7535f69072f7a7347e775bbe53ec66e3fc0ece8d0b",
+        "bytes": 75274
+      },
+      {
+        "name": "protected-selected-ar-mobile.png",
+        "sha256": "ef7a7f703315cbbe2acc262cc06049616151f89c9a501aed612d210e5c25ce54",
+        "bytes": 68799
+      },
+      {
+        "name": "protected-steward-en-mobile.png",
+        "sha256": "6f5c5a068baea58a9d4d37230b6e70d09f878c8c312e0e3bad037e48bfdf0052",
+        "bytes": 75465
+      },
+      {
+        "name": "protected-session-en-desktop.png",
+        "sha256": "c543b382b3f0cbd995de199d9936b8d25bd7bd70d206bbc259918fa0c271ee44",
+        "bytes": 82720
+      },
+      {
+        "name": "protected-selected-en-desktop.png",
+        "sha256": "c2c745a867f783e728d25f8000d20e95772e02c6d07155edc77107c6465f1e44",
+        "bytes": 85802
+      },
+      {
+        "name": "protected-tenant-denied-en-mobile.png",
+        "sha256": "21be5d5aa36de916779289c27023fcf704dd8b105af506a86fd4590038553b81",
+        "bytes": 75379
+      },
+      {
+        "name": "protected-unbound-denied-en-desktop.png",
+        "sha256": "2f139d7a88e2aa54a66c8d9590af052e9897b992971bfbcaa9e92681a6487e06",
+        "bytes": 78645
+      }
+    ],
+    "visualReview": "NOT_PERFORMED"
+  },
+  "verification_receipt_sha256": "a58e33df2adff50800e34a8817b822a1d48ab49694f1a9018ca9d2c54baaa140",
+  "source_security": "docs/verification/source-security-bc8dd26.json",
+  "runtime_security": "docs/verification/runtime-images-hosted-bc8dd26.json",
+  "pull_request": "https://github.com/dlamaro96/governance-commons/pull/47",
+  "merged": null,
+  "limitations": [
+    "Aggregate PASS requires all48 exact outcomes, five verified archives and completed quality/secrets/behavior/required jobs; pending or failed work never implies success.",
+    "Authenticated archives and declared source maps are checked against exact Git; private native TAP and mounted-source/resource inventory proofs are not exported unless explicitly noted.",
+    "Browser screenshot bytes are hashed, not visually reviewed.",
+    "No source-security requalification, runtime execution or GitHub mutation performed.",
+    "Inactive canonical asset-context scope is verified from exact hosted step outcome and immutable 13-case declarations; its private native executed-source and cleanup report is not exported.",
+    "Inactive content-security revision scope is verified from exact hosted step outcome and immutable 13+14+20 case declarations; its private executed-source, preservation, concurrency and cleanup report is not exported.",
+    "Inactive classification label identity scope is verified from exact hosted step outcome and immutable 13+14+23 case declarations; its private executed-source, preservation, concurrency and cleanup report is not exported.",
+    "Merge status must be filled from authenticated PR47 metadata after the normal merge; this proposal does not claim a merge."
+  ],
+  "visual_review": {
+    "status": "NOT_PERFORMED",
+    "inspected": [],
+    "observations": [],
+    "limitations": [
+      "All 33 hosted capture hashes were verified without visual inspection.",
+      "No independent accessibility or translation sign-off."
+    ]
+  }
+}
