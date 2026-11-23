@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-FROM ghcr.io/astral-sh/uv:0.11.14@sha256:1025398289b62de8269e70c45b91ffa37c373f38118d7da036fb8bb8efc85d97 AS uv
+FROM ghcr.io/astral-sh/uv:0.13.9@sha256:d3b601f0c7b118bc1753febf7c41cc80981df678445e0254284eecf84db79a7d AS uv
 FROM python:3.14.10-alpine3.24@sha256:5862d971d1f0ae26b258cefa4e893556b1d3aba81bd2ff30888704ad378bab67 AS runtime-base
 RUN apk add --no-cache --upgrade libcrypto3=3.5.9-r1 libssl3=3.5.9-r1 zlib=1.4-r0
 
