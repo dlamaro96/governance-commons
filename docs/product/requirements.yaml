@@ -54176,7 +54176,8 @@
         "docs/verification/protected-authentication-rate-limit-host.json",
         "docs/verification/protected-authentication-local-attempt-10.json",
         "docs/verification/protected-authentication-visual-review-attempt-10.json",
-        "docs/verification/application-authentication-bridge-local.json"
+        "docs/verification/application-authentication-bridge-local.json",
+        "docs/verification/migrator-import-compatibility-local.json"
       ]
     },
     {
@@ -54264,7 +54265,8 @@
         "docs/verification/protected-authentication-rate-limit-host.json",
         "docs/verification/protected-authentication-local-attempt-10.json",
         "docs/verification/protected-authentication-visual-review-attempt-10.json",
-        "docs/verification/application-authentication-bridge-local.json"
+        "docs/verification/application-authentication-bridge-local.json",
+        "docs/verification/migrator-import-compatibility-local.json"
       ]
     },
     {

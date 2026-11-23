@@ -4,7 +4,7 @@ Updated 23 November 2026. The complete M0–M10 programme remains required. [Pro
 
 ## Active delivery sequence
 
-Current publication: consolidate the latest protected application SSO and preceding open increments into one normally reviewed and checked main merge, then continue from main. The SQL037 isolated gate passes 26 cases; rebuilt-core API/browser qualification and the new 52-outcome hosted run must retain their separate results.
+Current publication: consolidate the latest protected application SSO and preceding open increments into one normally reviewed and checked main merge, then continue from main. The SQL037 isolated gate passes 26 cases and the rebuilt core passes all 172 API cases. The full browser matrix and corrected 52-outcome hosted run retain their separate qualification. PRs #48 and #49 are closed as superseded by PR #50; no stacked delivery remains.
 
 1. Completed: all 45 development outcomes and source security pass at `e51e8ec`; five behavior archives and three stored analyses are verified. PR #23 merged normally as `0fc25d4`. Historical failures remain recorded.
 2. Completed: PR #39 at `80101e0` passes all 45 development outcomes, source security and both native image scans. Five authenticated behavior archives verified before normal merge `fb1fd0e`; historical failures remain preserved.

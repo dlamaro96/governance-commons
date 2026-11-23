@@ -216,7 +216,7 @@ services before API execution and after browser execution. All 172 API cases and
 the selected real classification browser journey pass without retries or skips.
 Three of fourteen captures were inspected; all ten services remain healthy.
 [Integrated evidence](../verification/reviewed-classification-facts-integrated-local.json).
-PR #48 remains open. Its superseded `bc1f650` development run was cancelled,
+PR #48 is now closed as superseded by consolidated PR #50. Its `bc1f650` development run was cancelled,
 with 41 successful outcomes, two cancelled outcomes and six skips; the required
 aggregate did not pass. The fresh run at `7d91aae` retains its own qualification.
 [Cancelled checkpoint](../verification/hosted-checkpoint-bc1f650-cancelled.json).
@@ -277,3 +277,9 @@ The core rebuild and SQL037 application pass; all thirteen long-running services
 
 All 1,300 unit cases, types, 16 Keycloak host controls and both targeted real audit cases pass. The full local API attempt remains NOT_PASSED (171 pass, one expected-denial fixture failure, plus source drift during correction); a fresh rebuilt-image rerun is required. The original source scan reports two test-code findings: missing probe rate limiting and a synthetic credential written to disk. The test route now uses the production rate limiter, and registration tests keep decoded credentials in memory while preserving real private-file admission controls. Fresh hosted scans must confirm remediation. The prior image scan passes the high/critical gate and retains its lower findings; it does not qualify these corrections. [Correction evidence](../verification/protected-application-corrections-local.json), [retained source findings](../verification/source-security-bbc92e4-failed.json) and [prior image scan](../verification/runtime-images-hosted-bbc92e4.json).
 The failed initial development assignment is preserved separately: [hosted startup failure](../verification/hosted-checkpoint-bbc92e4-failed.json). No native/API/browser case executed in that run.
+
+## Migrator entry-point compatibility correction
+
+The `663fee9` source scan verifies all 1,657 files and three stored analyses with zero findings; both native image architectures pass the high/critical gate. All five hosted core startups pass. Three subsequent historical upgrade gates fail, and their partial authenticated snapshot remains NOT_PASSED. The new CLI guard skipped migration when those runners imported it without a script argument. The corrected entry point executes on import again; its unchanged transaction helper lives in a separately importable module and is included in native source manifests. SQL001–037 remain unchanged. [Source](../verification/source-security-663fee9.json), [images](../verification/runtime-images-hosted-663fee9.json) and [partial failed development checkpoint](../verification/hosted-checkpoint-663fee9-partial-failed.json) qualify only that prior revision.
+
+All 1,301 unit cases pass. Real isolated PostgreSQL now passes both import-only fresh/recovery scopes, with exact migration ledgers, replay, privileges and owned cleanup. The rebuilt core API rerun passes all 172 cases with all 108 declared source inputs matched. Its inherited commit label remains `bbc92e4`; the exact source hashes match `663fee9`, so the stale label is not used as qualification. The full 38-journey browser run is in progress and has no pass claim yet. The corrected native gate and exact source evidence are recorded in [entry-point qualification](../verification/migrator-import-compatibility-local.json). Fresh hosted qualification of the corrected head is required before the normal PR #50 merge.

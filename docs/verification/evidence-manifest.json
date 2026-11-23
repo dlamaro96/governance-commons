@@ -2240,6 +2240,43 @@
         "method": "52 exact hosted outcomes, five authenticated failure archives and retained exact input hashes.",
         "evidence_sha256": "542e0831b9fe10740c03d64ed3fbf07902df525ea57e47ce6b24c8c5cdf9c06a"
       }
+    },
+    {
+      "path": "docs/verification/source-security-663fee9.json",
+      "scope": "Exact hosted Source security artifact, Git-source and stored CodeQL analysis verification; not a new scan",
+      "source_binding": {
+        "method": "Exact prior-head authenticated hosted qualification or individually bound correction sources and local proof hashes; scopes remain separate.",
+        "evidence_sha256": "ec469b8450ea475284e7c2203f75901d1d093fb2fdd3fa75dfb7f1c51e49203c",
+        "implementation_commit": "663fee960c8c83a98ced2c69e60b206e70b180dd"
+      }
+    },
+    {
+      "path": "docs/verification/runtime-images-hosted-663fee9.json",
+      "scope": "runtime-images-hosted-663fee9",
+      "source_binding": {
+        "method": "Exact prior-head authenticated hosted qualification or individually bound correction sources and local proof hashes; scopes remain separate.",
+        "evidence_sha256": "2e1622e784882989da2f7a651eb1a9acfa1d1f5d25254ea5091430d2aeb83e3b",
+        "implementation_commit": "663fee960c8c83a98ced2c69e60b206e70b180dd"
+      }
+    },
+    {
+      "path": "docs/verification/hosted-checkpoint-663fee9-partial-failed.json",
+      "scope": "hosted-checkpoint-663fee9-partial-failed",
+      "source_binding": {
+        "method": "Exact prior-head authenticated hosted qualification or individually bound correction sources and local proof hashes; scopes remain separate.",
+        "evidence_sha256": "0a74b98b900a8663041362b8e3dfaa5b51c0a36b2991aab125b6de7a3838766e",
+        "implementation_commit": "663fee960c8c83a98ced2c69e60b206e70b180dd"
+      }
+    },
+    {
+      "path": "docs/verification/migrator-import-compatibility-local.json",
+      "scope": "Migrator import compatibility, fresh SQL001\u2013037 deployment and source-bound protected API verification",
+      "source_binding": {
+        "method": "Exact prior-head authenticated hosted qualification or individually bound correction sources and local proof hashes; scopes remain separate.",
+        "evidence_sha256": "6c4df046c26f76e15e0f90d07b11e31f85629b1e929d75eec831eb1719fef6bf",
+        "base_commit": "663fee960c8c83a98ced2c69e60b206e70b180dd",
+        "working_tree_dirty": true
+      }
     }
   ],
   "limitations": [

@@ -4,7 +4,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-import {applyMigration,type MigrationClient} from '../../packages/db/src/migrate.ts';
+import {execFileSync} from 'node:child_process';
+import {applyMigration,type MigrationClient} from '../../packages/db/src/migration-runner.ts';
 const name='037_application_authentication_bridge.sql';
 const bridge=await readFile(new URL('../../packages/db/migrations/'+name,import.meta.url),'utf8');
 const foundation=await readFile(new URL('../../packages/db/migrations/012_authentication_foundation.sql',import.meta.url),'utf8');
@@ -91,4 +92,15 @@ test('transfer admission requires unchanged native role invariants and cleanup v
  assert.ok(!grant.includes('CREATE ROLE'));assert.ok(!grant.includes('GRANT gc_authn_definer'));
  const cleanup=client.calls.find(x=>x.text.startsWith('REVOKE CREATE ON SCHEMA public'))!.text;
  assert.ok(cleanup.includes("has_schema_privilege('gc_authn_definer','public','CREATE')"));
+});
+
+test('existing node-e import path executes the migrator without a script argv entry',()=>{
+ const output=execFileSync(process.execPath,['--import','tsx','--input-type=module','-e',`
+  import assert from 'node:assert/strict';
+  assert.equal(process.argv[1],undefined);
+  delete process.env.MIGRATION_DATABASE_URL;
+  await assert.rejects(import('./packages/db/src/migrate.ts'),{message:'MIGRATION_DATABASE_URL required (separate migration owner)'});
+  console.log('MIGRATION_IMPORT_EXECUTED');
+ `],{cwd:new URL('../../',import.meta.url),timeout:10000,maxBuffer:64*1024,encoding:'utf8'});
+ assert.equal(output.trim(),'MIGRATION_IMPORT_EXECUTED');
 });

@@ -33,7 +33,7 @@ These are scoped development capabilities. Passing one workflow does not qualify
 
 ## Configurable identity and integrations
 
-Microsoft Entra ID federation has an operator-configured OIDC broker path. The protected login/session lifecycle is tested separately with real local Keycloak; connecting it to the main application remains in progress. Entra tenant registration, tenant-specific claims and live Microsoft sign-in still require external qualification; account/group synchronization and the broader identity administration capability remain open.
+Microsoft Entra ID federation has an operator-configured OIDC broker path. The main application uses the protected login and server-side session services, verified with real local Keycloak. Entra tenant registration, tenant-specific claims and live Microsoft sign-in still require external qualification; account/group synchronization and the broader identity administration capability remain open.
 
 Databricks Unity Catalog source registration and a metadata worker adapter are implemented in the development preview. Registration and missing-credential handling have local tests; a real Databricks workspace has **not** been qualified. Unity lineage, model registry, writeback and source permissions are separate remaining capabilities. PostgreSQL is the currently qualified real source path. The full [connector matrix](docs/product/connector-support.yaml) remains required.
 
