@@ -1,5 +1,5 @@
 export interface Tenant { id: string; name: string; role: string }
-export interface Session { user: { id: string; name: string }; tenant: Tenant; tenants: Tenant[]; permissions: string[]; csrfToken: string }
+export interface Session { user: { id: string; name: string }; tenant: Tenant; tenants: Tenant[]; permissions: string[]; csrfToken: string; sessionVersion: number }
 export interface Asset {
   id: string; name: string; qualifiedName: string; type: string;
   description: string | null; ownerId: string | null; ownerName: string | null;

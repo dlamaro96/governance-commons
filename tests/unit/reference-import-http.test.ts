@@ -21,7 +21,7 @@ async function fixture(t:test.TestContext,options:{denied?:boolean;failure?:unkn
  const tx=db as unknown as Tx;t.after(()=>db.destroy());
  const dependencies:ImportDependencies={
   scan:async()=>{assert.equal(calls.scope,calls.scan);calls.scan++;if(options.scannerFailure)throw options.scannerFailure;},
-  authenticate:(async()=>{calls.auth++;if(options.denied)throw new Problem(403,'CSRF_INVALID','CSRF check failed.');return {principal:p,sessionHash:'synthetic-session-hash',csrf:'synthetic-csrf',tenants:[]};}) as ImportDependencies['authenticate'],
+  authenticate:(async()=>{calls.auth++;if(options.denied)throw new Problem(403,'CSRF_INVALID','CSRF check failed.');return {principal:p,sessionHash:'synthetic-session-hash',csrf:'synthetic-csrf',sessionVersion:1,tenants:[]};}) as ImportDependencies['authenticate'],
   scope:(async(tenant,actor,work)=>{assert.equal(tenant,p.tenantId);assert.equal(actor,p.id);calls.scope++;return work(tx);}) as ImportDependencies['scope'],
   preview:async(_tx,principal,base,format,mode,raw)=>{assert.equal(principal,p);assert.deepEqual(base,{setId,expectedVersion:0,publicationHash:null});assert.equal(mode,'merge');calls.preview++;calls.raw=Buffer.from(raw);calls.format=format;if(options.failure)throw options.failure;return invalid;}
  };

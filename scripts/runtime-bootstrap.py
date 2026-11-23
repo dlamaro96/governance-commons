@@ -12,13 +12,113 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCAL = ROOT / ".local"
-LOCAL.mkdir(mode=0o700, exist_ok=True)
-os.chmod(LOCAL, 0o700)
 STATE = LOCAL / "bootstrap.json"
 
+
+def output_error():
+    raise SystemExit("Local bootstrap output is invalid or changed; private output was not confirmed.")
+
+
+def output_stamp(info):
+    return (info.st_dev, info.st_ino, info.st_mode, info.st_uid, info.st_nlink,
+            info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+
+
+def output_metadata(directory, name):
+    try:
+        info = os.stat(name, dir_fd=directory, follow_symlinks=False)
+    except FileNotFoundError:
+        return None
+    if (not stat.S_ISREG(info.st_mode) or info.st_uid != os.geteuid()
+            or stat.S_IMODE(info.st_mode) != 0o600 or info.st_nlink != 1):
+        output_error()
+    return output_stamp(info)
+
+
+def output_directory(path):
+    directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    info = os.fstat(directory)
+    if (not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid()
+            or stat.S_IMODE(info.st_mode) != 0o700):
+        os.close(directory)
+        output_error()
+    return directory
+
+
 def write(path, value):
-    path.write_text(value, encoding="utf-8")
-    os.chmod(path, 0o600)
+    """Publish only private regular outputs, never truncate or follow a link."""
+    directory, temporary = None, None
+    try:
+        directory = output_directory(path)
+        before = output_metadata(directory, path.name)
+        candidate = ".bootstrap-" + secrets.token_hex(16)
+        fd = os.open(candidate, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC,
+                     0o600, dir_fd=directory)
+        temporary = candidate
+        with os.fdopen(fd, "wb") as stream:
+            os.fchmod(stream.fileno(), 0o600)
+            stream.write(value.encode("utf-8"))
+            stream.flush()
+            os.fsync(stream.fileno())
+        current = path.parent.lstat()
+        opened = os.fstat(directory)
+        if ((current.st_dev, current.st_ino) != (opened.st_dev, opened.st_ino)
+                or not stat.S_ISDIR(current.st_mode) or current.st_uid != os.geteuid()
+                or stat.S_IMODE(current.st_mode) != 0o700
+                or output_metadata(directory, path.name) != before):
+            output_error()
+        os.replace(temporary, path.name, src_dir_fd=directory, dst_dir_fd=directory)
+        temporary = None
+        os.fsync(directory)
+    except (OSError, ValueError, UnicodeError):
+        output_error()
+    finally:
+        if directory is not None:
+            try:
+                if temporary is not None:
+                    os.unlink(temporary, dir_fd=directory)
+            finally:
+                os.close(directory)
+
+
+def read_state(path):
+    directory, fd = None, None
+    try:
+        directory = output_directory(path)
+        before = output_metadata(directory, path.name)
+        if before is None:
+            return None
+        fd = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC,
+                     dir_fd=directory)
+        opened = os.fstat(fd)
+        if output_stamp(opened) != before or not 0 < opened.st_size <= 65536:
+            output_error()
+        with os.fdopen(fd, "rb", closefd=False) as stream:
+            raw = stream.read(65537)
+        if (len(raw) != opened.st_size or output_stamp(os.fstat(fd)) != before
+                or output_metadata(directory, path.name) != before):
+            output_error()
+        value = json.loads(raw)
+        if not isinstance(value, dict):
+            output_error()
+        return value
+    except (OSError, ValueError, TypeError, RecursionError):
+        output_error()
+    finally:
+        if fd is not None:
+            os.close(fd)
+        if directory is not None:
+            os.close(directory)
+
+
+try:
+    LOCAL.mkdir(mode=0o700, exist_ok=True)
+    local_info = LOCAL.lstat()
+    if (not stat.S_ISDIR(local_info.st_mode) or local_info.st_uid != os.geteuid()
+            or stat.S_IMODE(local_info.st_mode) != 0o700):
+        output_error()
+except OSError:
+    output_error()
 
 def source_error():
     raise SystemExit("Source credential provider is invalid or changed; no provider data was overwritten.")
@@ -140,9 +240,8 @@ def publish_provider(demo):
         if path is not None: path.unlink(missing_ok=True)
 
 
-if STATE.exists():
-    values = json.loads(STATE.read_text())
-else:
+values = read_state(STATE)
+if values is None:
     values = {key: secrets.token_hex(24) for key in (
         "POSTGRES_PASSWORD", "GC_OWNER_PASSWORD", "GC_APP_PASSWORD", "KEYCLOAK_DB_PASSWORD",
         "TEMPORAL_DB_PASSWORD", "SOURCE_ADMIN_PASSWORD", "SOURCE_READER_PASSWORD", "SESSION_KEY",
@@ -162,6 +261,20 @@ env = {key: value for key, value in values.items()
        if key not in ('personas', 'GC_AUTHN_LOGIN_PASSWORD', 'GC_AUTHN_API_PASSWORD')}
 env.update({"LOCAL_UID": str(os.getuid()), "LOCAL_GID": str(os.getgid()), "SITE_TENANTS": ",".join(tenants)})
 write(LOCAL / "runtime.env", "".join(f"{key}={value}\n" for key, value in env.items()))
+# Authentication processes receive only their own native credential. The core
+# content API never receives either protected executor or owner connection.
+origin = "http://127.0.0.1:4310"
+issuer = "http://localhost:4311/realms/governance"
+authn_base = {"AUTHN_ENVIRONMENT": "local-development", "PUBLIC_AUTHN_ORIGIN": origin}
+login_env = {**authn_base, "AUTHN_LOGIN_DATABASE_URL": f"postgresql://gc_authn_login:{values['GC_AUTHN_LOGIN_PASSWORD']}@postgres:5432/governance",
+    "OIDC_PROVIDER": "keycloak", "OIDC_ISSUER": issuer, "OIDC_CLIENT_ID": "governance-protected-web",
+    "OIDC_REDIRECT_URI": origin + "/authn/callback", "OIDC_AUTHORIZATION_ENDPOINT": issuer + "/protocol/openid-connect/auth",
+    "OIDC_TOKEN_ENDPOINT": issuer + "/protocol/openid-connect/token", "OIDC_JWKS_URI": issuer + "/protocol/openid-connect/certs",
+    "OIDC_TRANSPORT_ALIASES_JSON": json.dumps({issuer + suffix: "http://keycloak:8080/realms/governance" + suffix for suffix in ("/.well-known/openid-configuration", "/protocol/openid-connect/token", "/protocol/openid-connect/certs")}, separators=(",", ":")),
+    "AUTHN_POST_LOGIN_PATH": "/", "HOST": "0.0.0.0", "PORT": "4312"}
+session_env = {**authn_base, "AUTHN_API_DATABASE_URL": f"postgresql://gc_authn_api:{values['GC_AUTHN_API_PASSWORD']}@postgres:5432/governance"}
+write(LOCAL / "authn-login.env", "".join(f"{key}={value}\n" for key, value in login_env.items()))
+write(LOCAL / "authn-session.env", "".join(f"{key}={value}\n" for key, value in session_env.items()))
 publish_provider({"tenantIds": [tenants[0]], "host": "source-postgres", "port": 5432,
     "database": "harbor", "schema": "public", "username": "harbor_reader", "password": values["SOURCE_READER_PASSWORD"]})
 write(LOCAL / "seaweed-s3.json", json.dumps({"identities": [{"name": "governance-local", "credentials": [{
@@ -180,6 +293,10 @@ realm = {"realm": "governance", "enabled": True, "displayName": "Governance Comm
     "standardFlowEnabled": True, "directAccessGrantsEnabled": False, "serviceAccountsEnabled": False,
     "redirectUris": ["http://localhost:4310/auth/callback"], "webOrigins": ["http://localhost:4310"],
     "attributes": {"pkce.code.challenge.method": "S256", "post.logout.redirect.uris": "http://localhost:4310/*"}}]}
+realm["clients"].append({"clientId": "governance-protected-web", "name": "Governance Commons protected login", "enabled": True, "publicClient": True,
+    "standardFlowEnabled": True, "directAccessGrantsEnabled": False, "serviceAccountsEnabled": False,
+    "redirectUris": [origin + "/authn/callback"], "webOrigins": [origin],
+    "attributes": {"pkce.code.challenge.method": "S256"}})
 write(LOCAL / "governance-realm.json", json.dumps(realm, indent=2) + "\n")
 # Credentials are hex generated above, never external SQL fragments.
 sql = "\\set ON_ERROR_STOP on\n"

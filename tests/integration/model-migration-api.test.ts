@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
+import {createProtectedCoreSession,closeProtectedCoreSessions} from '../fixtures/protected-core-authentication.ts';
 import { pacedFetch as fetch } from '../fixtures/http-budget.ts';
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { randomUUID, createHash } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { db, scope } from '../../packages/db/src/index.ts';
 
 const tenant = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
@@ -11,10 +12,7 @@ const steward = '10000000-0000-4000-8000-000000000001';
 const base = process.env.TEST_BASE_URL ?? 'http://api:4310';
 const origin = process.env.PUBLIC_URL ?? 'http://localhost:4310';
 async function session(actor = steward, organization = tenant) {
-  const raw = randomUUID() + randomUUID(), csrf = randomUUID();
-  await db.insertInto('sessions').values({ id_hash: createHash('sha256').update(raw).digest('hex'), identity_id: actor,
-    tenant_id: organization, csrf, expires_at: new Date(Date.now() + 120_000) }).execute();
-  return { Cookie: `gc_session=${raw}`, 'X-CSRF-Token': csrf, Origin: origin, 'Content-Type': 'application/json' };
+  return (await createProtectedCoreSession(actor, organization)).headers;
 }
 const request = (path: string, headers: Record<string, string>, method = 'GET', body?: unknown) =>
   fetch(base + '/api/v1' + path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body) });
@@ -99,4 +97,4 @@ test('migration HTTP execution rejects stale asset-bound preview with no head, r
   assert.deepEqual((await (await request('/assets/' + f.assetId + '/attributes', f.headers)).json() as any).attributes, { amount: '77.25' });
 });
 
-after(async () => { await db.destroy(); });
+after(async () => { await closeProtectedCoreSessions(); await db.destroy(); });

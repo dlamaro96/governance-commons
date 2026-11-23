@@ -2,6 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 """Synthetic parser/staging controls; these never claim real API execution."""
 import copy
+import contextlib
+import io
+import subprocess
+from types import SimpleNamespace
 import json
 from pathlib import Path
 import tempfile
@@ -55,6 +59,75 @@ class ApiEvidenceTests(unittest.TestCase):
     def report(self, output=None, code=0, match=True, truncated=False):
         return collect(self.root, tap() if output is None else output, code, COMMIT, match, truncated)
 
+    def run_control(self, *, stale=False, preparation_code=0, preparation_output=b"PRIVATE_PREPARATION", preparation_timeout=False):
+        events, waits, commands = [], [], []
+        hashes = {name: source['sha256'] for name, source in source_inventory(self.root)[0].items()}
+        def command(args, **kwargs):
+            if args[:2] == ['git', 'rev-parse']:
+                return SimpleNamespace(returncode=0, stdout=COMMIT+'\n')
+            boundary = 'api' if 'exec' in args else 'qualification-runner'
+            events.append('readback-'+boundary)
+            return SimpleNamespace(returncode=0, stdout=json.dumps({} if stale else hashes).encode())
+        def launch(args, **kwargs):
+            preparation = 'authn-test-fixture' in args
+            events.append('preparation' if preparation else 'tests'); commands.append(args)
+            class Process:
+                stdout = io.BytesIO(preparation_output if preparation else tap())
+                killed = False
+                def wait(self, timeout=None):
+                    waits.append(('preparation' if preparation else 'tests', timeout))
+                    if preparation and preparation_timeout and not self.killed:
+                        raise subprocess.TimeoutExpired(args, timeout)
+                    return preparation_code if preparation else 0
+                def kill(self):
+                    self.killed = True
+                def terminate(self):
+                    self.killed = True
+            return Process()
+        with patch('api_evidence.subprocess.run', side_effect=command), patch('api_evidence.subprocess.Popen', side_effect=launch), contextlib.redirect_stdout(io.StringIO()):
+            code = run(self.root)
+        report = json.loads((self.root/'.local/evidence/api-summary.json').read_text())
+        self.assertNotIn('PRIVATE', json.dumps(report))
+        self.assertEqual(safe_report(self.root, report, COMMIT), report)
+        return code, report, events, waits, commands
+
+    def test_stale_image_sources_cannot_invoke_owner_preparation_or_tests(self):
+        code, report, events, _, commands = self.run_control(stale=True)
+        self.assertEqual(code, 1); self.assertEqual(report['outcome'], 'NOT_PASSED')
+        self.assertIn('RUNTIME_SOURCE_MISMATCH', report['flags'])
+        self.assertEqual(events, ['readback-api']); self.assertEqual(commands, [])
+        self.assertEqual(list((self.root/'.local/evidence/api-runs').glob('*/preparation.log')), [])
+
+    def test_failed_owner_preparation_prevents_test_launch_and_retains_failure(self):
+        code, report, events, waits, _ = self.run_control(preparation_code=7)
+        self.assertEqual(code, 1); self.assertEqual(report['outcome'], 'NOT_PASSED')
+        self.assertEqual(report['exit_code'], 7); self.assertIn('RUNNER_FAILED', report['flags'])
+        self.assertEqual(events, ['readback-api', 'readback-qualification-runner', 'preparation', 'readback-api', 'readback-qualification-runner'])
+        self.assertEqual(report['observed_results'], 0)
+        retained = list((self.root/'.local/evidence/api-runs').glob('*/preparation.log'))
+        self.assertEqual(len(retained), 1); self.assertEqual(retained[0].read_bytes(), b'PRIVATE_PREPARATION')
+        self.assertEqual(retained[0].stat().st_mode & 0o777, 0o600)
+        self.assertTrue(all(0 < seconds <= 180 for _, seconds in waits))
+
+    def test_preparation_timeout_or_output_overflow_never_starts_tests(self):
+        for options, expected in (({'preparation_timeout': True}, 124), ({'preparation_output': b'x'*65537}, 125)):
+            with self.subTest(options=list(options)):
+                code, report, events, _, _ = self.run_control(**options)
+                self.assertEqual(code, 1); self.assertEqual(report['exit_code'], expected)
+                self.assertEqual(report['outcome'], 'NOT_PASSED'); self.assertNotIn('tests', events)
+                self.assertTrue(all(p.stat().st_size <= 65536 for p in (self.root/'.local/evidence/api-runs').glob('*/preparation.log')))
+
+    def test_successful_preparation_follows_both_readbacks_with_unchanged_test_supervisor(self):
+        code, report, events, waits, commands = self.run_control()
+        self.assertEqual(code, 0); self.assertEqual(report['outcome'], 'PASS')
+        self.assertEqual(events, ['readback-api', 'readback-qualification-runner', 'preparation', 'tests', 'readback-api', 'readback-qualification-runner'])
+        self.assertEqual([kind for kind, _ in waits], ['preparation', 'tests'])
+        self.assertLessEqual(waits[0][1], 180); self.assertLess(waits[1][1], 1800)
+        self.assertIn('stop(124),150000)', commands[0][commands[0].index('-e')+1])
+        self.assertIn('stop(124),1740000)', commands[1][commands[1].index('-e')+1])
+        self.assertEqual(commands[0][-6:], ['tsx', 'scripts/protected-core-test-fixture.ts', '--batch', '/state/qualification', '--core-plan', '/state/plan.json'])
+        self.assertNotIn('authn-test-fixture', (Path(__file__).resolve().parents[1]/'scripts/test-security.sh').read_text())
+
     def test_new_run_invalidates_latest_before_failure_and_preserves_archives(self):
         archive = self.root / ".local/evidence/api-runs/prior-invocation"
         archive.mkdir(parents=True)
@@ -88,6 +161,38 @@ class ApiEvidenceTests(unittest.TestCase):
                 self.assertEqual(archived_tap.read_bytes(), tap(True))
                 self.assertFalse(missing_target.exists())
                 self.assertEqual(sorted(path.name for path in archive.iterdir()), ["output.tap", "summary.json"])
+
+    def support_fixture(self):
+        self.source.write_text("import {fixture} from '../fixtures/protected-core-authentication.ts';\n"+SOURCE)
+        helper=self.root/'tests/fixtures/protected-core-authentication.ts'
+        helper.parent.mkdir(parents=True);helper.write_text("import {value} from './nested.ts';\nexport const fixture=value;\n")
+        (helper.parent/'nested.ts').write_text('export const value=1;\n')
+        for name in ('scripts/protected-core-test-fixture.ts','scripts/test-security.sh','deploy/compose/compose.yaml','policies/api_evidence.py','package.json','pnpm-lock.yaml','tsconfig.json'):
+            p=self.root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('// synthetic control input\n')
+        return helper
+
+    def test_imported_helpers_and_explicit_provisioning_are_bound_without_extra_declarations(self):
+        self.support_fixture()
+        files,declarations,flags=source_inventory(self.root)
+        self.assertEqual(flags,set());self.assertEqual(len(declarations),2);self.assertEqual(len(files),10)
+        self.assertIn('scripts/protected-core-test-fixture.ts',files)
+        self.assertIn('tests/fixtures/nested.ts',files)
+        report=self.report();self.assertEqual(report['outcome'],'PASS');self.assertEqual(safe_report(self.root,report,COMMIT),report)
+        (self.root/'scripts/protected-core-test-fixture.ts').write_text('// changed owner provisioning\n')
+        self.assertIsNone(safe_report(self.root,report,COMMIT))
+
+    def test_missing_provisioning_and_transitive_imports_fail_closed(self):
+        self.support_fixture()
+        for name in ('scripts/protected-core-test-fixture.ts','tests/fixtures/nested.ts'):
+            p=self.root/name;original=p.read_bytes();p.unlink()
+            self.assertIn('SOURCE_DECLARATION_INVALID',source_inventory(self.root)[2]);p.write_bytes(original)
+
+    def test_symlinked_helpers_and_imports_escaping_root_fail_closed(self):
+        helper=self.support_fixture();saved=helper.read_bytes();target=helper.parent/'target.ts';target.write_bytes(saved)
+        helper.unlink();helper.symlink_to(target)
+        self.assertIn('SOURCE_DECLARATION_INVALID',source_inventory(self.root)[2]);helper.unlink();helper.write_bytes(saved)
+        self.source.write_text("import '../fixtures/../../../../outside.ts';\n"+SOURCE)
+        self.assertIn('SOURCE_DECLARATION_INVALID',source_inventory(self.root)[2])
 
     def test_complete_static_results_are_source_bound_without_titles(self):
         report = self.report()

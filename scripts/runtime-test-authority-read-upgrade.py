@@ -42,7 +42,7 @@ volume.effective_sources=lambda rows,phase: rows if phase in NATIVE_PHASES else 
 def migrations():
  actual=sorted(p.name for p in (ROOT/'packages/db/migrations').glob('*.sql'))
  suffix=actual[len(NAMES):]
- successors=['032_relation_candidate_validation.sql','033_content_security_revisions.sql','034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql']
+ successors=['032_relation_candidate_validation.sql','033_content_security_revisions.sql','034_classification_label_identities.sql', '035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql']
  require(actual[:len(NAMES)]==NAMES and suffix==successors[:len(suffix)],'Exact001–031 prefix and declared contiguous successors required')
  return list(NAMES)
 

@@ -42,6 +42,9 @@ export async function createSessionApp(config: PublicAuthnConfig, authentication
     tenantId, expectedSessionVersion, replacementCsrfHash: sha256(replacement) });
    if (requestAbortSignal(request).aborted) return reply;
    if (selected.sessionId !== current.sessionId) throw new AuthnHttpError('AUTHN_UNAVAILABLE');
+   // Move an existing local /authn session cookie to the application path only
+   // after confirmed selection; retain the exact token and original expiry.
+   setAuthnCookie(reply, config, 'session', jar.session, current.expiresAt);
    setAuthnCookie(reply, config, 'csrf', replacement, current.expiresAt);
    return { session: selected };
   } catch (error) { return sendAuthnError(reply, mapAuthenticationError(error, 'selection')); }

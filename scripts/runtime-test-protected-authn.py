@@ -29,7 +29,7 @@ REPORT = LOCAL / 'protected-authn.json'
 COMPOSE = ROOT / 'deploy/protected-authn/compose.yaml'
 DATABASE = 'gc_protected_qualification'
 OWNER = 'gc_owner'
-ORIGIN = 'http://localhost:4314'
+ORIGIN = 'http://127.0.0.1:4314'
 ISSUER = 'http://localhost:4315/realms/governance'
 APP_IMAGE = 'sha256:b82f4d0b692cf9c7dbf338068eec5cded03909e76f1ffbb89f4187edc9d1d6b1'
 MIB, GIB = 1024**2, 1024**3
@@ -367,7 +367,7 @@ try{directory(root);directory(root+'/batch');if(mode==='verify'){const b=read(ro
             path.chmod(0o600)
 
     def http(self, url, *, data=None, token=None):
-        require(url.startswith(('http://localhost:4315/', 'http://localhost:4314/')), 'Only isolated HTTP endpoints admitted')
+        require(url.startswith(('http://localhost:4315/', 'http://127.0.0.1:4314/')), 'Only isolated HTTP endpoints admitted')
         request = urllib.request.Request(url, data=data)
         if token:
             request.add_header('Authorization', 'Bearer ' + token)
@@ -488,7 +488,7 @@ def configure(h):
                      'OIDC_TOKEN_ENDPOINT': ISSUER + suffixes[1], 'OIDC_JWKS_URI': ISSUER + suffixes[2], 'OIDC_TRANSPORT_ALIASES_JSON': json.dumps(aliases, separators=(',', ':'))})
     env('session.env', {**common, 'PORT': 4313, 'AUTHN_API_DATABASE_URL': cfg['api']})
     env('owner.env', {**common, 'MIGRATION_DATABASE_URL': cfg['owner'], 'OIDC_ISSUER': ISSUER})
-    env('helper.env', {'HOME': '/tmp', 'NODE_OPTIONS': '--max-old-space-size=256', 'AUTHN_FOUNDATION_CONFIG': '/run/authn-private/config.json',
+    env('helper.env', {**common, 'HOME': '/tmp', 'NODE_OPTIONS': '--max-old-space-size=256', 'AUTHN_FOUNDATION_CONFIG': '/run/authn-private/config.json',
                       'AUTHN_PROTECTED_CONFIG': '/run/authn-private/config.json', 'DATABASE_URL': cfg['legacy'], 'MIGRATION_DATABASE_URL': cfg['owner'], 'OIDC_ISSUER': ISSUER})
     env('keycloak.env', {'KC_DB_PASSWORD': password['keycloak'], 'KC_BOOTSTRAP_ADMIN_USERNAME': 'qualification-admin', 'KC_BOOTSTRAP_ADMIN_PASSWORD': password['admin']})
     users = []
@@ -579,7 +579,7 @@ def execute(h):
     try:
         h.sql(roles.prepare_sql(OWNER, DATABASE))
         migration = h.js("await import('./packages/db/src/migrate.ts');", timeout=180)
-        require(re.findall(r'^Applied (.+)$', migration.stdout, re.MULTILINE) == list(publication.MIGRATIONS), 'Fresh database did not apply exact SQL001–036')
+        require(re.findall(r'^Applied (.+)$', migration.stdout, re.MULTILINE) == list(publication.MIGRATIONS), 'Fresh database did not apply exact SQL001–037')
     finally:
         h.sql(roles.finish_sql(OWNER))
     h.sql(roles.executor_sql(DATABASE, definitions))

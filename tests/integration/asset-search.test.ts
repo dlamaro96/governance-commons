@@ -3,15 +3,17 @@
  * unbound fixture assets never create or modify immutable history/audit rows.
  * Projection writes are deliberate test inputs, not a projector-health claim. */
 import assert from 'node:assert/strict';
-import {createHash, randomUUID} from 'node:crypto';
+import {randomUUID} from 'node:crypto';
 import {after, before, test, type TestContext} from 'node:test';
 import {db, lockTenantLedger, pool, scope, sql} from '../../packages/db/src/index.ts';
 import {Problem, type Principal} from '../../packages/authz/src/index.ts';
 import {createAssetSearch, searchAssets, type AssetSearchQuery} from '../../apps/api/src/asset-search.ts';
 import {pacedFetch} from '../fixtures/http-budget.ts';
-import {SEARCH_TEST_FIXTURE} from '../fixtures/search-tenants.ts';
+import {PROTECTED_SEARCH_FIXTURE as SEARCH_TEST_FIXTURE} from '../fixtures/protected-core-tenants.ts';
+import {createProtectedCoreSession,preparedProtectedSession,closeProtectedCoreSessions} from '../fixtures/protected-core-authentication.ts';
+import {setTimeout as delay} from 'node:timers/promises';
 
-// The owner harness alone provisions these dedicated non-login fixtures. Their
+// The owner harness alone provisions these dedicated protected fixtures. Their
 // tenant/member rows persist; this test never resets or expands their authority.
 const {tenant,foreign,steward,consumer,summit}=SEARCH_TEST_FIXTURE;
 const base=process.env.TEST_BASE_URL??'http://api:4310';
@@ -97,7 +99,7 @@ before(async()=>{
   assert.ok(process.env.DATABASE_URL&&process.env.SESSION_KEY,'Actual runtime database and cursor key are required; no native search test ran.');
   assert.deepEqual((await sql<{name:string;superuser:boolean;bypass:boolean}>`SELECT current_user name,rolsuper superuser,rolbypassrls bypass
     FROM pg_roles WHERE rolname=current_user`.execute(db)).rows,[{name:'gc_app',superuser:false,bypass:false}]);
-  for(const [tenantId,actors] of [[tenant,[steward,consumer]],[foreign,[summit]]] as const) {
+  for(const [tenantId,actors] of [[tenant,[steward,consumer,SEARCH_TEST_FIXTURE.expired]],[foreign,[summit]]] as const) {
     await scope(tenantId,actors[0],async tx=>{
       assert.deepEqual(await tx.selectFrom('assets').select('id').where('tenant_id','=',tenantId).limit(1).execute(),[],'Owner fixture must start without preexisting assets');
       assert.deepEqual(await tx.selectFrom('relation_types').select('type_id').where('tenant_id','=',tenantId).limit(1).execute(),[],'Search qualification requires its isolated tenant, not a populated model fixture');
@@ -113,14 +115,12 @@ before(async()=>{
   const count=await searchRequest('/'+index+'/_count','POST',JSON.stringify({query:{terms:{id:bulkRows.map(row=>row.id)}}}));
   assert.equal(count.count,bulkRows.length,'Bulk refresh must expose every exact owned document before assertions');
 }, {timeout:120_000});
-after(async()=>{try {await cleanup();} finally {await db.destroy();}}, {timeout:120_000});
+after(async()=>{try {await cleanup();} finally {await closeProtectedCoreSessions();await db.destroy();}}, {timeout:120_000});
 
 async function session(t:TestContext,actor:string=consumer,tenantId:string=tenant) {
-  const raw=token()+token(),hash=createHash('sha256').update(raw).digest('hex');
-  await db.insertInto('sessions').values({id_hash:hash,identity_id:actor,tenant_id:tenantId,csrf:randomUUID(),expires_at:new Date(Date.now()+900_000)}).execute();
-  t.after(async()=>{await db.deleteFrom('sessions').where('id_hash','=',hash).execute();});
+  const native=await createProtectedCoreSession(actor,tenantId);t.after(()=>native.revoke());
   const principal:Principal={id:actor,tenantId,name:'Synthetic native search caller',permissions:['catalog:read']};
-  return {headers:{Cookie:'gc_session='+raw},auth:{principal,sessionHash:hash}};
+  return {headers:native.headers,auth:{principal,sessionHash:native.sessionHash},revoke:()=>native.revoke()};
 }
 async function http(query:AssetSearchQuery,headers:Record<string,string>,status=200,signal?:AbortSignal) {
   const params=new URLSearchParams();
@@ -231,20 +231,29 @@ test('stale indexed tenant ACL type and status never establish canonical rows co
   assert.deepEqual(await scope(tenant,consumer,tx=>tx.selectFrom('assets').select('id').where('id','=',foreignRow.id).execute()),[]);
 });
 
-test('real cursor continuation reauthenticates deleted expired and missing-membership sessions', {timeout:40_000},async t=>{
-  const removed=await session(t),expired=await session(t),noMember=await session(t,consumer,foreign);
-  assert.deepEqual(await scope(foreign,summit,tx=>tx.selectFrom('memberships').select('identity_id')
-    .where('tenant_id','=',foreign).where('identity_id','=',consumer).execute()),[],'Missing membership is an actual database fact, not injected authority');
+test('real cursor continuation reauthenticates revoked expired and missing-membership sessions', {timeout:40_000},async t=>{
+  const removed=await session(t),current=await session(t);
+  const expired=await preparedProtectedSession('expiredSession'),noMember=await preparedProtectedSession('membershipLossSession');
+  assert.deepEqual(await scope(tenant,steward,tx=>tx.selectFrom('memberships').select(['identity_id','active'])
+    .where('tenant_id','=',tenant).where('identity_id','=',noMember.identityId).execute()),[{identity_id:noMember.identityId,active:false}],
+    'Owner preparation deactivated this exact membership after successful native issuance; no test process can mutate it');
   const first=await http({q:narrow,limit:1},removed.headers,200,t.signal);assert.ok(first.nextCursor);checkPage(first,narrowRows.slice(0,1),narrowRows);
-  await db.deleteFrom('sessions').where('id_hash','=',removed.auth.sessionHash).execute();
-  const deleted=await http({q:narrow,limit:1,cursor:first.nextCursor},removed.headers,401,t.signal);assert.equal(deleted.code,'SESSION_EXPIRED');
-  const beforeExpiry=await http({q:narrow,limit:1},expired.headers,200,t.signal);assert.ok(beforeExpiry.nextCursor);
-  await db.updateTable('sessions').set({expires_at:new Date(0)}).where('id_hash','=',expired.auth.sessionHash).execute();
-  const ended=await http({q:narrow,limit:1,cursor:beforeExpiry.nextCursor},expired.headers,401,t.signal);assert.equal(ended.code,'SESSION_EXPIRED');
-  const missing=await http({q:narrow,limit:1},noMember.headers,401,t.signal);assert.equal(missing.code,'MEMBERSHIP_REVOKED');
-  for(const value of [deleted,ended,missing]) for(const key of ['items','total','facets','nextCursor']) assert.equal(Object.hasOwn(value,key),false);
-  for(const auth of [removed.auth,expired.auth,noMember.auth]) await assert.rejects(searchAssets(auth,{q:narrow,limit:1}),
+  await removed.revoke();
+  const revoked=await http({q:narrow,limit:1,cursor:first.nextCursor},removed.headers,401,t.signal);assert.equal(revoked.code,'SESSION_EXPIRED');
+  const continuation=await http({q:narrow,limit:1},current.headers,200,t.signal);assert.ok(continuation.nextCursor);
+  // This real session was inspected while live by owner preparation. Its own
+  // short binding bounds its native session expiry; no private row is updated.
+  const remaining=Date.parse(expired.expiresAt)-Date.now();assert.ok(remaining<20_000,'Fixture expiry must remain bounded');
+  if(remaining>=0)await delay(remaining+100,undefined,{signal:t.signal});
+  const ended=await http({q:narrow,limit:1,cursor:continuation.nextCursor},expired.headers,401,t.signal);assert.equal(ended.code,'SESSION_EXPIRED');
+  assert.ok(Date.parse(noMember.expiresAt)>Date.now()+10_000,'Membership-loss evidence requires its preissued session to remain unexpired; no fixture is renewed');
+  const missing=await http({q:narrow,limit:1,cursor:continuation.nextCursor},noMember.headers,401,t.signal);assert.equal(missing.code,'SESSION_EXPIRED');
+  assert.ok(Date.parse(noMember.expiresAt)>Date.now(),'Membership-loss response must precede session expiry');
+  for(const value of [revoked,ended,missing])for(const key of ['items','total','facets','nextCursor'])assert.equal(Object.hasOwn(value,key),false);
+  const stale=[expired,noMember].map(value=>({principal:{id:value.identityId,tenantId:value.selectedTenantId,name:'Synthetic stale native caller',permissions:['catalog:read']},sessionHash:value.sessionHash}));
+  for(const auth of [removed.auth,...stale])await assert.rejects(searchAssets(auth,{q:narrow,limit:1}),
     error=>error instanceof Problem&&error.status===401&&error.code==='SESSION_EXPIRED');
+  assert.ok(Date.parse(noMember.expiresAt)>Date.now(),'Native membership-loss denial must precede session expiry');
 });
 
 test('real glossary-text search retains canonical visibility before counts and facets', {timeout:40_000},async t=>{

@@ -124,7 +124,10 @@ test('closed SQL error mapping never reflects query details or unrecognized data
  for(const code of ['XX000','23514','23503','unknown']){const e=approvalFailure({code,message:'PRIVATE_SENTINEL query and payload',detail:'PRIVATE_SENTINEL'});assert.equal(e.code,'APPROVAL_STORAGE_INVALID');assert.doesNotMatch(e.message,/PRIVATE_SENTINEL/);}
  assert.equal(approvalFailure({code:'40001',message:'APPROVAL_TASK_CONFLICT'}).status,409);assert.equal(approvalFailure({code:'40001',message:'PRIVATE_SENTINEL'}).code,'APPROVAL_RETRY');assert.equal(approvalFailure({code:'42501',message:'PRIVATE_SENTINEL'}).status,403);
 });
-test('route installer exposes no submission or effects and rejects missing session/site identity before database access',async()=>{
+test('route installer exposes no submission or effects and rejects missing session/site identity before database access',async t=>{
+ const authKeys=['AUTHN_ENVIRONMENT','PUBLIC_AUTHN_ORIGIN','PUBLIC_URL'] as const,authBefore=Object.fromEntries(authKeys.map(key=>[key,process.env[key]]));
+ process.env.AUTHN_ENVIRONMENT='isolated-test';process.env.PUBLIC_AUTHN_ORIGIN='http://127.0.0.1:4310';process.env.PUBLIC_URL=process.env.PUBLIC_AUTHN_ORIGIN;
+ t.after(()=>{for(const key of authKeys){if(authBefore[key]===undefined)delete process.env[key];else process.env[key]=authBefore[key];}});
  const app=Fastify();await app.register(cookie);await installApprovals(app);
  try{
   for(const path of ['/api/v1/workflow-definitions','/api/v1/approval-requests',`/api/v1/approval-requests/${requestId}`])assert.equal((await app.inject({method:'GET',url:path})).statusCode,401);

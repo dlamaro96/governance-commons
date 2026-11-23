@@ -15,7 +15,7 @@ from protected_authn_evidence import load_report as load_protected_report, copy_
 from authentication_evidence import read_file as bounded_read, strict_json as private_json
 from quality_upgrade_diagnostics import load_repaired_report as load_quality_diagnostic, REPAIRED_PROFILES
 
-from ci_shards import SUPERSEDED, AUTHORITY_SCOPES, ASSET_CONTEXT_SCOPES, CONTENT_REVISION_SCOPES, CLASSIFICATION_LABEL_SCOPES, REVIEWED_CLASSIFICATION_SCOPES, HELD_METADATA_SCOPES, RELATION_SCOPES, STEPS, required_steps, collect_outcomes, checkout_identity, foreign_evidence
+from ci_shards import SUPERSEDED, AUTHORITY_SCOPES, ASSET_CONTEXT_SCOPES, CONTENT_REVISION_SCOPES, CLASSIFICATION_LABEL_SCOPES, REVIEWED_CLASSIFICATION_SCOPES, HELD_METADATA_SCOPES, APPLICATION_AUTHN_BRIDGE_SCOPES, CORE_AUTHENTICATION_SETUP_SCOPES, RELATION_SCOPES, STEPS, required_steps, collect_outcomes, checkout_identity, foreign_evidence
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--shard")
@@ -50,6 +50,8 @@ report = {
     "classification_label_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in CLASSIFICATION_LABEL_SCOPES.items()},
     "reviewed_classification_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in REVIEWED_CLASSIFICATION_SCOPES.items()},
     "held_metadata_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in HELD_METADATA_SCOPES.items()},
+    "application_authn_bridge_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in APPLICATION_AUTHN_BRIDGE_SCOPES.items()},
+    "core_authentication_setup": {step: {**scope, "outcome": outcomes[step]} for step, scope in CORE_AUTHENTICATION_SETUP_SCOPES.items()},
     "relation_qualifications": {step: {**scope, "outcome": outcomes[step]} for step, scope in RELATION_SCOPES.items()},
     "tests": [],
     "screenshots": [],

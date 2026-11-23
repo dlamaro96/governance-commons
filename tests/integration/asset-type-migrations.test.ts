@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
+import {createProtectedCoreSession,closeProtectedCoreSessions} from '../fixtures/protected-core-authentication.ts';
 import { pacedFetch as fetch } from '../fixtures/http-budget.ts';
 import assert from 'node:assert/strict';
 import { after, test } from 'node:test';
-import { createHash, randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { db, scope, sql } from '../../packages/db/src/index.ts';
 import { Problem, type Principal } from '../../packages/authz/src/index.ts';
 import { previewModelUpgrade } from '../../packages/domain/src/model.ts';
@@ -153,10 +154,9 @@ test('empty authored cohort binds the unpinned head resolution and still produce
 test('HTTP complete migration uses current authorization, exact preview, CSRF and immutable idempotent receipts', async () => {
   const original = definition(); await create(original); await asset(original.id, 1, owner);
   const input = await request({ ...original, version: 2 });
-  const token = randomUUID() + randomUUID(), csrf = randomUUID();
-  await db.insertInto('sessions').values({ id_hash: createHash('sha256').update(token).digest('hex'), identity_id: steward, tenant_id: tenant, csrf, expires_at: new Date(Date.now() + 120000) }).execute();
+  const native = await createProtectedCoreSession(steward, tenant);
   const base = (process.env.TEST_BASE_URL ?? 'http://api:4310') + '/api/v1/asset-types/' + original.id;
-  const headers = { Cookie: `gc_session=${token}`, 'X-CSRF-Token': csrf, Origin: process.env.PUBLIC_URL ?? 'http://localhost:4310', 'Content-Type': 'application/json', 'If-Match': '1', 'Idempotency-Key': randomUUID() };
+  const headers = { ...native.headers, 'If-Match': '1', 'Idempotency-Key': randomUUID() };
   const previewResponse = await fetch(base + '/migration-previews', { method: 'POST', headers, body: JSON.stringify(input) });
   assert.equal(previewResponse.status, 200); const checked = await previewResponse.json() as any;
   const body = JSON.stringify({ ...input, previewDigest: checked.preview.previewDigest });
@@ -165,4 +165,4 @@ test('HTTP complete migration uses current authorization, exact preview, CSRF an
   const replay = await fetch(base + '/migrations', { method: 'POST', headers, body }); assert.equal(replay.status, 201); assert.deepEqual(await replay.json(), result);
   const history = await fetch(base + '/migrations/' + result.receipt.id, { headers }); assert.equal(history.status, 200); assert.deepEqual(await history.json(), { receipt: result.receipt });
 });
-after(async () => { await db.destroy(); });
+after(async () => { await closeProtectedCoreSessions(); await db.destroy(); });

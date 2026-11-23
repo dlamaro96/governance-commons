@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+import {domainLogin} from '../fixtures/business-domains-browser.ts';
 import { test, expect, type Page, type Browser } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { mkdirSync, readFileSync } from 'node:fs';
@@ -6,19 +7,13 @@ import type { AssetTypeDefinition } from '../../packages/domain/src/asset-type.t
 import type { AssetTypeMigrationPlan } from '../../packages/domain/src/asset-type-migration.ts';
 import type { TypeMigrationPreview, TypeMigrationReceipt } from '../../packages/domain/src/asset-type-migration-contracts.ts';
 
-const credentials = JSON.parse(readFileSync('.local/bootstrap.json', 'utf8'));
 async function login(page: Page, username = 'steward') {
   page.on('response', response => { if (response.status() === 429) console.info(JSON.stringify({ diagnostic: 'browser_request_budget', method: response.request().method(), status: response.status(), path: new URL(response.url()).pathname })); });
-  await page.goto('/auth/login');
-  await page.locator('input[name="username"]').fill(username);
-  await page.locator('input[name="password"]').fill(credentials.personas[username]);
-  await page.getByRole('button', { name: 'Sign In', exact: true }).click();
-  await expect(page).toHaveURL('http://localhost:4310/');
-  await expect(page.getByRole('heading', { level: 1, name: username === 'summit' ? 'Summit Logistics' : 'Harbor Retail' })).toBeVisible();
+  await domainLogin(page, username);
 }
 async function headers(page: Page) {
   const me = await (await page.request.get('/api/v1/me')).json();
-  return { 'X-CSRF-Token': me.csrfToken, Origin: 'http://localhost:4310', 'Idempotency-Key': crypto.randomUUID() };
+  return { 'X-CSRF-Token': me.csrfToken, Origin: 'http://127.0.0.1:4310', 'Idempotency-Key': crypto.randomUUID() };
 }
 async function paceRequestBudget({ browser }: { browser: Browser }) {
   test.setTimeout(75_000); const context = await browser.newContext(); const response = await context.request.get('/api/v1/me');
@@ -225,7 +220,7 @@ test('MOD: complete typed migration handles mixed pins, explicit owners and stat
   await capture(page, 'confirmation-en'); await consent.focus(); await page.keyboard.press('Space');
   const executed = page.waitForResponse(response => response.url().endsWith(`/asset-types/${id}/migrations`) && response.request().method() === 'POST');
   await dialog.getByRole('button', { name: 'Execute migration', exact: true }).click(); const result = await executed; expect(result.status()).toBe(201); const { receipt } = await result.json() as { receipt: TypeMigrationReceipt };
-  await expect(page).toHaveURL(`http://localhost:4310/asset-types/${id}/migrations/${receipt.id}`);
+  await expect(page).toHaveURL(`http://127.0.0.1:4310/asset-types/${id}/migrations/${receipt.id}`);
   await expect(page.getByRole('heading', { name: 'Asset-type migration receipt', exact: true })).toBeVisible(); await page.reload();
   await expect(page.getByText(receipt.id, { exact: true })).toBeVisible(); expect(receipt.assets.map(asset => asset.after)).toEqual(finalPreview.assets.map(asset => asset.after));
   expect(await (await page.request.get(`/api/v1/assets/${descendant}/attributes`)).json()).toEqual(descendantBefore);
@@ -240,7 +235,7 @@ test('MOD: complete typed migration handles mixed pins, explicit owners and stat
   await capture(page, 'receipt-en');
   await page.goto(`/catalog/${first}?tab=history`); await page.getByRole('button', { name: 'Asset type and policies migrated', exact: true }).click();
   await page.getByRole('dialog').getByRole('link', { name: 'Asset-type migration receipt', exact: true }).click();
-  await expect(page).toHaveURL(`http://localhost:4310/asset-types/${id}/migrations/${receipt.id}`);
+  await expect(page).toHaveURL(`http://127.0.0.1:4310/asset-types/${id}/migrations/${receipt.id}`);
   await expect(page.getByRole('heading', { name: 'Asset-type migration receipt', exact: true })).toBeVisible();
   await page.locator('#language').selectOption('ar'); await page.getByRole('button', { name: 'نمط الألوان: داكن', exact: true }).click(); await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   await capture(page, 'receipt-ar-dark', undefined, [390]);

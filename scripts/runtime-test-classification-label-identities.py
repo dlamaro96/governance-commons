@@ -45,7 +45,7 @@ NAMES = [*predecessor.NAMES, MIGRATION]
 
 def migrations():
     actual = sorted(p.name for p in (ROOT / 'packages/db/migrations').glob('*.sql'))
-    successors = ['035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql']
+    successors = ['035_reviewed_classification_producer.sql', '036_authority_scope_alignment.sql', '037_application_authentication_bridge.sql']
     suffix = actual[len(NAMES):]
     require(actual[:len(NAMES)] == NAMES and suffix == successors[:len(suffix)],
             'Exact immutable SQL001–034 prefix and declared contiguous035–036 successors required')

@@ -59,6 +59,27 @@ class PreservationControls(unittest.TestCase):
   self.assertEqual(len(g.predecessor.NAMES),35);self.assertEqual(len(g.predecessor.PHASES),5)
   for path,count in [(g.PREFLIGHT,8),(g.SEED,1),(g.SCOPE,16),(g.HELD,g.EXPECTED_HELD_TESTS)]:self.assertEqual(len(g.volume.declared_tests(path,count)),count)
   self.assertEqual(len(g.PHASES),9);self.assertGreater(g.EXPECTED_HELD_TESTS,0)
+ def test_declared037_stays_outside036_and_gaps_renames_or_unknown038_refuse(self):
+  with tempfile.TemporaryDirectory() as directory:
+   root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)
+   for name in g.NAMES:(folder/name).write_text('-- historical prefix')
+   for name in [g.PREFLIGHT,g.SEED,g.SCOPE,g.HELD,'scripts/runtime-test-held-metadata-authority.py','scripts/test_held_metadata_authority.py']:
+    path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text('')
+   with patch.object(g,'ROOT',root),patch.object(g.volume,'ROOT',root),patch.object(g,'_original_sources',return_value=[]):
+    before=g.sources();self.assertEqual(len(g.migrations()),36)
+    successor=folder/'037_application_authentication_bridge.sql';successor.write_text('-- declared successor')
+    self.assertEqual(g.migrations(),g.NAMES);self.assertEqual(g.sources(),before)
+    self.assertNotIn('packages/db/migrations/'+successor.name,{r['path'] for r in before})
+    successor.write_text('-- changed but unexecuted');self.assertEqual(g.sources(),before)
+    renamed=successor.with_name('037_undeclared.sql');successor.rename(renamed)
+    with self.assertRaises(RuntimeError):g.sources()
+    renamed.rename(successor)
+    extra=folder/'038_undeclared.sql';extra.write_text('-- unreviewed')
+    with self.assertRaises(RuntimeError):g.sources()
+    extra.unlink();missing=folder/g.MIGRATION;old=missing.read_bytes();missing.unlink()
+    with self.assertRaises(RuntimeError):g.sources()
+    missing.write_bytes(old);self.assertEqual(g.sources(),before)
+
  def test_missing_extra_gap_or_changed_migration_does_not_pass(self):
   with tempfile.TemporaryDirectory() as directory:
    root=Path(directory);folder=root/'packages/db/migrations';folder.mkdir(parents=True)

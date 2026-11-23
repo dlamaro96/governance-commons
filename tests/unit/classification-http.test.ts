@@ -147,7 +147,7 @@ test('classification transaction deadline is shared and cannot renew after a slo
 
 async function appFixture(respond:(q:Query)=>Record<string,unknown>[]=membership,authError?:Problem){
  const fixture=recording(respond),app=Fastify({logger:false});let scopes=0,authentications=0;
- const dependencies:ClassificationDependencies={authenticate:async()=>{authentications++;if(authError)throw authError;return {principal:p,sessionHash:'synthetic',csrf:'synthetic',tenants:[]};},scope:(async(tenantId:string,actorId:string,work:(tx:Tx)=>Promise<unknown>)=>{scopes++;assert.equal(tenantId,tenant);assert.equal(actorId,actor);return work(fixture.tx);}) as ClassificationDependencies['scope']};
+ const dependencies:ClassificationDependencies={authenticate:async()=>{authentications++;if(authError)throw authError;return {principal:p,sessionHash:'synthetic',csrf:'synthetic',sessionVersion:1,tenants:[]};},scope:(async(tenantId:string,actorId:string,work:(tx:Tx)=>Promise<unknown>)=>{scopes++;assert.equal(tenantId,tenant);assert.equal(actorId,actor);return work(fixture.tx);}) as ClassificationDependencies['scope']};
  await installClassification(app,dependencies);await app.ready();return {app,fixture,scopes:()=>scopes,authentications:()=>authentications,close:async()=>{await app.close();await fixture.close();}};
 }
 

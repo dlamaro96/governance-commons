@@ -1,18 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
+import {createProtectedCoreSession,closeProtectedCoreSessions} from '../fixtures/protected-core-authentication.ts';
 import { pacedFetch as fetch } from '../fixtures/http-budget.ts';
 import {test,after} from 'node:test';
 import assert from 'node:assert/strict';
-import {randomUUID,createHash} from 'node:crypto';
+import {randomUUID} from 'node:crypto';
 import {db,scope} from '../../packages/db/src/index.ts';
 
 const A='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',B='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const steward='10000000-0000-4000-8000-000000000001';
 const base=process.env.TEST_BASE_URL??'http://api:4310',origin=process.env.PUBLIC_URL??'http://localhost:4310';
-async function session(user=steward,tenant=A){
- const raw=randomUUID()+randomUUID(),csrf=randomUUID();
- await db.insertInto('sessions').values({id_hash:createHash('sha256').update(raw).digest('hex'),identity_id:user,tenant_id:tenant,csrf,expires_at:new Date(Date.now()+120_000)}).execute();
- return {'Cookie':`gc_session=${raw}`,'X-CSRF-Token':csrf,'Origin':origin,'Content-Type':'application/json'};
-}
+async function session(user=steward,tenant=A){return (await createProtectedCoreSession(user,tenant)).headers;}
 const request=(path:string,headers:Record<string,string>,method='GET',body?:unknown)=>fetch(base+'/api/v1'+path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});
 const key=()=>({'Idempotency-Key':randomUUID()});
 const definition=(id:string)=>({formatVersion:1,id,version:1,attributes:{amount:{type:'decimal',required:true,precision:30,scale:10},status:{type:'enum',values:['draft','approved']}}});
@@ -71,4 +68,4 @@ test('publication requires a fresh server preview and leaves existing version pi
  assert.equal((await (await request('/models/'+id,headers)).json() as any).model.currentVersion,2);
  const history=await (await request('/assets/'+assetId,headers)).json() as any;assert.ok(history.audit.length>0);assert.ok(history.audit.every((event:any)=>event.action.startsWith('asset.')));
 });
-after(async()=>{await db.destroy();});
+after(async()=>{await closeProtectedCoreSessions(); await db.destroy();});

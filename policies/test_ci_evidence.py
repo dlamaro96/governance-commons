@@ -23,7 +23,7 @@ from test_authentication_evidence import fixture as authentication_fixture
 
 COLLECTOR = Path(__file__).with_name("ci_evidence.py")
 FILES = ("vertical-slice", "ui-accessibility", "models", "model-migrations", "asset-types", "asset-type-migrations", "relations", "relation-migrations", "business-domains", "source-connectors", "postgres-configuration", "approvals", "glossary", "quality", "lineage", "classification", "reference-data", "reference-quality", "reference-structures", "reference-import", "quality-uniqueness", "quality-range", "quality-monitoring", "quality-freshness", "quality-freshness-monitoring", "quality-volume", "catalog-sorting")
-STEPS = ("bootstrap", "services", "object_store", "seed", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_read_original", "authority_read_current", "authority_asset_context", "content_security_revision", "classification_label_identities", "reviewed_classification_facts", "held_metadata_authority", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "relation_candidate_original", "relation_candidate_current", "glossary_population_repaired_upgrade", "quality_repaired_upgrade", "quality_worker", "lineage_repaired_upgrade", "lineage_worker", "classification_repaired_upgrade", "reference_repaired_upgrade", "reference_quality_repaired_upgrade", "reference_quality_worker", "reference_structure_repaired_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade", "freshness_upgrade", "freshness_worker", "freshness_scheduling_upgrade", "volume_upgrade", "volume_worker", "browser", "protected_authn")
+STEPS = ("bootstrap", "services", "object_store", "seed", "core_authentication_install", "connectors", "security", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_read_original", "authority_read_current", "authority_asset_context", "content_security_revision", "classification_label_identities", "reviewed_classification_facts", "held_metadata_authority", "application_authn_bridge", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "relation_candidate_original", "relation_candidate_current", "glossary_population_repaired_upgrade", "quality_repaired_upgrade", "quality_worker", "lineage_repaired_upgrade", "lineage_worker", "classification_repaired_upgrade", "reference_repaired_upgrade", "reference_quality_repaired_upgrade", "reference_quality_worker", "reference_structure_repaired_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade", "freshness_upgrade", "freshness_worker", "freshness_scheduling_upgrade", "volume_upgrade", "volume_worker", "browser", "protected_authn")
 QUALITY_TITLE = "DQ: real column completeness, immutable thresholds, aggregate outcomes and current read boundaries"
 LINEAGE_TITLE = "LIN-001/004/006: real PostgreSQL view dependencies, evidence, paged exploration and tenant isolation"
 
@@ -111,7 +111,7 @@ class EvidenceGateTests(unittest.TestCase):
                 (source / "authority-authn-foundation.json").write_text(json.dumps(authn))
             # These native gates remain step claims only.
             # Their arbitrary private originals must never enter public artifacts.
-            for private_name in ("authority-foundation.json", "authority-read-original.json", "authority-read-current.json", "authority-asset-context.json", "content-security-revision.json", "classification-label-identities.json", "reviewed-classification-producer.json", "held-metadata-authority.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-repaired-upgrade.json", "quality-worker.json", "lineage-repaired-upgrade.json", "lineage-worker.json", "classification-repaired-upgrade.json", "reference-repaired-upgrade.json", "reference-quality-repaired-upgrade.json", "reference-quality-worker.json", "reference-structure-repaired-upgrade.json", "reference-import.json", "reference-import-upload.json", "reference-import-upload.csv", "quality-uniqueness-upgrade.json", "uniqueness-quality-worker.json", "quality-range-upgrade.json", "range-quality-worker.json", "quality-monitoring-upgrade.json", "quality-freshness-upgrade.json", "freshness-quality-worker.json", "quality-freshness-scheduling-upgrade.json", "quality-volume-upgrade.json", "volume-quality-worker.json"):
+            for private_name in ("authority-foundation.json", "authority-read-original.json", "authority-read-current.json", "authority-asset-context.json", "content-security-revision.json", "classification-label-identities.json", "reviewed-classification-producer.json", "held-metadata-authority.json", "application-authn-bridge.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-repaired-upgrade.json", "quality-worker.json", "lineage-repaired-upgrade.json", "lineage-worker.json", "classification-repaired-upgrade.json", "reference-repaired-upgrade.json", "reference-quality-repaired-upgrade.json", "reference-quality-worker.json", "reference-structure-repaired-upgrade.json", "reference-import.json", "reference-import-upload.json", "reference-import-upload.csv", "quality-uniqueness-upgrade.json", "uniqueness-quality-worker.json", "quality-range-upgrade.json", "range-quality-worker.json", "quality-monitoring-upgrade.json", "quality-freshness-upgrade.json", "freshness-quality-worker.json", "quality-freshness-scheduling-upgrade.json", "quality-volume-upgrade.json", "volume-quality-worker.json"):
                 if private_name == 'authority-foundation.json' and not authority and retained_foreign != private_name:continue
                 value = authority_report if private_name == 'authority-foundation.json' and authority_report else {"PRIVATE_SYNTHETIC_NATIVE_REPORT": True}
                 (source / private_name).write_text(json.dumps(value))
@@ -174,7 +174,7 @@ class EvidenceGateTests(unittest.TestCase):
             self.assertEqual(list((root / ".local/ci-artifacts").glob("*freshness*")), [])
             self.assertEqual(list((root / ".local/ci-artifacts").glob("*volume*")), [])
             self.assertEqual(list((root / ".local/ci-artifacts").glob("reference-import*")), [])
-            for private_name in ("authority-foundation.json", "authority-read-original.json", "authority-read-current.json", "authority-asset-context.json", "content-security-revision.json", "classification-label-identities.json", "reviewed-classification-producer.json", "held-metadata-authority.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-repaired-upgrade.json", "quality-worker.json", "lineage-repaired-upgrade.json", "lineage-worker.json", "classification-repaired-upgrade.json", "reference-repaired-upgrade.json", "reference-quality-repaired-upgrade.json", "reference-quality-worker.json", "reference-structure-repaired-upgrade.json", "reference-import.json", "reference-import-upload.json", "reference-import-upload.csv", "quality-uniqueness-upgrade.json", "uniqueness-quality-worker.json", "quality-range-upgrade.json", "range-quality-worker.json", "quality-monitoring-upgrade.json", "quality-freshness-upgrade.json", "freshness-quality-worker.json", "quality-freshness-scheduling-upgrade.json", "quality-volume-upgrade.json", "volume-quality-worker.json"):
+            for private_name in ("authority-foundation.json", "authority-read-original.json", "authority-read-current.json", "authority-asset-context.json", "content-security-revision.json", "classification-label-identities.json", "reviewed-classification-producer.json", "held-metadata-authority.json", "application-authn-bridge.json", "source-connectors-upgrade.json", "postgres-targets.json", "quality-repaired-upgrade.json", "quality-worker.json", "lineage-repaired-upgrade.json", "lineage-worker.json", "classification-repaired-upgrade.json", "reference-repaired-upgrade.json", "reference-quality-repaired-upgrade.json", "reference-quality-worker.json", "reference-structure-repaired-upgrade.json", "reference-import.json", "reference-import-upload.json", "reference-import-upload.csv", "quality-uniqueness-upgrade.json", "uniqueness-quality-worker.json", "quality-range-upgrade.json", "range-quality-worker.json", "quality-monitoring-upgrade.json", "quality-freshness-upgrade.json", "freshness-quality-worker.json", "quality-freshness-scheduling-upgrade.json", "quality-volume-upgrade.json", "volume-quality-worker.json"):
                 self.assertFalse((root / ".local/ci-artifacts" / private_name).exists())
             for name in report["screenshots"]:
                 if name in CONNECTOR_CAPTURES + POSTGRES_CAPTURES + SORTING_CAPTURES:
@@ -198,7 +198,7 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(report["outcome"], "PASS")
         self.assertEqual(len(report["tests"]), 38)
         self.assertEqual(set(report["screenshots"]), set(CONNECTOR_CAPTURES + POSTGRES_CAPTURES + SORTING_CAPTURES))
-        self.assertEqual(len(report["steps"]), 50)
+        self.assertEqual(len(report["steps"]), 52)
 
     def test_reference_quality_requires_one_reviewed_journey(self):
         def target(specs):
@@ -602,7 +602,7 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(report["outcome"], "NOT_PASSED")
 
     def test_missing_business_domain_qualification_steps_fail_closed(self):
-        for step in ("business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_read_original", "authority_read_current", "authority_asset_context", "content_security_revision", "classification_label_identities", "reviewed_classification_facts", "held_metadata_authority", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "relation_candidate_original", "relation_candidate_current", "glossary_population_repaired_upgrade", "quality_repaired_upgrade", "quality_worker", "lineage_repaired_upgrade", "lineage_worker", "classification_repaired_upgrade", "reference_repaired_upgrade", "reference_quality_repaired_upgrade", "reference_quality_worker", "reference_structure_repaired_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade", "freshness_upgrade", "freshness_worker", "volume_upgrade", "volume_worker"):
+        for step in ("business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_read_original", "authority_read_current", "authority_asset_context", "content_security_revision", "classification_label_identities", "reviewed_classification_facts", "held_metadata_authority", "application_authn_bridge", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "relation_candidate_original", "relation_candidate_current", "glossary_population_repaired_upgrade", "quality_repaired_upgrade", "quality_worker", "lineage_repaired_upgrade", "lineage_worker", "classification_repaired_upgrade", "reference_repaired_upgrade", "reference_quality_repaired_upgrade", "reference_quality_worker", "reference_structure_repaired_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade", "freshness_upgrade", "freshness_worker", "volume_upgrade", "volume_worker"):
             with self.subTest(step=step):
                 code, report = self.collect(omitted_step=step)
                 self.assertEqual(code, 1)
@@ -620,7 +620,7 @@ class EvidenceGateTests(unittest.TestCase):
                 self.assertEqual(code, 1)
 
     def test_real_service_failure_cannot_be_overridden_by_successful_browser_results(self):
-        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_read_original", "authority_read_current", "authority_asset_context", "content_security_revision", "classification_label_identities", "reviewed_classification_facts", "held_metadata_authority", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "relation_candidate_original", "relation_candidate_current", "glossary_population_repaired_upgrade", "quality_repaired_upgrade", "quality_worker", "lineage_repaired_upgrade", "lineage_worker", "classification_repaired_upgrade", "reference_repaired_upgrade", "reference_quality_repaired_upgrade", "reference_quality_worker", "reference_structure_repaired_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade", "freshness_upgrade", "freshness_worker", "volume_upgrade", "volume_worker"):
+        for step in ("object_store", "model_upgrade", "asset_type_upgrade", "type_migration_upgrade", "relations_upgrade", "relation_participation_upgrade", "business_domains_upgrade", "business_domain_seed", "authority_authn_foundation", "authority_read_original", "authority_read_current", "authority_asset_context", "content_security_revision", "classification_label_identities", "reviewed_classification_facts", "held_metadata_authority", "application_authn_bridge", "source_connectors_upgrade", "postgres_targets", "glossary_upgrade", "relation_scope_upgrade", "relation_candidate_original", "relation_candidate_current", "glossary_population_repaired_upgrade", "quality_repaired_upgrade", "quality_worker", "lineage_repaired_upgrade", "lineage_worker", "classification_repaired_upgrade", "reference_repaired_upgrade", "reference_quality_repaired_upgrade", "reference_quality_worker", "reference_structure_repaired_upgrade", "reference_import", "uniqueness_upgrade", "uniqueness_worker", "range_upgrade", "range_worker", "monitoring_upgrade", "freshness_upgrade", "freshness_worker", "volume_upgrade", "volume_worker"):
             with self.subTest(step=step):
                 code, report = self.collect(failed_step=step)
                 self.assertEqual(code, 1)
@@ -674,7 +674,7 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual(report["api_evidence"], "STEP_RESULT_MISMATCH")
 
     def test_authentication_native_gate_and_evidence_are_required(self):
-        self.assertEqual(len(STEPS), 50)
+        self.assertEqual(len(STEPS), 52)
         code, report = self.collect(omit_authn=True)
         self.assertEqual(code, 1)
         self.assertEqual(report["authentication_evidence"], "UNAVAILABLE_OR_INVALID")
@@ -707,7 +707,7 @@ class EvidenceGateTests(unittest.TestCase):
             self.assertEqual(code, 1)
             self.assertEqual(report["protected_authentication_evidence"], "STEP_RESULT_MISMATCH")
 
-    def test_workflow_executes_and_collects_all_fifty_steps(self):
+    def test_workflow_executes_and_collects_all_fifty_one_steps(self):
         workflow = (COLLECTOR.parent.parent / ".github/workflows/ci.yml").read_text()
         self.assertIn("id: authority_authn_foundation\n        run: ./dev test --suite authority-authn-foundation", workflow)
         self.assertLess(workflow.index("id: authority_authn_foundation"), workflow.index("id: browser"))
@@ -721,6 +721,10 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertLess(workflow.index("id: classification_label_identities"), workflow.index("id: reviewed_classification_facts"))
         self.assertIn("id: held_metadata_authority\n        run: ./dev test --suite held-metadata-authority", workflow)
         self.assertIn("python3 scripts/test_held_metadata_authority.py", workflow)
+        self.assertIn("id: application_authn_bridge\n        run: ./dev test --suite application-authn-bridge", workflow)
+        self.assertIn("python3 scripts/test_application_authn_bridge.py", workflow)
+        self.assertLess(workflow.index("id: held_metadata_authority"), workflow.index("id: application_authn_bridge"))
+        self.assertLess(workflow.index("id: application_authn_bridge"), workflow.index("id: source_connectors_upgrade"))
         self.assertLess(workflow.index("id: reviewed_classification_facts"), workflow.index("id: held_metadata_authority"))
         self.assertLess(workflow.index("id: held_metadata_authority"), workflow.index("id: source_connectors_upgrade"))
         self.assertIn("id: source_connectors_upgrade\n        run: ./dev test --suite source-connectors-upgrade", workflow)
@@ -777,7 +781,7 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertLess(workflow.index("id: lineage_repaired_upgrade"), workflow.index("id: lineage_worker"))
         self.assertLess(workflow.index("id: lineage_worker"), workflow.index("id: browser"))
         self.assertIn("tests/e2e/approvals.spec.ts tests/e2e/glossary.spec.ts tests/e2e/quality.spec.ts tests/e2e/lineage.spec.ts", workflow)
-        self.assertIn("name: Source credential persistence\n        run: python3 scripts/test_runtime_bootstrap.py", workflow)
+        self.assertIn("name: Source credential persistence\n        run: |\n          python3 scripts/test_runtime_bootstrap.py\n          python3 scripts/test_runtime_keycloak_client.py", workflow)
         self.assertIn("run: python3 scripts/test_reference_quality_fixture.py", workflow)
         config = (COLLECTOR.parent.parent / ".github/playwright.ci.config.ts").read_text()
         self.assertIn("{ name: 'source-connectors', testMatch: /source-connectors\\.spec\\.ts/, dependencies: ['business-domains'] }", config)

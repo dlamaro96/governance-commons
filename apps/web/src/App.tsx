@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react';
 import { ArrowRight, BookOpen, ClockCounterClockwise, Database, GitBranch, House, List, Moon, Question, WarningCircle, SignOut, Sun, X } from '@phosphor-icons/react';
 import { BrandMark, DetailDrawer, EmptyState, LoadingState, Notice, SearchBar } from '../../../packages/ui/src';
-import { api, ApiError, setCsrfToken, useResource } from './api.ts';
+import { ApiError, setCsrfToken, switchProtectedTenant, revokeProtectedSession, useResource } from './api.ts';
 import { useLocale } from './i18n.tsx';
 import { Link, useNavigation } from './navigation.tsx';
 import { SessionContext } from './session.tsx';
@@ -57,19 +57,20 @@ export default function App() {
   const session = useResource<Session>('/me');
   const { t, locale, setLocale } = useLocale();
   const [expired, setExpired] = useState(false);
+  const [signedOut, setSignedOut] = useState<'confirmed' | 'uncertain' | null>(null);
   const [theme, setTheme] = useState(() => localStorage.getItem('gc.theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
   useEffect(() => { document.documentElement.dataset.theme = theme; localStorage.setItem('gc.theme', theme); }, [theme]);
-  useEffect(() => { if (session.data) { setCsrfToken(session.data.csrfToken); setExpired(false); } }, [session.data]);
+  useEffect(() => { if (session.data && signedOut === null) { setCsrfToken(session.data.csrfToken); setExpired(false); } }, [session.data, signedOut]);
   useEffect(() => {
     const expire = () => { setExpired(true); setCsrfToken(''); session.reload(); };
     window.addEventListener('gc:session-expired', expire);
     return () => window.removeEventListener('gc:session-expired', expire);
   }, [session.reload]);
   const preferences = <div className="preferences"><label className="sr-only" htmlFor="language">{t('language')}</label><select id="language" aria-label={t('language')} value={locale} onChange={event => setLocale(event.target.value as 'en' | 'ar')}><option value="en">English</option><option value="ar">العربية</option></select><button className="icon-button" aria-label={`${t('theme')}: ${theme === 'dark' ? t('light') : t('dark')}`} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>{theme === 'dark' ? <Sun size={19}/> : <Moon size={19}/>}</button></div>;
-  if (session.loading && !session.data) return <div className="session-loading"><BrandMark size={36}/><LoadingState label={t('loading')}/></div>;
-  if (session.error instanceof ApiError && session.error.status === 401 || expired) return <div className="sign-in"><div className="sign-in-top"><a className="brand sign-in-brand" href="/"><BrandMark size={32}/><span>Governance<br/>Commons</span></a>{preferences}</div><main className="sign-in-main"><div className="sign-in-symbol"><BrandMark size={58}/></div><div className="eyebrow">{t('workspace')}</div><h1>{t('signIn')}</h1><p className="sign-in-description">{t('signInBody')}</p>{expired && <Notice>{t('sessionExpired')}</Notice>}<a className="button primary sign-in-action" href="/auth/login">{t('signInAction')}<ArrowRight size={19}/></a><p className="supporting-text">{t('identityNote')}</p></main><footer className="sign-in-footer">{t('tagline')}</footer></div>;
+  if (session.loading && !session.data && signedOut === null) return <div className="session-loading"><BrandMark size={36}/><LoadingState label={t('loading')}/></div>;
+  if (session.error instanceof ApiError && session.error.status === 401 || expired || signedOut !== null) return <div className="sign-in"><div className="sign-in-top"><a className="brand sign-in-brand" href="/"><BrandMark size={32}/><span>Governance<br/>Commons</span></a>{preferences}</div><main className="sign-in-main"><div className="sign-in-symbol"><BrandMark size={58}/></div><div className="eyebrow">{t('workspace')}</div><h1>{t('signIn')}</h1><p className="sign-in-description">{t('signInBody')}</p>{signedOut === 'uncertain' ? <Notice>{locale === 'ar' ? 'تعذر تأكيد إنهاء الجلسة على الخادم. تم إخفاء مساحة العمل. سجّل الدخول لإنشاء جلسة جديدة.' : 'Server sign-out could not be confirmed. This workspace is hidden. Sign in to establish a new session.'}</Notice> : expired && signedOut === null && <Notice>{t('sessionExpired')}</Notice>}<a className="button primary sign-in-action" href="/authn/login">{t('signInAction')}<ArrowRight size={19}/></a><p className="supporting-text">{t('identityNote')}</p></main><footer className="sign-in-footer">{t('tagline')}</footer></div>;
   if (session.error || !session.data) return <div className="session-loading"><RequestError error={session.error || new Error(t('sessionError'))} retry={session.reload}/></div>;
-  return <SessionContext.Provider value={session.data}><Shell session={session.data} reloadSession={session.reload} preferences={preferences}/></SessionContext.Provider>;
+  return <SessionContext.Provider value={session.data}><Shell session={session.data} reloadSession={session.reload} preferences={preferences} signedOut={confirmed => { setCsrfToken(''); setSignedOut(confirmed ? 'confirmed' : 'uncertain'); }}/></SessionContext.Provider>;
 }
 const RelationTypesPage = lazy(() => import('./pages/RelationTypes').then(module => ({ default: module.RelationTypesPage })));
 const RelationTypePage = lazy(() => import('./pages/RelationTypes').then(module => ({ default: module.RelationTypePage })));
@@ -77,7 +78,7 @@ const RelationTypeEditorPage = lazy(() => import('./pages/RelationTypes').then(m
 const RelationMigrationPage = lazy(() => import('./pages/RelationMigrations').then(module => ({ default: module.RelationMigrationPage })));
 const RelationMigrationReceiptPage = lazy(() => import('./pages/RelationMigrations').then(module => ({ default: module.RelationMigrationReceiptPage })));
 const RelationPage = lazy(() => import('./pages/Relation').then(module => ({ default: module.RelationPage })));
-function Shell({ session, reloadSession, preferences }: { session: Session; reloadSession: () => void; preferences: React.ReactNode }) {
+function Shell({ session, reloadSession, preferences, signedOut }: { session: Session; reloadSession: () => void; preferences: React.ReactNode; signedOut: (confirmed: boolean) => void }) {
   const { t, label, locale } = useLocale();
   const { path, go, search: routeSearch } = useNavigation();
   const [globalSearch, setGlobalSearch] = useState('');
@@ -106,13 +107,13 @@ function Shell({ session, reloadSession, preferences }: { session: Session; relo
   const navigation = <><Link href="/" className="brand" onClick={() => setMenuOpen(false)}><BrandMark size={30}/><span>Governance<br/>Commons</span></Link><nav aria-label={t('workspace')}><div className="nav-section-label">{t('workspace')}</div>{navItems.filter(item => item.visible).map(({ href, key, icon: Icon }) => <Link key={href} href={href} className={`nav-link ${path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/domain-types') || path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'selected' : ''}`} aria-current={path === href || href !== '/' && path.startsWith(href) || key === 'models' && (path.startsWith('/domain-types') || path.startsWith('/asset-types') || path.startsWith('/relation-types') || path.startsWith('/relation-migrations')) || key === 'catalog' && path.startsWith('/relations/') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><Icon size={20}/>{t(key)}</Link>)}{can('catalog:read') && <Link href="/glossary" className={`nav-link ${path.startsWith('/glossary') ? 'selected' : ''}`} aria-current={path.startsWith('/glossary') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><BookOpen size={20}/>{glossaryLabels.glossary}</Link>}{can('catalog:read') && can('classification:read') && <Link href="/classifications" className={`nav-link ${path === '/classifications' ? 'selected' : ''}`} aria-current={path === '/classifications' ? 'page' : undefined} onClick={() => setMenuOpen(false)}><BookOpen size={20}/>{classificationCopy[locale].title}</Link>}{can('catalog:read') && can('reference:read') && <Link href="/reference-data" className={`nav-link ${path.startsWith('/reference-data') ? 'selected' : ''}`} aria-current={path.startsWith('/reference-data') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><BookOpen size={20}/>{referenceCopy[locale].title}</Link>}{can('catalog:read') && can('quality:read') && <Link href="/quality/issues" className={`nav-link ${path.startsWith('/quality/issues') ? 'selected' : ''}`} aria-current={path.startsWith('/quality/issues') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><WarningCircle size={20}/>{monitoringCopy[locale].issues}</Link>}{canReadApprovals && <Link href="/approvals" className={`nav-link ${path.startsWith('/approvals') ? 'selected' : ''}`} aria-current={path.startsWith('/approvals') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><ClockCounterClockwise size={20}/>{approvalLabels.approvals}</Link>}{can('models:read') && <Link href="/workflows" className={`nav-link ${path.startsWith('/workflows') ? 'selected' : ''}`} aria-current={path.startsWith('/workflows') ? 'page' : undefined} onClick={() => setMenuOpen(false)}><GitBranch size={20}/>{approvalLabels.workflows}</Link>}</nav><div className="sidebar-bottom"><button className="sidebar-help" onClick={() => { setMenuOpen(false); setHelpOpen(true); }}><Question size={20}/>{t('help')}</button><div className="sidebar-tagline">{t('tagline')}</div></div></>;
   async function switchTenant(tenantId: string) {
     setSwitching(true); setError(null);
-    try { await api('/session/tenant', { method: 'POST', body: JSON.stringify({ tenantId }) }); window.location.assign('/'); }
-    catch (caught) { setError(caught as Error); setSwitching(false); }
+    try { await switchProtectedTenant(tenantId, session.sessionVersion); window.location.assign('/'); }
+    catch (caught) { if (caught instanceof ApiError && caught.code === 'AUTHN_VERSION_CONFLICT') reloadSession(); setError(caught as Error); setSwitching(false); }
   }
   async function logout() {
     setError(null);
-    try { await api('/auth/logout', { method: 'POST' }); setCsrfToken(''); reloadSession(); }
-    catch (caught) { setError(caught as Error); }
+    try { await revokeProtectedSession(session.sessionVersion); signedOut(true); }
+    catch { signedOut(false); }
   }
   function search(event: FormEvent<HTMLFormElement>) { event.preventDefault(); go(`/catalog?q=${encodeURIComponent(globalSearch)}`); setGlobalSearch(''); }
   let assetId: string | null = null;

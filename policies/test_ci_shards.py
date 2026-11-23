@@ -25,12 +25,12 @@ class AssignmentTests(unittest.TestCase):
 
     def test_exact_closed_union_and_shared_setup(self):
         self.assertEqual(tuple(policy.SHARDS), ('foundation','governance','quality-basics','quality-freshness-volume','browser'))
-        self.assertEqual(policy.COMMON, ('bootstrap','services','object_store','seed'))
+        self.assertEqual(policy.COMMON, ('bootstrap','services','object_store','seed','core_authentication_install'))
         assigned=[step for group in policy.SHARDS.values() for step in group]
         self.assertEqual(len(assigned),len(set(assigned)))
         self.assertFalse(set(assigned)&set(policy.COMMON))
         self.assertEqual(set((*policy.COMMON,*assigned)),set(policy.STEPS))
-        self.assertEqual(len(policy.STEPS),50)
+        self.assertEqual(len(policy.STEPS),52)
 
     def test_each_shard_requires_all_its_results(self):
         for shard in policy.SHARDS:
@@ -102,6 +102,19 @@ class IdentityTests(unittest.TestCase):
 
 
 class WorkflowTests(unittest.TestCase):
+    def test_bootstrap_controls_require_keycloak_registration_without_masking_or_conditions(self):
+        text=(ROOT/'.github/workflows/ci.yml').read_text()
+        bootstrap='          python3 scripts/test_runtime_bootstrap.py\n'
+        keycloak='          python3 scripts/test_runtime_keycloak_client.py\n'
+        block='      - name: Source credential persistence\n        run: |\n'+bootstrap+keycloak
+        self.assertIn(block,text)
+        for changed in (text.replace(keycloak,''),text.replace(keycloak,keycloak+keycloak),
+                        text.replace(keycloak,keycloak.rstrip()+' || true\n'),
+                        text.replace(bootstrap+keycloak,keycloak+bootstrap),
+                        text.replace(block,block.replace('        run:', '        if: false\n        run:')),
+                        text.replace(keycloak,'          true\n')):
+            with self.assertRaises(ValueError):policy.validate_workflow(changed)
+
     def test_current_workflow_matches_static_reviewed_contract(self):
         self.assertTrue(policy.validate_workflow((ROOT/'.github/workflows/ci.yml').read_text()))
 
@@ -642,9 +655,9 @@ class ReviewedClassificationGateTests(unittest.TestCase):
 
     def test_all_previous_forty_eight_assignments_and_scope_records_are_unchanged(self):
         historical = {
-            'common': policy.COMMON,
-            'shards': {name: tuple(step for step in steps if step not in (self.STEP, 'held_metadata_authority')) for name, steps in policy.SHARDS.items()},
-            'commands': {step: command for step, command in policy.COMMANDS.items() if step not in (self.STEP, 'held_metadata_authority')},
+            'common': tuple(step for step in policy.COMMON if step != 'core_authentication_install'),
+            'shards': {name: tuple(step for step in steps if step not in (self.STEP, 'held_metadata_authority', 'application_authn_bridge', 'core_authentication_install')) for name, steps in policy.SHARDS.items()},
+            'commands': {step: command for step, command in policy.COMMANDS.items() if step not in (self.STEP, 'held_metadata_authority', 'application_authn_bridge', 'core_authentication_install')},
             'superseded': policy.SUPERSEDED, 'authorityScopes': policy.AUTHORITY_SCOPES,
             'assetContextScopes': policy.ASSET_CONTEXT_SCOPES,
             'contentRevisionScopes': policy.CONTENT_REVISION_SCOPES,
@@ -737,7 +750,7 @@ class HeldMetadataGateTests(unittest.TestCase):
         self.assertEqual(policy.EVIDENCE[self.STEP], ('held-metadata-authority.json',))
         assigned = policy.SHARDS['foundation']
         self.assertEqual(assigned[assigned.index(self.STEP)-1:assigned.index(self.STEP)+2],
-                         ('reviewed_classification_facts', self.STEP, 'source_connectors_upgrade'))
+                         ('reviewed_classification_facts', self.STEP, 'application_authn_bridge'))
         digest = policy.assignment_hash()
         for field, value in [('profile', 'isolated-reviewed-classification-facts-sql035'),
                              ('report', 'reviewed-classification-producer.json'),
@@ -749,9 +762,9 @@ class HeldMetadataGateTests(unittest.TestCase):
 
     def test_all_previous_forty_nine_assignments_and_scope_records_are_unchanged(self):
         historical = {
-            'common': policy.COMMON,
-            'shards': {name: tuple(step for step in steps if step != self.STEP) for name, steps in policy.SHARDS.items()},
-            'commands': {step: command for step, command in policy.COMMANDS.items() if step != self.STEP},
+            'common': tuple(step for step in policy.COMMON if step != 'core_authentication_install'),
+            'shards': {name: tuple(step for step in steps if step not in (self.STEP, 'application_authn_bridge', 'core_authentication_install')) for name, steps in policy.SHARDS.items()},
+            'commands': {step: command for step, command in policy.COMMANDS.items() if step not in (self.STEP, 'application_authn_bridge', 'core_authentication_install')},
             'superseded': policy.SUPERSEDED, 'authorityScopes': policy.AUTHORITY_SCOPES,
             'assetContextScopes': policy.ASSET_CONTEXT_SCOPES,
             'contentRevisionScopes': policy.CONTENT_REVISION_SCOPES,
@@ -828,4 +841,167 @@ class HeldMetadataGateTests(unittest.TestCase):
             run.assert_not_called()
 
 
+class ApplicationAuthnBridgeGateTests(unittest.TestCase):
+    STEP = 'application_authn_bridge'
+
+    def test_distinct_inactive_source_scope_and_expected_native_partition(self):
+        scope = policy.APPLICATION_AUTHN_BRIDGE_SCOPES[self.STEP]
+        self.assertEqual(scope, {
+            'command': './dev test --suite application-authn-bridge',
+            'runner': 'scripts/runtime-test-application-authn-bridge.py',
+            'arguments': ['--run-local'],
+            'profile': 'isolated-application-authn-bridge-sql037',
+            'report': 'application-authn-bridge.json',
+            'schemaScope': 'Populated SQL001–036 to SQL037; protected application authentication binding, exact native reader privileges, preservation and replay; no HTTP cutover or content authority activation',
+            'expectedNativeTests': {'predecessor': 1, 'applicationBridge': 25, 'total': 26},
+            'outerTimeoutSeconds': 900, 'contentAuthority': False, 'evidence': 'STEP_OUTCOME_ONLY'})
+        self.assertEqual(policy.EVIDENCE[self.STEP], ('application-authn-bridge.json',))
+        assigned = policy.SHARDS['foundation']
+        self.assertEqual(assigned[assigned.index(self.STEP)-1:assigned.index(self.STEP)+2],
+                         ('held_metadata_authority', self.STEP, 'source_connectors_upgrade'))
+        digest = policy.assignment_hash()
+        for field, value in [('profile', 'isolated-reviewed-classification-facts-sql035'),
+                             ('report', 'reviewed-classification-producer.json'),
+                             ('arguments', []), ('outerTimeoutSeconds', 901),
+                             ('contentAuthority', True), ('evidence', 'VERIFIED_PASS'),
+                             ('expectedNativeTests', {'predecessor': 1, 'applicationBridge': 0, 'total': 1})]:
+            with self.subTest(field=field), patch.dict(scope, {field: value}):
+                self.assertNotEqual(policy.assignment_hash(), digest)
+
+    def test_all_previous_fifty_assignments_and_scope_records_are_unchanged(self):
+        historical = {
+            'common': tuple(step for step in policy.COMMON if step != 'core_authentication_install'),
+            'shards': {name: tuple(step for step in steps if step not in (self.STEP, 'core_authentication_install')) for name, steps in policy.SHARDS.items()},
+            'commands': {step: command for step, command in policy.COMMANDS.items() if step not in (self.STEP, 'core_authentication_install')},
+            'superseded': policy.SUPERSEDED, 'authorityScopes': policy.AUTHORITY_SCOPES,
+            'assetContextScopes': policy.ASSET_CONTEXT_SCOPES,
+            'contentRevisionScopes': policy.CONTENT_REVISION_SCOPES,
+            'classificationLabelScopes': policy.CLASSIFICATION_LABEL_SCOPES,
+            'reviewedClassificationScopes': policy.REVIEWED_CLASSIFICATION_SCOPES,
+            'heldMetadataScopes': policy.HELD_METADATA_SCOPES,
+            'relationScopes': policy.RELATION_SCOPES}
+        self.assertEqual(len(historical['commands']), 50)
+        self.assertEqual(hashlib.sha256(json.dumps(historical, sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
+                         '0923bc9db075aa44cdb326893c697b8af0d57fe885cb6ffb3bea7191d3c1168a')
+
+    def test_missing_or_failed_application_authn_bridge_cannot_use_a_successful_predecessor_or_raw_report(self):
+        collect = evidence_tests.EvidenceGateTests(methodName='runTest').collect
+        for shard in (None, 'foundation'):
+            for outcome in (None, 'failure', 'cancelled', 'skipped', 'NOT_IN_SHARD', ''):
+                options = {'omitted_step': self.STEP} if outcome is None else {'failed_step': self.STEP, 'failed_outcome': outcome}
+                with self.subTest(shard=shard, outcome=outcome):
+                    code, report = collect(shard=shard, **options)
+                    self.assertEqual(code, 1)
+                    self.assertEqual(report['held_metadata_qualifications']['held_metadata_authority']['outcome'], 'success')
+                    self.assertNotEqual(report['application_authn_bridge_qualifications'][self.STEP]['outcome'], 'success')
+        for shard in policy.SHARDS:
+            code, report = collect(shard=shard)
+            self.assertEqual(code, 0)
+            expected = 'success' if shard == 'foundation' else 'NOT_IN_SHARD'
+            self.assertEqual(report['application_authn_bridge_qualifications'], {
+                self.STEP: {**policy.APPLICATION_AUTHN_BRIDGE_SCOPES[self.STEP], 'outcome': expected}})
+
+    def test_workflow_refuses_omission_substitution_reordering_and_disabled_controls(self):
+        workflow = (ROOT/'.github/workflows/ci.yml').read_text()
+        block = ('      - name: Verify protected application authentication bridge and preservation\n'
+                 "        if: success() && matrix.shard == 'foundation'\n"
+                 '        id: application_authn_bridge\n'
+                 '        run: ./dev test --suite application-authn-bridge\n')
+        control = ('      - name: Application authentication bridge qualification controls\n'
+                   '        run: python3 scripts/test_application_authn_bridge.py\n')
+        anchor = '        run: ./dev test --suite content-security-revision\n'
+        env = '          GC_APPLICATION_AUTHN_BRIDGE_RESULT: ${{ steps.application_authn_bridge.outcome }}\n'
+        mutations = [workflow.replace(block, ''), workflow.replace(block, block+block),
+                     workflow.replace(block, '').replace(anchor, anchor+block),
+                     workflow.replace(block, block.replace("matrix.shard == 'foundation'", "matrix.shard == 'browser'")),
+                     workflow.replace(block, block+'        continue-on-error: true\n'),
+                     workflow.replace('run: ./dev test --suite application-authn-bridge', 'run: ./dev test --suite reviewed-classification-facts'),
+                     workflow.replace(env, ''), workflow.replace(env, env+env),
+                     workflow.replace(env, env.replace('steps.application_authn_bridge.outcome', 'steps.reviewed_classification_facts.outcome')),
+                     workflow.replace(control, ''), workflow.replace(control, control+control),
+                     workflow.replace(control, control.replace('        run:', '        if: false\n        run:')),
+                     workflow.replace(control, control+'        continue-on-error: true\n'),
+                     workflow.replace(control, control.replace('python3 scripts/test_application_authn_bridge.py', 'true'))]
+        self.assertTrue(policy.validate_workflow(workflow))
+        for index, mutation in enumerate(mutations):
+            with self.subTest(index=index), self.assertRaises(ValueError):
+                policy.validate_workflow(mutation)
+
+    def test_local_route_uses_isolated_runner_with_fixed_timeout_and_propagates_failure(self):
+        spec = importlib.util.spec_from_file_location('application_authn_bridge_runtime', ROOT/'scripts/runtime.py')
+        runtime = importlib.util.module_from_spec(spec); spec.loader.exec_module(runtime)
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'application-authn-bridge']), \
+                patch.object(runtime, 'require_local') as local, \
+                patch.object(runtime, 'require_bootstrap', side_effect=AssertionError('unexpected shared runtime')), \
+                patch.object(runtime, 'run', side_effect=RuntimeError('synthetic held-metadata refusal')) as run:
+            with self.assertRaisesRegex(RuntimeError, '^synthetic held-metadata refusal$'):
+                runtime.main()
+            local.assert_called_once_with()
+            run.assert_called_once_with([sys.executable, 'scripts/runtime-test-application-authn-bridge.py', '--run-local'], timeout=900)
+
+    def test_local_admission_refusal_never_reaches_runner(self):
+        spec = importlib.util.spec_from_file_location('application_authn_bridge_runtime_refusal', ROOT/'scripts/runtime.py')
+        runtime = importlib.util.module_from_spec(spec); spec.loader.exec_module(runtime)
+        with patch.object(sys, 'argv', ['dev', 'test', '--suite', 'application-authn-bridge']), \
+                patch.object(runtime, 'require_local', side_effect=SystemExit('synthetic local refusal')), \
+                patch.object(runtime, 'run') as run:
+            with self.assertRaisesRegex(SystemExit, '^synthetic local refusal$'):
+                runtime.main()
+            run.assert_not_called()
+
+
 if __name__=='__main__':unittest.main()
+
+
+class CoreAuthenticationSetupTests(unittest.TestCase):
+    STEP = 'core_authentication_install'
+
+    def test_fifty_two_steps_preserve_every_prior_assignment_and_distinguish_setup(self):
+        self.assertEqual(len(policy.STEPS),52)
+        self.assertEqual(policy.COMMON[-2:],('seed',self.STEP))
+        self.assertEqual(policy.CORE_AUTHENTICATION_SETUP_SCOPES, {'core_authentication_install': {'command': './dev authn-core-install', 'purpose': 'EXPLICIT_LOCAL_SETUP', 'qualifiesNativeBridge': False, 'contentAuthority': False, 'evidence': 'STEP_OUTCOME_ONLY'}})
+        self.assertNotIn(self.STEP,policy.APPLICATION_AUTHN_BRIDGE_SCOPES)
+        self.assertNotIn(self.STEP,policy.EVIDENCE)
+        historical={'common':tuple(s for s in policy.COMMON if s!=self.STEP),'shards':policy.SHARDS,
+          'commands':{s:c for s,c in policy.COMMANDS.items() if s!=self.STEP},'superseded':policy.SUPERSEDED,
+          'authorityScopes':policy.AUTHORITY_SCOPES,'assetContextScopes':policy.ASSET_CONTEXT_SCOPES,
+          'contentRevisionScopes':policy.CONTENT_REVISION_SCOPES,'classificationLabelScopes':policy.CLASSIFICATION_LABEL_SCOPES,
+          'reviewedClassificationScopes':policy.REVIEWED_CLASSIFICATION_SCOPES,'heldMetadataScopes':policy.HELD_METADATA_SCOPES,
+          'applicationAuthnBridgeScopes':policy.APPLICATION_AUTHN_BRIDGE_SCOPES,'relationScopes':policy.RELATION_SCOPES}
+        self.assertEqual(hashlib.sha256(json.dumps(historical,sort_keys=True,separators=(',',':')).encode()).hexdigest(),'979728112610294d09fa2e745ecf1a0916fac0d321a3005b8b47d63db0f04892')
+        original=policy.assignment_hash()
+        with patch.dict(policy.CORE_AUTHENTICATION_SETUP_SCOPES[self.STEP],{'qualifiesNativeBridge':True}):
+            self.assertNotEqual(policy.assignment_hash(),original)
+
+    def test_every_shard_requires_explicit_setup_without_native_gate_substitution(self):
+        for shard in (None,*policy.SHARDS):
+            env=AssignmentTests().environment(shard)
+            self.assertTrue(policy.collect_outcomes(env,shard)[1])
+            for outcome in (None,'failure','cancelled','skipped','unknown','NOT_IN_SHARD',''):
+                changed=dict(env)
+                if outcome is None:changed.pop('GC_CORE_AUTHENTICATION_INSTALL_RESULT')
+                else:changed['GC_CORE_AUTHENTICATION_INSTALL_RESULT']=outcome
+                self.assertFalse(policy.collect_outcomes(changed,shard)[1])
+        collect=evidence_tests.EvidenceGateTests(methodName='runTest').collect
+        for options in ({'omitted_step':self.STEP},{'failed_step':self.STEP}):
+            code,report=collect(shard='foundation',**options)
+            self.assertEqual(code,1)
+            self.assertEqual(report['application_authn_bridge_qualifications']['application_authn_bridge']['outcome'],'success')
+            self.assertNotEqual(report['core_authentication_setup'][self.STEP]['outcome'],'success')
+        code,report=collect(shard='browser')
+        self.assertEqual(code,0)
+        self.assertEqual(report['core_authentication_setup'],{self.STEP:{**policy.CORE_AUTHENTICATION_SETUP_SCOPES[self.STEP],'outcome':'success'}})
+        self.assertEqual(report['application_authn_bridge_qualifications']['application_authn_bridge']['outcome'],'NOT_IN_SHARD')
+
+    def test_workflow_refuses_missing_reordered_conditional_or_substituted_setup(self):
+        workflow=(ROOT/'.github/workflows/ci.yml').read_text()
+        block=('      - name: Explicitly install protected core authentication\n'
+               '        id: core_authentication_install\n        run: ./dev authn-core-install\n')
+        seed=('      - name: Seed independent synthetic tenants\n        id: seed\n        run: ./dev seed --dataset harbor-demo\n')
+        env='          GC_CORE_AUTHENTICATION_INSTALL_RESULT: ${{ steps.core_authentication_install.outcome }}\n'
+        self.assertIn(seed+block,workflow);self.assertTrue(policy.validate_workflow(workflow))
+        for text in (workflow.replace(block,''),workflow.replace(seed+block,block+seed),
+                     workflow.replace(block,block.replace('        run:',"        if: success() && matrix.shard == 'foundation'\n        run:")),
+                     workflow.replace('./dev authn-core-install','./dev test --suite application-authn-bridge'),
+                     workflow.replace(env,''),workflow.replace(env,env.replace('steps.core_authentication_install.outcome','steps.seed.outcome'))):
+            with self.assertRaises(ValueError):policy.validate_workflow(text)

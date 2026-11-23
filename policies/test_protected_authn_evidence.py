@@ -16,7 +16,7 @@ PNG=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42m
 
 def installation_fixture():
     def uid(n):return '10000000-0000-4000-8000-'+str(n).zfill(12)
-    config={'issuer':'http://localhost:4315/realms/governance','publicOrigin':'http://localhost:4314','environment':'isolated-test'}
+    config={'issuer':'http://localhost:4315/realms/governance','publicOrigin':'http://127.0.0.1:4314','environment':'isolated-test'}
     target={'databaseOid':123,'ownerRoleOid':456,'loginRoleOid':789,'apiRoleOid':790};expiry='2026-11-17T10:00:00.000Z'
     operations=[]
     for kind,n,oid in (('login',20,789),('api',22,790)):
@@ -78,7 +78,7 @@ def fixture(root):
         'scope':'registered-posix-groups-and-observed-descendants','result':'PASS','trigger':'normal',
         'registeredBrowserGroups':2,'trackedProcesses':8,'termSignals':0,'killSignals':0,
         'remainingLive':0,'identityConflicts':0,'unresolvedGroups':0,'registryClosed':True})
-    origin='http://localhost:4314';issuer='http://localhost:4315/realms/governance'
+    origin='http://127.0.0.1:4314';issuer='http://localhost:4315/realms/governance'
     readback=write('keycloak-readback.json',{'client':{'clientId':'governance-protected-web','enabled':True,'publicClient':True,
         'standardFlowEnabled':True,'implicitFlowEnabled':False,'directAccessGrantsEnabled':False,'serviceAccountsEnabled':False,
         'redirectUris':[origin+'/authn/callback'],'webOrigins':[origin],
@@ -219,9 +219,9 @@ class ProtectedEvidenceTests(unittest.TestCase):
         (self.root/'packages/authn/new.ts').write_text('new source')
         self.assertIsNone(self.validate())
 
-    def test_exact_thirty_six_migration_checksums_required(self):
-        self.assertEqual(len(evidence.MIGRATIONS),36)
-        self.assertEqual(evidence.MIGRATIONS[-4:],('033_content_security_revisions.sql','034_classification_label_identities.sql','035_reviewed_classification_producer.sql','036_authority_scope_alignment.sql'))
+    def test_exact_thirty_seven_migration_checksums_required(self):
+        self.assertEqual(len(evidence.MIGRATIONS),37)
+        self.assertEqual(evidence.MIGRATIONS[-5:],('033_content_security_revisions.sql','034_classification_label_identities.sql','035_reviewed_classification_producer.sql','036_authority_scope_alignment.sql','037_application_authentication_bridge.sql'))
         for mutate in (lambda r:r['migrations'].pop(),lambda r:r.update(migrations=r['migrations'][:12]),
                        lambda r:r['migrations'][0].update(sha256='0'*64),lambda r:r['migrations'][12].update(sha256='0'*64),
                        lambda r:r['migrations'][13].update(name='014_other.sql'),lambda r:r['migrations'].append(r['migrations'][0]),
@@ -230,8 +230,11 @@ class ProtectedEvidenceTests(unittest.TestCase):
 
     def test_extra_missing_changed_or_symlink_migration_cannot_escape_source_binding(self):
         folder=self.root/'packages/db/migrations'
-        later=folder/'037_unadopted.sql';later.write_text('-- Unreviewed migration\n')
-        self.assertIsNone(self.validate());later.unlink()
+        for name in ('037_unadopted.sql','038_unadopted.sql'):
+            later=folder/name;later.write_text('-- Unreviewed migration\n')
+            self.assertIsNone(self.validate());later.unlink()
+        current=folder/'037_application_authentication_bridge.sql';renamed=current.with_name('037_renamed.sql')
+        current.rename(renamed);self.assertIsNone(self.validate());renamed.rename(current)
         for name in evidence.MIGRATIONS[-2:]:
             path=folder/name;original=path.read_bytes();path.unlink()
             self.assertIsNone(self.validate())
@@ -256,7 +259,7 @@ class ProtectedEvidenceTests(unittest.TestCase):
 
     def test_ledger_projection_exports_only_counts_and_digests(self):
         result=self.validate();self.assertIsNotNone(result)
-        self.assertEqual(result['migration_ledger'],{'rows':36,'unchanged':True,
+        self.assertEqual(result['migration_ledger'],{'rows':37,'unchanged':True,
             'digests':{k:v['sha256'] for k,v in self.report['migrationLedger'].items()}})
         self.assertNotIn('applied_at',json.dumps(result));self.assertNotIn('migrations-before.json',json.dumps(result))
 
@@ -310,11 +313,21 @@ class ProtectedEvidenceTests(unittest.TestCase):
         p.write_text('{"result":"PASS",'+json.dumps(self.report)[1:]);self.assertIsNone(evidence.load_report(self.root,COMMIT))
         p.unlink();p.symlink_to(self.root/self.report['testLogs']['browser']['path']);self.assertIsNone(evidence.load_report(self.root,COMMIT))
 
+    def test_current_profile_check_names_exact37_migrations_and_rejects_old_range(self):
+        self.assertEqual(len(evidence.MIGRATIONS),37)
+        self.assertIn('exact SQL001–037',evidence.CHECKS[0])
+        self.assertIsNotNone(self.validate())
+        for old_range in ('exact001–033','exact SQL001–036'):
+            report=copy.deepcopy(self.report)
+            report['checks'][0]=report['checks'][0].replace('exact SQL001–037',old_range)
+            self.assertIsNone(self.validate(report))
+
     def test_keycloak_missing_or_wrong_client_mapper_and_endpoint_readback_refuses(self):
         original=json.loads((self.root/self.report['keycloakReadback']['path']).read_text())
         mutations=[lambda d:d.clear(),lambda d:d['client'].update(clientId='other'),lambda d:d['client'].update(publicClient=False),
             lambda d:d['client'].update(enabled=1),lambda d:d['client'].update(implicitFlowEnabled=True),
-            lambda d:d['client'].update(redirectUris=['http://localhost:4314/*']),lambda d:d['client'].update(webOrigins=['*']),
+            lambda d:d['client'].update(redirectUris=['http://127.0.0.1:4314/*']),
+            lambda d:d['client'].update(redirectUris=['http://localhost:4314/authn/callback'],webOrigins=['http://localhost:4314']),lambda d:d['client'].update(webOrigins=['*']),
             lambda d:d['client']['attributes'].update({'pkce.code.challenge.method':'plain'}),
             lambda d:d['client']['attributes'].update({'id.token.signed.response.alg':'HS256'}),
             lambda d:d.update(defaultScopes=[]),lambda d:d.update(defaultScopes=['basic','basic']),
@@ -356,7 +369,8 @@ class ProtectedEvidenceTests(unittest.TestCase):
     def test_empty_relinked_wrong_batch_or_unrelated_receipt_hashes_cannot_pass(self):
         path=self.root/self.report['evidence_directory']/'installation/plan.json';original=json.loads(path.read_text());old_hashes=self.report['installation']['manifestHashes']
         changes=[lambda p:p.clear(),lambda p:p['manifests'].pop(),lambda p:p['manifests'][0]['operation'].update(roleName='gc_app'),
-            lambda p:p['manifests'][4]['operation'].update(redirectUri='http://localhost:4314/other'),
+            lambda p:p['manifests'][4]['operation'].update(redirectUri='http://127.0.0.1:4314/other'),
+            lambda p:p['config'].update(publicOrigin='http://localhost:4314'),
             lambda p:p['manifests'][5]['operation'].update(identityId='10000000-0000-4000-8000-000000000099'),
             lambda p:p['manifests'][6]['operation'].update(bindingId=p['manifests'][5]['operation']['bindingId']),
             lambda p:p['manifests'][12]['operation'].update(tenantId=p['manifests'][11]['operation']['tenantId']),

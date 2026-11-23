@@ -26,8 +26,16 @@ python3 scripts/github/bootstrap check-local
 ./dev bootstrap
 ./dev up --profile core
 ./dev seed --dataset harbor-demo
+./dev authn-core-install
 ./dev test --suite smoke
 ```
+
+Open the core at **http://127.0.0.1:4310**. Run `./dev authn-core-install`
+explicitly after seeding to install protected local sign-in. Its private, persisted
+plan expires 24 hours after creation. Repeating the command replays that exact
+plan; bootstrap, seed and restarts never renew or reactivate it. Expiry or
+revocation requires a separate explicit successor installation; see
+[local operations](docs/operations/local-core.md) for the owner-only commands.
 
 After a successful normal `./dev up --profile core`, you can restart those images
 with `./dev up --profile core --no-build`. This requires the private local build

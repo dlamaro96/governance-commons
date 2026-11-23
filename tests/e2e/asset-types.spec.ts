@@ -1,22 +1,17 @@
 // SPDX-License-Identifier: Apache-2.0
+import {domainLogin} from '../fixtures/business-domains-browser.ts';
 import { test, expect, type Page, type Browser } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { mkdirSync, readFileSync } from 'node:fs';
 import type { AssetTypeDefinition } from '../../packages/domain/src/asset-type.ts';
 
-const credentials = JSON.parse(readFileSync('.local/bootstrap.json', 'utf8'));
 async function login(page: Page, username = 'steward') {
   page.on('response', response => { if (response.status() === 429) console.info(JSON.stringify({ diagnostic: 'browser_request_budget', method: response.request().method(), status: response.status(), path: new URL(response.url()).pathname })); });
-  await page.goto('/auth/login');
-  await page.locator('input[name="username"]').fill(username);
-  await page.locator('input[name="password"]').fill(credentials.personas[username]);
-  await page.getByRole('button', { name: 'Sign In', exact: true }).click();
-  await expect(page).toHaveURL('http://localhost:4310/');
-  await expect(page.getByRole('heading', { level: 1, name: username === 'summit' ? 'Summit Logistics' : 'Harbor Retail' })).toBeVisible();
+  await domainLogin(page, username);
 }
 async function headers(page: Page) {
   const me = await (await page.request.get('/api/v1/me')).json();
-  return { 'X-CSRF-Token': me.csrfToken, Origin: 'http://localhost:4310', 'Idempotency-Key': crypto.randomUUID() };
+  return { 'X-CSRF-Token': me.csrfToken, Origin: 'http://127.0.0.1:4310', 'Idempotency-Key': crypto.randomUUID() };
 }
 async function paceRequestBudget({ browser }: { browser: Browser }) {
   test.setTimeout(75_000);

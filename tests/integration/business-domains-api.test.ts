@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
+import {createProtectedCoreSession,closeProtectedCoreSessions} from '../fixtures/protected-core-authentication.ts';
 import { pacedFetch as fetch } from '../fixtures/http-budget.ts';
 /** Real HTTP, authenticated sessions and SQL011. These authored cases are not
  * qualification until executed against the matching runtime API/database. */
 import assert from 'node:assert/strict';
 import { after, before, test } from 'node:test';
-import { createHash, randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { setTimeout as delay } from 'node:timers/promises';
 import { db, lockTenantLedger, scope, sql } from '../../packages/db/src/index.ts';
 import { assetView, record } from '../../apps/api/src/repository.ts';
@@ -24,12 +25,9 @@ before(async () => {
   const result = await sql<{ installed: boolean }>`SELECT to_regclass('public.asset_domain_placement_revisions') IS NOT NULL AS installed`.execute(db);
   assert.equal(result.rows[0]?.installed, true, 'SQL011 must be installed in the matching API/database.');
 });
-after(async () => { await db.destroy(); });
+after(async () => { await closeProtectedCoreSessions(); await db.destroy(); });
 async function session(actor = steward, organization = tenant): Promise<Headers> {
-  const token = randomUUID() + randomUUID(), csrf = randomUUID();
-  await db.insertInto('sessions').values({ id_hash: createHash('sha256').update(token).digest('hex'), identity_id: actor,
-    tenant_id: organization, csrf, expires_at: new Date(Date.now() + 600_000) }).execute();
-  return { Cookie: `gc_session=${token}`, 'X-CSRF-Token': csrf, Origin: origin, 'Content-Type': 'application/json' };
+  return (await createProtectedCoreSession(actor, organization)).headers;
 }
 function request(path: string, headers: Headers, method = 'GET', body?: unknown) {
   return fetch(`${base}/api/v1${path}`, { method, headers, body: body === undefined ? undefined : JSON.stringify(body), signal: AbortSignal.timeout(45_000) });

@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
-/** Real API/storage tests with synthetic legacy sessions and controlled worker
+import {createProtectedCoreSession,closeProtectedCoreSessions} from '../fixtures/protected-core-authentication.ts';
+/** Real API/storage tests with native protected sessions and controlled worker
  * observations. These cases do not authenticate with or extract from Databricks. */
 import assert from 'node:assert/strict';
-import {createHash, randomUUID} from 'node:crypto';
+import {randomUUID} from 'node:crypto';
 import {after, before, test, type TestContext} from 'node:test';
 import {db, scope, sql} from '../../packages/db/src/index.ts';
 import {pacedFetch as fetch} from '../fixtures/http-budget.ts';
@@ -19,10 +20,8 @@ const scoped=<T>(fn:Parameters<typeof scope<T>>[2])=>scope(tenant,steward,fn);
 const request=(path:string,headers:Headers,method='GET',body?:unknown)=>fetch(base+'/api/v1'+path,{method,headers,body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(15_000)});
 async function response<T>(result:Response,status:number):Promise<T>{const body=await result.text();assert.equal(result.status,status,'Unexpected real API status');return JSON.parse(body) as T;}
 async function session(t:TestContext,identity=steward,organization=tenant):Promise<Headers>{
- const raw=randomUUID()+randomUUID(),csrf=randomUUID(),hash=createHash('sha256').update(raw).digest('hex');
- await db.insertInto('sessions').values({id_hash:hash,identity_id:identity,tenant_id:organization,csrf,expires_at:new Date(Date.now()+300_000)}).execute();
- t.after(async()=>{await db.deleteFrom('sessions').where('id_hash','=',hash).execute();});
- return {Cookie:'gc_session='+raw,'X-CSRF-Token':csrf,Origin:origin,'Content-Type':'application/json'};
+ const native=await createProtectedCoreSession(identity,organization);t.after(()=>native.revoke());
+ return native.headers;
 }
 async function create(t:TestContext){const headers=await session(t),body=input(),key=randomUUID();const result=await response<{source:Source}>(await request('/sources',{...headers,'Idempotency-Key':key},'POST',body),201);return {headers,body,key,source:result.source};}
 // Delivery status is owned by the live projector. Compare the complete immutable
@@ -41,7 +40,7 @@ before(async()=>{
  assert.deepEqual(role.rows,[{name:'gc_app',superuser:false,bypass:false}]);
  const migration=await db.selectFrom('schema_migrations').select('name').where('name','=','014_source_connectors.sql').executeTakeFirst();assert.ok(migration,'SQL014 must be applied before this gate');
 });
-after(async()=>{await db.destroy();});
+after(async()=>{await closeProtectedCoreSessions(); await db.destroy();});
 
 test('UC registration binds exact configuration and replay atomically without accepting credential values',async t=>{
  const f=await create(t);assert.equal(f.source.connectorId,'unity-catalog');
